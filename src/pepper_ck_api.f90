@@ -1288,10 +1288,7 @@ contains
       logical               pfnd
       logical               sfnd
       logical               gotit
-      if ( .not. allocated ( ctx%ckgp_state ) ) then
-         allocate ( ctx%ckgp_state )
-         call init_ckgp_state ( ctx%ckgp_state )
-      end if
+      if ( .not. allocated ( ctx%ckgp_state ) ) allocate ( ctx%ckgp_state )
       associate ( svctr1 => ctx%ckgp_state%svctr1, &
                   svref => ctx%ckgp_state%svref, &
                   svrefr => ctx%ckgp_state%svrefr, &
@@ -2321,10 +2318,7 @@ contains
       logical               pfnd
       logical               sfnd
       logical               gotit
-      if ( .not. allocated ( ctx%ckgpav_state ) ) then
-         allocate ( ctx%ckgpav_state )
-         call init_ckgpav_state ( ctx%ckgpav_state )
-      end if
+      if ( .not. allocated ( ctx%ckgpav_state ) ) allocate ( ctx%ckgpav_state )
       associate ( svctr1 => ctx%ckgpav_state%svctr1, &
                   svref => ctx%ckgpav_state%svref, &
                   svrefr => ctx%ckgpav_state%svrefr, &

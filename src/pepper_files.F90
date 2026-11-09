@@ -282,10 +282,7 @@ contains
       character(wdsize), parameter :: defrpy = '<UNAVAILABLE>'
       character(kysize)     keycpy
       integer(ip)           index
-      if ( .not. allocated ( ctx%zzplatfm ) ) then
-         allocate ( ctx%zzplatfm )
-         call init_zzplatfm_state ( ctx%zzplatfm )
-      end if
+      if ( .not. allocated ( ctx%zzplatfm ) ) allocate ( ctx%zzplatfm )
       associate ( first => ctx%zzplatfm%first, &
                   attcpy => ctx%zzplatfm%attcpy, &
                   keyval => ctx%zzplatfm%keyval )
@@ -762,10 +759,7 @@ contains
       character(1)          asc129
       character(1)          asc206
       integer(ip)           i
-      if ( .not. allocated ( ctx%zzftpstr ) ) then
-         allocate ( ctx%zzftpstr )
-         call init_zzftpstr_state ( ctx%zzftpstr )
-      end if
+      if ( .not. allocated ( ctx%zzftpstr ) ) allocate ( ctx%zzftpstr )
       associate ( first => ctx%zzftpstr%first, &
                   locdlm => ctx%zzftpstr%locdlm, &
                   loclnd => ctx%zzftpstr%loclnd, &
@@ -1073,10 +1067,7 @@ contains
       integer(ip)           length
       integer(ip)           msfidx
       logical               isther
-      if ( .not. allocated ( ctx%zzftpchk ) ) then
-         allocate ( ctx%zzftpchk )
-         call init_zzftpchk_state ( ctx%zzftpchk )
-      end if
+      if ( .not. allocated ( ctx%zzftpchk ) ) allocate ( ctx%zzftpchk )
       associate ( first => ctx%zzftpchk%first, &
                   lftbkt => ctx%zzftpchk%lftbkt, &
                   memstr => ctx%zzftpchk%memstr, &
@@ -1915,10 +1906,7 @@ contains
       integer(ip), parameter :: bff = arch   + 1
       character(locsiz)     tmpstr
       integer(ip)           clsid
-      if ( .not. allocated ( ctx%zzddhgsd ) ) then
-         allocate ( ctx%zzddhgsd )
-         call init_zzddhgsd_state ( ctx%zzddhgsd )
-      end if
+      if ( .not. allocated ( ctx%zzddhgsd ) ) allocate ( ctx%zzddhgsd )
       associate ( clslst => ctx%zzddhgsd%clslst, &
                   stramh => ctx%zzddhgsd%stramh, &
                   strarc => ctx%zzddhgsd%strarc, &
@@ -2117,10 +2105,7 @@ contains
       integer(ip)           intarr ( nints )
       integer(ip)           iostat
       integer(ip)           supidx
-      if ( .not. allocated ( ctx%zzddhmnm ) ) then
-         allocate ( ctx%zzddhmnm )
-         call init_zzddhmnm_state ( ctx%zzddhmnm )
-      end if
+      if ( .not. allocated ( ctx%zzddhmnm ) ) allocate ( ctx%zzddhmnm )
       associate ( first => ctx%zzddhmnm%first, &
                   natbff => ctx%zzddhmnm%natbff, &
                   supbff => ctx%zzddhmnm%supbff, &
@@ -2652,10 +2637,7 @@ contains
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
       zzichr(carg) = modulo ( ichar(carg), 256 )
-      if ( .not. allocated ( ctx%zzddhppf ) ) then
-         allocate ( ctx%zzddhppf )
-         call init_zzddhppf_state ( ctx%zzddhppf )
-      end if
+      if ( .not. allocated ( ctx%zzddhppf ) ) allocate ( ctx%zzddhppf )
       associate ( first => ctx%zzddhppf%first, &
                   ftpdlm => ctx%zzddhppf%ftpdlm, &
                   ftplft => ctx%zzddhppf%ftplft, &
@@ -3683,10 +3665,7 @@ contains
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
       zzichr(carg) = modulo ( ichar(carg), 256 )
-      if ( .not. allocated ( ctx%zzxlatei ) ) then
-         allocate ( ctx%zzxlatei )
-         call init_zzxlatei_state ( ctx%zzxlatei )
-      end if
+      if ( .not. allocated ( ctx%zzxlatei ) ) allocate ( ctx%zzxlatei )
       associate ( first => ctx%zzxlatei%first, &
                   natbff => ctx%zzxlatei%natbff, &
                   strbff => ctx%zzxlatei%strbff, &
@@ -5840,10 +5819,7 @@ contains
       implicit none
       character(strsiz)     tmpstr
       integer(ip)           i
-      if ( .not. allocated ( ctx%zzddhnfc ) ) then
-         allocate ( ctx%zzddhnfc )
-         call init_zzddhnfc_state ( ctx%zzddhnfc )
-      end if
+      if ( .not. allocated ( ctx%zzddhnfc ) ) allocate ( ctx%zzddhnfc )
       associate ( first => ctx%zzddhnfc%first, &
                   savbff => ctx%zzddhnfc%savbff, &
                   strbff => ctx%zzddhnfc%strbff )
@@ -6352,10 +6328,7 @@ contains
          allocate ( ctx%spice%zzddhman )
          call init_zzddhman_state ( ctx%spice%zzddhman )
       end if
-      if ( .not. allocated ( ctx%zzddhman_units ) ) then
-         allocate ( ctx%zzddhman_units )
-         call init_zzddhman_context_state ( ctx%zzddhman_units )
-      end if
+      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
@@ -7289,10 +7262,7 @@ contains
          allocate ( ctx%spice%zzddhman )
          call init_zzddhman_state ( ctx%spice%zzddhman )
       end if
-      if ( .not. allocated ( ctx%zzddhman_units ) ) then
-         allocate ( ctx%zzddhman_units )
-         call init_zzddhman_context_state ( ctx%zzddhman_units )
-      end if
+      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
@@ -7653,10 +7623,7 @@ contains
          allocate ( ctx%spice%zzddhman )
          call init_zzddhman_state ( ctx%spice%zzddhman )
       end if
-      if ( .not. allocated ( ctx%zzddhman_units ) ) then
-         allocate ( ctx%zzddhman_units )
-         call init_zzddhman_context_state ( ctx%zzddhman_units )
-      end if
+      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
@@ -8028,10 +7995,7 @@ contains
          allocate ( ctx%spice%zzddhman )
          call init_zzddhman_state ( ctx%spice%zzddhman )
       end if
-      if ( .not. allocated ( ctx%zzddhman_units ) ) then
-         allocate ( ctx%zzddhman_units )
-         call init_zzddhman_context_state ( ctx%zzddhman_units )
-      end if
+      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
@@ -8310,10 +8274,7 @@ contains
          allocate ( ctx%spice%zzddhman )
          call init_zzddhman_state ( ctx%spice%zzddhman )
       end if
-      if ( .not. allocated ( ctx%zzddhman_units ) ) then
-         allocate ( ctx%zzddhman_units )
-         call init_zzddhman_context_state ( ctx%zzddhman_units )
-      end if
+      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
@@ -8509,10 +8470,7 @@ contains
          allocate ( ctx%spice%zzddhman )
          call init_zzddhman_state ( ctx%spice%zzddhman )
       end if
-      if ( .not. allocated ( ctx%zzddhman_units ) ) then
-         allocate ( ctx%zzddhman_units )
-         call init_zzddhman_context_state ( ctx%zzddhman_units )
-      end if
+      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
@@ -8687,10 +8645,7 @@ contains
          allocate ( ctx%spice%zzddhman )
          call init_zzddhman_state ( ctx%spice%zzddhman )
       end if
-      if ( .not. allocated ( ctx%zzddhman_units ) ) then
-         allocate ( ctx%zzddhman_units )
-         call init_zzddhman_context_state ( ctx%zzddhman_units )
-      end if
+      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
@@ -8877,10 +8832,7 @@ contains
       logical               platok
       integer(ip)           findex
       integer(ip)           uindex
-      if ( .not. allocated ( ctx%zzddhman_units ) ) then
-         allocate ( ctx%zzddhman_units )
-         call init_zzddhman_context_state ( ctx%zzddhman_units )
-      end if
+      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
       associate ( first => ctx%zzddhman_units%first, &
                   stramh => ctx%zzddhman_units%stramh, &

@@ -314,7 +314,8 @@ HANDWRITTEN = {
 # tools/modularize_ctx.py: each entry point becomes a module procedure. The
 # "state" variables are the saved variables that really persist between
 # calls; they become the components of a derived type (in a generated module
-# pepper_state_<name>) held in pepper_spice as the allocatable component
+# pepper_state_<name>, since merged into pepper_states by
+# tools/merge_states.py) held in pepper_spice as the allocatable component
 # "component" ("where": "context" holds it in pepper_context instead, for
 # state of a computation in progress). "state": "all" makes every local
 # variable state (exactly SPICELIB's behavior with a bare SAVE). All other

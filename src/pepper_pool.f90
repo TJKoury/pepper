@@ -1539,10 +1539,7 @@ contains
       integer(ip)         iostat
       integer(ip)         i
       logical             same
-      if ( .not. allocated ( ctx%spice%rdtext ) ) then
-         allocate ( ctx%spice%rdtext )
-         call init_rdtext_state ( ctx%spice%rdtext )
-      end if
+      if ( .not. allocated ( ctx%spice%rdtext ) ) allocate ( ctx%spice%rdtext )
       associate ( units => ctx%spice%rdtext%units, &
                   n => ctx%spice%rdtext%n, &
                   lstfil => ctx%spice%rdtext%lstfil, &
@@ -1883,10 +1880,7 @@ contains
       integer(ip)         iostat
       integer(ip)         i
       logical             same
-      if ( .not. allocated ( ctx%spice%rdtext ) ) then
-         allocate ( ctx%spice%rdtext )
-         call init_rdtext_state ( ctx%spice%rdtext )
-      end if
+      if ( .not. allocated ( ctx%spice%rdtext ) ) allocate ( ctx%spice%rdtext )
       associate ( units => ctx%spice%rdtext%units, &
                   n => ctx%spice%rdtext%n, &
                   lstfil => ctx%spice%rdtext%lstfil, &
@@ -2432,10 +2426,7 @@ contains
       integer(ip)           i
       integer(ip)           r
       logical               end
-      if ( .not. allocated ( ctx%spice%rdker ) ) then
-         allocate ( ctx%spice%rdker )
-         call init_rdker_state ( ctx%spice%rdker )
-      end if
+      if ( .not. allocated ( ctx%spice%rdker ) ) allocate ( ctx%spice%rdker )
       associate ( file => ctx%spice%rdker%file, &
                   linnum => ctx%spice%rdker%linnum, &
                   status => ctx%spice%rdker%status, &
@@ -2726,10 +2717,7 @@ contains
       integer(ip)           i
       integer(ip)           r
       logical               end
-      if ( .not. allocated ( ctx%spice%rdker ) ) then
-         allocate ( ctx%spice%rdker )
-         call init_rdker_state ( ctx%spice%rdker )
-      end if
+      if ( .not. allocated ( ctx%spice%rdker ) ) allocate ( ctx%spice%rdker )
       associate ( file => ctx%spice%rdker%file, &
                   linnum => ctx%spice%rdker%linnum, &
                   status => ctx%spice%rdker%status, &
@@ -2946,10 +2934,7 @@ contains
       integer(ip)           i
       integer(ip)           r
       logical               end
-      if ( .not. allocated ( ctx%spice%rdker ) ) then
-         allocate ( ctx%spice%rdker )
-         call init_rdker_state ( ctx%spice%rdker )
-      end if
+      if ( .not. allocated ( ctx%spice%rdker ) ) allocate ( ctx%spice%rdker )
       associate ( file => ctx%spice%rdker%file, &
                   linnum => ctx%spice%rdker%linnum )
       kernel = file
@@ -3595,10 +3580,7 @@ contains
       integer(ip)           year
       logical               modtru
       divble(year,i) = max ( 0, 1 + ((iabs(year)/i)*i) - iabs(year) )
-      if ( .not. allocated ( ctx%spice%tcheck ) ) then
-         allocate ( ctx%spice%tcheck )
-         call init_tcheck_state ( ctx%spice%tcheck )
-      end if
+      if ( .not. allocated ( ctx%spice%tcheck ) ) allocate ( ctx%spice%tcheck )
       associate ( dochck => ctx%spice%tcheck%dochck )
       if ( .not. dochck ) then
          ok    = .true.
@@ -4161,10 +4143,7 @@ contains
       integer(ip)           year
       logical               modtru
       divble(year,i) = max ( 0, 1 + ((iabs(year)/i)*i) - iabs(year) )
-      if ( .not. allocated ( ctx%spice%tcheck ) ) then
-         allocate ( ctx%spice%tcheck )
-         call init_tcheck_state ( ctx%spice%tcheck )
-      end if
+      if ( .not. allocated ( ctx%spice%tcheck ) ) allocate ( ctx%spice%tcheck )
       associate ( dochck => ctx%spice%tcheck%dochck )
       dochck = eqstr( type, 'YES' )
 
@@ -4316,10 +4295,7 @@ contains
       integer(ip)           year
       logical               modtru
       divble(year,i) = max ( 0, 1 + ((iabs(year)/i)*i) - iabs(year) )
-      if ( .not. allocated ( ctx%spice%tcheck ) ) then
-         allocate ( ctx%spice%tcheck )
-         call init_tcheck_state ( ctx%spice%tcheck )
-      end if
+      if ( .not. allocated ( ctx%spice%tcheck ) ) allocate ( ctx%spice%tcheck )
       associate ( dochck => ctx%spice%tcheck%dochck )
       if ( dochck ) then
          type = 'YES'
@@ -4551,10 +4527,7 @@ contains
 !!
       use pepper_kinds, only: ip
       implicit none
-      if ( .not. allocated ( ctx%spice%texpyr ) ) then
-         allocate ( ctx%spice%texpyr )
-         call init_texpyr_state ( ctx%spice%texpyr )
-      end if
+      if ( .not. allocated ( ctx%spice%texpyr ) ) allocate ( ctx%spice%texpyr )
       associate ( centry => ctx%spice%texpyr%centry, &
                   lbound => ctx%spice%texpyr%lbound )
       if ( year >= 100 .or. year < 0 ) return
@@ -4757,10 +4730,7 @@ contains
 !!
       use pepper_kinds, only: ip
       implicit none
-      if ( .not. allocated ( ctx%spice%texpyr ) ) then
-         allocate ( ctx%spice%texpyr )
-         call init_texpyr_state ( ctx%spice%texpyr )
-      end if
+      if ( .not. allocated ( ctx%spice%texpyr ) ) allocate ( ctx%spice%texpyr )
       associate ( centry => ctx%spice%texpyr%centry, &
                   lbound => ctx%spice%texpyr%lbound )
       if ( year > 0 ) then
@@ -6826,10 +6796,7 @@ contains
       integer(ip) :: put
       logical :: did
       integer(ip) :: from
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
@@ -6996,10 +6963,7 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size )
       string = rep(1:max(1,size))
@@ -7135,10 +7099,7 @@ contains
       parameter           ( smwdsz = 12 )
       logical :: did
       integer(ip) :: from
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
@@ -7293,10 +7254,7 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size )
       zzist = index ( rep(1:size), letter ) > 0
@@ -7436,10 +7394,7 @@ contains
       integer(ip) :: next
       integer(ip) :: put
       logical :: did
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
@@ -7599,10 +7554,7 @@ contains
       integer(ip) :: put
       integer(ip) :: i
       logical :: did
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
@@ -7792,10 +7744,7 @@ contains
       integer(ip) :: k
       logical :: did
       integer(ip) :: from
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   to => ctx%zztime%to )
@@ -8052,10 +8001,7 @@ contains
       logical :: did
       integer(ip) :: from
       integer(ip) :: kind
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
@@ -9188,10 +9134,7 @@ contains
       integer(ip) :: k
       integer(ip) :: i
       integer(ip) :: j
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
@@ -9897,10 +9840,7 @@ contains
       integer(ip) :: i
       logical :: did
       integer(ip) :: j
-      if ( .not. allocated ( ctx%zztime ) ) then
-         allocate ( ctx%zztime )
-         call init_zztime_state ( ctx%zztime )
-      end if
+      if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &

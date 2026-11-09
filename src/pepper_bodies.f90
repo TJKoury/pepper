@@ -12165,10 +12165,7 @@ contains
       character(namlen)     varnam
       integer(ip)           bodyid
       logical               found
-      if ( .not. allocated ( ctx%bodvrd_cache ) ) then
-         allocate ( ctx%bodvrd_cache )
-         call init_bodvrd_state ( ctx%bodvrd_cache )
-      end if
+      if ( .not. allocated ( ctx%bodvrd_cache ) ) allocate ( ctx%bodvrd_cache )
       associate ( svctr1 => ctx%bodvrd_cache%svctr1, &
                   svbdnm => ctx%bodvrd_cache%svbdnm, &
                   svbdid => ctx%bodvrd_cache%svbdid, &

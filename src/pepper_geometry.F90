@@ -144,10 +144,7 @@ contains
 !!
       use pepper_kinds, only: wp
       implicit none
-      if ( .not. allocated ( ctx%gfstep_state ) ) then
-         allocate ( ctx%gfstep_state )
-         call init_gfstep_state ( ctx%gfstep_state )
-      end if
+      if ( .not. allocated ( ctx%gfstep_state ) ) allocate ( ctx%gfstep_state )
       associate ( svstep => ctx%gfstep_state%svstep, &
                   svinit => ctx%gfstep_state%svinit )
       if ( .not. svinit ) then
@@ -260,10 +257,7 @@ contains
 !!
       use pepper_kinds, only: wp
       implicit none
-      if ( .not. allocated ( ctx%gfstep_state ) ) then
-         allocate ( ctx%gfstep_state )
-         call init_gfstep_state ( ctx%gfstep_state )
-      end if
+      if ( .not. allocated ( ctx%gfstep_state ) ) allocate ( ctx%gfstep_state )
       associate ( svstep => ctx%gfstep_state%svstep, &
                   svinit => ctx%gfstep_state%svinit )
       if ( step <= 0.0_wp ) then
@@ -578,10 +572,7 @@ contains
       character(1) :: mycase
       integer(ip) :: i
       character(1) :: begin
-      if ( .not. allocated ( ctx%ana_state ) ) then
-         allocate ( ctx%ana_state )
-         call init_ana_state ( ctx%ana_state )
-      end if
+      if ( .not. allocated ( ctx%ana_state ) ) allocate ( ctx%ana_state )
       associate ( start => ctx%ana_state%start )
       call ucase ( word,              myword )
       call replch( myword, '''', ' ', myword )
@@ -1438,10 +1429,7 @@ contains
       integer(ip)           fxfcde
       integer(ip)           obscde
       logical               found
-      if ( .not. allocated ( ctx%azlcpo_state ) ) then
-         allocate ( ctx%azlcpo_state )
-         call init_azlcpo_state ( ctx%azlcpo_state )
-      end if
+      if ( .not. allocated ( ctx%azlcpo_state ) ) allocate ( ctx%azlcpo_state )
       associate ( z => ctx%azlcpo_state%z )
       if ( ctx%failed() ) return
 
@@ -1936,10 +1924,7 @@ contains
       character(frnmln) :: bnmnms  (          maxbfr )
       integer(ip) :: i
       integer(ip) :: center ( nframe )
-      if ( .not. allocated ( ctx%bltfrm_state ) ) then
-         allocate ( ctx%bltfrm_state )
-         call init_bltfrm_state ( ctx%bltfrm_state )
-      end if
+      if ( .not. allocated ( ctx%bltfrm_state ) ) allocate ( ctx%bltfrm_state )
       associate ( fclass => ctx%bltfrm_state%fclass, &
                   fcode => ctx%bltfrm_state%fcode, &
                   pass1 => ctx%bltfrm_state%pass1 )
@@ -4181,10 +4166,7 @@ contains
       real(wp)              scale
       real(wp)              tmpd
       real(wp)              tmpv   ( 2 )
-      if ( .not. allocated ( ctx%diags2_state ) ) then
-         allocate ( ctx%diags2_state )
-         call init_diags2_state ( ctx%diags2_state )
-      end if
+      if ( .not. allocated ( ctx%diags2_state ) ) allocate ( ctx%diags2_state )
       associate ( ident => ctx%diags2_state%ident )
       if ( ctx%failed() ) return
 
@@ -5604,10 +5586,7 @@ contains
       real(wp) :: ux
       real(wp) :: q2
       real(wp) :: ao
-      if ( .not. allocated ( ctx%ev2lin_state ) ) then
-         allocate ( ctx%ev2lin_state )
-         call init_ev2lin_state ( ctx%ev2lin_state )
-      end if
+      if ( .not. allocated ( ctx%ev2lin_state ) ) allocate ( ctx%ev2lin_state )
       associate ( ke => ctx%ev2lin_state%ke, &
                   er => ctx%ev2lin_state%er, &
                   ae => ctx%ev2lin_state%ae, &
@@ -9873,10 +9852,7 @@ contains
       real(wp)              upper
       real(wp)              diff
       real(wp)              lastdf
-      if ( .not. allocated ( ctx%hyptof_state ) ) then
-         allocate ( ctx%hyptof_state )
-         call init_hyptof_state ( ctx%hyptof_state )
-      end if
+      if ( .not. allocated ( ctx%hyptof_state ) ) allocate ( ctx%hyptof_state )
       associate ( first => ctx%hyptof_state%first, &
                   maxlog => ctx%hyptof_state%maxlog )
       if ( ctx%failed() ) return
@@ -10684,10 +10660,7 @@ contains
       integer(ip)           obscde
       integer(ip)           trgcde
       logical               found
-      if ( .not. allocated ( ctx%illum_state ) ) then
-         allocate ( ctx%illum_state )
-         call init_illum_state ( ctx%illum_state )
-      end if
+      if ( .not. allocated ( ctx%illum_state ) ) allocate ( ctx%illum_state )
       associate ( svctr1 => ctx%illum_state%svctr1, &
                   svtarg => ctx%illum_state%svtarg, &
                   svtcde => ctx%illum_state%svtcde, &
@@ -13006,10 +12979,7 @@ contains
       integer(ip)           idcode
       integer(ip)           i
       logical               found
-      if ( .not. allocated ( ctx%lspcn_state ) ) then
-         allocate ( ctx%lspcn_state )
-         call init_lspcn_state ( ctx%lspcn_state )
-      end if
+      if ( .not. allocated ( ctx%lspcn_state ) ) allocate ( ctx%lspcn_state )
       associate ( svctr1 => ctx%lspcn_state%svctr1, &
                   svbody => ctx%lspcn_state%svbody, &
                   svidcd => ctx%lspcn_state%svidcd, &
@@ -15654,10 +15624,7 @@ contains
       real(wp)              v      ( 3 )
       real(wp)              vmag
       real(wp)              xprod  ( 3 )
-      if ( .not. allocated ( ctx%oscelt_state ) ) then
-         allocate ( ctx%oscelt_state )
-         call init_oscelt_state ( ctx%oscelt_state )
-      end if
+      if ( .not. allocated ( ctx%oscelt_state ) ) allocate ( ctx%oscelt_state )
       associate ( zvec => ctx%oscelt_state%zvec )
       if ( ctx%failed() ) return
 
@@ -17910,10 +17877,7 @@ contains
       integer(ip)           tcode
       real(wp)              jf ( 3, 3 )
       real(wp)              tj ( 3, 3 )
-      if ( .not. allocated ( ctx%pxfrm2_state ) ) then
-         allocate ( ctx%pxfrm2_state )
-         call init_pxfrm2_state ( ctx%pxfrm2_state )
-      end if
+      if ( .not. allocated ( ctx%pxfrm2_state ) ) allocate ( ctx%pxfrm2_state )
       associate ( svctr1 => ctx%pxfrm2_state%svctr1, &
                   svfrom => ctx%pxfrm2_state%svfrom, &
                   svfcod => ctx%pxfrm2_state%svfcod, &
@@ -18773,10 +18737,7 @@ contains
       integer(ip)           mrkpsb
       integer(ip)           mrkpse
       integer(ip)           validx
-      if ( .not. allocated ( ctx%repml_state ) ) then
-         allocate ( ctx%repml_state )
-         call init_repml_state ( ctx%repml_state )
-      end if
+      if ( .not. allocated ( ctx%repml_state ) ) allocate ( ctx%repml_state )
       associate ( casstr => ctx%repml_state%casstr )
       if ( ctx%failed() ) return
 
@@ -19447,10 +19408,7 @@ contains
       real(wp) :: moduli ( mxnfld )
       integer(ip) :: nfield
       integer(ip) :: pntr
-      if ( .not. allocated ( ctx%scps01_state ) ) then
-         allocate ( ctx%scps01_state )
-         call init_scps01_state ( ctx%scps01_state )
-      end if
+      if ( .not. allocated ( ctx%scps01_state ) ) allocate ( ctx%scps01_state )
       associate ( strerr => ctx%scps01_state%strerr, &
                   namlst => ctx%scps01_state%namlst, &
                   cmptks => ctx%scps01_state%cmptks, &
@@ -20460,10 +20418,7 @@ contains
       real(wp)              dc         (    2 )
       real(wp)              xform      ( 6, 6 )
       real(wp)              tstate     ( 6    )
-      if ( .not. allocated ( ctx%spkpv_state ) ) then
-         allocate ( ctx%spkpv_state )
-         call init_spkpv_state ( ctx%spkpv_state )
-      end if
+      if ( .not. allocated ( ctx%spkpv_state ) ) allocate ( ctx%spkpv_state )
       associate ( svctr1 => ctx%spkpv_state%svctr1, &
                   svref => ctx%spkpv_state%svref, &
                   svirfr => ctx%spkpv_state%svirfr, &
@@ -21211,10 +21166,7 @@ contains
       real(wp)              ymag
       real(wp)              yproj ( 3 )
       integer(ip)           bad
-      if ( .not. allocated ( ctx%surfpt_state ) ) then
-         allocate ( ctx%surfpt_state )
-         call init_surfpt_state ( ctx%surfpt_state )
-      end if
+      if ( .not. allocated ( ctx%surfpt_state ) ) allocate ( ctx%surfpt_state )
       associate ( mssg => ctx%surfpt_state%mssg )
       if ( ctx%failed() ) return
 
@@ -23277,10 +23229,7 @@ contains
       real(wp)              num1
       real(wp)              num2
       real(wp)              sqdisc
-      if ( .not. allocated ( ctx%zzbquad_state ) ) then
-         allocate ( ctx%zzbquad_state )
-         call init_zzbquad_state ( ctx%zzbquad_state )
-      end if
+      if ( .not. allocated ( ctx%zzbquad_state ) ) allocate ( ctx%zzbquad_state )
       associate ( big => ctx%zzbquad_state%big, &
                   first => ctx%zzbquad_state%first )
       if ( ctx%failed() ) return
@@ -24740,10 +24689,7 @@ contains
       implicit none
       real(wp) :: logden
       real(wp) :: lognum
-      if ( .not. allocated ( ctx%zzdiv_state ) ) then
-         allocate ( ctx%zzdiv_state )
-         call init_zzdiv_state ( ctx%zzdiv_state )
-      end if
+      if ( .not. allocated ( ctx%zzdiv_state ) ) allocate ( ctx%zzdiv_state )
       associate ( expnt => ctx%zzdiv_state%expnt, &
                   first => ctx%zzdiv_state%first )
       if ( ctx%failed() ) then
@@ -24971,10 +24917,7 @@ contains
       logical               newbod
       logical               segfnd
       logical               update
-      if ( .not. allocated ( ctx%zzdskbbl_state ) ) then
-         allocate ( ctx%zzdskbbl_state )
-         call init_zzdskbbl_state ( ctx%zzdskbbl_state )
-      end if
+      if ( .not. allocated ( ctx%zzdskbbl_state ) ) allocate ( ctx%zzdskbbl_state )
       associate ( ctr => ctx%zzdskbbl_state%ctr, &
                   first => ctx%zzdskbbl_state%first, &
                   prvbod => ctx%zzdskbbl_state%prvbod )
@@ -25940,10 +25883,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid )
       zzdsksbd = .false.
 !
@@ -26075,10 +26015,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid )
       zzdskbdc = nint( dskdsc(ctridx) ) == savbid
 
@@ -26335,10 +26272,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savet => ctx%zzdsksel_state%savet, &
                   savnsf => ctx%zzdsksel_state%savnsf, &
@@ -26495,10 +26429,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savet => ctx%zzdsksel_state%savet, &
                   savnsf => ctx%zzdsksel_state%savnsf, &
@@ -26661,10 +26592,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savco1 => ctx%zzdsksel_state%savco1, &
                   savco2 => ctx%zzdsksel_state%savco2, &
@@ -26805,10 +26733,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savco1 => ctx%zzdsksel_state%savco1, &
                   savco2 => ctx%zzdsksel_state%savco2, &
@@ -27062,10 +26987,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savco1 => ctx%zzdsksel_state%savco1, &
                   savco2 => ctx%zzdsksel_state%savco2, &
@@ -27229,10 +27151,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savco1 => ctx%zzdsksel_state%savco1, &
                   savco2 => ctx%zzdsksel_state%savco2, &
@@ -27503,10 +27422,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savcls => ctx%zzdsksel_state%savcls, &
                   savet => ctx%zzdsksel_state%savet, &
@@ -27665,10 +27581,7 @@ contains
       integer(ip)           segsys
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
-      if ( .not. allocated ( ctx%zzdsksel_state ) ) then
-         allocate ( ctx%zzdsksel_state )
-         call init_zzdsksel_state ( ctx%zzdsksel_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savcls => ctx%zzdsksel_state%savcls, &
                   savet => ctx%zzdsksel_state%savet, &
@@ -30405,10 +30318,7 @@ contains
       real(wp) :: mo
       character(wdsize) :: cday
       integer(ip) :: bexp
-      if ( .not. allocated ( ctx%zzgetelm_state ) ) then
-         allocate ( ctx%zzgetelm_state )
-         call init_zzgetelm_state ( ctx%zzgetelm_state )
-      end if
+      if ( .not. allocated ( ctx%zzgetelm_state ) ) allocate ( ctx%zzgetelm_state )
       associate ( errprs => ctx%zzgetelm_state%errprs, &
                   term => ctx%zzgetelm_state%term, &
                   d2r => ctx%zzgetelm_state%d2r, &
@@ -31192,10 +31102,7 @@ contains
       use pepper_inc_zzholdd
       implicit none
       integer(ip)           i
-      if ( .not. allocated ( ctx%zzholdd_state ) ) then
-         allocate ( ctx%zzholdd_state )
-         call init_zzholdd_state ( ctx%zzholdd_state )
-      end if
+      if ( .not. allocated ( ctx%zzholdd_state ) ) allocate ( ctx%zzholdd_state )
       associate ( svalue => ctx%zzholdd_state%svalue, &
                   first => ctx%zzholdd_state%first, &
                   init => ctx%zzholdd_state%init )
@@ -33589,10 +33496,7 @@ contains
       implicit none
       real(wp) :: loga
       real(wp) :: logb
-      if ( .not. allocated ( ctx%zzmult_state ) ) then
-         allocate ( ctx%zzmult_state )
-         call init_zzmult_state ( ctx%zzmult_state )
-      end if
+      if ( .not. allocated ( ctx%zzmult_state ) ) allocate ( ctx%zzmult_state )
       associate ( expnt => ctx%zzmult_state%expnt, &
                   first => ctx%zzmult_state%first )
       if ( ctx%failed() ) then
@@ -34319,10 +34223,7 @@ contains
       real(wp)              rad    ( 3 )
       real(wp)              vlon   ( 3 )
       integer(ip)           i
-      if ( .not. allocated ( ctx%zzrtnmat_state ) ) then
-         allocate ( ctx%zzrtnmat_state )
-         call init_zzrtnmat_state ( ctx%zzrtnmat_state )
-      end if
+      if ( .not. allocated ( ctx%zzrtnmat_state ) ) allocate ( ctx%zzrtnmat_state )
       associate ( z => ctx%zzrtnmat_state%z )
       if ( ctx%failed() ) return
 
@@ -35596,10 +35497,7 @@ contains
       real(wp), intent(out) :: trgepc  !! Target epoch, if intercept was found.
       real(wp), intent(out) :: srfvec  ( 3 )  !! Observer-to-intercept vector, if found.
       logical, intent(out) :: found  !! Found flag.
-      if ( .not. allocated ( ctx%zzsfxcor_state ) ) then
-         allocate ( ctx%zzsfxcor_state )
-         call init_zzsfxcor_state ( ctx%zzsfxcor_state )
-      end if
+      if ( .not. allocated ( ctx%zzsfxcor_state ) ) allocate ( ctx%zzsfxcor_state )
       associate ( first => ctx%zzsfxcor_state%first, &
                   loccor => ctx%zzsfxcor_state%loccor, &
                   prvcor => ctx%zzsfxcor_state%prvcor )
@@ -36467,10 +36365,7 @@ contains
       real(wp)              r
       real(wp)              t      ( 3 )
       integer(ip)           nxpts
-      if ( .not. allocated ( ctx%zzsglatx_state ) ) then
-         allocate ( ctx%zzsglatx_state )
-         call init_zzsglatx_state ( ctx%zzsglatx_state )
-      end if
+      if ( .not. allocated ( ctx%zzsglatx_state ) ) allocate ( ctx%zzsglatx_state )
       associate ( z => ctx%zzsglatx_state%z )
       if ( ctx%failed() ) return
 
@@ -36899,10 +36794,7 @@ contains
       integer(ip), parameter :: spshpn = 2
       integer(ip), parameter :: point = 1
       integer(ip), parameter :: sphere = 2
-      if ( .not. allocated ( ctx%zzspin_state ) ) then
-         allocate ( ctx%zzspin_state )
-         call init_zzspin_state ( ctx%zzspin_state )
-      end if
+      if ( .not. allocated ( ctx%zzspin_state ) ) allocate ( ctx%zzspin_state )
       associate ( svshap => ctx%zzspin_state%svshap )
       if ( ctx%failed() ) return
 
@@ -37860,10 +37752,7 @@ contains
       integer(ip)           ltsign
       integer(ip)           maxitr
       integer(ip)           refid
-      if ( .not. allocated ( ctx%zzspkap0_state ) ) then
-         allocate ( ctx%zzspkap0_state )
-         call init_zzspkap0_state ( ctx%zzspkap0_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkap0_state ) ) allocate ( ctx%zzspkap0_state )
       associate ( first => ctx%zzspkap0_state%first, &
                   flags => ctx%zzspkap0_state%flags, &
                   prvcor => ctx%zzspkap0_state%prvcor, &
@@ -38729,10 +38618,7 @@ contains
       integer(ip)           ltsign
       integer(ip)           maxitr
       integer(ip)           refid
-      if ( .not. allocated ( ctx%zzspkap1_state ) ) then
-         allocate ( ctx%zzspkap1_state )
-         call init_zzspkap1_state ( ctx%zzspkap1_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkap1_state ) ) allocate ( ctx%zzspkap1_state )
       associate ( first => ctx%zzspkap1_state%first, &
                   flags => ctx%zzspkap1_state%flags, &
                   prvcor => ctx%zzspkap1_state%prvcor, &
@@ -41604,10 +41490,7 @@ contains
       integer(ip)           n
       integer(ip)           sense
       logical               found
-      if ( .not. allocated ( ctx%dpgrdr_state ) ) then
-         allocate ( ctx%dpgrdr_state )
-         call init_dpgrdr_state ( ctx%dpgrdr_state )
-      end if
+      if ( .not. allocated ( ctx%dpgrdr_state ) ) allocate ( ctx%dpgrdr_state )
       associate ( svctr1 => ctx%dpgrdr_state%svctr1, &
                   svbody => ctx%dpgrdr_state%svbody, &
                   svbdid => ctx%dpgrdr_state%svbdid, &
@@ -42314,10 +42197,7 @@ contains
       integer(ip)           n
       integer(ip)           sense
       logical               found
-      if ( .not. allocated ( ctx%drdpgr_state ) ) then
-         allocate ( ctx%drdpgr_state )
-         call init_drdpgr_state ( ctx%drdpgr_state )
-      end if
+      if ( .not. allocated ( ctx%drdpgr_state ) ) allocate ( ctx%drdpgr_state )
       associate ( svctr1 => ctx%drdpgr_state%svctr1, &
                   svbody => ctx%drdpgr_state%svbody, &
                   svbdid => ctx%drdpgr_state%svbdid, &
@@ -43615,10 +43495,7 @@ contains
       integer(ip)           srcid
       integer(ip)           trgid
       logical               found
-      if ( .not. allocated ( ctx%edterm_state ) ) then
-         allocate ( ctx%edterm_state )
-         call init_edterm_state ( ctx%edterm_state )
-      end if
+      if ( .not. allocated ( ctx%edterm_state ) ) allocate ( ctx%edterm_state )
       associate ( svctr1 => ctx%edterm_state%svctr1, &
                   svtarg => ctx%edterm_state%svtarg, &
                   svtgid => ctx%edterm_state%svtgid, &
@@ -45140,10 +45017,7 @@ contains
 !     to integer arguments).
       integer(ip)           instid
       logical               found
-      if ( .not. allocated ( ctx%getfvn_state ) ) then
-         allocate ( ctx%getfvn_state )
-         call init_getfvn_state ( ctx%getfvn_state )
-      end if
+      if ( .not. allocated ( ctx%getfvn_state ) ) allocate ( ctx%getfvn_state )
       associate ( svctr1 => ctx%getfvn_state%svctr1, &
                   svinst => ctx%getfvn_state%svinst, &
                   svinid => ctx%getfvn_state%svinid, &
@@ -46692,10 +46566,7 @@ contains
       integer(ip)           n
       integer(ip)           sense
       logical               found
-      if ( .not. allocated ( ctx%pgrrec_state ) ) then
-         allocate ( ctx%pgrrec_state )
-         call init_pgrrec_state ( ctx%pgrrec_state )
-      end if
+      if ( .not. allocated ( ctx%pgrrec_state ) ) allocate ( ctx%pgrrec_state )
       associate ( svctr1 => ctx%pgrrec_state%svctr1, &
                   svbody => ctx%pgrrec_state%svbody, &
                   svbdid => ctx%pgrrec_state%svbdid, &
@@ -47326,10 +47197,7 @@ contains
       integer(ip)           n
       integer(ip)           sense
       logical               found
-      if ( .not. allocated ( ctx%recpgr_state ) ) then
-         allocate ( ctx%recpgr_state )
-         call init_recpgr_state ( ctx%recpgr_state )
-      end if
+      if ( .not. allocated ( ctx%recpgr_state ) ) allocate ( ctx%recpgr_state )
       associate ( svctr1 => ctx%recpgr_state%svctr1, &
                   svbody => ctx%recpgr_state%svbody, &
                   svbdid => ctx%recpgr_state%svbdid, &
@@ -49104,10 +48972,7 @@ contains
       integer(ip)           obscde
       integer(ip)           trgcde
       logical               found
-      if ( .not. allocated ( ctx%subpt_state ) ) then
-         allocate ( ctx%subpt_state )
-         call init_subpt_state ( ctx%subpt_state )
-      end if
+      if ( .not. allocated ( ctx%subpt_state ) ) allocate ( ctx%subpt_state )
       associate ( origin => ctx%subpt_state%origin, &
                   svctr1 => ctx%subpt_state%svctr1, &
                   svtarg => ctx%subpt_state%svtarg, &
@@ -49752,10 +49617,7 @@ contains
       integer(ip)           obscde
       integer(ip)           trgcde
       logical               found
-      if ( .not. allocated ( ctx%subsol_state ) ) then
-         allocate ( ctx%subsol_state )
-         call init_subsol_state ( ctx%subsol_state )
-      end if
+      if ( .not. allocated ( ctx%subsol_state ) ) allocate ( ctx%subsol_state )
       associate ( origin => ctx%subsol_state%origin, &
                   svctr1 => ctx%subsol_state%svctr1, &
                   svtarg => ctx%subsol_state%svtarg, &
@@ -50637,10 +50499,7 @@ contains
 !!
       use pepper_kinds, only: ip
       implicit none
-      if ( .not. allocated ( ctx%tostdo_state ) ) then
-         allocate ( ctx%tostdo_state )
-         call init_tostdo_state ( ctx%tostdo_state )
-      end if
+      if ( .not. allocated ( ctx%tostdo_state ) ) allocate ( ctx%tostdo_state )
       associate ( stdout => ctx%tostdo_state%stdout, &
                   first => ctx%tostdo_state%first )
       if ( first ) then
@@ -52401,10 +52260,7 @@ contains
       integer(ip)           i
       integer(ip)           maxix
       integer(ip)           nx
-      if ( .not. allocated ( ctx%zzcnquad_state ) ) then
-         allocate ( ctx%zzcnquad_state )
-         call init_zzcnquad_state ( ctx%zzcnquad_state )
-      end if
+      if ( .not. allocated ( ctx%zzcnquad_state ) ) allocate ( ctx%zzcnquad_state )
       associate ( first => ctx%zzcnquad_state%first, &
                   invub => ctx%zzcnquad_state%invub )
       if ( ctx%failed() ) return
@@ -52923,10 +52779,7 @@ contains
       logical               segfnd
       logical               update
       integer(ip) :: prvfid
-      if ( .not. allocated ( ctx%zzdsksph_state ) ) then
-         allocate ( ctx%zzdsksph_state )
-         call init_zzdsksph_state ( ctx%zzdsksph_state )
-      end if
+      if ( .not. allocated ( ctx%zzdsksph_state ) ) allocate ( ctx%zzdsksph_state )
       associate ( ctr => ctx%zzdsksph_state%ctr, &
                   first => ctx%zzdsksph_state%first, &
                   prvbod => ctx%zzdsksph_state%prvbod, &
@@ -54549,10 +54402,7 @@ contains
       real(wp) :: x5
       real(wp) :: f220
       real(wp) :: gam
-      if ( .not. allocated ( ctx%zznrddp_state ) ) then
-         allocate ( ctx%zznrddp_state )
-         call init_zznrddp_state ( ctx%zznrddp_state )
-      end if
+      if ( .not. allocated ( ctx%zznrddp_state ) ) allocate ( ctx%zznrddp_state )
       associate ( atime => ctx%zznrddp_state%atime, &
                   cosiq => ctx%zznrddp_state%cosiq, &
                   e3 => ctx%zznrddp_state%e3, &
@@ -55270,10 +55120,7 @@ contains
       real(wp) :: temp
       real(wp) :: stepp
       real(wp) :: xl
-      if ( .not. allocated ( ctx%zznrddp_state ) ) then
-         allocate ( ctx%zznrddp_state )
-         call init_zznrddp_state ( ctx%zznrddp_state )
-      end if
+      if ( .not. allocated ( ctx%zznrddp_state ) ) allocate ( ctx%zznrddp_state )
       associate ( atime => ctx%zznrddp_state%atime, &
                   delt => ctx%zznrddp_state%delt, &
                   omegao => ctx%zznrddp_state%omegao, &
@@ -55591,10 +55438,7 @@ contains
       real(wp) :: oxnode
       real(wp) :: sis
       real(wp) :: cosis
-      if ( .not. allocated ( ctx%zznrddp_state ) ) then
-         allocate ( ctx%zznrddp_state )
-         call init_zznrddp_state ( ctx%zznrddp_state )
-      end if
+      if ( .not. allocated ( ctx%zznrddp_state ) ) allocate ( ctx%zznrddp_state )
       associate ( cosiq => ctx%zznrddp_state%cosiq, &
                   e3 => ctx%zznrddp_state%e3, &
                   ee2 => ctx%zznrddp_state%ee2, &
@@ -55908,10 +55752,7 @@ contains
       real(wp)              rp
       real(wp)              xincpt
       real(wp)              yincpt
-      if ( .not. allocated ( ctx%zzpdcmpl_state ) ) then
-         allocate ( ctx%zzpdcmpl_state )
-         call init_zzpdcmpl_state ( ctx%zzpdcmpl_state )
-      end if
+      if ( .not. allocated ( ctx%zzpdcmpl_state ) ) allocate ( ctx%zzpdcmpl_state )
       associate ( apex => ctx%zzpdcmpl_state%apex )
       if ( ctx%failed() ) return
 
@@ -57476,10 +57317,7 @@ contains
       logical               fndbod
       logical               fndcde
       logical               fndnam
-      if ( .not. allocated ( ctx%zzsrfker_state ) ) then
-         allocate ( ctx%zzsrfker_state )
-         call init_zzsrfker_state ( ctx%zzsrfker_state )
-      end if
+      if ( .not. allocated ( ctx%zzsrfker_state ) ) allocate ( ctx%zzsrfker_state )
       associate ( pass1 => ctx%zzsrfker_state%pass1, &
                   names => ctx%zzsrfker_state%names )
       if ( ctx%failed() ) return
@@ -58576,10 +58414,7 @@ contains
       real(wp) :: v     ( 3 )
       real(wp) :: sinu
       real(wp) :: xnode
-      if ( .not. allocated ( ctx%dpspce_state ) ) then
-         allocate ( ctx%dpspce_state )
-         call init_dpspce_state ( ctx%dpspce_state )
-      end if
+      if ( .not. allocated ( ctx%dpspce_state ) ) allocate ( ctx%dpspce_state )
       associate ( ae => ctx%dpspce_state%ae, &
                   ck2 => ctx%dpspce_state%ck2, &
                   xke => ctx%dpspce_state%xke, &
@@ -59997,10 +59832,7 @@ contains
       logical               neg1
       logical               neg2
       real(wp) :: y      ( 3 )
-      if ( .not. allocated ( ctx%incnsg_state ) ) then
-         allocate ( ctx%incnsg_state )
-         call init_incnsg_state ( ctx%incnsg_state )
-      end if
+      if ( .not. allocated ( ctx%incnsg_state ) ) allocate ( ctx%incnsg_state )
       associate ( origin => ctx%incnsg_state%origin, &
                   z => ctx%incnsg_state%z )
       if ( ctx%failed() ) return
@@ -61734,10 +61566,7 @@ contains
       integer(ip)           j
       integer(ip)           osys
       logical               found
-      if ( .not. allocated ( ctx%xfmsta_state ) ) then
-         allocate ( ctx%xfmsta_state )
-         call init_xfmsta_state ( ctx%xfmsta_state )
-      end if
+      if ( .not. allocated ( ctx%xfmsta_state ) ) allocate ( ctx%xfmsta_state )
       associate ( svctr1 => ctx%xfmsta_state%svctr1, &
                   svbody => ctx%xfmsta_state%svbody, &
                   svbdid => ctx%xfmsta_state%svbdid, &
@@ -69169,10 +68998,7 @@ contains
       integer(ip)           relmin
       integer(ip)           relmax
       logical               alpass
-      if ( .not. allocated ( ctx%zzinpdt_state ) ) then
-         allocate ( ctx%zzinpdt_state )
-         call init_zzinpdt_state ( ctx%zzinpdt_state )
-      end if
+      if ( .not. allocated ( ctx%zzinpdt_state ) ) allocate ( ctx%zzinpdt_state )
       associate ( altbds => ctx%zzinpdt_state%altbds, &
                   first => ctx%zzinpdt_state%first, &
                   hpi => ctx%zzinpdt_state%hpi, &
@@ -69680,10 +69506,7 @@ contains
       logical               found
       logical               inside
       logical               xin
-      if ( .not. allocated ( ctx%zzrytlat_state ) ) then
-         allocate ( ctx%zzrytlat_state )
-         call init_zzrytlat_state ( ctx%zzrytlat_state )
-      end if
+      if ( .not. allocated ( ctx%zzrytlat_state ) ) allocate ( ctx%zzrytlat_state )
       associate ( origin => ctx%zzrytlat_state%origin, &
                   z => ctx%zzrytlat_state%z )
       call zzinlat ( ctx, vertex, bounds, 2*margin, 0, inside )
@@ -72756,10 +72579,7 @@ contains
       logical               xin
       logical               xval1
       logical               xval2
-      if ( .not. allocated ( ctx%zzrytpdt_state ) ) then
-         allocate ( ctx%zzrytpdt_state )
-         call init_zzrytpdt_state ( ctx%zzrytpdt_state )
-      end if
+      if ( .not. allocated ( ctx%zzrytpdt_state ) ) allocate ( ctx%zzrytpdt_state )
       associate ( z => ctx%zzrytpdt_state%z )
       if ( ctx%failed() ) return
 
@@ -76227,10 +76047,7 @@ contains
       logical               uselt
       logical               usestl
       logical               xmit
-      if ( .not. allocated ( ctx%srfxpt_state ) ) then
-         allocate ( ctx%srfxpt_state )
-         call init_srfxpt_state ( ctx%srfxpt_state )
-      end if
+      if ( .not. allocated ( ctx%srfxpt_state ) ) allocate ( ctx%srfxpt_state )
       associate ( svctr1 => ctx%srfxpt_state%svctr1, &
                   svtarg => ctx%srfxpt_state%svtarg, &
                   svtcde => ctx%srfxpt_state%svtcde, &
@@ -78901,10 +78718,7 @@ contains
       logical               fnd
       logical               ltcnv
       logical               stlcnv
-      if ( .not. allocated ( ctx%tangpt_state ) ) then
-         allocate ( ctx%tangpt_state )
-         call init_tangpt_state ( ctx%tangpt_state )
-      end if
+      if ( .not. allocated ( ctx%tangpt_state ) ) allocate ( ctx%tangpt_state )
       associate ( first => ctx%tangpt_state%first, &
                   prvcor => ctx%tangpt_state%prvcor, &
                   prvloc => ctx%tangpt_state%prvloc, &
@@ -81455,10 +81269,7 @@ contains
       integer(ip)           vid
       logical               inside
       real(wp) :: limit
-      if ( .not. allocated ( ctx%zzptpl02_state ) ) then
-         allocate ( ctx%zzptpl02_state )
-         call init_zzptpl02_state ( ctx%zzptpl02_state )
-      end if
+      if ( .not. allocated ( ctx%zzptpl02_state ) ) allocate ( ctx%zzptpl02_state )
       associate ( cgrscl => ctx%zzptpl02_state%cgrscl, &
                   corsys => ctx%zzptpl02_state%corsys, &
                   maxr => ctx%zzptpl02_state%maxr, &
@@ -85247,10 +85058,7 @@ contains
       logical               trgfnd
       logical               update
       integer(ip) :: trgcde
-      if ( .not. allocated ( ctx%dskxsi_state ) ) then
-         allocate ( ctx%dskxsi_state )
-         call init_dskxsi_state ( ctx%dskxsi_state )
-      end if
+      if ( .not. allocated ( ctx%dskxsi_state ) ) allocate ( ctx%dskxsi_state )
       associate ( first => ctx%dskxsi_state%first, &
                   fixfid => ctx%dskxsi_state%fixfid, &
                   frmctr => ctx%dskxsi_state%frmctr, &
@@ -86207,10 +86015,7 @@ contains
       logical               trgfnd
       logical               update
       integer(ip) :: trgcde
-      if ( .not. allocated ( ctx%dskxv_state ) ) then
-         allocate ( ctx%dskxv_state )
-         call init_dskxv_state ( ctx%dskxv_state )
-      end if
+      if ( .not. allocated ( ctx%dskxv_state ) ) allocate ( ctx%dskxv_state )
       associate ( first => ctx%dskxv_state%first, &
                   fixfid => ctx%dskxv_state%fixfid, &
                   frmctr => ctx%dskxv_state%frmctr, &
@@ -87533,10 +87338,7 @@ contains
       integer(ip) :: center
       integer(ip) :: trgcde
       logical :: pri
-      if ( .not. allocated ( ctx%illumg_state ) ) then
-         allocate ( ctx%illumg_state )
-         call init_illumg_state ( ctx%illumg_state )
-      end if
+      if ( .not. allocated ( ctx%illumg_state ) ) allocate ( ctx%illumg_state )
       associate ( first => ctx%illumg_state%first, &
                   nsurf => ctx%illumg_state%nsurf, &
                   prvcor => ctx%illumg_state%prvcor, &
@@ -88713,10 +88515,7 @@ contains
       logical               surfup
       real(wp) :: maxr
       logical :: pri
-      if ( .not. allocated ( ctx%srfnrm_state ) ) then
-         allocate ( ctx%srfnrm_state )
-         call init_srfnrm_state ( ctx%srfnrm_state )
-      end if
+      if ( .not. allocated ( ctx%srfnrm_state ) ) allocate ( ctx%srfnrm_state )
       associate ( svctr1 => ctx%srfnrm_state%svctr1, &
                   svtarg => ctx%srfnrm_state%svtarg, &
                   svtcde => ctx%srfnrm_state%svtcde, &
@@ -89309,10 +89108,7 @@ contains
       implicit none
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
-      if ( .not. allocated ( ctx%zzsinutl_state ) ) then
-         allocate ( ctx%zzsinutl_state )
-         call init_zzsinutl_state ( ctx%zzsinutl_state )
-      end if
+      if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmnr => ctx%zzsinutl_state%savmnr, &
                   savmxr => ctx%zzsinutl_state%savmxr, &
                   savrad => ctx%zzsinutl_state%savrad, &
@@ -89477,10 +89273,7 @@ contains
       implicit none
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
-      if ( .not. allocated ( ctx%zzsinutl_state ) ) then
-         allocate ( ctx%zzsinutl_state )
-         call init_zzsinutl_state ( ctx%zzsinutl_state )
-      end if
+      if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savfid => ctx%zzsinutl_state%savfid, &
                   savmnr => ctx%zzsinutl_state%savmnr, &
                   savmxr => ctx%zzsinutl_state%savmxr, &
@@ -89665,10 +89458,7 @@ contains
       implicit none
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
-      if ( .not. allocated ( ctx%zzsinutl_state ) ) then
-         allocate ( ctx%zzsinutl_state )
-         call init_zzsinutl_state ( ctx%zzsinutl_state )
-      end if
+      if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savfid => ctx%zzsinutl_state%savfid, &
                   savnsf => ctx%zzsinutl_state%savnsf, &
                   savrad => ctx%zzsinutl_state%savrad, &
@@ -89831,10 +89621,7 @@ contains
       logical               return
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
-      if ( .not. allocated ( ctx%zzsinutl_state ) ) then
-         allocate ( ctx%zzsinutl_state )
-         call init_zzsinutl_state ( ctx%zzsinutl_state )
-      end if
+      if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmxr => ctx%zzsinutl_state%savmxr )
       maxrad = savmxr
 
@@ -89971,10 +89758,7 @@ contains
       logical               return
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
-      if ( .not. allocated ( ctx%zzsinutl_state ) ) then
-         allocate ( ctx%zzsinutl_state )
-         call init_zzsinutl_state ( ctx%zzsinutl_state )
-      end if
+      if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmnr => ctx%zzsinutl_state%savmnr )
       minrad = savmnr
 
@@ -90130,10 +89914,7 @@ contains
       implicit none
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
-      if ( .not. allocated ( ctx%zzsinutl_state ) ) then
-         allocate ( ctx%zzsinutl_state )
-         call init_zzsinutl_state ( ctx%zzsinutl_state )
-      end if
+      if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmxr => ctx%zzsinutl_state%savmxr, &
                   savrad => ctx%zzsinutl_state%savrad, &
                   savtyp => ctx%zzsinutl_state%savtyp )
@@ -91373,10 +91154,7 @@ contains
       integer(ip) :: trgcde
       logical :: pri
       integer(ip) :: nsurf
-      if ( .not. allocated ( ctx%illumf_state ) ) then
-         allocate ( ctx%illumf_state )
-         call init_illumf_state ( ctx%illumf_state )
-      end if
+      if ( .not. allocated ( ctx%illumf_state ) ) allocate ( ctx%illumf_state )
       associate ( first => ctx%illumf_state%first, &
                   prvcor => ctx%illumf_state%prvcor, &
                   prvmth => ctx%illumf_state%prvmth, &
@@ -93708,10 +93486,7 @@ contains
       logical               fnd
       logical               surfup
       logical :: pri
-      if ( .not. allocated ( ctx%latsrf_state ) ) then
-         allocate ( ctx%latsrf_state )
-         call init_latsrf_state ( ctx%latsrf_state )
-      end if
+      if ( .not. allocated ( ctx%latsrf_state ) ) allocate ( ctx%latsrf_state )
       associate ( svctr1 => ctx%latsrf_state%svctr1, &
                   svtarg => ctx%latsrf_state%svtarg, &
                   svtcde => ctx%latsrf_state%svtcde, &
@@ -95763,10 +95538,7 @@ contains
       logical               fnd
       logical               surfup
       logical :: pri
-      if ( .not. allocated ( ctx%sincpt_state ) ) then
-         allocate ( ctx%sincpt_state )
-         call init_sincpt_state ( ctx%sincpt_state )
-      end if
+      if ( .not. allocated ( ctx%sincpt_state ) ) allocate ( ctx%sincpt_state )
       associate ( first => ctx%sincpt_state%first, &
                   nsurf => ctx%sincpt_state%nsurf, &
                   prvcor => ctx%sincpt_state%prvcor, &
@@ -97687,10 +97459,7 @@ contains
       logical               surfup
       character(sublen) :: subtyp
       logical :: pri
-      if ( .not. allocated ( ctx%subpnt_state ) ) then
-         allocate ( ctx%subpnt_state )
-         call init_subpnt_state ( ctx%subpnt_state )
-      end if
+      if ( .not. allocated ( ctx%subpnt_state ) ) allocate ( ctx%subpnt_state )
       associate ( first => ctx%subpnt_state%first, &
                   near => ctx%subpnt_state%near, &
                   nsurf => ctx%subpnt_state%nsurf, &
@@ -99671,10 +99440,7 @@ contains
       logical               surfup
       logical :: pri
       logical :: xmit
-      if ( .not. allocated ( ctx%subslr_state ) ) then
-         allocate ( ctx%subslr_state )
-         call init_subslr_state ( ctx%subslr_state )
-      end if
+      if ( .not. allocated ( ctx%subslr_state ) ) allocate ( ctx%subslr_state )
       associate ( first => ctx%subslr_state%first, &
                   near => ctx%subslr_state%near, &
                   nsurf => ctx%subslr_state%nsurf, &
@@ -100819,10 +100585,7 @@ contains
       real(wp)              apex   ( 3 )
       real(wp)              raydir ( 3 )
       real(wp)              vrtoff ( 3 )
-      if ( .not. allocated ( ctx%zztanutl_state ) ) then
-         allocate ( ctx%zztanutl_state )
-         call init_zztanutl_state ( ctx%zztanutl_state )
-      end if
+      if ( .not. allocated ( ctx%zztanutl_state ) ) allocate ( ctx%zztanutl_state )
       associate ( svaxis => ctx%zztanutl_state%svaxis, &
                   svcurv => ctx%zztanutl_state%svcurv, &
                   svet => ctx%zztanutl_state%svet, &
@@ -101100,10 +100863,7 @@ contains
       real(wp)              apex   ( 3 )
       real(wp)              raydir ( 3 )
       real(wp)              vrtoff ( 3 )
-      if ( .not. allocated ( ctx%zztanutl_state ) ) then
-         allocate ( ctx%zztanutl_state )
-         call init_zztanutl_state ( ctx%zztanutl_state )
-      end if
+      if ( .not. allocated ( ctx%zztanutl_state ) ) allocate ( ctx%zztanutl_state )
       associate ( svaxis => ctx%zztanutl_state%svaxis, &
                   svcurv => ctx%zztanutl_state%svcurv, &
                   svet => ctx%zztanutl_state%svet, &

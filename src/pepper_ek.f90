@@ -447,10 +447,7 @@ contains
       integer(ip)           idend
       integer(ip)           nchars
       integer(ip)           stype
-      if ( .not. allocated ( ctx%ekbseg_state ) ) then
-         allocate ( ctx%ekbseg_state )
-         call init_ekbseg_state ( ctx%ekbseg_state )
-      end if
+      if ( .not. allocated ( ctx%ekbseg_state ) ) allocate ( ctx%ekbseg_state )
       associate ( first => ctx%ekbseg_state%first, &
                   idspec => ctx%ekbseg_state%idspec )
       if ( ctx%failed() ) return
@@ -1198,10 +1195,7 @@ contains
       integer(ip) :: i
       integer(ip) :: strlns ( mxclsg )
       integer(ip) :: tmphnd
-      if ( .not. allocated ( ctx%stcc01_state ) ) then
-         allocate ( ctx%stcc01_state )
-         call init_stcc01_state ( ctx%stcc01_state )
-      end if
+      if ( .not. allocated ( ctx%stcc01_state ) ) allocate ( ctx%stcc01_state )
       associate ( dtypes => ctx%stcc01_state%dtypes, &
                   cnames => ctx%stcc01_state%cnames, &
                   tmptnm => ctx%stcc01_state%tmptnm, &
@@ -5108,10 +5102,7 @@ contains
       integer(ip) :: npad
       integer(ip) :: nlinks
       integer(ip) :: ptrloc
-      if ( .not. allocated ( ctx%zzekad06_state ) ) then
-         allocate ( ctx%zzekad06_state )
-         call init_zzekad06_state ( ctx%zzekad06_state )
-      end if
+      if ( .not. allocated ( ctx%zzekad06_state ) ) allocate ( ctx%zzekad06_state )
       associate ( padbuf => ctx%zzekad06_state%padbuf, &
                   datptr => ctx%zzekad06_state%datptr, &
                   p => ctx%zzekad06_state%p, &
@@ -41466,10 +41457,7 @@ contains
       integer(ip)           trsolv
       logical               likeop
       logical               nulval
-      if ( .not. allocated ( ctx%zzeksemc_state ) ) then
-         allocate ( ctx%zzeksemc_state )
-         call init_zzeksemc_state ( ctx%zzeksemc_state )
-      end if
+      if ( .not. allocated ( ctx%zzeksemc_state ) ) allocate ( ctx%zzeksemc_state )
       associate ( typstr => ctx%zzeksemc_state%typstr )
       error   =  .false.
       errmsg  = ' '

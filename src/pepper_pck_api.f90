@@ -1737,10 +1737,7 @@ contains
       real(wp) :: dpval
       real(wp) :: conepc
       real(wp) :: rcoef  ( 0:mxpoly-1 )
-      if ( .not. allocated ( ctx%bodeul_state ) ) then
-         allocate ( ctx%bodeul_state )
-         call init_bodeul_state ( ctx%bodeul_state )
-      end if
+      if ( .not. allocated ( ctx%bodeul_state ) ) allocate ( ctx%bodeul_state )
       associate ( ac => ctx%bodeul_state%ac, &
                   costh => ctx%bodeul_state%costh, &
                   dc => ctx%bodeul_state%dc, &

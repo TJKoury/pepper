@@ -4705,10 +4705,7 @@ contains
       integer(ip)           j
       integer(ip)           loc
       integer(ip)           p
-      if ( .not. allocated ( ctx%chgirf_cache ) ) then
-         allocate ( ctx%chgirf_cache )
-         call init_chgirf_context_state ( ctx%chgirf_cache )
-      end if
+      if ( .not. allocated ( ctx%chgirf_cache ) ) allocate ( ctx%chgirf_cache )
       associate ( ready => ctx%chgirf_cache%ready, &
                   trans => ctx%chgirf_cache%trans )
       if ( ctx%failed() ) return
@@ -5074,10 +5071,7 @@ contains
       integer(ip)           j
       integer(ip)           loc
       integer(ip)           p
-      if ( .not. allocated ( ctx%spice%chgirf_state ) ) then
-         allocate ( ctx%spice%chgirf_state )
-         call init_chgirf_state ( ctx%spice%chgirf_state )
-      end if
+      if ( .not. allocated ( ctx%spice%chgirf_state ) ) allocate ( ctx%spice%chgirf_state )
       associate ( dframe => ctx%spice%chgirf_state%dframe )
       if ( ctx%failed() ) return
 
@@ -5626,10 +5620,7 @@ contains
       integer(ip)           j
       integer(ip)           loc
       integer(ip)           p
-      if ( .not. allocated ( ctx%spice%chgirf_state ) ) then
-         allocate ( ctx%spice%chgirf_state )
-         call init_chgirf_state ( ctx%spice%chgirf_state )
-      end if
+      if ( .not. allocated ( ctx%spice%chgirf_state ) ) allocate ( ctx%spice%chgirf_state )
       associate ( dframe => ctx%spice%chgirf_state%dframe )
       if ( ctx%failed() ) return
 
@@ -5771,10 +5762,7 @@ contains
       real(wp), parameter :: c2 = -0.00059_wp
       real(wp), parameter :: c3 = 0.001813_wp
       real(wp) :: t
-      if ( .not. allocated ( ctx%zzmobliq_state ) ) then
-         allocate ( ctx%zzmobliq_state )
-         call init_zzmobliq_state ( ctx%zzmobliq_state )
-      end if
+      if ( .not. allocated ( ctx%zzmobliq_state ) ) allocate ( ctx%zzmobliq_state )
       associate ( rad => ctx%zzmobliq_state%rad, &
                   year => ctx%zzmobliq_state%year, &
                   persec => ctx%zzmobliq_state%persec, &
@@ -6111,10 +6099,7 @@ contains
       real(wp) :: arg
       real(wp) :: argrt
       real(wp) :: dd2
-      if ( .not. allocated ( ctx%zzwahr_state ) ) then
-         allocate ( ctx%zzwahr_state )
-         call init_zzwahr_state ( ctx%zzwahr_state )
-      end if
+      if ( .not. allocated ( ctx%zzwahr_state ) ) allocate ( ctx%zzwahr_state )
       associate ( angle => ctx%zzwahr_state%angle, &
                   angrt => ctx%zzwahr_state%angrt, &
                   dtwopi => ctx%zzwahr_state%dtwopi, &
@@ -6867,10 +6852,7 @@ contains
       real(wp)              temp   ( 3 )
       real(wp)              zenith ( 3 )
       integer(ip)           i
-      if ( .not. allocated ( ctx%zzdnpt_state ) ) then
-         allocate ( ctx%zzdnpt_state )
-         call init_zzdnpt_state ( ctx%zzdnpt_state )
-      end if
+      if ( .not. allocated ( ctx%zzdnpt_state ) ) allocate ( ctx%zzdnpt_state )
       associate ( gradm => ctx%zzdnpt_state%gradm, &
                   m => ctx%zzdnpt_state%m )
       if ( ctx%failed() ) return

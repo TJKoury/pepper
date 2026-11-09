@@ -10346,10 +10346,7 @@ contains
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
       logical, parameter :: isfixd ( ndspar ) = &
          [ .false., .false., .false., .false., .true., .true. ]
-      if ( .not. allocated ( ctx%spice%dsktol ) ) then
-         allocate ( ctx%spice%dsktol )
-         call init_dsktol_state ( ctx%spice%dsktol )
-      end if
+      if ( .not. allocated ( ctx%spice%dsktol ) ) allocate ( ctx%spice%dsktol )
       associate ( dppars => ctx%spice%dsktol%dppars )
       if (  ( keywrd < 1 ) .or. ( keywrd > ndspar )  ) then
 
@@ -10538,10 +10535,7 @@ contains
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
       logical, parameter :: isfixd ( ndspar ) = &
          [ .false., .false., .false., .false., .true., .true. ]
-      if ( .not. allocated ( ctx%spice%dsktol ) ) then
-         allocate ( ctx%spice%dsktol )
-         call init_dsktol_state ( ctx%spice%dsktol )
-      end if
+      if ( .not. allocated ( ctx%spice%dsktol ) ) allocate ( ctx%spice%dsktol )
       associate ( dppars => ctx%spice%dsktol%dppars )
       if ( ctx%failed() ) return
 
@@ -11950,10 +11944,7 @@ contains
       integer(ip)           e
       integer(ip)           ibase
       integer(ip)           size
-      if ( .not. allocated ( ctx%dskd02_state ) ) then
-         allocate ( ctx%dskd02_state )
-         call init_dskd02_state ( ctx%dskd02_state )
-      end if
+      if ( .not. allocated ( ctx%dskd02_state ) ) allocate ( ctx%dskd02_state )
       associate ( first => ctx%dskd02_state%first, &
                   prvbas => ctx%dskd02_state%prvbas, &
                   prvhan => ctx%dskd02_state%prvhan, &
@@ -12581,10 +12572,7 @@ contains
       integer(ip)           ibuff  ( ibfsiz )
       integer(ip)           ncgr
       integer(ip)           size
-      if ( .not. allocated ( ctx%dski02_state ) ) then
-         allocate ( ctx%dski02_state )
-         call init_dski02_state ( ctx%dski02_state )
-      end if
+      if ( .not. allocated ( ctx%dski02_state ) ) allocate ( ctx%dski02_state )
       associate ( cgscal => ctx%dski02_state%cgscal, &
                   first => ctx%dski02_state%first, &
                   np => ctx%dski02_state%np, &

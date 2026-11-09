@@ -1916,10 +1916,7 @@ contains
       integer(ip) :: blank
       logical :: minus
       integer(ip) :: code
-      if ( .not. allocated ( ctx%zzvstrng_state ) ) then
-         allocate ( ctx%zzvstrng_state )
-         call init_zzvstrng_state ( ctx%zzvstrng_state )
-      end if
+      if ( .not. allocated ( ctx%zzvstrng_state ) ) allocate ( ctx%zzvstrng_state )
       associate ( string => ctx%zzvstrng_state%string, &
                   myfill => ctx%zzvstrng_state%myfill, &
                   code0 => ctx%zzvstrng_state%code0, &
@@ -2141,10 +2138,7 @@ contains
       character(1) :: letter
       integer(ip) :: value
       integer(ip) :: lsub
-      if ( .not. allocated ( ctx%zzvstrng_state ) ) then
-         allocate ( ctx%zzvstrng_state )
-         call init_zzvstrng_state ( ctx%zzvstrng_state )
-      end if
+      if ( .not. allocated ( ctx%zzvstrng_state ) ) allocate ( ctx%zzvstrng_state )
       associate ( string => ctx%zzvstrng_state%string, &
                   myfill => ctx%zzvstrng_state%myfill, &
                   code0 => ctx%zzvstrng_state%code0, &
@@ -4037,10 +4031,7 @@ contains
       jdp001(yr,mon,dy) = jydays(yr) &
                         + jdoy  (yr, mon, dy) &
                         - 1
-      if ( .not. allocated ( ctx%jul2gr_state ) ) then
-         allocate ( ctx%jul2gr_state )
-         call init_jul2gr_state ( ctx%jul2gr_state )
-      end if
+      if ( .not. allocated ( ctx%jul2gr_state ) ) allocate ( ctx%jul2gr_state )
       associate ( first => ctx%jul2gr_state%first, &
                   rdayg => ctx%jul2gr_state%rdayg, &
                   rdayj => ctx%jul2gr_state%rdayj, &
@@ -4457,10 +4448,7 @@ contains
       jdp001(yr,mon,dy) = jydays(yr) &
                         + jdoy  (yr, mon, dy) &
                         - 1
-      if ( .not. allocated ( ctx%jul2gr_state ) ) then
-         allocate ( ctx%jul2gr_state )
-         call init_jul2gr_state ( ctx%jul2gr_state )
-      end if
+      if ( .not. allocated ( ctx%jul2gr_state ) ) allocate ( ctx%jul2gr_state )
       associate ( first => ctx%jul2gr_state%first, &
                   rdayg => ctx%jul2gr_state%rdayg, &
                   rdayj => ctx%jul2gr_state%rdayj, &
@@ -4935,10 +4923,7 @@ contains
       logical :: adjust
       real(wp) :: mydnom
       integer(ip) :: yr1
-      if ( .not. allocated ( ctx%etcal_state ) ) then
-         allocate ( ctx%etcal_state )
-         call init_etcal_state ( ctx%etcal_state )
-      end if
+      if ( .not. allocated ( ctx%etcal_state ) ) allocate ( ctx%etcal_state )
       associate ( dmnint => ctx%etcal_state%dmnint, &
                   dmxint => ctx%etcal_state%dmxint, &
                   halfd => ctx%etcal_state%halfd, &
@@ -5898,10 +5883,7 @@ contains
       integer(ip) :: dyear
       real(wp) :: tai
       integer(ip) :: rem
-      if ( .not. allocated ( ctx%ttrans_state ) ) then
-         allocate ( ctx%ttrans_state )
-         call init_ttrans_state ( ctx%ttrans_state )
-      end if
+      if ( .not. allocated ( ctx%ttrans_state ) ) allocate ( ctx%ttrans_state )
       associate ( unifrm => ctx%ttrans_state%unifrm, &
                   recog => ctx%ttrans_state%recog, &
                   parsed => ctx%ttrans_state%parsed, &
@@ -7132,10 +7114,7 @@ contains
       character(wdsize) :: myitem
       character(wdsize) :: myactn
       real(wp) :: moff
-      if ( .not. allocated ( ctx%spice%timdef_state ) ) then
-         allocate ( ctx%spice%timdef_state )
-         call init_timdef_state ( ctx%spice%timdef_state )
-      end if
+      if ( .not. allocated ( ctx%spice%timdef_state ) ) allocate ( ctx%spice%timdef_state )
       associate ( defzon => ctx%spice%timdef_state%defzon, &
                   defsys => ctx%spice%timdef_state%defsys, &
                   defcal => ctx%spice%timdef_state%defcal, &
@@ -7534,10 +7513,7 @@ contains
       logical               outtdb
       logical               outtdt
       logical               update
-      if ( .not. allocated ( ctx%unitim_state ) ) then
-         allocate ( ctx%unitim_state )
-         call init_unitim_state ( ctx%unitim_state )
-      end if
+      if ( .not. allocated ( ctx%unitim_state ) ) allocate ( ctx%unitim_state )
       associate ( bslash => ctx%unitim_state%bslash, &
                   dta => ctx%unitim_state%dta, &
                   eb => ctx%unitim_state%eb, &
@@ -8674,10 +8650,7 @@ contains
       character(2) :: hstr
       real(wp) :: hour
       integer(ip) :: gyear
-      if ( .not. allocated ( ctx%str2et_state ) ) then
-         allocate ( ctx%str2et_state )
-         call init_str2et_state ( ctx%str2et_state )
-      end if
+      if ( .not. allocated ( ctx%str2et_state ) ) allocate ( ctx%str2et_state )
       associate ( calndr => ctx%str2et_state%calndr, &
                   defsys => ctx%str2et_state%defsys, &
                   defzon => ctx%str2et_state%defzon, &

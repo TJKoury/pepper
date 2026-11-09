@@ -16247,10 +16247,7 @@ contains
       integer(ip) :: free
       integer(ip) :: ni
       character(ifnlen) :: ifname
-      if ( .not. allocated ( ctx%spcrfl_state ) ) then
-         allocate ( ctx%spcrfl_state )
-         call init_spcrfl_state ( ctx%spcrfl_state )
-      end if
+      if ( .not. allocated ( ctx%spcrfl_state ) ) allocate ( ctx%spcrfl_state )
       associate ( eot => ctx%spcrfl_state%eot, &
                   null => ctx%spcrfl_state%null, &
                   record => ctx%spcrfl_state%record, &
@@ -16560,10 +16557,7 @@ contains
       integer(ip) :: dafu
       character(maxcpr) :: temp
       integer(ip) :: bol
-      if ( .not. allocated ( ctx%spcrfl_state ) ) then
-         allocate ( ctx%spcrfl_state )
-         call init_spcrfl_state ( ctx%spcrfl_state )
-      end if
+      if ( .not. allocated ( ctx%spcrfl_state ) ) allocate ( ctx%spcrfl_state )
       associate ( eot => ctx%spcrfl_state%eot, &
                   null => ctx%spcrfl_state%null, &
                   record => ctx%spcrfl_state%record, &

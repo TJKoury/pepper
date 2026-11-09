@@ -154,10 +154,7 @@ contains
       integer(ip)           typeid
       real(wp)              tsipm  ( 6, 6 )
       real(wp)              rotate ( 3, 3 )
-      if ( .not. allocated ( ctx%zzfrmgt1_state ) ) then
-         allocate ( ctx%zzfrmgt1_state )
-         call init_zzfrmgt1_state ( ctx%zzfrmgt1_state )
-      end if
+      if ( .not. allocated ( ctx%zzfrmgt1_state ) ) allocate ( ctx%zzfrmgt1_state )
       associate ( idnt66 => ctx%zzfrmgt1_state%idnt66, &
                   pass1 => ctx%zzfrmgt1_state%pass1, &
                   versn => ctx%zzfrmgt1_state%versn )
@@ -444,10 +441,7 @@ contains
       integer(ip)           type
       integer(ip)           typeid
       real(wp)              tipm  ( 3, 3 )
-      if ( .not. allocated ( ctx%zzrotgt1_state ) ) then
-         allocate ( ctx%zzrotgt1_state )
-         call init_zzrotgt1_state ( ctx%zzrotgt1_state )
-      end if
+      if ( .not. allocated ( ctx%zzrotgt1_state ) ) allocate ( ctx%zzrotgt1_state )
       associate ( versn => ctx%zzrotgt1_state%versn )
       found = .false.
 
@@ -2223,10 +2217,7 @@ contains
                                   .and. cframe <= ninert &
                                   .and. tmpfrm > 0 &
                                   .and. tmpfrm <= ninert
-      if ( .not. allocated ( ctx%zzspkgo1_state ) ) then
-         allocate ( ctx%zzspkgo1_state )
-         call init_zzspkgo1_state ( ctx%zzspkgo1_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkgo1_state ) ) allocate ( ctx%zzspkgo1_state )
       associate ( svctr1 => ctx%zzspkgo1_state%svctr1, &
                   svref => ctx%zzspkgo1_state%svref, &
                   svrefi => ctx%zzspkgo1_state%svrefi, &
@@ -3182,10 +3173,7 @@ contains
                                   .and. cframe <= ninert &
                                   .and. tmpfrm > 0 &
                                   .and. tmpfrm <= ninert
-      if ( .not. allocated ( ctx%zzspkgp1_state ) ) then
-         allocate ( ctx%zzspkgp1_state )
-         call init_zzspkgp1_state ( ctx%zzspkgp1_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkgp1_state ) ) allocate ( ctx%zzspkgp1_state )
       associate ( svctr1 => ctx%zzspkgp1_state%svctr1, &
                   svref => ctx%zzspkgp1_state%svref, &
                   svrefi => ctx%zzspkgp1_state%svrefi, &
@@ -4298,10 +4286,7 @@ contains
       integer(ip)           refid
       logical               attblk ( nabcor )
       logical               usestl
-      if ( .not. allocated ( ctx%zzspklt1_state ) ) then
-         allocate ( ctx%zzspklt1_state )
-         call init_zzspklt1_state ( ctx%zzspklt1_state )
-      end if
+      if ( .not. allocated ( ctx%zzspklt1_state ) ) allocate ( ctx%zzspklt1_state )
       associate ( pass1 => ctx%zzspklt1_state%pass1, &
                   prvcor => ctx%zzspklt1_state%prvcor, &
                   usecn => ctx%zzspklt1_state%usecn, &
@@ -5190,10 +5175,7 @@ contains
       integer(ip)           ltsign
       integer(ip)           maxitr
       integer(ip)           refid
-      if ( .not. allocated ( ctx%zzspkpa1_state ) ) then
-         allocate ( ctx%zzspkpa1_state )
-         call init_zzspkpa1_state ( ctx%zzspkpa1_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkpa1_state ) ) allocate ( ctx%zzspkpa1_state )
       associate ( first => ctx%zzspkpa1_state%first, &
                   flags => ctx%zzspkpa1_state%flags, &
                   prvcor => ctx%zzspkpa1_state%prvcor, &
@@ -6056,10 +6038,7 @@ contains
       real(wp)              pcorr  ( 3 )
       integer(ip)           refid
       logical               attblk ( nabcor )
-      if ( .not. allocated ( ctx%zzspkas1_state ) ) then
-         allocate ( ctx%zzspkas1_state )
-         call init_zzspkas1_state ( ctx%zzspkas1_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkas1_state ) ) allocate ( ctx%zzspkas1_state )
       associate ( first => ctx%zzspkas1_state%first, &
                   prvcor => ctx%zzspkas1_state%prvcor, &
                   uselt => ctx%zzspkas1_state%uselt, &
@@ -6959,10 +6938,7 @@ contains
       integer(ip) :: typeid
       integer(ip) :: reqfrm
       integer(ip) :: center
-      if ( .not. allocated ( ctx%zzspkzp1_state ) ) then
-         allocate ( ctx%zzspkzp1_state )
-         call init_zzspkzp1_state ( ctx%zzspkzp1_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkzp1_state ) ) allocate ( ctx%zzspkzp1_state )
       associate ( fj2000 => ctx%zzspkzp1_state%fj2000, &
                   first => ctx%zzspkzp1_state%first, &
                   svctr1 => ctx%zzspkzp1_state%svctr1, &
@@ -7573,10 +7549,7 @@ contains
       integer(ip)           i
       integer(ip)           refid
       logical               attblk ( nabcor )
-      if ( .not. allocated ( ctx%zzspkac1_state ) ) then
-         allocate ( ctx%zzspkac1_state )
-         call init_zzspkac1_state ( ctx%zzspkac1_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkac1_state ) ) allocate ( ctx%zzspkac1_state )
       associate ( first => ctx%zzspkac1_state%first, &
                   prvcor => ctx%zzspkac1_state%prvcor, &
                   usestl => ctx%zzspkac1_state%usestl )
@@ -8661,10 +8634,7 @@ contains
       integer(ip) :: typeid
       integer(ip) :: reqfrm
       integer(ip) :: center
-      if ( .not. allocated ( ctx%zzspkez1_state ) ) then
-         allocate ( ctx%zzspkez1_state )
-         call init_zzspkez1_state ( ctx%zzspkez1_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkez1_state ) ) allocate ( ctx%zzspkez1_state )
       associate ( prvcor => ctx%zzspkez1_state%prvcor, &
                   fj2000 => ctx%zzspkez1_state%fj2000, &
                   usegeo => ctx%zzspkez1_state%usegeo, &
@@ -9312,10 +9282,7 @@ contains
       logical               negate
       logical               ofdate
       logical               trueeq
-      if ( .not. allocated ( ctx%zzdynfr0_state ) ) then
-         allocate ( ctx%zzdynfr0_state )
-         call init_zzdynfr0_state ( ctx%zzdynfr0_state )
-      end if
+      if ( .not. allocated ( ctx%zzdynfr0_state ) ) allocate ( ctx%zzdynfr0_state )
       associate ( axes => ctx%zzdynfr0_state%axes, &
                   earth => ctx%zzdynfr0_state%earth, &
                   first => ctx%zzdynfr0_state%first, &
@@ -11108,10 +11075,7 @@ contains
       integer(ip)           typeid
       real(wp)              tsipm  ( 6, 6 )
       real(wp)              rotate ( 3, 3 )
-      if ( .not. allocated ( ctx%zzfrmgt0_state ) ) then
-         allocate ( ctx%zzfrmgt0_state )
-         call init_zzfrmgt0_state ( ctx%zzfrmgt0_state )
-      end if
+      if ( .not. allocated ( ctx%zzfrmgt0_state ) ) allocate ( ctx%zzfrmgt0_state )
       associate ( idnt66 => ctx%zzfrmgt0_state%idnt66, &
                   pass1 => ctx%zzfrmgt0_state%pass1, &
                   versn => ctx%zzfrmgt0_state%versn )
@@ -12406,10 +12370,7 @@ contains
                                   .and. cframe <= ninert &
                                   .and. tmpfrm > 0 &
                                   .and. tmpfrm <= ninert
-      if ( .not. allocated ( ctx%zzspkgo0_state ) ) then
-         allocate ( ctx%zzspkgo0_state )
-         call init_zzspkgo0_state ( ctx%zzspkgo0_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkgo0_state ) ) allocate ( ctx%zzspkgo0_state )
       associate ( svctr1 => ctx%zzspkgo0_state%svctr1, &
                   svref => ctx%zzspkgo0_state%svref, &
                   svrefi => ctx%zzspkgo0_state%svrefi, &
@@ -13523,10 +13484,7 @@ contains
       integer(ip)           refid
       logical               attblk ( nabcor )
       logical               usestl
-      if ( .not. allocated ( ctx%zzspklt0_state ) ) then
-         allocate ( ctx%zzspklt0_state )
-         call init_zzspklt0_state ( ctx%zzspklt0_state )
-      end if
+      if ( .not. allocated ( ctx%zzspklt0_state ) ) allocate ( ctx%zzspklt0_state )
       associate ( pass1 => ctx%zzspklt0_state%pass1, &
                   prvcor => ctx%zzspklt0_state%prvcor, &
                   usecn => ctx%zzspklt0_state%usecn, &
@@ -14507,10 +14465,7 @@ contains
       real(wp)              pcorr  ( 3 )
       integer(ip)           refid
       logical               attblk ( nabcor )
-      if ( .not. allocated ( ctx%zzspkas0_state ) ) then
-         allocate ( ctx%zzspkas0_state )
-         call init_zzspkas0_state ( ctx%zzspkas0_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkas0_state ) ) allocate ( ctx%zzspkas0_state )
       associate ( first => ctx%zzspkas0_state%first, &
                   prvcor => ctx%zzspkas0_state%prvcor, &
                   uselt => ctx%zzspkas0_state%uselt, &
@@ -15089,10 +15044,7 @@ contains
       integer(ip)           i
       integer(ip)           refid
       logical               attblk ( nabcor )
-      if ( .not. allocated ( ctx%zzspkac0_state ) ) then
-         allocate ( ctx%zzspkac0_state )
-         call init_zzspkac0_state ( ctx%zzspkac0_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkac0_state ) ) allocate ( ctx%zzspkac0_state )
       associate ( first => ctx%zzspkac0_state%first, &
                   prvcor => ctx%zzspkac0_state%prvcor, &
                   usestl => ctx%zzspkac0_state%usestl )
@@ -16177,10 +16129,7 @@ contains
       integer(ip) :: typeid
       integer(ip) :: reqfrm
       integer(ip) :: center
-      if ( .not. allocated ( ctx%zzspkez0_state ) ) then
-         allocate ( ctx%zzspkez0_state )
-         call init_zzspkez0_state ( ctx%zzspkez0_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkez0_state ) ) allocate ( ctx%zzspkez0_state )
       associate ( prvcor => ctx%zzspkez0_state%prvcor, &
                   fj2000 => ctx%zzspkez0_state%fj2000, &
                   usegeo => ctx%zzspkez0_state%usegeo, &
@@ -16810,10 +16759,7 @@ contains
       logical               negate
       logical               ofdate
       logical               trueeq
-      if ( .not. allocated ( ctx%zzdynrt0_state ) ) then
-         allocate ( ctx%zzdynrt0_state )
-         call init_zzdynrt0_state ( ctx%zzdynrt0_state )
-      end if
+      if ( .not. allocated ( ctx%zzdynrt0_state ) ) allocate ( ctx%zzdynrt0_state )
       associate ( axes => ctx%zzdynrt0_state%axes, &
                   earth => ctx%zzdynrt0_state%earth, &
                   first => ctx%zzdynrt0_state%first, &
@@ -18437,10 +18383,7 @@ contains
       integer(ip)           type
       integer(ip)           typeid
       real(wp)              tipm  ( 3, 3 )
-      if ( .not. allocated ( ctx%zzrotgt0_state ) ) then
-         allocate ( ctx%zzrotgt0_state )
-         call init_zzrotgt0_state ( ctx%zzrotgt0_state )
-      end if
+      if ( .not. allocated ( ctx%zzrotgt0_state ) ) allocate ( ctx%zzrotgt0_state )
       associate ( versn => ctx%zzrotgt0_state%versn )
       found = .false.
 
@@ -19415,10 +19358,7 @@ contains
                                   .and. cframe <= ninert &
                                   .and. tmpfrm > 0 &
                                   .and. tmpfrm <= ninert
-      if ( .not. allocated ( ctx%zzspkgp0_state ) ) then
-         allocate ( ctx%zzspkgp0_state )
-         call init_zzspkgp0_state ( ctx%zzspkgp0_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkgp0_state ) ) allocate ( ctx%zzspkgp0_state )
       associate ( svctr1 => ctx%zzspkgp0_state%svctr1, &
                   svref => ctx%zzspkgp0_state%svref, &
                   svrefi => ctx%zzspkgp0_state%svrefi, &
@@ -20654,10 +20594,7 @@ contains
       integer(ip)           ltsign
       integer(ip)           maxitr
       integer(ip)           refid
-      if ( .not. allocated ( ctx%zzspkpa0_state ) ) then
-         allocate ( ctx%zzspkpa0_state )
-         call init_zzspkpa0_state ( ctx%zzspkpa0_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkpa0_state ) ) allocate ( ctx%zzspkpa0_state )
       associate ( first => ctx%zzspkpa0_state%first, &
                   flags => ctx%zzspkpa0_state%flags, &
                   prvcor => ctx%zzspkpa0_state%prvcor, &
@@ -21596,10 +21533,7 @@ contains
       integer(ip) :: typeid
       integer(ip) :: reqfrm
       integer(ip) :: center
-      if ( .not. allocated ( ctx%zzspkzp0_state ) ) then
-         allocate ( ctx%zzspkzp0_state )
-         call init_zzspkzp0_state ( ctx%zzspkzp0_state )
-      end if
+      if ( .not. allocated ( ctx%zzspkzp0_state ) ) allocate ( ctx%zzspkzp0_state )
       associate ( fj2000 => ctx%zzspkzp0_state%fj2000, &
                   first => ctx%zzspkzp0_state%first, &
                   svctr1 => ctx%zzspkzp0_state%svctr1, &
@@ -22167,10 +22101,7 @@ contains
       logical               negate
       logical               ofdate
       logical               trueeq
-      if ( .not. allocated ( ctx%zzdynfrm_state ) ) then
-         allocate ( ctx%zzdynfrm_state )
-         call init_zzdynfrm_state ( ctx%zzdynfrm_state )
-      end if
+      if ( .not. allocated ( ctx%zzdynfrm_state ) ) allocate ( ctx%zzdynfrm_state )
       associate ( axes => ctx%zzdynfrm_state%axes, &
                   earth => ctx%zzdynfrm_state%earth, &
                   first => ctx%zzdynfrm_state%first, &
@@ -24218,10 +24149,7 @@ contains
       logical               negate
       logical               ofdate
       logical               trueeq
-      if ( .not. allocated ( ctx%zzdynrot_state ) ) then
-         allocate ( ctx%zzdynrot_state )
-         call init_zzdynrot_state ( ctx%zzdynrot_state )
-      end if
+      if ( .not. allocated ( ctx%zzdynrot_state ) ) allocate ( ctx%zzdynrot_state )
       associate ( axes => ctx%zzdynrot_state%axes, &
                   earth => ctx%zzdynrot_state%earth, &
                   first => ctx%zzdynrot_state%first, &

@@ -233,10 +233,7 @@ contains
       integer(ip)           n
       integer(ip)           nleap
       logical               found    ( 5 )
-      if ( .not. allocated ( ctx%deltet_state ) ) then
-         allocate ( ctx%deltet_state )
-         call init_deltet_state ( ctx%deltet_state )
-      end if
+      if ( .not. allocated ( ctx%deltet_state ) ) allocate ( ctx%deltet_state )
       associate ( missed => ctx%deltet_state%missed )
       if ( ctx%failed() ) return
 
@@ -806,10 +803,7 @@ contains
       integer(ip) :: year
       character(4) :: fmt
       integer(ip) :: ehr
-      if ( .not. allocated ( ctx%et2utc_state ) ) then
-         allocate ( ctx%et2utc_state )
-         call init_et2utc_state ( ctx%et2utc_state )
-      end if
+      if ( .not. allocated ( ctx%et2utc_state ) ) allocate ( ctx%et2utc_state )
       associate ( str => ctx%et2utc_state%str, &
                   tvec => ctx%et2utc_state%tvec )
       if ( ctx%failed() ) return
@@ -4258,10 +4252,7 @@ contains
       logical :: dozone
       real(wp) :: tempd
       character(16) :: bastyp
-      if ( .not. allocated ( ctx%timout_state ) ) then
-         allocate ( ctx%timout_state )
-         call init_timout_state ( ctx%timout_state )
-      end if
+      if ( .not. allocated ( ctx%timout_state ) ) allocate ( ctx%timout_state )
       associate ( first => ctx%timout_state%first, &
                   marks => ctx%timout_state%marks, &
                   class => ctx%timout_state%class, &

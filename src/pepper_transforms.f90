@@ -160,10 +160,7 @@ contains
       integer(ip)           typeid
       real(wp)              tsipm  ( 6, 6 )
       real(wp)              rotate ( 3, 3 )
-      if ( .not. allocated ( ctx%frmget_state ) ) then
-         allocate ( ctx%frmget_state )
-         call init_frmget_state ( ctx%frmget_state )
-      end if
+      if ( .not. allocated ( ctx%frmget_state ) ) allocate ( ctx%frmget_state )
       associate ( idnt66 => ctx%frmget_state%idnt66, &
                   pass1 => ctx%frmget_state%pass1, &
                   versn => ctx%frmget_state%versn )
@@ -461,10 +458,7 @@ contains
       integer(ip)           type
       integer(ip)           typeid
       real(wp)              tipm  ( 3, 3 )
-      if ( .not. allocated ( ctx%rotget_state ) ) then
-         allocate ( ctx%rotget_state )
-         call init_rotget_state ( ctx%rotget_state )
-      end if
+      if ( .not. allocated ( ctx%rotget_state ) ) allocate ( ctx%rotget_state )
       associate ( versn => ctx%rotget_state%versn )
       found = .false.
 
@@ -1974,10 +1968,7 @@ contains
       integer(ip), parameter :: frnmln = 32
       integer(ip)           fcode
       integer(ip)           tcode
-      if ( .not. allocated ( ctx%pxform_state ) ) then
-         allocate ( ctx%pxform_state )
-         call init_pxform_state ( ctx%pxform_state )
-      end if
+      if ( .not. allocated ( ctx%pxform_state ) ) allocate ( ctx%pxform_state )
       associate ( svctr1 => ctx%pxform_state%svctr1, &
                   svfrom => ctx%pxform_state%svfrom, &
                   svfcod => ctx%pxform_state%svfcod, &
@@ -2211,10 +2202,7 @@ contains
       integer(ip), parameter :: frnmln = 32
       integer(ip)           fcode
       integer(ip)           tcode
-      if ( .not. allocated ( ctx%sxform_state ) ) then
-         allocate ( ctx%sxform_state )
-         call init_sxform_state ( ctx%sxform_state )
-      end if
+      if ( .not. allocated ( ctx%sxform_state ) ) allocate ( ctx%sxform_state )
       associate ( svctr1 => ctx%sxform_state%svctr1, &
                   svfrom => ctx%sxform_state%svfrom, &
                   svfcod => ctx%sxform_state%svfcod, &

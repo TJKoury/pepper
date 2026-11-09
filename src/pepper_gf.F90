@@ -903,10 +903,7 @@ contains
       real(wp)              srfvec ( 3 )
       integer(ip)           crdidx
       integer(ip)           sysidx
-      if ( .not. allocated ( ctx%zzgfcoq_state ) ) then
-         allocate ( ctx%zzgfcoq_state )
-         call init_zzgfcoq_state ( ctx%zzgfcoq_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcoq_state ) ) allocate ( ctx%zzgfcoq_state )
       associate ( ctrnam => ctx%zzgfcoq_state%ctrnam, &
                   first => ctx%zzgfcoq_state%first, &
                   obsnam => ctx%zzgfcoq_state%obsnam, &
@@ -4595,10 +4592,7 @@ contains
       integer(ip) :: svtarg
       integer(ip) :: svobs
       integer(ip) :: svilum
-      if ( .not. allocated ( ctx%zzgfilu_state ) ) then
-         allocate ( ctx%zzgfilu_state )
-         call init_zzgfilu_state ( ctx%zzgfilu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfilu_state ) ) allocate ( ctx%zzgfilu_state )
       associate ( angnms => ctx%zzgfilu_state%angnms, &
                   svaidx => ctx%zzgfilu_state%svaidx, &
                   svcorr => ctx%zzgfilu_state%svcorr, &
@@ -4973,10 +4967,7 @@ contains
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! Flag indicating whether illumination angle is decreasing.
       procedure(gf_scalar) :: udfunc  !! Placeholder external routine argument.
-      if ( .not. allocated ( ctx%zzgfilu_state ) ) then
-         allocate ( ctx%zzgfilu_state )
-         call init_zzgfilu_state ( ctx%zzgfilu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfilu_state ) ) allocate ( ctx%zzgfilu_state )
       associate ( svaidx => ctx%zzgfilu_state%svaidx, &
                   svcorr => ctx%zzgfilu_state%svcorr, &
                   svinam => ctx%zzgfilu_state%svinam, &
@@ -5148,10 +5139,7 @@ contains
       integer(ip)           fxtyid
       integer(ip)           fxcent
       logical               found
-      if ( .not. allocated ( ctx%zzgfilu_state ) ) then
-         allocate ( ctx%zzgfilu_state )
-         call init_zzgfilu_state ( ctx%zzgfilu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfilu_state ) ) allocate ( ctx%zzgfilu_state )
       associate ( svaidx => ctx%zzgfilu_state%svaidx, &
                   svcorr => ctx%zzgfilu_state%svcorr, &
                   svinam => ctx%zzgfilu_state%svinam, &
@@ -5856,10 +5844,7 @@ contains
       logical               found
       logical               pntocc
       logical               pri
-      if ( .not. allocated ( ctx%zzgfocu_state ) ) then
-         allocate ( ctx%zzgfocu_state )
-         call init_zzgfocu_state ( ctx%zzgfocu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfocu_state ) ) allocate ( ctx%zzgfocu_state )
       associate ( svback => ctx%zzgfocu_state%svback, &
                   svbfrm => ctx%zzgfocu_state%svbfrm, &
                   svbmth => ctx%zzgfocu_state%svbmth, &
@@ -6555,10 +6540,7 @@ contains
       logical               found
       logical               pntocc
       logical               pri
-      if ( .not. allocated ( ctx%zzgfocu_state ) ) then
-         allocate ( ctx%zzgfocu_state )
-         call init_zzgfocu_state ( ctx%zzgfocu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfocu_state ) ) allocate ( ctx%zzgfocu_state )
       associate ( ncalls => ctx%zzgfocu_state%ncalls, &
                   svback => ctx%zzgfocu_state%svback, &
                   svbfrm => ctx%zzgfocu_state%svbfrm, &
@@ -9927,10 +9909,7 @@ contains
          [ character(32) :: 'POINT', 'SPHERE' ]
       integer(ip), parameter :: point = 1
       integer(ip), parameter :: sphere = 2
-      if ( .not. allocated ( ctx%zzgfspu_state ) ) then
-         allocate ( ctx%zzgfspu_state )
-         call init_zzgfspu_state ( ctx%zzgfspu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfspu_state ) ) allocate ( ctx%zzgfspu_state )
       associate ( svabcr => ctx%zzgfspu_state%svabcr, &
                   svbod1 => ctx%zzgfspu_state%svbod1, &
                   svbod2 => ctx%zzgfspu_state%svbod2, &
@@ -10328,10 +10307,7 @@ contains
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! .TRUE. if angular separation is decreasing .FALSE. otherwise.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfspu_state ) ) then
-         allocate ( ctx%zzgfspu_state )
-         call init_zzgfspu_state ( ctx%zzgfspu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfspu_state ) ) allocate ( ctx%zzgfspu_state )
       associate ( svabcr => ctx%zzgfspu_state%svabcr, &
                   svbod1 => ctx%zzgfspu_state%svbod1, &
                   svbod2 => ctx%zzgfspu_state%svbod2, &
@@ -10504,10 +10480,7 @@ contains
          [ character(32) :: 'POINT', 'SPHERE' ]
       integer(ip), parameter :: point = 1
       integer(ip), parameter :: sphere = 2
-      if ( .not. allocated ( ctx%zzgfspu_state ) ) then
-         allocate ( ctx%zzgfspu_state )
-         call init_zzgfspu_state ( ctx%zzgfspu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfspu_state ) ) allocate ( ctx%zzgfspu_state )
       associate ( svabcr => ctx%zzgfspu_state%svabcr, &
                   svbod1 => ctx%zzgfspu_state%svbod1, &
                   svbod2 => ctx%zzgfspu_state%svbod2, &
@@ -10646,10 +10619,7 @@ contains
          [ character(32) :: 'POINT', 'SPHERE' ]
       integer(ip), parameter :: point = 1
       integer(ip), parameter :: sphere = 2
-      if ( .not. allocated ( ctx%zzgfspu_state ) ) then
-         allocate ( ctx%zzgfspu_state )
-         call init_zzgfspu_state ( ctx%zzgfspu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfspu_state ) ) allocate ( ctx%zzgfspu_state )
       associate ( svabcr => ctx%zzgfspu_state%svabcr, &
                   svbod1 => ctx%zzgfspu_state%svbod1, &
                   svbod2 => ctx%zzgfspu_state%svbod2, &
@@ -11036,10 +11006,7 @@ contains
       logical               uselt
       logical               usestl
       logical               xmit
-      if ( .not. allocated ( ctx%zzgfssin_state ) ) then
-         allocate ( ctx%zzgfssin_state )
-         call init_zzgfssin_state ( ctx%zzgfssin_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfssin_state ) ) allocate ( ctx%zzgfssin_state )
       associate ( first => ctx%zzgfssin_state%first, &
                   svobs => ctx%zzgfssin_state%svobs, &
                   prvobs => ctx%zzgfssin_state%prvobs, &
@@ -11826,10 +11793,7 @@ contains
       logical               uselt
       logical               usestl
       logical               xmit
-      if ( .not. allocated ( ctx%zzgfssob_state ) ) then
-         allocate ( ctx%zzgfssob_state )
-         call init_zzgfssob_state ( ctx%zzgfssob_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfssob_state ) ) allocate ( ctx%zzgfssob_state )
       associate ( first => ctx%zzgfssob_state%first, &
                   svobs => ctx%zzgfssob_state%svobs, &
                   prvobs => ctx%zzgfssob_state%prvobs, &
@@ -13832,10 +13796,7 @@ contains
       use pepper_strings, only: eqstr
       use pepper_inc_gf
       implicit none
-      if ( .not. allocated ( ctx%fovtrg_state ) ) then
-         allocate ( ctx%fovtrg_state )
-         call init_fovtrg_state ( ctx%fovtrg_state )
-      end if
+      if ( .not. allocated ( ctx%fovtrg_state ) ) allocate ( ctx%fovtrg_state )
       associate ( raydir => ctx%fovtrg_state%raydir )
       if ( ctx%failed() ) return
 
@@ -18291,10 +18252,7 @@ contains
       logical               attblk ( nabcor )
       logical               fnd
       character(32)         xbcorr
-      if ( .not. allocated ( ctx%phaseq_state ) ) then
-         allocate ( ctx%phaseq_state )
-         call init_phaseq_state ( ctx%phaseq_state )
-      end if
+      if ( .not. allocated ( ctx%phaseq_state ) ) allocate ( ctx%phaseq_state )
       associate ( svctr1 => ctx%phaseq_state%svctr1, &
                   svtarg => ctx%phaseq_state%svtarg, &
                   svtgid => ctx%phaseq_state%svtgid, &
@@ -19118,10 +19076,7 @@ contains
       real(wp)              state  ( 6 )
       logical               attblk ( nabcor )
       logical               found
-      if ( .not. allocated ( ctx%zzgfdiu_state ) ) then
-         allocate ( ctx%zzgfdiu_state )
-         call init_zzgfdiu_state ( ctx%zzgfdiu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfdiu_state ) ) allocate ( ctx%zzgfdiu_state )
       associate ( svcorr => ctx%zzgfdiu_state%svcorr, &
                   svobs => ctx%zzgfdiu_state%svobs, &
                   svtarg => ctx%zzgfdiu_state%svtarg )
@@ -19321,10 +19276,7 @@ contains
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! Flag indicating whether distance is decreasing.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfdiu_state ) ) then
-         allocate ( ctx%zzgfdiu_state )
-         call init_zzgfdiu_state ( ctx%zzgfdiu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfdiu_state ) ) allocate ( ctx%zzgfdiu_state )
       associate ( svcorr => ctx%zzgfdiu_state%svcorr, &
                   svobs => ctx%zzgfdiu_state%svobs, &
                   svtarg => ctx%zzgfdiu_state%svtarg )
@@ -19444,10 +19396,7 @@ contains
       real(wp)              state  ( 6 )
       logical               attblk ( nabcor )
       logical               found
-      if ( .not. allocated ( ctx%zzgfdiu_state ) ) then
-         allocate ( ctx%zzgfdiu_state )
-         call init_zzgfdiu_state ( ctx%zzgfdiu_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfdiu_state ) ) allocate ( ctx%zzgfdiu_state )
       associate ( svcorr => ctx%zzgfdiu_state%svcorr, &
                   svobs => ctx%zzgfdiu_state%svobs, &
                   svtarg => ctx%zzgfdiu_state%svtarg )
@@ -19813,10 +19762,7 @@ contains
       real(wp)              uvec (3)
       integer(ip)           i
       logical               found
-      if ( .not. allocated ( ctx%zzgfpau_state ) ) then
-         allocate ( ctx%zzgfpau_state )
-         call init_zzgfpau_state ( ctx%zzgfpau_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfpau_state ) ) allocate ( ctx%zzgfpau_state )
       associate ( svablk => ctx%zzgfpau_state%svablk, &
                   svabco => ctx%zzgfpau_state%svabco, &
                   svtarg => ctx%zzgfpau_state%svtarg, &
@@ -20036,10 +19982,7 @@ contains
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! .TRUE. if phase angle is decreasing, .FALSE. otherwise.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfpau_state ) ) then
-         allocate ( ctx%zzgfpau_state )
-         call init_zzgfpau_state ( ctx%zzgfpau_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfpau_state ) ) allocate ( ctx%zzgfpau_state )
       associate ( svablk => ctx%zzgfpau_state%svablk, &
                   svabco => ctx%zzgfpau_state%svabco, &
                   svtarg => ctx%zzgfpau_state%svtarg, &
@@ -20219,10 +20162,7 @@ contains
       real(wp)              uvec (3)
       integer(ip)           i
       logical               found
-      if ( .not. allocated ( ctx%zzgfpau_state ) ) then
-         allocate ( ctx%zzgfpau_state )
-         call init_zzgfpau_state ( ctx%zzgfpau_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfpau_state ) ) allocate ( ctx%zzgfpau_state )
       associate ( svabco => ctx%zzgfpau_state%svabco, &
                   svtarg => ctx%zzgfpau_state%svtarg, &
                   svobs => ctx%zzgfpau_state%svobs, &
@@ -20325,10 +20265,7 @@ contains
       real(wp)              uvec (3)
       integer(ip)           i
       logical               found
-      if ( .not. allocated ( ctx%zzgfpau_state ) ) then
-         allocate ( ctx%zzgfpau_state )
-         call init_zzgfpau_state ( ctx%zzgfpau_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfpau_state ) ) allocate ( ctx%zzgfpau_state )
       associate ( svablk => ctx%zzgfpau_state%svablk, &
                   svabco => ctx%zzgfpau_state%svabco, &
                   svtarg => ctx%zzgfpau_state%svtarg, &
@@ -20853,10 +20790,7 @@ contains
       procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
       procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
       procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
-      if ( .not. allocated ( ctx%zzgfrel_state ) ) then
-         allocate ( ctx%zzgfrel_state )
-         call init_zzgfrel_state ( ctx%zzgfrel_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrel_state ) ) allocate ( ctx%zzgfrel_state )
       associate ( cnames => ctx%zzgfrel_state%cnames, &
                   cstep => ctx%zzgfrel_state%cstep )
       if ( ctx%failed() ) return
@@ -21946,10 +21880,7 @@ contains
       procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
       procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
       procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
-      if ( .not. allocated ( ctx%zzgfrelx_state ) ) then
-         allocate ( ctx%zzgfrelx_state )
-         call init_zzgfrelx_state ( ctx%zzgfrelx_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrelx_state ) ) allocate ( ctx%zzgfrelx_state )
       associate ( cnames => ctx%zzgfrelx_state%cnames, &
                   cstep => ctx%zzgfrelx_state%cstep )
       if ( ctx%failed() ) return
@@ -22868,10 +22799,7 @@ contains
       real(wp)              cursec
       real(wp)              fractn
       real(wp)              tvec ( 6 )
-      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) then
-         allocate ( ctx%zzgfrpwk_state )
-         call init_zzgfrpwk_state ( ctx%zzgfrpwk_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( calls => ctx%zzgfrpwk_state%calls, &
                   check => ctx%zzgfrpwk_state%check, &
                   done => ctx%zzgfrpwk_state%done, &
@@ -23046,10 +22974,7 @@ contains
       real(wp)              cursec
       real(wp)              fractn
       real(wp)              tvec ( 6 )
-      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) then
-         allocate ( ctx%zzgfrpwk_state )
-         call init_zzgfrpwk_state ( ctx%zzgfrpwk_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( calls => ctx%zzgfrpwk_state%calls, &
                   check => ctx%zzgfrpwk_state%check, &
                   done => ctx%zzgfrpwk_state%done, &
@@ -23265,10 +23190,7 @@ contains
       real(wp)              cursec
       real(wp)              fractn
       real(wp)              tvec ( 6 )
-      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) then
-         allocate ( ctx%zzgfrpwk_state )
-         call init_zzgfrpwk_state ( ctx%zzgfrpwk_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( check => ctx%zzgfrpwk_state%check, &
                   finish => ctx%zzgfrpwk_state%finish, &
                   start => ctx%zzgfrpwk_state%start, &
@@ -23373,10 +23295,7 @@ contains
       real(wp)              cursec
       real(wp)              fractn
       real(wp)              tvec ( 6 )
-      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) then
-         allocate ( ctx%zzgfrpwk_state )
-         call init_zzgfrpwk_state ( ctx%zzgfrpwk_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( first => ctx%zzgfrpwk_state%first, &
                   stdout => ctx%zzgfrpwk_state%stdout, &
                   svunit => ctx%zzgfrpwk_state%svunit )
@@ -23497,10 +23416,7 @@ contains
       real(wp)              cursec
       real(wp)              fractn
       real(wp)              tvec ( 6 )
-      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) then
-         allocate ( ctx%zzgfrpwk_state )
-         call init_zzgfrpwk_state ( ctx%zzgfrpwk_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( check => ctx%zzgfrpwk_state%check, &
                   entire => ctx%zzgfrpwk_state%entire, &
                   finish => ctx%zzgfrpwk_state%finish, &
@@ -23919,10 +23835,7 @@ contains
       integer(ip)           n
       logical               attblk ( nabcor )
       logical               found
-      if ( .not. allocated ( ctx%zzgfrru_state ) ) then
-         allocate ( ctx%zzgfrru_state )
-         call init_zzgfrru_state ( ctx%zzgfrru_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrru_state ) ) allocate ( ctx%zzgfrru_state )
       associate ( svabco => ctx%zzgfrru_state%svabco, &
                   svtarg => ctx%zzgfrru_state%svtarg, &
                   svref => ctx%zzgfrru_state%svref, &
@@ -24134,10 +24047,7 @@ contains
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! true if range rate is decreasing, false otherwise.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfrru_state ) ) then
-         allocate ( ctx%zzgfrru_state )
-         call init_zzgfrru_state ( ctx%zzgfrru_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrru_state ) ) allocate ( ctx%zzgfrru_state )
       associate ( svabco => ctx%zzgfrru_state%svabco, &
                   svtarg => ctx%zzgfrru_state%svtarg, &
                   svref => ctx%zzgfrru_state%svref, &
@@ -24282,10 +24192,7 @@ contains
       integer(ip)           n
       logical               attblk ( nabcor )
       logical               found
-      if ( .not. allocated ( ctx%zzgfrru_state ) ) then
-         allocate ( ctx%zzgfrru_state )
-         call init_zzgfrru_state ( ctx%zzgfrru_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrru_state ) ) allocate ( ctx%zzgfrru_state )
       associate ( svabco => ctx%zzgfrru_state%svabco, &
                   svtarg => ctx%zzgfrru_state%svtarg, &
                   svobs => ctx%zzgfrru_state%svobs )
@@ -24383,10 +24290,7 @@ contains
       integer(ip)           n
       logical               attblk ( nabcor )
       logical               found
-      if ( .not. allocated ( ctx%zzgfrru_state ) ) then
-         allocate ( ctx%zzgfrru_state )
-         call init_zzgfrru_state ( ctx%zzgfrru_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfrru_state ) ) allocate ( ctx%zzgfrru_state )
       associate ( svabco => ctx%zzgfrru_state%svabco, &
                   svtarg => ctx%zzgfrru_state%svtarg, &
                   svobs => ctx%zzgfrru_state%svobs, &
@@ -28272,10 +28176,7 @@ contains
       integer(ip)           short
       integer(ip)           stdout
       integer(ip)           unit
-      if ( .not. allocated ( ctx%gfrprt_state ) ) then
-         allocate ( ctx%gfrprt_state )
-         call init_gfrprt_state ( ctx%gfrprt_state )
-      end if
+      if ( .not. allocated ( ctx%gfrprt_state ) ) allocate ( ctx%gfrprt_state )
       associate ( copyb => ctx%gfrprt_state%copyb, &
                   copye => ctx%gfrprt_state%copye, &
                   t0 => ctx%gfrprt_state%t0, &
@@ -28529,10 +28430,7 @@ contains
       integer(ip)           short
       integer(ip)           stdout
       integer(ip)           unit
-      if ( .not. allocated ( ctx%gfrprt_state ) ) then
-         allocate ( ctx%gfrprt_state )
-         call init_gfrprt_state ( ctx%gfrprt_state )
-      end if
+      if ( .not. allocated ( ctx%gfrprt_state ) ) allocate ( ctx%gfrprt_state )
       associate ( t0 => ctx%gfrprt_state%t0, &
                   remain => ctx%gfrprt_state%remain )
       if ( ctx%failed() ) return
@@ -28707,10 +28605,7 @@ contains
       integer(ip)           stdout
       integer(ip)           tcheck
       integer(ip)           unit
-      if ( .not. allocated ( ctx%gfrprt_state ) ) then
-         allocate ( ctx%gfrprt_state )
-         call init_gfrprt_state ( ctx%gfrprt_state )
-      end if
+      if ( .not. allocated ( ctx%gfrprt_state ) ) allocate ( ctx%gfrprt_state )
       associate ( copyb => ctx%gfrprt_state%copyb, &
                   copye => ctx%gfrprt_state%copye )
       if ( ctx%failed() ) return
@@ -29600,10 +29495,7 @@ contains
       logical, parameter :: rpt = .false.
       real(wp)              tol
       logical               ok
-      if ( .not. allocated ( ctx%gftfov_state ) ) then
-         allocate ( ctx%gftfov_state )
-         call init_gftfov_state ( ctx%gftfov_state )
-      end if
+      if ( .not. allocated ( ctx%gftfov_state ) ) allocate ( ctx%gftfov_state )
       associate ( raydir => ctx%gftfov_state%raydir )
       if ( ctx%failed() ) return
 
@@ -32417,10 +32309,7 @@ contains
       integer(ip)           sysidx
       logical               attblk ( abatsz )
       logical               found
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
-         allocate ( ctx%zzgfcou_state )
-         call init_zzgfcou_state ( ctx%zzgfcou_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
       associate ( svcidx => ctx%zzgfcou_state%svcidx, &
                   svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
@@ -32968,10 +32857,7 @@ contains
       integer(ip)           sysidx
       logical               attblk ( abatsz )
       logical               found
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
-         allocate ( ctx%zzgfcou_state )
-         call init_zzgfcou_state ( ctx%zzgfcou_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
       associate ( svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
@@ -33172,10 +33058,7 @@ contains
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if coordinate is decreasing.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
-         allocate ( ctx%zzgfcou_state )
-         call init_zzgfcou_state ( ctx%zzgfcou_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
       associate ( svcidx => ctx%zzgfcou_state%svcidx, &
                   svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
@@ -33380,10 +33263,7 @@ contains
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: crdfnd  !! Flag indicating if coordinate state is computable.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
-         allocate ( ctx%zzgfcou_state )
-         call init_zzgfcou_state ( ctx%zzgfcou_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
       associate ( svcorr => ctx%zzgfcou_state%svcorr, &
                   svdctr => ctx%zzgfcou_state%svdctr, &
                   svdref => ctx%zzgfcou_state%svdref, &
@@ -33530,10 +33410,7 @@ contains
       integer(ip)           sysidx
       logical               attblk ( abatsz )
       logical               found
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
-         allocate ( ctx%zzgfcou_state )
-         call init_zzgfcou_state ( ctx%zzgfcou_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
       associate ( svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
@@ -33691,10 +33568,7 @@ contains
       integer(ip)           sysidx
       logical               attblk ( abatsz )
       logical               found
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
-         allocate ( ctx%zzgfcou_state )
-         call init_zzgfcou_state ( ctx%zzgfcou_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
       associate ( svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
@@ -33899,10 +33773,7 @@ contains
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if cos of coordinate is decreasing.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
-         allocate ( ctx%zzgfcou_state )
-         call init_zzgfcou_state ( ctx%zzgfcou_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
       associate ( svcidx => ctx%zzgfcou_state%svcidx, &
                   svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
@@ -34183,10 +34054,7 @@ contains
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if sine of coordinate is decreasing.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
-         allocate ( ctx%zzgfcou_state )
-         call init_zzgfcou_state ( ctx%zzgfcou_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
       associate ( svcidx => ctx%zzgfcou_state%svcidx, &
                   svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
@@ -35213,10 +35081,7 @@ contains
       procedure(gf_rep_init) :: udrepi  !! Progress report initialization routine.
       procedure(gf_rep_update) :: udrepu  !! Progress report update routine.
       procedure(gf_rep_final) :: udrepf  !! Progress report termination routine.
-      if ( .not. allocated ( ctx%zzgflong_state ) ) then
-         allocate ( ctx%zzgflong_state )
-         call init_zzgflong_state ( ctx%zzgflong_state )
-      end if
+      if ( .not. allocated ( ctx%zzgflong_state ) ) allocate ( ctx%zzgflong_state )
       associate ( ops => ctx%zzgflong_state%ops, &
                   y => ctx%zzgflong_state%y )
       if ( ctx%failed() ) return
@@ -37658,10 +37523,7 @@ contains
       procedure(gf_rep_init) :: udrepi  !! Progress report initialization routine.
       procedure(gf_rep_update) :: udrepu  !! Progress report update routine.
       procedure(gf_rep_final) :: udrepf  !! Progress report termination routine.
-      if ( .not. allocated ( ctx%zzgfcslv_state ) ) then
-         allocate ( ctx%zzgfcslv_state )
-         call init_zzgfcslv_state ( ctx%zzgfcslv_state )
-      end if
+      if ( .not. allocated ( ctx%zzgfcslv_state ) ) allocate ( ctx%zzgfcslv_state )
       associate ( cnames => ctx%zzgfcslv_state%cnames, &
                   rptpre => ctx%zzgfcslv_state%rptpre, &
                   rptsuf => ctx%zzgfcslv_state%rptsuf )
@@ -39545,10 +39407,7 @@ contains
       procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
       procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
       procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
-      if ( .not. allocated ( ctx%gfevnt_state ) ) then
-         allocate ( ctx%gfevnt_state )
-         call init_gfevnt_state ( ctx%gfevnt_state )
-      end if
+      if ( .not. allocated ( ctx%gfevnt_state ) ) allocate ( ctx%gfevnt_state )
       associate ( first => ctx%gfevnt_state%first, &
                   cnames => ctx%gfevnt_state%cnames, &
                   dref => ctx%gfevnt_state%dref, &

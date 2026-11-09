@@ -1,0 +1,6562 @@
+!> The saved state of SPICELIB's routines: one derived type for each
+!> routine (or umbrella routine with its entry points) whose saved
+!> variables are real state. Each is an allocatable component of
+!> pepper_spice (the state of the instance, e.g. the kernel pool) or of
+!> pepper_context (the state of a computation in progress), allocated on
+!> first use.
+!>
+!> The components start with SPICELIB's DATA values, and the others as
+!> zero (SPICELIB relies on saved storage starting as zero). A type of
+!> at most 16 KiB has default initialization. A larger one has a
+!> routine init_<name>_state that sets the initial values after
+!> allocate: for a type with default initialization, gfortran builds a
+!> temporary of the whole type on the stack in allocate (and a template
+!> of it in the executable).
+!>
+!> The parameters are private. Those that several states define with
+!> different values have the name of the state as a prefix.
+!> (tools/merge_states.py merged the modules pepper_state_<name> that
+!> tools/modularize_ctx.py had generated.)
+module pepper_states
+
+   use pepper_kinds, only: ip, wp
+   use pepper_inc_das, only: ftsize
+   use pepper_inc_dla, only: dladsz
+   use pepper_inc_dsk, only: maxsrf
+   use pepper_inc_dsk02, only: maxcgr, maxplt
+   use pepper_inc_dskdsc, only: dskdsz, nsypar
+   use pepper_inc_dsktol, only: angmrg, lonali, ptmemm, sgpadm, sgreed, xfract
+   use pepper_inc_ekcnamsz, only: cnamsz
+   use pepper_inc_ekcoldsc, only: cdscsz
+   use pepper_inc_ekglimit, only: mxclsg
+   use pepper_inc_ekjrs, only: mxjrs
+   use pepper_inc_ekpage, only: pgsizc, pgsizd, pgsizi
+   use pepper_inc_ekqlimit, only: maxcon, maxord, maxsel, maxtab, maxtok, mxjcon, mxjoin
+   use pepper_inc_ekquery, only: eqvdsz
+   use pepper_inc_eksegdsc, only: sdscsz
+   use pepper_inc_ektnamsz, only: tnamsz
+   use pepper_inc_gf, only: annulr, any, full, maxvrt, noctyp, oclln, partl, shplen
+   use pepper_inc_ninert, only: ninert
+   use pepper_inc_nninrt, only: nninrt
+   use pepper_inc_sclk, only: mxnfld, mxpart
+   use pepper_inc_sgparam, only: mxmeta
+   use pepper_inc_srftrn, only: mxnsrf, sfnmln
+   use pepper_inc_zzabcorr, only: corlen, nabcor
+   use pepper_inc_zzbodtrn, only: maxe, maxl, nperm, zzbodtrn_nroom => nroom
+   use pepper_inc_zzctr, only: ctrsiz
+   use pepper_inc_zzddhman, only: filen, numamh, numarc, numbff, strsiz, utsize
+   use pepper_inc_zzdsk, only: acllen, ellshp, mthlen
+   use pepper_inc_zzdyn, only: kvnmln, kvx, kvy, kvz, kwatol, kweac1, kweac2, kweac3
+   use pepper_inc_zzftprms, only: sizdlm, sizend, sizftp, sizstr
+   use pepper_inc_zzgf, only: cylsys, geosys, latsys, mxbegm, mxendm, pgrsys, radsys, recsys, sphsys
+   use pepper_inc_zzholdd, only: nid
+   use pepper_inc_zzsc01, only: dbufsz, dplen, ibufsz, lbsngl, mxnclk
+   use pepper_inc_zzsrftrn, only: zzsrftrn_nroom => nroom
+   use pepper_inc_zzswtchf, only: maxbas, maxfrm
+
+   implicit none
+
+   private
+
+   public :: init_ckbsr_state, init_ckbsr_context_state, init_dafah_state, init_dafana_state, &
+       init_dafec_state, init_daffa_state, init_dafrwd_state, init_dascls_state, init_dasec_state, &
+       init_dasfm_state, init_dasrwr_state, init_dskx02_state, init_ekqmgr_state, init_ekqmgr_context_state, &
+       init_framex_state, init_keeper_state, init_limbpt_state, init_pckbsr_state, init_pckbsr_context_state, &
+       init_pool_state, init_sc01_state, init_scdecd_state, init_scencd_state, init_spkbsr_state, &
+       init_spkbsr_context_state, init_termpt_state, init_tisbod_state, init_tkfram_state, &
+       init_zzbodblt_state, init_zzbodtrn_state, init_zzddhman_state, init_zzdskbsr_state, &
+       init_zzdskbsr_context_state, init_zzdsksbf_state, init_zzekjsrt_state, init_zzekjtst_state, &
+       init_zzeknrml_state, init_zzeksca_state, init_zzelvupy_state, init_zzgffvu_state, init_zzsrftrn_state, &
+       init_zzswfxfm_state
+
+   ! parameters of several states
+   integer(ip), parameter :: crdlen = 32
+   integer(ip), parameter :: crlen = 1000
+   integer(ip), parameter :: errlen = 240
+   integer(ip), parameter :: evlfln = 25
+   integer(ip), parameter :: filsiz = 255
+   integer(ip), parameter :: lbcell = -5
+   integer(ip), parameter :: lbpool = -5
+   integer(ip), parameter :: maxang = 200
+   integer(ip), parameter :: maxivl = 1000
+   integer(ip), parameter :: mrklen = 10
+   integer(ip), parameter :: mxphas = 4
+   integer(ip), parameter :: mxspec = 512
+   integer(ip), parameter :: nc = 7
+   integer(ip), parameter :: nevflg = 3
+   integer(ip), parameter :: nflags = 9
+   integer(ip), parameter :: nil = -1
+   integer(ip), parameter :: nsys = 7
+   integer(ip), parameter :: pstftp = 297
+   integer(ip), parameter :: sidlen = 40
+   integer(ip), parameter :: slen = 40
+   integer(ip), parameter :: typlen = 8
+
+   ! ------------------------------------------------------------------ ANA
+
+   integer(ip), parameter :: ana_wdsize = 32
+
+   !> Return the correct article "a" or "an" used to modify a word
+   !> and return it capitalized, lower case, or upper case.
+   !>
+   !> The saved variables of SPICELIB's ANA routines (entry points ana), held
+   !> in pepper_context (one per thread).
+   type, public :: ana_state
+      character(ana_wdsize) :: start ( 7 ) = ' '  !! work: the first 1 to 7 characters of the input word
+   end type ana_state
+
+   ! ------------------------------------------------------------------ AZLCPO
+
+   !> Return the azimuth/elevation coordinates of a specified target
+   !> relative to an "observer," where the observer has constant
+   !> position in a specified reference frame. The observer's position
+   !> is provided by the calling program rather than by loaded SPK
+   !> files.
+   !>
+   !> The saved variables of SPICELIB's AZLCPO routines (entry points azlcpo),
+   !> held in pepper_context (one per thread).
+   type, public :: azlcpo_state
+      real(wp) :: z ( 3    ) = [ 0.00_wp, 0.00_wp, 1.00_wp ]  !! constant +Z unit vector (0,0,1)
+   end type azlcpo_state
+
+   ! ------------------------------------------------------------------ BLTFRM
+
+   integer(ip), parameter :: nframe = ninert + nninrt
+
+   !> Return a set containing the frame IDs of all built-in frames of a
+   !> specified class.
+   !>
+   !> The saved variables of SPICELIB's BLTFRM routines (entry points bltfrm),
+   !> held in pepper_context (one per thread).
+   type, public :: bltfrm_state
+      integer(ip) :: fclass ( nframe ) = 0  !! frame classes of the built-in frames
+      integer(ip) :: fcode ( nframe ) = 0  !! frame ID codes of the built-in frames
+      logical :: pass1 = .true.  !! first call: the built-in frame tables not yet loaded (ZZFDAT)
+   end type bltfrm_state
+
+   ! ------------------------------------------------------------------ BODEUL
+
+   !> Return the Euler angles needed to compute the transformation from
+   !> inertial to body-fixed coordinates for any body in the kernel
+   !> pool.
+   !>
+   !> The saved variables of SPICELIB's BODEUL routines (entry points bodeul),
+   !> held in pepper_context (one per thread).
+   type, public :: bodeul_state
+      real(wp) :: ac ( maxang ) = 0.0_wp  !! coefficients of the nutation/precession terms of the pole RA (NUT_PREC_RA)
+      real(wp) :: costh ( maxang ) = 0.0_wp  !! work: cosines of the nutation/precession angles at the epoch
+      real(wp) :: dc ( maxang   ) = 0.0_wp  !! coefficients of the nutation/precession terms of the pole Dec (NUT_PREC_DEC)
+      real(wp) :: sinth ( maxang ) = 0.0_wp  !! work: sines of the nutation/precession angles at the epoch
+      real(wp) :: tcoef ( mxphas * maxang ) = 0.0_wp  !! polynomial coefficients of the nutation/precession angles (NUT_PREC_ANGLES)
+      real(wp) :: wc ( maxang ) = 0.0_wp  !! coefficients of the nutation/precession terms of the prime meridian (NUT_PREC_PM)
+      integer(ip) :: j2code = 0  !! inertial frame code (IRFNUM) of J2000
+      integer(ip) :: nphase = 0  !! number of nutation/precession angles (phase polynomials) last loaded
+      integer(ip) :: nphsco = 0  !! number of coefficients per nutation/precession angle (max phase degree + 1)
+      logical :: first = .true.  !! first call: J2000 frame code not yet looked up
+   end type bodeul_state
+
+   ! ------------------------------------------------------------------ BODVRD
+
+   integer(ip), parameter :: bodvrd_maxl = 36
+
+   !> Fetch from the kernel pool the double precision values
+   !> of an item associated with a body.
+   !>
+   !> The saved variables of SPICELIB's BODVRD routines (entry points bodvrd),
+   !> held in pepper_context (one per thread).
+   type, public :: bodvrd_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C)
+      character(bodvrd_maxl) :: svbdnm = ' '  !! the body name translated last
+      integer(ip) :: svbdid = 0  !! its NAIF ID code
+      logical :: svfnd1 = .false.  !! the name was found
+      logical :: first = .true.  !! no name has been translated yet
+   end type bodvrd_state
+
+   ! ------------------------------------------------------------------ CHGIRF
+
+   integer(ip), parameter :: maxf = ninert
+
+   !> Support changes among a standard set of inertial coordinate
+   !> reference frames.
+   !>
+   !> The saved variables of SPICELIB's CHGIRF routines (entry points irfrot,
+   !> irfnum, irfnam, irfdef), held in pepper_spice (and, for some variables,
+   !> in pepper_context).
+   type, public :: chgirf_state
+      integer(ip) :: dframe = 0  !! the default inertial frame (set by IRFDEF; 0: none)
+   end type chgirf_state
+
+   !> The saved variables of CHGIRF that are per context.
+   type, public :: chgirf_context_state
+      logical :: ready = .false.  !! the rotations have been computed
+      real(wp) :: trans ( 9, maxf ) = 0.0_wp  !! rotation (3x3, by columns) from J2000 to each frame
+   end type chgirf_context_state
+
+   ! ------------------------------------------------------------------ CKBSR
+
+   integer(ip), parameter :: ckbsr_ftsize = 5000
+   integer(ip), parameter :: itsize = 5000
+   integer(ip), parameter :: ckbsr_stsize = 100000
+   integer(ip), parameter :: nd = 2
+   integer(ip), parameter :: ni = 6
+   integer(ip), parameter :: ckbsr_dscsiz = nd + (ni + 1)/2
+
+   !> Load and unload files for use by the readers. Buffer segments
+   !> for readers.
+   !>
+   !> The saved variables of SPICELIB's CKBSR routines (entry points cklpf,
+   !> ckupf, ckbss, cksns, ckhave), held in pepper_spice (and, for some
+   !> variables, in pepper_context).
+   !>
+   !> No default initialization (40008 bytes): see init_ckbsr_state.
+   type, public :: ckbsr_state
+      integer(ip) :: fthan ( ckbsr_ftsize )  !! handle of each loaded file (in load order)
+      integer(ip) :: ftnum ( ckbsr_ftsize )  !! file number of each loaded file: its place in the load (and search) order
+      integer(ip) :: next  !! the file number of the file loaded last
+      integer(ip) :: nft  !! number of loaded files
+   end type ckbsr_state
+
+   !> The saved variables of CKBSR that are per context.
+   !>
+   !> No default initialization (9860176 bytes): see init_ckbsr_context_state.
+   type, public :: ckbsr_context_state
+      real(wp) :: alpha  !! start of the interval of interest (request time minus tolerance) of the search
+      logical :: avneed  !! the search requires angular velocity
+      integer(ip) :: findex  !! index in the file table of the file being searched
+      logical :: fnd  !! a segment was found by the last search
+      logical :: fresub  !! the partial list left by the 'CHECK PARTIAL LIST' state must be freed
+      integer(ip) :: iindex  !! index in the instrument table of the instrument being searched
+      integer(ip) :: itbeg ( itsize )  !! head of the segment list of each instrument
+      logical :: itchkp ( itsize )  !! the segment returned last for each instrument is to be checked first (its re-use interval is valid)
+      integer(ip) :: itexp ( itsize )  !! expense (number of segment descriptors examined) of the segment list of each instrument
+      integer(ip) :: ithfs ( itsize )  !! highest file number searched for the segment list of each instrument
+      integer(ip) :: itins ( itsize )  !! each spacecraft clock/instrument code
+      real(wp) :: itlb ( itsize )  !! lower bound of the re-use interval of the segment returned last for each instrument
+      integer(ip) :: itlfs ( itsize )  !! lowest file number searched for the segment list of each instrument
+      real(wp) :: itprvd ( ckbsr_dscsiz, itsize )  !! descriptor of the segment returned last for each instrument
+      integer(ip) :: itprvf ( itsize )  !! angular velocity flag of the segment returned last for each instrument (non-zero: present)
+      integer(ip) :: itprvh ( itsize )  !! handle of the file of the segment returned last for each instrument
+      character(sidlen) :: itprvi ( itsize )  !! identifier of the segment returned last for each instrument
+      real(wp) :: itub ( itsize )  !! upper bound of the re-use interval of the segment returned last for each instrument
+      integer(ip) :: itruex ( itsize )  !! expense of the re-use interval of each instrument
+      logical :: newsch  !! the search is new (CKBSS was called; CKSNS not yet)
+      integer(ip) :: nit  !! number of instruments in the instrument table
+      real(wp) :: omega  !! end of the interval of interest (request time plus tolerance) of the search
+      real(wp) :: reqt  !! the request time (encoded spacecraft clock) of the search
+      integer(ip) :: savep  !! the segment list node to continue the search from
+      real(wp) :: savtol  !! the time tolerance of the search
+      integer(ip) :: scinst  !! the instrument of the search
+      integer(ip) :: slbeg  !! head of the partial segment list being checked
+      character(slen) :: status  !! the state of the search in progress
+      real(wp) :: stdcd ( nd,          ckbsr_stsize )  !! double precision components of the descriptor of each segment
+      integer(ip) :: sthan (              ckbsr_stsize )  !! handle of the file of each segment in the segment table
+      integer(ip) :: sticd ( ni,          ckbsr_stsize )  !! integer components of the descriptor of each segment
+      character(sidlen) :: stidnt (              ckbsr_stsize )  !! identifier of each segment in the segment table
+      integer(ip) :: stpool ( 2,  lbpool : ckbsr_stsize )  !! doubly linked list pool of the segment table (one list per instrument, in priority order)
+      integer(ip) :: top  !! depth of the stack of interrupted states of the search
+      integer(ip) :: epoch  !! the instance's segment_epoch this cache reflects
+   end type ckbsr_context_state
+
+   ! ------------------------------------------------------------------ CKGP
+
+   integer(ip), parameter :: ckgp_frnmln = 32
+
+   !> Get pointing (attitude) for a specified spacecraft clock time.
+   !>
+   !> The saved variables of SPICELIB's CKGP routines (entry points ckgp),
+   !> held in pepper_context (one per thread).
+   type, public :: ckgp_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(ckgp_frnmln) :: svref = ' '  !! name of the reference frame looked up last (ZZNAMFRM)
+      integer(ip) :: svrefr = 0  !! ID code of the reference frame looked up last
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type ckgp_state
+
+   ! ------------------------------------------------------------------ CKGPAV
+
+   integer(ip), parameter :: ckgpav_frnmln = 32
+
+   !> Get pointing (attitude) and angular velocity for a specified
+   !> spacecraft clock time.
+   !>
+   !> The saved variables of SPICELIB's CKGPAV routines (entry points ckgpav),
+   !> held in pepper_context (one per thread).
+   type, public :: ckgpav_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(ckgpav_frnmln) :: svref = ' '  !! name of the reference frame looked up last (ZZNAMFRM)
+      integer(ip) :: svrefr = 0  !! ID code of the reference frame looked up last
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type ckgpav_state
+
+   ! ------------------------------------------------------------------ CKMETA
+
+   integer(ip), parameter :: ckmeta_wdsize = 32
+   integer(ip), parameter :: nck = 30
+
+   !> Return (depending upon the user's request) the ID code of either
+   !> the spacecraft or spacecraft clock associated with a C-Kernel ID
+   !> code.
+   !>
+   !> The saved variables of SPICELIB's CKMETA routines (entry points ckmeta),
+   !> held in pepper_context (one per thread).
+   type, public :: ckmeta_state
+      character(ckmeta_wdsize) :: lookup ( 2, nck ) = ' '  !! names of the kernel variables CK_<id>_SCLK and CK_<id>_SPK of each buffered CK ID
+      character(ckmeta_wdsize) :: agent (    nck ) = ' '  !! kernel pool watcher (agent) name of each buffered CK ID
+      integer(ip) :: cks (    nck ) = 0  !! buffered CK IDs
+      integer(ip) :: cksord (    nck ) = 0  !! order vector of cks (for the binary search)
+      integer(ip) :: currnt = 0  !! number of buffered CK IDs
+      integer(ip) :: last = 0  !! buffer slot filled last (slots are reused round-robin when the buffer is full)
+      integer(ip) :: sclks (    nck ) = 0  !! SCLK ID of each buffered CK ID
+      integer(ip) :: spks (    nck ) = 0  !! SPK ID of each buffered CK ID
+      integer(ip) :: usrctr ( ctrsiz, nck ) = 0  !! kernel pool state counter of each buffered CK ID
+      logical :: first = .true.  !! this is the first call (the counters and agents are not initialized yet)
+      logical :: found (    2   ) = .false.  !! SCLK and SPK kernel variables were found (a work variable; not used between calls)
+      logical :: nodata = .true.  !! the last kernel pool lookup failed (the buffered IDs must be fetched again)
+   end type ckmeta_state
+
+   ! ------------------------------------------------------------------ CKR03
+
+   !> Read a pointing record from a CK segment, data type 3.
+   !>
+   !> The saved variables of SPICELIB's CKR03 routines (entry points ckr03),
+   !> held in pepper_context (one per thread).
+   type, public :: ckr03_state
+      real(wp) :: prevs = -1.0_wp  !! start time of the interpolation interval found on the last search
+      real(wp) :: prevn = -1.0_wp  !! start time of the interpolation interval following the one starting at prevs
+      integer(ip) :: lhand = 0  !! handle of the file of the segment searched last
+      integer(ip) :: lbeg = -1  !! begin address of the segment searched last
+      integer(ip) :: lend = -1  !! end address of the segment searched last
+   end type ckr03_state
+
+   ! ------------------------------------------------------------------ CKR05
+
+   !> Read a single CK data record from a segment of type 05
+   !> (MEX/Rosetta Attitude file interpolation).
+   !>
+   !> The saved variables of SPICELIB's CKR05 routines (entry points ckr05),
+   !> held in pepper_context (one per thread).
+   type, public :: ckr05_state
+      real(wp) :: prevs = -1.0_wp  !! start time of the interpolation interval found on the last search
+      real(wp) :: prevn = -1.0_wp  !! start time of the interpolation interval following the one starting at prevs
+      real(wp) :: prevnn = -1.0_wp  !! start time of the interpolation interval following the one starting at prevn
+      integer(ip) :: lhand = 0  !! handle of the file of the segment searched last
+      integer(ip) :: lbeg = -1  !! begin address of the segment searched last
+      integer(ip) :: lend = -1  !! end address of the segment searched last
+   end type ckr05_state
+
+   ! ------------------------------------------------------------------ CKR06
+
+   !> Read a single CK data record from a segment of type 6
+   !> (ESOC/DDID Piecewise Interpolation).
+   !>
+   !> The saved variables of SPICELIB's CKR06 routines (entry points ckr06),
+   !> held in pepper_context (one per thread).
+   type, public :: ckr06_state
+      logical :: pass1 = .true.  !! this is the first call (the record size check has not been done yet)
+      integer(ip) :: svbeg = -1  !! begin address of the segment used last
+      real(wp) :: svbtim = 0.0_wp  !! start time of the mini-segment interval used last
+      real(wp) :: svetim = -1.0_wp  !! end time of the mini-segment interval used last (at most its last epoch)
+      logical :: svfnd = .false.  !! value of FOUND returned last (the saved values are valid only if true)
+      integer(ip) :: svhan = 0  !! handle of the file of the segment used last
+      logical :: svlast = .false.  !! interval selection flag of the segment used last (select the last applicable interval)
+      integer(ip) :: svmiix = -1  !! index of the mini-segment (interval) used last
+      integer(ip) :: svminb = -1  !! begin address of the mini-segment used last
+      integer(ip) :: svn = -1  !! number of mini-segments in the segment used last
+      integer(ip) :: svnpkt = -1  !! number of packets in the mini-segment used last
+      integer(ip) :: svpkdb = -1  !! base address of the packet directory of the mini-segment used last
+      integer(ip) :: svpknd = -1  !! number of packet directory entries of the mini-segment used last
+      integer(ip) :: svpksz = -1  !! packet size of the mini-segment used last
+      real(wp) :: svrate = -1.0_wp  !! nominal SCLK rate of the mini-segment used last
+      integer(ip) :: svstyp = -1  !! subtype of the mini-segment used last
+      integer(ip) :: svwnsz = -1  !! interpolation window size of the mini-segment used last
+   end type ckr06_state
+
+   ! ------------------------------------------------------------------ DAFAH
+
+   !> Assign handles to DAFs as they are opened.
+   !>
+   !> The saved variables of SPICELIB's DAFAH routines (entry points dafopr,
+   !> dafopw, dafonw, dafopn, dafcls, dafhsf, dafhlu, dafluh, dafhfn, daffnh,
+   !> dafhof, dafsih), held in pepper_spice.
+   !>
+   !> No default initialization (100032 bytes): see init_dafah_state.
+   type, public :: dafah_state
+      integer(ip) :: nft  !! number of DAFs in the file table
+      integer(ip) :: fthan ( ftsize )  !! handle of each DAF
+      integer(ip) :: ftlnk ( ftsize )  !! number of links (opens) of each DAF
+      integer(ip) :: ftnd ( ftsize )  !! number of double precision components of the summaries
+      integer(ip) :: ftni ( ftsize )  !! number of integer components of the summaries
+      integer(ip) :: fhlist ( lbcell : ftsize )  !! set of the handles of the open DAFs
+      logical :: first  !! the handle set has not been initialized yet
+   end type dafah_state
+
+   ! ------------------------------------------------------------------ DAFANA
+
+   integer(ip), parameter :: dafana_tbsize = 20
+   integer(ip), parameter :: ifnlen = 60
+   integer(ip), parameter :: maxsum = 125
+
+   !> Add a new array to an existing DAF.
+   !>
+   !> The saved variables of SPICELIB's DAFANA routines (entry points dafbna,
+   !> dafada, dafena, dafcad), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (41776 bytes): see init_dafana_state.
+   type, public :: dafana_state
+      integer(ip) :: stfh (         dafana_tbsize )  !! handle of each DAF being written
+      character(ifnlen) :: stifnm (         dafana_tbsize )  !! internal file name of each DAF being
+                                                             !! written
+      logical :: staddg (         dafana_tbsize )  !! an array is being added to each DAF (between DAFBNA
+                                                   !! and DAFENA)
+      integer(ip) :: stfrst (         dafana_tbsize )  !! record number of the first summary record of each
+                                                       !! DAF
+      integer(ip) :: stlast (         dafana_tbsize )  !! record number of the last summary record of each
+                                                       !! DAF
+      integer(ip) :: stfree (         dafana_tbsize )  !! address of the next free word of each DAF
+      integer(ip) :: stbegn (         dafana_tbsize )  !! beginning address of the new array of each DAF
+      real(wp) :: stlsum ( maxsum, dafana_tbsize )  !! summary of the new array of each DAF
+      character(crlen) :: stname (         dafana_tbsize )  !! name of the new array of each DAF
+      integer(ip) :: stpool ( dafana_tbsize )  !! linked-list pool of the state table (active and free
+                                               !! entries)
+      integer(ip) :: sthead  !! head of the list of active entries of the state table
+      integer(ip) :: stfptr  !! head of the list of free entries of the state table
+      logical :: first  !! the state table has not been initialized yet
+   end type dafana_state
+
+   ! ------------------------------------------------------------------ DAFEC
+
+   integer(ip), parameter :: dafec_ftsize = 5000
+   integer(ip), parameter :: dafec_mxcrec = 1000
+
+   !> Extract comments from the comment area of a binary DAF.
+   !>
+   !> The saved variables of SPICELIB's DAFEC routines (entry points dafec),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (101016 bytes): see init_dafec_state.
+   type, public :: dafec_state
+      character(dafec_mxcrec) :: crecrd  !! the comment record read last
+      character(1) :: eocmrk  !! the end-of-comments marker
+      character(1) :: eolmrk  !! the end-of-line marker
+      integer(ip) :: filchr (dafec_ftsize)  !! the file table declarations for keeping track of which files
+                                            !! are currently in the process of having comments extracted.
+      integer(ip) :: filcnt (dafec_ftsize)  !! number of comment lines read from each file
+      integer(ip) :: filhan (dafec_ftsize)  !! handles of the files whose comments are being read
+      integer(ip) :: lsthan  !! the handle read last
+      integer(ip) :: lstpos (dafec_ftsize)  !! position in the last comment record of each file
+      integer(ip) :: lstrec (dafec_ftsize)  !! the comment record read last of each file
+      integer(ip) :: nfiles  !! number of files whose comments are being read
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+   end type dafec_state
+
+   ! ------------------------------------------------------------------ DAFFA
+
+   integer(ip), parameter :: daffa_tbsize = ftsize
+   integer(ip), parameter :: dprsiz = 128
+
+   !> Find arrays in a DAF.
+   !>
+   !> The saved variables of SPICELIB's DAFFA routines (entry points dafbfs,
+   !> daffna, dafbbs, daffpa, dafgs, dafgn, dafgh, dafrs, dafrn, dafws,
+   !> dafcs), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (10280016 bytes): see init_daffa_state.
+   type, public :: daffa_state
+      integer(ip) :: stfh (         daffa_tbsize )  !! handle of each DAF being searched
+      integer(ip) :: stprev (         daffa_tbsize )  !! record number of the previous summary record of
+                                                      !! each search
+      integer(ip) :: stthis (         daffa_tbsize )  !! record number of the current summary record of
+                                                      !! each search
+      integer(ip) :: stnext (         daffa_tbsize )  !! record number of the next summary record of each
+                                                      !! search
+      integer(ip) :: stnseg (         daffa_tbsize )  !! number of summaries in the current summary record
+                                                      !! of each search
+      integer(ip) :: stcurr (         daffa_tbsize )  !! index of the current summary within its record,
+                                                      !! for each search
+      character(crlen) :: stnr (         daffa_tbsize )  !! the name record read last, for each search
+      logical :: sthvnr (         daffa_tbsize )  !! the name record of the current array is buffered
+                                                  !! (stnr), for each search
+      real(wp) :: stsr ( dprsiz, daffa_tbsize )  !! the summary record read last, for each search
+      integer(ip) :: stpool ( daffa_tbsize )  !! linked-list pool of the state table (active and free
+                                              !! entries)
+      integer(ip) :: sthead  !! head of the list of active entries of the state table
+      integer(ip) :: stfptr  !! head of the list of free entries of the state table
+      logical :: first  !! the state table has not been initialized yet
+   end type daffa_state
+
+   ! ------------------------------------------------------------------ DAFRWD
+
+   integer(ip), parameter :: rbsize = 100
+
+   !> Read, write, and rewrite double precision records to and
+   !> from DAFs.
+   !>
+   !> The saved variables of SPICELIB's DAFRWD routines (entry points dafgdr,
+   !> dafgsr, dafrdr, dafwdr, dafnrr), held in pepper_context (one per
+   !> thread).
+   !>
+   !> No default initialization (103616 bytes): see init_dafrwd_state.
+   type, public :: dafrwd_state
+      integer(ip) :: rbhan (      rbsize )  !! handle of the file of each buffered record
+      integer(ip) :: rbrec (      rbsize )  !! record number of each buffered record
+      integer(ip) :: rbreq (      rbsize )  !! request number of the last use of each buffered
+                                            !! record (to replace the oldest)
+      real(wp) :: rbdat ( 128, rbsize )  !! the buffered records
+      integer(ip) :: rbnbr  !! number of records in the buffer
+      integer(ip) :: nread  !! number of records read from files
+      integer(ip) :: nreq  !! number of requests
+   end type dafrwd_state
+
+   ! ------------------------------------------------------------------ DAFWDA
+
+   integer(ip), parameter :: bsize = 128
+
+   !> Write or rewrite the double precision data bounded by two
+   !> addresses within a DAF.
+   !>
+   !> The saved variables of SPICELIB's DAFWDA routines (entry points dafwda),
+   !> held in pepper_context (one per thread).
+   type, public :: dafwda_state
+      real(wp) :: buffer ( bsize ) = 0.0_wp  !! work buffer of one record (saved in SPICELIB to keep it off
+                                             !! the stack)
+   end type dafwda_state
+
+   ! ------------------------------------------------------------------ DASA2L
+
+   integer(ip), parameter :: dasa2l_nwc = 1024
+   integer(ip), parameter :: dasa2l_nwd = 128
+   integer(ip), parameter :: dasa2l_nwi = 256
+   integer(ip), parameter :: chrrng = 3
+   integer(ip), parameter :: dprng = chrrng + 2
+   integer(ip), parameter :: intrng = dprng  + 2
+   integer(ip), parameter :: dasa2l_maxfil = 20
+
+   !> Map a DAS address to a physical location in a specified DAS file.
+   !>
+   !> The saved variables of SPICELIB's DASA2L routines (entry points dasa2l),
+   !> held in pepper_context (one per thread).
+   type, public :: dasa2l_state
+      integer(ip) :: fidx = 0  !! index (in the tables) of the file looked up last
+      integer(ip) :: next ( 3 ) = [ 2, 3, 1 ]  !! the next data type (character, double precision, integer,
+                                               !! cyclic)
+      integer(ip) :: nfiles = 0  !! number of files in the tables
+      integer(ip) :: nw ( 3 ) = [ dasa2l_nwc, dasa2l_nwd, dasa2l_nwi ]  !! words per record of each data type
+      integer(ip) :: prev ( 3 ) = [ 3, 1, 2 ]  !! the previous data type (cyclic)
+      integer(ip) :: prvhan = 0  !! handle of the file looked up last
+      integer(ip) :: rngloc ( 3 ) = [ chrrng, dprng, intrng ]  !! location of each data type's address range in a directory
+                                                               !! record
+      integer(ip) :: tbbase ( 3, dasa2l_maxfil ) = -1  !! first record of the single cluster of each data type,
+                                                       !! for each file
+      integer(ip) :: tbfwrd (    dasa2l_maxfil ) = -1  !! forward pointer of the first directory record of each
+                                                       !! file
+      integer(ip) :: tbhan (    dasa2l_maxfil ) = 0  !! handles of the files in the tables
+      integer(ip) :: tbmxad ( 3, dasa2l_maxfil ) = -1  !! largest address of each data type, for each file
+      integer(ip) :: tbsize ( 3, dasa2l_maxfil ) = -1  !! number of records of the single cluster of each data
+                                                       !! type, for each file
+      logical :: fast = .false.  !! the file looked up last has one cluster per data type (fast lookup)
+      logical :: prvok = .false.  !! the last lookup was valid
+      logical :: tbfast ( dasa2l_maxfil ) = .false.  !! each file has one cluster per data type (fast lookup)
+      logical :: tbrdon ( dasa2l_maxfil ) = .false.  !! each file is open for reading only (so its tables do not
+                                                     !! change)
+   end type dasa2l_state
+
+   ! ------------------------------------------------------------------ DASADC
+
+   integer(ip), parameter :: dasadc_nwc = 1024
+
+   !> Add character data to a DAS file.
+   !>
+   !> The saved variables of SPICELIB's DASADC routines (entry points dasadc),
+   !> held in pepper_context (one per thread).
+   type, public :: dasadc_state
+      character(dasadc_nwc) :: record = ' '  !! work buffer of one character record (saved in SPICELIB to keep it
+                                             !! off the stack)
+   end type dasadc_state
+
+   ! ------------------------------------------------------------------ DASADD
+
+   integer(ip), parameter :: dasadd_nwd = 128
+
+   !> Add an array of double precision numbers to a DAS file.
+   !>
+   !> The saved variables of SPICELIB's DASADD routines (entry points dasadd),
+   !> held in pepper_context (one per thread).
+   type, public :: dasadd_state
+      real(wp) :: record ( dasadd_nwd ) = 0.0_wp  !! work buffer of one double precision record (saved in SPICELIB
+                                                  !! to keep it off the stack)
+   end type dasadd_state
+
+   ! ------------------------------------------------------------------ DASADI
+
+   integer(ip), parameter :: dasadi_nwi = 256
+
+   !> Add an array of integers to a DAS file.
+   !>
+   !> The saved variables of SPICELIB's DASADI routines (entry points dasadi),
+   !> held in pepper_context (one per thread).
+   type, public :: dasadi_state
+      integer(ip) :: record ( dasadi_nwi ) = 0  !! work buffer of one integer record (saved in SPICELIB to keep
+                                                !! it off the stack)
+   end type dasadi_state
+
+   ! ------------------------------------------------------------------ DASCLS
+
+   !> Close a DAS file.
+   !>
+   !> The saved variables of SPICELIB's DASCLS routines (entry points dascls),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (20028 bytes): see init_dascls_state.
+   type, public :: dascls_state
+      integer(ip) :: fhset ( lbcell : ftsize )  !! set of the handles of the open DAS files (sized
+                                                !! once)
+      logical :: pass1  !! the handle set has not been sized yet
+   end type dascls_state
+
+   ! ------------------------------------------------------------------ DASEC
+
+   integer(ip), parameter :: dasec_mxcrec = 1024
+
+   !> Extract comments from the comment area of a binary DAS file.
+   !>
+   !> The saved variables of SPICELIB's DASEC routines (entry points dasec),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (101036 bytes): see init_dasec_state.
+   type, public :: dasec_state
+      character(dasec_mxcrec) :: crecrd  !! the comment record read last
+      integer(ip) :: filcnt (ftsize)  !! the file table declarations for keeping track of which files
+                                      !! are currently in the process of having comments extracted.
+      integer(ip) :: filchr (ftsize)  !! number of comment characters read from each file
+      integer(ip) :: filhan (ftsize)  !! handles of the files whose comments are being read
+      integer(ip) :: lsthan  !! the handle read last
+      integer(ip) :: lstpos (ftsize)  !! position in the last comment record of each file
+      integer(ip) :: lstrec (ftsize)  !! the comment record read last of each file
+      integer(ip) :: nfiles  !! number of files whose comments are being read
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+   end type dasec_state
+
+   ! ------------------------------------------------------------------ DASFM
+
+   integer(ip), parameter :: rrcidx = 1
+   integer(ip), parameter :: rchidx = rrcidx + 1
+   integer(ip), parameter :: crcidx = rchidx + 1
+   integer(ip), parameter :: cchidx = crcidx + 1
+   integer(ip), parameter :: freidx = cchidx + 1
+   integer(ip), parameter :: llabas = freidx
+   integer(ip), parameter :: lrcbas = llabas + 3
+   integer(ip), parameter :: lwdbas = lrcbas + 3
+   integer(ip), parameter :: sumsiz = lwdbas + 3
+
+   !> Manage open DAS files.
+   !>
+   !> The saved variables of SPICELIB's DASFM routines (entry points dasopr,
+   !> dasopw, dasonw, dasopn, dasops, dasllc, dashfs, dasufs, dashlu, dasluh,
+   !> dashfn, dasfnh, dashof, dassih, dasham), held in pepper_spice.
+   !>
+   !> No default initialization (400080 bytes): see init_dasfm_state.
+   type, public :: dasfm_state
+      integer(ip) :: fthan (         ftsize )  !! handle of each DAS
+      integer(ip) :: ftacc (         ftsize )  !! access method of each DAS
+      integer(ip) :: ftlnk (         ftsize )  !! number of links (opens) of each DAS
+      integer(ip) :: ftsum ( sumsiz, ftsize )  !! file summary of each DAS (free records and
+                                               !! addresses, last records and words of each data
+                                               !! type)
+      integer(ip) :: pool ( 2,  lbpool : ftsize )  !! linked-list pool of the file table
+      integer(ip) :: fthead  !! head of the list of the file table's entries
+      integer(ip) :: fhlist ( lbcell : ftsize )  !! set of the handles of the open DASs
+      logical :: pass1  !! the file table has not been initialized yet
+   end type dasfm_state
+
+   ! ------------------------------------------------------------------ DASRWR
+
+   integer(ip), parameter :: dasrwr_nwd = 128
+   integer(ip), parameter :: dasrwr_nwi = 256
+   integer(ip), parameter :: dasrwr_nwc = 1024
+   integer(ip), parameter :: bufszd = 10
+   integer(ip), parameter :: bufszi = 10
+   integer(ip), parameter :: bufszc = 10
+
+   !> Read and write DAS physical records.
+   !>
+   !> The saved variables of SPICELIB's DASRWR routines (entry points dasrrd,
+   !> dasrri, dasrrc, daswrd, daswri, daswrc, dasurd, dasuri, dasurc, daswbr),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (31496 bytes): see init_dasrwr_state.
+   type, public :: dasrwr_state
+      character(dasrwr_nwc) :: rcbufc (      bufszc )  !! the buffered character records
+      real(wp) :: rcbufd ( dasrwr_nwd, bufszd )  !! the buffered double precision records
+      integer(ip) :: rcbufi ( dasrwr_nwi, bufszi )  !! the buffered integer records
+      integer(ip) :: rnbufc (      bufszc )  !! record number of each buffered character record
+      integer(ip) :: rnbufd (      bufszd )  !! record number of each buffered double precision
+                                             !! record
+      integer(ip) :: rnbufi (      bufszi )  !! record number of each buffered integer record
+      integer(ip) :: hnbufc (      bufszc )  !! file handle of each buffered character record
+      integer(ip) :: hnbufd (      bufszd )  !! file handle of each buffered double precision record
+      integer(ip) :: hnbufi (      bufszi )  !! file handle of each buffered integer record
+      logical :: upbufc (      bufszc )  !! each buffered character record was updated and is not
+                                         !! written to the file yet
+      logical :: upbufd (      bufszd )  !! each buffered double precision record was updated and is
+                                         !! not written to the file yet
+      logical :: upbufi (      bufszi )  !! each buffered integer record was updated and is not
+                                         !! written to the file yet
+      integer(ip) :: poolc ( 2, lbpool : bufszc )  !! linked-list pool of the character buffer
+                                                   !! (most recently used first)
+      integer(ip) :: poold ( 2, lbpool : bufszd )  !! linked-list pool of the double precision
+                                                   !! buffer (most recently used first)
+      integer(ip) :: pooli ( 2, lbpool : bufszi )  !! linked-list pool of the integer buffer (most
+                                                   !! recently used first)
+      integer(ip) :: headc  !! head of the list of the character buffer's entries
+      integer(ip) :: headd  !! head of the list of the double precision buffer's entries
+      integer(ip) :: headi  !! head of the list of the integer buffer's entries
+      integer(ip) :: usedc  !! number of entries of the character buffer in use
+      integer(ip) :: usedd  !! number of entries of the double precision buffer in use
+      integer(ip) :: usedi  !! number of entries of the integer buffer in use
+      logical :: pass1  !! the buffers have not been initialized yet
+   end type dasrwr_state
+
+   ! ------------------------------------------------------------------ DELTET
+
+   !> Return the value of Delta ET (ET-UTC) for an input epoch.
+   !>
+   !> The saved variables of SPICELIB's DELTET routines (entry points deltet),
+   !> held in pepper_context (one per thread).
+   type, public :: deltet_state
+      !> error message templates naming each missing DELTET kernel variable
+      character(20) :: missed ( 5 ) = [ character(20) :: 'DELTET/DELTA_T_A, #', 'DELTET/K, #', 'DELTET/EB, #', &
+         'DELTET/M, #', 'DELTET/DELTA_AT, #' ]
+   end type deltet_state
+
+   ! ------------------------------------------------------------------ DIAGS2
+
+   !> Diagonalize a symmetric 2x2 matrix.
+   !>
+   !> The saved variables of SPICELIB's DIAGS2 routines (entry points diags2),
+   !> held in pepper_context (one per thread).
+   type, public :: diags2_state
+      real(wp) :: ident ( 2, 2 ) = reshape ( [ 1.0_wp, 0.0_wp, 0.0_wp, 1.0_wp ], [ 2, 2 ] )  !! the 2x2 identity matrix, constant
+   end type diags2_state
+
+   ! ------------------------------------------------------------------ DPGRDR
+
+   integer(ip), parameter :: dpgrdr_maxl = 36
+
+   !> Compute the Jacobian matrix of the transformation from
+   !> rectangular to planetographic coordinates.
+   !>
+   !> The saved variables of SPICELIB's DPGRDR routines (entry points dpgrdr),
+   !> held in pepper_context (one per thread).
+   type, public :: dpgrdr_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(dpgrdr_maxl) :: svbody = ' '  !! name of the body looked up last (ZZBODS2C)
+      integer(ip) :: svbdid = 0  !! ID code of the body looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last body name lookup
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type dpgrdr_state
+
+   ! ------------------------------------------------------------------ DPSPCE
+
+   integer(ip), parameter :: numgeo = 8
+   integer(ip), parameter :: numelm = 10
+
+   !> **Deprecated:** This routine has been superseded by the SPICELIB
+   !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
+   !> NAIF supports DPSPCE only for backward compatibility.
+   !>
+   !> The saved variables of SPICELIB's DPSPCE routines (entry points dpspce),
+   !> held in pepper_context (one per thread).
+   type, public :: dpspce_state
+      real(wp) :: ae = 0.0_wp  !! distance units per Earth radius (GEOPHS(8))
+      real(wp) :: ck2 = 0.0_wp  !! J2 term coefficient: 0.5 * J2 * AE**2
+      real(wp) :: xke = 0.0_wp  !! square root of GM, in Earth radii**1.5 per minute (GEOPHS(4))
+      real(wp) :: xkmper = 0.0_wp  !! km per Earth radius (GEOPHS(7))
+      real(wp) :: lstphs ( numgeo ) = 0.0_wp  !! geophysical constants (GEOPHS) of the last initialization
+      real(wp) :: bstar = 0.0_wp  !! elements
+      real(wp) :: epoch = 0.0_wp  !! epoch of the elements (ET)
+      real(wp) :: omegao = 0.0_wp  !! argument of perigee at epoch (radians)
+      real(wp) :: xmo = 0.0_wp  !! mean anomaly at epoch (radians)
+      real(wp) :: xnodeo = 0.0_wp  !! right ascension of the ascending node at epoch (radians)
+      real(wp) :: lstelm ( numelm ) = 0.0_wp  !! two-line elements (ELEMS) of the last initialization
+      real(wp) :: aodp = 0.0_wp  !! original (un-Kozai) semi-major axis, from the initialization
+      real(wp) :: aycof = 0.0_wp  !! long-period periodic coefficient of the AYN term
+      real(wp) :: c1 = 0.0_wp  !! drag coefficient C1 (BSTAR * C2)
+      real(wp) :: c4 = 0.0_wp  !! drag coefficient C4
+      real(wp) :: cosepw = 0.0_wp  !! work: cosine of (E + omega) in the Kepler iteration
+      real(wp) :: cosio = 0.0_wp  !! cosine of the inclination at epoch
+      real(wp) :: omgdot = 0.0_wp  !! secular rate of the argument of perigee (radians/minute)
+      real(wp) :: pio2 = 0.0_wp  !! pi/2, set on the first call
+      real(wp) :: pix2 = 0.0_wp  !! 2*pi, set on the first call
+      real(wp) :: sinepw = 0.0_wp  !! work: sine of (E + omega) in the Kepler iteration
+      real(wp) :: sinio = 0.0_wp  !! sine of the inclination at epoch
+      real(wp) :: t2cof = 0.0_wp  !! coefficient of the t**2 drag term of the mean longitude (1.5 * C1)
+      real(wp) :: temp3 = 0.0_wp  !! work: temporary of the initialization and the Kepler iteration
+      real(wp) :: temp4 = 0.0_wp  !! work: temporary of the Kepler iteration
+      real(wp) :: temp5 = 0.0_wp  !! work: temporary of the Kepler iteration
+      real(wp) :: temp6 = 0.0_wp  !! work: temporary of the Kepler iteration
+      real(wp) :: x1mth2 = 0.0_wp  !! 1 - cos(i)**2
+      real(wp) :: x3thm1 = 0.0_wp  !! 3*cos(i)**2 - 1
+      real(wp) :: x7thm1 = 0.0_wp  !! 7*cos(i)**2 - 1
+      real(wp) :: xlcof = 0.0_wp  !! long-period periodic coefficient of the mean longitude
+      real(wp) :: xmdot = 0.0_wp  !! secular rate of the mean anomaly (radians/minute)
+      real(wp) :: xnodcf = 0.0_wp  !! coefficient of the t**2 drag term of the node
+      real(wp) :: xnodot = 0.0_wp  !! secular rate of the ascending node (radians/minute)
+      real(wp) :: xnodp = 0.0_wp  !! original (un-Kozai) mean motion, from the initialization (radians/minute)
+      logical :: doinit = .true.  !! the derived quantities must be recomputed (first call or new GEOPHS/ELEMS)
+      logical :: first = .true.  !! first call: PIO2 and PIX2 not yet set
+   end type dpspce_state
+
+   ! ------------------------------------------------------------------ DRDPGR
+
+   integer(ip), parameter :: drdpgr_maxl = 36
+
+   !> Compute the Jacobian matrix of the transformation from
+   !> planetographic to rectangular coordinates.
+   !>
+   !> The saved variables of SPICELIB's DRDPGR routines (entry points drdpgr),
+   !> held in pepper_context (one per thread).
+   type, public :: drdpgr_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(drdpgr_maxl) :: svbody = ' '  !! name of the body looked up last (ZZBODS2C)
+      integer(ip) :: svbdid = 0  !! ID code of the body looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last body name lookup
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type drdpgr_state
+
+   ! ------------------------------------------------------------------ DSKD02
+
+   !> Fetch double precision data from a type 2 DSK segment.
+   !>
+   !> The saved variables of SPICELIB's DSKD02 routines (entry points dskd02),
+   !> held in pepper_context (one per thread).
+   type, public :: dskd02_state
+      logical :: first = .true.  !! no segment has been read yet
+      integer(ip) :: prvbas = 0  !! DLA base address of the segment read last
+      integer(ip) :: prvhan = 0  !! handle of the DSK file of the segment read last
+      integer(ip) :: nv = 0  !! number of vertices of the segment read last
+   end type dskd02_state
+
+   ! ------------------------------------------------------------------ DSKI02
+
+   !> Fetch integer data from a type 2 DSK segment.
+   !>
+   !> The saved variables of SPICELIB's DSKI02 routines (entry points dski02),
+   !> held in pepper_context (one per thread).
+   type, public :: dski02_state
+      integer(ip) :: cgscal = 0  !! coarse voxel scale of the segment read last
+      logical :: first = .true.  !! no segment has been read yet
+      integer(ip) :: np = 0  !! number of plates of the segment read last
+      integer(ip) :: nv = 0  !! number of vertices of the segment read last
+      integer(ip) :: nvxtot = 0  !! number of voxels of the segment read last
+      integer(ip) :: prvbas = 0  !! DLA base address of the segment read last
+      integer(ip) :: prvhan = 0  !! handle of the DSK file of the segment read last
+      integer(ip) :: voxnpl = 0  !! size of the voxel-plate pointer array of the segment read last
+      integer(ip) :: voxnpt = 0  !! size of the voxel-plate correspondence list of the segment read last
+      integer(ip) :: vtxnpl = 0  !! size of the vertex-plate correspondence list of the segment read
+                                 !! last
+   end type dski02_state
+
+   ! ------------------------------------------------------------------ DSKTOL
+
+   integer(ip), parameter :: ndspar = 6
+
+   !> Umbrella routine for DSK tolerance and margin parameter access
+   !> routines.
+   !>
+   !> The saved variables of SPICELIB's DSKTOL routines (entry points dskgtl,
+   !> dskstl), held in pepper_spice.
+   type, public :: dsktol_state
+      real(wp) :: dppars ( ndspar ) = [ xfract, sgreed, sgpadm, ptmemm, angmrg, lonali ]  !! the values of the DSK tolerance and margin parameters
+   end type dsktol_state
+
+   ! ------------------------------------------------------------------ DSKX02
+
+   integer(ip), parameter :: nvxlst = 50000
+   integer(ip), parameter :: maxpl = maxplt/125
+   integer(ip), parameter :: dskx02_bufsiz = 200
+
+   !> Determine the plate ID and body-fixed coordinates of the
+   !> intersection of a specified ray with the surface defined by a
+   !> type 2 DSK plate model.
+   !>
+   !> The saved variables of SPICELIB's DSKX02 routines (entry points dskx02),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (3453136 bytes): see init_dskx02_state.
+   type, public :: dskx02_state
+      integer(ip) :: cgrext ( 3 )  !! coarse voxel grid extents of the current segment
+      integer(ip) :: cgrptr ( maxcgr )  !! coarse voxel grid pointers of the current segment
+      integer(ip) :: cgscal  !! coarse voxel scale of the current segment
+      integer(ip) :: cgscl2  !! square of the coarse voxel scale
+      integer(ip) :: corsys  !! coordinate system code of the current segment
+      real(wp) :: dskdsc ( dskdsz )  !! DSK descriptor of the current segment
+      real(wp) :: grdext ( 3 )  !! voxel grid extents (km) of the current segment
+      real(wp) :: grdtol  !! tolerance for the ray vertex being inside the voxel grid
+      integer(ip) :: platid ( maxpl )  !! work: plate IDs of the voxels of the current group
+      integer(ip) :: prvdsc ( dladsz )  !! DLA descriptor of the segment used last
+      integer(ip) :: prvhan  !! DSK handle of the segment used last (0 if its data were not fully read)
+      integer(ip) :: source ( maxpl )  !! work: index (into the voxel list) of the voxel each plate in PLATID came from
+      real(wp) :: vbuff ( 3, dskx02_bufsiz )  !! work: buffer of plate vertices already fetched during this call
+      integer(ip) :: vgrext ( 3 )  !! voxel grid extents (in voxels) of the current segment
+      real(wp) :: voxori ( 3 )  !! voxel grid origin of the current segment
+      real(wp) :: voxsiz  !! voxel size (km) of the current segment
+      integer(ip) :: vxlcg ( 3, nvxlst )  !! work: coarse voxel coordinates of the voxels hit by the ray
+      integer(ip) :: vxlout ( nvxlst )  !! work: indices (into the voxel list) of the voxels with non-empty coarse voxels
+      integer(ip) :: vxlstr ( nvxlst )  !! work: start pointers of the fine voxel data of the voxels hit by the ray
+   end type dskx02_state
+
+   ! ------------------------------------------------------------------ DSKXSI
+
+   integer(ip), parameter :: dskxsi_bdnmln = 36
+   integer(ip), parameter :: dskxsi_frnmln = 32
+
+   !> Compute a ray-surface intercept using data provided by
+   !> multiple loaded DSK segments. Return information about
+   !> the source of the data defining the surface on which the
+   !> intercept was found: DSK handle, DLA and DSK descriptors,
+   !> and DSK data type-dependent parameters.
+   !>
+   !> The saved variables of SPICELIB's DSKXSI routines (entry points dskxsi),
+   !> held in pepper_context (one per thread).
+   type, public :: dskxsi_state
+      logical :: first = .true.  !! first call: the counters are not yet initialized
+      integer(ip) :: fixfid = 0  !! ID code of the body-fixed frame FIXREF of the previous call
+      integer(ip) :: frmctr ( ctrsiz ) = 0  !! pool counter of the frame name lookup of FIXREF (ZZPCTRCK)
+      character(dskxsi_frnmln) :: prvfrm = ' '  !! body-fixed frame name of the previous call
+      integer(ip) :: prvtcd = 0  !! target ID code of the previous call
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svtfnd = .false.  !! found flag of the last target name lookup
+      character(dskxsi_bdnmln) :: svtnam = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: trgctr ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the target
+   end type dskxsi_state
+
+   ! ------------------------------------------------------------------ DSKXV
+
+   integer(ip), parameter :: dskxv_bdnmln = 36
+   integer(ip), parameter :: dskxv_frnmln = 32
+
+   !> Compute ray-surface intercepts for a set of rays, using data
+   !> provided by multiple loaded DSK segments.
+   !>
+   !> The saved variables of SPICELIB's DSKXV routines (entry points dskxv),
+   !> held in pepper_context (one per thread).
+   type, public :: dskxv_state
+      logical :: first = .true.  !! first call: pool counters not initialized, no frame validated yet
+      integer(ip) :: fixfid = 0  !! frame ID code of the last validated body-fixed frame (fixref)
+      integer(ip) :: frmctr ( ctrsiz ) = 0  !! pool counter for the frame kernel variables (ZZPCTRCK), triggers re-validating fixref
+      character(dskxv_frnmln) :: prvfrm = ' '  !! name of the body-fixed frame validated last
+      integer(ip) :: prvtcd = 0  !! ID code of the target for which the frame was validated last
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last (ZZBODS2C)
+      logical :: svtfnd = .false.  !! found flag of the last target name lookup
+      character(dskxv_bdnmln) :: svtnam = ' '  !! name of the target looked up last
+      integer(ip) :: trgctr ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the target
+   end type dskxv_state
+
+   ! ------------------------------------------------------------------ EDTERM
+
+   integer(ip), parameter :: edterm_maxl = 36
+   integer(ip), parameter :: edterm_frnmln = 32
+
+   !> Compute a set of points on the umbral or penumbral terminator of
+   !> a specified target body, where the target shape is modeled as an
+   !> ellipsoid.
+   !>
+   !> The saved variables of SPICELIB's EDTERM routines (entry points edterm),
+   !> held in pepper_context (one per thread).
+   type, public :: edterm_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(edterm_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtgid = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the light source
+      character(edterm_maxl) :: svscre = ' '  !! name of the light source looked up last
+      integer(ip) :: svsrci = 0  !! ID code of the light source looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last light source name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(edterm_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsi = 0  !! ID code of the observer looked up last
+      logical :: svfnd3 = .false.  !! found flag of the last observer name lookup
+      logical :: first = .true.  !! first call: the pool counters are not yet initialized
+      integer(ip) :: svctr4 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(edterm_frnmln) :: svfref = ' '  !! name of the body-fixed frame looked up last (ZZNAMFRM)
+      integer(ip) :: svfrcd = 0  !! ID code of the body-fixed frame looked up last
+   end type edterm_state
+
+   ! ------------------------------------------------------------------ EKBSEG
+
+   !> Start a new segment in an E-kernel.
+   !>
+   !> The saved variables of SPICELIB's EKBSEG routines (entry points ekbseg),
+   !> held in pepper_context (one per thread).
+   type, public :: ekbseg_state
+      logical :: first = .true.  !! idspec is not set yet
+      integer(ip) :: idspec ( lbcell : mxspec ) = 0  !! default identifier specification (lxdfid), to check table/column names
+   end type ekbseg_state
+
+   ! ------------------------------------------------------------------ EKQMGR
+
+   integer(ip), parameter :: ekqmgr_ftsize = 20
+   integer(ip), parameter :: ekqmgr_stsize = 200
+   integer(ip), parameter :: mxtbld = 100
+   integer(ip), parameter :: mxclld = 500
+   integer(ip), parameter :: maxseg = ekqmgr_stsize
+   integer(ip), parameter :: ctsize = mxclld
+   integer(ip), parameter :: dtsize = maxseg * mxclld / 10
+   integer(ip), parameter :: ekqmgr_short = 80
+
+   !> Manage query operations on EK files.
+   !>
+   !> The saved variables of SPICELIB's EKQMGR routines (entry points eklef,
+   !> ekuef, ekntab, ektnam, ekccnt, ekcii, eksrch, eknelt, ekgc, ekgd, ekgi),
+   !> held in pepper_spice (and, for some variables, in pepper_context).
+   !>
+   !> No default initialization (596092 bytes): see init_ekqmgr_state.
+   type, public :: ekqmgr_state
+      integer(ip) :: ftpool ( 2,  lbpool : ekqmgr_ftsize )  !! doubly linked list pool of the file list (head: fthead)
+      integer(ip) :: fthan (              ekqmgr_ftsize )  !! handle of each loaded EK file
+      integer(ip) :: fthead  !! head node of the file list (0 if no files are loaded)
+      integer(ip) :: tbpool ( 2,  lbpool : mxtbld )  !! doubly linked list pool of the table list (head: tbhead)
+      integer(ip) :: tbstpt (              mxtbld )  !! head node of the segment list (in stpool) of each table
+      integer(ip) :: tbncol (              mxtbld )  !! number of columns of each table
+      character(tnamsz) :: tbnams (              mxtbld )  !! name of each table
+      integer(ip) :: tbctpt (              mxtbld )  !! head node of the column attribute list (in ctpool) of each table
+      integer(ip) :: tbfils ( ekqmgr_ftsize,      mxtbld )  !! handles of the files that contain segments of each table
+      integer(ip) :: tbflsz (              mxtbld )  !! number of handles in tbfils for each table
+      integer(ip) :: tbhead  !! head node of the table list (0 if no tables are loaded)
+      integer(ip) :: stpool ( 2, lbpool : maxseg )  !! doubly linked list pool of the segment table (one list per table)
+      integer(ip) :: sthan (             maxseg )  !! handle of the EK file of each loaded segment
+      integer(ip) :: stsidx (             maxseg )  !! index of each loaded segment within its EK file
+      integer(ip) :: stdscs ( sdscsz,     maxseg )  !! segment descriptor of each loaded segment
+      integer(ip) :: stnrow (             maxseg )  !! number of rows of each loaded segment
+      integer(ip) :: stncol (             maxseg )  !! number of columns of each loaded segment
+      integer(ip) :: stdtpt (             maxseg )  !! head node of the column descriptor list (in dtpool) of each loaded segment
+      integer(ip) :: dtpool ( 2,       lbpool:dtsize )  !! doubly linked list pool of the column descriptor table (one list per segment)
+      integer(ip) :: dtdscs ( cdscsz,  dtsize        )  !! column descriptor of each entry of the column descriptor table
+      integer(ip) :: ctpool ( 2,       lbpool : ctsize )  !! doubly linked list pool of the column attribute table (one list per table)
+      character(cnamsz) :: ctnams (                   ctsize )  !! column name of each column attribute entry
+      integer(ip) :: ctclas (                   ctsize )  !! class of each column
+      integer(ip) :: cttyps (                   ctsize )  !! data type of each column
+      integer(ip) :: ctlens (                   ctsize )  !! string length of each column (character columns)
+      logical :: ctfixd (                   ctsize )  !! each column has fixed-size entries
+      integer(ip) :: ctsizs (                   ctsize )  !! number of elements per entry of each column (fixed-size columns)
+      logical :: ctindx (                   ctsize )  !! each column is indexed
+      logical :: ctnull (                   ctsize )  !! each column may contain null values
+      logical :: first  !! the linked list pools are not initialized yet (done by the first eklef or eksrch)
+   end type ekqmgr_state
+
+   !> The saved variables of EKQMGR that are per context.
+   !>
+   !> No default initialization (123296 bytes): see init_ekqmgr_context_state.
+   type, public :: ekqmgr_context_state
+      character(cnamsz) :: cnams ( mxclld )  !! work: names of the columns of the segment being loaded (eklef)
+      character(cnamsz) :: cnmset ( lbcell : mxclld )  !! work: set of the segment's column names, to find duplicates (eklef)
+      character(cnamsz) :: colnam  !! work: name of a column (for eklef's error messages; of a SELECT column in eksrch)
+      character(tnamsz) :: frmals ( maxtab )  !! work: alias of each FROM table of the query (eksrch)
+      character(tnamsz) :: frmtab ( maxtab )  !! work: name of each FROM table of the query (eksrch)
+      character(ekqmgr_short) :: problm  !! work: code of the problem that made eklef abort loading the file
+      character(tnamsz) :: tabnam  !! work: name of a table (of the segment being loaded, or of a SELECT or order-by column)
+      character(tnamsz) :: tabvec ( lbcell : maxtab )  !! work: cell of the names of the FROM tables of the query (eksrch)
+      real(wp) :: dvals ( maxcon )  !! work: d.p. value of each constraint of the current conjunction (eksrch)
+      integer(ip) :: cbegs ( maxcon )  !! work: start in eqryc of the string value of each constraint of the current conjunction
+      integer(ip) :: cdscrs ( cdscsz,  mxclld )  !! work: column descriptors of the segment being loaded (eklef)
+      integer(ip) :: cends ( maxcon )  !! work: end in eqryc of the string value of each constraint of the current conjunction
+      integer(ip) :: cnstyp ( maxcon )  !! work: type (column or value comparison) of each constraint of the current conjunction
+      integer(ip) :: dtype ( maxcon )  !! work: data type of the value of each constraint of the current conjunction
+      integer(ip) :: ivals ( maxcon )  !! work: integer value of each constraint of the current conjunction
+      integer(ip) :: lcidx ( maxcon )  !! work: index (in its table) of the left-hand column of each constraint
+      integer(ip) :: lelts ( maxcon )  !! element indices (all 1) of the left-hand columns of the constraints
+      integer(ip) :: ltbidx ( maxcon )  !! work: FROM table index of the left-hand column of each constraint
+      integer(ip) :: ncols  !! work: number of columns of the segment being loaded (eklef)
+      integer(ip) :: new  !! work: file table node of the file being loaded (eklef)
+      integer(ip) :: nmatch  !! work: number of matching rows in the current segment (eksrch)
+      integer(ip) :: norder  !! number of order-by columns of the last query
+      integer(ip) :: npcol  !! work: number of columns of the table of the segment being loaded (for an error message)
+      integer(ip) :: nsel  !! number of SELECT columns of the last query
+      integer(ip) :: ntab  !! number of FROM tables of the last query
+      integer(ip) :: ocols ( maxord )  !! index (in its table's column list) of each order-by column of the last query
+      integer(ip) :: oelts ( maxord )  !! element indices (all 1) of the order-by columns
+      integer(ip) :: ops ( maxcon )  !! work: operator code of each constraint of the current conjunction
+      integer(ip) :: ordbas  !! base address in the EK scratch area of the order vector of the sorted query results
+      integer(ip) :: otabs ( maxord )  !! FROM table index of each order-by column of the last query
+      integer(ip) :: rbas ( mxjoin )  !! work: scratch area base address of the one-table join row set of each FROM table
+      integer(ip) :: rcidx ( maxcon )  !! work: index (in its table) of the right-hand column of each constraint
+      integer(ip) :: relts ( maxcon )  !! element indices (all 1) of the right-hand columns of the constraints
+      integer(ip) :: rsize ( mxjrs  )  !! work: size of the one-table join row set of each FROM table
+      integer(ip) :: rtbidx ( maxcon )  !! work: FROM table index of the right-hand column of each constraint
+      integer(ip) :: selcol ( maxsel )  !! index (in its table's column list) of each SELECT column of the last query
+      integer(ip) :: selctp ( maxsel )  !! column attribute table entry (ctpool node) of each SELECT column of the last query
+      integer(ip) :: seltab ( maxsel )  !! FROM table index of each SELECT column of the last query
+      integer(ip) :: segdsc ( sdscsz )  !! work: descriptor of the segment being loaded (eklef)
+      integer(ip) :: sense ( maxord )  !! sense (ascending or descending) of each order-by column of the last query
+      integer(ip) :: stnew  !! work: segment table node of the segment being loaded (eklef)
+      integer(ip) :: tbcurr  !! work: the current node of the table list
+      integer(ip) :: tptvec ( lbcell : maxtab )  !! cell of the table list nodes of the FROM tables of the last query
+      integer(ip) :: ubase ( mxjrs )  !! base address of the join row set of each conjunction (the join row set union)
+      integer(ip) :: unrows  !! number of rows that matched the last query
+      integer(ip) :: usize  !! number of join row sets in the join row set union of the last query
+      logical :: activc ( maxcon )  !! work: each column comparison constraint is active
+      logical :: activv ( maxcon )  !! work: each value comparison constraint is active
+      logical :: dosort  !! the results of the last query must be sorted at the next fetch
+      logical :: fnd  !! work: the searched for table, file or column was found
+      logical :: presnt  !! work: the table of the segment being loaded is in the table list already (eklef)
+      logical :: sorted  !! the results of the last query are sorted (ordbas holds their order vector)
+   end type ekqmgr_context_state
+
+   ! ------------------------------------------------------------------ ET2UTC
+
+   !> Convert an input time from ephemeris seconds past J2000
+   !> to Calendar, Day-of-Year, or Julian Date format, UTC.
+   !>
+   !> The saved variables of SPICELIB's ET2UTC routines (entry points et2utc),
+   !> held in pepper_context (one per thread).
+   type, public :: et2utc_state
+      character(80) :: str = ' '  !! work: output string of the Julian date format
+      real(wp) :: tvec ( 8 ) = 0.0_wp  !! work: time vector converted from TDB to JDUTC
+   end type et2utc_state
+
+   ! ------------------------------------------------------------------ ETCAL
+
+   !> Convert from an ephemeris epoch measured in seconds past
+   !> the epoch of J2000 to a calendar string format using a
+   !> formal calendar free of leapseconds.
+   !>
+   !> The saved variables of SPICELIB's ETCAL routines (entry points etcal),
+   !> held in pepper_context (one per thread).
+   type, public :: etcal_state
+      real(wp) :: dmnint = 0.0_wp  !! smallest integer, as a double precision number (computed on the first call)
+      real(wp) :: dmxint = 0.0_wp  !! largest integer, as a double precision number (computed on the first call)
+      real(wp) :: halfd = 0.0_wp  !! number of seconds in half a day
+      real(wp) :: secspd = 0.0_wp  !! number of seconds in a day
+      integer(ip) :: dn2000 = 0  !! day number past 1 Jan 1 AD of Jan 1, 2000 (computed on the first call)
+      integer(ip) :: offset = 0  !! scratch: number of 400-year periods by which a B.C. day number was shifted
+      logical :: first = .true.  !! the first call has not set up the constants yet
+   end type etcal_state
+
+   ! ------------------------------------------------------------------ EV2LIN
+
+   integer(ip), parameter :: nmodl = 6
+   integer(ip), parameter :: kae = 8
+   integer(ip), parameter :: ngeocn = kae
+   integer(ip), parameter :: ev2lin_kepoch = 10
+   integer(ip), parameter :: ev2lin_nelems = ev2lin_kepoch
+   integer(ip), parameter :: prsize = 29
+
+   !> **Deprecated:** This routine has been superseded by the SPICELIB
+   !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
+   !> NAIF supports EV2LIN only for backward compatibility.
+   !>
+   !> The saved variables of SPICELIB's EV2LIN routines (entry points ev2lin),
+   !> held in pepper_context (one per thread).
+   type, public :: ev2lin_state
+      real(wp) :: ke = 0.0_wp  !! sqrt(GM) of the earth in (earth radii)^1.5/min, from the geophysical constants
+      real(wp) :: er = 0.0_wp  !! equatorial radius of the earth (km), from the geophysical constants
+      real(wp) :: ae = 0.0_wp  !! distance units per earth radius, from the geophysical constants
+      real(wp) :: ck2 = 0.0_wp  !! J2 coefficient term J2*ae^2/2
+      real(wp) :: a3ovk2 = 0.0_wp  !! J3/J2 term -2*J3*ae/J2
+      real(wp) :: ck4 = 0.0_wp  !! J4 coefficient term -3/8*J4*ae^4
+      real(wp) :: qoms2t = 0.0_wp  !! atmospheric density parameter ((QO-SO)*ae/er)^4
+      real(wp) :: s = 0.0_wp  !! atmospheric density parameter ae*(1+SO/er)
+      real(wp) :: d2 = 0.0_wp  !! work: drag coefficient D2 of the current elements (t^2 term, perigee >= 220 km)
+      real(wp) :: d3 = 0.0_wp  !! work: drag coefficient D3 of the current elements (t^3 term, perigee >= 220 km)
+      real(wp) :: d4 = 0.0_wp  !! work: drag coefficient D4 of the current elements (t^4 term, perigee >= 220 km)
+      real(wp) :: elemnt ( ev2lin_nelems, nmodl ) = 0.0_wp  !! element sets of the cached models (matched against the input to reuse PRELIM)
+      real(wp) :: fl = 0.0_wp  !! work: Kepler equation residual at the lower bisection bound
+      real(wp) :: fu = 0.0_wp  !! work: Kepler equation residual at the upper bisection bound
+      real(wp) :: lower = 0.0_wp  !! work: lower bracket of the Kepler equation bisection
+      real(wp) :: lstgeo ( ngeocn ) = 0.0_wp  !! geophysical constants of the previous call (derived constants recomputed on change)
+      real(wp) :: pix2 = 0.0_wp  !! 2*pi, set on the first call
+      real(wp) :: prelim ( prsize, nmodl ) = 0.0_wp  !! element-dependent preliminary quantities of each cached model
+      real(wp) :: t3cof = 0.0_wp  !! work: t^3 mean longitude coefficient of the current elements (perigee >= 220 km)
+      real(wp) :: t4cof = 0.0_wp  !! work: t^4 mean longitude coefficient of the current elements (perigee >= 220 km)
+      real(wp) :: t5cof = 0.0_wp  !! work: t^5 mean longitude coefficient of the current elements (perigee >= 220 km)
+      real(wp) :: tokm = 0.0_wp  !! kilometers per distance unit (er/ae)
+      real(wp) :: tokmps = 0.0_wp  !! conversion from distance units/min to km/s (tokm/60)
+      real(wp) :: upper = 0.0_wp  !! work: upper bracket of the Kepler equation bisection
+      integer(ip) :: head = 0  !! head of the most-recently-used list of cached models
+      integer(ip) :: last = 0  !! work: last model visited in the cache search (reused when no match)
+      integer(ip) :: list ( 2, nmodl ) = 0  !! previous/next links of the most-recently-used list of cached models
+      logical :: doinit = .true.  !! first call: the model cache and list are not yet initialized
+      logical :: recog = .false.  !! work: the input elements match a cached model
+   end type ev2lin_state
+
+   ! ------------------------------------------------------------------ FOVTRG
+
+   !> Determine if a specified ephemeris object is within the
+   !> field-of-view (FOV) of a specified instrument at a given time.
+   !>
+   !> The saved variables of SPICELIB's FOVTRG routines (entry points fovtrg),
+   !> held in pepper_context (one per thread).
+   type, public :: fovtrg_state
+      real(wp) :: raydir ( 3 ) = 0.0_wp  !! ray direction vector required by ZZGFFVIN. This is an unused variable as far is this routine is concerned: the target is an ephemeris object. We initialize the ray to prevent portability problems.
+   end type fovtrg_state
+
+   ! ------------------------------------------------------------------ FRAMEX
+
+   integer(ip), parameter :: non = nninrt
+   integer(ip), parameter :: ncount = ninert + non
+   integer(ip), parameter :: framex_frnmln = 32
+   integer(ip), parameter :: maxkfr = 5209
+   integer(ip), parameter :: maxbfr = 149
+
+   !> This is an umbrella routine for the entry points available for
+   !> manipulating different reference frames. It should not be called
+   !> directly.
+   !>
+   !> The saved variables of SPICELIB's FRAMEX routines (entry points namfrm,
+   !> frmnam, frinfo, cidfrm, cnmfrm, ccifrm), held in pepper_context (one per
+   !> thread).
+   !>
+   !> No default initialization (537488 bytes): see init_framex_state.
+   type, public :: framex_state
+      character(framex_frnmln) :: name ( ncount )  !! official names of the built-in frames (inertial and non-inertial)
+      integer(ip) :: center ( ncount )  !! body ID codes of the centers of the built-in frames (parallel to name)
+      integer(ip) :: centrd ( ncount )  !! order vector of center (indices of center sorted in increasing order)
+      integer(ip) :: idcode ( ncount )  !! frame ID codes of the built-in frames (parallel to name)
+      integer(ip) :: type ( ncount )  !! frame class (INERTL, PCK, CK, TK, DYN, ...) of the built-in frames (parallel to name)
+      integer(ip) :: typeid ( ncount )  !! frame class IDs of the built-in frames (parallel to name)
+      logical :: first  !! true until the built-in frame tables and hashes have been set up
+      integer(ip) :: pulctr ( ctrsiz )  !! POOL state counter.
+      integer(ip) :: knmlst (          maxkfr )  !! heads of the name hash collision lists of the kernel pool frames (index into knmids)
+      integer(ip) :: knmpol ( lbpool : maxkfr )  !! name-based hash for kernel pool frames: collision lists
+      character(framex_frnmln) :: knmnms (          maxkfr )  !! name-based hash for kernel pool frames: the names
+      integer(ip) :: knmids (          maxkfr )  !! frame ID codes for the names in knmnms
+      integer(ip) :: kidlst (          maxkfr )  !! heads of the ID hash collision lists of the kernel pool frames (index into kname, kcent, ...)
+      integer(ip) :: kidpol ( lbpool : maxkfr )  !! ID-based hash for kernel pool frames: collision lists
+      integer(ip) :: kidids (          maxkfr )  !! ID-based hash for kernel pool frames: the frame ID codes
+      character(framex_frnmln) :: kname (          maxkfr )  !! names of the kernel pool frames in kidids
+      integer(ip) :: kcent (          maxkfr )  !! center body ID codes of the kernel pool frames in kidids
+      integer(ip) :: kclass (          maxkfr )  !! frame classes of the kernel pool frames in kidids
+      integer(ip) :: kclsid (          maxkfr )  !! frame class IDs of the kernel pool frames in kidids
+      integer(ip) :: bnmlst (          maxbfr )  !! heads of the name hash collision lists of the built-in frames (index into bnmidx)
+      integer(ip) :: bnmpol ( lbpool : maxbfr )  !! name-based hash for built-in frames: collision lists
+      character(framex_frnmln) :: bnmnms (          maxbfr )  !! name-based hash for built-in frames: the names (uppercase)
+      integer(ip) :: bnmidx (          maxbfr )  !! index in the built-in frame arrays (name, idcode, ...) of each name in bnmnms
+      integer(ip) :: bidlst (          maxbfr )  !! heads of the ID hash collision lists of the built-in frames (index into bididx)
+      integer(ip) :: bidpol ( lbpool : maxbfr )  !! ID-based hash for built-in frames: collision lists
+      integer(ip) :: bidids (          maxbfr )  !! ID-based hash for built-in frames: the frame ID codes
+      integer(ip) :: bididx (          maxbfr )  !! index in the built-in frame arrays (name, idcode, ...) of each ID in bidids
+   end type framex_state
+
+   ! ------------------------------------------------------------------ FRMGET
+
+   !> Find the transformation from a user specified frame to
+   !> another frame at a user specified epoch.
+   !>
+   !> The saved variables of SPICELIB's FRMGET routines (entry points frmget),
+   !> held in pepper_context (one per thread).
+   type, public :: frmget_state
+      real(wp) :: idnt66 ( 6, 6 ) = 0.0_wp  !! 6x6 identity matrix, set on the first call
+      logical :: pass1 = .true.  !! true until the first-call initialization is done
+      character(6) :: versn = '5.0.0'  !! FRMGET version string, used in error messages
+   end type frmget_state
+
+   ! ------------------------------------------------------------------ GETFVN
+
+   integer(ip), parameter :: getfvn_maxl = 36
+
+   !> Return the field-of-view (FOV) parameters for a specified
+   !> instrument. The instrument is specified by name.
+   !>
+   !> The saved variables of SPICELIB's GETFVN routines (entry points getfvn),
+   !> held in pepper_context (one per thread).
+   type, public :: getfvn_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(getfvn_maxl) :: svinst = ' '  !! name of the instrument looked up last (ZZBODS2C)
+      integer(ip) :: svinid = 0  !! ID code of the instrument looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last instrument name lookup
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type getfvn_state
+
+   ! ------------------------------------------------------------------ GFEVNT
+
+   integer(ip), parameter :: nq = 8
+   integer(ip), parameter :: gfevnt_maxcln = 80
+
+   !> Determine time intervals when a specified geometric quantity
+   !> satisfies a specified mathematical condition.
+   !>
+   !> The saved variables of SPICELIB's GFEVNT routines (entry points gfevnt),
+   !> held in pepper_context (one per thread).
+   type, public :: gfevnt_state
+      logical :: first = .true.  !! first call: progress report prefixes and suffixes not yet set up
+      !> recognized relational operators (constant)
+      character(gfevnt_maxcln) :: cnames ( nc ) = [ character(gfevnt_maxcln) :: '>', '=', '<', 'ABSMAX', &
+         'ABSMIN', 'LOCMAX', 'LOCMIN' ]
+      character(gfevnt_maxcln) :: dref = ' '  !! frame of the DVEC ray for coordinate searches (DREF; kept if not supplied)
+      !> recognized geometric quantity names (constant)
+      character(gfevnt_maxcln) :: qnames ( nq     ) = [ character(gfevnt_maxcln) :: 'ANGULAR SEPARATION', &
+         'DISTANCE', 'COORDINATE', 'RANGE RATE', 'PHASE ANGLE', 'ILLUMINATION ANGLE', ' ', ' ' ]
+      character(mxbegm) :: srcpre ( 2, nq ) = ' '  !! progress report prefixes for each pass of each quantity
+      character(mxendm) :: srcsuf ( 2, nq ) = ' '  !! progress report suffixes for each pass of each quantity
+   end type gfevnt_state
+
+   ! ------------------------------------------------------------------ GFRPRT
+
+   !> The entry points contained under this routine provide users
+   !> information regarding the status of a GF search in progress.
+   !>
+   !> The saved variables of SPICELIB's GFRPRT routines (entry points gfrepi,
+   !> gfrepu, gfrepf), held in pepper_context (one per thread).
+   type, public :: gfrprt_state
+      character(mxbegm) :: copyb = ' '  !! progress report begin message saved by GFREPI for GFREPF
+      character(mxendm) :: copye = ' '  !! progress report end message saved by GFREPI for GFREPF
+      real(wp) :: t0 = 0.0_wp  !! time of the last progress update (start of the search window at first)
+      real(wp) :: remain = 0.0_wp  !! measure of the current interval remaining after t0
+   end type gfrprt_state
+
+   ! ------------------------------------------------------------------ GFSTEP
+
+   !> Return the time step set by the most recent call to GFSSTP.
+   !>
+   !> The saved variables of SPICELIB's GFSTEP routines (entry points gfstep,
+   !> gfsstp), held in pepper_context (one per thread).
+   type, public :: gfstep_state
+      real(wp) :: svstep = -1.0_wp  !! the step size (set by GFSSTP)
+      logical :: svinit = .false.  !! the step size has been set
+   end type gfstep_state
+
+   ! ------------------------------------------------------------------ GFTFOV
+
+   !> Determine time intervals when a specified ephemeris object
+   !> intersects the space bounded by the field-of-view (FOV) of a
+   !> specified instrument.
+   !>
+   !> The saved variables of SPICELIB's GFTFOV routines (entry points gftfov),
+   !> held in pepper_context (one per thread).
+   type, public :: gftfov_state
+      real(wp) :: raydir ( 3 ) = 0.0_wp  !! ray direction vector required by GFFOVE. This is an unused variable as far is this routine is concerned: the target is an ephemeris object. We initialize the ray to prevent portability problems.
+   end type gftfov_state
+
+   ! ------------------------------------------------------------------ HX2DP
+
+   integer(ip), parameter :: maxman = 31
+
+   !> Convert a string representing a double precision number in a
+   !> base 16 "scientific notation" into its equivalent double
+   !> precision number.
+   !>
+   !> The saved variables of SPICELIB's HX2DP routines (entry points hx2dp),
+   !> held in pepper_context (one per thread).
+   type, public :: hx2dp_state
+      real(wp) :: maxdp = 0.0_wp  !! largest number divided by the base
+      real(wp) :: mindp = 0.0_wp  !! smallest number divided by the base
+      real(wp) :: scales (maxman) = 0.0_wp  !! negative powers of the base (16) for the digits of the mantissa
+      integer(ip) :: digbeg = 0  !! character code of '0'
+      integer(ip) :: digend = 0  !! character code of '9'
+      integer(ip) :: iexpch = 0  !! character code of the exponent character
+      integer(ip) :: iminus = 0  !! character code of '-'
+      integer(ip) :: iplus = 0  !! character code of '+'
+      integer(ip) :: ispace = 0  !! character code of ' '
+      integer(ip) :: lccbeg = 0  !! character code of 'a'
+      integer(ip) :: lccend = 0  !! character code of 'f'
+      integer(ip) :: uccbeg = 0  !! character code of 'A'
+      integer(ip) :: uccend = 0  !! character code of 'F'
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+   end type hx2dp_state
+
+   ! ------------------------------------------------------------------ HYPTOF
+
+   !> Solve the time of flight equation MA = e sinh(F) - F for the
+   !> hyperbolic eccentric anomaly F, given the mean anomaly, MA,
+   !> and the eccentricity, e.
+   !>
+   !> The saved variables of SPICELIB's HYPTOF routines (entry points hyptof),
+   !> held in pepper_context (one per thread).
+   type, public :: hyptof_state
+      logical :: first = .true.  !! first call: maxlog not yet computed
+      real(wp) :: maxlog = 0.0_wp  !! log(dpmax), the natural log of the largest double precision number
+   end type hyptof_state
+
+   ! ------------------------------------------------------------------ ILLUM
+
+   integer(ip), parameter :: illum_maxl = 36
+
+   !> **Deprecated:** This routine has been superseded by the SPICELIB
+   !> routine ILUMIN. This routine is supported for purposes of
+   !> backward compatibility only.
+   !>
+   !> The saved variables of SPICELIB's ILLUM routines (entry points illum),
+   !> held in pepper_context (one per thread).
+   type, public :: illum_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(illum_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(illum_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      logical :: first = .true.  !! first call: the pool counters are not yet initialized
+   end type illum_state
+
+   ! ------------------------------------------------------------------ ILLUMF
+
+   integer(ip), parameter :: illumf_maxl = 36
+   integer(ip), parameter :: illumf_frnmln = 32
+
+   !> Compute the illumination angles---phase, incidence, and
+   !> emission---at a specified point on a target body. Return logical
+   !> flags indicating whether the surface point is visible from
+   !> the observer's position and whether the surface point is
+   !> illuminated.
+   !>
+   !> The saved variables of SPICELIB's ILLUMF routines (entry points illumf),
+   !> held in pepper_context (one per thread).
+   type, public :: illumf_state
+      logical :: first = .true.  !! first call: counters, correction and method not yet set up
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      character(mthlen) :: prvmth = ' '  !! method string of the previous call (blank after a parse error)
+      integer(ip) :: shape = 0  !! target shape parsed from the saved method (ellipsoid or DSK)
+      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the saved method
+      logical :: uselt = .false.  !! the saved correction includes light time
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(illumf_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(illumf_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(illumf_frnmln) :: svfref = ' '  !! name of the body-fixed frame (FIXREF) looked up last (ZZNAMFRM)
+      integer(ip) :: svrefc = 0  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr4 ( ctrsiz ) = 0  !! saved surface name/ID item declarations.
+   end type illumf_state
+
+   ! ------------------------------------------------------------------ ILLUMG
+
+   integer(ip), parameter :: illumg_lnsize = 80
+   integer(ip), parameter :: illumg_maxl = 36
+   integer(ip), parameter :: illumg_frnmln = 32
+
+   !> Find the illumination angles (phase, incidence, and
+   !> emission) at a specified surface point of a target body.
+   !>
+   !> The saved variables of SPICELIB's ILLUMG routines (entry points illumg),
+   !> held in pepper_context (one per thread).
+   type, public :: illumg_state
+      logical :: first = .true.  !! first call: counters, correction and method not yet set up
+      integer(ip) :: nsurf = 0  !! number of surface IDs in the saved method's surface list
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      character(illumg_lnsize) :: prvmth = ' '  !! method string of the previous call (blank after a parse error)
+      integer(ip) :: shape = 0  !! target shape parsed from the saved method (ellipsoid or DSK)
+      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the saved method
+      logical :: uselt = .false.  !! the saved correction includes light time
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(illumg_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(illumg_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(illumg_frnmln) :: svfref = ' '  !! name of the body-fixed frame (FIXREF) looked up last (ZZNAMFRM)
+      integer(ip) :: svrefc = 0  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr4 ( ctrsiz ) = 0  !! saved surface name/ID item declarations.
+   end type illumg_state
+
+   ! ------------------------------------------------------------------ INCNSG
+
+   !> Compute the points of intersection of a specified nappe of a cone
+   !> and a line segment.
+   !>
+   !> The saved variables of SPICELIB's INCNSG routines (entry points incnsg),
+   !> held in pepper_context (one per thread).
+   type, public :: incnsg_state
+      real(wp) :: origin ( 3 ) = 0.0_wp  !! the zero vector
+      real(wp) :: z ( 3 ) = [ 0.0_wp, 0.0_wp, 1.0_wp ]  !! the +Z unit vector
+   end type incnsg_state
+
+   ! ------------------------------------------------------------------ JUL2GR
+
+   !> Convert Year Month and Day on the Julian Calendar
+   !> to the Gregorian Calendar
+   !>
+   !> The saved variables of SPICELIB's JUL2GR routines (entry points jul2gr,
+   !> gr2jul), held in pepper_context (one per thread).
+   type, public :: jul2gr_state
+      logical :: first = .true.  !! the first call has not set up the constants yet
+      integer(ip) :: rdayg = 0  !! Gregorian day number of the reference day Oct 15, 1582
+      integer(ip) :: rdayj = 0  !! Julian day number of the reference day Oct 5, 1582 (the same day)
+      integer(ip) :: offstj = 0  !! offset from Gregorian to Julian calendar day numbers (RDAYJ - RDAYG)
+      integer(ip) :: offstg = 0  !! offset from Julian to Gregorian calendar day numbers (RDAYG - RDAYJ)
+   end type jul2gr_state
+
+   ! ------------------------------------------------------------------ KEEPER
+
+   integer(ip), parameter :: keeper_ftsize = 5000
+   integer(ip), parameter :: maxtxt = 300
+   integer(ip), parameter :: keeper_maxfil = keeper_ftsize + maxtxt
+   integer(ip), parameter :: keeper_wdsize = 32
+   integer(ip), parameter :: nknown = 3
+
+   !> This routine is an umbrella for a collection of entry points
+   !> that manage the loading and unloading of SPICE kernels from
+   !> an application program.
+   !>
+   !> The saved variables of SPICELIB's KEEPER routines (entry points furnsh,
+   !> ktotal, kdata, kinfo, kclear, unload), held in pepper_spice.
+   !>
+   !> No default initialization (1436404 bytes): see init_keeper_state.
+   type, public :: keeper_state
+      character(filsiz) :: files ( keeper_maxfil )  !! name of each kernel loaded through FURNSH
+      integer(ip) :: handls ( keeper_maxfil )  !! handle of each loaded kernel (0 for a text kernel)
+      integer(ip) :: srces ( keeper_maxfil )  !! index in files of the meta-kernel each kernel was loaded from (0: loaded directly)
+      character(typlen) :: types ( keeper_maxfil )  !! type (SPK, CK, PCK, DSK, EK, TEXT, META) of each loaded kernel
+      integer(ip) :: loaded  !! number of kernels loaded
+      character(keeper_wdsize) :: known ( nknown )  !! the meta-kernel variables (KERNELS_TO_LOAD, PATH_SYMBOLS, PATH_VALUES) watched by FURNSH
+      logical :: first  !! the watcher has not been set yet
+   end type keeper_state
+
+   ! ------------------------------------------------------------------ LATSRF
+
+   integer(ip), parameter :: latsrf_bdnmln = 36
+   integer(ip), parameter :: latsrf_frnmln = 32
+
+   !> Map array of planetocentric longitude/latitude coordinate pairs
+   !> to surface points on a specified target body.
+   !>
+   !> The saved variables of SPICELIB's LATSRF routines (entry points latsrf),
+   !> held in pepper_context (one per thread).
+   type, public :: latsrf_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(latsrf_bdnmln) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(latsrf_frnmln) :: svfref = ' '  !! name of the body-fixed frame looked up last (ZZNAMFRM)
+      integer(ip) :: svfxfc = 0  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved target radius values.
+      integer(ip) :: svprvt = 0  !! ID code of the target whose radii were looked up last
+      real(wp) :: svradi ( 3 ) = 0.0_wp  !! radii of the target body (from the kernel pool, ZZBODVCD)
+      integer(ip) :: nsurf = 0  !! number of surface IDs in the previous METHOD string
+      logical :: first = .true.  !! first call: counters not yet initialized and no METHOD parsed yet
+      character(mthlen) :: prvmth = ' '  !! METHOD string of the previous call
+      integer(ip) :: shape = 0  !! target shape code parsed from the previous METHOD (ellipsoid or DSK)
+      integer(ip) :: srfctr ( ctrsiz ) = 0  !! surface name-ID mapping state counter (ZZSRFTRK)
+      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the previous METHOD string
+   end type latsrf_state
+
+   ! ------------------------------------------------------------------ LIMBPT
+
+   integer(ip), parameter :: limbpt_maxl = 36
+   integer(ip), parameter :: limbpt_frnmln = 32
+   integer(ip), parameter :: limbpt_maxwin = 2 * maxivl
+
+   !> Find limb points on a target body. The limb is the set of points
+   !> of tangency on the target of rays emanating from the observer.
+   !> The caller specifies half-planes bounded by the observer-target
+   !> center vector in which to search for limb points.
+   !>
+   !> The saved variables of SPICELIB's LIMBPT routines (entry points limbpt),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (49168 bytes): see init_limbpt_state.
+   type, public :: limbpt_state
+      logical :: first  !! first call: counters, correction, method and locus not yet set up
+      integer(ip) :: lmbtyp  !! limb type parsed from the saved method (tangent or guided)
+      integer(ip) :: loccde  !! aberration correction locus code parsed from the saved CORLOC
+      integer(ip) :: nsurf  !! number of surface IDs in the saved method's surface list
+      real(wp) :: pntbuf ( 3, limbpt_maxwin )  !! work: buffer of the limb points found in one cutting half-plane
+      character(corlen) :: prvcor  !! aberration correction string of the previous call
+      character(acllen) :: prvloc  !! aberration correction locus string (CORLOC) of the previous call
+      character(mthlen) :: prvmth  !! method string of the previous call (blank after a parse error)
+      integer(ip) :: prvtrg  !! target ID code of the previous call (the radii counter is reset when it changes)
+      integer(ip) :: shape  !! target shape parsed from the saved method (ellipsoid or DSK)
+      integer(ip) :: srflst ( maxsrf )  !! surface ID list parsed from the saved method
+      integer(ip) :: svnrad  !! number of target radii returned by the last ZZBODVCD lookup
+      logical :: usecn  !! the saved correction uses converged Newtonian light time
+      logical :: uselt  !! the saved correction includes light time
+      logical :: usestl  !! the saved correction includes stellar aberration
+      logical :: xmit  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz )  !! saved name/ID item declarations.
+      character(limbpt_maxl) :: svtarg  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde  !! ID code of the target looked up last
+      logical :: svfnd1  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz )  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(limbpt_maxl) :: svobsr  !! name of the observer looked up last
+      integer(ip) :: svobsc  !! ID code of the observer looked up last
+      logical :: svfnd2  !! found flag of the last observer name lookup
+      integer(ip) :: svctr3 ( ctrsiz )  !! saved frame name/ID item declarations.
+      character(limbpt_frnmln) :: svfref  !! name of the body-fixed frame (FIXREF) looked up last (ZZNAMFRM)
+      integer(ip) :: svfxfc  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr4 ( ctrsiz )  !! saved surface name/ID item declarations.
+      integer(ip) :: svctr5 ( ctrsiz )  !! saved target radii declarations.
+      real(wp) :: svradi ( 3 )  !! target radii (km) returned by the last ZZBODVCD lookup
+   end type limbpt_state
+
+   ! ------------------------------------------------------------------ LSPCN
+
+   integer(ip), parameter :: lspcn_maxl = 36
+
+   !> Compute L_s, the planetocentric longitude of the sun, as seen
+   !> from a specified body.
+   !>
+   !> The saved variables of SPICELIB's LSPCN routines (entry points lspcn),
+   !> held in pepper_context (one per thread).
+   type, public :: lspcn_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(lspcn_maxl) :: svbody = ' '  !! name of the body looked up last (ZZBODS2C)
+      integer(ip) :: svidcd = 0  !! ID code of the body looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last body name lookup
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type lspcn_state
+
+   ! ------------------------------------------------------------------ OSCELT
+
+   !> Determine the set of osculating conic orbital elements that
+   !> corresponds to the state (position, velocity) of a body at
+   !> some epoch.
+   !>
+   !> The saved variables of SPICELIB's OSCELT routines (entry points oscelt),
+   !> held in pepper_context (one per thread).
+   type, public :: oscelt_state
+      real(wp) :: zvec ( 3 ) = [ 0.0_wp, 0.0_wp, 1.0_wp ]  !! the +Z unit vector
+   end type oscelt_state
+
+   ! ------------------------------------------------------------------ PCKBSR
+
+   integer(ip), parameter :: pckbsr_ftsize = 5000
+   integer(ip), parameter :: pckbsr_btsize = 20
+   integer(ip), parameter :: pckbsr_stsize = 5000
+   integer(ip), parameter :: pckbsr_dscsiz = 5
+
+   !> Load and unload PCK binary files for use by the readers.
+   !> Buffer segments for readers.
+   !>
+   !> The saved variables of SPICELIB's PCKBSR routines (entry points pcklof,
+   !> pckuof, pcksfs), held in pepper_spice (and, for some variables, in
+   !> pepper_context).
+   !>
+   !> No default initialization (40008 bytes): see init_pckbsr_state.
+   type, public :: pckbsr_state
+      integer(ip) :: fthan ( pckbsr_ftsize )  !! handle of each loaded file (in load order)
+      integer(ip) :: ftnum ( pckbsr_ftsize )  !! file number of each loaded file: its place in the load (and search) order
+      integer(ip) :: next  !! the file number of the file loaded last
+      integer(ip) :: nft  !! number of loaded files
+   end type pckbsr_state
+
+   !> The saved variables of PCKBSR that are per context.
+   !>
+   !> No default initialization (462624 bytes): see init_pckbsr_context_state.
+   type, public :: pckbsr_context_state
+      integer(ip) :: btbeg ( pckbsr_btsize )  !! head of the segment list of each body
+      integer(ip) :: btbod ( pckbsr_btsize )  !! each body's code
+      logical :: btchkp ( pckbsr_btsize )  !! the segment returned last for each body is to be checked first (its re-use interval is valid)
+      integer(ip) :: btexp ( pckbsr_btsize )  !! expense (number of segment descriptors examined) of the segment list of each body
+      integer(ip) :: bthfs ( pckbsr_btsize )  !! highest file number searched for the segment list of each body
+      real(wp) :: btlb ( pckbsr_btsize )  !! lower bound of the re-use interval of the segment returned last for each body
+      integer(ip) :: btlfs ( pckbsr_btsize )  !! lowest file number searched for the segment list of each body
+      real(wp) :: btprvd ( pckbsr_dscsiz, pckbsr_btsize )  !! descriptor of the segment returned last for each body
+      integer(ip) :: btprvh ( pckbsr_btsize )  !! handle of the file of the segment returned last for each body
+      character(sidlen) :: btprvi ( pckbsr_btsize )  !! identifier of the segment returned last for each body
+      integer(ip) :: btruex ( pckbsr_btsize )  !! expense of the re-use interval of each body
+      real(wp) :: btub ( pckbsr_btsize )  !! upper bound of the re-use interval of the segment returned last for each body
+      integer(ip) :: nbt  !! number of bodies in the body table
+      real(wp) :: stdes ( pckbsr_dscsiz,     pckbsr_stsize )  !! descriptor of each segment in the segment table
+      integer(ip) :: sthan (             pckbsr_stsize )  !! handle of the file of each segment in the segment table
+      character(sidlen) :: stidnt (             pckbsr_stsize )  !! identifier of each segment in the segment table
+      integer(ip) :: stpool ( 2, lbpool : pckbsr_stsize )  !! doubly linked list pool of the segment table (one list per body, in priority order)
+      integer(ip) :: epoch  !! the instance's segment_epoch this cache reflects
+   end type pckbsr_context_state
+
+   ! ------------------------------------------------------------------ PGRREC
+
+   integer(ip), parameter :: pgrrec_maxl = 36
+
+   !> Convert planetographic coordinates to rectangular coordinates.
+   !>
+   !> The saved variables of SPICELIB's PGRREC routines (entry points pgrrec),
+   !> held in pepper_context (one per thread).
+   type, public :: pgrrec_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(pgrrec_maxl) :: svbody = ' '  !! name of the body looked up last (ZZBODS2C)
+      integer(ip) :: svbdid = 0  !! ID code of the body looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last body name lookup
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type pgrrec_state
+
+   ! ------------------------------------------------------------------ PHASEQ
+
+   integer(ip), parameter :: phaseq_maxl = 36
+
+   !> Compute the apparent phase angle for a target, observer,
+   !> illuminator set of ephemeris objects.
+   !>
+   !> The saved variables of SPICELIB's PHASEQ routines (entry points phaseq),
+   !> held in pepper_context (one per thread).
+   type, public :: phaseq_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(phaseq_maxl) :: svtarg = ' '  !! saved target name for the zzbods2c lookup
+      integer(ip) :: svtgid = 0  !! saved target ID code for the zzbods2c lookup
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the illumination source
+      character(phaseq_maxl) :: svilmn = ' '  !! saved illumination source name for the zzbods2c lookup
+      integer(ip) :: svicde = 0  !! saved illumination source ID code for the zzbods2c lookup
+      logical :: svfnd2 = .false.  !! found flag of the last illumination source name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(phaseq_maxl) :: svobsr = ' '  !! saved observer name for the zzbods2c lookup
+      integer(ip) :: svobsn = 0  !! saved observer ID code for the zzbods2c lookup
+      logical :: svfnd3 = .false.  !! found flag of the last observer name lookup
+      logical :: first = .true.  !! first call: pool counters not yet initialized
+   end type phaseq_state
+
+   ! ------------------------------------------------------------------ POOL
+
+   integer(ip), parameter :: pool_maxvar = 26003
+   integer(ip), parameter :: maxval = 400000
+   integer(ip), parameter :: maxlin = 15000
+   integer(ip), parameter :: maxchr = 80
+   integer(ip), parameter :: pool_maxlen = 32
+
+   !> Maintain a pool of variables read from SPICE ASCII kernel files.
+   !>
+   !> The saved variables of SPICELIB's POOL routines (entry points clpool,
+   !> ldpool, rtpool, expool, wrpool, swpool, cvpool, gcpool, gdpool, gipool,
+   !> dtpool, pcpool, pdpool, pipool, lmpool, szpool, dvpool, gnpool, dwpool,
+   !> zzvupool, zzpctrck), held in pepper_spice.
+   !>
+   !> No default initialization (8968320 bytes): see init_pool_state.
+   type, public :: pool_state
+      character(pool_maxlen) :: pnames (           pool_maxvar )  !! names of the kernel pool variables
+      integer(ip) :: namlst (           pool_maxvar )  !! heads of the hash collision lists (by hash
+                                                       !! value of the name)
+      integer(ip) :: nmpool ( 2, lbpool:pool_maxvar )  !! linked-list pool of the name collision lists
+      integer(ip) :: datlst (           pool_maxvar )  !! heads of the value lists of the variables
+                                                       !! (positive: numeric, negative: character)
+      integer(ip) :: chpool ( 2, lbpool:maxlin )  !! linked-list pool of the character values
+      integer(ip) :: dppool ( 2, lbpool:maxval )  !! linked-list pool of the numeric values
+      character(maxchr) :: chvals (           maxlin )  !! character values
+      real(wp) :: dpvals (           maxval )  !! numeric values
+      logical :: first  !! the pool has not been initialized yet
+      integer(ip) :: subctr ( ctrsiz )  !! pool state counter (changes when the pool changes)
+      character(mrklen) :: begdat  !! the begin-data marker of text kernels
+      character(mrklen) :: begtxt  !! the begin-text marker of text kernels
+   end type pool_state
+
+   ! ------------------------------------------------------------------ PROP2B
+
+   integer(ip), parameter :: prop2b_bufsiz = 3
+
+   !> Compute the state of a massless body at time t_0 + DT by applying
+   !> the two-body force model to a given central mass and a given body
+   !> state at time t_0.
+   !>
+   !> The saved variables of SPICELIB's PROP2B routines (entry points prop2b),
+   !> held in pepper_context (one per thread).
+   type, public :: prop2b_state
+      real(wp) :: lower = 0.0_wp  !! lower end of the bracket of the Kepler equation root (a work variable; not used between calls)
+      real(wp) :: upper = 0.0_wp  !! upper end of the bracket of the Kepler equation root (a work variable; not used between calls)
+      real(wp) :: vel ( 3 ) = 0.0_wp  !! initial velocity (from pvinit) (a work array; not used between calls)
+      real(wp) :: savepv ( 6, prop2b_bufsiz ) = 0.0_wp  !! initial states of the last calls, whose derived quantities (below) are kept for reuse
+      real(wp) :: savegm (    prop2b_bufsiz ) = 0.0_wp  !! gm of each saved initial state
+      real(wp) :: sbound (    prop2b_bufsiz ) = 0.0_wp  !! bound on the magnitude of x (avoids overflow) for each saved initial state
+      real(wp) :: sb2rv (    prop2b_bufsiz ) = 0.0_wp  !! b**2 * (r dot v) for each saved initial state (b = sqrt(q/gm))
+      real(wp) :: sbq (    prop2b_bufsiz ) = 0.0_wp  !! b*q for each saved initial state (q = periapsis distance)
+      real(wp) :: sbr0 (    prop2b_bufsiz ) = 0.0_wp  !! b*r0 for each saved initial state (r0 = initial distance)
+      real(wp) :: sf (    prop2b_bufsiz ) = 0.0_wp  !! 1 - e for each saved initial state (e = eccentricity)
+      real(wp) :: sqovr0 (    prop2b_bufsiz ) = 0.0_wp  !! q/r0 for each saved initial state
+      integer(ip) :: newest (    prop2b_bufsiz ) = [ 1, 2, 3 ]  !! saved-state slots from most to least recently used
+      integer(ip) :: nsaved = 0  !! number of saved initial states
+   end type prop2b_state
+
+   ! ------------------------------------------------------------------ PXFORM
+
+   integer(ip), parameter :: pxform_frnmln = 32
+
+   !> Return the matrix that transforms position vectors from one
+   !> specified frame to another at a specified epoch.
+   !>
+   !> The saved variables of SPICELIB's PXFORM routines (entry points pxform),
+   !> held in pepper_context (one per thread).
+   type, public :: pxform_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the "from" frame
+      character(pxform_frnmln) :: svfrom = ' '  !! name of the "from" frame looked up last
+      integer(ip) :: svfcod = 0  !! ID code of the "from" frame looked up last
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! kernel pool state counter for the "to" frame name lookup
+      character(pxform_frnmln) :: svto = ' '  !! name of the "to" frame looked up last
+      integer(ip) :: svtcde = 0  !! ID code of the "to" frame looked up last
+      logical :: first = .true.  !! true until the pool state counters are initialized
+   end type pxform_state
+
+   ! ------------------------------------------------------------------ PXFRM2
+
+   integer(ip), parameter :: pxfrm2_frnmln = 32
+
+   !> Return the 3x3 matrix that transforms position vectors from one
+   !> specified frame at a specified epoch to another specified
+   !> frame at another specified epoch.
+   !>
+   !> The saved variables of SPICELIB's PXFRM2 routines (entry points pxfrm2),
+   !> held in pepper_context (one per thread).
+   type, public :: pxfrm2_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(pxfrm2_frnmln) :: svfrom = ' '  !! name of the "from" frame looked up last
+      integer(ip) :: svfcod = 0  !! ID code of the "from" frame looked up last
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the "to" frame
+      character(pxfrm2_frnmln) :: svto = ' '  !! name of the "to" frame looked up last
+      integer(ip) :: svtcde = 0  !! ID code of the "to" frame looked up last
+      logical :: first = .true.  !! first call: the pool counters are not yet initialized
+   end type pxfrm2_state
+
+   ! ------------------------------------------------------------------ RDKER
+
+   !> Open and read the contents of a SPICE ASCII kernel file.
+   !>
+   !> The saved variables of SPICELIB's RDKER routines (entry points rdknew,
+   !> rdkdat, rdklin), held in pepper_spice.
+   type, public :: rdker_state
+      character(filsiz) :: file = ' '  !! the text kernel being read
+      integer(ip) :: linnum = 0  !! number of the last line read
+      integer(ip) :: status = 0  !! reading text, data, or at the end of the file
+      logical :: frstim = .true.  !! no kernel has been opened yet
+      character(mrklen) :: begdat = ' '  !! the begin-data marker
+      character(mrklen) :: begtxt = ' '  !! the begin-text marker
+   end type rdker_state
+
+   ! ------------------------------------------------------------------ RDTEXT
+
+   integer(ip), parameter :: rdtext_maxlen = 255
+   integer(ip), parameter :: maxopn = 96
+
+   !> Read the next line of text from a text file.
+   !>
+   !> The saved variables of SPICELIB's RDTEXT routines (entry points rdtext,
+   !> cltext), held in pepper_spice.
+   type, public :: rdtext_state
+      integer(ip) :: units ( maxopn ) = 0  !! units of the files open for reading
+      integer(ip) :: n = 0  !! number of files open
+      character(rdtext_maxlen) :: lstfil = ' '  !! the file read last
+      integer(ip) :: lstunt = 0  !! the unit of the file read last
+      integer(ip) :: index = 0  !! index in units of the file read last
+   end type rdtext_state
+
+   ! ------------------------------------------------------------------ RECPGR
+
+   integer(ip), parameter :: recpgr_maxl = 36
+
+   !> Convert rectangular coordinates to planetographic coordinates.
+   !>
+   !> The saved variables of SPICELIB's RECPGR routines (entry points recpgr),
+   !> held in pepper_context (one per thread).
+   type, public :: recpgr_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(recpgr_maxl) :: svbody = ' '  !! name of the body looked up last (ZZBODS2C)
+      integer(ip) :: svbdid = 0  !! ID code of the body looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last body name lookup
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type recpgr_state
+
+   ! ------------------------------------------------------------------ REPML
+
+   integer(ip), parameter :: ncase = 3
+
+   !> Replace a marker with the text representation of a logical value.
+   !>
+   !> The saved variables of SPICELIB's REPML routines (entry points repml),
+   !> held in pepper_context (one per thread).
+   type, public :: repml_state
+      character(1) :: casstr ( ncase ) = [ character(1) :: 'U', 'L', 'C' ]  !! constant list of the recognized case flags: 'U', 'L', 'C'
+   end type repml_state
+
+   ! ------------------------------------------------------------------ ROTGET
+
+   !> Find the rotation from a user specified frame to another frame at
+   !> a user specified epoch.
+   !>
+   !> The saved variables of SPICELIB's ROTGET routines (entry points rotget),
+   !> held in pepper_context (one per thread).
+   type, public :: rotget_state
+      character(6) :: versn = '5.0.0'  !! ROTGET version string, used in error messages
+   end type rotget_state
+
+   ! ------------------------------------------------------------------ SC01
+
+   integer(ip), parameter :: initsc = 0
+
+   !> Perform time conversions between different representations of
+   !> type 1 spacecraft clock.
+   !>
+   !> The saved variables of SPICELIB's SC01 routines (entry points sctk01,
+   !> scfm01, scte01, scet01, scec01, scty01, scpr01), held in pepper_context
+   !> (one per thread).
+   !>
+   !> No default initialization (2566632 bytes): see init_sc01_state.
+   type, public :: sc01_state
+      integer(ip) :: hdsclk ( mxnclk )  !! heads of the SCLK ID hash collision lists (in scpool)
+      integer(ip) :: scpool ( lbsngl : mxnclk )  !! singly linked list pool of the SCLK ID hash collision lists (heads in hdsclk)
+      integer(ip) :: clklst ( mxnclk )  !! SCLK ID of each clock in the type 1 database (parallel to the data portion of scpool)
+      integer(ip) :: scbase ( mxnclk )  !! base index in intbuf of the integer data of each clock in clklst
+      character(dplen) :: cmp ( mxnfld )  !! work: string value of each field of an SCLK string (parsed or formatted)
+      character(errlen) :: error  !! work: error message from parsing an SCLK string field
+      real(wp) :: cmptks ( mxnfld )  !! work: number of ticks per unit of each SCLK field
+      real(wp) :: cmpval ( mxnfld )  !! work: numeric value of each SCLK field
+      real(wp) :: dpbuff ( dbufsz )  !! double precision buffer of the type 1 database (coefficients, partitions, moduli, offsets)
+      real(wp) :: partim  !! work: time in the clock's parallel time system (TDB or TDT)
+      integer(ip) :: cmpwid ( mxnfld )  !! work: width (number of digits) of each SCLK field in an output string
+      integer(ip) :: cofbas  !! base index in dpbuff of the coefficients of the previous clock (prvsc)
+      integer(ip) :: delcde  !! delimiter code of the previous clock (prvsc)
+      integer(ip) :: dpfree  !! index of the first free element of dpbuff
+      integer(ip) :: end  !! work: index of the last character before the decimal point of a formatted field
+      integer(ip) :: endbas  !! base index in dpbuff of the partition end times of the previous clock (prvsc)
+      integer(ip) :: ifree  !! index of the first free element of intbuf
+      integer(ip) :: intbuf ( ibufsz )  !! integer buffer of the type 1 database (nivals values per clock, see zzsc01.inc)
+      integer(ip) :: length ( mxnfld )  !! work: length of the string value of each SCLK field
+      integer(ip) :: lower  !! work: index of the coefficient record bracketing the input time (binary search)
+      integer(ip) :: modbas  !! base index in dpbuff of the field moduli of the previous clock (prvsc)
+      integer(ip) :: ncoeff  !! number of coefficients (3 x number of records) of the previous clock (prvsc)
+      integer(ip) :: nfield  !! number of fields of the previous clock (prvsc)
+      integer(ip) :: npart  !! number of partitions of the previous clock (prvsc)
+      integer(ip) :: offbas  !! base index in dpbuff of the field offsets of the previous clock (prvsc)
+      integer(ip) :: polctr ( ctrsiz )  !! kernel pool state counter of the type 1 database (to detect pool updates)
+      integer(ip) :: prvsc  !! SCLK ID of the clock seen on the previous successful call (0 if none)
+      integer(ip) :: strbas  !! base index in dpbuff of the partition start times of the previous clock (prvsc)
+      integer(ip) :: timsys  !! parallel time system code (TDB or TDT) of the previous clock (prvsc)
+      logical :: pass1  !! the database must be (re)initialized on the next call (first call or after an error)
+   end type sc01_state
+
+   ! ------------------------------------------------------------------ SCDECD
+
+   !> Convert a double precision encoding of spacecraft clock time into
+   !> a character representation.
+   !>
+   !> The saved variables of SPICELIB's SCDECD routines (entry points scdecd),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (239976 bytes): see init_scdecd_state.
+   type, public :: scdecd_state
+      real(wp) :: pstart ( mxpart )  !! work: start counts of the SCLK partitions
+      real(wp) :: pstop ( mxpart )  !! work: stop counts of the SCLK partitions
+      real(wp) :: ptotls ( mxpart )  !! work: cumulative tick counts at the end of each partition
+   end type scdecd_state
+
+   ! ------------------------------------------------------------------ SCENCD
+
+   !> Encode a character representation of spacecraft clock time into a
+   !> double precision number.
+   !>
+   !> The saved variables of SPICELIB's SCENCD routines (entry points scencd),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (239976 bytes): see init_scencd_state.
+   type, public :: scencd_state
+      real(wp) :: pstart ( mxpart )  !! work: start counts of the SCLK partitions
+      real(wp) :: pstop ( mxpart )  !! work: stop counts of the SCLK partitions
+      real(wp) :: ptotls ( mxpart )  !! work: cumulative tick counts at the end of each partition
+   end type scencd_state
+
+   ! ------------------------------------------------------------------ SCPS01
+
+   integer(ip), parameter :: scps01_namlen = 60
+   integer(ip), parameter :: scps01_nflidx = 1
+   integer(ip), parameter :: offidx = scps01_nflidx + 1
+   integer(ip), parameter :: modidx = offidx + 1
+   integer(ip), parameter :: nkitem = modidx
+
+   !> Convert a character representation of a type 1 spacecraft clock
+   !> count to ticks.
+   !>
+   !> The saved variables of SPICELIB's SCPS01 routines (entry points scps01),
+   !> held in pepper_context (one per thread).
+   type, public :: scps01_state
+      character(errlen) :: strerr = ' '  !! work: error message from parsing a clock string field (NPARSD)
+      !> constant kernel variable names: SCLK01_N_FIELDS, SCLK01_OFFSETS, SCLK01_MODULI
+      character(scps01_namlen) :: namlst ( nkitem ) = [ character(scps01_namlen) :: 'SCLK01_N_FIELDS', &
+         'SCLK01_OFFSETS', 'SCLK01_MODULI' ]
+      real(wp) :: cmptks ( mxnfld ) = 0.0_wp  !! work: number of ticks per unit of each clock field
+      real(wp) :: cmpval ( mxnfld ) = 0.0_wp  !! work: values of the clock string fields, offset-corrected
+   end type scps01_state
+
+   ! ------------------------------------------------------------------ SGMETA
+
+   !> Obtain the value of a specified generic segment meta data item.
+   !>
+   !> The saved variables of SPICELIB's SGMETA routines (entry points sgmeta),
+   !> held in pepper_context (one per thread).
+   type, public :: sgmeta_state
+      integer(ip) :: lstbeg = -1  !! begin address of the segment whose meta data are buffered
+      integer(ip) :: lsthan = 0  !! handle of the file whose descriptor layout is buffered
+      integer(ip) :: meta ( mxmeta ) = 0  !! buffered meta data of the segment (base addresses made absolute)
+      integer(ip) :: metasz = 0  !! number of meta data items of the buffered segment
+      logical :: nieven = .false.  !! the number of integer descriptor components of file lsthan is even
+      integer(ip) :: ioffst = 0  !! index in the descriptor of the DP word holding the segment begin and end addresses
+   end type sgmeta_state
+
+   ! ------------------------------------------------------------------ SGSEQW
+
+   integer(ip), parameter :: sgseqw_ftsize = 20
+
+   !> This is the umbrella routine for managing the sequential writing
+   !> of generic segments to DAF files. It should never be called
+   !> directly, it provides the mechanism whereby data are shared by
+   !> its entry points.
+   !>
+   !> The saved variables of SPICELIB's SGSEQW routines (entry points sgbwfs,
+   !> sgbwvs, sgwfpk, sgwvpk, sgwes), held in pepper_context (one per thread).
+   type, public :: sgseqw_state
+      logical :: explct = .false.  !! reference values of the current segment are explicit (not implicit)
+      integer(ip) :: index = 0  !! file table index of the segment being written to the last handle used
+      integer(ip) :: numfxd = 0  !! number of fixed size packet segments currently being written
+      integer(ip) :: numvar = 0  !! number of variable size packet segments currently being written
+      integer(ip) :: lsthan = 0  !! handle of the DAF used in the last call
+      logical :: fxdseg = .false.  !! the current segment has fixed (rather than variable) size packets
+      real(wp) :: ftrefs ( 2, sgseqw_ftsize ) = 0.0_wp  !! file table declarations. The file table is used to keep track of the vital statistics for each of the generic segments being written.
+      integer(ip) :: ftbadr ( sgseqw_ftsize ) = 0  !! file table: DAF begin address of each segment
+      integer(ip) :: fthan ( sgseqw_ftsize ) = 0  !! file table: handle of the DAF to which each segment is written
+      integer(ip) :: ftmxsz ( sgseqw_ftsize ) = 0  !! file table: maximum packet size written so far (variable size segments)
+      integer(ip) :: ftncon ( sgseqw_ftsize ) = 0  !! file table: number of constant values of each segment
+      integer(ip) :: ftnpkt ( sgseqw_ftsize ) = 0  !! file table: number of packets written so far to each segment
+      integer(ip) :: ftnref ( sgseqw_ftsize ) = 0  !! file table: number of reference values written so far to each segment
+      integer(ip) :: ftnres ( sgseqw_ftsize ) = 0  !! file table: number of reserved values of each segment (always 0)
+      integer(ip) :: ftityp ( sgseqw_ftsize ) = 0  !! file table: reference value index type of each segment
+      logical :: ftexpl ( sgseqw_ftsize ) = .false.  !! file table: each segment has explicit reference values
+      integer(ip) :: ftoff ( sgseqw_ftsize ) = 0  !! file table: packet offset (PKTOFF) of each segment
+      integer(ip) :: ftpksz ( sgseqw_ftsize ) = 0  !! file table: packet size of each fixed size segment
+      logical :: ftfixd ( sgseqw_ftsize ) = .false.  !! file table: each segment has fixed size packets
+      integer(ip) :: nft = 0  !! number of segments in the file table
+   end type sgseqw_state
+
+   ! ------------------------------------------------------------------ SINCPT
+
+   integer(ip), parameter :: sincpt_maxl = 36
+   integer(ip), parameter :: sincpt_frnmln = 32
+
+   !> Compute, for a given observer and a ray emanating from the
+   !> observer, the surface intercept of the ray on a target body at
+   !> a specified epoch, optionally corrected for light time and
+   !> stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's SINCPT routines (entry points sincpt),
+   !> held in pepper_context (one per thread).
+   type, public :: sincpt_state
+      logical :: first = .true.  !! first call: pool counters not initialized, correction and method not yet parsed
+      integer(ip) :: nsurf = 0  !! number of surface IDs in the surface list parsed from the saved method
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      character(mthlen) :: prvmth = ' '  !! method string of the previous call
+      integer(ip) :: shape = 0  !! target shape parsed from the saved method (ellipsoid or DSK)
+      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the saved method
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time (CN)
+      logical :: uselt = .false.  !! the saved correction uses light time (LT or CN)
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration (+S)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(sincpt_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(sincpt_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(sincpt_frnmln) :: svfref = ' '  !! name of the body-fixed frame looked up last (ZZNAMFRM)
+      integer(ip) :: svfxfc = 0  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr4 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the ray frame dref
+      character(sincpt_frnmln) :: svdref = ' '  !! name of the ray frame dref looked up last
+      integer(ip) :: svdfrc = 0  !! ID code of the ray frame dref looked up last
+      integer(ip) :: svctr5 ( ctrsiz ) = 0  !! saved surface name/ID item declarations.
+   end type sincpt_state
+
+   ! ------------------------------------------------------------------ SPCRFL
+
+   integer(ip), parameter :: maxcpr = 1000
+
+   !> Read the first line of text from the comment area
+   !> of a binary SPK or CK file.
+   !>
+   !> The saved variables of SPICELIB's SPCRFL routines (entry points spcrfl,
+   !> spcrnl), held in pepper_context (one per thread).
+   type, public :: spcrfl_state
+      character(1) :: eot = ' '  !! end-of-transmission character (CHAR(4)) that ends the comment area
+      character(1) :: null = ' '  !! null character (CHAR(0)) that ends each comment line
+      character(maxcpr) :: record = ' '  !! comment area record currently being read
+      integer(ip) :: eol = 0  !! position of the end of the last line read within RECORD
+      integer(ip) :: fward = 0  !! forward pointer of the file record (first summary record); the comments precede it
+      integer(ip) :: hanbuf = 0  !! handle of the file whose comments are being read
+      integer(ip) :: iostat = 0  !! work: IOSTAT of the last record read
+      integer(ip) :: rec = 0  !! number of the comment area record in RECORD
+      logical :: called = .false.  !! SPCRFL has been called (SPCRNL may continue reading)
+      logical :: eocsav = .false.  !! the end of the comments was reached by the last SPCRFL/SPCRNL call
+   end type spcrfl_state
+
+   ! ------------------------------------------------------------------ SPKACS
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observer, optionally corrected for light time
+   !> and stellar aberration, expressed relative to an inertial
+   !> reference frame.
+   !>
+   !> The saved variables of SPICELIB's SPKACS routines (entry points spkacs),
+   !> held in pepper_context (one per thread).
+   type, public :: spkacs_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+   end type spkacs_state
+
+   ! ------------------------------------------------------------------ SPKAPO
+
+   integer(ip), parameter :: spkapo_corlen = 5
+
+   !> Return the position of a target body relative to an observer,
+   !> optionally corrected for light time and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's SPKAPO routines (entry points spkapo),
+   !> held in pepper_context (one per thread).
+   type, public :: spkapo_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      !> list of recognized aberration correction flags ('NONE', 'LT', 'LT+S', ...)
+      character(spkapo_corlen) :: flags ( nflags ) = [ character(spkapo_corlen) :: 'NONE', 'LT', 'LT+S', 'CN', &
+         'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
+      character(spkapo_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+      logical :: uselt = .false.  !! the saved correction uses (single-iteration) light time
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type spkapo_state
+
+   ! ------------------------------------------------------------------ SPKAPP
+
+   integer(ip), parameter :: spkapp_corlen = 5
+
+   !> **Deprecated:** This routine has been superseded by the SPICELIB
+   !> routine SPKAPS. This routine is supported for purposes of
+   !> backward compatibility only.
+   !>
+   !> The saved variables of SPICELIB's SPKAPP routines (entry points spkapp),
+   !> held in pepper_context (one per thread).
+   type, public :: spkapp_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      !> list of recognized aberration correction flags ('NONE', 'LT', 'LT+S', ...)
+      character(spkapp_corlen) :: flags ( nflags ) = [ character(spkapp_corlen) :: 'NONE', 'LT', 'LT+S', 'CN', &
+         'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
+      character(spkapp_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+      logical :: uselt = .false.  !! the saved correction uses (single-iteration) light time
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type spkapp_state
+
+   ! ------------------------------------------------------------------ SPKAPS
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observer specified by its state and
+   !> acceleration relative to the solar system barycenter. The
+   !> returned state may be optionally corrected for light time
+   !> and stellar aberration. All input and output vectors are
+   !> expressed relative to an inertial reference frame.
+   !>
+   !> The saved variables of SPICELIB's SPKAPS routines (entry points spkaps),
+   !> held in pepper_context (one per thread).
+   type, public :: spkaps_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type spkaps_state
+
+   ! ------------------------------------------------------------------ SPKBSR
+
+   integer(ip), parameter :: spkbsr_ftsize = 5000
+   integer(ip), parameter :: spkbsr_btsize = 10000
+   integer(ip), parameter :: spkbsr_stsize = 100000
+   integer(ip), parameter :: spkbsr_dscsiz = 5
+
+   !> Load and unload files for use by the readers. Buffer segments
+   !> for readers.
+   !>
+   !> The saved variables of SPICELIB's SPKBSR routines (entry points spklef,
+   !> spkuef, spksfs), held in pepper_spice (and, for some variables, in
+   !> pepper_context).
+   !>
+   !> No default initialization (40008 bytes): see init_spkbsr_state.
+   type, public :: spkbsr_state
+      integer(ip) :: fthan ( spkbsr_ftsize )  !! handle of each loaded file (in load order)
+      integer(ip) :: ftnum ( spkbsr_ftsize )  !! file number of each loaded file: its place in the load (and search) order
+      integer(ip) :: next  !! the file number of the file loaded last
+      integer(ip) :: nft  !! number of loaded files
+   end type spkbsr_state
+
+   !> The saved variables of SPKBSR that are per context.
+   !>
+   !> No default initialization (10480064 bytes): see init_spkbsr_context_state.
+   type, public :: spkbsr_context_state
+      integer(ip) :: btbeg ( spkbsr_btsize )  !! head of the segment list of each body
+      integer(ip) :: btbod ( spkbsr_btsize )  !! each body's code
+      logical :: btchkp ( spkbsr_btsize )  !! the segment returned last for each body is to be checked first (its re-use interval is valid)
+      integer(ip) :: btexp ( spkbsr_btsize )  !! expense (number of segment descriptors examined) of the segment list of each body
+      integer(ip) :: bthfs ( spkbsr_btsize )  !! highest file number searched for the segment list of each body
+      real(wp) :: btlb ( spkbsr_btsize )  !! lower bound of the re-use interval of the segment returned last for each body
+      integer(ip) :: btlfs ( spkbsr_btsize )  !! lowest file number searched for the segment list of each body
+      real(wp) :: btprvd ( spkbsr_dscsiz, spkbsr_btsize )  !! descriptor of the segment returned last for each body
+      integer(ip) :: btprvh ( spkbsr_btsize )  !! handle of the file of the segment returned last for each body
+      character(sidlen) :: btprvi ( spkbsr_btsize )  !! identifier of the segment returned last for each body
+      integer(ip) :: btruex ( spkbsr_btsize )  !! expense of the re-use interval of each body
+      real(wp) :: btub ( spkbsr_btsize )  !! upper bound of the re-use interval of the segment returned last for each body
+      integer(ip) :: nbt  !! number of bodies in the body table
+      real(wp) :: stdes ( spkbsr_dscsiz,     spkbsr_stsize )  !! descriptor of each segment in the segment table
+      integer(ip) :: sthan (             spkbsr_stsize )  !! handle of the file of each segment in the segment table
+      character(sidlen) :: stidnt (             spkbsr_stsize )  !! identifier of each segment in the segment table
+      integer(ip) :: stpool ( 2, lbpool : spkbsr_stsize )  !! doubly linked list pool of the segment table (one list per body, in priority order)
+      integer(ip) :: epoch  !! the instance's segment_epoch this cache reflects
+   end type spkbsr_context_state
+
+   ! ------------------------------------------------------------------ SPKCVO
+
+   integer(ip), parameter :: spkcvo_maxl = 36
+   integer(ip), parameter :: spkcvo_frnmln = 32
+
+   !> Return the state of a specified target relative to an "observer,"
+   !> where the observer has constant velocity in a specified reference
+   !> frame. The observer's state is provided by the calling program
+   !> rather than by loaded SPK files.
+   !>
+   !> The saved variables of SPICELIB's SPKCVO routines (entry points spkcvo),
+   !> held in pepper_context (one per thread).
+   type, public :: spkcvo_state
+      character(evlfln) :: evlflg ( nevflg ) = [ character(evlfln) :: 'OBSERVER', 'TARGET', 'CENTER' ]  !! recognized frame evaluation loci (OBSERVER, TARGET, CENTER)
+      integer(ip) :: j2code = 0  !! inertial frame code (IRFNUM) of J2000
+      logical :: first = .true.  !! first call: counters, correction flags and J2000 code not yet set up
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: uselt = .false.  !! the saved correction includes light time correction
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(spkcvo_maxl) :: svoctr = ' '  !! name of the observer's center of motion looked up last (ZZBODS2C)
+      integer(ip) :: svccde = 0  !! ID code of the observer's center of motion looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last observer center name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the target
+      character(spkcvo_maxl) :: svtarg = ' '  !! name of the target looked up last
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(spkcvo_frnmln) :: svoref = ' '  !! name of the output frame looked up last (ZZNAMFRM)
+      integer(ip) :: svorfc = 0  !! ID code of the output frame looked up last
+   end type spkcvo_state
+
+   ! ------------------------------------------------------------------ SPKCVT
+
+   integer(ip), parameter :: spkcvt_maxl = 36
+   integer(ip), parameter :: spkcvt_frnmln = 32
+
+   !> Return the state, relative to a specified observer, of a target
+   !> having constant velocity in a specified reference frame. The
+   !> target's state is provided by the calling program rather than by
+   !> loaded SPK files.
+   !>
+   !> The saved variables of SPICELIB's SPKCVT routines (entry points spkcvt),
+   !> held in pepper_context (one per thread).
+   type, public :: spkcvt_state
+      character(evlfln) :: evlflg ( nevflg ) = [ character(evlfln) :: 'OBSERVER', 'TARGET', 'CENTER' ]  !! recognized frame evaluation loci (OBSERVER, TARGET, CENTER)
+      integer(ip) :: j2code = 0  !! inertial frame code (IRFNUM) of J2000
+      logical :: first = .true.  !! first call: counters, correction flags and J2000 code not yet set up
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: uselt = .false.  !! the saved correction includes light time correction
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(spkcvt_maxl) :: svtctr = ' '  !! name of the target's center of motion looked up last (ZZBODS2C)
+      integer(ip) :: svccde = 0  !! ID code of the target's center of motion looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target center name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(spkcvt_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(spkcvt_frnmln) :: svoref = ' '  !! name of the output frame looked up last (ZZNAMFRM)
+      integer(ip) :: svorfc = 0  !! ID code of the output frame looked up last
+   end type spkcvt_state
+
+   ! ------------------------------------------------------------------ SPKEZ
+
+   integer(ip), parameter :: spkez_frnmln = 32
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observing body, optionally corrected for light
+   !> time (planetary aberration) and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's SPKEZ routines (entry points spkez),
+   !> held in pepper_context (one per thread).
+   type, public :: spkez_state
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
+      logical :: usegeo = .false.  !! the saved correction is geometric (no aberration correction)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(spkez_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
+      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
+      logical :: first = .true.  !! first call: counter, correction flags and J2000 code not yet set up
+   end type spkez_state
+
+   ! ------------------------------------------------------------------ SPKEZP
+
+   integer(ip), parameter :: spkezp_frnmln = 32
+
+   !> Return the position of a target body relative to an observing
+   !> body, optionally corrected for light time (planetary aberration)
+   !> and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's SPKEZP routines (entry points spkezp),
+   !> held in pepper_context (one per thread).
+   type, public :: spkezp_state
+      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
+      logical :: first = .true.  !! first call: J2000 code and counter not yet set up
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(spkezp_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
+      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
+   end type spkezp_state
+
+   ! ------------------------------------------------------------------ SPKEZR
+
+   integer(ip), parameter :: spkezr_maxl = 36
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observing body, optionally corrected for light
+   !> time (planetary aberration) and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's SPKEZR routines (entry points spkezr),
+   !> held in pepper_context (one per thread).
+   type, public :: spkezr_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(spkezr_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtgid = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(spkezr_maxl) :: svobsn = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsi = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      logical :: first = .true.  !! first call: the pool counters are not yet initialized
+   end type spkezr_state
+
+   ! ------------------------------------------------------------------ SPKGEO
+
+   integer(ip), parameter :: spkgeo_frnmln = 32
+
+   !> Compute the geometric state (position and velocity) of a target
+   !> body relative to an observing body.
+   !>
+   !> The saved variables of SPICELIB's SPKGEO routines (entry points spkgeo),
+   !> held in pepper_context (one per thread).
+   type, public :: spkgeo_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(spkgeo_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
+      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
+      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
+   end type spkgeo_state
+
+   ! ------------------------------------------------------------------ SPKGPS
+
+   integer(ip), parameter :: spkgps_frnmln = 32
+
+   !> Compute the geometric position of a target body relative to an
+   !> observing body.
+   !>
+   !> The saved variables of SPICELIB's SPKGPS routines (entry points spkgps),
+   !> held in pepper_context (one per thread).
+   type, public :: spkgps_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(spkgps_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
+      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
+      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
+   end type spkgps_state
+
+   ! ------------------------------------------------------------------ SPKLTC
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observer, optionally corrected for light time,
+   !> expressed relative to an inertial reference frame.
+   !>
+   !> The saved variables of SPICELIB's SPKLTC routines (entry points spkltc),
+   !> held in pepper_context (one per thread).
+   type, public :: spkltc_state
+      logical :: pass1 = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: uselt = .false.  !! the saved correction includes light time (normal or converged Newtonian)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type spkltc_state
+
+   ! ------------------------------------------------------------------ SPKPOS
+
+   integer(ip), parameter :: spkpos_maxl = 36
+
+   !> Return the position of a target body relative to an observing
+   !> body, optionally corrected for light time (planetary aberration)
+   !> and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's SPKPOS routines (entry points spkpos),
+   !> held in pepper_context (one per thread).
+   type, public :: spkpos_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(spkpos_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtgid = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(spkpos_maxl) :: svobsn = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsi = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      logical :: first = .true.  !! first call: the pool counters are not yet initialized
+   end type spkpos_state
+
+   ! ------------------------------------------------------------------ SPKPV
+
+   integer(ip), parameter :: spkpv_frnmln = 32
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to some center of motion in a specified frame.
+   !>
+   !> The saved variables of SPICELIB's SPKPV routines (entry points spkpv),
+   !> held in pepper_context (one per thread).
+   type, public :: spkpv_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(spkpv_frnmln) :: svref = ' '  !! name of the reference frame looked up last (ZZNAMFRM)
+      integer(ip) :: svirfr = 0  !! ID code of the reference frame looked up last
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type spkpv_state
+
+   ! ------------------------------------------------------------------ SPKR19
+
+   !> Read a single SPK data record from a segment of type 19
+   !> (ESOC/DDID Piecewise Interpolation).
+   !>
+   !> The saved variables of SPICELIB's SPKR19 routines (entry points spkr19),
+   !> held in pepper_context (one per thread).
+   type, public :: spkr19_state
+      logical :: pass1 = .true.  !! this is the first call (the record size check has not been done yet)
+      integer(ip) :: svbeg = -1  !! begin address of the segment used last
+      real(wp) :: svbtim = 0.0_wp  !! start time of the mini-segment interval used last
+      real(wp) :: svetim = -1.0_wp  !! end time of the mini-segment interval used last
+      integer(ip) :: svhan = 0  !! handle of the file of the segment used last
+      logical :: svlast = .false.  !! interval selection flag of the segment used last (select the last applicable interval)
+      integer(ip) :: svmiix = -1  !! index of the mini-segment (interval) used last
+      integer(ip) :: svminb = -1  !! begin address of the mini-segment used last
+      integer(ip) :: svn = -1  !! number of mini-segments in the segment used last
+      integer(ip) :: svnpkt = -1  !! number of packets in the mini-segment used last
+      logical :: svok = .false.  !! the last call succeeded (the saved values are valid only if true)
+      integer(ip) :: svpkdb = -1  !! base address of the packet directory of the mini-segment used last
+      integer(ip) :: svpknd = -1  !! number of packet directory entries of the mini-segment used last
+      integer(ip) :: svpksz = -1  !! packet size of the mini-segment used last
+      integer(ip) :: svstyp = -1  !! subtype of the mini-segment used last
+      integer(ip) :: svwnsz = -1  !! interpolation window size of the mini-segment used last
+   end type spkr19_state
+
+   ! ------------------------------------------------------------------ SPKS19
+
+   !> Extract a subset of the data in an SPK segment of type 19
+   !> into a new segment.
+   !>
+   !> The saved variables of SPICELIB's SPKS19 routines (entry points spks19),
+   !> held in pepper_context (one per thread).
+   type, public :: spks19_state
+      real(wp) :: iv1beg = 0.0_wp  !! work: start time of the first output interpolation interval
+      real(wp) :: iv1end = 0.0_wp  !! work: end time of the first output interpolation interval
+      real(wp) :: ivfbeg = 0.0_wp  !! work: start time of the final output interpolation interval
+      real(wp) :: ivfend = 0.0_wp  !! work: end time of the final output interpolation interval
+      integer(ip) :: minfsz = 0  !! work: size in DAF addresses of the final output mini-segment
+      integer(ip) :: shift = 0  !! work: shift of the middle group mini-segment pointers
+   end type spks19_state
+
+   ! ------------------------------------------------------------------ SRFNRM
+
+   integer(ip), parameter :: srfnrm_bdnmln = 36
+   integer(ip), parameter :: srfnrm_frnmln = 32
+
+   !> Map array of surface points on a specified target body to
+   !> the corresponding unit length outward surface normal vectors.
+   !>
+   !> The saved variables of SPICELIB's SRFNRM routines (entry points srfnrm),
+   !> held in pepper_context (one per thread).
+   type, public :: srfnrm_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(srfnrm_bdnmln) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(srfnrm_frnmln) :: svfref = ' '  !! name of the body-fixed frame looked up last (ZZNAMFRM)
+      integer(ip) :: svfxfc = 0  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved target radius values.
+      integer(ip) :: svprvt = 0  !! ID code of the target whose radii were looked up last
+      real(wp) :: svradi ( 3 ) = 0.0_wp  !! radii of the target body (from the kernel pool, ZZBODVCD)
+      integer(ip) :: nsurf = 0  !! number of surface IDs in the previous METHOD string
+      logical :: first = .true.  !! first call: counters not yet initialized and no METHOD parsed yet
+      character(mthlen) :: prvmth = ' '  !! METHOD string of the previous call
+      integer(ip) :: shape = 0  !! target shape code parsed from the previous METHOD (ellipsoid or DSK)
+      integer(ip) :: srfctr ( ctrsiz ) = 0  !! surface name-ID mapping state counter (ZZSRFTRK)
+      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the previous METHOD string
+   end type srfnrm_state
+
+   ! ------------------------------------------------------------------ SRFXPT
+
+   integer(ip), parameter :: srfxpt_maxl = 36
+   integer(ip), parameter :: srfxpt_frnmln = 32
+
+   !> **Deprecated:** This routine has been superseded by the SPICELIB
+   !> routine SINCPT. This routine is supported for purposes of
+   !> backward compatibility only.
+   !>
+   !> The saved variables of SPICELIB's SRFXPT routines (entry points srfxpt),
+   !> held in pepper_context (one per thread).
+   type, public :: srfxpt_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(srfxpt_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(srfxpt_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      logical :: first = .true.  !! first call: the pool counters are not yet initialized
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(srfxpt_frnmln) :: svdref = ' '  !! name of the ray frame dref looked up last (ZZNAMFRM)
+      integer(ip) :: svrefc = 0  !! ID code of the ray frame dref looked up last
+   end type srfxpt_state
+
+   ! ------------------------------------------------------------------ STCC01
+
+   !> Check whether a file is a type 1 star catalog and return the
+   !> catalog's table name if it is.
+   !>
+   !> The saved variables of SPICELIB's STCC01 routines (entry points stcc01),
+   !> held in pepper_context (one per thread).
+   type, public :: stcc01_state
+      character(4) :: dtypes ( mxclsg ) = ' '  !! work: data type of each column of the current segment (from EKSSUM)
+      character(cnamsz) :: cnames ( mxclsg ) = ' '  !! work: names of the columns of the current segment
+      character(tnamsz) :: tmptnm = ' '  !! work: table name of the current segment
+      character(tnamsz) :: tnmprv = ' '  !! work: table name of the previous segment
+      integer(ip) :: ncols = 0  !! work: number of columns in the current segment
+      logical :: nullok ( mxclsg ) = .false.  !! work: whether each column of the current segment allows null values
+   end type stcc01_state
+
+   ! ------------------------------------------------------------------ STMP03
+
+   ! (SPICELIB: 10 for Intel Fortran on Windows, 11 elsewhere)
+   integer(ip), parameter :: stmp03_trunc = 11
+   integer(ip), parameter :: npairs = 2*stmp03_trunc - 2
+
+   !> Compute the values of the Stumpff functions C_0 through C_3 at
+   !> a specified point.
+   !>
+   !> The saved variables of SPICELIB's STMP03 routines (entry points stmp03),
+   !> held in pepper_context (one per thread). Generated by
+   !> tools/modularize_ctx.py from the saved variables of stmp03.F90.
+   type, public :: stmp03_state
+      logical :: first = .true.  !! this is the first call (pairs and lbound are not computed yet)
+      real(wp) :: lbound = 0.0_wp  !! lower bound of x (below it cosh overflows)
+      real(wp) :: pairs ( npairs ) = 0.0_wp  !! reciprocal pairs 1/(i*(i+1)) of the truncated Taylor series
+   end type stmp03_state
+
+   ! ------------------------------------------------------------------ STR2ET
+
+   integer(ip), parameter :: str2et_smwdsz = 16
+
+   !> Convert a string representing an epoch to a double precision
+   !> value representing the number of TDB seconds past the J2000
+   !> epoch corresponding to the input epoch.
+   !>
+   !> The saved variables of SPICELIB's STR2ET routines (entry points str2et),
+   !> held in pepper_context (one per thread).
+   type, public :: str2et_state
+      character(str2et_smwdsz) :: calndr = ' '  !! scratch: the default calendar, from TIMDEF
+      character(str2et_smwdsz) :: defsys = 'UTC'  !! scratch: the default time system, from TIMDEF
+      character(str2et_smwdsz) :: defzon = ' '  !! scratch: the default time zone, from TIMDEF
+      !> names of the months, for error messages
+      character(str2et_smwdsz) :: mname ( 12 ) = [ character(str2et_smwdsz) :: 'January', 'February', 'March', &
+         'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
+      real(wp) :: hoff = 0.0_wp  !! scratch: hour offset of the time zone of the string
+      real(wp) :: mdy ( 2 ) = 0.0_wp  !! scratch: last days of June and December (months that can have leapseconds)
+      real(wp) :: moff = 0.0_wp  !! scratch: minute offset of the time zone of the string
+      real(wp) :: mon ( 2 ) = 0.0_wp  !! scratch: the months (June, December) that can have leapseconds
+      integer(ip) :: mm = 0  !! scratch: index of the month in the time vector
+   end type str2et_state
+
+   ! ------------------------------------------------------------------ SUBPNT
+
+   integer(ip), parameter :: subpnt_maxl = 36
+   integer(ip), parameter :: subpnt_frnmln = 32
+
+   !> Compute the rectangular coordinates of the sub-observer point on
+   !> a target body at a specified epoch, optionally corrected for
+   !> light time and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's SUBPNT routines (entry points subpnt),
+   !> held in pepper_context (one per thread).
+   type, public :: subpnt_state
+      logical :: first = .true.  !! first call: counters not yet initialized and no correction/method parsed yet
+      logical :: near = .true.  !! the previous METHOD selects the near point (rather than the intercept) sub-point
+      integer(ip) :: nsurf = 0  !! number of surface IDs in the previous METHOD string
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      character(mthlen) :: prvmth = ' '  !! METHOD string of the previous call
+      integer(ip) :: shape = -1  !! target shape code parsed from the previous METHOD (ellipsoid or DSK)
+      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the previous METHOD string
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: uselt = .false.  !! the saved correction uses light time
+      logical :: usestl = .false.  !! the saved correction uses stellar aberration
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(subpnt_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(subpnt_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(subpnt_frnmln) :: svfref = ' '  !! name of the body-fixed frame looked up last (ZZNAMFRM)
+      integer(ip) :: svrefc = 0  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr4 ( ctrsiz ) = 0  !! saved surface name/ID item declarations.
+   end type subpnt_state
+
+   ! ------------------------------------------------------------------ SUBPT
+
+   integer(ip), parameter :: subpt_maxl = 36
+
+   !> **Deprecated:** This routine has been superseded by the SPICELIB
+   !> routine SUBPNT. This routine is supported for purposes of
+   !> backward compatibility only.
+   !>
+   !> The saved variables of SPICELIB's SUBPT routines (entry points subpt),
+   !> held in pepper_context (one per thread).
+   type, public :: subpt_state
+      real(wp) :: origin ( 3 ) = 0.0_wp  !! the origin (zero vector), constant
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(subpt_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(subpt_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      logical :: first = .true.  !! first call: the pool counters are not yet initialized
+   end type subpt_state
+
+   ! ------------------------------------------------------------------ SUBSLR
+
+   integer(ip), parameter :: subslr_maxl = 36
+   integer(ip), parameter :: subslr_frnmln = 32
+
+   !> Compute the rectangular coordinates of the sub-solar point on
+   !> a target body at a specified epoch, optionally corrected for
+   !> light time and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's SUBSLR routines (entry points subslr),
+   !> held in pepper_context (one per thread).
+   type, public :: subslr_state
+      logical :: first = .true.  !! first call: pool counters not initialized, correction and method not yet parsed
+      logical :: near = .true.  !! the saved method's sub-point type is near point/nadir (not intercept)
+      integer(ip) :: nsurf = 0  !! number of surface IDs in the surface list parsed from the saved method
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      character(mthlen) :: prvmth = ' '  !! method string of the previous call
+      integer(ip) :: shape = ellshp  !! target shape parsed from the saved method (ellipsoid or DSK)
+      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the saved method
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time (CN)
+      logical :: uselt = .false.  !! the saved correction uses light time (LT or CN)
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration (+S)
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(subslr_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(subslr_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(subslr_frnmln) :: svfref = ' '  !! name of the body-fixed frame looked up last (ZZNAMFRM)
+      integer(ip) :: svrefc = 0  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr4 ( ctrsiz ) = 0  !! saved surface name/ID item declarations.
+   end type subslr_state
+
+   ! ------------------------------------------------------------------ SUBSOL
+
+   integer(ip), parameter :: subsol_maxl = 36
+
+   !> **Deprecated:** This routine has been superseded by the SPICELIB
+   !> routine SUBSLR. This routine is supported for purposes of
+   !> backward compatibility only.
+   !>
+   !> The saved variables of SPICELIB's SUBSOL routines (entry points subsol),
+   !> held in pepper_context (one per thread).
+   type, public :: subsol_state
+      real(wp) :: origin ( 3 ) = 0.0_wp  !! the zero vector
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(subsol_maxl) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(subsol_maxl) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      logical :: first = .true.  !! first call: the pool counters are not yet initialized
+   end type subsol_state
+
+   ! ------------------------------------------------------------------ SURFPT
+
+   integer(ip), parameter :: msgdim = 7
+   integer(ip), parameter :: msglen = 32
+
+   !> Determine the intersection of a line-of-sight vector with the
+   !> surface of an ellipsoid.
+   !>
+   !> The saved variables of SPICELIB's SURFPT routines (entry points surfpt),
+   !> held in pepper_context (one per thread).
+   type, public :: surfpt_state
+      !> error messages for each combination of nonpositive axes, constant
+      character(msglen) :: mssg ( msgdim ) = [ character(msglen) :: 'Axis A was nonpositive.', &
+         'Axis B was nonpositive.', 'Axes A and B were nonpositive.', 'Axis C was nonpositive.', &
+         'Axes A and C were nonpositive.', 'Axes B and C were nonpositive.', &
+         'All three axes were nonpositive.' ]
+   end type surfpt_state
+
+   ! ------------------------------------------------------------------ SXFORM
+
+   integer(ip), parameter :: sxform_frnmln = 32
+
+   !> Return the state transformation matrix from one frame to
+   !> another at a specified epoch.
+   !>
+   !> The saved variables of SPICELIB's SXFORM routines (entry points sxform),
+   !> held in pepper_context (one per thread).
+   type, public :: sxform_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the "from" frame
+      character(sxform_frnmln) :: svfrom = ' '  !! name of the "from" frame looked up last
+      integer(ip) :: svfcod = 0  !! ID code of the "from" frame looked up last
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! kernel pool state counter for the "to" frame name lookup
+      character(sxform_frnmln) :: svto = ' '  !! name of the "to" frame looked up last
+      integer(ip) :: svtcde = 0  !! ID code of the "to" frame looked up last
+      logical :: first = .true.  !! true until the pool state counters are initialized
+   end type sxform_state
+
+   ! ------------------------------------------------------------------ TANGPT
+
+   integer(ip), parameter :: tangpt_bdnmln = 36
+   integer(ip), parameter :: tangpt_frnmln = 32
+   integer(ip), parameter :: tangpt_loclen = 15
+
+   !> Compute, for a given observer, ray emanating from the observer,
+   !> and target, the "tangent point": the point on the ray nearest
+   !> to the target's surface. Also compute the point on the target's
+   !> surface nearest to the tangent point.
+   !>
+   !> The saved variables of SPICELIB's TANGPT routines (entry points tangpt),
+   !> held in pepper_context (one per thread).
+   type, public :: tangpt_state
+      logical :: first = .true.  !! first call: counters, correction and locus not yet set up
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      character(tangpt_loclen) :: prvloc = ' '  !! aberration correction locus string (CORLOC) of the previous call
+      integer(ip) :: prvtcd = 0  !! saved body name/ID item declarations.
+      logical :: tanloc = .false.  !! the saved locus is TANGENT POINT (false: SURFACE POINT)
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: uselt = .false.  !! the saved correction includes light time
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the target
+      character(tangpt_bdnmln) :: svtarg = ' '  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde = 0  !! ID code of the target looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz ) = 0  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(tangpt_bdnmln) :: svobsr = ' '  !! name of the observer looked up last
+      integer(ip) :: svobsc = 0  !! ID code of the observer looked up last
+      logical :: svfnd2 = .false.  !! found flag of the last observer name lookup
+      integer(ip) :: svctr3 ( ctrsiz ) = 0  !! saved frame name/ID item declarations.
+      character(tangpt_frnmln) :: svfref = ' '  !! name of the body-fixed frame (FIXREF) looked up last (ZZNAMFRM)
+      integer(ip) :: svfxfc = 0  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr4 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the ray frame (DREF)
+      character(tangpt_frnmln) :: svdref = ' '  !! name of the ray direction frame (DREF) looked up last
+      integer(ip) :: svdfrc = 0  !! ID code of the ray direction frame looked up last
+      integer(ip) :: svctr5 ( ctrsiz ) = 0  !! saved target radii declarations.
+      real(wp) :: svradi ( 3 ) = 0.0_wp  !! target radii (km) returned by the last ZZBODVCD lookup
+      integer(ip) :: svnrad = 0  !! number of target radii returned by the last ZZBODVCD lookup
+   end type tangpt_state
+
+   ! ------------------------------------------------------------------ TCHECK
+
+   !> Determine whether the components of a time vector are in the
+   !> "usual" range for the components, if component checking is
+   !> enabled.
+   !>
+   !> The saved variables of SPICELIB's TCHECK routines (entry points tcheck,
+   !> tparch, tchckd), held in pepper_spice.
+   type, public :: tcheck_state
+      logical :: dochck = .false.  !! check the components of parsed times (set by TPARCH)
+   end type tcheck_state
+
+   ! ------------------------------------------------------------------ TERMPT
+
+   integer(ip), parameter :: termpt_maxl = 36
+   integer(ip), parameter :: termpt_frnmln = 32
+   integer(ip), parameter :: termpt_maxwin = 2 * maxivl
+
+   !> Find terminator points on a target body. The caller specifies
+   !> half-planes, bounded by the illumination source center-target
+   !> center vector, in which to search for terminator points.
+   !>
+   !> The saved variables of SPICELIB's TERMPT routines (entry points termpt),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (49272 bytes): see init_termpt_state.
+   type, public :: termpt_state
+      logical :: first  !! first call: counters not yet initialized and no correction/method parsed yet
+      integer(ip) :: loccde  !! work: code of the aberration correction locus (CENTER or ELLIPSOID TERMINATOR)
+      real(wp) :: maxrad  !! work: maximum radius of the target DSK surfaces (DSK shape only)
+      integer(ip) :: nrad  !! work: number of radii returned by the last ZZBODVCD lookup
+      integer(ip) :: nsurf  !! number of surface IDs in the previous METHOD string
+      real(wp) :: pntbuf ( 3, termpt_maxwin )  !! work: terminator points found in the current cutting half-plane
+      character(corlen) :: prvcor  !! aberration correction string of the previous call
+      integer(ip) :: prvilu  !! ID code of the illumination source whose radii were looked up last (0 after a failure)
+      character(acllen) :: prvloc  !! aberration correction locus string of the previous call
+      character(mthlen) :: prvmth  !! METHOD string of the previous call
+      integer(ip) :: prvtrg  !! ID code of the target whose radii were looked up last
+      integer(ip) :: shadow  !! shadow type parsed from the previous METHOD (UMBRAL or PENUMBRAL code)
+      integer(ip) :: shape  !! target shape code parsed from the previous METHOD (ellipsoid or DSK)
+      integer(ip) :: srflst ( maxsrf )  !! surface ID list parsed from the previous METHOD string
+      integer(ip) :: svlcod  !! aberration correction locus code parsed from the previous CORLOC
+      integer(ip) :: trmtyp  !! terminator point definition parsed from the previous METHOD (TANGENT or GUIDED)
+      logical :: uflag  !! the previous METHOD requested the umbral terminator
+      logical :: usecn  !! the saved correction uses converged Newtonian light time
+      logical :: uselt  !! the saved correction uses light time
+      logical :: usestl  !! the saved correction uses stellar aberration
+      integer(ip) :: svctr1 ( ctrsiz )  !! saved name/ID item declarations.
+      character(termpt_maxl) :: svtarg  !! name of the target looked up last (ZZBODS2C)
+      integer(ip) :: svtcde  !! ID code of the target looked up last
+      logical :: svfnd1  !! found flag of the last target name lookup
+      integer(ip) :: svctr2 ( ctrsiz )  !! pool counter of the body name lookup (ZZBODS2C) of the observer
+      character(termpt_maxl) :: svobsr  !! name of the observer looked up last
+      integer(ip) :: svobsc  !! ID code of the observer looked up last
+      logical :: svfnd2  !! found flag of the last observer name lookup
+      integer(ip) :: svctr3 ( ctrsiz )  !! pool counter of the body name lookup (ZZBODS2C) of the illumination source
+      character(termpt_maxl) :: svilum  !! name of the illumination source looked up last
+      integer(ip) :: svicde  !! ID code of the illumination source looked up last
+      logical :: svfnd3  !! found flag of the last illumination source name lookup
+      integer(ip) :: svctr4 ( ctrsiz )  !! saved frame name/ID item declarations.
+      character(termpt_frnmln) :: svfref  !! name of the body-fixed frame looked up last (ZZNAMFRM)
+      integer(ip) :: svfxfc  !! ID code of the body-fixed frame looked up last
+      integer(ip) :: svctr5 ( ctrsiz )  !! saved surface name/ID item declarations.
+      integer(ip) :: svctr6 ( ctrsiz )  !! saved target radii declarations.
+      real(wp) :: svtrad ( 3 )  !! radii of the target body (from the kernel pool, ZZBODVCD)
+      integer(ip) :: svctr7 ( ctrsiz )  !! pool counter of the illumination source radii lookup (ZZBODVCD)
+      real(wp) :: svsrad ( 3 )  !! radii of the illumination source (from the kernel pool, ZZBODVCD)
+   end type termpt_state
+
+   ! ------------------------------------------------------------------ TEXPYR
+
+   !> Expand an abbreviated year to a full year specification.
+   !>
+   !> The saved variables of SPICELIB's TEXPYR routines (entry points texpyr,
+   !> tsetyr), held in pepper_spice.
+   type, public :: texpyr_state
+      integer(ip) :: centry = 1900  !! the century assumed for two-digit years
+      integer(ip) :: lbound = 1969  !! the lower bound of the 100-year window for two-digit years
+   end type texpyr_state
+
+   ! ------------------------------------------------------------------ TIMDEF
+
+   integer(ip), parameter :: timdef_wdsize = 16
+   integer(ip), parameter :: nzones = 8
+
+   !> Set and retrieve the defaults associated with calendar
+   !> input strings.
+   !>
+   !> The saved variables of SPICELIB's TIMDEF routines (entry points timdef),
+   !> held in pepper_spice.
+   type, public :: timdef_state
+      character(timdef_wdsize) :: defzon = ' '  !! setting: the default time zone, as UTC+HR[:MN] (blank when a system is set)
+      character(timdef_wdsize) :: defsys = 'UTC'  !! setting: the default time system (UTC, TDB, TDT or TT; blank when a zone is set)
+      character(timdef_wdsize) :: defcal = 'GREGORIAN'  !! setting: the default calendar (GREGORIAN, JULIAN or MIXED)
+      !> names of the U.S. time zones that TIMDEF translates to UTC offsets
+      character(timdef_wdsize) :: zones ( nzones ) = [ character(timdef_wdsize) :: 'EST', 'EDT', 'CST', 'CDT', &
+         'MST', 'MDT', 'PST', 'PDT' ]
+   end type timdef_state
+
+   ! ------------------------------------------------------------------ TIMOUT
+
+   integer(ip), parameter :: currnt = 1
+   integer(ip), parameter :: begin = currnt
+   integer(ip), parameter :: noname = currnt  + 1
+   integer(ip), parameter :: year = noname + 1
+   integer(ip), parameter :: yr = year   + 1
+   integer(ip), parameter :: umon = yr     + 1
+   integer(ip), parameter :: mmon = umon   + 1
+   integer(ip), parameter :: lmon = mmon   + 1
+   integer(ip), parameter :: umnth = lmon   + 1
+   integer(ip), parameter :: mmnth = umnth  + 1
+   integer(ip), parameter :: lmnth = mmnth  + 1
+   integer(ip), parameter :: month = lmnth  + 1
+   integer(ip), parameter :: doy = month  + 1
+   integer(ip), parameter :: uwkd = doy    + 1
+   integer(ip), parameter :: mwkd = uwkd   + 1
+   integer(ip), parameter :: lwkd = mwkd   + 1
+   integer(ip), parameter :: uweekd = lwkd   + 1
+   integer(ip), parameter :: mweekd = uweekd + 1
+   integer(ip), parameter :: lweekd = mweekd + 1
+   integer(ip), parameter :: day = lweekd + 1
+   integer(ip), parameter :: minute = day    + 1
+   integer(ip), parameter :: hour = minute + 1
+   integer(ip), parameter :: sec = hour   + 1
+   integer(ip), parameter :: point = sec    + 1
+   integer(ip), parameter :: place = point  + 1
+   integer(ip), parameter :: julian = place  + 1
+   integer(ip), parameter :: utc = julian + 1
+   integer(ip), parameter :: timout_tdb = utc    + 1
+   integer(ip), parameter :: timout_tdt = timout_tdb    + 1
+   integer(ip), parameter :: tt = timout_tdt    + 1
+   integer(ip), parameter :: sp2000 = tt     + 1
+   integer(ip), parameter :: sp1950 = sp2000 + 1
+   integer(ip), parameter :: round = sp1950 + 1
+   integer(ip), parameter :: timout_trunc = round  + 1
+   integer(ip), parameter :: uera = timout_trunc  + 1
+   integer(ip), parameter :: lera = uera   + 1
+   integer(ip), parameter :: uerax = lera + 1
+   integer(ip), parameter :: lerax = uerax + 1
+   integer(ip), parameter :: uampm = lerax   + 1
+   integer(ip), parameter :: lampm = uampm  + 1
+   integer(ip), parameter :: utcp = lampm  + 1
+   integer(ip), parameter :: utcm = utcp   + 1
+   integer(ip), parameter :: jcal = utcm   + 1
+   integer(ip), parameter :: gcal = jcal   + 1
+   integer(ip), parameter :: mcal = gcal   + 1
+   integer(ip), parameter :: timsys = mcal   + 1
+   integer(ip), parameter :: calndr = timsys + 1
+   integer(ip), parameter :: ampm = calndr + 1
+   integer(ip), parameter :: mon = ampm   + 1
+   integer(ip), parameter :: wkday = mon    + 1
+   integer(ip), parameter :: era = wkday  + 1
+   integer(ip), parameter :: noon = era    + 1
+   integer(ip), parameter :: rlyear = noon   + 1
+   integer(ip), parameter :: finish = rlyear
+   integer(ip), parameter :: timout_ymd = 1
+   integer(ip), parameter :: contin = timout_ymd + 1
+   integer(ip), parameter :: maxmrk = 43
+   integer(ip), parameter :: timout_maxlen = 256
+   integer(ip), parameter :: mrksiz = 8
+   integer(ip), parameter :: timout_loclen = 32
+
+   !> Convert an input epoch represented in TDB seconds past the TDB
+   !> epoch of J2000 to a character string formatted to the
+   !> specifications of a user's format picture.
+   !>
+   !> The saved variables of SPICELIB's TIMOUT routines (entry points timout),
+   !> held in pepper_context (one per thread).
+   type, public :: timout_state
+      logical :: first = .true.  !! first call: the format mark tables are not yet set up
+      character(mrksiz) :: marks (     maxmrk ) = ' '  !! the next set of variables holds the marks and auxiliary arrays used for scanning the format string.
+      integer(ip) :: class ( 0 : maxmrk ) = 0  !! component class of each format mark (0: no mark)
+      integer(ip) :: mrklen (     maxmrk ) = 0  !! lengths of the format marks
+      integer(ip) :: pntrs (     100    ) = 0  !! scanning pointers of the format marks (from SCANPR)
+      integer(ip) :: dump (     11     ) = 0  !! mark IDs of the time system/rounding/calendar tokens removed from the format
+      integer(ip) :: ndump = 0  !! number of mark IDs in DUMP
+      integer(ip) :: timfmt = 0  !! work: kind of time vector (YMD or CONTIN) of the current component
+      integer(ip) :: numtyp = 0  !! work: component type of the last numeric field
+      character(32) :: orignl ( begin : finish ) = ' '  !! the variables below are used to hold, base formats, values of time vector components, adjustments to use when rounding, the lengths of the format pictures and whether or not various components have already been computed.
+      real(wp) :: values ( begin : finish ) = 0.0_wp  !! work: value of each time component at the epoch
+      real(wp) :: pad ( begin : finish ) = 0.0_wp  !! amount added to the epoch to round each component
+      integer(ip) :: length ( begin : finish ) = 0  !! default output width of each component
+      integer(ip) :: id ( begin : finish ) = 0  !! mark index of each component in MARKS
+      logical :: have ( begin : finish ) = .false.  !! work: each component value has been computed for this epoch
+      integer(ip) :: compnt ( 8, contin ) = 0  !! the array below contains the indexes of the various values associated with the three different times of time vectors that we will be using YMD, YD, CONTIN.
+      character(timout_maxlen) :: string = ' '  !! work: output string being built
+      character(timout_loclen) :: fmt = ' '  !! work: numeric format picture of the current component
+      integer(ip) :: width = 0  !! work: width of the current numeric field
+      character(16) :: intyp = ' '  !! work: time vector type (TTRANS) of the current component
+      character(16) :: tsys = ' '  !! work: default time system (TIMDEF)
+      character(16) :: cal = ' '  !! work: default calendar (TIMDEF)
+      character(32) :: zon = ' '  !! work: default time zone (TIMDEF)
+      real(wp) :: ntvec ( 8 ) = 0.0_wp  !! work: time vector of the next unit of the current component
+      real(wp) :: ptvec ( 8 ) = 0.0_wp  !! work: time vector of the start of the current component unit
+      real(wp) :: tvec ( 8 ) = 0.0_wp  !! work: time vector of the epoch
+      real(wp) :: value = 0.0_wp  !! work: value of the current numeric component
+      integer(ip) :: mylen = 0  !! work: length of the current month or weekday name
+   end type timout_state
+
+   ! ------------------------------------------------------------------ TISBOD
+
+   integer(ip), parameter :: mxpoly = 3
+   integer(ip), parameter :: maxbod = 157
+
+   !> Return a 6x6 matrix that transforms states in inertial
+   !> coordinates to states in body-equator-and-prime-meridian
+   !> coordinates.
+   !>
+   !> The saved variables of SPICELIB's TISBOD routines (entry points tisbod),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (1783072 bytes): see init_tisbod_state.
+   type, public :: tisbod_state
+      real(wp) :: costh (    maxang )  !! work: cosines of the nutation precession angles
+      real(wp) :: d  !! seconds per day
+      real(wp) :: dcosth (    maxang )  !! work: time derivatives of the cosines of the nutation precession angles
+      real(wp) :: dsinth (    maxang )  !! work: time derivatives of the sines of the nutation precession angles
+      real(wp) :: sinth (    maxang )  !! work: sines of the nutation precession angles
+      real(wp) :: t  !! seconds per Julian century
+      integer(ip) :: j2code  !! frame ID code of J2000
+      logical :: first  !! true until the first-call initialization is done
+      integer(ip) :: pulctr ( ctrsiz )  !! POOL state counter.
+      integer(ip) :: bidlst (             maxbod )  !! body ID hash: collision list heads
+      integer(ip) :: bidpol ( lbpool :    maxbod )  !! body ID hash: collision list pool
+      integer(ip) :: bidids (             maxbod )  !! body ID hash: ID codes of the buffered bodies
+      real(wp) :: bac (     maxang, maxbod )  !! buffered RA nutation precession coefficients of each body
+      real(wp) :: bdc (     maxang, maxbod )  !! buffered DEC nutation precession coefficients of each body
+      real(wp) :: bdcoef ( 0:mxpoly-1, maxbod )  !! buffered DEC polynomial coefficients of each body
+      real(wp) :: bpckep (             maxbod )  !! buffered PCK reference epoch (JED) of each body
+      real(wp) :: brcoef ( 0:mxpoly-1, maxbod )  !! buffered RA polynomial coefficients of each body
+      real(wp) :: btcoef ( mxphas * maxang, maxbod )  !! buffered nutation precession angle (phase) coefficients of each body
+      real(wp) :: bwc (     maxang, maxbod )  !! buffered prime meridian (W) nutation precession coefficients of each body
+      real(wp) :: bwcoef ( 0:mxpoly-1, maxbod )  !! buffered prime meridian (W) polynomial coefficients of each body
+      integer(ip) :: bna (             maxbod )  !! buffered count of RA nutation precession coefficients of each body
+      integer(ip) :: bnd (             maxbod )  !! buffered count of DEC nutation precession coefficients of each body
+      integer(ip) :: bnphas (             maxbod )  !! buffered number of nutation precession angles of each body
+      integer(ip) :: bnphco (             maxbod )  !! buffered number of coefficients per nutation precession angle of each body
+      integer(ip) :: bnw (             maxbod )  !! buffered count of W nutation precession coefficients of each body
+      integer(ip) :: bpcref (             maxbod )  !! buffered PCK reference frame ID of each body
+   end type tisbod_state
+
+   ! ------------------------------------------------------------------ TKFRAM
+
+   integer(ip), parameter :: tkfram_bufsiz = 200
+   integer(ip), parameter :: tkfram_wdsize = 32
+   integer(ip), parameter :: nitems = 14
+   integer(ip), parameter :: nvars = 14
+   integer(ip), parameter :: ndps = 9
+   integer(ip), parameter :: nints = 1
+
+   !> Find the position rotation matrix from a Text Kernel (TK) frame
+   !> with the specified frame class ID to its base frame.
+   !>
+   !> The saved variables of SPICELIB's TKFRAM routines (entry points tkfram),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (18592 bytes): see init_tkfram_state.
+   type, public :: tkfram_state
+      character(tkfram_wdsize) :: alt ( nitems )  !! work: alternate (frame name based) kernel variable names for the frame
+      character(tkfram_wdsize) :: item ( nvars  )  !! work: kernel variable names for the frame (ID based, or the alternates if found)
+      character(tkfram_wdsize) :: oldagt  !! work: watcher agent name of the frame dropped from the full buffer
+      real(wp) :: buffd ( ndps, tkfram_bufsiz )  !! buffered rotation matrix (column order) of each frame
+      integer(ip) :: at  !! buffer index of the frame looked up last
+      integer(ip) :: buffi ( nints,     tkfram_bufsiz )  !! buffered ID of the frame each buffered rotation is relative to
+      integer(ip) :: idents ( 1,         tkfram_bufsiz )  !! frame ID codes of the buffered frames
+      integer(ip) :: idnt ( 1 )  !! work: frame ID to look up in the buffer
+      integer(ip) :: pool ( 2, lbpool: tkfram_bufsiz )  !! linked list pool of the buffer (in order of use)
+      logical :: first  !! true until the buffer pool is initialized
+   end type tkfram_state
+
+   ! ------------------------------------------------------------------ TOSTDO
+
+   !> Write a line of text to standard output.
+   !>
+   !> The saved variables of SPICELIB's TOSTDO routines (entry points tostdo),
+   !> held in pepper_context (one per thread).
+   type, public :: tostdo_state
+      integer(ip) :: stdout = 0  !! logical unit of standard output (from STDIO)
+      logical :: first = .true.  !! first call: the standard output unit not yet obtained
+   end type tostdo_state
+
+   ! ------------------------------------------------------------------ TTRANS
+
+   integer(ip), parameter :: maxlp = 140
+   integer(ip), parameter :: ttrans_maxvar = 1
+   integer(ip), parameter :: daysec = 1
+   integer(ip), parameter :: dayp2 = daysec + 1
+   integer(ip), parameter :: et = dayp2 + 1
+   integer(ip), parameter :: frml = et     + 1
+   integer(ip), parameter :: jdtdb = frml + 1
+   integer(ip), parameter :: jdtdt = jdtdb  + 1
+   integer(ip), parameter :: jdutc = jdtdt  + 1
+   integer(ip), parameter :: jed = jdutc  + 1
+   integer(ip), parameter :: ttai = jed    + 1
+   integer(ip), parameter :: ttrans_tdb = ttai   + 1
+   integer(ip), parameter :: ttrans_tdt = ttrans_tdb    + 1
+   integer(ip), parameter :: yd = ttrans_tdt    + 1
+   integer(ip), parameter :: ydd = yd     + 1
+   integer(ip), parameter :: yddf = ydd    + 1
+   integer(ip), parameter :: ydf = yddf   + 1
+   integer(ip), parameter :: ttrans_ymd = ydf    + 1
+   integer(ip), parameter :: ymdf = ttrans_ymd    + 1
+   integer(ip), parameter :: ymwd = ymdf   + 1
+   integer(ip), parameter :: ymwdf = ymwd   + 1
+   integer(ip), parameter :: ywd = ymwdf  + 1
+   integer(ip), parameter :: ywdf = ywd    + 1
+   integer(ip), parameter :: nrec = ywdf
+
+   !> Transform a time vector from one representation and system
+   !> to another.
+   !>
+   !> The saved variables of SPICELIB's TTRANS routines (entry points ttrans),
+   !> held in pepper_context (one per thread).
+   type, public :: ttrans_state
+      character(typlen) :: unifrm (lbcell : nrec ) = ' '  !! set of the uniform time systems, which UNITIM converts
+      character(typlen) :: recog ( nrec ) = ' '  !! sorted names of the recognized time vector representations
+      integer(ip) :: parsed ( nrec ) = 0  !! integer code of each recognized representation (parallel to RECOG)
+      logical :: needy ( nrec ) = .false.  !! the representation has a year (parallel to RECOG)
+      logical :: forml ( nrec ) = .false.  !! the representation is a formal (not UTC-based) time system (parallel to RECOG)
+      character(32) :: vars ( ttrans_maxvar ) = ' '  !! name of the watched kernel pool variable (DELTET/DELTA_AT)
+      real(wp) :: halfd = 0.0_wp  !! number of seconds in half a day
+      real(wp) :: jd1101 = 0.0_wp  !! Julian date UTC of Jan 1, 1 AD (computed on the first call)
+      real(wp) :: secspd = 0.0_wp  !! number of seconds in a day
+      real(wp) :: taitab ( 2*maxlp ) = 0.0_wp  !! TAI at the starts of the UTC days around each leapsecond (from DELTET/DELTA_AT)
+      real(wp) :: tsecs = 0.0_wp  !! scratch: seconds into the day, then into the minute, of the time being converted
+      integer(ip) :: daytab ( 2*maxlp ) = 0  !! day numbers past 1 Jan 1 AD of the days in TAITAB
+      integer(ip) :: dn2000 = 0  !! day number past 1 Jan 1 AD of Jan 1, 2000 (computed on the first call)
+      integer(ip) :: dofyr = 0  !! scratch: day of year of the time being converted
+      integer(ip) :: nref = 0  !! number of entries in TAITAB and DAYTAB
+      integer(ip) :: sunday = 0  !! day number past 1 Jan 1 AD of Sunday, Jan 6, 1991 (computed on the first call)
+      integer(ip) :: usrctr ( ctrsiz ) = 0  !! counter of the kernel pool's state when the leapseconds were read
+      logical :: first = .true.  !! the first call has not set up the tables yet
+      logical :: nodata = .true.  !! the leapseconds have not been read (successfully) from the kernel pool
+   end type ttrans_state
+
+   ! ------------------------------------------------------------------ UNITIM
+
+   integer(ip), parameter :: needed = 4
+   integer(ip), parameter :: lngvar = 16
+   integer(ip), parameter :: mislen = 20
+   integer(ip), parameter :: ntdt = 5
+   integer(ip), parameter :: ntdb = 4
+   integer(ip), parameter :: unitim_nrecog = ntdb + ntdt
+
+   !> Transform time from one uniform scale to another. The uniform
+   !> time scales are TAI, GPS, TT, TDT, TDB, ET, JED, JDTDB, JDTDT.
+   !>
+   !> The saved variables of SPICELIB's UNITIM routines (entry points unitim),
+   !> held in pepper_context (one per thread).
+   type, public :: unitim_state
+      character(1) :: bslash = ' '  !! the backslash character
+      real(wp) :: dta = 0.0_wp  !! TDT - TAI offset, in seconds (DELTET/DELTA_T_A from the kernel pool)
+      real(wp) :: eb = 0.0_wp  !! eccentricity of the heliocentric orbit of the Earth-Moon barycenter (DELTET/EB)
+      logical :: first = .true.  !! the first call has not set up the tables yet
+      real(wp) :: jd2000 = 0.0_wp  !! Julian date of J2000
+      real(wp) :: k = 0.0_wp  !! amplitude of the TDB - TDT periodic term, in seconds (DELTET/K)
+      real(wp) :: m ( 0:1 ) = 0.0_wp  !! mean anomaly of the Earth-Moon barycenter at J2000 and its rate (DELTET/M)
+      !> names of the needed kernel pool variables, for the missing-variable message
+      character(mislen) :: missed ( needed ) = [ character(mislen) :: 'DELTET/DELTA_T_A, #', 'DELTET/K, #', &
+         'DELTET/EB, #', 'DELTET/M, #' ]
+      logical :: nodata = .true.  !! the DELTET variables have not been read (successfully) from the kernel pool
+      character(typlen) :: recog ( lbcell : unitim_nrecog    ) = ' '  !! set of all the recognized time types (union of TYPTDB and TYPTDT)
+      real(wp) :: secspd = 0.0_wp  !! number of seconds in a day
+      character(typlen) :: typtdb ( lbcell : ntdb      ) = ' '  !! set of the time types based on TDB (ET, JDTDB, JED, TDB)
+      character(typlen) :: typtdt ( lbcell : ntdt      ) = ' '  !! set of the time types based on TDT (GPS, JDTDT, TAI, TDT, TT)
+      !> names of the watched kernel pool variables (DELTET/...)
+      character(lngvar) :: vars ( needed ) = [ character(lngvar) :: 'DELTET/DELTA_T_A', 'DELTET/K', &
+         'DELTET/EB', 'DELTET/M' ]
+      integer(ip) :: usrctr ( ctrsiz ) = 0  !! counter of the kernel pool's state when the DELTET variables were read
+   end type unitim_state
+
+   ! ------------------------------------------------------------------ WRENCC
+
+   !> Encode and write characters to a text file.
+   !>
+   !> The saved variables of SPICELIB's WRENCC routines (entry points wrencc),
+   !> held in pepper_context (one per thread).
+   type, public :: wrencc_state
+      integer(ip) :: intesc = 0  !! character code of the escape character
+      integer(ip) :: intfpc = 0  !! character code of the first printable character
+      integer(ip) :: intlpc = 0  !! character code of the last printable character
+      integer(ip) :: intquo = 0  !! character code of the quote character
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+   end type wrencc_state
+
+   ! ------------------------------------------------------------------ XFMSTA
+
+   integer(ip), parameter :: xfmsta_maxl = 36
+
+   !> Transform a state between coordinate systems.
+   !>
+   !> The saved variables of SPICELIB's XFMSTA routines (entry points xfmsta),
+   !> held in pepper_context (one per thread).
+   type, public :: xfmsta_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
+      character(xfmsta_maxl) :: svbody = ' '  !! name of the body looked up last (ZZBODS2C)
+      integer(ip) :: svbdid = 0  !! ID code of the body looked up last
+      logical :: svfnd1 = .false.  !! found flag of the last body name lookup
+      logical :: first = .true.  !! first call: the pool counter is not yet initialized
+   end type xfmsta_state
+
+   ! ------------------------------------------------------------------ ZZBODBLT
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZBODBLT routines (entry points
+   !> zzbodget, zzbodlst), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (52596 bytes): see init_zzbodblt_state.
+   type, public :: zzbodblt_state
+      character(maxl) :: bltnam ( nperm )  !! names of the built-in bodies
+      character(maxl) :: bltnor ( nperm )  !! the names, normalized
+      integer(ip) :: bltcod ( nperm )  !! NAIF ID codes of the built-in bodies
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+   end type zzbodblt_state
+
+   ! ------------------------------------------------------------------ ZZBODTRN
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZBODTRN routines (entry points
+   !> zzbodn2c, zzbodc2n, zzboddef, zzbodkik, zzbodrst, zzbctrck), held in
+   !> pepper_context (one per thread).
+   !>
+   !> No default initialization (1677792 bytes): see init_zzbodtrn_state.
+   type, public :: zzbodtrn_state
+      character(maxl) :: defnam ( maxe )  !! names of the built-in and BODDEF-defined bodies
+      character(maxl) :: defnor ( maxe )  !! the names, normalized (uppercase, single blanks)
+      integer(ip) :: defcod ( maxe )  !! their NAIF ID codes
+      integer(ip) :: defsiz  !! number of built-in and defined names
+      integer(ip) :: dnmlst (          maxe )  !! hash table of the defined names: head nodes
+      integer(ip) :: dnmpol ( lbpool : maxe )  !! hash table of the defined names: collision lists
+      character(maxl) :: dnmnms (          maxe )  !! hash table of the defined names: the names
+      integer(ip) :: dnmidx (          maxe )  !! hash table of the defined names: index of each
+                                               !! name in defnam
+      integer(ip) :: didlst (          maxe )  !! hash table of the defined codes: head nodes
+      integer(ip) :: didpol ( lbpool : maxe )  !! hash table of the defined codes: collision lists
+      integer(ip) :: didids (          maxe )  !! hash table of the defined codes: the codes
+      integer(ip) :: dididx (          maxe )  !! hash table of the defined codes: index of each
+                                               !! code in defcod
+      character(maxl) :: kernam ( zzbodtrn_nroom )  !! names from the kernel pool (NAIF_BODY_NAME)
+      integer(ip) :: kercod ( zzbodtrn_nroom )  !! codes from the kernel pool (NAIF_BODY_CODE)
+      integer(ip) :: knmlst (          zzbodtrn_nroom )  !! hash table of the kernel pool names: head nodes
+      integer(ip) :: knmpol ( lbpool : zzbodtrn_nroom )  !! hash table of the kernel pool names: collision
+                                                         !! lists
+      character(maxl) :: knmnms (          zzbodtrn_nroom )  !! hash table of the kernel pool names: the
+                                                             !! names
+      integer(ip) :: knmidx (          zzbodtrn_nroom )  !! hash table of the kernel pool names: index of
+                                                         !! each name in kernam
+      integer(ip) :: kidlst (          zzbodtrn_nroom )  !! hash table of the kernel pool codes: head nodes
+      integer(ip) :: kidpol ( lbpool : zzbodtrn_nroom )  !! hash table of the kernel pool codes: collision
+                                                         !! lists
+      integer(ip) :: kidids (          zzbodtrn_nroom )  !! hash table of the kernel pool codes: the codes
+      integer(ip) :: kididx (          zzbodtrn_nroom )  !! hash table of the kernel pool codes: index of
+                                                         !! each code in kercod
+      integer(ip) :: subctr ( ctrsiz )  !! body name state counter (changes when the name tables
+                                        !! change)
+      integer(ip) :: pulctr ( ctrsiz )  !! the pool state counter when the kernel pool tables were
+                                        !! built
+      logical :: bodchg  !! the defined names changed
+      logical :: extker  !! the kernel pool defines names
+      logical :: nodata  !! the kernel pool tables have not been built yet
+      integer(ip) :: i  !! work variable (saved in SPICELIB; not shown to carry a value between
+                        !! calls)
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: boddef_epoch  !! the instance's boddef_epoch these tables include
+   end type zzbodtrn_state
+
+   ! ------------------------------------------------------------------ ZZBQUAD
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZBQUAD routines (entry points
+   !> zzbquad), held in pepper_context (one per thread).
+   type, public :: zzbquad_state
+      real(wp) :: big = 0.0_wp  !! bound on the magnitude of the coefficients: sqrt(dpmax)/100, set on the first call
+      logical :: first = .true.  !! first call: big not yet computed
+   end type zzbquad_state
+
+   ! ------------------------------------------------------------------ ZZCNQUAD
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZCNQUAD routines (entry points
+   !> zzcnquad), held in pepper_context (one per thread).
+   type, public :: zzcnquad_state
+      logical :: first = .true.  !! first call: INVUB not yet computed
+      real(wp) :: invub = -1.0_wp  !! upper bound on the magnitude of root inverses, sqrt(DPMAX)/200
+   end type zzcnquad_state
+
+   ! ------------------------------------------------------------------ ZZCVSTAT
+
+   integer(ip), parameter :: zzcvstat_frnmln = 32
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZCVSTAT routines (entry points
+   !> zzcvxsta, zzcvssta), held in pepper_context (one per thread).
+   type, public :: zzcvstat_state
+      integer(ip) :: svctr = 0  !! ID code of the center of motion of the stored constant-velocity state
+      real(wp) :: svet = 0.0_wp  !! epoch of the stored constant-velocity state
+      character(zzcvstat_frnmln) :: svref = ' '  !! reference frame name of the stored constant-velocity state
+      real(wp) :: svstat ( 6 ) = 0.0_wp  !! constant-velocity state stored by ZZCVSSTA
+   end type zzcvstat_state
+
+   ! ------------------------------------------------------------------ ZZDAFGDR
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDAFGDR routines (entry points
+   !> zzdafgdr), held in pepper_context (one per thread).
+   type, public :: zzdafgdr_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff = 0  !! code of the native binary file format
+      character(strsiz) :: strbff ( numbff ) = ' '  !! names of the binary file formats
+   end type zzdafgdr_state
+
+   ! ------------------------------------------------------------------ ZZDAFGFR
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDAFGFR routines (entry points
+   !> zzdafgfr), held in pepper_context (one per thread).
+   type, public :: zzdafgfr_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff = 0  !! code of the native binary file format
+      character(strsiz) :: strbff ( numbff ) = ' '  !! names of the binary file formats
+   end type zzdafgfr_state
+
+   ! ------------------------------------------------------------------ ZZDAFGSR
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDAFGSR routines (entry points
+   !> zzdafgsr), held in pepper_context (one per thread).
+   type, public :: zzdafgsr_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff = 0  !! code of the native binary file format
+      character(strsiz) :: strbff ( numbff ) = ' '  !! names of the binary file formats
+   end type zzdafgsr_state
+
+   ! ------------------------------------------------------------------ ZZDAFNFR
+
+   integer(ip), parameter :: zzdafnfr_preftp = 603
+
+   !> Write the file record to a new DAF file.
+   !>
+   !> The saved variables of SPICELIB's ZZDAFNFR routines (entry points
+   !> zzdafnfr), held in pepper_context (one per thread).
+   type, public :: zzdafnfr_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      character(sizftp) :: ftpstr = ' '  !! the FTP validation string
+      character(zzdafnfr_preftp) :: prenul = ' '  !! the bytes before the FTP validation string (nulls)
+      character(pstftp) :: pstnul = ' '  !! the bytes after the FTP validation string (nulls)
+   end type zzdafnfr_state
+
+   ! ------------------------------------------------------------------ ZZDASGRD
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDASGRD routines (entry points
+   !> zzdasgrd), held in pepper_context (one per thread).
+   type, public :: zzdasgrd_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: intbff = 0  !! code of the binary file format of the file read last
+      integer(ip) :: natbff = 0  !! code of the native binary file format
+   end type zzdasgrd_state
+
+   ! ------------------------------------------------------------------ ZZDASGRI
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDASGRI routines (entry points
+   !> zzdasgri), held in pepper_context (one per thread).
+   type, public :: zzdasgri_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: intbff = 0  !! code of the binary file format of the file read last
+      integer(ip) :: natbff = 0  !! code of the native binary file format
+   end type zzdasgri_state
+
+   ! ------------------------------------------------------------------ ZZDASNFR
+
+   integer(ip), parameter :: zzdasnfr_preftp = 607
+
+   !> Write the file record to a new DAS file.
+   !>
+   !> The saved variables of SPICELIB's ZZDASNFR routines (entry points
+   !> zzdasnfr), held in pepper_context (one per thread).
+   type, public :: zzdasnfr_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      character(sizftp) :: ftpstr = ' '  !! the FTP validation string
+      character(zzdasnfr_preftp) :: prenul = ' '  !! the bytes before the FTP validation string (nulls)
+      character(pstftp) :: pstnul = ' '  !! the bytes after the FTP validation string (nulls)
+   end type zzdasnfr_state
+
+   ! ------------------------------------------------------------------ ZZDASRFR
+
+   !> Return the contents of the file record of a specified DAS file.
+   !>
+   !> The saved variables of SPICELIB's ZZDASRFR routines (entry points
+   !> zzdasrfr), held in pepper_context (one per thread).
+   type, public :: zzdasrfr_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff = -1  !! code of the native binary file format
+   end type zzdasrfr_state
+
+   ! ------------------------------------------------------------------ ZZDDHGSD
+
+   integer(ip), parameter :: locsiz = 8
+   integer(ip), parameter :: numcls = 3
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDDHGSD routines (entry points
+   !> zzddhgsd), held in pepper_context (one per thread).
+   type, public :: zzddhgsd_state
+      character(locsiz) :: clslst ( numcls ) = [ character(locsiz) :: 'METHOD', 'ARCH', 'BFF' ]  !! names of the classes of strings (METHOD, ARCH, BFF)
+      character(strsiz) :: stramh ( numamh ) = [ character(strsiz) :: 'READ', 'WRITE', 'SCRATCH', 'NEW' ]  !! names of the access methods
+      character(strsiz) :: strarc ( numarc ) = [ character(strsiz) :: 'DAF', 'DAS' ]  !! names of the architectures
+      !> names of the binary file formats
+      character(strsiz) :: strbff ( numbff ) = [ character(strsiz) :: 'BIG-IEEE', 'LTL-IEEE', 'VAX-GFLT', &
+         'VAX-DFLT' ]
+   end type zzddhgsd_state
+
+   ! ------------------------------------------------------------------ ZZDDHMAN
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDDHMAN routines (entry points
+   !> zzddhopn, zzddhcls, zzddhhlu, zzddhunl, zzddhnfo, zzddhisn, zzddhfnh,
+   !> zzddhluh), held in pepper_spice (and, for some variables, in
+   !> pepper_context).
+   !>
+   !> No default initialization (1435016 bytes): see init_zzddhman_state.
+   type, public :: zzddhman_state
+      integer(ip) :: nft  !! number of files in the file table
+      integer(ip) :: ftabs ( ftsize )  !! absolute value of each file's handle
+      integer(ip) :: ftamh ( ftsize )  !! access method of each file
+      integer(ip) :: ftarc ( ftsize )  !! architecture (DAF, DAS) of each file
+      integer(ip) :: ftbff ( ftsize )  !! binary file format of each file
+      integer(ip) :: fthan ( ftsize )  !! handle of each file
+      character(filen) :: ftnam ( ftsize )  !! name of each file
+      integer(ip) :: ftrtm ( ftsize )  !! length of each file name
+      real(wp) :: ftmnm ( ftsize )  !! unique number (from the file's attributes) of each file
+      integer(ip) :: next  !! the next handle number (handles are never reused)
+   end type zzddhman_state
+
+   !> The saved variables of ZZDDHMAN that are per context.
+   type, public :: zzddhman_context_state
+      logical :: first = .true.  !! the tables of names have not been built yet
+      logical :: opnfst = .true.  !! no file has been opened yet (platform check)
+      character(strsiz) :: stramh ( numamh ) = ' '  !! names of the access methods
+      character(strsiz) :: strarc ( numarc ) = ' '  !! names of the architectures
+      character(strsiz) :: strbff ( numbff ) = ' '  !! names of the binary file formats
+      integer(ip) :: natbff = 0  !! the native binary file format
+      integer(ip) :: supbff ( numbff ) = 0  !! the supported binary file formats
+      integer(ip) :: numsup = 0  !! number of supported binary file formats
+      integer(ip) :: nut = 0  !! number of entries in the unit table
+      integer(ip) :: utcst ( utsize ) = 0  !! cost (time of the last request) of each unit
+      integer(ip) :: uthan ( utsize ) = 0  !! handle of the file connected to each unit
+      logical :: utlck ( utsize ) = .false.  !! the unit is locked to its file
+      integer(ip) :: utlun ( utsize ) = 0  !! the units
+      integer(ip) :: reqcnt = 0  !! request counter (for the costs)
+      integer(ip) :: closegen = 0  !! the instance's close_generation the unit table reflects
+   end type zzddhman_context_state
+
+   ! ------------------------------------------------------------------ ZZDDHMNM
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDDHMNM routines (entry points
+   !> zzddhmnm), held in pepper_context (one per thread).
+   type, public :: zzddhmnm_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff = 0  !! code of the native binary file format
+      integer(ip) :: supbff ( numbff ) = 0  !! codes of the supported binary file formats
+      integer(ip) :: numsup = 0  !! number of supported binary file formats
+   end type zzddhmnm_state
+
+   ! ------------------------------------------------------------------ ZZDDHNFC
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDDHNFC routines (entry points
+   !> zzddhnfc), held in pepper_context (one per thread).
+   type, public :: zzddhnfc_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: savbff = 0  !! code of the native binary file format
+      character(strsiz) :: strbff ( numbff ) = ' '  !! names of the binary file formats
+   end type zzddhnfc_state
+
+   ! ------------------------------------------------------------------ ZZDDHPPF
+
+   integer(ip), parameter :: nullid = numbff+1
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDDHPPF routines (entry points
+   !> zzddhppf), held in pepper_context (one per thread). Generated by
+   !> tools/modularize_ctx.py from the saved variables of zzddhppf.F90.
+   type, public :: zzddhppf_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      character(sizdlm) :: ftpdlm = ' '  !! delimiter of the FTP validation string
+      character(sizend) :: ftplft = ' '  !! left bracket of the FTP validation string
+      character(sizstr) :: ftpmem = ' '  !! the FTP validation string without its brackets
+      character(sizend) :: ftprgt = ' '  !! right bracket of the FTP validation string
+      character(1) :: null = ' '  !! the null character
+      character(strsiz) :: strarc ( numarc ) = ' '  !! names of the architectures
+      character(strsiz) :: strbff ( nullid ) = ' '  !! names of the binary file formats
+   end type zzddhppf_state
+
+   ! ------------------------------------------------------------------ ZZDIV
+
+   !> Safely calculate the value NUMR/DENOM, avoiding the possibility
+   !> of floating point exceptions (FPE), due to numeric underflow,
+   !> numeric overflow, or divide-by-zero.
+   !>
+   !> The saved variables of SPICELIB's ZZDIV routines (entry points zzdiv),
+   !> held in pepper_context (one per thread).
+   type, public :: zzdiv_state
+      real(wp) :: expnt = 0.0_wp  !! the bounds on the potential result of the calculation.
+      logical :: first = .true.  !! first entry flag.
+   end type zzdiv_state
+
+   ! ------------------------------------------------------------------ ZZDNPT
+
+   !> Compute the velocity of an ellipsoid surface point nearest to a
+   !> specified position.
+   !>
+   !> The saved variables of SPICELIB's ZZDNPT routines (entry points zzdnpt),
+   !> held in pepper_context (one per thread).
+   type, public :: zzdnpt_state
+      !> diag(1/a**2, 1/b**2, 1/c**2): maps a surface point to (half) the ellipsoid gradient
+      real(wp) :: gradm ( 3, 3 ) = reshape ( [ 1.0_wp, 0.0_wp, 0.0_wp, 0.0_wp, 1.0_wp, 0.0_wp, 0.0_wp, 0.0_wp, &
+         1.0_wp ], [ 3, 3 ] )
+      !> inverse of (identity + l*gradm), diagonal (off-diagonal zeros set once)
+      real(wp) :: m ( 3, 3 ) = reshape ( [ 1.0_wp, 0.0_wp, 0.0_wp, 0.0_wp, 1.0_wp, 0.0_wp, 0.0_wp, 0.0_wp, &
+         1.0_wp ], [ 3, 3 ] )
+   end type zzdnpt_state
+
+   ! ------------------------------------------------------------------ ZZDSKBBL
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDSKBBL routines (entry points
+   !> zzdskbbl), held in pepper_context (one per thread).
+   type, public :: zzdskbbl_state
+      integer(ip) :: ctr ( ctrsiz ) = 0  !! DSK state change counter (ZZDSKCHK)
+      logical :: first = .true.  !! first call: the counter is not yet initialized
+      integer(ip) :: prvbod = 0  !! body ID code of the previous successful segment search
+   end type zzdskbbl_state
+
+   ! ------------------------------------------------------------------ ZZDSKBSR
+
+   integer(ip), parameter :: zzdskbsr_ftsize = 5000
+   integer(ip), parameter :: zzdskbsr_btsize = 100
+   integer(ip), parameter :: zzdskbsr_stsize = 10000
+
+   !> Load and unload DSK files for use by the readers. Buffer segments
+   !> for readers.
+   !>
+   !> The saved variables of SPICELIB's ZZDSKBSR routines (entry points
+   !> zzdsklsf, zzdskusf, zzdskbss, zzdsksns, zzdskchk), held in pepper_spice
+   !> (and, for some variables, in pepper_context).
+   !>
+   !> No default initialization (40020 bytes): see init_zzdskbsr_state.
+   type, public :: zzdskbsr_state
+      integer(ip) :: fthan ( zzdskbsr_ftsize )  !! handle of each loaded file (in load order)
+      integer(ip) :: ftnum ( zzdskbsr_ftsize )  !! file number of each loaded file: its place in the load (and search) order
+      integer(ip) :: next  !! the file number of the file loaded last
+      integer(ip) :: nft  !! number of loaded files
+      integer(ip) :: dskctr ( ctrsiz )  !! counter of changes of the loaded DSK set (checked by ZZDSKCHK)
+      logical :: pass1  !! the counter has not been set up yet
+   end type zzdskbsr_state
+
+   !> The saved variables of ZZDSKBSR that are per context.
+   !>
+   !> No default initialization (2362128 bytes): see init_zzdskbsr_context_state.
+   type, public :: zzdskbsr_context_state
+      logical :: begsch  !! a search was begun by ZZDSKBSS
+      integer(ip) :: findex  !! index in the file table of the file being searched
+      logical :: fnd  !! a segment was found by the last search
+      integer(ip) :: bindex  !! index in the body table of the body being searched
+      integer(ip) :: btbeg ( zzdskbsr_btsize )  !! head of the segment list of each body
+      integer(ip) :: btexp ( zzdskbsr_btsize )  !! expense (number of segment descriptors examined) of the segment list of each body
+      integer(ip) :: bthfs ( zzdskbsr_btsize )  !! highest file number searched for the segment list of each body
+      integer(ip) :: btbod ( zzdskbsr_btsize )  !! each body's code
+      integer(ip) :: btlfs ( zzdskbsr_btsize )  !! lowest file number searched for the segment list of each body
+      integer(ip) :: nbt  !! number of bodies in the body table
+      integer(ip) :: savep  !! the segment list node to continue the search from
+      integer(ip) :: svbody  !! the body of the search
+      character(slen) :: status  !! the state of the search in progress
+      integer(ip) :: stdlad ( dladsz,     zzdskbsr_stsize )  !! DLA descriptor of each segment in the segment table
+      real(wp) :: stdskd ( dskdsz,     zzdskbsr_stsize )  !! DSK descriptor of each segment in the segment table
+      integer(ip) :: sthan (             zzdskbsr_stsize )  !! handle of the file of each segment in the segment table
+      integer(ip) :: stpool ( 2,  lbpool : zzdskbsr_stsize )  !! doubly linked list pool of the segment table (one list per body, in priority order)
+      integer(ip) :: top  !! depth of the stack of interrupted states of the search
+      integer(ip) :: epoch  !! the instance's segment_epoch this cache reflects
+   end type zzdskbsr_context_state
+
+   ! ------------------------------------------------------------------ ZZDSKSBF
+
+   integer(ip), parameter :: zzdsksbf_stsize = 10000
+   integer(ip), parameter :: zzdsksbf_btsize = 10
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDSKSBF routines (entry points
+   !> zzsbfxr, zzsbfxri, zzsbfnrm), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (2840144 bytes): see init_zzdsksbf_state.
+   type, public :: zzdsksbf_state
+      integer(ip) :: bsrctr ( ctrsiz )  !! DSK BSR loaded kernel state counter when the tables were last validated
+      integer(ip) :: btbody ( zzdsksbf_btsize )  !! body table: body ID codes
+      integer(ip) :: btnbod  !! BTSTSZ  is an array of segment table entry counts. The Ith element of BTSTSZ is the number of entries in the segment table for the Ith body.
+      integer(ip) :: btsegp ( zzdsksbf_btsize )  !! body table: start index of each body's segment list in the segment table
+      integer(ip) :: btstsz ( zzdsksbf_btsize )  !! body table: number of segment table entries of each body
+      logical :: first  !! first call: BSRCTR not yet initialized
+      real(wp) :: stctr ( 3,      zzdsksbf_stsize )  !! segment table: outer bounding sphere centers (km, segment frame)
+      integer(ip) :: stdlad ( dladsz, zzdsksbf_stsize )  !! segment table: DLA descriptors
+      real(wp) :: stdscr ( dskdsz, zzdsksbf_stsize )  !! segment table: DSK descriptors
+      integer(ip) :: stfree  !! segment table: index of the first free entry
+      integer(ip) :: sthan ( zzdsksbf_stsize )  !! segment table variables
+      real(wp) :: stoff ( 3,      zzdsksbf_stsize )  !! segment table: offsets of segment frame centers from the central body (km)
+      real(wp) :: strad ( zzdsksbf_stsize )  !! segment table: outer bounding sphere radii (km)
+   end type zzdsksbf_state
+
+   ! ------------------------------------------------------------------ ZZDSKSEL
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDSKSEL routines (entry points
+   !> zzdsksbd, zzdskbdc, zzdsknot, zzdsksit, zzdskcit, zzdskusc, zzdskumc,
+   !> zzdskmsc, zzdskmmc, zzdsksrc, zzdskmrc), held in pepper_context (one per
+   !> thread).
+   type, public :: zzdsksel_state
+      integer(ip) :: savbid = 0  !! saved body ID code (surface ID code when set by ZZDSKMSC/ZZDSKSRC) to match segments against
+      integer(ip) :: savcls = 0  !! saved DSK data class to match segments against
+      real(wp) :: savco1 = 0.0_wp  !! saved first coordinate of the point to match against segment coverage
+      real(wp) :: savco2 = 0.0_wp  !! saved second coordinate of the point to match against segment coverage
+      real(wp) :: savet = 0.0_wp  !! saved epoch (TDB seconds past J2000) to match against segment time coverage
+      integer(ip) :: savfid = 0  !! saved frame ID code of the input coordinates or position
+      integer(ip) :: savnsf = 0  !! number of surface IDs in the saved surface list
+      real(wp) :: savpar ( nsypar ) = 0.0_wp  !! saved coordinate system parameters of the input coordinates
+      real(wp) :: savpos ( 3 ) = 0.0_wp  !! saved body-centered position whose lat/lon must lie within the segment bounds
+      integer(ip) :: savsrf ( maxsrf ) = 0  !! saved surface ID list (sorted) to match segments against
+      integer(ip) :: savsys = 0  !! saved coordinate system code of the input coordinates
+      integer(ip) :: savtrg = 0  !! saved target body ID code to match segments against
+   end type zzdsksel_state
+
+   ! ------------------------------------------------------------------ ZZDSKSPH
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDSKSPH routines (entry points
+   !> zzdsksph), held in pepper_context (one per thread).
+   type, public :: zzdsksph_state
+      integer(ip) :: ctr ( ctrsiz ) = -1  !! DSK state change counter (ZZDSKCHK)
+      logical :: first = .true.  !! first call: the counter is not yet initialized and nothing is saved
+      integer(ip) :: prvbod = 0  !! body ID code of the previous call
+      integer(ip) :: prvlst ( maxsrf ) = 0  !! surface ID list of the previous call
+      integer(ip) :: prvnls = -1  !! number of surface IDs of the previous call (-1 if the saved radii are invalid)
+      real(wp) :: svmaxr = -1.0_wp  !! maximum radius of the bounding spheres for the saved body and surfaces
+      real(wp) :: svminr = -1.0_wp  !! minimum radius of the bounding spheres for the saved body and surfaces
+   end type zzdsksph_state
+
+   ! ------------------------------------------------------------------ ZZDYNFR0
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDYNFR0 routines (entry points
+   !> zzdynfr0), held in pepper_context (one per thread).
+   type, public :: zzdynfr0_state
+      character(1) :: axes ( 3 ) = [ character(1) :: kvx, kvy, kvz ]  !! axis names 'X', 'Y', 'Z' used to decode an axis kernel variable
+      integer(ip) :: earth = 0  !! NAIF ID code of the Earth (Earth-centered check for precession/nutation frames)
+      logical :: first = .true.  !! first-call setup (J2000 and Earth codes, kernel variable names) not yet done
+      integer(ip) :: j2000 = 0  !! frame ID code of J2000
+      character(kvnmln) :: itmabc ( 2 ) = ' '  !! kernel variable names PRI_ABCORR and SEC_ABCORR
+      character(kvnmln) :: itmaxe ( 2 ) = ' '  !! kernel variable names PRI_AXIS and SEC_AXIS
+      character(kvnmln) :: itmcof ( 3 ) = [ character(kvnmln) :: kweac1, kweac2, kweac3 ]  !! kernel variable names ANGLE_1_COEFFS, ANGLE_2_COEFFS, ANGLE_3_COEFFS (Euler frames)
+      character(kvnmln) :: itmdec ( 2 ) = ' '  !! kernel variable names PRI_DEC and SEC_DEC
+      character(kvnmln) :: itmfrm ( 2 ) = ' '  !! kernel variable names PRI_FRAME and SEC_FRAME
+      character(kvnmln) :: itmlat ( 2 ) = ' '  !! kernel variable names PRI_LATITUDE and SEC_LATITUDE
+      character(kvnmln) :: itmlon ( 2 ) = ' '  !! kernel variable names PRI_LONGITUDE and SEC_LONGITUDE
+      character(kvnmln) :: itmobs ( 2 ) = ' '  !! kernel variable names PRI_OBSERVER and SEC_OBSERVER
+      character(kvnmln) :: itmra ( 2 ) = ' '  !! kernel variable names PRI_RA and SEC_RA
+      character(kvnmln) :: itmsep = kwatol  !! kernel variable name ANGLE_SEP_TOL (minimum angular separation of the defining vectors)
+      character(kvnmln) :: itmspc ( 2 ) = ' '  !! kernel variable names PRI_SPEC and SEC_SPEC
+      character(kvnmln) :: itmtrg ( 2 ) = ' '  !! kernel variable names PRI_TARGET and SEC_TARGET
+      character(kvnmln) :: itmunt ( 2 ) = ' '  !! kernel variable names PRI_UNITS and SEC_UNITS
+      character(kvnmln) :: itmvdf ( 2 ) = ' '  !! kernel variable names PRI_VECTOR_DEF and SEC_VECTOR_DEF
+      character(kvnmln) :: itmvec ( 2 ) = ' '  !! kernel variable names PRI_VECTOR and SEC_VECTOR
+   end type zzdynfr0_state
+
+   ! ------------------------------------------------------------------ ZZDYNFRM
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDYNFRM routines (entry points
+   !> zzdynfrm), held in pepper_context (one per thread).
+   type, public :: zzdynfrm_state
+      character(1) :: axes ( 3 ) = [ character(1) :: kvx, kvy, kvz ]  !! axis names 'X', 'Y', 'Z' used to decode an axis kernel variable
+      integer(ip) :: earth = 0  !! NAIF ID code of the Earth (Earth-centered check for precession/nutation frames)
+      logical :: first = .true.  !! first-call setup (J2000 and Earth codes, kernel variable names) not yet done
+      integer(ip) :: j2000 = 0  !! frame ID code of J2000
+      character(kvnmln) :: itmabc ( 2 ) = ' '  !! kernel variable names PRI_ABCORR and SEC_ABCORR
+      character(kvnmln) :: itmaxe ( 2 ) = ' '  !! kernel variable names PRI_AXIS and SEC_AXIS
+      character(kvnmln) :: itmcof ( 3 ) = [ character(kvnmln) :: kweac1, kweac2, kweac3 ]  !! kernel variable names ANGLE_1_COEFFS, ANGLE_2_COEFFS, ANGLE_3_COEFFS (Euler frames)
+      character(kvnmln) :: itmdec ( 2 ) = ' '  !! kernel variable names PRI_DEC and SEC_DEC
+      character(kvnmln) :: itmfrm ( 2 ) = ' '  !! kernel variable names PRI_FRAME and SEC_FRAME
+      character(kvnmln) :: itmlat ( 2 ) = ' '  !! kernel variable names PRI_LATITUDE and SEC_LATITUDE
+      character(kvnmln) :: itmlon ( 2 ) = ' '  !! kernel variable names PRI_LONGITUDE and SEC_LONGITUDE
+      character(kvnmln) :: itmobs ( 2 ) = ' '  !! kernel variable names PRI_OBSERVER and SEC_OBSERVER
+      character(kvnmln) :: itmra ( 2 ) = ' '  !! kernel variable names PRI_RA and SEC_RA
+      character(kvnmln) :: itmsep = kwatol  !! kernel variable name ANGLE_SEP_TOL (minimum angular separation of the defining vectors)
+      character(kvnmln) :: itmspc ( 2 ) = ' '  !! kernel variable names PRI_SPEC and SEC_SPEC
+      character(kvnmln) :: itmtrg ( 2 ) = ' '  !! kernel variable names PRI_TARGET and SEC_TARGET
+      character(kvnmln) :: itmunt ( 2 ) = ' '  !! kernel variable names PRI_UNITS and SEC_UNITS
+      character(kvnmln) :: itmvdf ( 2 ) = ' '  !! kernel variable names PRI_VECTOR_DEF and SEC_VECTOR_DEF
+      character(kvnmln) :: itmvec ( 2 ) = ' '  !! kernel variable names PRI_VECTOR and SEC_VECTOR
+   end type zzdynfrm_state
+
+   ! ------------------------------------------------------------------ ZZDYNROT
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDYNROT routines (entry points
+   !> zzdynrot), held in pepper_context (one per thread).
+   type, public :: zzdynrot_state
+      character(1) :: axes ( 3 ) = [ character(1) :: kvx, kvy, kvz ]  !! axis names 'X', 'Y', 'Z' used to decode an axis kernel variable
+      integer(ip) :: earth = 0  !! NAIF ID code of the Earth (Earth-centered check for precession/nutation frames)
+      logical :: first = .true.  !! first-call setup (J2000 and Earth codes, kernel variable names) not yet done
+      integer(ip) :: j2000 = 0  !! frame ID code of J2000
+      character(kvnmln) :: itmabc ( 2 ) = ' '  !! kernel variable names PRI_ABCORR and SEC_ABCORR
+      character(kvnmln) :: itmaxe ( 2 ) = ' '  !! kernel variable names PRI_AXIS and SEC_AXIS
+      character(kvnmln) :: itmcof ( 3 ) = [ character(kvnmln) :: kweac1, kweac2, kweac3 ]  !! kernel variable names ANGLE_1_COEFFS, ANGLE_2_COEFFS, ANGLE_3_COEFFS (Euler frames)
+      character(kvnmln) :: itmdec ( 2 ) = ' '  !! kernel variable names PRI_DEC and SEC_DEC
+      character(kvnmln) :: itmfrm ( 2 ) = ' '  !! kernel variable names PRI_FRAME and SEC_FRAME
+      character(kvnmln) :: itmlat ( 2 ) = ' '  !! kernel variable names PRI_LATITUDE and SEC_LATITUDE
+      character(kvnmln) :: itmlon ( 2 ) = ' '  !! kernel variable names PRI_LONGITUDE and SEC_LONGITUDE
+      character(kvnmln) :: itmobs ( 2 ) = ' '  !! kernel variable names PRI_OBSERVER and SEC_OBSERVER
+      character(kvnmln) :: itmra ( 2 ) = ' '  !! kernel variable names PRI_RA and SEC_RA
+      character(kvnmln) :: itmsep = kwatol  !! kernel variable name ANGLE_SEP_TOL (minimum angular separation of the defining vectors)
+      character(kvnmln) :: itmspc ( 2 ) = ' '  !! kernel variable names PRI_SPEC and SEC_SPEC
+      character(kvnmln) :: itmtrg ( 2 ) = ' '  !! kernel variable names PRI_TARGET and SEC_TARGET
+      character(kvnmln) :: itmunt ( 2 ) = ' '  !! kernel variable names PRI_UNITS and SEC_UNITS
+      character(kvnmln) :: itmvdf ( 2 ) = ' '  !! kernel variable names PRI_VECTOR_DEF and SEC_VECTOR_DEF
+      character(kvnmln) :: itmvec ( 2 ) = ' '  !! kernel variable names PRI_VECTOR and SEC_VECTOR
+   end type zzdynrot_state
+
+   ! ------------------------------------------------------------------ ZZDYNRT0
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZDYNRT0 routines (entry points
+   !> zzdynrt0), held in pepper_context (one per thread).
+   type, public :: zzdynrt0_state
+      character(1) :: axes ( 3 ) = [ character(1) :: kvx, kvy, kvz ]  !! axis names 'X', 'Y', 'Z' used to decode an axis kernel variable
+      integer(ip) :: earth = 0  !! NAIF ID code of the Earth (Earth-centered check for precession/nutation frames)
+      logical :: first = .true.  !! first-call setup (J2000 and Earth codes, kernel variable names) not yet done
+      integer(ip) :: j2000 = 0  !! frame ID code of J2000
+      character(kvnmln) :: itmabc ( 2 ) = ' '  !! kernel variable names PRI_ABCORR and SEC_ABCORR
+      character(kvnmln) :: itmaxe ( 2 ) = ' '  !! kernel variable names PRI_AXIS and SEC_AXIS
+      character(kvnmln) :: itmcof ( 3 ) = [ character(kvnmln) :: kweac1, kweac2, kweac3 ]  !! kernel variable names ANGLE_1_COEFFS, ANGLE_2_COEFFS, ANGLE_3_COEFFS (Euler frames)
+      character(kvnmln) :: itmdec ( 2 ) = ' '  !! kernel variable names PRI_DEC and SEC_DEC
+      character(kvnmln) :: itmfrm ( 2 ) = ' '  !! kernel variable names PRI_FRAME and SEC_FRAME
+      character(kvnmln) :: itmlat ( 2 ) = ' '  !! kernel variable names PRI_LATITUDE and SEC_LATITUDE
+      character(kvnmln) :: itmlon ( 2 ) = ' '  !! kernel variable names PRI_LONGITUDE and SEC_LONGITUDE
+      character(kvnmln) :: itmobs ( 2 ) = ' '  !! kernel variable names PRI_OBSERVER and SEC_OBSERVER
+      character(kvnmln) :: itmra ( 2 ) = ' '  !! kernel variable names PRI_RA and SEC_RA
+      character(kvnmln) :: itmsep = kwatol  !! kernel variable name ANGLE_SEP_TOL (minimum angular separation of the defining vectors)
+      character(kvnmln) :: itmspc ( 2 ) = ' '  !! kernel variable names PRI_SPEC and SEC_SPEC
+      character(kvnmln) :: itmtrg ( 2 ) = ' '  !! kernel variable names PRI_TARGET and SEC_TARGET
+      character(kvnmln) :: itmunt ( 2 ) = ' '  !! kernel variable names PRI_UNITS and SEC_UNITS
+      character(kvnmln) :: itmvdf ( 2 ) = ' '  !! kernel variable names PRI_VECTOR_DEF and SEC_VECTOR_DEF
+      character(kvnmln) :: itmvec ( 2 ) = ' '  !! kernel variable names PRI_VECTOR and SEC_VECTOR
+   end type zzdynrt0_state
+
+   ! ------------------------------------------------------------------ ZZEKAD06
+
+   integer(ip), parameter :: maxpad = 100
+
+   !> Add a column entry to a specified record in a class 6 column.
+   !> The entries of class 6 columns are arrays of character string
+   !> values.
+   !>
+   !> The saved variables of SPICELIB's ZZEKAD06 routines (entry points
+   !> zzekad06), held in pepper_context (one per thread).
+   type, public :: zzekad06_state
+      character(maxpad) :: padbuf = ' '  !! blanks used to pad entry elements shorter than the column string length
+      integer(ip) :: datptr = 0  !! work: DAS character address where the next character of the entry goes
+      integer(ip) :: p = 0  !! work: number of the character data page being written
+      integer(ip) :: padlen = 0  !! work: number of trailing blanks that pad each element to the column string length
+      logical :: first = .true.  !! padbuf has not been blanked yet
+   end type zzekad06_state
+
+   ! ------------------------------------------------------------------ ZZEKJSRT
+
+   integer(ip), parameter :: inisub = 32
+   integer(ip), parameter :: limit1 = 250000
+
+   !> Sort the row vectors of a join row set union, given an order
+   !> relation defined by a set of qualified order-by columns.
+   !>
+   !> The saved variables of SPICELIB's ZZEKJSRT routines (entry points
+   !> zzekjsrt), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (12250000 bytes): see init_zzekjsrt_state.
+   type, public :: zzekjsrt_state
+      character(inisub) :: cdat ( limit1 )  !! work: first inisub characters of the primary order-by column's entry in each row
+      real(wp) :: ddat ( limit1 )  !! work: d.p. entry of the primary order-by column in each row
+      integer(ip) :: idat ( limit1 )  !! work: integer entry of the primary order-by column in each row
+      character(1) :: nf ( limit1 )  !! work: null flag of the primary order-by column's entry in each row
+      integer(ip) :: ordvec ( limit1 )  !! work: order vector of the rows, sorted in parallel with the data
+   end type zzekjsrt_state
+
+   ! ------------------------------------------------------------------ ZZEKJTST
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZEKJTST routines (entry points
+   !> zzekjprp, zzekjnxt), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (32088 bytes): see init_zzekjtst_state.
+   type, public :: zzekjtst_state
+      integer(ip) :: case  !! join strategy chosen by zzekjprp: equi-join, non-equi-join, no key (test all), or empty
+      integer(ip) :: cnstr  !! index of the key join constraint used to order the candidate row vectors
+      integer(ip) :: lbase  !! scratch-area base of the narrow join row set built for the key constraint LHS column
+      integer(ip) :: lcur  !! current LHS order-vector index within the run of equal keys (equi-join case)
+      integer(ip) :: ldscrs ( cdscsz, mxjcon )  !! column descriptor of the LHS column of each active join constraint
+      integer(ip) :: lelt  !! element index of the key constraint LHS column entry
+      integer(ip) :: lelts (         mxjcon )  !! element index of the LHS column of each constraint (never set, so always 0)
+      integer(ip) :: lhans (         mxjcon )  !! handle of the EK containing the LHS column of each active join constraint
+      logical :: locact (         mxjcon )  !! which join constraints to test, with the key constraint deactivated
+      integer(ip) :: lovbas  !! scratch-area base of the order vector that sorts the LHS key column
+      integer(ip) :: lptr  !! current LHS order-vector index (start of the equal-key run in the equi-join case)
+      integer(ip) :: lrows (         mxjcon )  !! work: LHS row pointer of each active constraint, from the candidate row vector
+      integer(ip) :: lsdsc ( sdscsz, mxjcon )  !! segment descriptor of the LHS column of each active join constraint
+      integer(ip) :: rbase  !! scratch-area base of the narrow join row set built for the key constraint RHS column
+      integer(ip) :: rdscrs ( cdscsz, mxjcon )  !! column descriptor of the RHS column of each active join constraint
+      integer(ip) :: relt  !! element index of the key constraint RHS column entry
+      integer(ip) :: relts (         mxjcon )  !! element index of the RHS column of each constraint (never set, so always 0)
+      integer(ip) :: rhans (         mxjcon )  !! handle of the EK containing the RHS column of each active join constraint
+      integer(ip) :: rovbas  !! scratch-area base of the order vector that sorts the RHS key column
+      integer(ip) :: rptr  !! current RHS order-vector index
+      integer(ip) :: rrows (         mxjcon )  !! work: RHS row pointer of each active constraint, from the candidate row vector
+      integer(ip) :: rsdsc ( sdscsz, mxjcon )  !! segment descriptor of the RHS column of each active join constraint
+      integer(ip) :: svbas1  !! base of the join row set holding the key LHS table (the first set if no key)
+      integer(ip) :: svbas2  !! base of the join row set holding the key RHS table (the second set if no key)
+      integer(ip) :: svcp1 ( mxjcon )  !! cross-product index of the LHS table of each join constraint
+      integer(ip) :: svcp2 ( mxjcon )  !! cross-product index of the RHS table of each join constraint
+      integer(ip) :: svops ( mxjcon )  !! relational operator code of each join constraint
+      integer(ip) :: svncon  !! number of join constraints
+      integer(ip) :: svnr1  !! number of considered row vectors in the svbas1 join row set
+      integer(ip) :: svnr2  !! number of considered row vectors in the svbas2 join row set
+      integer(ip) :: svnt1  !! number of tables in the svbas1 join row set
+      integer(ip) :: svnt2  !! number of tables in the svbas2 join row set
+      integer(ip) :: svrb1  !! base-relative address of the considered row vectors in the svbas1 join row set
+      integer(ip) :: svrb2  !! base-relative address of the considered row vectors in the svbas2 join row set
+      logical :: done  !! all candidate row vector pairs have been tested
+      logical :: lsmall  !! the non-equi-join key constraint requires LHS < or <= RHS
+   end type zzekjtst_state
+
+   ! ------------------------------------------------------------------ ZZEKNRML
+
+   integer(ip), parameter :: maxrel = 10*maxtok
+   integer(ip), parameter :: maxstk = 500
+   integer(ip), parameter :: zzeknrml_dscsiz = eqvdsz + 1
+
+   !> Convert the WHERE clause of an EK query to a normalized form.
+   !>
+   !> The saved variables of SPICELIB's ZZEKNRML routines (entry points
+   !> zzeknrml), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (436332 bytes): see init_zzeknrml_state.
+   type, public :: zzeknrml_state
+      integer(ip) :: rels ( 3,  maxrel          )  !! work: each comparison relation: token pointer, operator code, token
+      integer(ip) :: rlpool ( 2,  lbpool : maxrel )  !! work: linked list pool of the relations (rels)
+      integer(ip) :: cjpool ( 2,  lbpool : maxrel )  !! work: linked list pool of the conjunctions (one list per conjunction)
+      integer(ip) :: cjptrs (              maxrel )  !! work: relation (index in rels) of each conjunction list node
+      integer(ip) :: djpool ( 2,  lbpool : maxrel )  !! work: linked list pool of the disjunctions (one per expression)
+      integer(ip) :: djptrs (              maxrel )  !! work: head of the conjunction list (cjpool) of each disjunction node
+      integer(ip) :: mtpool ( 2,  lbpool : maxtok )  !! work: linked list pool of the meta-tokens of the query
+      integer(ip) :: mtcode (              maxtok )  !! work: classification code of each meta-token
+      integer(ip) :: mtexpr (              maxtok )  !! work: token, descriptor or disjunction list pointer of each meta-token
+      integer(ip) :: mstart ( maxstk )  !! work: the first meta-token node at each level of the normalization stack
+      integer(ip) :: popcnd ( maxstk )  !! work: pop condition (reduction or right grouper) of each stack level
+      integer(ip) :: cj (4)  !! work: conjunction list nodes made for a BETWEEN or NOT BETWEEN relation
+      integer(ip) :: dj (2)  !! work: disjunction list nodes being made or joined
+      integer(ip) :: dspool ( 2, lbpool : maxrel )  !! work: linked list pool of the descriptors in dscbuf
+      integer(ip) :: dscbuf ( zzeknrml_dscsiz,     maxrel )  !! work: descriptor and type code (value or ident) of each value/identifier
+      integer(ip) :: first  !! work: node of the first meta-token of the current expression
+      integer(ip) :: level  !! work: current level of the parser's state stack
+      integer(ip) :: newdj  !! work: disjunction list node just made
+      integer(ip) :: rel (4)  !! work: relations made for a BETWEEN or NOT BETWEEN relation
+      integer(ip) :: relset ( lbcell : maxrel )  !! work: set of the relations of an expression to negate, so each is negated once
+      integer(ip) :: retcnd  !! work: pop condition of the stack level to push
+      integer(ip) :: second  !! work: node of the second meta-token of the current expression
+      integer(ip) :: sizes ( maxcon )  !! work: number of relations of each conjunction of the normalized expression
+      integer(ip) :: start  !! work: node of the first meta-token of the subexpression to push
+      integer(ip) :: state  !! work: state of the parser (push, pop, parse, reduced or terminated)
+   end type zzeknrml_state
+
+   ! ------------------------------------------------------------------ ZZEKPAGE
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZEKPAGE routines (entry points
+   !> zzekpgin, zzekpgan, zzekpgal, zzekpgfr, zzekpgrc, zzekpgrd, zzekpgri,
+   !> zzekpgwc, zzekpgwd, zzekpgwi, zzekpgbs, zzekpgpg, zzekpgst), held in
+   !> pepper_context (one per thread).
+   type, public :: zzekpage_state
+      character(pgsizc) :: cfill = ' '  !! note:  the integer fill buffer should be as large as the maximum of the integer page size and the metadata area size.
+      real(wp) :: dfill ( pgsizd ) = 0.0_wp  !! zero-filled d.p. page used to append new d.p. pages to the file
+      integer(ip) :: ifill ( pgsizi ) = 0  !! zero-filled integer page used to append integer pages and the metadata area
+   end type zzekpage_state
+
+   ! ------------------------------------------------------------------ ZZEKPDEC
+
+   integer(ip), parameter :: zzekpdec_nattr = 5
+   integer(ip), parameter :: toklen = 32
+   integer(ip), parameter :: nrkey = 1
+
+   !> Parse a declaration of a new EK column.
+   !>
+   !> The saved variables of SPICELIB's ZZEKPDEC routines (entry points
+   !> zzekpdec), held in pepper_context (one per thread).
+   type, public :: zzekpdec_state
+      !> recognized column attribute keywords (DATATYPE, SIZE, INDEXED, ...)
+      character(toklen) :: attkey ( zzekpdec_nattr ) = [ character(toklen) :: 'DATATYPE', 'SIZE', 'INDEXED', &
+         'NULLS_OK', 'FIXED_COUNT' ]
+      integer(ip) :: reqkey ( nrkey  ) = 1  !! indices in attkey of the required attributes (DATATYPE)
+   end type zzekpdec_state
+
+   ! ------------------------------------------------------------------ ZZEKREQI
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZEKREQI routines (entry points
+   !> zzekreqi), held in pepper_context (one per thread).
+   type, public :: zzekreqi_state
+   end type zzekreqi_state
+
+   ! ------------------------------------------------------------------ ZZEKSCA
+
+   integer(ip), parameter :: memsiz = 2500000
+
+   !> Manage the EK scratch area.
+   !>
+   !> The saved variables of SPICELIB's ZZEKSCA routines (entry points
+   !> zzekstop, zzekspsh, zzekspop, zzeksdec, zzeksupd, zzeksrd, zzekscln),
+   !> held in pepper_context (one per thread).
+   !>
+   !> No default initialization (10000016 bytes): see init_zzeksca_state.
+   type, public :: zzeksca_state
+      logical :: return  !! unused (SPICELIB's declaration of the RETURN function, taken for a saved variable)
+      integer(ip) :: scrhan  !! handle of the scratch DAS file holding the stack beyond the in-memory part
+      integer(ip) :: scrtch ( memsiz )  !! in-memory part of the scratch stack (elements 1 to memsiz)
+      integer(ip) :: t  !! top of the scratch stack: number of integers in the scratch area
+      logical :: first  !! the scratch DAS is not open (set again by zzekscln after it is closed)
+   end type zzeksca_state
+
+   ! ------------------------------------------------------------------ ZZEKSCAN
+
+   !> Scan tokens in an EK query.
+   !>
+   !> The saved variables of SPICELIB's ZZEKSCAN routines (entry points
+   !> zzekscan), held in pepper_context (one per thread).
+   type, public :: zzekscan_state
+      integer(ip) :: idspec ( lbcell : mxspec ) = 0  !! identifier character spec for lxidnt (built by lxcsid on the first call)
+      logical :: pass1 = .true.  !! idspec has not been built yet
+   end type zzekscan_state
+
+   ! ------------------------------------------------------------------ ZZEKSEMC
+
+   integer(ip), parameter :: zzeksemc_short = 32
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZEKSEMC routines (entry points
+   !> zzeksemc), held in pepper_context (one per thread).
+   type, public :: zzeksemc_state
+      !> names of the EK data types, indexed by type code (for error messages)
+      character(zzeksemc_short) :: typstr ( 4 ) = [ character(zzeksemc_short) :: 'CHARACTER', &
+         'DOUBLE PRECISION', 'INTEGER', 'TIME' ]
+   end type zzeksemc_state
+
+   ! ------------------------------------------------------------------ ZZEKTRIT
+
+   !> Initialize an EK tree, returning the root of the tree.
+   !>
+   !> The saved variables of SPICELIB's ZZEKTRIT routines (entry points
+   !> zzektrit), held in pepper_context (one per thread).
+   type, public :: zzektrit_state
+      integer(ip) :: page ( pgsizi ) = 0  !! work: integer page image of the new tree root node, written to the file
+   end type zzektrit_state
+
+   ! ------------------------------------------------------------------ ZZEKTRLK
+
+   !> Locate a specified key.  Return metadata describing the node
+   !> containing the key.
+   !>
+   !> The saved variables of SPICELIB's ZZEKTRLK routines (entry points
+   !> zzektrlk), held in pepper_context (one per thread).
+   type, public :: zzektrlk_state
+      integer(ip) :: oldhan = 0  !! handle of the EK of the last lookup
+      integer(ip) :: oldidx = 0  !! index within its node of the last key found
+      integer(ip) :: oldlvl = 0  !! tree level of the node containing the last key found
+      integer(ip) :: oldmax = 0  !! number of keys in the node containing the last key found
+      integer(ip) :: oldnod = 0  !! number of the node containing the last key found
+      integer(ip) :: oldnof = 0  !! key offset of the node containing the last key found
+      integer(ip) :: oldtre = 0  !! root node of the tree of the last lookup
+      integer(ip) :: oldkey = 0  !! last key found
+      integer(ip) :: oldval = 0  !! value of the last key found
+      integer(ip) :: page ( pgsizi ) = 0  !! last node page read (the node of the last key found, after a successful lookup)
+      logical :: first = .true.  !! no lookup done yet (the file access method is not known)
+      logical :: leaf = .false.  !! the node containing the last key found is a leaf
+      logical :: rdonly = .false.  !! the file of the last lookup is open read-only, so the cached node can be trusted
+   end type zzektrlk_state
+
+   ! ------------------------------------------------------------------ ZZEKVADR
+
+   integer(ip), parameter :: zzekvadr_mxjrs = 200
+
+   !> Compute the EK scratch area base address of the row vector having
+   !> a specified index, given a union of EK join row sets and a row
+   !> vector index. Also return the base address of the row
+   !> vector's parent segment vector.
+   !>
+   !> The saved variables of SPICELIB's ZZEKVADR routines (entry points
+   !> zzekvset, zzekvcal), held in pepper_context (one per thread).
+   type, public :: zzekvadr_state
+      integer(ip) :: begidx ( zzekvadr_mxjrs ) = 0  !! index of the first row vector of each join row set in the union
+      integer(ip) :: j = 0  !! work: table or row count read from a join row set
+      integer(ip) :: maxrwv = 0  !! largest valid row vector index of the union (computed one too large by zzekvset)
+      integer(ip) :: ntabs = 0  !! number of tables in each join row set of the union
+      integer(ip) :: rbas ( zzekvadr_mxjrs ) = 0  !! scratch-area base address of the row vectors of each join row set
+      integer(ip) :: svbas ( zzekvadr_mxjrs ) = 0  !! scratch-area base address of each join row set
+      integer(ip) :: svnjrs = 0  !! number of join row sets in the union
+   end type zzekvadr_state
+
+   ! ------------------------------------------------------------------ ZZEKWEQI
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZEKWEQI routines (entry points
+   !> zzekweqi), held in pepper_context (one per thread).
+   type, public :: zzekweqi_state
+   end type zzekweqi_state
+
+   ! ------------------------------------------------------------------ ZZELVUPY
+
+   integer(ip), parameter :: maxfov = 10000
+
+   !> Determine whether a specified ellipse intersects the pyramid
+   !> defined by a polygonal field of view.
+   !>
+   !> The saved variables of SPICELIB's ZZELVUPY routines (entry points
+   !> zzelvupy), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (240024 bytes): see init_zzelvupy_state.
+   type, public :: zzelvupy_state
+      real(wp) :: origin ( 3 )  !! the origin (zero vector), constant
+      real(wp) :: work ( 3, maxfov )  !! work: projections of the FOV boundary vectors onto the FOV plane
+   end type zzelvupy_state
+
+   ! ------------------------------------------------------------------ ZZFRMGT0
+
+   !> Find the transformation from a user specified frame to
+   !> another frame at a user specified epoch.
+   !>
+   !> The saved variables of SPICELIB's ZZFRMGT0 routines (entry points
+   !> zzfrmgt0), held in pepper_context (one per thread).
+   type, public :: zzfrmgt0_state
+      real(wp) :: idnt66 ( 6, 6 ) = 0.0_wp  !! 6x6 identity matrix, built on the first call
+      logical :: pass1 = .true.  !! first call: the identity matrix has not been built yet
+      character(6) :: versn = '4.0.0'  !! version string quoted in the unsupported-frame-class error message
+   end type zzfrmgt0_state
+
+   ! ------------------------------------------------------------------ ZZFRMGT1
+
+   !> Find the transformation from a user specified frame to
+   !> another frame at a user specified epoch.
+   !>
+   !> The saved variables of SPICELIB's ZZFRMGT1 routines (entry points
+   !> zzfrmgt1), held in pepper_context (one per thread).
+   type, public :: zzfrmgt1_state
+      real(wp) :: idnt66 ( 6, 6 ) = 0.0_wp  !! 6x6 identity matrix, built on the first call
+      logical :: pass1 = .true.  !! first call: the identity matrix has not been built yet
+      character(6) :: versn = '4.0.0'  !! version string quoted in the unsupported-frame-class error message
+   end type zzfrmgt1_state
+
+   ! ------------------------------------------------------------------ ZZFTPCHK
+
+   !> Check a character string that may contain the FTP validation
+   !> string for FTP based errors.
+   !>
+   !> The saved variables of SPICELIB's ZZFTPCHK routines (entry points
+   !> zzftpchk), held in pepper_context (one per thread).
+   type, public :: zzftpchk_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      character(sizend) :: lftbkt = ' '  !! left bracket of the FTP validation string
+      character(sizstr) :: memstr = ' '  !! the FTP validation string without its brackets
+      character(sizend) :: rgtbkt = ' '  !! right bracket of the FTP validation string
+   end type zzftpchk_state
+
+   ! ------------------------------------------------------------------ ZZFTPSTR
+
+   !> Retrieve the components of the FTP validation string.
+   !>
+   !> The saved variables of SPICELIB's ZZFTPSTR routines (entry points
+   !> zzftpstr), held in pepper_context (one per thread).
+   type, public :: zzftpstr_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      character(sizdlm) :: locdlm = ':'  !! delimiter of the pieces of the FTP validation string
+      character(sizend) :: loclnd = 'FTPSTR'  !! left bracket of the FTP validation string
+      character(sizend) :: locrnd = 'ENDFTP'  !! right bracket of the FTP validation string
+      character(sizstr) :: locstr = ' '  !! the FTP validation string
+   end type zzftpstr_state
+
+   ! ------------------------------------------------------------------ ZZGETELM
+
+   integer(ip), parameter :: zzgetelm_lnsize = 160
+   integer(ip), parameter :: zzgetelm_maxp = 37
+   integer(ip), parameter :: minp = -zzgetelm_maxp
+
+   !> Given a the "lines" of a two-line element set, parse the
+   !> lines and return the elements in units suitable for use
+   !> in SPICE software.
+   !>
+   !> The saved variables of SPICELIB's ZZGETELM routines (entry points
+   !> zzgetelm), held in pepper_context (one per thread).
+   type, public :: zzgetelm_state
+      character(zzgetelm_lnsize) :: errprs ( 13 ) = ' '  !! work: parse error messages for each of the 13 TLE terms
+      character(zzgetelm_lnsize) :: term ( 13 ) = ' '  !! descriptions (name and character columns) of the 13 TLE terms, set on the first call
+      real(wp) :: d2r = 0.0_wp  !! radians per degree, set on the first call
+      real(wp) :: pi2 = 0.0_wp  !! 2 pi, set on the first call
+      real(wp) :: power ( minp:zzgetelm_maxp ) = 0.0_wp  !! powers of ten 10**minp ... 10**maxp, set on the first call
+      real(wp) :: tvec ( 8 ) = 0.0_wp  !! work: epoch time vector (year, day) converted by TTRANS from YD.D to TDB
+      logical :: first = .true.  !! first call: constants, powers of ten and term descriptions not yet set
+   end type zzgetelm_state
+
+   ! ------------------------------------------------------------------ ZZGFCOQ
+
+   integer(ip), parameter :: zzgfcoq_bdnmln = 36
+
+   !> SPICE private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFCOQ routines (entry points
+   !> zzgfcoq), held in pepper_context (one per thread).
+   type, public :: zzgfcoq_state
+      character(zzgfcoq_bdnmln) :: ctrnam = ' '  !! name of the body with ID prvctr (center of the planetographic frame)
+      logical :: first = .true.  !! first call: target, observer and center names not yet looked up
+      character(zzgfcoq_bdnmln) :: obsnam = ' '  !! name of the observer with ID prvobs
+      integer(ip) :: prvctr = 0  !! frame center ID code of the previous call
+      integer(ip) :: prvobs = 0  !! observer ID code of the previous call
+      integer(ip) :: prvtrg = 0  !! target ID code of the previous call
+      !> recognized coordinate system names (constant)
+      character(crdlen) :: sysnms (    nsys ) = [ character(crdlen) :: recsys, latsys, radsys, sphsys, cylsys, &
+         geosys, pgrsys ]
+      character(zzgfcoq_bdnmln) :: trgnam = ' '  !! name of the target with ID prvtrg
+   end type zzgfcoq_state
+
+   ! ------------------------------------------------------------------ ZZGFCOU
+
+   integer(ip), parameter :: abclen = 20
+   integer(ip), parameter :: zzgfcou_frnmln = 32
+   integer(ip), parameter :: zzgfcou_bdnmln = 36
+   integer(ip), parameter :: syslen = 32
+   integer(ip), parameter :: vdflen = 32
+   integer(ip), parameter :: metlen = 200
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFCOU routines (entry points
+   !> zzgfcoin, zzgfcog, zzgfcodc, zzgfcoex, zzgfcocg, zzgfcosg, zzgfcocd,
+   !> zzgfcosd), held in pepper_context (one per thread).
+   type, public :: zzgfcou_state
+      integer(ip) :: svcidx = 0  !! index of the coordinate within its coordinate system
+      character(abclen) :: svcorr = ' '  !! aberration correction saved by ZZGFCOIN
+      character(crdlen) :: svcrd = ' '  !! coordinate name saved by ZZGFCOIN
+      character(syslen) :: svcsys = ' '  !! coordinate system name saved by ZZGFCOIN
+      integer(ip) :: svdctr = 0  !! ID code of the center of the ray frame svdref (intercept searches)
+      character(zzgfcou_frnmln) :: svdref = ' '  !! ray direction frame name (intercept searches; blank otherwise)
+      real(wp) :: svdvec ( 3 ) = 0.0_wp  !! ray direction vector (intercept searches; zero otherwise)
+      real(wp) :: svf = 0.0_wp  !! flattening coefficient of the frame center body (geodetic/planetographic)
+      character(metlen) :: svmeth = ' '  !! subpoint/intercept computation method saved by ZZGFCOIN
+      integer(ip) :: svobs = 0  !! observer ID code saved by ZZGFCOIN
+      real(wp) :: svradi ( 3 ) = 0.0_wp  !! radii of the frame center body (sub-observer, intercept, geodetic, planetographic)
+      character(zzgfcou_bdnmln) :: svrcnm = ' '  !! name of the frame center body (planetographic only)
+      integer(ip) :: svrctr = 0  !! ID code of the center of the coordinate frame svref
+      real(wp) :: svre = 0.0_wp  !! equatorial radius of the frame center body (geodetic/planetographic)
+      character(zzgfcou_frnmln) :: svref = ' '  !! coordinate reference frame name saved by ZZGFCOIN
+      integer(ip) :: svsens = 0  !! planetographic longitude sense: 1 east, -1 west, 0 not planetographic
+      integer(ip) :: svtarg = 0  !! target ID code saved by ZZGFCOIN
+      character(vdflen) :: svvdef = ' '  !! vector definition (position, sub-observer point, surface intercept)
+      !> recognized coordinate system names (constant)
+      character(syslen) :: sysnms ( nsys ) = [ character(syslen) :: recsys, latsys, radsys, sphsys, cylsys, &
+         geosys, pgrsys ]
+      real(wp) :: y ( 3 ) = [ 0.0_wp, 1.0_wp, 0.0_wp ]  !! +Y unit vector used to find the planetographic longitude sense (constant)
+   end type zzgfcou_state
+
+   ! ------------------------------------------------------------------ ZZGFCSLV
+
+   integer(ip), parameter :: mxpass = 3
+   integer(ip), parameter :: maxop = 6
+
+   !> Perform a coordinate search.
+   !>
+   !> The saved variables of SPICELIB's ZZGFCSLV routines (entry points
+   !> zzgfcslv), held in pepper_context (one per thread).
+   type, public :: zzgfcslv_state
+      !> recognized relational operators (constant)
+      character(maxop) :: cnames ( nc ) = [ character(maxop) :: '>', '=', '<', 'ABSMAX', 'ABSMIN', 'LOCMAX', &
+         'LOCMIN' ]
+      !> progress report prefixes for each pass (constant)
+      character(mxbegm) :: rptpre ( mxpass ) = [ character(mxbegm) :: 'Coordinate pass 1 of # ', &
+         'Coordinate pass 2 of # ', 'Intercept existence pass 1 of 1' ]
+      character(mxendm) :: rptsuf ( mxpass ) = 'done.'  !! progress report suffixes for each pass (constant)
+   end type zzgfcslv_state
+
+   ! ------------------------------------------------------------------ ZZGFDIU
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFDIU routines (entry points
+   !> zzgfdiin, zzgfdidc, zzgfdigq), held in pepper_context (one per thread).
+   type, public :: zzgfdiu_state
+      character(corlen) :: svcorr = ' '  !! aberration correction saved by ZZGFDIIN
+      integer(ip) :: svobs = 0  !! observer ID code saved by ZZGFDIIN
+      integer(ip) :: svtarg = 0  !! target ID code saved by ZZGFDIIN
+   end type zzgfdiu_state
+
+   ! ------------------------------------------------------------------ ZZGFFVU
+
+   integer(ip), parameter :: ubpl = 4
+   integer(ip), parameter :: zzgffvu_bdnmln = 36
+   integer(ip), parameter :: zzgffvu_frnmln = 32
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFFVU routines (entry points
+   !> zzgffvin, zzgffvst), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (400584 bytes): see init_zzgffvu_state.
+   type, public :: zzgffvu_state
+      real(wp) :: svarad  !! angular radius of the FOV (max angle between axis and boundary vectors)
+      real(wp) :: svbnds ( 3, maxvrt )  !! FOV boundary vectors, from GETFOV (second semi-axis added for circles)
+      character(corlen) :: svcorr  !! aberration correction saved by ZZGFFVIN
+      real(wp) :: svedct ( 3 )  !! center of the ellipsoid representing a circular/elliptical FOV (for ZZOCCED)
+      logical :: svetrg  !! the target is an ellipsoid
+      real(wp) :: svfaxi ( 3 )  !! FOV axis vector (instrument frame)
+      real(wp) :: svfovm ( 3, 3 )  !! rotation from the instrument frame to a frame whose +Z is the FOV axis
+      real(wp) :: svfpol ( 2, maxvrt )  !! 2D vertices of the FOV polygon in the FOV plane (svfovm frame)
+      real(wp) :: svfsmx ( 3, 3 )  !! semi-axis matrix of the ellipsoid representing the FOV (for ZZOCCED)
+      real(wp) :: svfvct ( 3 )  !! unit FOV axis vector: center of the FOV plane
+      character(zzgffvu_frnmln) :: svifrm  !! instrument frame name, from GETFOV
+      character(zzgffvu_bdnmln) :: svinam  !! instrument name saved by ZZGFFVIN
+      character(shplen) :: svishp  !! FOV shape (RECTANGLE mapped to POLYGON)
+      integer(ip) :: svnvrt  !! number of FOV boundary vectors
+      integer(ip) :: svobs  !! observer ID code saved by ZZGFFVIN
+      real(wp) :: svorig ( 3 )  !! origin (zero vector): the observer/instrument position (constant)
+      real(wp) :: svplan ( ubpl )  !! FOV plane: normal to the FOV axis at unit distance from the origin
+      real(wp) :: svrdir ( 3 )  !! unit ray direction (ray target) saved by ZZGFFVIN
+      real(wp) :: svsemi ( 3, 2 )  !! semi-axis vectors of an elliptical/circular FOV in the FOV plane
+      integer(ip) :: svtarg  !! target ID code saved by ZZGFFVIN (0 for a ray target)
+      character(zzgffvu_frnmln) :: svtfrm  !! target body-fixed frame (or ray frame) name saved by ZZGFFVIN
+      character(zzgffvu_bdnmln) :: svtnam  !! target name saved by ZZGFFVIN
+      real(wp) :: svtrad ( 3 )  !! target ellipsoid radii (zero unless the target is an ellipsoid)
+      logical :: svuray  !! the target is a ray
+      logical :: svustl  !! the aberration correction includes stellar aberration
+      real(wp) :: svxmag ( 2 )  !! lengths of the svsemi semi-axis vectors
+      logical :: svxmit  !! the aberration correction is for transmission
+   end type zzgffvu_state
+
+   ! ------------------------------------------------------------------ ZZGFILU
+
+   integer(ip), parameter :: zzgfilu_bdnmln = 36
+   integer(ip), parameter :: zzgfilu_frnmln = 32
+   integer(ip), parameter :: zzgfilu_mthlen = 200
+   integer(ip), parameter :: zzgfilu_namlen = 50
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFILU routines (entry points
+   !> zzgfilin, zzgfildc, zzgfilgq), held in pepper_context (one per thread).
+   type, public :: zzgfilu_state
+      !> recognized illumination angle names (constant)
+      character(zzgfilu_namlen) :: angnms ( 3 ) = [ character(zzgfilu_namlen) :: 'PHASE', 'INCIDENCE', &
+         'EMISSION' ]
+      integer(ip) :: svaidx = 0  !! index of the angle type in angnms
+      character(corlen) :: svcorr = ' '  !! aberration correction saved by ZZGFILIN
+      character(zzgfilu_bdnmln) :: svinam = ' '  !! illumination source name saved by ZZGFILIN
+      character(zzgfilu_mthlen) :: svmeth = ' '  !! computation method saved by ZZGFILIN
+      real(wp) :: svnrml ( 3 ) = 0.0_wp  !! outward surface normal at the surface point svsspt
+      character(zzgfilu_bdnmln) :: svonam = ' '  !! observer name saved by ZZGFILIN
+      character(zzgfilu_frnmln) :: svref = ' '  !! target body-fixed frame name saved by ZZGFILIN
+      real(wp) :: svsspt ( 3 ) = 0.0_wp  !! surface point on the target saved by ZZGFILIN
+      character(zzgfilu_bdnmln) :: svtnam = ' '  !! target name saved by ZZGFILIN
+   end type zzgfilu_state
+
+   ! ------------------------------------------------------------------ ZZGFLONG
+
+   integer(ip), parameter :: oplen = 6
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFLONG routines (entry points
+   !> zzgflong), held in pepper_context (one per thread).
+   type, public :: zzgflong_state
+      !> recognized relational operators (constant)
+      character(oplen) :: ops ( nc ) = [ character(oplen) :: '<', '=', '>', 'LOCMIN', 'ABSMIN', 'LOCMAX', &
+         'ABSMAX' ]
+      real(wp) :: y ( 3 ) = [ 0.0_wp, 1.0_wp, 0.0_wp ]  !! +Y unit vector used to find the planetographic longitude sense (constant)
+   end type zzgflong_state
+
+   ! ------------------------------------------------------------------ ZZGFOCU
+
+   integer(ip), parameter :: zzgfocu_bdnmln = 36
+   integer(ip), parameter :: zzgfocu_frnmln = 32
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFOCU routines (entry points
+   !> zzgfocin, zzgfocst), held in pepper_context (one per thread).
+   type, public :: zzgfocu_state
+      integer(ip) :: ncalls = 0  !! number of SINCPT calls made by ZZGFOCST (diagnostic count only)
+      integer(ip) :: svback = 0  !! back body ID code saved by ZZGFOCIN
+      character(zzgfocu_frnmln) :: svbfrm = ' '  !! back body-fixed frame name (blank for a point)
+      character(mthlen) :: svbmth = ' '  !! back body shape/method string saved by ZZGFOCIN
+      character(zzgfocu_bdnmln) :: svbnam = ' '  !! back body name saved by ZZGFOCIN
+      real(wp) :: svbrad ( 3 ) = 0.0_wp  !! back body ellipsoid radii (zero for a point)
+      character(shplen) :: svbshp = ' '  !! back body shape: point, ellipsoid or DSK
+      character(corlen) :: svcorr = ' '  !! aberration correction for SPKEZP (stellar aberration removed)
+      character(zzgfocu_frnmln) :: svffrm = ' '  !! front body-fixed frame name (blank for a point)
+      character(mthlen) :: svfmth = ' '  !! front body shape/method string saved by ZZGFOCIN
+      character(zzgfocu_bdnmln) :: svfnam = ' '  !! front body name saved by ZZGFOCIN
+      real(wp) :: svfrad ( 3 ) = 0.0_wp  !! front body ellipsoid radii (zero for a point)
+      integer(ip) :: svfrnt = 0  !! front body ID code saved by ZZGFOCIN
+      character(shplen) :: svfshp = ' '  !! front body shape: point, ellipsoid or DSK
+      real(wp) :: svmnbr = 0.0_wp  !! minimum radius of the back body (bounding radius for DSK shapes)
+      real(wp) :: svmnfr = 0.0_wp  !! minimum radius of the front body (bounding radius for DSK shapes)
+      real(wp) :: svmxbr = 0.0_wp  !! maximum radius of the back body (bounding radius for DSK shapes)
+      real(wp) :: svmxfr = 0.0_wp  !! maximum radius of the front body (bounding radius for DSK shapes)
+      integer(ip) :: svobs = 0  !! observer ID code saved by ZZGFOCIN
+      character(zzgfocu_bdnmln) :: svonam = ' '  !! observer name saved by ZZGFOCIN
+      real(wp) :: svorig ( 3 ) = 0.0_wp  !! origin (zero vector): the observer position (constant)
+      character(oclln) :: svtype = ' '  !! occultation type saved by ZZGFOCIN
+      character(oclln) :: svtyps ( noctyp ) = [ character(oclln) :: annulr, any, partl, full ]  !! recognized occultation types (constant)
+   end type zzgfocu_state
+
+   ! ------------------------------------------------------------------ ZZGFPAU
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFPAU routines (entry points
+   !> zzgfpain, zzgfpadc, zzgfpagq, zzgfpax), held in pepper_context (one per
+   !> thread).
+   type, public :: zzgfpau_state
+      logical :: svablk ( nabcor ) = .false.  !! attribute flags of the aberration correction svabco (from ZZVALCOR)
+      character(corlen) :: svabco = ' '  !! aberration correction saved by ZZGFPAIN
+      integer(ip) :: svtarg = 0  !! target ID code saved by ZZGFPAIN
+      integer(ip) :: svobs = 0  !! observer ID code saved by ZZGFPAIN
+      integer(ip) :: svillm = 0  !! illumination source ID code saved by ZZGFPAIN
+   end type zzgfpau_state
+
+   ! ------------------------------------------------------------------ ZZGFREL
+
+   integer(ip), parameter :: zzgfrel_maxcln = 80
+
+   !> SPICE private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFREL routines (entry points
+   !> zzgfrel), held in pepper_context (one per thread).
+   type, public :: zzgfrel_state
+      !> recognized relational operators (constant)
+      character(zzgfrel_maxcln) :: cnames ( nc ) = [ character(zzgfrel_maxcln) :: '<', '=', '>', 'LOCMIN', &
+         'ABSMIN', 'LOCMAX', 'ABSMAX' ]
+      logical :: cstep = .false.  !! constant step size flag passed to ZZGFSOLV: always false (constant)
+   end type zzgfrel_state
+
+   ! ------------------------------------------------------------------ ZZGFRELX
+
+   integer(ip), parameter :: zzgfrelx_maxcln = 80
+
+   !> SPICE private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFRELX routines (entry points
+   !> zzgfrelx), held in pepper_context (one per thread).
+   type, public :: zzgfrelx_state
+      !> recognized relational operators (constant)
+      character(zzgfrelx_maxcln) :: cnames ( nc ) = [ character(zzgfrelx_maxcln) :: '<', '=', '>', 'LOCMIN', &
+         'ABSMIN', 'LOCMAX', 'ABSMAX' ]
+      logical :: cstep = .false.  !! constant step size flag passed to ZZGFSOLVX: always false (constant)
+   end type zzgfrelx_state
+
+   ! ------------------------------------------------------------------ ZZGFRPWK
+
+   !> The entry points under this routine allows one to easily monitor
+   !> the status of job in progress.
+   !>
+   !> The saved variables of SPICELIB's ZZGFRPWK routines (entry points
+   !> zzgftswk, zzgfwkin, zzgfwkad, zzgfwkun, zzgfwkmo), held in
+   !> pepper_context (one per thread).
+   type, public :: zzgfrpwk_state
+      integer(ip) :: calls = 0  !! ZZGFWKIN calls since the last time check
+      integer(ip) :: check = 1  !! number of ZZGFWKIN calls between system time checks
+      real(wp) :: done = 0.0_wp  !! amount of work done so far
+      real(wp) :: entire = 0.0_wp  !! total amount of work to be done
+      character(mxendm) :: finish = ' '  !! progress report end message
+      logical :: first = .true.  !! first call: standard output unit not yet looked up
+      integer(ip) :: ls = 1  !! nonblank length of the begin message (set by ZZGFTSWK)
+      real(wp) :: lstsec = 0.0_wp  !! system time of the last report, seconds past midnight
+      character(mxbegm) :: start = ' '  !! progress report begin message
+      integer(ip) :: stdout = 6  !! logical unit of standard output
+      real(wp) :: step = 0.0_wp  !! minimum seconds between progress reports (0 to 3600)
+      real(wp) :: svincr = 0.0_wp  !! last increment passed to ZZGFWKIN
+      integer(ip) :: svunit = 6  !! logical unit the progress report is written to
+   end type zzgfrpwk_state
+
+   ! ------------------------------------------------------------------ ZZGFRRU
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFRRU routines (entry points
+   !> zzgfrrin, zzgfrrdc, zzgfrrgq, zzgfrrx), held in pepper_context (one per
+   !> thread).
+   type, public :: zzgfrru_state
+      character(corlen) :: svabco = ' '  !! aberration correction saved by ZZGFRRIN
+      integer(ip) :: svtarg = 0  !! target ID code saved by ZZGFRRIN
+      character(32) :: svref = ' '  !! reference frame for the states: J2000
+      integer(ip) :: svobs = 0  !! observer ID code saved by ZZGFRRIN
+      real(wp) :: svdt = 0.0_wp  !! time step of the numerical derivative of range rate
+   end type zzgfrru_state
+
+   ! ------------------------------------------------------------------ ZZGFSPU
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFSPU routines (entry points
+   !> zzgfspin, zzgfspdc, zzgfspgq, zzgfspx), held in pepper_context (one per
+   !> thread).
+   type, public :: zzgfspu_state
+      character(32) :: svabcr = ' '  !! aberration correction saved by ZZGFSPIN
+      integer(ip) :: svbod1 = 0  !! ID code of the first body saved by ZZGFSPIN
+      integer(ip) :: svbod2 = 0  !! ID code of the second body saved by ZZGFSPIN
+      character(32) :: svref = ' '  !! reference frame of the states saved by ZZGFSPIN
+      character(32) :: svref1 = ' '  !! body-fixed frame name of the first body saved by ZZGFSPIN
+      character(32) :: svref2 = ' '  !! body-fixed frame name of the second body saved by ZZGFSPIN
+      integer(ip) :: svobs = 0  !! observer ID code saved by ZZGFSPIN
+      real(wp) :: svrad1 = 0.0_wp  !! radius of the first body (largest radius for a sphere, 0 for a point)
+      real(wp) :: svrad2 = 0.0_wp  !! radius of the second body (largest radius for a sphere, 0 for a point)
+      integer(ip) :: svshp1 = 0  !! shape index of the first body (point or sphere)
+      integer(ip) :: svshp2 = 0  !! shape index of the second body (point or sphere)
+   end type zzgfspu_state
+
+   ! ------------------------------------------------------------------ ZZGFSSIN
+
+   integer(ip), parameter :: zzgfssin_bdnmln = 36
+
+   !> SPICE private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFSSIN routines (entry points
+   !> zzgfssin), held in pepper_context (one per thread).
+   type, public :: zzgfssin_state
+      logical :: first = .true.  !! first call: target and observer names not yet looked up
+      character(zzgfssin_bdnmln) :: svobs = ' '  !! name of the observer with ID prvobs
+      integer(ip) :: prvobs = 0  !! observer ID code of the previous call
+      integer(ip) :: prvtrg = 0  !! target ID code of the previous call
+      character(zzgfssin_bdnmln) :: svtarg = ' '  !! name of the target with ID prvtrg
+   end type zzgfssin_state
+
+   ! ------------------------------------------------------------------ ZZGFSSOB
+
+   integer(ip), parameter :: zzgfssob_bdnmln = 36
+
+   !> SPICE private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZGFSSOB routines (entry points
+   !> zzgfssob), held in pepper_context (one per thread).
+   type, public :: zzgfssob_state
+      logical :: first = .true.  !! first call: target and observer names not yet looked up
+      character(zzgfssob_bdnmln) :: svobs = ' '  !! name of the observer with ID prvobs
+      integer(ip) :: prvobs = 0  !! observer ID code of the previous call
+      integer(ip) :: prvtrg = 0  !! target ID code of the previous call
+      character(zzgfssob_bdnmln) :: svtarg = ' '  !! name of the target with ID prvtrg
+   end type zzgfssob_state
+
+   ! ------------------------------------------------------------------ ZZHOLDD
+
+   !> SPICE private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZHOLDD routines (entry points
+   !> zzholdd), held in pepper_context (one per thread).
+   type, public :: zzholdd_state
+      real(wp) :: svalue (nid) = 0.0_wp  !! the stored value of each ID (GF_REF, GF_TOL, GF_DT, ...)
+      logical :: first (nid) = .false.  !! no value has been put for the ID yet (or it was reset)
+      logical :: init = .true.  !! first call: the FIRST flags not yet initialized
+   end type zzholdd_state
+
+   ! ------------------------------------------------------------------ ZZINPDT
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZINPDT routines (entry points
+   !> zzinpdt), held in pepper_context (one per thread).
+   type, public :: zzinpdt_state
+      real(wp) :: altbds ( 2, 3 ) = 0.0_wp  !! bounds for the altitude-only test: full lat/lon range, altitudes expanded by the margin
+      logical :: first = .true.  !! first call: hpi, pi2 and the lat/lon parts of altbds not yet set
+      real(wp) :: hpi = -1.0_wp  !! pi/2, set on the first call
+      real(wp) :: pi2 = 0.0_wp  !! 2 pi, set on the first call
+   end type zzinpdt_state
+
+   ! ------------------------------------------------------------------ ZZMOBLIQ
+
+   !> Return the mean obliquity of the ecliptic, and its time
+   !> derivative, at a specified epoch.
+   !>
+   !> The saved variables of SPICELIB's ZZMOBLIQ routines (entry points
+   !> zzmobliq), held in pepper_context (one per thread).
+   type, public :: zzmobliq_state
+      real(wp) :: rad = 0.0_wp  !! radians per degree
+      real(wp) :: year = 0.0_wp  !! seconds per Julian year
+      real(wp) :: persec = 0.0_wp  !! Julian centuries per second
+      logical :: first = .true.  !! true until the constants above have been set
+   end type zzmobliq_state
+
+   ! ------------------------------------------------------------------ ZZMULT
+
+   !> Safely calculate the value A*B, avoiding the possibility
+   !> of floating point exceptions (FPE) due to numeric underflow
+   !> or numeric overflow.
+   !>
+   !> The saved variables of SPICELIB's ZZMULT routines (entry points zzmult),
+   !> held in pepper_context (one per thread).
+   type, public :: zzmult_state
+      real(wp) :: expnt = 0.0_wp  !! the bounds on the potential result of the calculation.
+      logical :: first = .true.  !! first entry flag.
+   end type zzmult_state
+
+   ! ------------------------------------------------------------------ ZZNRDDP
+
+   !> This subroutine is a shell for the routines needed by DPSPCE
+   !> for calculating deep space effects on a vehicle.
+   !>
+   !> The saved variables of SPICELIB's ZZNRDDP routines (entry points
+   !> zzdpinit, zzdpsec, zzdpper), held in pepper_context (one per thread).
+   type, public :: zznrddp_state
+      real(wp) :: atime = 0.0_wp  !! resonance integrator: time of the current integration step (min from epoch)
+      real(wp) :: cosiq = 0.0_wp  !! cosine of the inclination at epoch
+      real(wp) :: delt = 0.0_wp  !! work: step (+/-720 min) of the resonance integrator
+      real(wp) :: e3 = 0.0_wp  !! lunar long-period eccentricity coefficient e3
+      real(wp) :: ee2 = 0.0_wp  !! lunar long-period eccentricity coefficient ee2
+      real(wp) :: omegao = 0.0_wp  !! argument of perigee at epoch (rad)
+      real(wp) :: pe0 = 0.0_wp  !! long-period eccentricity perturbation at epoch, subtracted in ZZDPPER (never set)
+      real(wp) :: pgh0 = 0.0_wp  !! long-period argument of perigee perturbation at epoch, subtracted in ZZDPPER (never set)
+      real(wp) :: ph0 = 0.0_wp  !! long-period node perturbation at epoch, subtracted in ZZDPPER (never set)
+      real(wp) :: pinc0 = 0.0_wp  !! long-period inclination perturbation at epoch, subtracted in ZZDPPER (never set)
+      real(wp) :: pix1 = 0.0_wp  !! pi
+      real(wp) :: pix2 = 0.0_wp  !! 2 pi
+      real(wp) :: pl0 = 0.0_wp  !! long-period mean longitude perturbation at epoch, subtracted in ZZDPPER (never set)
+      real(wp) :: preep = 0.0_wp  !! epoch day (days since 1900 Jan 0.5) of the last lunar orbit computation
+      real(wp) :: se = 0.0_wp  !! work: secular eccentricity rate of the current (solar or lunar) pass of ZZDPINIT
+      real(wp) :: se2 = 0.0_wp  !! solar long-period eccentricity coefficient se2
+      real(wp) :: se3 = 0.0_wp  !! solar long-period eccentricity coefficient se3
+      real(wp) :: sgh = 0.0_wp  !! work: secular argument of perigee rate of the current (solar or lunar) pass of ZZDPINIT
+      real(wp) :: sgh2 = 0.0_wp  !! solar long-period argument of perigee coefficient sgh2
+      real(wp) :: sgh3 = 0.0_wp  !! solar long-period argument of perigee coefficient sgh3
+      real(wp) :: sgh4 = 0.0_wp  !! solar long-period argument of perigee coefficient sgh4
+      real(wp) :: sh = 0.0_wp  !! work: secular node rate of the current (solar or lunar) pass of ZZDPINIT
+      real(wp) :: sh2 = 0.0_wp  !! solar long-period node coefficient sh2
+      real(wp) :: sh3 = 0.0_wp  !! solar long-period node coefficient sh3
+      real(wp) :: si = 0.0_wp  !! work: secular inclination rate of the current (solar or lunar) pass of ZZDPINIT
+      real(wp) :: si2 = 0.0_wp  !! solar long-period inclination coefficient si2
+      real(wp) :: si3 = 0.0_wp  !! solar long-period inclination coefficient si3
+      real(wp) :: siniq = 0.0_wp  !! sine of the inclination at epoch
+      real(wp) :: sl = 0.0_wp  !! work: secular mean anomaly rate of the current (solar or lunar) pass of ZZDPINIT
+      real(wp) :: sl2 = 0.0_wp  !! solar long-period mean longitude coefficient sl2
+      real(wp) :: sl3 = 0.0_wp  !! solar long-period mean longitude coefficient sl3
+      real(wp) :: sl4 = 0.0_wp  !! solar long-period mean longitude coefficient sl4
+      real(wp) :: thgr = 0.0_wp  !! Greenwich sidereal angle at epoch (rad)
+      real(wp) :: xfact = 0.0_wp  !! resonance term: rate of the resonance angle minus the mean motion at epoch (rad/min)
+      real(wp) :: xgh2 = 0.0_wp  !! lunar long-period argument of perigee coefficient xgh2
+      real(wp) :: xgh3 = 0.0_wp  !! lunar long-period argument of perigee coefficient xgh3
+      real(wp) :: xgh4 = 0.0_wp  !! lunar long-period argument of perigee coefficient xgh4
+      real(wp) :: xh2 = 0.0_wp  !! lunar long-period node coefficient xh2
+      real(wp) :: xh3 = 0.0_wp  !! lunar long-period node coefficient xh3
+      real(wp) :: xi2 = 0.0_wp  !! lunar long-period inclination coefficient xi2
+      real(wp) :: xi3 = 0.0_wp  !! lunar long-period inclination coefficient xi3
+      real(wp) :: xl2 = 0.0_wp  !! lunar long-period mean longitude coefficient xl2
+      real(wp) :: xl3 = 0.0_wp  !! lunar long-period mean longitude coefficient xl3
+      real(wp) :: xl4 = 0.0_wp  !! lunar long-period mean longitude coefficient xl4
+      real(wp) :: xlamo = 0.0_wp  !! resonance angle lambda at epoch (rad)
+      real(wp) :: xli = 0.0_wp  !! resonance integrator: resonance angle lambda at time atime (rad)
+      real(wp) :: xni = 0.0_wp  !! resonance integrator: mean motion at time atime (rad/min)
+      real(wp) :: xnq = 0.0_wp  !! mean motion at epoch (rad/min, un-Kozai'd)
+      real(wp) :: xqncl = 0.0_wp  !! inclination at epoch (rad)
+      real(wp) :: zcosgl = 0.0_wp  !! cosine of the lunar argument of perigee angle (epoch preep)
+      real(wp) :: zcoshl = 0.0_wp  !! cosine of the right ascension of the lunar node (epoch preep)
+      real(wp) :: zcosil = 0.0_wp  !! cosine of the inclination of the lunar orbit to the equator (epoch preep)
+      real(wp) :: zmol = 0.0_wp  !! lunar mean anomaly at the epoch day preep (rad)
+      real(wp) :: zmos = 0.0_wp  !! solar mean anomaly at the epoch day preep (rad)
+      real(wp) :: zsingl = 0.0_wp  !! sine of the lunar argument of perigee angle (epoch preep)
+      real(wp) :: zsinhl = 0.0_wp  !! sine of the right ascension of the lunar node (epoch preep)
+      real(wp) :: zsinil = 0.0_wp  !! sine of the inclination of the lunar orbit to the equator (epoch preep)
+      real(wp) :: del ( 3  ) = 0.0_wp  !! one-day (synchronous) resonance coefficients del1, del2, del3
+      real(wp) :: dg ( 10 ) = 0.0_wp  !! half-day resonance coefficients d2201, d2211, d3210, ..., d5433 (in that order)
+      real(wp) :: ssx ( 5  ) = 0.0_wp  !! lunar-solar secular rates of the mean anomaly, perigee, node, eccentricity, inclination (/min)
+      integer(ip) :: iresfl = 0  !! resonance flag: 1 if the orbit is resonant (one-day or half-day), else 0
+      integer(ip) :: isynfl = 0  !! synchronous flag: 1 for one-day (synchronous) resonance, else 0
+      logical :: return = .false.  !! unused (name of the SPICELIB RETURN function in the original declarations)
+   end type zznrddp_state
+
+   ! ------------------------------------------------------------------ ZZPDCMPL
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZPDCMPL routines (entry points
+   !> zzpdcmpl), held in pepper_context (one per thread).
+   type, public :: zzpdcmpl_state
+      real(wp) :: apex ( 3 ) = 0.0_wp  !! apex of the latitude cone (X and Y are zero; Z is set on each call)
+   end type zzpdcmpl_state
+
+   ! ------------------------------------------------------------------ ZZPLATFM
+
+   integer(ip), parameter :: kysize = 64
+   integer(ip), parameter :: zzplatfm_wdsize = 32
+   integer(ip), parameter :: zzplatfm_nattr = 6
+
+   !> Return platform ID and various attributes of the intended
+   !> environment
+   !>
+   !> The saved variables of SPICELIB's ZZPLATFM routines (entry points
+   !> zzplatfm), held in pepper_context (one per thread). Generated by
+   !> tools/modularize_ctx.py from the saved variables of zzplatfm.F90.
+   type, public :: zzplatfm_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      character(zzplatfm_wdsize) :: attcpy ( 0 : zzplatfm_nattr ) = ' '  !! copy of the attribute names (uppercase)
+      character(kysize) :: keyval ( zzplatfm_nattr ) = ' '  !! value of each platform attribute (system, compiler,
+                                                            !! format, ...)
+   end type zzplatfm_state
+
+   ! ------------------------------------------------------------------ ZZPTPL02
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZPTPL02 routines (entry points
+   !> zzptpl02), held in pepper_context (one per thread).
+   type, public :: zzptpl02_state
+      integer(ip) :: cgrscl = 0  !! coarse voxel grid scale of the saved segment
+      integer(ip) :: corsys = 0  !! coordinate system code of the saved segment, from its DSK descriptor
+      real(wp) :: maxr = 0.0_wp  !! radius of the saved segment's bounding box (ZZSEGBOX), scales the search distance limit
+      logical :: pass1 = .true.  !! first call: no segment parameters saved yet
+      integer(ip) :: prvhan = 0  !! DAS handle of the segment whose parameters are saved
+      integer(ip) :: prvdsc ( dladsz ) = 0  !! DLA descriptor of the segment whose parameters are saved
+      integer(ip) :: vgrext ( 3 ) = 0  !! voxel grid extents (voxel counts in x, y, z) of the saved segment
+      real(wp) :: voxori ( 3 ) = 0.0_wp  !! voxel grid origin of the saved segment
+      real(wp) :: voxsiz = 0.0_wp  !! voxel size of the saved segment
+   end type zzptpl02_state
+
+   ! ------------------------------------------------------------------ ZZROTGT0
+
+   !> Find the rotation from a user specified frame to another frame at
+   !> a user specified epoch.
+   !>
+   !> The saved variables of SPICELIB's ZZROTGT0 routines (entry points
+   !> zzrotgt0), held in pepper_context (one per thread).
+   type, public :: zzrotgt0_state
+      character(6) :: versn = '4.0.0'  !! version string quoted in the unsupported-frame-class error message
+   end type zzrotgt0_state
+
+   ! ------------------------------------------------------------------ ZZROTGT1
+
+   !> Find the rotation from a user specified frame to another frame at
+   !> a user specified epoch.
+   !>
+   !> The saved variables of SPICELIB's ZZROTGT1 routines (entry points
+   !> zzrotgt1), held in pepper_context (one per thread).
+   type, public :: zzrotgt1_state
+      character(6) :: versn = '4.0.0'  !! version string quoted in the unsupported-frame-class error message
+   end type zzrotgt1_state
+
+   ! ------------------------------------------------------------------ ZZRTNMAT
+
+   !> Given a vector, return a transformation matrix that maps from the
+   !> vector's base reference frame to the RTN
+   !> (radial-tangential-normal) frame associated with the vector.
+   !>
+   !> The saved variables of SPICELIB's ZZRTNMAT routines (entry points
+   !> zzrtnmat), held in pepper_context (one per thread).
+   type, public :: zzrtnmat_state
+      real(wp) :: z ( 3 ) = [ 0.0_wp, 0.0_wp, 1.0_wp ]  !! constant +Z unit vector (0,0,1)
+   end type zzrtnmat_state
+
+   ! ------------------------------------------------------------------ ZZRYTLAT
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZRYTLAT routines (entry points
+   !> zzrytlat), held in pepper_context (one per thread).
+   type, public :: zzrytlat_state
+      real(wp) :: origin ( 3 ) = 0.0_wp  !! constant origin vector (0,0,0), vertex of the latitude cones
+      real(wp) :: z ( 3 ) = [ 0.0_wp, 0.0_wp, 1.0_wp ]  !! constant +Z unit vector (0,0,1), axis of the latitude cones
+   end type zzrytlat_state
+
+   ! ------------------------------------------------------------------ ZZRYTPDT
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZRYTPDT routines (entry points
+   !> zzrytpdt), held in pepper_context (one per thread).
+   type, public :: zzrytpdt_state
+      real(wp) :: z ( 3 ) = [ 0.0_wp, 0.0_wp, 1.0_wp ]  !! the +Z unit vector, constant
+   end type zzrytpdt_state
+
+   ! ------------------------------------------------------------------ ZZSCLK
+
+   integer(ip), parameter :: maxids = 10
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSCLK routines (entry points zzsclk),
+   !> held in pepper_context (one per thread).
+   type, public :: zzsclk_state
+      integer(ip) :: known ( lbcell : maxids ) = 0  !! set of SCLK IDs watched in the kernel pool (by agent ZZSCLK<id>)
+      integer(ip) :: passed ( lbcell : maxids ) = 0  !! set of SCLK IDs known to have all required SCLK kernel variables
+      logical :: first = .true.  !! this is the first call (dtsize and the sets are not yet initialized)
+      integer(ip) :: dtsize ( 7 ) = 0  !! required multiple of the size of each of the 7 SCLK kernel variables checked
+   end type zzsclk_state
+
+   ! ------------------------------------------------------------------ ZZSFXCOR
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSFXCOR routines (entry points
+   !> zzsfxcor), held in pepper_context (one per thread).
+   type, public :: zzsfxcor_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: loccor = ' '  !! correction string for SPKEZP derived from the previous ABCORR (stellar aberration removed)
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+   end type zzsfxcor_state
+
+   ! ------------------------------------------------------------------ ZZSGLATX
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSGLATX routines (entry points
+   !> zzsglatx), held in pepper_context (one per thread).
+   type, public :: zzsglatx_state
+      real(wp) :: z ( 3 ) = [ 0.0_wp, 0.0_wp, 1.0_wp ]  !! the +Z unit vector
+   end type zzsglatx_state
+
+   ! ------------------------------------------------------------------ ZZSGP4
+
+   !> Umbrella for the SGP4 initializer and evaluator routines.
+   !>
+   !> The saved variables of SPICELIB's ZZSGP4 routines (entry points xxsgp4i,
+   !> xxsgp4e), held in pepper_context (one per thread).
+   type, public :: zzsgp4_state
+      real(wp) :: a = 0.0_wp  !! mean semi-major axis at epoch from the TLE mean motion (earth radii)
+      real(wp) :: alta = 0.0_wp  !! apogee altitude at epoch (earth radii)
+      real(wp) :: altp = 0.0_wp  !! perigee altitude at epoch (earth radii)
+      real(wp) :: argpdot = 0.0_wp  !! secular rate of the argument of perigee (rad/min)
+      real(wp) :: argpo = 0.0_wp  !! argument of perigee at epoch (rad), from the TLE
+      real(wp) :: atime = 0.0_wp  !! deep-space resonance integrator: time of the current integration step (min)
+      real(wp) :: aycof = 0.0_wp  !! J3 long-period coefficient of the axN/ayN term (recomputed by XXSGP4E for deep space)
+      real(wp) :: bstar = 0.0_wp  !! B* drag term (1/earth radii), from the TLE
+      real(wp) :: cc1 = 0.0_wp  !! drag coefficient C1 (secular decay of the semi-major axis)
+      real(wp) :: cc4 = 0.0_wp  !! drag coefficient C4 (secular decay of the eccentricity)
+      real(wp) :: cc5 = 0.0_wp  !! drag coefficient C5 (periodic eccentricity term, near-earth only)
+      real(wp) :: con41 = 0.0_wp  !! 3 cos^2(inclination) - 1 at epoch
+      real(wp) :: d2 = 0.0_wp  !! drag coefficient D2 (t^2 term of the semi-major axis, near-earth only)
+      real(wp) :: d2201 = 0.0_wp  !! deep-space resonance term d2201 (half-day resonance)
+      real(wp) :: d2211 = 0.0_wp  !! deep-space resonance term d2211 (half-day resonance)
+      real(wp) :: d3 = 0.0_wp  !! drag coefficient D3 (t^3 term of the semi-major axis, near-earth only)
+      real(wp) :: d3210 = 0.0_wp  !! deep-space resonance term d3210 (half-day resonance)
+      real(wp) :: d3222 = 0.0_wp  !! deep-space resonance term d3222 (half-day resonance)
+      real(wp) :: d4 = 0.0_wp  !! drag coefficient D4 (t^4 term of the semi-major axis, near-earth only)
+      real(wp) :: d4410 = 0.0_wp  !! deep-space resonance term d4410 (half-day resonance)
+      real(wp) :: d4422 = 0.0_wp  !! deep-space resonance term d4422 (half-day resonance)
+      real(wp) :: d5220 = 0.0_wp  !! deep-space resonance term d5220 (half-day resonance)
+      real(wp) :: d5232 = 0.0_wp  !! deep-space resonance term d5232 (half-day resonance)
+      real(wp) :: d5421 = 0.0_wp  !! deep-space resonance term d5421 (half-day resonance)
+      real(wp) :: d5433 = 0.0_wp  !! deep-space resonance term d5433 (half-day resonance)
+      real(wp) :: dedt = 0.0_wp  !! deep-space secular rate of the eccentricity (lunar-solar, 1/min)
+      real(wp) :: del1 = 0.0_wp  !! deep-space resonance term del1 (one-day resonance)
+      real(wp) :: del2 = 0.0_wp  !! deep-space resonance term del2 (one-day resonance)
+      real(wp) :: del3 = 0.0_wp  !! deep-space resonance term del3 (one-day resonance)
+      real(wp) :: delmo = 0.0_wp  !! (1 + eta cos(mean anomaly at epoch))^3, for the drag mean anomaly term
+      real(wp) :: didt = 0.0_wp  !! deep-space secular rate of the inclination (lunar-solar, rad/min)
+      real(wp) :: dmdt = 0.0_wp  !! deep-space secular rate of the mean anomaly (lunar-solar, rad/min)
+      real(wp) :: dnodt = 0.0_wp  !! deep-space secular rate of the right ascension of the node (lunar-solar, rad/min)
+      logical :: dodeep = .false.  !! the orbit is deep space (period >= 225 min): apply lunar-solar terms
+      real(wp) :: domdt = 0.0_wp  !! deep-space secular rate of the argument of perigee (lunar-solar, rad/min)
+      logical :: dosimp = .false.  !! use the simplified drag model (perigee below 220 km, or deep space)
+      real(wp) :: e3 = 0.0_wp  !! deep-space lunar long-period eccentricity coefficient e3
+      real(wp) :: ecco = 0.0_wp  !! eccentricity at epoch, from the TLE
+      real(wp) :: ee2 = 0.0_wp  !! deep-space lunar long-period eccentricity coefficient ee2
+      real(wp) :: er = 0.0_wp  !! equatorial radius of the earth (km), from GEOPHS
+      real(wp) :: eta = 0.0_wp  !! SGP4 eta: a0 e0 / (a0 - s) at epoch
+      real(wp) :: gsto = 0.0_wp  !! Greenwich sidereal time at epoch (rad)
+      real(wp) :: inclo = 0.0_wp  !! inclination at epoch (rad), from the TLE
+      integer(ip) :: irez = 0  !! deep-space resonance flag: 0 none, 1 one-day, 2 half-day
+      real(wp) :: j2 = 0.0_wp  !! J2 zonal harmonic, from GEOPHS
+      real(wp) :: j3oj2 = 0.0_wp  !! J3/J2 ratio of the zonal harmonics, from GEOPHS
+      real(wp) :: mdot = 0.0_wp  !! secular rate of the mean anomaly (rad/min), including J2 and J4 terms
+      real(wp) :: mo = 0.0_wp  !! mean anomaly at epoch (rad), from the TLE
+      real(wp) :: no = 0.0_wp  !! mean motion at epoch (rad/min), from the TLE (un-Kozai'd by ZZINIL)
+      real(wp) :: nodedot = 0.0_wp  !! secular rate of the right ascension of the ascending node (rad/min)
+      real(wp) :: nodeo = 0.0_wp  !! right ascension of the ascending node at epoch (rad), from the TLE
+      real(wp) :: omgcof = 0.0_wp  !! drag coefficient of the argument of perigee correction (B* C3 cos(argpo))
+      real(wp) :: peo = 0.0_wp  !! deep-space long-period eccentricity perturbation at epoch
+      real(wp) :: pgho = 0.0_wp  !! deep-space long-period argument of perigee perturbation at epoch
+      real(wp) :: pho = 0.0_wp  !! deep-space long-period node perturbation at epoch
+      real(wp) :: pinco = 0.0_wp  !! deep-space long-period inclination perturbation at epoch
+      real(wp) :: plo = 0.0_wp  !! deep-space long-period mean longitude perturbation at epoch
+      real(wp) :: se2 = 0.0_wp  !! deep-space solar long-period eccentricity coefficient se2
+      real(wp) :: se3 = 0.0_wp  !! deep-space solar long-period eccentricity coefficient se3
+      real(wp) :: sgh2 = 0.0_wp  !! deep-space solar long-period argument of perigee coefficient sgh2
+      real(wp) :: sgh3 = 0.0_wp  !! deep-space solar long-period argument of perigee coefficient sgh3
+      real(wp) :: sgh4 = 0.0_wp  !! deep-space solar long-period argument of perigee coefficient sgh4
+      real(wp) :: sh2 = 0.0_wp  !! deep-space solar long-period node coefficient sh2
+      real(wp) :: sh3 = 0.0_wp  !! deep-space solar long-period node coefficient sh3
+      real(wp) :: si2 = 0.0_wp  !! deep-space solar long-period inclination coefficient si2
+      real(wp) :: si3 = 0.0_wp  !! deep-space solar long-period inclination coefficient si3
+      real(wp) :: sinmao = 0.0_wp  !! sin(mean anomaly at epoch), for the drag eccentricity term
+      real(wp) :: sl2 = 0.0_wp  !! deep-space solar long-period mean longitude coefficient sl2
+      real(wp) :: sl3 = 0.0_wp  !! deep-space solar long-period mean longitude coefficient sl3
+      real(wp) :: sl4 = 0.0_wp  !! deep-space solar long-period mean longitude coefficient sl4
+      integer(ip) :: svmode = 0  !! operation mode (OPMODE of XXSGP4I: AFSPC or improved), used by XXSGP4E
+      real(wp) :: t2cof = 0.0_wp  !! coefficient of the t^2 term of the mean anomaly, times no (1.5 C1)
+      real(wp) :: t3cof = 0.0_wp  !! coefficient of the t^3 term of the mean anomaly, times no (near-earth only)
+      real(wp) :: t4cof = 0.0_wp  !! coefficient of the t^4 term of the mean anomaly, times no (near-earth only)
+      real(wp) :: t5cof = 0.0_wp  !! coefficient of the t^5 term of the mean anomaly, times no (near-earth only)
+      real(wp) :: x1mth2 = 0.0_wp  !! 1 - cos^2(inclination) at epoch
+      real(wp) :: x7thm1 = 0.0_wp  !! 7 cos^2(inclination) - 1 at epoch
+      real(wp) :: xfact = 0.0_wp  !! deep-space resonance: rate of the resonance angle minus the mean motion
+      real(wp) :: xgh2 = 0.0_wp  !! deep-space lunar long-period argument of perigee coefficient xgh2
+      real(wp) :: xgh3 = 0.0_wp  !! deep-space lunar long-period argument of perigee coefficient xgh3
+      real(wp) :: xgh4 = 0.0_wp  !! deep-space lunar long-period argument of perigee coefficient xgh4
+      real(wp) :: xh2 = 0.0_wp  !! deep-space lunar long-period node coefficient xh2
+      real(wp) :: xh3 = 0.0_wp  !! deep-space lunar long-period node coefficient xh3
+      real(wp) :: xi2 = 0.0_wp  !! deep-space lunar long-period inclination coefficient xi2
+      real(wp) :: xi3 = 0.0_wp  !! deep-space lunar long-period inclination coefficient xi3
+      real(wp) :: xke = 0.0_wp  !! sqrt(GM) of the earth in earth radii^1.5/min, from GEOPHS
+      real(wp) :: xl2 = 0.0_wp  !! deep-space lunar long-period mean longitude coefficient xl2
+      real(wp) :: xl3 = 0.0_wp  !! deep-space lunar long-period mean longitude coefficient xl3
+      real(wp) :: xl4 = 0.0_wp  !! deep-space lunar long-period mean longitude coefficient xl4
+      real(wp) :: xlamo = 0.0_wp  !! deep-space resonance angle (lambda) at epoch (rad)
+      real(wp) :: xlcof = 0.0_wp  !! J3 long-period coefficient of the mean longitude (recomputed by XXSGP4E for deep space)
+      real(wp) :: xli = 0.0_wp  !! deep-space resonance integrator: resonance angle at atime (rad)
+      real(wp) :: xmcof = 0.0_wp  !! drag coefficient of the mean anomaly correction (-2/3 coef B* / (e eta))
+      real(wp) :: xni = 0.0_wp  !! deep-space resonance integrator: mean motion at atime (rad/min)
+      real(wp) :: xnodcf = 0.0_wp  !! coefficient of the t^2 drag term of the node (3.5 beta0^2 xhdot1 C1)
+      real(wp) :: zmol = 0.0_wp  !! lunar mean anomaly at epoch (rad)
+      real(wp) :: zmos = 0.0_wp  !! solar mean anomaly at epoch (rad)
+   end type zzsgp4_state
+
+   ! ------------------------------------------------------------------ ZZSINUTL
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSINUTL routines (entry points
+   !> zzsuelin, zzsudski, zzraysfx, zzmaxrad, zzminrad, zzraynp), held in
+   !> pepper_context (one per thread).
+   type, public :: zzsinutl_state
+      integer(ip) :: savfid = 0  !! body-fixed frame ID code of the target, saved by ZZSUDSKI
+      real(wp) :: savmnr = 0.0_wp  !! minimum radius of the target (ellipsoid radii or DSK bounding radius), km
+      real(wp) :: savmxr = 0.0_wp  !! maximum radius of the target (ellipsoid radii or DSK bounding radius), km
+      integer(ip) :: savnsf = 0  !! number of surface IDs in savsrf, saved by ZZSUDSKI
+      real(wp) :: savrad ( 3 ) = 0.0_wp  !! target ellipsoid radii (km), saved by ZZSUELIN (zeroed by ZZSUDSKI)
+      integer(ip) :: savsrf ( maxsrf ) = 0  !! surface ID list of the DSK target, saved by ZZSUDSKI
+      integer(ip) :: savtrg = 0  !! target ID code, saved by ZZSUDSKI
+      integer(ip) :: savtyp = 0  !! target shape type: ellipsoid (ZZSUELIN) or DSK (ZZSUDSKI)
+   end type zzsinutl_state
+
+   ! ------------------------------------------------------------------ ZZSPIN
+
+   integer(ip), parameter :: spshpn = 2
+
+   !> Check/initialize the quantities describing an angular separation
+   !> between two spherical or point objects.
+   !>
+   !> The saved variables of SPICELIB's ZZSPIN routines (entry points zzspin),
+   !> held in pepper_context (one per thread).
+   type, public :: zzspin_state
+      character(32) :: svshap ( spshpn ) = [ character(32) :: 'POINT', 'SPHERE' ]  !! names of the supported target shapes (POINT, SPHERE), constant
+   end type zzspin_state
+
+   ! ------------------------------------------------------------------ ZZSPKAC0
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observer, optionally corrected for light time
+   !> and stellar aberration, expressed relative to an inertial
+   !> reference frame.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKAC0 routines (entry points
+   !> zzspkac0), held in pepper_context (one per thread).
+   type, public :: zzspkac0_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+   end type zzspkac0_state
+
+   ! ------------------------------------------------------------------ ZZSPKAC1
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observer, optionally corrected for light time
+   !> and stellar aberration, expressed relative to an inertial
+   !> reference frame.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKAC1 routines (entry points
+   !> zzspkac1), held in pepper_context (one per thread).
+   type, public :: zzspkac1_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+   end type zzspkac1_state
+
+   ! ------------------------------------------------------------------ ZZSPKAP0
+
+   integer(ip), parameter :: zzspkap0_corlen = 5
+
+   !> **Deprecated:** This routine has been superseded by SPKAPS. This
+   !> routine is supported for purposes of backward compatibility only.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKAP0 routines (entry points
+   !> zzspkap0), held in pepper_context (one per thread).
+   type, public :: zzspkap0_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      !> the recognized aberration correction strings
+      character(zzspkap0_corlen) :: flags ( nflags ) = [ character(zzspkap0_corlen) :: 'NONE', 'LT', 'LT+S', &
+         'CN', 'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
+      character(zzspkap0_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: usestl = .false.  !! the saved correction uses stellar aberration
+      logical :: uselt = .false.  !! the saved correction uses light time
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkap0_state
+
+   ! ------------------------------------------------------------------ ZZSPKAP1
+
+   integer(ip), parameter :: zzspkap1_corlen = 5
+
+   !> **Deprecated:** This routine has been superseded by SPKAPS. This
+   !> routine is supported for purposes of backward compatibility only.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKAP1 routines (entry points
+   !> zzspkap1), held in pepper_context (one per thread).
+   type, public :: zzspkap1_state
+      logical :: first = .true.  !! first call: the aberration correction flags are not yet parsed
+      !> constant list of the recognized aberration correction strings
+      character(zzspkap1_corlen) :: flags ( nflags ) = [ character(zzspkap1_corlen) :: 'NONE', 'LT', 'LT+S', &
+         'CN', 'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
+      character(zzspkap1_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time (CN)
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration (+S)
+      logical :: uselt = .false.  !! the saved correction uses one-iteration light time (LT)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkap1_state
+
+   ! ------------------------------------------------------------------ ZZSPKAS0
+
+   !> Given the state and acceleration of an observer relative to the
+   !> solar system barycenter, return the state (position and velocity)
+   !> of a target body relative to the observer, optionally corrected
+   !> for light time and stellar aberration. All input and output
+   !> vectors are expressed relative to an inertial reference frame.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKAS0 routines (entry points
+   !> zzspkas0), held in pepper_context (one per thread).
+   type, public :: zzspkas0_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: uselt = .false.  !! the saved correction includes light time
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkas0_state
+
+   ! ------------------------------------------------------------------ ZZSPKAS1
+
+   !> Given the state and acceleration of an observer relative to the
+   !> solar system barycenter, return the state (position and velocity)
+   !> of a target body relative to the observer, optionally corrected
+   !> for light time and stellar aberration. All input and output
+   !> vectors are expressed relative to an inertial reference frame.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKAS1 routines (entry points
+   !> zzspkas1), held in pepper_context (one per thread).
+   type, public :: zzspkas1_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: uselt = .false.  !! the saved correction includes light time
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkas1_state
+
+   ! ------------------------------------------------------------------ ZZSPKEZ0
+
+   integer(ip), parameter :: zzspkez0_frnmln = 32
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observing body, optionally corrected for light
+   !> time (planetary aberration) and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKEZ0 routines (entry points
+   !> zzspkez0), held in pepper_context (one per thread).
+   type, public :: zzspkez0_state
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
+      logical :: usegeo = .false.  !! the saved correction is geometric (no aberration correction)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
+      character(zzspkez0_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
+      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
+      logical :: first = .true.  !! first call: counter, correction flags and J2000 code not yet set up
+   end type zzspkez0_state
+
+   ! ------------------------------------------------------------------ ZZSPKEZ1
+
+   integer(ip), parameter :: zzspkez1_frnmln = 32
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observing body, optionally corrected for light
+   !> time (planetary aberration) and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKEZ1 routines (entry points
+   !> zzspkez1), held in pepper_context (one per thread).
+   type, public :: zzspkez1_state
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
+      logical :: usegeo = .false.  !! the saved correction is geometric (no aberration correction)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
+      character(zzspkez1_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
+      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
+      logical :: first = .true.  !! first call: counter, correction flags and J2000 code not yet set up
+   end type zzspkez1_state
+
+   ! ------------------------------------------------------------------ ZZSPKFAO
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKFAO routines (entry points
+   !> zzspkfao), held in pepper_context (one per thread).
+   type, public :: zzspkfao_state
+      logical :: pass1 = .true.  !! first call: aberration correction flags not yet set up
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration correction
+   end type zzspkfao_state
+
+   ! ------------------------------------------------------------------ ZZSPKFAP
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKFAP routines (entry points
+   !> zzspkfap), held in pepper_context (one per thread).
+   type, public :: zzspkfap_state
+      logical :: pass1 = .true.  !! first call: aberration correction flags not yet set up
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration correction
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkfap_state
+
+   ! ------------------------------------------------------------------ ZZSPKFAT
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKFAT routines (entry points
+   !> zzspkfat), held in pepper_context (one per thread).
+   type, public :: zzspkfat_state
+      logical :: pass1 = .true.  !! first call: aberration correction flags not yet set up
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration correction
+   end type zzspkfat_state
+
+   ! ------------------------------------------------------------------ ZZSPKFLT
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKFLT routines (entry points
+   !> zzspkflt), held in pepper_context (one per thread).
+   type, public :: zzspkflt_state
+      logical :: pass1 = .true.  !! first call: aberration correction flags not yet set up
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: uselt = .false.  !! the saved correction includes light time correction
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkflt_state
+
+   ! ------------------------------------------------------------------ ZZSPKFZO
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKFZO routines (entry points
+   !> zzspkfzo), held in pepper_context (one per thread).
+   type, public :: zzspkfzo_state
+      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
+      logical :: pass1 = .true.  !! first call: correction flags and J2000 code not yet set up
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usegeo = .false.  !! the saved correction is geometric (no aberration correction)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkfzo_state
+
+   ! ------------------------------------------------------------------ ZZSPKFZT
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKFZT routines (entry points
+   !> zzspkfzt), held in pepper_context (one per thread).
+   type, public :: zzspkfzt_state
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      real(wp) :: sttctr ( 6    ) = 0.0_wp  !! work: state of the target relative to its center (from TRGSUB)
+      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
+      integer(ip) :: trgctr = 0  !! work: ID code of the target's center (from TRGSUB)
+      logical :: first = .true.  !! first call: correction flags and J2000 code not yet set up
+      logical :: usegeo = .false.  !! the saved correction is geometric (no aberration correction)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkfzt_state
+
+   ! ------------------------------------------------------------------ ZZSPKGO0
+
+   integer(ip), parameter :: zzspkgo0_frnmln = 32
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKGO0 routines (entry points
+   !> zzspkgo0), held in pepper_context (one per thread).
+   type, public :: zzspkgo0_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
+      character(zzspkgo0_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
+      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
+      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
+   end type zzspkgo0_state
+
+   ! ------------------------------------------------------------------ ZZSPKGO1
+
+   integer(ip), parameter :: zzspkgo1_frnmln = 32
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKGO1 routines (entry points
+   !> zzspkgo1), held in pepper_context (one per thread).
+   type, public :: zzspkgo1_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
+      character(zzspkgo1_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
+      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
+      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
+   end type zzspkgo1_state
+
+   ! ------------------------------------------------------------------ ZZSPKGP0
+
+   integer(ip), parameter :: zzspkgp0_frnmln = 32
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKGP0 routines (entry points
+   !> zzspkgp0), held in pepper_context (one per thread).
+   type, public :: zzspkgp0_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
+      character(zzspkgp0_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
+      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
+      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
+   end type zzspkgp0_state
+
+   ! ------------------------------------------------------------------ ZZSPKGP1
+
+   integer(ip), parameter :: zzspkgp1_frnmln = 32
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKGP1 routines (entry points
+   !> zzspkgp1), held in pepper_context (one per thread).
+   type, public :: zzspkgp1_state
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
+      character(zzspkgp1_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
+      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
+      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
+   end type zzspkgp1_state
+
+   ! ------------------------------------------------------------------ ZZSPKLT0
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observer, optionally corrected for light time,
+   !> expressed relative to an inertial reference frame.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKLT0 routines (entry points
+   !> zzspklt0), held in pepper_context (one per thread).
+   type, public :: zzspklt0_state
+      logical :: pass1 = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: uselt = .false.  !! the saved correction includes light time (normal or converged Newtonian)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspklt0_state
+
+   ! ------------------------------------------------------------------ ZZSPKLT1
+
+   !> Return the state (position and velocity) of a target body
+   !> relative to an observer, optionally corrected for light time,
+   !> expressed relative to an inertial reference frame.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKLT1 routines (entry points
+   !> zzspklt1), held in pepper_context (one per thread).
+   type, public :: zzspklt1_state
+      logical :: pass1 = .true.  !! first call: no aberration correction has been parsed yet
+      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: uselt = .false.  !! the saved correction includes light time (normal or converged Newtonian)
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspklt1_state
+
+   ! ------------------------------------------------------------------ ZZSPKPA0
+
+   integer(ip), parameter :: zzspkpa0_corlen = 5
+
+   !> Return the position of a target body relative to an observer,
+   !> optionally corrected for light time and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKPA0 routines (entry points
+   !> zzspkpa0), held in pepper_context (one per thread).
+   type, public :: zzspkpa0_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      !> list of recognized aberration correction flags ('NONE', 'LT', 'LT+S', ...)
+      character(zzspkpa0_corlen) :: flags ( nflags ) = [ character(zzspkpa0_corlen) :: 'NONE', 'LT', 'LT+S', &
+         'CN', 'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
+      character(zzspkpa0_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+      logical :: uselt = .false.  !! the saved correction uses (single-iteration) light time
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkpa0_state
+
+   ! ------------------------------------------------------------------ ZZSPKPA1
+
+   integer(ip), parameter :: zzspkpa1_corlen = 5
+
+   !> Return the position of a target body relative to an observer,
+   !> optionally corrected for light time and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKPA1 routines (entry points
+   !> zzspkpa1), held in pepper_context (one per thread).
+   type, public :: zzspkpa1_state
+      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
+      !> list of recognized aberration correction flags ('NONE', 'LT', 'LT+S', ...)
+      character(zzspkpa1_corlen) :: flags ( nflags ) = [ character(zzspkpa1_corlen) :: 'NONE', 'LT', 'LT+S', &
+         'CN', 'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
+      character(zzspkpa1_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
+      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
+      logical :: usestl = .false.  !! the saved correction includes stellar aberration
+      logical :: uselt = .false.  !! the saved correction uses (single-iteration) light time
+      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
+   end type zzspkpa1_state
+
+   ! ------------------------------------------------------------------ ZZSPKZP0
+
+   integer(ip), parameter :: zzspkzp0_frnmln = 32
+
+   !> Return the position of a target body relative to an observing
+   !> body, optionally corrected for light time (planetary aberration)
+   !> and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKZP0 routines (entry points
+   !> zzspkzp0), held in pepper_context (one per thread).
+   type, public :: zzspkzp0_state
+      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
+      logical :: first = .true.  !! first call: J2000 code and counter not yet set up
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
+      character(zzspkzp0_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
+      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
+   end type zzspkzp0_state
+
+   ! ------------------------------------------------------------------ ZZSPKZP1
+
+   integer(ip), parameter :: zzspkzp1_frnmln = 32
+
+   !> Return the position of a target body relative to an observing
+   !> body, optionally corrected for light time (planetary aberration)
+   !> and stellar aberration.
+   !>
+   !> The saved variables of SPICELIB's ZZSPKZP1 routines (entry points
+   !> zzspkzp1), held in pepper_context (one per thread).
+   type, public :: zzspkzp1_state
+      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
+      logical :: first = .true.  !! first call: J2000 code and counter not yet set up
+      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
+      character(zzspkzp1_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
+      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
+   end type zzspkzp1_state
+
+   ! ------------------------------------------------------------------ ZZSRFKER
+
+   character(*), parameter :: kvsfbd = 'NAIF_SURFACE_BODY'
+   character(*), parameter :: kvsfcd = 'NAIF_SURFACE_CODE'
+   character(*), parameter :: kvsfnm = 'NAIF_SURFACE_NAME'
+   integer(ip), parameter :: zzsrfker_kvnmln = 32
+   integer(ip), parameter :: nnames = 3
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSRFKER routines (entry points
+   !> zzsrfker), held in pepper_context (one per thread).
+   type, public :: zzsrfker_state
+      logical :: pass1 = .true.  !! first call: the kernel pool watch on the surface variables is not yet set
+      !> names of the surface name-ID kernel variables (watched by ZZSRFTRN)
+      character(zzsrfker_kvnmln) :: names ( nnames ) = [ character(zzsrfker_kvnmln) :: kvsfbd, kvsfcd, &
+         kvsfnm ]
+   end type zzsrfker_state
+
+   ! ------------------------------------------------------------------ ZZSRFTRN
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSRFTRN routines (entry points
+   !> zzsrfn2c, zzsrfc2n, zzsrftrk), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (208148 bytes): see init_zzsrftrn_state.
+   type, public :: zzsrftrn_state
+      integer(ip) :: kersid ( mxnsrf )  !! input names:                 KERNAM Input surface IDs:           KERSID Input body IDs:              KERBID
+      integer(ip) :: kerbid ( mxnsrf )  !! body ID codes from the kernel pool (NAIF_SURFACE_BODY)
+      character(sfnmln) :: kernam ( mxnsrf )  !! surface names from the kernel pool (NAIF_SURFACE_NAME)
+      character(sfnmln) :: nornam ( mxnsrf )  !! the surface names, normalized (uppercase, left-justified, single blanks)
+      integer(ip) :: sidhls ( zzsrftrn_nroom )  !! surface ID list heads:       SIDHLS Surface ID pool:             SIDPOL Surface ID name pointers:    SIDIDX
+      integer(ip) :: sidpol ( lbsngl : zzsrftrn_nroom )  !! hash table of the surface IDs: collision lists
+      integer(ip) :: sididx ( zzsrftrn_nroom )  !! hash table of the surface IDs: index of each node's entry in kersid
+      integer(ip) :: snmhls ( zzsrftrn_nroom )  !! surface name list heads:     SNMHLS Surface name pool:           SNMPOL Surface name ID pointers:    SNMIDP
+      integer(ip) :: snmpol ( lbsngl : zzsrftrn_nroom )  !! hash table of the surface names: collision lists
+      integer(ip) :: snmidx ( zzsrftrn_nroom )  !! hash table of the surface names: index of each node's entry in nornam
+      integer(ip) :: itemat  !! work: hash table node of the matching entry found by a lookup
+      integer(ip) :: polctr ( ctrsiz )  !! POLCTR tracks the state of the kernel pool. SRFCTR tracks the state of the surface mapping kernel variables.
+      integer(ip) :: srfctr ( ctrsiz )  !! surface mapping state counter (incremented when the tables are rebuilt)
+      logical :: extker  !! the kernel pool defines surface name/ID mappings
+      logical :: pass1  !! first call: counters and tables not yet initialized
+   end type zzsrftrn_state
+
+   ! ------------------------------------------------------------------ ZZSWFXFM
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZSWFXFM routines (entry points
+   !> zzswfxfm), held in pepper_context (one per thread).
+   !>
+   !> No default initialization (448704 bytes): see init_zzswfxfm_state.
+   type, public :: zzswfxfm_state
+      integer(ip) :: basbeg ( maxfrm )  !! start index in baslst of each switch frame's base frame list
+      integer(ip) :: bascnt ( maxfrm )  !! number of base frames of each switch frame
+      integer(ip) :: baslst ( maxbas )  !! ID codes of the base frames of the buffered switch frames
+      integer(ip) :: clsids ( maxbas )  !! frame class ID of each base frame in baslst
+      integer(ip) :: clsses ( maxbas )  !! frame class of each base frame in baslst
+      logical :: binary ( maxfrm )  !! true for each switch frame whose base frame intervals allow a binary search
+      integer(ip) :: fidlst ( maxfrm )  !! switch frame ID hash: ID codes of the buffered switch frames
+      integer(ip) :: free  !! index of the first free element of baslst and its parallel arrays
+      integer(ip) :: frpool ( lbsngl : maxfrm )  !! switch frame ID hash: collision list pool
+      integer(ip) :: hdfram ( maxfrm )  !! switch frame ID hash: collision list heads
+      logical :: pass1  !! true until the first-call initialization is done
+      integer(ip) :: polctr ( ctrsiz )  !! kernel pool state counter
+      integer(ip) :: prvat  !! buffer index of the switch frame from the previous successful call
+      integer(ip) :: prvfrm  !! switch frame ID from the previous successful call (0 if none)
+      real(wp) :: starts ( maxbas )  !! start time (TDB) of the interval of each base frame of the switch frames
+      real(wp) :: stops ( maxbas )  !! applicability interval stop time of each base frame in baslst
+      logical :: usetim ( maxfrm )  !! true for each switch frame whose base frames have time intervals
+      real(wp) :: xident ( 6, 6 )  !! 6x6 identity matrix, set on the first call
+   end type zzswfxfm_state
+
+   ! ------------------------------------------------------------------ ZZTANUTL
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZTANUTL routines (entry points
+   !> zztanini, zztansta), held in pepper_context (one per thread).
+   type, public :: zztanutl_state
+      real(wp) :: svaxis ( 3 ) = 0.0_wp  !! unit vector along the axis (AXIS) saved by ZZTANINI
+      integer(ip) :: svcurv = 0  !! curve type code (limb, umbral or penumbral terminator) saved by ZZTANINI
+      real(wp) :: svet = 0.0_wp  !! evaluation epoch (ET, used for DSK segment selection) saved by ZZTANINI
+      real(wp) :: svirad = 0.0_wp  !! illumination source radius (km) saved by ZZTANINI
+      real(wp) :: svnrml ( 3 ) = 0.0_wp  !! unit normal of the half-plane of AXIS and PLNVEC, saved by ZZTANINI
+      real(wp) :: svvrtx ( 3 ) = 0.0_wp  !! the axis vector as given, used as the ray vertex; saved by ZZTANINI
+   end type zztanutl_state
+
+   ! ------------------------------------------------------------------ ZZTIME
+
+   integer(ip), parameter :: lower = 1
+   integer(ip), parameter :: upper = lower  + 1
+   integer(ip), parameter :: mixed = upper  + 1
+   integer(ip), parameter :: zztime_full = 1
+   integer(ip), parameter :: zztime_short = zztime_full   + 1
+   integer(ip), parameter :: maxtkn = 64
+   integer(ip), parameter :: piclen = maxtkn * 5
+   integer(ip), parameter :: zztime_wdsize = 32
+   integer(ip), parameter :: zztime_nrecog = 70
+   integer(ip), parameter :: zztime_smwdsz = 12
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZTIME routines (entry points zzcmbt,
+   !> zzgrep, zzispt, zzist, zznote, zzremt, zzsubt, zztokns, zzunpck,
+   !> zzvalt), held in pepper_context (one per thread).
+   type, public :: zztime_state
+      character(maxtkn) :: rep = ' '  !! the token representation of the time string: one letter per token
+      integer(ip) :: size = 0  !! number of tokens
+      integer(ip) :: begs ( maxtkn ) = 0  !! first character of each token in the string
+      integer(ip) :: ends ( maxtkn ) = 0  !! last character of each token in the string
+      integer(ip) :: pbegs ( maxtkn ) = 0  !! first character of each token's picture in pictur
+      integer(ip) :: pends ( maxtkn ) = 0  !! last character of each token's picture in pictur
+      character(piclen) :: pictur = ' '  !! the format picture (as for TIMOUT) built from the tokens
+      character(zztime_wdsize) :: names ( 32 : 126 ) = ' '  !! name of each token class (by its letter), for error
+                                                            !! messages
+      character(piclen) :: picerr = ' '  !! template of the message for a picture that is too long
+      character(piclen) :: tknerr = ' '  !! template of the message for too many tokens
+      real(wp) :: hms ( 3  ) = 0.0_wp  !! work variable (saved in SPICELIB; not shown to carry a value
+                                       !! between calls); hours, minutes and seconds
+      integer(ip) :: blank = 0  !! character code of ' '
+      integer(ip) :: to = 0  !! work variable (saved in SPICELIB; not shown to carry a value between
+                             !! calls)
+      integer(ip) :: pto = 0  !! work variable (saved in SPICELIB; not shown to carry a value between
+                              !! calls)
+      integer(ip) :: case = 0  !! work variable (saved in SPICELIB; not shown to carry a value between
+                               !! calls)
+      integer(ip) :: mnsize ( zztime_short ) = 0  !! number of characters of month names (full, short)
+      integer(ip) :: wksize ( zztime_short ) = 0  !! number of characters of weekday names (full, short)
+      integer(ip) :: width ( zztime_nrecog ) = 0  !! length of each recognized substring
+      character(zztime_smwdsz) :: recog ( zztime_nrecog ) = ' '  !! the recognized substrings (month and weekday names,
+                                                                 !! eras, ...)
+      character(zztime_smwdsz) :: mnmrk ( mixed, zztime_short ) = ' '  !! picture markers of month names by case (lower,
+                                                                       !! upper, mixed) and length
+      character(zztime_smwdsz) :: wkday ( mixed, zztime_short ) = ' '  !! picture markers of weekday names by case and
+                                                                       !! length
+      character(1) :: class ( zztime_nrecog ) = ' '  !! token class letter of each recognized substring
+      integer(ip) :: f ( 32 : 126 ) = 0  !! first recognized substring that starts with each character
+      integer(ip) :: l ( 32 : 126 ) = 0  !! last recognized substring that starts with each character
+      logical :: ampm = .false.  !! the string has an AM/PM marker
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+   end type zztime_state
+
+   ! ------------------------------------------------------------------ ZZVSTRNG
+
+   integer(ip), parameter :: maxsig = 14
+   integer(ip), parameter :: zzvstrng_wdsize = maxsig + 16
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZVSTRNG routines (entry points
+   !> zzvststr, zzvsbstr), held in pepper_context (one per thread).
+   type, public :: zzvstrng_state
+      character(zzvstrng_wdsize) :: string = ' 0.0000000000000E+00 '  !! the decimal string (from DPSTR) of the number set by ZZVSTSTR
+      character(1) :: myfill = ' '  !! the fill character for the digits before the first significant one
+      integer(ip) :: code0 = 0  !! the character code of '0'
+      integer(ip) :: exp = 0  !! the exponent of the number set by ZZVSTSTR
+   end type zzvstrng_state
+
+   ! ------------------------------------------------------------------ ZZWAHR
+
+   !> Calculates nutation angles delta psi and delta epsilon,  and
+   !> their rates of change, referred to the ecliptic of date, from
+   !> the Wahr series (Table 1,'Proposal to the IAU Working Group
+   !> on Nutation', John M. Wahr and Martin L. Smith 1979)
+   !>
+   !> The saved variables of SPICELIB's ZZWAHR routines (entry points zzwahr),
+   !> held in pepper_context (one per thread).
+   type, public :: zzwahr_state
+      real(wp) :: angle (5) = 0.0_wp  !! fundamental arguments l, l', F, D, Omega at the epoch of the last call (radians)
+      real(wp) :: angrt (5) = 0.0_wp  !! rates of the fundamental arguments at the epoch of the last call (radians/day)
+      real(wp) :: dtwopi = 0.0_wp  !! two pi
+      real(wp) :: factr = 0.0_wp  !! conversion from units of 0.0001 arcseconds to radians (divisor)
+      real(wp) :: oneday = 0.0_wp  !! number of seconds in a day
+      real(wp) :: radian = 0.0_wp  !! degrees per radian
+      real(wp) :: d0 = 0.0_wp  !! D (Moon minus Sun mean longitude): constant term (degrees)
+      real(wp) :: d1 = 0.0_wp  !! D: linear coefficient (degrees/day)
+      real(wp) :: d2 = 0.0_wp  !! D: quadratic coefficient (degrees/(0.0001 days)**2)
+      real(wp) :: d3 = 0.0_wp  !! D: cubic coefficient (degrees/(0.0001 days)**3)
+      real(wp) :: f0 = 0.0_wp  !! F (Moon minus Moon node mean longitude): constant term (degrees)
+      real(wp) :: f1 = 0.0_wp  !! F: linear coefficient (degrees/day)
+      real(wp) :: f2 = 0.0_wp  !! F: quadratic coefficient (degrees/(0.0001 days)**2)
+      real(wp) :: f3 = 0.0_wp  !! F: cubic coefficient (degrees/(0.0001 days)**3)
+      real(wp) :: l0 = 0.0_wp  !! l (Moon mean anomaly): constant term (degrees)
+      real(wp) :: l1 = 0.0_wp  !! l: linear coefficient (degrees/day)
+      real(wp) :: l2 = 0.0_wp  !! l: quadratic coefficient (degrees/(0.0001 days)**2)
+      real(wp) :: l3 = 0.0_wp  !! l: cubic coefficient (degrees/(0.0001 days)**3)
+      real(wp) :: lp0 = 0.0_wp  !! l' (Sun mean anomaly): constant term (degrees)
+      real(wp) :: lp1 = 0.0_wp  !! l': linear coefficient (degrees/day)
+      real(wp) :: lp2 = 0.0_wp  !! l': quadratic coefficient (degrees/(0.0001 days)**2)
+      real(wp) :: lp3 = 0.0_wp  !! l': cubic coefficient (degrees/(0.0001 days)**3)
+      real(wp) :: mg0 = 0.0_wp  !! Omega (lunar mean ascending node longitude): constant term (degrees)
+      real(wp) :: mg1 = 0.0_wp  !! Omega: linear coefficient (degrees/day)
+      real(wp) :: mg2 = 0.0_wp  !! Omega: quadratic coefficient (degrees/(0.0001 days)**2)
+      real(wp) :: mg3 = 0.0_wp  !! Omega: cubic coefficient (degrees/(0.0001 days)**3)
+      logical :: first = .true.  !! true until the constants above have been computed
+   end type zzwahr_state
+
+   ! ------------------------------------------------------------------ ZZXLATED
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZXLATED routines (entry points
+   !> zzxlated), held in pepper_context (one per thread). Generated by
+   !> tools/modularize_ctx.py from the saved variables of zzxlated.F90.
+   type, public :: zzxlated_state
+      integer(ip) :: bigint = 0  !! largest integer
+      integer(ip) :: smlint = 0  !! smallest integer
+      character(strsiz) :: strbff ( numbff ) = ' '  !! names of the binary file formats
+      integer(ip) :: natbff = 0  !! code of the native binary file format
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+   end type zzxlated_state
+
+   ! ------------------------------------------------------------------ ZZXLATEI
+
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines.  Users should not call this routine directly due
+   !> to the volatile nature of this routine.
+   !>
+   !> The saved variables of SPICELIB's ZZXLATEI routines (entry points
+   !> zzxlatei), held in pepper_context (one per thread). Generated by
+   !> tools/modularize_ctx.py from the saved variables of zzxlatei.F90.
+   type, public :: zzxlatei_state
+      logical :: first = .true.  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff = 0  !! code of the native binary file format
+      character(strsiz) :: strbff ( numbff ) = ' '  !! names of the binary file formats
+      integer(ip) :: smlint = 0  !! smallest integer
+      integer(ip) :: bigint = 0  !! largest integer
+   end type zzxlatei_state
+
+contains
+
+   !> Set the initial values of a new ckbsr_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_ckbsr_state(state)
+      type(ckbsr_state), intent(inout) :: state  !! the state
+      state%fthan = 0
+      state%ftnum = 0
+      state%next = 0
+      state%nft = 0
+   end subroutine init_ckbsr_state
+
+   !> Set the initial values of a new ckbsr_context_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_ckbsr_context_state(state)
+      type(ckbsr_context_state), intent(inout) :: state  !! the state
+      state%alpha = 0.0_wp
+      state%avneed = .false.
+      state%findex = 0
+      state%fnd = .false.
+      state%fresub = .false.
+      state%iindex = 0
+      state%itbeg = 0
+      state%itchkp = .false.
+      state%itexp = 0
+      state%ithfs = 0
+      state%itins = 0
+      state%itlb = 0.0_wp
+      state%itlfs = 0
+      state%itprvd = 0.0_wp
+      state%itprvf = 0
+      state%itprvh = 0
+      state%itprvi = ' '
+      state%itub = 0.0_wp
+      state%itruex = 0
+      state%newsch = .false.
+      state%nit = 0
+      state%omega = 0.0_wp
+      state%reqt = 0.0_wp
+      state%savep = 0
+      state%savtol = 0.0_wp
+      state%scinst = 0
+      state%slbeg = 0
+      state%status = 'BOGUS ENTRY'
+      state%stdcd = 0.0_wp
+      state%sthan = 0
+      state%sticd = 0
+      state%stidnt = ' '
+      state%stpool = 0
+      state%top = 0
+      state%epoch = 0
+   end subroutine init_ckbsr_context_state
+
+   !> Set the initial values of a new dafah_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_dafah_state(state)
+      type(dafah_state), intent(inout) :: state  !! the state
+      state%nft = 0
+      state%fthan = 0
+      state%ftlnk = 0
+      state%ftnd = 0
+      state%ftni = 0
+      state%fhlist = 0
+      state%first = .true.
+   end subroutine init_dafah_state
+
+   !> Set the initial values of a new dafana_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_dafana_state(state)
+      type(dafana_state), intent(inout) :: state  !! the state
+      state%stfh = 0
+      state%stifnm = ' '
+      state%staddg = .false.
+      state%stfrst = 0
+      state%stlast = 0
+      state%stfree = 0
+      state%stbegn = 0
+      state%stlsum = 0.0_wp
+      state%stname = ' '
+      state%stpool = 0
+      state%sthead = nil
+      state%stfptr = nil
+      state%first = .true.
+   end subroutine init_dafana_state
+
+   !> Set the initial values of a new dafec_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_dafec_state(state)
+      type(dafec_state), intent(inout) :: state  !! the state
+      state%crecrd = ' '
+      state%eocmrk = ' '
+      state%eolmrk = ' '
+      state%filchr = 0
+      state%filcnt = 0
+      state%filhan = 0
+      state%lsthan = 0
+      state%lstpos = 0
+      state%lstrec = 0
+      state%nfiles = 0
+      state%first = .true.
+   end subroutine init_dafec_state
+
+   !> Set the initial values of a new daffa_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_daffa_state(state)
+      type(daffa_state), intent(inout) :: state  !! the state
+      state%stfh = 0
+      state%stprev = 0
+      state%stthis = 0
+      state%stnext = 0
+      state%stnseg = 0
+      state%stcurr = 0
+      state%stnr = ' '
+      state%sthvnr = .false.
+      state%stsr = 0.0_wp
+      state%stpool = 0
+      state%sthead = nil
+      state%stfptr = nil
+      state%first = .true.
+   end subroutine init_daffa_state
+
+   !> Set the initial values of a new dafrwd_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_dafrwd_state(state)
+      type(dafrwd_state), intent(inout) :: state  !! the state
+      state%rbhan = 0
+      state%rbrec = 0
+      state%rbreq = 0
+      state%rbdat = 0.0_wp
+      state%rbnbr = 1
+      state%nread = 0
+      state%nreq = 0
+   end subroutine init_dafrwd_state
+
+   !> Set the initial values of a new dascls_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_dascls_state(state)
+      type(dascls_state), intent(inout) :: state  !! the state
+      state%fhset = 0
+      state%pass1 = .true.
+   end subroutine init_dascls_state
+
+   !> Set the initial values of a new dasec_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_dasec_state(state)
+      type(dasec_state), intent(inout) :: state  !! the state
+      state%crecrd = ' '
+      state%filcnt = 0
+      state%filchr = 0
+      state%filhan = 0
+      state%lsthan = 0
+      state%lstpos = 0
+      state%lstrec = 0
+      state%nfiles = 0
+      state%first = .true.
+   end subroutine init_dasec_state
+
+   !> Set the initial values of a new dasfm_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_dasfm_state(state)
+      type(dasfm_state), intent(inout) :: state  !! the state
+      state%fthan = 0
+      state%ftacc = -1
+      state%ftlnk = -1
+      state%ftsum = 0
+      state%pool = 0
+      state%fthead = 0
+      state%fhlist = 0
+      state%pass1 = .true.
+   end subroutine init_dasfm_state
+
+   !> Set the initial values of a new dasrwr_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_dasrwr_state(state)
+      type(dasrwr_state), intent(inout) :: state  !! the state
+      state%rcbufc = ' '
+      state%rcbufd = 0.0_wp
+      state%rcbufi = 0
+      state%rnbufc = 0
+      state%rnbufd = 0
+      state%rnbufi = 0
+      state%hnbufc = 0
+      state%hnbufd = 0
+      state%hnbufi = 0
+      state%upbufc = .false.
+      state%upbufd = .false.
+      state%upbufi = .false.
+      state%poolc = 0
+      state%poold = 0
+      state%pooli = 0
+      state%headc = 0
+      state%headd = 0
+      state%headi = 0
+      state%usedc = 0
+      state%usedd = 0
+      state%usedi = 0
+      state%pass1 = .true.
+   end subroutine init_dasrwr_state
+
+   !> Set the initial values of a new dskx02_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_dskx02_state(state)
+      type(dskx02_state), intent(inout) :: state  !! the state
+      state%cgrext = 0
+      state%cgrptr = 0
+      state%cgscal = 0
+      state%cgscl2 = 0
+      state%corsys = 0
+      state%dskdsc = 0.0_wp
+      state%grdext = -1.0_wp
+      state%grdtol = 0.0_wp
+      state%platid = 0
+      state%prvdsc = 0
+      state%prvhan = 0
+      state%source = 0
+      state%vbuff = 0.0_wp
+      state%vgrext = 0
+      state%voxori = 0.0_wp
+      state%voxsiz = 0.0_wp
+      state%vxlcg = 0
+      state%vxlout = 0
+      state%vxlstr = 0
+   end subroutine init_dskx02_state
+
+   !> Set the initial values of a new ekqmgr_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_ekqmgr_state(state)
+      type(ekqmgr_state), intent(inout) :: state  !! the state
+      state%ftpool = 0
+      state%fthan = 0
+      state%fthead = 0
+      state%tbpool = 0
+      state%tbstpt = 0
+      state%tbncol = 0
+      state%tbnams = ' '
+      state%tbctpt = 0
+      state%tbfils = 0
+      state%tbflsz = 0
+      state%tbhead = 0
+      state%stpool = 0
+      state%sthan = 0
+      state%stsidx = 0
+      state%stdscs = 0
+      state%stnrow = 0
+      state%stncol = 0
+      state%stdtpt = 0
+      state%dtpool = 0
+      state%dtdscs = 0
+      state%ctpool = 0
+      state%ctnams = ' '
+      state%ctclas = 0
+      state%cttyps = 0
+      state%ctlens = 0
+      state%ctfixd = .false.
+      state%ctsizs = 0
+      state%ctindx = .false.
+      state%ctnull = .false.
+      state%first = .true.
+   end subroutine init_ekqmgr_state
+
+   !> Set the initial values of a new ekqmgr_context_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_ekqmgr_context_state(state)
+      type(ekqmgr_context_state), intent(inout) :: state  !! the state
+      state%cnams = ' '
+      state%cnmset = ' '
+      state%colnam = ' '
+      state%frmals = ' '
+      state%frmtab = ' '
+      state%problm = ' '
+      state%tabnam = ' '
+      state%tabvec = ' '
+      state%dvals = 0.0_wp
+      state%cbegs = 0
+      state%cdscrs = 0
+      state%cends = 0
+      state%cnstyp = 0
+      state%dtype = 0
+      state%ivals = 0
+      state%lcidx = 0
+      state%lelts = 1
+      state%ltbidx = 0
+      state%ncols = 0
+      state%new = 0
+      state%nmatch = 0
+      state%norder = 0
+      state%npcol = 0
+      state%nsel = 0
+      state%ntab = 0
+      state%ocols = 0
+      state%oelts = 1
+      state%ops = 0
+      state%ordbas = 0
+      state%otabs = 0
+      state%rbas = 0
+      state%rcidx = 0
+      state%relts = 1
+      state%rsize = 0
+      state%rtbidx = 0
+      state%selcol = 0
+      state%selctp = 0
+      state%seltab = 0
+      state%segdsc = 0
+      state%sense = 0
+      state%stnew = 0
+      state%tbcurr = 0
+      state%tptvec = 0
+      state%ubase = 0
+      state%unrows = 0
+      state%usize = 0
+      state%activc = .false.
+      state%activv = .false.
+      state%dosort = .false.
+      state%fnd = .false.
+      state%presnt = .false.
+      state%sorted = .false.
+   end subroutine init_ekqmgr_context_state
+
+   !> Set the initial values of a new framex_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_framex_state(state)
+      type(framex_state), intent(inout) :: state  !! the state
+      state%name = ' '
+      state%center = 0
+      state%centrd = 0
+      state%idcode = 0
+      state%type = 0
+      state%typeid = 0
+      state%first = .true.
+      state%pulctr = 0
+      state%knmlst = 0
+      state%knmpol = 0
+      state%knmnms = ' '
+      state%knmids = 0
+      state%kidlst = 0
+      state%kidpol = 0
+      state%kidids = 0
+      state%kname = ' '
+      state%kcent = 0
+      state%kclass = 0
+      state%kclsid = 0
+      state%bnmlst = 0
+      state%bnmpol = 0
+      state%bnmnms = ' '
+      state%bnmidx = 0
+      state%bidlst = 0
+      state%bidpol = 0
+      state%bidids = 0
+      state%bididx = 0
+   end subroutine init_framex_state
+
+   !> Set the initial values of a new keeper_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_keeper_state(state)
+      type(keeper_state), intent(inout) :: state  !! the state
+      state%files = ' '
+      state%handls = 0
+      state%srces = 0
+      state%types = ' '
+      state%loaded = 0
+      state%known = ' '
+      state%first = .true.
+   end subroutine init_keeper_state
+
+   !> Set the initial values of a new limbpt_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_limbpt_state(state)
+      type(limbpt_state), intent(inout) :: state  !! the state
+      state%first = .true.
+      state%lmbtyp = 0
+      state%loccde = 0
+      state%nsurf = 0
+      state%pntbuf = 0.0_wp
+      state%prvcor = ' '
+      state%prvloc = ' '
+      state%prvmth = ' '
+      state%prvtrg = 0
+      state%shape = 0
+      state%srflst = 0
+      state%svnrad = 0
+      state%usecn = .false.
+      state%uselt = .false.
+      state%usestl = .false.
+      state%xmit = .false.
+      state%svctr1 = 0
+      state%svtarg = ' '
+      state%svtcde = 0
+      state%svfnd1 = .false.
+      state%svctr2 = 0
+      state%svobsr = ' '
+      state%svobsc = 0
+      state%svfnd2 = .false.
+      state%svctr3 = 0
+      state%svfref = ' '
+      state%svfxfc = 0
+      state%svctr4 = 0
+      state%svctr5 = 0
+      state%svradi = 0.0_wp
+   end subroutine init_limbpt_state
+
+   !> Set the initial values of a new pckbsr_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_pckbsr_state(state)
+      type(pckbsr_state), intent(inout) :: state  !! the state
+      state%fthan = 0
+      state%ftnum = 0
+      state%next = 0
+      state%nft = 0
+   end subroutine init_pckbsr_state
+
+   !> Set the initial values of a new pckbsr_context_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_pckbsr_context_state(state)
+      type(pckbsr_context_state), intent(inout) :: state  !! the state
+      state%btbeg = 0
+      state%btbod = 0
+      state%btchkp = .false.
+      state%btexp = 0
+      state%bthfs = 0
+      state%btlb = 0.0_wp
+      state%btlfs = 0
+      state%btprvd = 0.0_wp
+      state%btprvh = 0
+      state%btprvi = ' '
+      state%btruex = 0
+      state%btub = 0.0_wp
+      state%nbt = 0
+      state%stdes = 0.0_wp
+      state%sthan = 0
+      state%stidnt = ' '
+      state%stpool = 0
+      state%epoch = 0
+   end subroutine init_pckbsr_context_state
+
+   !> Set the initial values of a new pool_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_pool_state(state)
+      type(pool_state), intent(inout) :: state  !! the state
+      state%pnames = ' '
+      state%namlst = 0
+      state%nmpool = 0
+      state%datlst = 0
+      state%chpool = 0
+      state%dppool = 0
+      state%chvals = ' '
+      state%dpvals = 0.0_wp
+      state%first = .true.
+      state%subctr = 0
+      state%begdat = ' '
+      state%begtxt = ' '
+   end subroutine init_pool_state
+
+   !> Set the initial values of a new sc01_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_sc01_state(state)
+      type(sc01_state), intent(inout) :: state  !! the state
+      state%hdsclk = 0
+      state%scpool = 0
+      state%clklst = 0
+      state%scbase = 0
+      state%cmp = ' '
+      state%error = ' '
+      state%cmptks = 0.0_wp
+      state%cmpval = 0.0_wp
+      state%dpbuff = 0.0_wp
+      state%partim = 0.0_wp
+      state%cmpwid = 0
+      state%cofbas = 0
+      state%delcde = 0
+      state%dpfree = 1
+      state%end = 0
+      state%endbas = 0
+      state%ifree = 1
+      state%intbuf = 0
+      state%length = 0
+      state%lower = 0
+      state%modbas = 0
+      state%ncoeff = 0
+      state%nfield = 0
+      state%npart = 0
+      state%offbas = 0
+      state%polctr = 0
+      state%prvsc = initsc
+      state%strbas = 0
+      state%timsys = 0
+      state%pass1 = .true.
+   end subroutine init_sc01_state
+
+   !> Set the initial values of a new scdecd_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_scdecd_state(state)
+      type(scdecd_state), intent(inout) :: state  !! the state
+      state%pstart = 0.0_wp
+      state%pstop = 0.0_wp
+      state%ptotls = 0.0_wp
+   end subroutine init_scdecd_state
+
+   !> Set the initial values of a new scencd_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_scencd_state(state)
+      type(scencd_state), intent(inout) :: state  !! the state
+      state%pstart = 0.0_wp
+      state%pstop = 0.0_wp
+      state%ptotls = 0.0_wp
+   end subroutine init_scencd_state
+
+   !> Set the initial values of a new spkbsr_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_spkbsr_state(state)
+      type(spkbsr_state), intent(inout) :: state  !! the state
+      state%fthan = 0
+      state%ftnum = 0
+      state%next = 0
+      state%nft = 0
+   end subroutine init_spkbsr_state
+
+   !> Set the initial values of a new spkbsr_context_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_spkbsr_context_state(state)
+      type(spkbsr_context_state), intent(inout) :: state  !! the state
+      state%btbeg = 0
+      state%btbod = 0
+      state%btchkp = .false.
+      state%btexp = 0
+      state%bthfs = 0
+      state%btlb = 0.0_wp
+      state%btlfs = 0
+      state%btprvd = 0.0_wp
+      state%btprvh = 0
+      state%btprvi = ' '
+      state%btruex = 0
+      state%btub = 0.0_wp
+      state%nbt = 0
+      state%stdes = 0.0_wp
+      state%sthan = 0
+      state%stidnt = ' '
+      state%stpool = 0
+      state%epoch = 0
+   end subroutine init_spkbsr_context_state
+
+   !> Set the initial values of a new termpt_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_termpt_state(state)
+      type(termpt_state), intent(inout) :: state  !! the state
+      state%first = .true.
+      state%loccde = 0
+      state%maxrad = 0.0_wp
+      state%nrad = 0
+      state%nsurf = 0
+      state%pntbuf = 0.0_wp
+      state%prvcor = ' '
+      state%prvilu = 0
+      state%prvloc = ' '
+      state%prvmth = ' '
+      state%prvtrg = 0
+      state%shadow = 0
+      state%shape = 0
+      state%srflst = 0
+      state%svlcod = 0
+      state%trmtyp = 0
+      state%uflag = .false.
+      state%usecn = .false.
+      state%uselt = .false.
+      state%usestl = .false.
+      state%svctr1 = 0
+      state%svtarg = ' '
+      state%svtcde = 0
+      state%svfnd1 = .false.
+      state%svctr2 = 0
+      state%svobsr = ' '
+      state%svobsc = 0
+      state%svfnd2 = .false.
+      state%svctr3 = 0
+      state%svilum = ' '
+      state%svicde = 0
+      state%svfnd3 = .false.
+      state%svctr4 = 0
+      state%svfref = ' '
+      state%svfxfc = 0
+      state%svctr5 = 0
+      state%svctr6 = 0
+      state%svtrad = 0.0_wp
+      state%svctr7 = 0
+      state%svsrad = 0.0_wp
+   end subroutine init_termpt_state
+
+   !> Set the initial values of a new tisbod_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_tisbod_state(state)
+      type(tisbod_state), intent(inout) :: state  !! the state
+      state%costh = 0.0_wp
+      state%d = 0.0_wp
+      state%dcosth = 0.0_wp
+      state%dsinth = 0.0_wp
+      state%sinth = 0.0_wp
+      state%t = 0.0_wp
+      state%j2code = 0
+      state%first = .true.
+      state%pulctr = 0
+      state%bidlst = 0
+      state%bidpol = 0
+      state%bidids = 0
+      state%bac = 0.0_wp
+      state%bdc = 0.0_wp
+      state%bdcoef = 0.0_wp
+      state%bpckep = 0.0_wp
+      state%brcoef = 0.0_wp
+      state%btcoef = 0.0_wp
+      state%bwc = 0.0_wp
+      state%bwcoef = 0.0_wp
+      state%bna = 0
+      state%bnd = 0
+      state%bnphas = 0
+      state%bnphco = 0
+      state%bnw = 0
+      state%bpcref = 0
+   end subroutine init_tisbod_state
+
+   !> Set the initial values of a new tkfram_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_tkfram_state(state)
+      type(tkfram_state), intent(inout) :: state  !! the state
+      state%alt = ' '
+      state%item = ' '
+      state%oldagt = ' '
+      state%buffd = 0.0_wp
+      state%at = 0
+      state%buffi = 0
+      state%idents = 0
+      state%idnt = 0
+      state%pool = 0
+      state%first = .true.
+   end subroutine init_tkfram_state
+
+   !> Set the initial values of a new zzbodblt_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzbodblt_state(state)
+      type(zzbodblt_state), intent(inout) :: state  !! the state
+      state%bltnam = ' '
+      state%bltnor = ' '
+      state%bltcod = 0
+      state%first = .true.
+   end subroutine init_zzbodblt_state
+
+   !> Set the initial values of a new zzbodtrn_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzbodtrn_state(state)
+      type(zzbodtrn_state), intent(inout) :: state  !! the state
+      state%defnam = ' '
+      state%defnor = ' '
+      state%defcod = 0
+      state%defsiz = 0
+      state%dnmlst = 0
+      state%dnmpol = 0
+      state%dnmnms = ' '
+      state%dnmidx = 0
+      state%didlst = 0
+      state%didpol = 0
+      state%didids = 0
+      state%dididx = 0
+      state%kernam = ' '
+      state%kercod = 0
+      state%knmlst = 0
+      state%knmpol = 0
+      state%knmnms = ' '
+      state%knmidx = 0
+      state%kidlst = 0
+      state%kidpol = 0
+      state%kidids = 0
+      state%kididx = 0
+      state%subctr = 0
+      state%pulctr = 0
+      state%bodchg = .false.
+      state%extker = .false.
+      state%nodata = .true.
+      state%i = 0
+      state%first = .true.
+      state%boddef_epoch = 0
+   end subroutine init_zzbodtrn_state
+
+   !> Set the initial values of a new zzddhman_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzddhman_state(state)
+      type(zzddhman_state), intent(inout) :: state  !! the state
+      state%nft = 0
+      state%ftabs = 0
+      state%ftamh = 0
+      state%ftarc = 0
+      state%ftbff = 0
+      state%fthan = 0
+      state%ftnam = ' '
+      state%ftrtm = 0
+      state%ftmnm = 0.0_wp
+      state%next = 0
+   end subroutine init_zzddhman_state
+
+   !> Set the initial values of a new zzdskbsr_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzdskbsr_state(state)
+      type(zzdskbsr_state), intent(inout) :: state  !! the state
+      state%fthan = 0
+      state%ftnum = 0
+      state%next = 0
+      state%nft = 0
+      state%dskctr = 0
+      state%pass1 = .true.
+   end subroutine init_zzdskbsr_state
+
+   !> Set the initial values of a new zzdskbsr_context_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzdskbsr_context_state(state)
+      type(zzdskbsr_context_state), intent(inout) :: state  !! the state
+      state%begsch = .false.
+      state%findex = 0
+      state%fnd = .false.
+      state%bindex = 0
+      state%btbeg = 0
+      state%btexp = 0
+      state%bthfs = 0
+      state%btbod = 0
+      state%btlfs = 0
+      state%nbt = 0
+      state%savep = 0
+      state%svbody = 0
+      state%status = 'BOGUS ENTRY'
+      state%stdlad = 0
+      state%stdskd = 0.0_wp
+      state%sthan = 0
+      state%stpool = 0
+      state%top = 0
+      state%epoch = 0
+   end subroutine init_zzdskbsr_context_state
+
+   !> Set the initial values of a new zzdsksbf_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzdsksbf_state(state)
+      type(zzdsksbf_state), intent(inout) :: state  !! the state
+      state%bsrctr = 0
+      state%btbody = 0
+      state%btnbod = 0
+      state%btsegp = 0
+      state%btstsz = 0
+      state%first = .true.
+      state%stctr = 0.0_wp
+      state%stdlad = 0
+      state%stdscr = 0.0_wp
+      state%stfree = 1
+      state%sthan = 0
+      state%stoff = 0.0_wp
+      state%strad = 0.0_wp
+   end subroutine init_zzdsksbf_state
+
+   !> Set the initial values of a new zzekjsrt_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzekjsrt_state(state)
+      type(zzekjsrt_state), intent(inout) :: state  !! the state
+      state%cdat = ' '
+      state%ddat = 0.0_wp
+      state%idat = 0
+      state%nf = ' '
+      state%ordvec = 0
+   end subroutine init_zzekjsrt_state
+
+   !> Set the initial values of a new zzekjtst_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzekjtst_state(state)
+      type(zzekjtst_state), intent(inout) :: state  !! the state
+      state%case = 0
+      state%cnstr = 0
+      state%lbase = 0
+      state%lcur = 0
+      state%ldscrs = 0
+      state%lelt = 0
+      state%lelts = 0
+      state%lhans = 0
+      state%locact = .false.
+      state%lovbas = 0
+      state%lptr = 0
+      state%lrows = 0
+      state%lsdsc = 0
+      state%rbase = 0
+      state%rdscrs = 0
+      state%relt = 0
+      state%relts = 0
+      state%rhans = 0
+      state%rovbas = 0
+      state%rptr = 0
+      state%rrows = 0
+      state%rsdsc = 0
+      state%svbas1 = 0
+      state%svbas2 = 0
+      state%svcp1 = 0
+      state%svcp2 = 0
+      state%svops = 0
+      state%svncon = 0
+      state%svnr1 = 0
+      state%svnr2 = 0
+      state%svnt1 = 0
+      state%svnt2 = 0
+      state%svrb1 = 0
+      state%svrb2 = 0
+      state%done = .false.
+      state%lsmall = .false.
+   end subroutine init_zzekjtst_state
+
+   !> Set the initial values of a new zzeknrml_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzeknrml_state(state)
+      type(zzeknrml_state), intent(inout) :: state  !! the state
+      state%rels = 0
+      state%rlpool = 0
+      state%cjpool = 0
+      state%cjptrs = 0
+      state%djpool = 0
+      state%djptrs = 0
+      state%mtpool = 0
+      state%mtcode = 0
+      state%mtexpr = 0
+      state%mstart = 0
+      state%popcnd = 0
+      state%cj = 0
+      state%dj = 0
+      state%dspool = 0
+      state%dscbuf = 0
+      state%first = 0
+      state%level = 0
+      state%newdj = 0
+      state%rel = 0
+      state%relset = 0
+      state%retcnd = 0
+      state%second = 0
+      state%sizes = 0
+      state%start = 0
+      state%state = 0
+   end subroutine init_zzeknrml_state
+
+   !> Set the initial values of a new zzeksca_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzeksca_state(state)
+      type(zzeksca_state), intent(inout) :: state  !! the state
+      state%return = .false.
+      state%scrhan = 0
+      state%scrtch = 0
+      state%t = 0
+      state%first = .true.
+   end subroutine init_zzeksca_state
+
+   !> Set the initial values of a new zzelvupy_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzelvupy_state(state)
+      type(zzelvupy_state), intent(inout) :: state  !! the state
+      state%origin = 0.0_wp
+      state%work = 0.0_wp
+   end subroutine init_zzelvupy_state
+
+   !> Set the initial values of a new zzgffvu_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzgffvu_state(state)
+      type(zzgffvu_state), intent(inout) :: state  !! the state
+      state%svarad = 0.0_wp
+      state%svbnds = 0.0_wp
+      state%svcorr = ' '
+      state%svedct = 0.0_wp
+      state%svetrg = .false.
+      state%svfaxi = 0.0_wp
+      state%svfovm = 0.0_wp
+      state%svfpol = 0.0_wp
+      state%svfsmx = 0.0_wp
+      state%svfvct = 0.0_wp
+      state%svifrm = ' '
+      state%svinam = ' '
+      state%svishp = ' '
+      state%svnvrt = 0
+      state%svobs = 0
+      state%svorig = 0.0_wp
+      state%svplan = 0.0_wp
+      state%svrdir = 0.0_wp
+      state%svsemi = 0.0_wp
+      state%svtarg = 0
+      state%svtfrm = ' '
+      state%svtnam = ' '
+      state%svtrad = 0.0_wp
+      state%svuray = .false.
+      state%svustl = .false.
+      state%svxmag = 0.0_wp
+      state%svxmit = .false.
+   end subroutine init_zzgffvu_state
+
+   !> Set the initial values of a new zzsrftrn_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzsrftrn_state(state)
+      type(zzsrftrn_state), intent(inout) :: state  !! the state
+      state%kersid = 0
+      state%kerbid = 0
+      state%kernam = ' '
+      state%nornam = ' '
+      state%sidhls = 0
+      state%sidpol = 0
+      state%sididx = 0
+      state%snmhls = 0
+      state%snmpol = 0
+      state%snmidx = 0
+      state%itemat = 0
+      state%polctr = 0
+      state%srfctr = 0
+      state%extker = .false.
+      state%pass1 = .true.
+   end subroutine init_zzsrftrn_state
+
+   !> Set the initial values of a new zzswfxfm_state: SPICELIB's DATA
+   !> values, and zero for the other components.
+   pure subroutine init_zzswfxfm_state(state)
+      type(zzswfxfm_state), intent(inout) :: state  !! the state
+      state%basbeg = 0
+      state%bascnt = 0
+      state%baslst = 0
+      state%clsids = 0
+      state%clsses = 0
+      state%binary = .false.
+      state%fidlst = 0
+      state%free = 1
+      state%frpool = 0
+      state%hdfram = 0
+      state%pass1 = .true.
+      state%polctr = 0
+      state%prvat = 0
+      state%prvfrm = 0
+      state%starts = 0.0_wp
+      state%stops = 0.0_wp
+      state%usetim = .false.
+      state%xident = 0.0_wp
+   end subroutine init_zzswfxfm_state
+
+end module pepper_states

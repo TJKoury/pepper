@@ -2448,10 +2448,7 @@ contains
       logical               update
       logical               watch
       logical               found
-      if ( .not. allocated ( ctx%zzsclk_state ) ) then
-         allocate ( ctx%zzsclk_state )
-         call init_zzsclk_state ( ctx%zzsclk_state )
-      end if
+      if ( .not. allocated ( ctx%zzsclk_state ) ) allocate ( ctx%zzsclk_state )
       associate ( known => ctx%zzsclk_state%known, &
                   passed => ctx%zzsclk_state%passed, &
                   first => ctx%zzsclk_state%first, &

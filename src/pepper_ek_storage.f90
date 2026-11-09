@@ -1996,10 +1996,7 @@ contains
       integer(ip)           tokloc
       logical               attfnd ( cdscsz )
       logical               found
-      if ( .not. allocated ( ctx%zzekpdec_state ) ) then
-         allocate ( ctx%zzekpdec_state )
-         call init_zzekpdec_state ( ctx%zzekpdec_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpdec_state ) ) allocate ( ctx%zzekpdec_state )
       associate ( attkey => ctx%zzekpdec_state%attkey, &
                   reqkey => ctx%zzekpdec_state%reqkey )
       if ( ctx%failed() ) return
@@ -3245,10 +3242,7 @@ contains
          eqnptr, eqcsiz, eqcptr ]
       character(namlen) :: tmpnam
       integer(ip) :: i
-      if ( .not. allocated ( ctx%zzekreqi_state ) ) then
-         allocate ( ctx%zzekreqi_state )
-         call init_zzekreqi_state ( ctx%zzekreqi_state )
-      end if
+      if ( .not. allocated ( ctx%zzekreqi_state ) ) allocate ( ctx%zzekreqi_state )
       call ljust ( name,   tmpnam )
       call ucase ( tmpnam, tmpnam )
 
@@ -4998,10 +4992,7 @@ contains
       integer(ip) :: chcard
       integer(ip) :: nnums
       integer(ip) :: length
-      if ( .not. allocated ( ctx%zzekscan_state ) ) then
-         allocate ( ctx%zzekscan_state )
-         call init_zzekscan_state ( ctx%zzekscan_state )
-      end if
+      if ( .not. allocated ( ctx%zzekscan_state ) ) allocate ( ctx%zzekscan_state )
       associate ( idspec => ctx%zzekscan_state%idspec, &
                   pass1 => ctx%zzekscan_state%pass1 )
       if ( ctx%failed() ) return
@@ -6689,10 +6680,7 @@ contains
          eqnptr, eqcsiz, eqcptr ]
       character(namlen) :: tmpnam
       integer(ip) :: i
-      if ( .not. allocated ( ctx%zzekweqi_state ) ) then
-         allocate ( ctx%zzekweqi_state )
-         call init_zzekweqi_state ( ctx%zzekweqi_state )
-      end if
+      if ( .not. allocated ( ctx%zzekweqi_state ) ) allocate ( ctx%zzekweqi_state )
       call ljust ( name,   tmpnam )
       call ucase ( tmpnam, tmpnam )
 
@@ -8490,10 +8478,7 @@ contains
       integer(ip) :: lastd
       integer(ip) :: lasti
       integer(ip) :: lastc
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       associate ( cfill => ctx%zzekpage_state%cfill, &
                   dfill => ctx%zzekpage_state%dfill, &
                   ifill => ctx%zzekpage_state%ifill )
@@ -8668,10 +8653,7 @@ contains
       integer(ip) :: npd
       integer(ip) :: npc
       integer(ip) :: npi
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       associate ( cfill => ctx%zzekpage_state%cfill, &
                   dfill => ctx%zzekpage_state%dfill, &
                   ifill => ctx%zzekpage_state%ifill )
@@ -8856,10 +8838,7 @@ contains
       integer(ip) :: nfreed
       integer(ip) :: forwrd
       integer(ip) :: nfreec
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       associate ( cfill => ctx%zzekpage_state%cfill, &
                   dfill => ctx%zzekpage_state%dfill, &
                   ifill => ctx%zzekpage_state%ifill )
@@ -9165,10 +9144,7 @@ contains
       character(5) :: encpag
       integer(ip) :: nfreed
       integer(ip) :: nfreec
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -9408,10 +9384,7 @@ contains
       integer(ip) :: e
       integer(ip) :: npc
       integer(ip) :: l
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       call dasrdi ( ctx, handle, epnpc, epnpc, npc_1 )
       npc = npc_1(1)
 
@@ -9531,10 +9504,7 @@ contains
       integer(ip) :: npd_1(1)  !! one-element copy of npd (array argument)
       integer(ip) :: npd
       integer(ip) :: addr
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       call dasrdi ( ctx, handle, epnpd, epnpd, npd_1 )
       npd = npd_1(1)
 
@@ -9647,10 +9617,7 @@ contains
       integer(ip) :: npi_1(1)  !! one-element copy of npi (array argument)
       integer(ip) :: addr
       integer(ip) :: npi
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       call dasrdi ( ctx, handle, epnpi, epnpi, npi_1 )
       npi = npi_1(1)
 
@@ -9773,10 +9740,7 @@ contains
       integer(ip) :: addr
       integer(ip) :: npc
       integer(ip) :: l
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -9914,10 +9878,7 @@ contains
       integer(ip) :: npd_1(1)  !! one-element copy of npd (array argument)
       integer(ip) :: npd
       integer(ip) :: addr
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -10043,10 +10004,7 @@ contains
       integer(ip) :: npi_1(1)  !! one-element copy of npi (array argument)
       integer(ip) :: addr
       integer(ip) :: npi
-      if ( .not. allocated ( ctx%zzekpage_state ) ) then
-         allocate ( ctx%zzekpage_state )
-         call init_zzekpage_state ( ctx%zzekpage_state )
-      end if
+      if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -12783,10 +12741,7 @@ contains
       integer(ip) :: nsv
       integer(ip) :: i
       integer(ip) :: top
-      if ( .not. allocated ( ctx%zzekvadr_state ) ) then
-         allocate ( ctx%zzekvadr_state )
-         call init_zzekvadr_state ( ctx%zzekvadr_state )
-      end if
+      if ( .not. allocated ( ctx%zzekvadr_state ) ) allocate ( ctx%zzekvadr_state )
       associate ( begidx => ctx%zzekvadr_state%begidx, &
                   j => ctx%zzekvadr_state%j, &
                   maxrwv => ctx%zzekvadr_state%maxrwv, &
@@ -13055,10 +13010,7 @@ contains
       integer(ip), parameter :: jsvbas = 4
       integer(ip) :: reloff
       integer(ip) :: jrsidx
-      if ( .not. allocated ( ctx%zzekvadr_state ) ) then
-         allocate ( ctx%zzekvadr_state )
-         call init_zzekvadr_state ( ctx%zzekvadr_state )
-      end if
+      if ( .not. allocated ( ctx%zzekvadr_state ) ) allocate ( ctx%zzekvadr_state )
       associate ( begidx => ctx%zzekvadr_state%begidx, &
                   maxrwv => ctx%zzekvadr_state%maxrwv, &
                   ntabs => ctx%zzekvadr_state%ntabs, &
@@ -17213,10 +17165,7 @@ contains
       use pepper_inc_ektype
       integer(ip)           base
       integer(ip)           p
-      if ( .not. allocated ( ctx%zzektrit_state ) ) then
-         allocate ( ctx%zzektrit_state )
-         call init_zzektrit_state ( ctx%zzektrit_state )
-      end if
+      if ( .not. allocated ( ctx%zzektrit_state ) ) allocate ( ctx%zzektrit_state )
       associate ( page => ctx%zzektrit_state%page )
       if ( ctx%failed() ) return
 
@@ -17405,10 +17354,7 @@ contains
       integer(ip) :: totkey
       integer(ip) :: prev
       logical :: samkey
-      if ( .not. allocated ( ctx%zzektrlk_state ) ) then
-         allocate ( ctx%zzektrlk_state )
-         call init_zzektrlk_state ( ctx%zzektrlk_state )
-      end if
+      if ( .not. allocated ( ctx%zzektrlk_state ) ) allocate ( ctx%zzektrlk_state )
       associate ( oldhan => ctx%zzektrlk_state%oldhan, &
                   oldidx => ctx%zzektrlk_state%oldidx, &
                   oldlvl => ctx%zzektrlk_state%oldlvl, &

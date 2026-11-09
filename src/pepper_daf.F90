@@ -694,10 +694,7 @@ contains
       logical               more
       logical               negtiv
       logical               fndexp
-      if ( .not. allocated ( ctx%hx2dp_state ) ) then
-         allocate ( ctx%hx2dp_state )
-         call init_hx2dp_state ( ctx%hx2dp_state )
-      end if
+      if ( .not. allocated ( ctx%hx2dp_state ) ) allocate ( ctx%hx2dp_state )
       associate ( maxdp => ctx%hx2dp_state%maxdp, &
                   mindp => ctx%hx2dp_state%mindp, &
                   scales => ctx%hx2dp_state%scales, &
@@ -3790,10 +3787,7 @@ contains
       integer(ip)           locni
       integer(ip)           lun
       logical               locfnd
-      if ( .not. allocated ( ctx%zzdafgfr_state ) ) then
-         allocate ( ctx%zzdafgfr_state )
-         call init_zzdafgfr_state ( ctx%zzdafgfr_state )
-      end if
+      if ( .not. allocated ( ctx%zzdafgfr_state ) ) allocate ( ctx%zzdafgfr_state )
       associate ( first => ctx%zzdafgfr_state%first, &
                   natbff => ctx%zzdafgfr_state%natbff, &
                   strbff => ctx%zzdafgfr_state%strbff )
@@ -4119,10 +4113,7 @@ contains
       character(sizstr)     tststr
       integer(ip)           i
       integer(ip)           iostat
-      if ( .not. allocated ( ctx%zzdafnfr_state ) ) then
-         allocate ( ctx%zzdafnfr_state )
-         call init_zzdafnfr_state ( ctx%zzdafnfr_state )
-      end if
+      if ( .not. allocated ( ctx%zzdafnfr_state ) ) allocate ( ctx%zzdafnfr_state )
       associate ( first => ctx%zzdafnfr_state%first, &
                   ftpstr => ctx%zzdafnfr_state%ftpstr, &
                   prenul => ctx%zzdafnfr_state%prenul, &
@@ -4360,10 +4351,7 @@ contains
       integer(ip)           iostat
       integer(ip)           lun
       logical               locfnd
-      if ( .not. allocated ( ctx%zzdafgdr_state ) ) then
-         allocate ( ctx%zzdafgdr_state )
-         call init_zzdafgdr_state ( ctx%zzdafgdr_state )
-      end if
+      if ( .not. allocated ( ctx%zzdafgdr_state ) ) allocate ( ctx%zzdafgdr_state )
       associate ( first => ctx%zzdafgdr_state%first, &
                   natbff => ctx%zzdafgdr_state%natbff, &
                   strbff => ctx%zzdafgdr_state%strbff )
@@ -4649,10 +4637,7 @@ contains
       integer(ip)           sumsiz
       logical               locfnd
       equivalence         ( dpbuf, inbuf )
-      if ( .not. allocated ( ctx%zzdafgsr_state ) ) then
-         allocate ( ctx%zzdafgsr_state )
-         call init_zzdafgsr_state ( ctx%zzdafgsr_state )
-      end if
+      if ( .not. allocated ( ctx%zzdafgsr_state ) ) allocate ( ctx%zzdafgsr_state )
       associate ( first => ctx%zzdafgsr_state%first, &
                   natbff => ctx%zzdafgsr_state%natbff, &
                   strbff => ctx%zzdafgsr_state%strbff )
@@ -13168,10 +13153,7 @@ contains
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
       zzichr(carg) = modulo ( ichar(carg), 256 )
-      if ( .not. allocated ( ctx%zzxlated_state ) ) then
-         allocate ( ctx%zzxlated_state )
-         call init_zzxlated_state ( ctx%zzxlated_state )
-      end if
+      if ( .not. allocated ( ctx%zzxlated_state ) ) allocate ( ctx%zzxlated_state )
       associate ( bigint => ctx%zzxlated_state%bigint, &
                   smlint => ctx%zzxlated_state%smlint, &
                   strbff => ctx%zzxlated_state%strbff, &
@@ -14914,10 +14896,7 @@ contains
       integer(ip)           n
       integer(ip)           next
       logical               found
-      if ( .not. allocated ( ctx%dafwda_state ) ) then
-         allocate ( ctx%dafwda_state )
-         call init_dafwda_state ( ctx%dafwda_state )
-      end if
+      if ( .not. allocated ( ctx%dafwda_state ) ) allocate ( ctx%dafwda_state )
       associate ( buffer => ctx%dafwda_state%buffer )
       if ( ctx%failed() ) return
 

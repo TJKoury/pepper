@@ -4164,10 +4164,7 @@ contains
       real(wp)              start
       real(wp)              nstart
       logical               fnd
-      if ( .not. allocated ( ctx%ckr03_state ) ) then
-         allocate ( ctx%ckr03_state )
-         call init_ckr03_state ( ctx%ckr03_state )
-      end if
+      if ( .not. allocated ( ctx%ckr03_state ) ) allocate ( ctx%ckr03_state )
       associate ( prevs => ctx%ckr03_state%prevs, &
                   prevn => ctx%ckr03_state%prevn, &
                   lhand => ctx%ckr03_state%lhand, &
@@ -5095,10 +5092,7 @@ contains
       integer(ip)           type
       integer(ip)           wndsiz
       integer(ip)           wstart
-      if ( .not. allocated ( ctx%ckr05_state ) ) then
-         allocate ( ctx%ckr05_state )
-         call init_ckr05_state ( ctx%ckr05_state )
-      end if
+      if ( .not. allocated ( ctx%ckr05_state ) ) allocate ( ctx%ckr05_state )
       associate ( prevs => ctx%ckr05_state%prevs, &
                   prevn => ctx%ckr05_state%prevn, &
                   prevnn => ctx%ckr05_state%prevnn, &
@@ -6195,10 +6189,7 @@ contains
       logical               prvfnd
       logical               samivl
       logical               samseg
-      if ( .not. allocated ( ctx%ckr06_state ) ) then
-         allocate ( ctx%ckr06_state )
-         call init_ckr06_state ( ctx%ckr06_state )
-      end if
+      if ( .not. allocated ( ctx%ckr06_state ) ) allocate ( ctx%ckr06_state )
       associate ( pass1 => ctx%ckr06_state%pass1, &
                   svbeg => ctx%ckr06_state%svbeg, &
                   svbtim => ctx%ckr06_state%svbtim, &
@@ -8384,10 +8375,7 @@ contains
       real(wp)              dtemp  (      2 )
       integer(ip)           itemp  (      4 )
       equivalence         ( dtemp, itemp )
-      if ( .not. allocated ( ctx%sgmeta_state ) ) then
-         allocate ( ctx%sgmeta_state )
-         call init_sgmeta_state ( ctx%sgmeta_state )
-      end if
+      if ( .not. allocated ( ctx%sgmeta_state ) ) allocate ( ctx%sgmeta_state )
       associate ( lstbeg => ctx%sgmeta_state%lstbeg, &
                   lsthan => ctx%sgmeta_state%lsthan, &
                   meta => ctx%sgmeta_state%meta, &
@@ -15490,10 +15478,7 @@ contains
       logical               prvok
       logical               samivl
       logical               samseg
-      if ( .not. allocated ( ctx%spkr19_state ) ) then
-         allocate ( ctx%spkr19_state )
-         call init_spkr19_state ( ctx%spkr19_state )
-      end if
+      if ( .not. allocated ( ctx%spkr19_state ) ) allocate ( ctx%spkr19_state )
       associate ( pass1 => ctx%spkr19_state%pass1, &
                   svbeg => ctx%spkr19_state%svbeg, &
                   svbtim => ctx%spkr19_state%svbtim, &
@@ -17580,10 +17565,7 @@ contains
       real(wp)              y
       real(wp)              z
       integer(ip)           i
-      if ( .not. allocated ( ctx%stmp03_state ) ) then
-         allocate ( ctx%stmp03_state )
-         call init_stmp03_state ( ctx%stmp03_state )
-      end if
+      if ( .not. allocated ( ctx%stmp03_state ) ) allocate ( ctx%stmp03_state )
       associate ( first => ctx%stmp03_state%first, &
                   lbound => ctx%stmp03_state%lbound, &
                   pairs => ctx%stmp03_state%pairs )
@@ -20958,10 +20940,7 @@ contains
       integer(ip) :: n
       logical :: update
       character(7) :: mymeta
-      if ( .not. allocated ( ctx%ckmeta_state ) ) then
-         allocate ( ctx%ckmeta_state )
-         call init_ckmeta_state ( ctx%ckmeta_state )
-      end if
+      if ( .not. allocated ( ctx%ckmeta_state ) ) allocate ( ctx%ckmeta_state )
       associate ( lookup => ctx%ckmeta_state%lookup, &
                   agent => ctx%ckmeta_state%agent, &
                   cks => ctx%ckmeta_state%cks, &
@@ -22195,10 +22174,7 @@ contains
       real(wp) :: br0
       real(wp) :: bound
       real(wp) :: vcdot
-      if ( .not. allocated ( ctx%prop2b_state ) ) then
-         allocate ( ctx%prop2b_state )
-         call init_prop2b_state ( ctx%prop2b_state )
-      end if
+      if ( .not. allocated ( ctx%prop2b_state ) ) allocate ( ctx%prop2b_state )
       associate ( lower => ctx%prop2b_state%lower, &
                   upper => ctx%prop2b_state%upper, &
                   vel => ctx%prop2b_state%vel, &
@@ -28954,10 +28930,7 @@ contains
       real(wp)                 z33
       integer(ip)              iter
       logical                  doinit
-      if ( .not. allocated ( ctx%zzsgp4_state ) ) then
-         allocate ( ctx%zzsgp4_state )
-         call init_zzsgp4_state ( ctx%zzsgp4_state )
-      end if
+      if ( .not. allocated ( ctx%zzsgp4_state ) ) allocate ( ctx%zzsgp4_state )
       associate ( a => ctx%zzsgp4_state%a, &
                   alta => ctx%zzsgp4_state%alta, &
                   altp => ctx%zzsgp4_state%altp, &
@@ -29672,10 +29645,7 @@ contains
       real(wp)                 z33
       integer(ip)              iter
       logical                  doinit
-      if ( .not. allocated ( ctx%zzsgp4_state ) ) then
-         allocate ( ctx%zzsgp4_state )
-         call init_zzsgp4_state ( ctx%zzsgp4_state )
-      end if
+      if ( .not. allocated ( ctx%zzsgp4_state ) ) allocate ( ctx%zzsgp4_state )
       associate ( argpdot => ctx%zzsgp4_state%argpdot, &
                   argpo => ctx%zzsgp4_state%argpo, &
                   atime => ctx%zzsgp4_state%atime, &

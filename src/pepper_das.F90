@@ -983,10 +983,7 @@ contains
       integer(ip)           room
       integer(ip)           zzichr
       zzichr(carg) = ichar(carg) - max( -1, min(0,ichar(carg)) )*256
-      if ( .not. allocated ( ctx%wrencc_state ) ) then
-         allocate ( ctx%wrencc_state )
-         call init_wrencc_state ( ctx%wrencc_state )
-      end if
+      if ( .not. allocated ( ctx%wrencc_state ) ) allocate ( ctx%wrencc_state )
       associate ( intesc => ctx%wrencc_state%intesc, &
                   intfpc => ctx%wrencc_state%intfpc, &
                   intlpc => ctx%wrencc_state%intlpc, &
@@ -2329,10 +2326,7 @@ contains
       integer(ip)           iostat
       integer(ip)           unit
       logical               found
-      if ( .not. allocated ( ctx%zzdasgrd_state ) ) then
-         allocate ( ctx%zzdasgrd_state )
-         call init_zzdasgrd_state ( ctx%zzdasgrd_state )
-      end if
+      if ( .not. allocated ( ctx%zzdasgrd_state ) ) allocate ( ctx%zzdasgrd_state )
       associate ( first => ctx%zzdasgrd_state%first, &
                   intbff => ctx%zzdasgrd_state%intbff, &
                   natbff => ctx%zzdasgrd_state%natbff )
@@ -2542,10 +2536,7 @@ contains
       integer(ip)           iostat
       integer(ip)           unit
       logical               found
-      if ( .not. allocated ( ctx%zzdasgri_state ) ) then
-         allocate ( ctx%zzdasgri_state )
-         call init_zzdasgri_state ( ctx%zzdasgri_state )
-      end if
+      if ( .not. allocated ( ctx%zzdasgri_state ) ) allocate ( ctx%zzdasgri_state )
       associate ( first => ctx%zzdasgri_state%first, &
                   intbff => ctx%zzdasgri_state%intbff, &
                   natbff => ctx%zzdasgri_state%natbff )
@@ -2787,10 +2778,7 @@ contains
       character(sizstr)     tststr
       integer(ip)           i
       integer(ip)           iostat
-      if ( .not. allocated ( ctx%zzdasnfr_state ) ) then
-         allocate ( ctx%zzdasnfr_state )
-         call init_zzdasnfr_state ( ctx%zzdasnfr_state )
-      end if
+      if ( .not. allocated ( ctx%zzdasnfr_state ) ) allocate ( ctx%zzdasnfr_state )
       associate ( first => ctx%zzdasnfr_state%first, &
                   ftpstr => ctx%zzdasnfr_state%ftpstr, &
                   prenul => ctx%zzdasnfr_state%prenul, &
@@ -3088,10 +3076,7 @@ contains
       integer(ip)           ibff
       integer(ip)           iostat
       integer(ip)           unit
-      if ( .not. allocated ( ctx%zzdasrfr_state ) ) then
-         allocate ( ctx%zzdasrfr_state )
-         call init_zzdasrfr_state ( ctx%zzdasrfr_state )
-      end if
+      if ( .not. allocated ( ctx%zzdasrfr_state ) ) allocate ( ctx%zzdasrfr_state )
       associate ( first => ctx%zzdasrfr_state%first, &
                   natbff => ctx%zzdasrfr_state%natbff )
       if ( ctx%failed() ) return
@@ -16160,10 +16145,7 @@ contains
       integer(ip) :: mxaddr
       integer(ip) :: nresvr
       call files_check ( ctx )
-      if ( .not. allocated ( ctx%dasa2l_state ) ) then
-         allocate ( ctx%dasa2l_state )
-         call init_dasa2l_state ( ctx%dasa2l_state )
-      end if
+      if ( .not. allocated ( ctx%dasa2l_state ) ) allocate ( ctx%dasa2l_state )
       associate ( fidx => ctx%dasa2l_state%fidx, &
                   next => ctx%dasa2l_state%next, &
                   nfiles => ctx%dasa2l_state%nfiles, &
@@ -19949,10 +19931,7 @@ contains
       integer(ip)           rcpos
       integer(ip)           recno
       integer(ip)           wordno
-      if ( .not. allocated ( ctx%dasadc_state ) ) then
-         allocate ( ctx%dasadc_state )
-         call init_dasadc_state ( ctx%dasadc_state )
-      end if
+      if ( .not. allocated ( ctx%dasadc_state ) ) allocate ( ctx%dasadc_state )
       associate ( record => ctx%dasadc_state%record )
       if ( ctx%failed() ) return
 
@@ -20480,10 +20459,7 @@ contains
       integer(ip)           nwritn
       integer(ip)           recno
       integer(ip)           wordno
-      if ( .not. allocated ( ctx%dasadd_state ) ) then
-         allocate ( ctx%dasadd_state )
-         call init_dasadd_state ( ctx%dasadd_state )
-      end if
+      if ( .not. allocated ( ctx%dasadd_state ) ) allocate ( ctx%dasadd_state )
       associate ( record => ctx%dasadd_state%record )
       if ( ctx%failed() ) return
 
@@ -20931,10 +20907,7 @@ contains
       integer(ip)           nwritn
       integer(ip)           recno
       integer(ip)           wordno
-      if ( .not. allocated ( ctx%dasadi_state ) ) then
-         allocate ( ctx%dasadi_state )
-         call init_dasadi_state ( ctx%dasadi_state )
-      end if
+      if ( .not. allocated ( ctx%dasadi_state ) ) allocate ( ctx%dasadi_state )
       associate ( record => ctx%dasadi_state%record )
       if ( ctx%failed() ) return
 
