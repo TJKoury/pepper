@@ -8,12 +8,12 @@
 module pepper_state_zzgfrel
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
 
    implicit none
 
    private
 
-   include               'gf.inc'
    integer(ip), parameter :: maxcln = 80
    integer(ip), parameter :: nc = 7
 

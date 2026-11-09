@@ -7,13 +7,13 @@
 module pepper_state_dasfm
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_das
+      use pepper_inc_errhnd
 
    implicit none
 
    private
 
-   include 'das.inc'
-   include 'errhnd.inc'
    integer(ip), parameter :: lbcell = -5
    integer(ip), parameter :: lbpool = -5
    integer(ip), parameter :: rrcidx = 1

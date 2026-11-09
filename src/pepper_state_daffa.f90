@@ -7,12 +7,12 @@
 module pepper_state_daffa
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
 
    implicit none
 
    private
 
-   include              'zzddhman.inc'
    integer(ip), parameter :: tbsize = ftsize
    integer(ip), parameter :: crlen = 1000
    integer(ip), parameter :: ifnlen = 60

@@ -1,0 +1,100 @@
+!> The parameters of SPICELIB's include file ck05.inc (an include
+!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+module pepper_inc_ck05
+
+   implicit none
+
+   public
+
+! $ Abstract
+!
+!     Declare parameters specific to CK type 05.
+!
+! $ Required_Reading
+!
+!     CK
+!
+! $ Keywords
+!
+!     CK
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman      (JPL)
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.0, 20-AUG-2002 (NJB)
+!
+!-&
+
+!
+!     CK type 5 subtype codes:
+!
+!
+!     Subtype 0:  Hermite interpolation, 8-element packets. Quaternion
+!                 and quaternion derivatives only, no angular velocity
+!                 vector provided. Quaternion elements are listed
+!                 first, followed by derivatives. Angular velocity is
+!                 derived from the quaternions and quaternion
+!                 derivatives.
+!
+   integer               c05tp0
+   parameter           ( c05tp0 = 0 )
+
+
+!
+!     Subtype 1:  Lagrange interpolation, 4-element packets. Quaternion
+!                 only. Angular velocity is derived by differentiating
+!                 the interpolating polynomials.
+!
+   integer               c05tp1
+   parameter           ( c05tp1 = c05tp0 + 1 )
+
+
+!
+!     Subtype 2:  Hermite interpolation, 14-element packets.
+!                 Quaternion and angular angular velocity vector, as
+!                 well as derivatives of each, are provided. The
+!                 quaternion comes first, then quaternion derivatives,
+!                 then angular velocity and its derivatives.
+!
+   integer               c05tp2
+   parameter           ( c05tp2 = c05tp1 + 1 )
+
+!
+!     Subtype 3:  Lagrange interpolation, 7-element packets. Quaternion
+!                 and angular velocity vector provided.  The quaternion
+!                 comes first.
+!
+   integer               c05tp3
+   parameter           ( c05tp3 = c05tp2 + 1 )
+
+!
+!     Packet sizes associated with the various subtypes:
+!
+   integer               c05ps0
+   parameter           ( c05ps0 = 8 )
+
+   integer               c05ps1
+   parameter           ( c05ps1 = 4 )
+
+   integer               c05ps2
+   parameter           ( c05ps2 = 14 )
+
+   integer               c05ps3
+   parameter           ( c05ps3 = 7 )
+
+!
+!     End of file ck05.inc.
+!
+
+end module pepper_inc_ck05

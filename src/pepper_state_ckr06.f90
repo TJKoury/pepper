@@ -7,13 +7,13 @@
 module pepper_state_ckr06
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ckparam
+      use pepper_inc_ck06
 
    implicit none
 
    private
 
-   include 'ckparam.inc'
-   include 'ck06.inc'
 
    public :: init_ckr06_state
 

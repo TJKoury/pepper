@@ -6,12 +6,12 @@
 module pepper_state_dasec
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_das
 
    implicit none
 
    private
 
-   include 'das.inc'
    integer(ip), parameter :: mxcrec = 1024
 
    public :: init_dasec_state

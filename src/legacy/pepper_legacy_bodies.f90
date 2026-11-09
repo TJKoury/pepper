@@ -15,8 +15,8 @@
       use pepper_instance, only: pepper_context, pepper_zzidmap => zzidmap
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
       implicit none
-      include              'zzbodtrn.inc'
       integer(ip) :: bltcod(nperm)  !! List of default integer ID codes.
       character(maxl) :: bltnam(nperm)  !! List of default names.
       type(pepper_context), pointer :: ctx
@@ -264,8 +264,8 @@
       use pepper_instance, only: pepper_context, pepper_zzbodini => zzbodini
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
       implicit none
-      include              'zzbodtrn.inc'
       integer(ip), parameter :: lbpool = -5
       character(maxl) :: names  (          * )  !! Array of names
       character(maxl) :: nornam (          * )  !! Array of normalized names
@@ -296,8 +296,8 @@
       use pepper_instance, only: pepper_context, pepper_zzbodker => zzbodker
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
       implicit none
-      include               'zzbodtrn.inc'
       integer(ip), parameter :: lbpool = -5
       character(maxl) :: names  (          nroom )  !! Array of kernel pool assigned names.
       character(maxl) :: nornam (          nroom )  !! Array of normalized kernel pool assigned
@@ -327,8 +327,8 @@
       use pepper_instance, only: pepper_context, pepper_zzbodget => zzbodget
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
       implicit none
-      include              'zzbodtrn.inc'
       integer(ip) :: room  !! Space available in NAMES, NORNAM, and CODES.
       character(*) :: names  ( * )  !! Array of built-in body names.
       character(*) :: nornam ( * )  !! Array of normalized built-in body names.
@@ -348,8 +348,8 @@
       use pepper_instance, only: pepper_context, pepper_zzbodlst => zzbodlst
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
       implicit none
-      include              'zzbodtrn.inc'
       character(*) :: device  !! Device name to receive the output.
       character(*) :: reqst  !! Data list name to output.
       type(pepper_context), pointer :: ctx
@@ -366,9 +366,9 @@
       use pepper_instance, only: pepper_context, pepper_zzbodn2c => zzbodn2c
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       character(*) :: name  !! Body name to be translated.
       integer(ip) :: code  !! Integer code for that body.
       logical :: found  !! True if translated, otherwise false.
@@ -386,9 +386,9 @@
       use pepper_instance, only: pepper_context, pepper_zzbodc2n => zzbodc2n
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       character(*) :: name  !! Common name for the body identified by CODE.
       integer(ip) :: code  !! Integer code to be translated.
       logical :: found  !! True if translated, otherwise false.
@@ -406,9 +406,9 @@
       use pepper_instance, only: pepper_context, pepper_zzboddef => zzboddef
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       character(*) :: name  !! Common name of some body.
       integer(ip) :: code  !! Integer code for that body.
       type(pepper_context), pointer :: ctx
@@ -425,9 +425,9 @@
       use pepper_instance, only: pepper_context, pepper_zzbodkik => zzbodkik
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call pepper_zzbodkik ( ctx )
@@ -442,9 +442,9 @@
       use pepper_instance, only: pepper_context, pepper_zzbodrst => zzbodrst
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call pepper_zzbodrst ( ctx )
@@ -459,9 +459,9 @@
       use pepper_instance, only: pepper_context, pepper_zzbctrck => zzbctrck
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       integer(ip) :: usrctr    ( ctrsiz )  !! ZZBODTRN state counter tracked by the caller
       logical :: update  !! Flag indicating if input counter was updated
       type(pepper_context), pointer :: ctx
@@ -579,8 +579,8 @@
       use pepper_instance, only: pepper_context, pepper_zzbods2c => zzbods2c
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip) :: usrctr    ( ctrsiz )  !! ZZBODTRN state counter saved by the caller.
       character(*) :: savnam  !! Body name saved by the caller.
       integer(ip) :: savcde  !! Body ID code saved by the caller.
@@ -602,8 +602,8 @@
       use pepper_instance, only: pepper_context, pepper_zzbodvcd => zzbodvcd
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include 'zzctr.inc'
       integer(ip) :: bodyid  !! Body ID code.
       character(*) :: item  !! Item for which values are desired.
       integer(ip) :: maxn  !! Maximum number of values that may be returned.
@@ -615,7 +615,7 @@
       call pepper_zzbodvcd ( ctx, bodyid, item, maxn, varctr, n, values )
       end subroutine zzbodvcd
 
-      !> Deprecated: This routine has been superseded by BODVCD and
+      !> **Deprecated:** This routine has been superseded by BODVCD and
       !> BODVRD. This routine is supported for purposes of backward
       !> compatibility only.
       !>
@@ -663,8 +663,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: bodynm  !! Body name.
       character(*) :: item  !! Item for which values are desired. ('RADII', 'NUT_PREC_ANGLES', etc.
                             !! )

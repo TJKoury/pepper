@@ -7,13 +7,13 @@
 module pepper_state_spkr19
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
 
    implicit none
 
    private
 
-   include 'spk19.inc'
-   include 'spkrec.inc'
 
    public :: init_spkr19_state
 

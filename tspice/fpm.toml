@@ -1,0 +1,43 @@
+# NAIF's test suite for SPICELIB (tspice), run against PEPPER's legacy
+# interface. A package of its own: its F77-style code passes arguments
+# against their declarations (scalar for array, different types for one
+# dummy argument) and needs gfortran's -fallow-argument-mismatch, which the
+# library does not. Build and run through the pixi tasks (pixi run tspice).
+name = "tspice"
+version = "0.1.0"
+license = "license"
+
+[library]
+source-dir = "src"
+
+[build]
+auto-executables = false
+auto-tests = false
+auto-examples = false
+
+[[executable]]
+name = "tspice"
+source-dir = "app"
+main = "tspice.f90"
+
+[dependencies]
+pepper = { path = ".." }
+
+[fortran]
+implicit-typing = true
+implicit-external = true
+source-form = "default"
+
+[features]
+platform.macos.flags = "-DSPICE_OS_MACOS"
+platform.linux.flags = "-DSPICE_OS_LINUX"
+platform.windows.flags = "-DSPICE_OS_WINDOWS"
+platform.cygwin.flags = "-DSPICE_OS_CYGWIN"
+platform.gfortran.flags = "-DSPICE_COMPILER_GFORTRAN -frecursive -fallow-argument-mismatch"
+platform.ifx.flags = "-DSPICE_COMPILER_INTEL"
+platform.ifort.flags = "-DSPICE_COMPILER_INTEL"
+platform.windows.ifx.flags = "/fpp"
+platform.windows.ifort.flags = "/fpp"
+
+[profiles]
+default = ["platform"]

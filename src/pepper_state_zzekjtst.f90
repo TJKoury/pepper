@@ -8,17 +8,17 @@
 module pepper_state_zzekjtst
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
 
    implicit none
 
    private
 
-   include 'ekcoldsc.inc'
-   include 'ekjrs.inc'
-   include 'ekopcd.inc'
-   include 'ekqlimit.inc'
-   include 'ekquery.inc'
-   include 'eksegdsc.inc'
 
    public :: init_zzekjtst_state
 

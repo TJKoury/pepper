@@ -15,8 +15,8 @@
       use pepper_instance, only: pepper_context, pepper_zzfrmgt1 => zzfrmgt1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
       real(wp) :: et  !! An epoch in seconds past J2000.
       real(wp) :: xform ( 6, 6 )  !! A state transformation matrix.
@@ -35,8 +35,8 @@
       use pepper_instance, only: pepper_context, pepper_zzrotgt1 => zzrotgt1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
       real(wp) :: et  !! An epoch in seconds past J2000.
       real(wp) :: rotate ( 3, 3 )  !! A rotation matrix.
@@ -55,9 +55,9 @@
       use pepper_instance, only: pepper_context, pepper_zzfrmch1 => zzfrmch1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
       integer(ip) :: frame1  !! the frame id-code for some reference frame
       integer(ip) :: frame2  !! the frame id-code for some reference frame
       real(wp) :: et  !! an epoch in TDB seconds past J2000.
@@ -75,9 +75,9 @@
       use pepper_instance, only: pepper_context, pepper_zzrefch1 => zzrefch1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
       integer(ip) :: frame1  !! the frame id-code for some reference frame
       integer(ip) :: frame2  !! the frame id-code for some reference frame
       real(wp) :: et  !! an epoch in TDB seconds past J2000.
@@ -96,9 +96,9 @@
       use pepper_instance, only: pepper_context, pepper_zzspkgo1 => zzspkgo1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Target epoch.
       character(*) :: ref  !! Target reference frame.
@@ -119,9 +119,9 @@
       use pepper_instance, only: pepper_context, pepper_zzspkgp1 => zzspkgp1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Target epoch.
       character(*) :: ref  !! Target reference frame.
@@ -142,8 +142,8 @@
       use pepper_instance, only: pepper_context, pepper_zzspklt1 => zzspklt1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -208,8 +208,8 @@
       use pepper_instance, only: pepper_context, pepper_zzspkas1 => zzspkas1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -233,9 +233,9 @@
       use pepper_instance, only: pepper_context, pepper_zzspkzp1 => zzspkzp1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body NAIF ID code.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output position vector.
@@ -258,8 +258,8 @@
       use pepper_instance, only: pepper_context, pepper_zzspkac1 => zzspkac1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -282,10 +282,10 @@
       use pepper_instance, only: pepper_context, pepper_zzspkez1 => zzspkez1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output state vector.
@@ -307,10 +307,10 @@
       use pepper_instance, only: pepper_context, pepper_zzdynfr0 => zzdynfr0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
       implicit none
-      include 'frmtyp.inc'
-      include 'zzabcorr.inc'
-      include 'zzdyn.inc'
       integer(ip) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
       integer(ip) :: center  !! ID code for the center of the input frame.
       real(wp) :: et  !! An epoch in seconds past J2000 TDB.
@@ -329,8 +329,8 @@
       use pepper_instance, only: pepper_context, pepper_zzfrmgt0 => zzfrmgt0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
       real(wp) :: et  !! An epoch in seconds past J2000.
       real(wp) :: xform ( 6, 6 )  !! A state transformation matrix.
@@ -349,9 +349,9 @@
       use pepper_instance, only: pepper_context, pepper_zzfrmch0 => zzfrmch0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
       integer(ip) :: frame1  !! the frame id-code for some reference frame
       integer(ip) :: frame2  !! the frame id-code for some reference frame
       real(wp) :: et  !! an epoch in TDB seconds past J2000.
@@ -370,9 +370,9 @@
       use pepper_instance, only: pepper_context, pepper_zzspkgo0 => zzspkgo0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Target epoch.
       character(*) :: ref  !! Target reference frame.
@@ -393,8 +393,8 @@
       use pepper_instance, only: pepper_context, pepper_zzspklt0 => zzspklt0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -438,8 +438,8 @@
       use pepper_instance, only: pepper_context, pepper_zzspkas0 => zzspkas0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -464,8 +464,8 @@
       use pepper_instance, only: pepper_context, pepper_zzspkac0 => zzspkac0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -488,10 +488,10 @@
       use pepper_instance, only: pepper_context, pepper_zzspkez0 => zzspkez0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output state vector.
@@ -513,10 +513,10 @@
       use pepper_instance, only: pepper_context, pepper_zzdynrt0 => zzdynrt0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
       implicit none
-      include 'frmtyp.inc'
-      include 'zzabcorr.inc'
-      include 'zzdyn.inc'
       integer(ip) :: infram  !! Class ID code for a SPICE dynamic reference frame.
       integer(ip) :: center  !! ID code for the center of the input frame.
       real(wp) :: et  !! An epoch in seconds past J2000 TDB.
@@ -535,8 +535,8 @@
       use pepper_instance, only: pepper_context, pepper_zzrotgt0 => zzrotgt0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
       real(wp) :: et  !! An epoch in seconds past J2000.
       real(wp) :: rotate ( 3, 3 )  !! A rotation matrix.
@@ -555,9 +555,9 @@
       use pepper_instance, only: pepper_context, pepper_zzrefch0 => zzrefch0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
       integer(ip) :: frame1  !! the frame id-code for some reference frame
       integer(ip) :: frame2  !! the frame id-code for some reference frame
       real(wp) :: et  !! an epoch in TDB seconds past J2000.
@@ -576,9 +576,9 @@
       use pepper_instance, only: pepper_context, pepper_zzspkgp0 => zzspkgp0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Target epoch.
       character(*) :: ref  !! Target reference frame.
@@ -620,9 +620,9 @@
       use pepper_instance, only: pepper_context, pepper_zzspkzp0 => zzspkzp0
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body NAIF ID code.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output position vector.
@@ -644,10 +644,10 @@
       use pepper_instance, only: pepper_context, pepper_zzdynfrm => zzdynfrm
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
       implicit none
-      include 'frmtyp.inc'
-      include 'zzabcorr.inc'
-      include 'zzdyn.inc'
       integer(ip) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
       integer(ip) :: center  !! ID code for the center of the input frame.
       real(wp) :: et  !! An epoch in seconds past J2000 TDB.
@@ -667,10 +667,10 @@
       use pepper_instance, only: pepper_context, pepper_zzdynrot => zzdynrot
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
       implicit none
-      include 'frmtyp.inc'
-      include 'zzabcorr.inc'
-      include 'zzdyn.inc'
       integer(ip) :: infram  !! Class ID code for a SPICE dynamic reference frame.
       integer(ip) :: center  !! ID code for the center of the input frame.
       real(wp) :: et  !! An epoch in seconds past J2000 TDB.

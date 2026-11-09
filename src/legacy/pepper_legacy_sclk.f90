@@ -14,8 +14,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
       implicit none
-      include               'sclk.inc'
       character(*) :: name  !! Name of kernel data item, NAIF spacecraft ID code.
       integer(ip) :: sc  !! Name of kernel data item, NAIF spacecraft ID code.
       integer(ip) :: maxnv  !! Maximum number of integer values to return.
@@ -33,8 +33,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
       implicit none
-      include               'sclk.inc'
       character(*) :: name  !! Name of kernel data item, NAIF spacecraft ID code.
       integer(ip) :: sc  !! Name of kernel data item, NAIF spacecraft ID code.
       integer(ip) :: maxnv  !! Maximum number of d.p. values to return.
@@ -55,8 +55,8 @@
       use pepper_instance, only: pepper_context, pepper_zzscin01 => zzscin01
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzsc01
       implicit none
-      include 'zzsc01.inc'
       integer(ip) :: hdsclk ( * )  !! Array of heads of hash collision lists.
       integer(ip) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
       integer(ip) :: clklst ( * )  !! Array of SCLK codes.
@@ -77,9 +77,9 @@
       use pepper_instance, only: pepper_context, pepper_zzscad01 => zzscad01
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_zzsc01
       implicit none
-      include 'errhnd.inc'
-      include 'zzsc01.inc'
       integer(ip) :: sc  !! SCLK ID code.
       integer(ip) :: hdsclk ( * )  !! Array of heads of hash collision lists.
       integer(ip) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
@@ -108,9 +108,9 @@
       use pepper_instance, only: pepper_context, pepper_zzscup01 => zzscup01
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzsc01
+      use pepper_inc_zzctr
       implicit none
-      include 'zzsc01.inc'
-      include 'zzctr.inc'
       integer(ip) :: sc  !! SCLK ID code.
       integer(ip) :: polctr ( ctrsiz )  !! Kernel pool update counter.
       integer(ip) :: hdsclk ( * )  !! Array of heads of hash collision lists.
@@ -162,9 +162,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
       implicit none
-      include               'zzctr.inc'
-      include               'zzsc01.inc'
       integer(ip) :: sc  !! NAIF spacecraft ID code.
       character(*) :: clkstr  !! Character representation of a clock count.
       real(wp) :: ticks  !! Number of ticks represented by the clock count.
@@ -181,9 +181,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
       implicit none
-      include               'zzctr.inc'
-      include               'zzsc01.inc'
       integer(ip) :: sc  !! NAIF spacecraft identification code.
       character(*) :: clkstr  !! Character string representation of the clock count.
       real(wp) :: ticks  !! Number of ticks represented by a clock count.
@@ -200,9 +200,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
       implicit none
-      include               'zzctr.inc'
-      include               'zzsc01.inc'
       integer(ip) :: sc  !! NAIF spacecraft ID code.
       real(wp) :: sclkdp  !! Type 1 SCLK, encoded as ticks since clock start.
       real(wp) :: et  !! Ephemeris time, seconds past J2000.
@@ -219,9 +219,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
       implicit none
-      include               'zzctr.inc'
-      include               'zzsc01.inc'
       integer(ip) :: sc  !! NAIF spacecraft ID code.
       real(wp) :: sclkdp  !! Type 1 SCLK, encoded as ticks since clock start.
       real(wp) :: et  !! Ephemeris time, seconds past J2000.
@@ -239,9 +239,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
       implicit none
-      include               'zzctr.inc'
-      include               'zzsc01.inc'
       integer(ip) :: sc  !! NAIF spacecraft ID code.
       real(wp) :: sclkdp  !! Type 1 SCLK, encoded as continuous ticks since clock start.
       real(wp) :: et  !! Ephemeris time, seconds past J2000.
@@ -258,9 +258,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
       implicit none
-      include               'zzctr.inc'
-      include               'zzsc01.inc'
       integer(ip) :: sc  !! NAIF spacecraft clock ID code.
       integer(ip) :: clktyp  !! NAIF spacecraft clock type.
       type(pepper_context), pointer :: ctx
@@ -275,9 +275,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
       implicit none
-      include               'zzctr.inc'
-      include               'zzsc01.inc'
       integer(ip) :: sc  !! NAIF spacecraft clock ID code.
       integer(ip) :: npartn  !! Number of partitions.
       real(wp) :: parbeg ( * )  !! Partition begin times.
@@ -290,8 +290,8 @@
       !> Umbrella of the SCLU01 routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine sclu01 ( name, sc, maxnv, n, ival, dval )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
       implicit none
-      include               'sclk.inc'
       character(*) :: name
       integer(ip) :: sc
       integer(ip) :: maxnv
@@ -305,9 +305,9 @@
       !> Umbrella of the SC01 routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine sc01 ( sc, clkstr, ticks, sclkdp, et, npartn, parbeg, parend, clktyp )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
       implicit none
-      include               'zzctr.inc'
-      include               'zzsc01.inc'
       integer(ip) :: sc
       character(*) :: clkstr
       real(wp) :: ticks

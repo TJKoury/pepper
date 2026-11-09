@@ -7,12 +7,12 @@
 module pepper_state_zzelvupy
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
 
    implicit none
 
    private
 
-   include 'errhnd.inc'
    integer(ip), parameter :: maxfov = 10000
 
    public :: init_zzelvupy_state

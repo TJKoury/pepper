@@ -6,22 +6,22 @@
 module pepper_state_ekbseg
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekfilpar
+      use pepper_inc_ekglimit
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
 
    implicit none
 
    private
 
-   include 'ekbool.inc'
-   include 'ekcoldsc.inc'
-   include 'ekcnamsz.inc'
-   include 'ekdatpag.inc'
-   include 'ekfilpar.inc'
-   include 'ekglimit.inc'
-   include 'ekpage.inc'
-   include 'ekrecptr.inc'
-   include 'eksegdsc.inc'
-   include 'ektnamsz.inc'
-   include 'ektype.inc'
    integer(ip), parameter :: lbcell = -5
    integer(ip), parameter :: mxspec = 512
 

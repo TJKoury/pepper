@@ -7,12 +7,12 @@
 module pepper_state_zzftpchk
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzftprms
 
    implicit none
 
    private
 
-   include              'zzftprms.inc'
 
    public :: init_zzftpchk_state
 

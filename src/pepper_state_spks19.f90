@@ -7,12 +7,12 @@
 module pepper_state_spks19
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_spk19
 
    implicit none
 
    private
 
-   include 'spk19.inc'
    integer(ip), parameter :: bufsiz = 100
    integer(ip), parameter :: ctrlsz = 3
    integer(ip), parameter :: filsiz = 255

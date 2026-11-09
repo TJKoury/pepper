@@ -9,13 +9,13 @@
 module pepper_state_zzbodtrn
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzbodtrn.inc'
-   include               'zzctr.inc'
    integer(ip), parameter :: wdsize = 32
    integer(ip), parameter :: lbpool = -5
 

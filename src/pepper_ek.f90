@@ -12,458 +12,433 @@ submodule (pepper_instance) pepper_ek
 contains
 
       module procedure ekbseg
-
-! $ Abstract
-!
-!     Start a new segment in an E-kernel.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of an EK file that is open for writing.
-!
-!     TABNAM   is the name of the EK table to which the current
-!              segment belongs. All segments in the EK file
-!              designated by HANDLE must have identical column
-!              attributes. TABNAM must not exceed 32 characters
-!              in length. Case is not significant. Table names
-!              must start with a letter and contain only
-!              characters from the set {A-Z,a-z,0-9,$,_}.
-!
-!     NCOLS    is the number of columns in a new segment.
-!
-!     CNAMES,
-!     DECLS    are, respectively, and array of column names and
-!              their corresponding declarations: the Ith element
-!              of CNAMES and the Ith element of DECLS apply to
-!              the Ith column in the segment.
-!
-!              Column names must not exceed CNAMSZ (32) characters
-!              in length. Case is not significant. Column names
-!              must start with a letter and contain only
-!              characters from the set {A-Z,a-z,0-9,$,_}.
-!
-!              The declarations are strings that contain
-!              `keyword=value' assignments that define the
-!              attributes of the columns to which they apply. The
-!              column attributes that are defined by a column
-!              declaration are:
-!
-!                 DATATYPE
-!                 SIZE
-!                 <is the column indexed?>
-!                 <does the column allow null values?>
-!
-!              The form of a declaration is
-!
-!                 'DATATYPE  = <type>,
-!                  SIZE      = <size>,
-!                  INDEXED   = <boolean>,
-!                  NULLS_OK  = <boolean>'
-!
-!              For example, an indexed, scalar, integer column
-!              that allows null values would have the declaration
-!
-!                 'DATATYPE  = INTEGER,
-!                  SIZE      = 1,
-!                  INDEXED   = TRUE,
-!                  NULLS_OK  = TRUE'
-!
-!              Commas are required to separate the assignments
-!              within declarations; white space is optional;
-!              case is not significant.
-!
-!              The order in which the attribute keywords are
-!              listed in declaration is not significant.
-!
-!              Every column in a segment must be declared.
-!
-!              Each column entry is effectively an array, each
-!              element of which has the declared data type. The
-!              SIZE keyword indicates how many elements are in
-!              each entry of the column in whose declaration the
-!              keyword appears. Note that only scalar-valued
-!              columns (those for which SIZE = 1) may be
-!              referenced in query constraints. A size
-!              assignment has the syntax
-!
-!                 'SIZE = <integer>'
-!
-!              or
-!
-!                 'SIZE = VARIABLE'
-!
-!              The size value defaults to 1 if omitted.
-!
-!              The DATATYPE keyword defines the data type of
-!              column entries. The DATATYPE assignment syntax
-!              has any of the forms
-!
-!                 'DATATYPE = CHARACTER*(<length>)'
-!                 'DATATYPE = CHARACTER*(*)'
-!                 'DATATYPE = DOUBLE PRECISION'
-!                 'DATATYPE = INTEGER'
-!                 'DATATYPE = TIME'
-!
-!              As the datatype declaration syntax suggests,
-!              character strings may have fixed or variable
-!              length. Variable-length strings are allowed only
-!              in columns of size 1.
-!
-!              Optionally, scalar-valued columns may be indexed.
-!              To create an index for a column, use the assignment
-!
-!                 'INDEXED = TRUE'
-!
-!              By default, columns are not indexed.
-!
-!              Optionally, any column can allow null values. To
-!              indicate that a column may allow null values, use
-!              the assignment
-!
-!                 'NULLS_OK = TRUE'
-!
-!              in the column declaration. By default, null
-!              values are not allowed in column entries.
-!
-! $ Detailed_Output
-!
-!     SEGNO    is the number of the segment created by this
-!              routine. Segment numbers are used as unique
-!              identifiers by other EK access routines.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, an error is signaled by a routine in the
-!         call tree of this routine.
-!
-!     2)  If TABNAM is more than TNAMSZ characters long, an error
-!         is signaled by a routine in the call tree of this routine.
-!
-!     3)  If TABNAM contains any nonprintable characters, an error
-!         is signaled by a routine in the call tree of this routine.
-!
-!     4)  If NCOLS is non-positive or greater than the maximum allowed
-!         number MXCLSG, the error SPICE(INVALIDCOUNT) is signaled.
-!
-!     5)  If any column name exceeds CNAMSZ characters in length, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     6)  If any column name contains non-printable characters, an error
-!         is signaled by a routine in the call tree of this routine.
-!
-!     7)  If a declaration cannot be understood by this routine, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     8)  If an non-positive string length or element size is specified,
-!         an error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     9)  If an I/O error occurs while reading or writing the indicated
-!         file, the error is signaled by a routine in the call tree of
-!         this routine.
-!
-! $ Files
-!
-!     See the EK Required Reading ek.req for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects: it prepares an EK for
-!     the addition of a new segment. It is not necessary to take
-!     any special action to `complete' a segment; segments are readable
-!     after the completion of any record insertion, deletion, write,
-!     or update operation.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Suppose we want to create an E-kernel which contains a table
-!        of items that have been ordered. The columns of this table
-!        are shown below:
-!
-!           DATAITEMS
-!
-!              Column Name     Data Type
-!              -----------     ---------
-!              ITEM_ID         INTEGER
-!              ORDER_ID        INTEGER
-!              ITEM_NAME       CHARACTER*(*)
-!              DESCRIPTION     CHARACTER*(*)
-!              PRICE           DOUBLE PRECISION
-!
-!        This EK file will have one segment containing the DATAITEMS
-!        table.
-!
-!        This examples demonstrates how to open a new EK file; create
-!        the segment described above and how to insert a new record
-!        into it.
-!
-!        Example code begins here.
-!
-!              PROGRAM EKBSEG_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Column Name Size (CNAMSZ)
-!        C
-!              INCLUDE 'ekcnamsz.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME  = 'ekbseg_ex1.bdb' )
-!
-!              CHARACTER*(*)         TABLE
-!              PARAMETER           ( TABLE   = 'DATAITEMS'      )
-!
-!              INTEGER               DECLEN
-!              PARAMETER           ( DECLEN = 200 )
-!
-!              INTEGER               DESCLN
-!              PARAMETER           ( DESCLN = 80  )
-!
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 40  )
-!
-!              INTEGER               NCOLS
-!              PARAMETER           ( NCOLS  = 5   )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-!              CHARACTER*(DESCLN)    DESCRP
-!              CHARACTER*(NAMLEN)    IFNAME
-!              CHARACTER*(NAMLEN)    ITEMNM
-!
-!              DOUBLE PRECISION      PRICE
-!
-!              INTEGER               ESIZE
-!              INTEGER               HANDLE
-!              INTEGER               ITEMID
-!              INTEGER               NRESVC
-!              INTEGER               ORDID
-!              INTEGER               RECNO
-!              INTEGER               SEGNO
-!
-!              LOGICAL               ISNULL
-!
-!        C
-!        C     Open a new EK file.  For simplicity, we will not
-!        C     reserve any space for the comment area, so the
-!        C     number of reserved comment characters is zero.
-!        C     The variable IFNAME is the internal file name.
-!        C
-!              NRESVC  =  0
-!              IFNAME  =  'Test EK;Created 21-JUN-2019'
-!
-!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-!
-!        C
-!        C     Set up the table and column names and declarations
-!        C     for the DATAITEMS segment.  We'll index all of
-!        C     the columns.  All columns are scalar, so we omit
-!        C     the size declaration.
-!        C
-!              CNAMES(1) =  'ITEM_ID'
-!              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
-!
-!              CNAMES(2) =  'ORDER_ID'
-!              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
-!
-!              CNAMES(3) =  'ITEM_NAME'
-!              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-!             .             'INDEXED  = TRUE'
-!
-!              CNAMES(4) =  'DESCRIPTION'
-!              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-!             .             'INDEXED  = TRUE'
-!
-!              CNAMES(5) =  'PRICE'
-!              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-!             .             'INDEXED  = TRUE'
-!
-!        C
-!        C     Start the segment. Since we have no data for this
-!        C     segment, start the segment by just defining the new
-!        C     segment's schema.
-!        C
-!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-!             .              CNAMES, CDECLS, SEGNO )
-!
-!        C
-!        C     Append a new, empty record to the DATAITEMS
-!        C     table. Recall that the DATAITEMS table
-!        C     is in segment number 1.  The call will return
-!        C     the number of the new, empty record.
-!        C
-!              SEGNO = 1
-!              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-!
-!        C
-!        C     At this point, the new record is empty.  A valid EK
-!        C     cannot contain empty records.  We fill in the data
-!        C     here.  Data items are filled in one column at a time.
-!        C     The order in which the columns are filled in is not
-!        C     important.  We use the EKACEx (add column entry)
-!        C     routines to fill in column entries.  We'll assume
-!        C     that no entries are null.  All entries are scalar,
-!        C     so the entry size is 1.
-!        C
-!              ISNULL   =  .FALSE.
-!              ESIZE    =  1
-!
-!        C
-!        C     The following variables will contain the data for
-!        C     the new record.
-!        C
-!              ORDID    =   10011
-!              ITEMID   =   531
-!              ITEMNM   =  'Sample item'
-!              DESCRP   =  'This sample item is used only in tests.'
-!              PRICE    =   1345.678D0
-!
-!        C
-!        C     Note that the names of the routines called
-!        C     correspond to the data types of the columns:  the
-!        C     last letter of the routine name is C, I, or D,
-!        C     depending on the data type.
-!        C
-!              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
-!             .              ESIZE,  ORDID,  ISNULL               )
-!
-!              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
-!             .              ESIZE,  ITEMID, ISNULL               )
-!
-!              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
-!             .              ESIZE,  ITEMNM, ISNULL               )
-!
-!              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
-!             .              ESIZE,  DESCRP, ISNULL               )
-!
-!              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
-!             .              ESIZE,  PRICE,  ISNULL               )
-!
-!        C
-!        C     Close the file to make the update permanent.
-!        C
-!              CALL EKCLS ( HANDLE )
-!
-!              END
-!
-!        When this program is executed, no output is presented on
-!        screen. After run completion, a new EK file exists in the
-!        output directory.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 13-AUG-2021 (JDR)
-!
-!        Added IMPLICI NONE statement.
-!
-!        Edited the header to comply with NAIF standard and
-!        created complete code example from existing fragment.
-!
-!-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
-!
-!        Erroneous error message for invalid column names was fixed.
-!        Previous version line was changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 06-NOV-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     start new E-kernel segment
-!     start new EK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Local variables
-!
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Start a new segment in an E-kernel.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE   is the handle of an EK file that is open for writing.
+!!
+!!     TABNAM   is the name of the EK table to which the current
+!!              segment belongs. All segments in the EK file
+!!              designated by HANDLE must have identical column
+!!              attributes. TABNAM must not exceed 32 characters
+!!              in length. Case is not significant. Table names
+!!              must start with a letter and contain only
+!!              characters from the set {A-Z,a-z,0-9,$,_}.
+!!
+!!     NCOLS    is the number of columns in a new segment.
+!!
+!!     CNAMES,
+!!     DECLS    are, respectively, and array of column names and
+!!              their corresponding declarations: the Ith element
+!!              of CNAMES and the Ith element of DECLS apply to
+!!              the Ith column in the segment.
+!!
+!!              Column names must not exceed CNAMSZ (32) characters
+!!              in length. Case is not significant. Column names
+!!              must start with a letter and contain only
+!!              characters from the set {A-Z,a-z,0-9,$,_}.
+!!
+!!              The declarations are strings that contain
+!!              `keyword=value' assignments that define the
+!!              attributes of the columns to which they apply. The
+!!              column attributes that are defined by a column
+!!              declaration are:
+!!
+!!                 DATATYPE
+!!                 SIZE
+!!                 <is the column indexed?>
+!!                 <does the column allow null values?>
+!!
+!!              The form of a declaration is
+!!
+!!                 'DATATYPE  = <type>,
+!!                  SIZE      = <size>,
+!!                  INDEXED   = <boolean>,
+!!                  NULLS_OK  = <boolean>'
+!!
+!!              For example, an indexed, scalar, integer column
+!!              that allows null values would have the declaration
+!!
+!!                 'DATATYPE  = INTEGER,
+!!                  SIZE      = 1,
+!!                  INDEXED   = TRUE,
+!!                  NULLS_OK  = TRUE'
+!!
+!!              Commas are required to separate the assignments
+!!              within declarations; white space is optional;
+!!              case is not significant.
+!!
+!!              The order in which the attribute keywords are
+!!              listed in declaration is not significant.
+!!
+!!              Every column in a segment must be declared.
+!!
+!!              Each column entry is effectively an array, each
+!!              element of which has the declared data type. The
+!!              SIZE keyword indicates how many elements are in
+!!              each entry of the column in whose declaration the
+!!              keyword appears. Note that only scalar-valued
+!!              columns (those for which SIZE = 1) may be
+!!              referenced in query constraints. A size
+!!              assignment has the syntax
+!!
+!!                 'SIZE = <integer>'
+!!
+!!              or
+!!
+!!                 'SIZE = VARIABLE'
+!!
+!!              The size value defaults to 1 if omitted.
+!!
+!!              The DATATYPE keyword defines the data type of
+!!              column entries. The DATATYPE assignment syntax
+!!              has any of the forms
+!!
+!!                 'DATATYPE = CHARACTER*(<length>)'
+!!                 'DATATYPE = CHARACTER*(*)'
+!!                 'DATATYPE = DOUBLE PRECISION'
+!!                 'DATATYPE = INTEGER'
+!!                 'DATATYPE = TIME'
+!!
+!!              As the datatype declaration syntax suggests,
+!!              character strings may have fixed or variable
+!!              length. Variable-length strings are allowed only
+!!              in columns of size 1.
+!!
+!!              Optionally, scalar-valued columns may be indexed.
+!!              To create an index for a column, use the assignment
+!!
+!!                 'INDEXED = TRUE'
+!!
+!!              By default, columns are not indexed.
+!!
+!!              Optionally, any column can allow null values. To
+!!              indicate that a column may allow null values, use
+!!              the assignment
+!!
+!!                 'NULLS_OK = TRUE'
+!!
+!!              in the column declaration. By default, null
+!!              values are not allowed in column entries.
+!!
+!! ## Detailed Output
+!!
+!!     SEGNO    is the number of the segment created by this
+!!              routine. Segment numbers are used as unique
+!!              identifiers by other EK access routines.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, an error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!!     2)  If TABNAM is more than TNAMSZ characters long, an error
+!!         is signaled by a routine in the call tree of this routine.
+!!
+!!     3)  If TABNAM contains any nonprintable characters, an error
+!!         is signaled by a routine in the call tree of this routine.
+!!
+!!     4)  If NCOLS is non-positive or greater than the maximum allowed
+!!         number MXCLSG, the error SPICE(INVALIDCOUNT) is signaled.
+!!
+!!     5)  If any column name exceeds CNAMSZ characters in length, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     6)  If any column name contains non-printable characters, an error
+!!         is signaled by a routine in the call tree of this routine.
+!!
+!!     7)  If a declaration cannot be understood by this routine, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     8)  If an non-positive string length or element size is specified,
+!!         an error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     9)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error is signaled by a routine in the call tree of
+!!         this routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading ek.req for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects: it prepares an EK for
+!!     the addition of a new segment. It is not necessary to take
+!!     any special action to `complete' a segment; segments are readable
+!!     after the completion of any record insertion, deletion, write,
+!!     or update operation.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Suppose we want to create an E-kernel which contains a table
+!!        of items that have been ordered. The columns of this table
+!!        are shown below:
+!!
+!!           DATAITEMS
+!!
+!!              Column Name     Data Type
+!!              -----------     ---------
+!!              ITEM_ID         INTEGER
+!!              ORDER_ID        INTEGER
+!!              ITEM_NAME       CHARACTER*(*)
+!!              DESCRIPTION     CHARACTER*(*)
+!!              PRICE           DOUBLE PRECISION
+!!
+!!        This EK file will have one segment containing the DATAITEMS
+!!        table.
+!!
+!!        This examples demonstrates how to open a new EK file; create
+!!        the segment described above and how to insert a new record
+!!        into it.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKBSEG_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Column Name Size (CNAMSZ)
+!!        C
+!!              INCLUDE 'ekcnamsz.inc'
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         EKNAME
+!!              PARAMETER           ( EKNAME  = 'ekbseg_ex1.bdb' )
+!!
+!!              CHARACTER*(*)         TABLE
+!!              PARAMETER           ( TABLE   = 'DATAITEMS'      )
+!!
+!!              INTEGER               DECLEN
+!!              PARAMETER           ( DECLEN = 200 )
+!!
+!!              INTEGER               DESCLN
+!!              PARAMETER           ( DESCLN = 80  )
+!!
+!!              INTEGER               NAMLEN
+!!              PARAMETER           ( NAMLEN = 40  )
+!!
+!!              INTEGER               NCOLS
+!!              PARAMETER           ( NCOLS  = 5   )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+!!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+!!              CHARACTER*(DESCLN)    DESCRP
+!!              CHARACTER*(NAMLEN)    IFNAME
+!!              CHARACTER*(NAMLEN)    ITEMNM
+!!
+!!              DOUBLE PRECISION      PRICE
+!!
+!!              INTEGER               ESIZE
+!!              INTEGER               HANDLE
+!!              INTEGER               ITEMID
+!!              INTEGER               NRESVC
+!!              INTEGER               ORDID
+!!              INTEGER               RECNO
+!!              INTEGER               SEGNO
+!!
+!!              LOGICAL               ISNULL
+!!
+!!        C
+!!        C     Open a new EK file.  For simplicity, we will not
+!!        C     reserve any space for the comment area, so the
+!!        C     number of reserved comment characters is zero.
+!!        C     The variable IFNAME is the internal file name.
+!!        C
+!!              NRESVC  =  0
+!!              IFNAME  =  'Test EK;Created 21-JUN-2019'
+!!
+!!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+!!
+!!        C
+!!        C     Set up the table and column names and declarations
+!!        C     for the DATAITEMS segment.  We'll index all of
+!!        C     the columns.  All columns are scalar, so we omit
+!!        C     the size declaration.
+!!        C
+!!              CNAMES(1) =  'ITEM_ID'
+!!              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+!!
+!!              CNAMES(2) =  'ORDER_ID'
+!!              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+!!
+!!              CNAMES(3) =  'ITEM_NAME'
+!!              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+!!             .             'INDEXED  = TRUE'
+!!
+!!              CNAMES(4) =  'DESCRIPTION'
+!!              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+!!             .             'INDEXED  = TRUE'
+!!
+!!              CNAMES(5) =  'PRICE'
+!!              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+!!             .             'INDEXED  = TRUE'
+!!
+!!        C
+!!        C     Start the segment. Since we have no data for this
+!!        C     segment, start the segment by just defining the new
+!!        C     segment's schema.
+!!        C
+!!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+!!             .              CNAMES, CDECLS, SEGNO )
+!!
+!!        C
+!!        C     Append a new, empty record to the DATAITEMS
+!!        C     table. Recall that the DATAITEMS table
+!!        C     is in segment number 1.  The call will return
+!!        C     the number of the new, empty record.
+!!        C
+!!              SEGNO = 1
+!!              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+!!
+!!        C
+!!        C     At this point, the new record is empty.  A valid EK
+!!        C     cannot contain empty records.  We fill in the data
+!!        C     here.  Data items are filled in one column at a time.
+!!        C     The order in which the columns are filled in is not
+!!        C     important.  We use the EKACEx (add column entry)
+!!        C     routines to fill in column entries.  We'll assume
+!!        C     that no entries are null.  All entries are scalar,
+!!        C     so the entry size is 1.
+!!        C
+!!              ISNULL   =  .FALSE.
+!!              ESIZE    =  1
+!!
+!!        C
+!!        C     The following variables will contain the data for
+!!        C     the new record.
+!!        C
+!!              ORDID    =   10011
+!!              ITEMID   =   531
+!!              ITEMNM   =  'Sample item'
+!!              DESCRP   =  'This sample item is used only in tests.'
+!!              PRICE    =   1345.678D0
+!!
+!!        C
+!!        C     Note that the names of the routines called
+!!        C     correspond to the data types of the columns:  the
+!!        C     last letter of the routine name is C, I, or D,
+!!        C     depending on the data type.
+!!        C
+!!              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
+!!             .              ESIZE,  ORDID,  ISNULL               )
+!!
+!!              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
+!!             .              ESIZE,  ITEMID, ISNULL               )
+!!
+!!              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
+!!             .              ESIZE,  ITEMNM, ISNULL               )
+!!
+!!              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
+!!             .              ESIZE,  DESCRP, ISNULL               )
+!!
+!!              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
+!!             .              ESIZE,  PRICE,  ISNULL               )
+!!
+!!        C
+!!        C     Close the file to make the update permanent.
+!!        C
+!!              CALL EKCLS ( HANDLE )
+!!
+!!              END
+!!
+!!        When this program is executed, no output is presented on
+!!        screen. After run completion, a new EK file exists in the
+!!        output directory.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 13-AUG-2021 (JDR)
+!!
+!!        Added IMPLICI NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard and
+!!        created complete code example from existing fragment.
+!!
+!!-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
+!!
+!!        Erroneous error message for invalid column names was fixed.
+!!        Previous version line was changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 06-NOV-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     start new E-kernel segment
+!!     start new EK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: lastnb
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekfilpar
+      use pepper_inc_ekglimit
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekcnamsz.inc'
-      include 'ekdatpag.inc'
-      include 'ekfilpar.inc'
-      include 'ekglimit.inc'
-      include 'ekpage.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektnamsz.inc'
-      include 'ektype.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: mxspec = 512
       integer(ip), parameter :: namlim = 32
@@ -611,34 +586,33 @@ contains
 !$Procedure EKINSR ( EK, insert record into segment )
 
       module procedure ekinsr
+!! ## Abstract
+!!
+!!     Add a new, empty record to a specified E-kernel segment at
+!!     a specified index.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: cleari, filli
-
-! $ Abstract
-!
-!     Add a new, empty record to a specified E-kernel segment at
-!     a specified index.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: nlinks_1(1)  !! one-element copy of nlinks (array argument)
 
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekpage.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -1061,176 +1035,154 @@ contains
       end procedure ekinsr
 
       module procedure stcc01
-
-! $ Abstract
-!
-!     Check whether a file is a type 1 star catalog and return the
-!     catalog's table name if it is.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     CATFNM   is the name of the catalog file.
-!
-! $ Detailed_Output
-!
-!     TABNAM   is the name of the data table contained in the
-!              catalog. Set to blank if file is not a type 1 star
-!              catalog.
-!
-!     ISTYP1   is .TRUE. when the file is a type 1 star catalog. .FALSE.
-!              otherwise.
-!
-!     ERRMSG   is a diagnostic message indicating why the file is
-!              not a type 1 star catalog. Set to blank if the file
-!              is a type 1 star catalog.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the indicated file cannot be opened, an error is signaled
-!         by a routine in the call tree of this routine.
-!
-!     2)  If the indicated file has the wrong architecture version, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     3)  If an I/O error occurs while reading the indicated file, the
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     This routine checks whether file is really SPICE type 1 star
-!     catalog file.
-!
-!     SPICE type 1 star catalog files MUST contain a single data table.
-!     It can occupy a single segment or it can spread across multiple
-!     segments. This table MUST include the following columns:
-!
-!        column name                data type          units
-!     -------------------------------------------------------
-!        RA                   DOUBLE PRECISION        DEGREES
-!        DEC                  DOUBLE PRECISION        DEGREES
-!        RA_SIGMA             DOUBLE PRECISION        DEGREES
-!        DEC_SIGMA            DOUBLE PRECISION        DEGREES
-!        CATALOG_NUMBER       INTEGER
-!        SPECTRAL_TYPE        CHARACTER*(4)
-!        VISUAL_MAGNITUDE     DOUBLE PRECISION
-!
-!     Nulls are not allowed in any of the columns.
-!     Other columns can also be present in the table but their data
-!     will NOT be accessible through type 1 star catalog access
-!     routines. Note that the names and attributes of these additional
-!     columns must be identical for all segments containing this table.
-!
-! $ Particulars
-!
-!     This routine does not need to be called by the user's program.
-!     It is used by star catalog loader routines to check
-!     whether a particular file is a type 1 star catalog before loading
-!     the file.
-!
-! $ Examples
-!
-!     In the following code fragment, STCC01 is used to determine
-!     whether a file is a SPICE type 1 star catalog.
-!
-!     C
-!     C     Call STCC01 to determine whether the file is type 1 star
-!     C     catalog file.
-!     C
-!           CALL STCC01 ( CATFNM, TABNAM, ISTYP1, ERRMSG )
-!
-!     C
-!     C     Check ISTYP1 flag and stop execution and report an
-!     C     error if file is not type 1 star catalog file.
-!     C
-!           IF ( .NOT. ISTYP1 ) THEN
-!          .   WRITE (*,*) 'The file:'
-!          .   WRITE (*,*) '  ',CATFNM(1:RTRIM(CATFNM))
-!          .   WRITE (*,*) 'is not a type 1 star catalog.'
-!          .   WRITE (*,*) ERRMSG
-!              STOP
-!           END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     check whether a file is a type 1 star catalog
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters.
-!
-
-!
-!     Local variables
-!
-
-
-
-
-
-!
-!     Initial values.
-!
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Check whether a file is a type 1 star catalog and return the
+!!     catalog's table name if it is.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     CATFNM   is the name of the catalog file.
+!!
+!! ## Detailed Output
+!!
+!!     TABNAM   is the name of the data table contained in the
+!!              catalog. Set to blank if file is not a type 1 star
+!!              catalog.
+!!
+!!     ISTYP1   is .TRUE. when the file is a type 1 star catalog. .FALSE.
+!!              otherwise.
+!!
+!!     ERRMSG   is a diagnostic message indicating why the file is
+!!              not a type 1 star catalog. Set to blank if the file
+!!              is a type 1 star catalog.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the indicated file cannot be opened, an error is signaled
+!!         by a routine in the call tree of this routine.
+!!
+!!     2)  If the indicated file has the wrong architecture version, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     3)  If an I/O error occurs while reading the indicated file, the
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     This routine checks whether file is really SPICE type 1 star
+!!     catalog file.
+!!
+!!     SPICE type 1 star catalog files MUST contain a single data table.
+!!     It can occupy a single segment or it can spread across multiple
+!!     segments. This table MUST include the following columns:
+!!
+!!        column name                data type          units
+!!     -------------------------------------------------------
+!!        RA                   DOUBLE PRECISION        DEGREES
+!!        DEC                  DOUBLE PRECISION        DEGREES
+!!        RA_SIGMA             DOUBLE PRECISION        DEGREES
+!!        DEC_SIGMA            DOUBLE PRECISION        DEGREES
+!!        CATALOG_NUMBER       INTEGER
+!!        SPECTRAL_TYPE        CHARACTER*(4)
+!!        VISUAL_MAGNITUDE     DOUBLE PRECISION
+!!
+!!     Nulls are not allowed in any of the columns.
+!!     Other columns can also be present in the table but their data
+!!     will NOT be accessible through type 1 star catalog access
+!!     routines. Note that the names and attributes of these additional
+!!     columns must be identical for all segments containing this table.
+!!
+!! ## Particulars
+!!
+!!     This routine does not need to be called by the user's program.
+!!     It is used by star catalog loader routines to check
+!!     whether a particular file is a type 1 star catalog before loading
+!!     the file.
+!!
+!! ## Examples
+!!
+!!     In the following code fragment, STCC01 is used to determine
+!!     whether a file is a SPICE type 1 star catalog.
+!!
+!!     C
+!!     C     Call STCC01 to determine whether the file is type 1 star
+!!     C     catalog file.
+!!     C
+!!           CALL STCC01 ( CATFNM, TABNAM, ISTYP1, ERRMSG )
+!!
+!!     C
+!!     C     Check ISTYP1 flag and stop execution and report an
+!!     C     error if file is not type 1 star catalog file.
+!!     C
+!!           IF ( .NOT. ISTYP1 ) THEN
+!!          .   WRITE (*,*) 'The file:'
+!!          .   WRITE (*,*) '  ',CATFNM(1:RTRIM(CATFNM))
+!!          .   WRITE (*,*) 'is not a type 1 star catalog.'
+!!          .   WRITE (*,*) ERRMSG
+!!              STOP
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     check whether a file is a type 1 star catalog
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters.
+!!
+!!     Local variables
+!!
+!!     Initial values.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchc
       use pepper_strings, only: nblen
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ektnamsz
+      use pepper_inc_ekglimit
       implicit none
-      include 'ekcnamsz.inc'
-      include 'ektnamsz.inc'
-      include 'ekglimit.inc'
       integer(ip), parameter :: cat1nc = 7
       character(4), parameter :: cat1dt ( cat1nc ) = &
          [ character(4) :: 'INT', 'DP', 'DP', 'DP', 'DP', 'DP', 'CHR' ]
@@ -1364,170 +1316,160 @@ contains
 !$Procedure     ZZEKAC01 ( EK, add class 1 column to segment )
 
       module procedure zzekac01
+!! ## Abstract
+!!
+!!     Add an entire class 1 column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!                    A `begin segment for fast load' operation must
+!!                    have already been performed for the designated
+!!                    segment.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     COLDSC         is a descriptor for the column to be added.  The
+!!                    column attributes must be filled in, but any
+!!                    pointers may be uninitialized.
+!!
+!!     IVALS          is an array containing the entire set of column
+!!                    entries for the specified column.  The entries
+!!                    are listed in row-order:  the column entry for the
+!!                    first row of the segment is first, followed by the
+!!                    column entry for the second row, and so on.  The
+!!                    number of column entries must match the declared
+!!                    number of rows in the segment.  Elements must be
+!!                    allocated for each column entry, including null
+!!                    entries.
+!!
+!!     NLFLGS         is an array of logical flags indicating whether
+!!                    the corresponding entries are null.  If the Ith
+!!                    element of NLFLGS is .FALSE., the Ith column entry
+!!                    defined by IVALS is added to the specified segment
+!!                    in the specified kernel file.
+!!
+!!                    If the Ith element of NLFGLS is .TRUE., the
+!!                    contents of the Ith column entry are undefined.
+!!
+!!                    NLFLGS is used only for columns that allow null
+!!                    values; it's ignored for other columns.
+!!
+!!     RCPTRS         is an array of record pointers for the input
+!!                    segment.  These pointers are base addresses of the
+!!                    `record pointer structures' for the segment.
+!!                    These pointers are used instead of record numbers
+!!                    in column indexes:  the indexes map ordinal
+!!                    positions to record pointers.
+!!
+!!     WKINDX         is a work space array used for building a column
+!!                    index.  If the column is indexed, the dimension of
+!!                    WKINDX must be at NROWS, where NROWS is the number
+!!                    of rows in the column.  If the column is not
+!!                    indexed, this work space is not used, so the
+!!                    dimension may be any positive value.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it modifies the named
+!!     EK file by adding data to the specified column.  This routine
+!!     writes the entire contents of the specified column in one shot.
+!!     This routine creates columns much more efficiently than can be
+!!     done by sequential calls to EKACEI, but has the drawback that
+!!     the caller must use more memory for the routine's inputs.  This
+!!     routine cannot be used to add data to a partially completed
+!!     column.
+!!
+!! ## Examples
+!!
+!!     See EKACLI.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes the EK scratch area has been set up
+!!         properly for a fast load operation.  This routine writes
+!!         to the EK scratch area as well.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 25-SEP-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  The test to determine when to write a page
+!!        was fixed to handle this case.
+!!
+!!        Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: cleari
-
-! $ Abstract
-!
-!     Add an entire class 1 column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekcoldsc.inc'
-      include  'ekcnamsz.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'ekrecptr.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!                    A `begin segment for fast load' operation must
-!                    have already been performed for the designated
-!                    segment.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     COLDSC         is a descriptor for the column to be added.  The
-!                    column attributes must be filled in, but any
-!                    pointers may be uninitialized.
-!
-!     IVALS          is an array containing the entire set of column
-!                    entries for the specified column.  The entries
-!                    are listed in row-order:  the column entry for the
-!                    first row of the segment is first, followed by the
-!                    column entry for the second row, and so on.  The
-!                    number of column entries must match the declared
-!                    number of rows in the segment.  Elements must be
-!                    allocated for each column entry, including null
-!                    entries.
-!
-!     NLFLGS         is an array of logical flags indicating whether
-!                    the corresponding entries are null.  If the Ith
-!                    element of NLFLGS is .FALSE., the Ith column entry
-!                    defined by IVALS is added to the specified segment
-!                    in the specified kernel file.
-!
-!                    If the Ith element of NLFGLS is .TRUE., the
-!                    contents of the Ith column entry are undefined.
-!
-!                    NLFLGS is used only for columns that allow null
-!                    values; it's ignored for other columns.
-!
-!     RCPTRS         is an array of record pointers for the input
-!                    segment.  These pointers are base addresses of the
-!                    `record pointer structures' for the segment.
-!                    These pointers are used instead of record numbers
-!                    in column indexes:  the indexes map ordinal
-!                    positions to record pointers.
-!
-!     WKINDX         is a work space array used for building a column
-!                    index.  If the column is indexed, the dimension of
-!                    WKINDX must be at NROWS, where NROWS is the number
-!                    of rows in the column.  If the column is not
-!                    indexed, this work space is not used, so the
-!                    dimension may be any positive value.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it modifies the named
-!     EK file by adding data to the specified column.  This routine
-!     writes the entire contents of the specified column in one shot.
-!     This routine creates columns much more efficiently than can be
-!     done by sequential calls to EKACEI, but has the drawback that
-!     the caller must use more memory for the routine's inputs.  This
-!     routine cannot be used to add data to a partially completed
-!     column.
-!
-! $ Examples
-!
-!     See EKACLI.
-!
-! $ Restrictions
-!
-!     1)  This routine assumes the EK scratch area has been set up
-!         properly for a fast load operation.  This routine writes
-!         to the EK scratch area as well.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 25-SEP-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  The test to determine when to write a page
-!        was fixed to handle this case.
-!
-!        Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = ipsize
 
 !
@@ -1779,170 +1721,160 @@ contains
 !$Procedure     ZZEKAC02 ( EK, add class 2 column to segment )
 
       module procedure zzekac02
+!! ## Abstract
+!!
+!!     Add an entire class 2 column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!                    A `begin segment for fast load' operation must
+!!                    have already been performed for the designated
+!!                    segment.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     COLDSC         is a descriptor for the column to be added.  The
+!!                    column attributes must be filled in, but any
+!!                    pointers may be uninitialized.
+!!
+!!     DVALS          is an array containing the entire set of column
+!!                    entries for the specified column.  The entries
+!!                    are listed in row-order:  the column entry for the
+!!                    first row of the segment is first, followed by the
+!!                    column entry for the second row, and so on.  The
+!!                    number of column entries must match the declared
+!!                    number of rows in the segment.  Elements must be
+!!                    allocated for each column entry, including null
+!!                    entries.
+!!
+!!     NLFLGS         is an array of logical flags indicating whether
+!!                    the corresponding entries are null.  If the Ith
+!!                    element of NLFLGS is .FALSE., the Ith column entry
+!!                    defined by DVALS is added to the specified segment
+!!                    in the specified kernel file.
+!!
+!!                    If the Ith element of NLFGLS is .TRUE., the
+!!                    contents of the Ith column entry are undefined.
+!!
+!!                    NLFLGS is used only for columns that allow null
+!!                    values; it's ignored for other columns.
+!!
+!!     RCPTRS         is an array of record pointers for the input
+!!                    segment.  These pointers are base addresses of the
+!!                    `record pointer structures' for the segment.
+!!                    These pointers are used instead of record numbers
+!!                    in column indexes:  the indexes map ordinal
+!!                    positions to record pointers.
+!!
+!!     WKINDX         is a work space array used for building a column
+!!                    index.  If the column is indexed, the dimension of
+!!                    WKINDX must be at NROWS, where NROWS is the number
+!!                    of rows in the column.  If the column is not
+!!                    indexed, this work space is not used, so the
+!!                    dimension may be any positive value.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it modifies the named
+!!     EK file by adding data to the specified column.  This routine
+!!     writes the entire contents of the specified column in one shot.
+!!     This routine creates columns much more efficiently than can be
+!!     done by sequential calls to EKACED, but has the drawback that
+!!     the caller must use more memory for the routine's inputs.  This
+!!     routine cannot be used to add data to a partially completed
+!!     column.
+!!
+!! ## Examples
+!!
+!!     See EKACLD.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes the EK scratch area has been set up
+!!         properly for a fast load operation.  This routine writes
+!!         to the EK scratch area as well.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  The test to determine when to write a page
+!!        was fixed to handle this case.
+!!
+!!        Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
-
-! $ Abstract
-!
-!     Add an entire class 2 column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'ekrecptr.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!                    A `begin segment for fast load' operation must
-!                    have already been performed for the designated
-!                    segment.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     COLDSC         is a descriptor for the column to be added.  The
-!                    column attributes must be filled in, but any
-!                    pointers may be uninitialized.
-!
-!     DVALS          is an array containing the entire set of column
-!                    entries for the specified column.  The entries
-!                    are listed in row-order:  the column entry for the
-!                    first row of the segment is first, followed by the
-!                    column entry for the second row, and so on.  The
-!                    number of column entries must match the declared
-!                    number of rows in the segment.  Elements must be
-!                    allocated for each column entry, including null
-!                    entries.
-!
-!     NLFLGS         is an array of logical flags indicating whether
-!                    the corresponding entries are null.  If the Ith
-!                    element of NLFLGS is .FALSE., the Ith column entry
-!                    defined by DVALS is added to the specified segment
-!                    in the specified kernel file.
-!
-!                    If the Ith element of NLFGLS is .TRUE., the
-!                    contents of the Ith column entry are undefined.
-!
-!                    NLFLGS is used only for columns that allow null
-!                    values; it's ignored for other columns.
-!
-!     RCPTRS         is an array of record pointers for the input
-!                    segment.  These pointers are base addresses of the
-!                    `record pointer structures' for the segment.
-!                    These pointers are used instead of record numbers
-!                    in column indexes:  the indexes map ordinal
-!                    positions to record pointers.
-!
-!     WKINDX         is a work space array used for building a column
-!                    index.  If the column is indexed, the dimension of
-!                    WKINDX must be at NROWS, where NROWS is the number
-!                    of rows in the column.  If the column is not
-!                    indexed, this work space is not used, so the
-!                    dimension may be any positive value.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it modifies the named
-!     EK file by adding data to the specified column.  This routine
-!     writes the entire contents of the specified column in one shot.
-!     This routine creates columns much more efficiently than can be
-!     done by sequential calls to EKACED, but has the drawback that
-!     the caller must use more memory for the routine's inputs.  This
-!     routine cannot be used to add data to a partially completed
-!     column.
-!
-! $ Examples
-!
-!     See EKACLD.
-!
-! $ Restrictions
-!
-!     1)  This routine assumes the EK scratch area has been set up
-!         properly for a fast load operation.  This routine writes
-!         to the EK scratch area as well.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  The test to determine when to write a page
-!        was fixed to handle this case.
-!
-!        Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = dpsize
 
 !
@@ -2195,152 +2127,143 @@ contains
 !$Procedure     ZZEKAC03 ( EK, add class 3 column to segment )
 
       module procedure zzekac03
+!! ## Abstract
+!!
+!!     Add an entire class 3 column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!                    A `begin segment for fast load' operation must
+!!                    have already been performed for the designated
+!!                    segment.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     COLDSC         is a descriptor for the column to be added.  The
+!!                    column attributes must be filled in, but any
+!!                    pointers may be uninitialized.
+!!
+!!     CVALS          is an array containing the entire set of column
+!!                    entries for the specified column.  The entries
+!!                    are listed in row-order:  the column entry for the
+!!                    first row of the segment is first, followed by the
+!!                    column entry for the second row, and so on.  The
+!!                    number of column entries must match the declared
+!!                    number of rows in the segment.  Elements must be
+!!                    allocated for each column entry, including null
+!!                    entries.
+!!
+!!     NLFLGS         is an array of logical flags indicating whether
+!!                    the corresponding entries are null.  If the Ith
+!!                    element of NLFLGS is .FALSE., the Ith column entry
+!!                    defined by CVALS is added to the specified segment
+!!                    in the specified kernel file.
+!!
+!!                    If the Ith element of NLFGLS is .TRUE., the
+!!                    contents of the Ith column entry are undefined.
+!!
+!!                    NLFLGS is used only for columns that allow null
+!!                    values; it's ignored for other columns.
+!!
+!!     RCPTRS         is an array of record pointers for the input
+!!                    segment.  These pointers are base addresses of the
+!!                    `record pointer structures' for the segment.
+!!                    These pointers are used instead of record numbers
+!!                    in column indexes:  the indexes map ordinal
+!!                    positions to record pointers.
+!!
+!!     WKINDX         is a work space array used for building a column
+!!                    index.  If the column is indexed, the dimension of
+!!                    WKINDX must be at NROWS, where NROWS is the number
+!!                    of rows in the column.  If the column is not
+!!                    indexed, this work space is not used, so the
+!!                    dimension may be any positive value.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it modifies the named
+!!     EK file by adding data to the specified column.  This routine
+!!     writes the entire contents of the specified column in one shot.
+!!     This routine creates columns much more efficiently than can be
+!!     done by sequential calls to EKACEC, but has the drawback that
+!!     the caller must use more memory for the routine's inputs.  This
+!!     routine cannot be used to add data to a partially completed
+!!     column.
+!!
+!! ## Examples
+!!
+!!     See EKACLC.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes the EK scratch area has been set up
+!!         properly for a fast load operation.  This routine writes
+!!         to the EK scratch area as well.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 26-SEP-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
-
-! $ Abstract
-!
-!     Add an entire class 3 column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'ekrecptr.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!                    A `begin segment for fast load' operation must
-!                    have already been performed for the designated
-!                    segment.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     COLDSC         is a descriptor for the column to be added.  The
-!                    column attributes must be filled in, but any
-!                    pointers may be uninitialized.
-!
-!     CVALS          is an array containing the entire set of column
-!                    entries for the specified column.  The entries
-!                    are listed in row-order:  the column entry for the
-!                    first row of the segment is first, followed by the
-!                    column entry for the second row, and so on.  The
-!                    number of column entries must match the declared
-!                    number of rows in the segment.  Elements must be
-!                    allocated for each column entry, including null
-!                    entries.
-!
-!     NLFLGS         is an array of logical flags indicating whether
-!                    the corresponding entries are null.  If the Ith
-!                    element of NLFLGS is .FALSE., the Ith column entry
-!                    defined by CVALS is added to the specified segment
-!                    in the specified kernel file.
-!
-!                    If the Ith element of NLFGLS is .TRUE., the
-!                    contents of the Ith column entry are undefined.
-!
-!                    NLFLGS is used only for columns that allow null
-!                    values; it's ignored for other columns.
-!
-!     RCPTRS         is an array of record pointers for the input
-!                    segment.  These pointers are base addresses of the
-!                    `record pointer structures' for the segment.
-!                    These pointers are used instead of record numbers
-!                    in column indexes:  the indexes map ordinal
-!                    positions to record pointers.
-!
-!     WKINDX         is a work space array used for building a column
-!                    index.  If the column is indexed, the dimension of
-!                    WKINDX must be at NROWS, where NROWS is the number
-!                    of rows in the column.  If the column is not
-!                    indexed, this work space is not used, so the
-!                    dimension may be any positive value.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it modifies the named
-!     EK file by adding data to the specified column.  This routine
-!     writes the entire contents of the specified column in one shot.
-!     This routine creates columns much more efficiently than can be
-!     done by sequential calls to EKACEC, but has the drawback that
-!     the caller must use more memory for the routine's inputs.  This
-!     routine cannot be used to add data to a partially completed
-!     column.
-!
-! $ Examples
-!
-!     See EKACLC.
-!
-! $ Restrictions
-!
-!     1)  This routine assumes the EK scratch area has been set up
-!         properly for a fast load operation.  This routine writes
-!         to the EK scratch area as well.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 26-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = cpsize
 
 !
@@ -2708,189 +2631,179 @@ contains
 !$Procedure     ZZEKAC04 ( EK, add class 4 column to segment )
 
       module procedure zzekac04
+!! ## Abstract
+!!
+!!     Add an entire class 4 column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!                    A `begin segment for fast load' operation must
+!!                    have already been performed for the designated
+!!                    segment.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     COLDSC         is a descriptor for the column to be added.  The
+!!                    column attributes must be filled in, but any
+!!                    pointers may be uninitialized.
+!!
+!!     ENTSZS         is an array containing sizes of column entries.
+!!                    The Ith element of ENTSZS gives the size of the
+!!                    Ith column entry.  ENTSZS is used only for columns
+!!                    having variable-size entries.  For such columns,
+!!                    the dimension of ENTSZS must be at least NROWS.
+!!                    The size of null entries should be set to zero.
+!!
+!!                    For columns having fixed-size entries, the
+!!                    dimension of this array may be any positive value.
+!!
+!!     IVALS          is an array containing the entire set of column
+!!                    entries for the specified column.  The entries
+!!                    are listed in row-order:  the column entry for the
+!!                    first row of the segment is first, followed by the
+!!                    column entry for the second row, and so on.  The
+!!                    number of column entries must match the declared
+!!                    number of rows in the segment.  For columns having
+!!                    fixed-size entries, a null entry must be allocated
+!!                    the same amount of space occupied by a non-null
+!!                    entry in the array IVALS.  For columns having
+!!                    variable-size entries, null entries do not require
+!!                    any space in the IVALS array, but in any case must
+!!                    have their allocated space described correctly by
+!!                    the corresponding element of the ENTSZS array
+!!                    (described below).
+!!
+!!     ENTSZS         is an array containing sizes of column entries.
+!!                    The Ith element of ENTSZS gives the size of the
+!!                    Ith column entry.  ENTSZS is used only for columns
+!!                    having variable-size entries.  For such columns,
+!!                    the dimension of ENTSZS must be at least NROWS.
+!!                    The size of null entries should be set to zero.
+!!
+!!                    For columns having fixed-size entries, the
+!!                    dimension of this array may be any positive value.
+!!
+!!     NLFLGS         is an array of logical flags indicating whether
+!!                    the corresponding entries are null.  If the Ith
+!!                    element of NLFLGS is .FALSE., the Ith column entry
+!!                    defined by IVALS is added to the specified segment
+!!                    in the specified kernel file.
+!!
+!!                    If the Ith element of NLFGLS is .TRUE., the
+!!                    contents of the Ith column entry are undefined.
+!!
+!!                    NLFLGS is used only for columns that allow null
+!!                    values; it's ignored for other columns.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it modifies the named
+!!     EK file by adding data to the specified column.  This routine
+!!     writes the entire contents of the specified column in one shot.
+!!     This routine creates columns much more efficiently than can be
+!!     done by sequential calls to EKACEI, but has the drawback that
+!!     the caller must use more memory for the routine's inputs.  This
+!!     routine cannot be used to add data to a partially completed
+!!     column.
+!!
+!! ## Examples
+!!
+!!     See EKACLI.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes the EK scratch area has been set up
+!!         properly for a fast load operation.  This routine writes
+!!         to the EK scratch area as well.
+!!
+!!     2)  Only one segment can be created at a time using the fast
+!!         load routines.
+!!
+!!     3)  No other EK operation may interrupt a fast load.  For
+!!         example, it is not valid to issue a query while a fast load
+!!         is in progress.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  The test to determine when to write a page
+!!        was fixed to handle this case.
+!!
+!!        Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: cleari
-
-! $ Abstract
-!
-!     Add an entire class 4 column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekcoldsc.inc'
-      include  'ekcnamsz.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'ekrecptr.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!                    A `begin segment for fast load' operation must
-!                    have already been performed for the designated
-!                    segment.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     COLDSC         is a descriptor for the column to be added.  The
-!                    column attributes must be filled in, but any
-!                    pointers may be uninitialized.
-!
-!     ENTSZS         is an array containing sizes of column entries.
-!                    The Ith element of ENTSZS gives the size of the
-!                    Ith column entry.  ENTSZS is used only for columns
-!                    having variable-size entries.  For such columns,
-!                    the dimension of ENTSZS must be at least NROWS.
-!                    The size of null entries should be set to zero.
-!
-!                    For columns having fixed-size entries, the
-!                    dimension of this array may be any positive value.
-!
-!     IVALS          is an array containing the entire set of column
-!                    entries for the specified column.  The entries
-!                    are listed in row-order:  the column entry for the
-!                    first row of the segment is first, followed by the
-!                    column entry for the second row, and so on.  The
-!                    number of column entries must match the declared
-!                    number of rows in the segment.  For columns having
-!                    fixed-size entries, a null entry must be allocated
-!                    the same amount of space occupied by a non-null
-!                    entry in the array IVALS.  For columns having
-!                    variable-size entries, null entries do not require
-!                    any space in the IVALS array, but in any case must
-!                    have their allocated space described correctly by
-!                    the corresponding element of the ENTSZS array
-!                    (described below).
-!
-!     ENTSZS         is an array containing sizes of column entries.
-!                    The Ith element of ENTSZS gives the size of the
-!                    Ith column entry.  ENTSZS is used only for columns
-!                    having variable-size entries.  For such columns,
-!                    the dimension of ENTSZS must be at least NROWS.
-!                    The size of null entries should be set to zero.
-!
-!                    For columns having fixed-size entries, the
-!                    dimension of this array may be any positive value.
-!
-!     NLFLGS         is an array of logical flags indicating whether
-!                    the corresponding entries are null.  If the Ith
-!                    element of NLFLGS is .FALSE., the Ith column entry
-!                    defined by IVALS is added to the specified segment
-!                    in the specified kernel file.
-!
-!                    If the Ith element of NLFGLS is .TRUE., the
-!                    contents of the Ith column entry are undefined.
-!
-!                    NLFLGS is used only for columns that allow null
-!                    values; it's ignored for other columns.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it modifies the named
-!     EK file by adding data to the specified column.  This routine
-!     writes the entire contents of the specified column in one shot.
-!     This routine creates columns much more efficiently than can be
-!     done by sequential calls to EKACEI, but has the drawback that
-!     the caller must use more memory for the routine's inputs.  This
-!     routine cannot be used to add data to a partially completed
-!     column.
-!
-! $ Examples
-!
-!     See EKACLI.
-!
-! $ Restrictions
-!
-!     1)  This routine assumes the EK scratch area has been set up
-!         properly for a fast load operation.  This routine writes
-!         to the EK scratch area as well.
-!
-!     2)  Only one segment can be created at a time using the fast
-!         load routines.
-!
-!     3)  No other EK operation may interrupt a fast load.  For
-!         example, it is not valid to issue a query while a fast load
-!         is in progress.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  The test to determine when to write a page
-!        was fixed to handle this case.
-!
-!        Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = ipsize
 
 !
@@ -3204,189 +3117,179 @@ contains
 !$Procedure     ZZEKAC05 ( EK, add class 5 column to segment )
 
       module procedure zzekac05
+!! ## Abstract
+!!
+!!     Add an entire class 5 column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!                    A `begin segment for fast load' operation must
+!!                    have already been performed for the designated
+!!                    segment.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     COLDSC         is a descriptor for the column to be added.  The
+!!                    column attributes must be filled in, but any
+!!                    pointers may be uninitialized.
+!!
+!!     ENTSZS         is an array containing sizes of column entries.
+!!                    The Ith element of ENTSZS gives the size of the
+!!                    Ith column entry.  ENTSZS is used only for columns
+!!                    having variable-size entries.  For such columns,
+!!                    the dimension of ENTSZS must be at least NROWS.
+!!                    The size of null entries should be set to zero.
+!!
+!!                    For columns having fixed-size entries, the
+!!                    dimension of this array may be any positive value.
+!!
+!!     DVALS          is an array containing the entire set of column
+!!                    entries for the specified column.  The entries
+!!                    are listed in row-order:  the column entry for the
+!!                    first row of the segment is first, followed by the
+!!                    column entry for the second row, and so on.  The
+!!                    number of column entries must match the declared
+!!                    number of rows in the segment.  For columns having
+!!                    fixed-size entries, a null entry must be allocated
+!!                    the same amount of space occupied by a non-null
+!!                    entry in the array DVALS.  For columns having
+!!                    variable-size entries, null entries do not require
+!!                    any space in the DVALS array, but in any case must
+!!                    have their allocated space described correctly by
+!!                    the corresponding element of the ENTSZS array
+!!                    (described below).
+!!
+!!     ENTSZS         is an array containing sizes of column entries.
+!!                    The Ith element of ENTSZS gives the size of the
+!!                    Ith column entry.  ENTSZS is used only for columns
+!!                    having variable-size entries.  For such columns,
+!!                    the dimension of ENTSZS must be at least NROWS.
+!!                    The size of null entries should be set to zero.
+!!
+!!                    For columns having fixed-size entries, the
+!!                    dimension of this array may be any positive value.
+!!
+!!     NLFLGS         is an array of logical flags indicating whether
+!!                    the corresponding entries are null.  If the Ith
+!!                    element of NLFLGS is .FALSE., the Ith column entry
+!!                    defined by DVALS is added to the specified segment
+!!                    in the specified kernel file.
+!!
+!!                    If the Ith element of NLFGLS is .TRUE., the
+!!                    contents of the Ith column entry are undefined.
+!!
+!!                    NLFLGS is used only for columns that allow null
+!!                    values; it's ignored for other columns.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it modifies the named
+!!     EK file by adding data to the specified column.  This routine
+!!     writes the entire contents of the specified column in one shot.
+!!     This routine creates columns much more efficiently than can be
+!!     done by sequential calls to EKACED, but has the drawback that
+!!     the caller must use more memory for the routine's inputs.  This
+!!     routine cannot be used to add data to a partially completed
+!!     column.
+!!
+!! ## Examples
+!!
+!!     See EKACLD.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes the EK scratch area has been set up
+!!         properly for a fast load operation.  This routine writes
+!!         to the EK scratch area as well.
+!!
+!!     2)  Only one segment can be created at a time using the fast
+!!         load routines.
+!!
+!!     3)  No other EK operation may interrupt a fast load.  For
+!!         example, it is not valid to issue a query while a fast load
+!!         is in progress.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-SEP-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  The test to determine when to write a page
+!!        was fixed to handle this case.
+!!
+!!        Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
-
-! $ Abstract
-!
-!     Add an entire class 5 column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekcoldsc.inc'
-      include  'ekcnamsz.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'ekrecptr.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!                    A `begin segment for fast load' operation must
-!                    have already been performed for the designated
-!                    segment.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     COLDSC         is a descriptor for the column to be added.  The
-!                    column attributes must be filled in, but any
-!                    pointers may be uninitialized.
-!
-!     ENTSZS         is an array containing sizes of column entries.
-!                    The Ith element of ENTSZS gives the size of the
-!                    Ith column entry.  ENTSZS is used only for columns
-!                    having variable-size entries.  For such columns,
-!                    the dimension of ENTSZS must be at least NROWS.
-!                    The size of null entries should be set to zero.
-!
-!                    For columns having fixed-size entries, the
-!                    dimension of this array may be any positive value.
-!
-!     DVALS          is an array containing the entire set of column
-!                    entries for the specified column.  The entries
-!                    are listed in row-order:  the column entry for the
-!                    first row of the segment is first, followed by the
-!                    column entry for the second row, and so on.  The
-!                    number of column entries must match the declared
-!                    number of rows in the segment.  For columns having
-!                    fixed-size entries, a null entry must be allocated
-!                    the same amount of space occupied by a non-null
-!                    entry in the array DVALS.  For columns having
-!                    variable-size entries, null entries do not require
-!                    any space in the DVALS array, but in any case must
-!                    have their allocated space described correctly by
-!                    the corresponding element of the ENTSZS array
-!                    (described below).
-!
-!     ENTSZS         is an array containing sizes of column entries.
-!                    The Ith element of ENTSZS gives the size of the
-!                    Ith column entry.  ENTSZS is used only for columns
-!                    having variable-size entries.  For such columns,
-!                    the dimension of ENTSZS must be at least NROWS.
-!                    The size of null entries should be set to zero.
-!
-!                    For columns having fixed-size entries, the
-!                    dimension of this array may be any positive value.
-!
-!     NLFLGS         is an array of logical flags indicating whether
-!                    the corresponding entries are null.  If the Ith
-!                    element of NLFLGS is .FALSE., the Ith column entry
-!                    defined by DVALS is added to the specified segment
-!                    in the specified kernel file.
-!
-!                    If the Ith element of NLFGLS is .TRUE., the
-!                    contents of the Ith column entry are undefined.
-!
-!                    NLFLGS is used only for columns that allow null
-!                    values; it's ignored for other columns.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it modifies the named
-!     EK file by adding data to the specified column.  This routine
-!     writes the entire contents of the specified column in one shot.
-!     This routine creates columns much more efficiently than can be
-!     done by sequential calls to EKACED, but has the drawback that
-!     the caller must use more memory for the routine's inputs.  This
-!     routine cannot be used to add data to a partially completed
-!     column.
-!
-! $ Examples
-!
-!     See EKACLD.
-!
-! $ Restrictions
-!
-!     1)  This routine assumes the EK scratch area has been set up
-!         properly for a fast load operation.  This routine writes
-!         to the EK scratch area as well.
-!
-!     2)  Only one segment can be created at a time using the fast
-!         load routines.
-!
-!     3)  No other EK operation may interrupt a fast load.  For
-!         example, it is not valid to issue a query while a fast load
-!         is in progress.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-SEP-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  The test to determine when to write a page
-!        was fixed to handle this case.
-!
-!        Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = dpsize
 
 !
@@ -3700,187 +3603,177 @@ contains
 !$Procedure     ZZEKAC06 ( EK, add class 6 column to segment )
 
       module procedure zzekac06
+!! ## Abstract
+!!
+!!     Add an entire class 6 column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!                    A `begin segment for fast load' operation must
+!!                    have already been performed for the designated
+!!                    segment.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     COLDSC         is a descriptor for the column to be added.  The
+!!                    column attributes must be filled in, but any
+!!                    pointers may be uninitialized.
+!!
+!!     ENTSZS         is an array containing sizes of column entries.
+!!                    The Ith element of ENTSZS gives the size of the
+!!                    Ith column entry.  ENTSZS is used only for columns
+!!                    having variable-size entries.  For such columns,
+!!                    the dimension of ENTSZS must be at least NROWS.
+!!                    The size of null entries should be set to zero.
+!!
+!!                    For columns having fixed-size entries, the
+!!                    dimension of this array may be any positive value.
+!!
+!!     CVALS          is an array containing the entire set of column
+!!                    entries for the specified column.  The entries
+!!                    are listed in row-order:  the column entry for the
+!!                    first row of the segment is first, followed by the
+!!                    column entry for the second row, and so on.  The
+!!                    number of column entries must match the declared
+!!                    number of rows in the segment.  For columns having
+!!                    fixed-size entries, a null entry must be allocated
+!!                    the same amount of space occupied by a non-null
+!!                    entry in the array CVALS.  For columns having
+!!                    variable-size entries, null entries do not require
+!!                    any space in the CVALS array, but in any case must
+!!                    have their allocated space described correctly by
+!!                    the corresponding element of the ENTSZS array
+!!                    (described below).
+!!
+!!     ENTSZS         is an array containing sizes of column entries.
+!!                    The Ith element of ENTSZS gives the size of the
+!!                    Ith column entry.  ENTSZS is used only for columns
+!!                    having variable-size entries.  For such columns,
+!!                    the dimension of ENTSZS must be at least NROWS.
+!!                    The size of null entries should be set to zero.
+!!
+!!                    For columns having fixed-size entries, the
+!!                    dimension of this array may be any positive value.
+!!
+!!     NLFLGS         is an array of logical flags indicating whether
+!!                    the corresponding entries are null.  If the Ith
+!!                    element of NLFLGS is .FALSE., the Ith column entry
+!!                    defined by CVALS is added to the specified segment
+!!                    in the specified kernel file.
+!!
+!!                    If the Ith element of NLFGLS is .TRUE., the
+!!                    contents of the Ith column entry are undefined.
+!!
+!!                    NLFLGS is used only for columns that allow null
+!!                    values; it's ignored for other columns.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it modifies the named
+!!     EK file by adding data to the specified column.  This routine
+!!     writes the entire contents of the specified column in one shot.
+!!     This routine creates columns much more efficiently than can be
+!!     done by sequential calls to EKACEI, but has the drawback that
+!!     the caller must use more memory for the routine's inputs.  This
+!!     routine cannot be used to add data to a partially completed
+!!     column.
+!!
+!! ## Examples
+!!
+!!     See EKACLC.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes the EK scratch area has been set up
+!!         properly for a fast load operation.  This routine writes
+!!         to the EK scratch area as well.
+!!
+!!     2)  Currently, the EK system can handle only one fast load
+!!         at at time---one segment created by a fast load must be
+!!         be completed by a call to EKFFLD before another segment
+!!         can be created by a fast load, even if the two segments
+!!         reside in different files.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
+!!
+!!        Bug fix:  case of 100% null data values is now handled
+!!        correctly.  The test to determine when to write a page
+!!        was fixed to handle this case.
+!!
+!!        Previous version line was changed from "Beta"
+!!        to "SPICELIB."
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Add an entire class 6 column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekcoldsc.inc'
-      include  'ekcnamsz.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'ekrecptr.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!                    A `begin segment for fast load' operation must
-!                    have already been performed for the designated
-!                    segment.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     COLDSC         is a descriptor for the column to be added.  The
-!                    column attributes must be filled in, but any
-!                    pointers may be uninitialized.
-!
-!     ENTSZS         is an array containing sizes of column entries.
-!                    The Ith element of ENTSZS gives the size of the
-!                    Ith column entry.  ENTSZS is used only for columns
-!                    having variable-size entries.  For such columns,
-!                    the dimension of ENTSZS must be at least NROWS.
-!                    The size of null entries should be set to zero.
-!
-!                    For columns having fixed-size entries, the
-!                    dimension of this array may be any positive value.
-!
-!     CVALS          is an array containing the entire set of column
-!                    entries for the specified column.  The entries
-!                    are listed in row-order:  the column entry for the
-!                    first row of the segment is first, followed by the
-!                    column entry for the second row, and so on.  The
-!                    number of column entries must match the declared
-!                    number of rows in the segment.  For columns having
-!                    fixed-size entries, a null entry must be allocated
-!                    the same amount of space occupied by a non-null
-!                    entry in the array CVALS.  For columns having
-!                    variable-size entries, null entries do not require
-!                    any space in the CVALS array, but in any case must
-!                    have their allocated space described correctly by
-!                    the corresponding element of the ENTSZS array
-!                    (described below).
-!
-!     ENTSZS         is an array containing sizes of column entries.
-!                    The Ith element of ENTSZS gives the size of the
-!                    Ith column entry.  ENTSZS is used only for columns
-!                    having variable-size entries.  For such columns,
-!                    the dimension of ENTSZS must be at least NROWS.
-!                    The size of null entries should be set to zero.
-!
-!                    For columns having fixed-size entries, the
-!                    dimension of this array may be any positive value.
-!
-!     NLFLGS         is an array of logical flags indicating whether
-!                    the corresponding entries are null.  If the Ith
-!                    element of NLFLGS is .FALSE., the Ith column entry
-!                    defined by CVALS is added to the specified segment
-!                    in the specified kernel file.
-!
-!                    If the Ith element of NLFGLS is .TRUE., the
-!                    contents of the Ith column entry are undefined.
-!
-!                    NLFLGS is used only for columns that allow null
-!                    values; it's ignored for other columns.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it modifies the named
-!     EK file by adding data to the specified column.  This routine
-!     writes the entire contents of the specified column in one shot.
-!     This routine creates columns much more efficiently than can be
-!     done by sequential calls to EKACEI, but has the drawback that
-!     the caller must use more memory for the routine's inputs.  This
-!     routine cannot be used to add data to a partially completed
-!     column.
-!
-! $ Examples
-!
-!     See EKACLC.
-!
-! $ Restrictions
-!
-!     1)  This routine assumes the EK scratch area has been set up
-!         properly for a fast load operation.  This routine writes
-!         to the EK scratch area as well.
-!
-!     2)  Currently, the EK system can handle only one fast load
-!         at at time---one segment created by a fast load must be
-!         be completed by a call to EKFFLD before another segment
-!         can be created by a fast load, even if the two segments
-!         reside in different files.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
-!
-!        Bug fix:  case of 100% null data values is now handled
-!        correctly.  The test to determine when to write a page
-!        was fixed to handle this case.
-!
-!        Previous version line was changed from "Beta"
-!        to "SPICELIB."
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = cpsize
 
 !
@@ -4322,152 +4215,145 @@ contains
 !$Procedure     ZZEKAD04 ( EK, add data to class 4 column )
 
       module procedure zzekad04
+!! ## Abstract
+!!
+!!     Add a column entry to a specified record in a class 4 column.
+!!     The entries of class 4 columns are arrays of integer values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment in which
+!!                    the specified column entry is to be written.
+!!
+!!     COLDSC         is the descriptor of the column in which
+!!                    the specified column entry is to be written.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to be written.
+!!
+!!     NVALS,
+!!     IVALS          are, respectively, the number of values to add to
+!!                    the specified column and the set of values
+!!                    themselves.  The data values are written into the
+!!                    specified column and record.
+!!
+!!                    If the column has fixed-size entries, then NVALS
+!!                    must equal the entry size for the specified column.
+!!
+!!                    Only one value can be added to a virtual column.
+!!
+!!     ISNULL         is a logical flag indicating whether the entry is
+!!                    null.  If ISNULL is .FALSE., the column entry
+!!                    defined by NVALS and IVALS is added to the
+!!                    specified kernel file.
+!!
+!!                    If ISNULL is .TRUE., NVALS and IVALS are ignored.
+!!                    The contents of the column entry are undefined.
+!!                    If the column has fixed-length, variable-size
+!!                    entries, the number of entries is considered to
+!!                    be 1.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file is not modified.
+!!
+!!     2)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!         The file is not modified.
+!!
+!!     3)  If the input flag ISNULL is .TRUE. but the target column
+!!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
+!!         signaled.  The file is not modified.
+!!
+!!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
+!!         error in *not* trapped in advance.  This routine assumes that
+!!         a valid value of RECPTR has been supplied by the caller.
+!!
+!!     3)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it sets the value of a
+!!     column entry in an EK segment.  If the column is indexed, the
+!!     index is updated to reflect the presence of the new entry.  This
+!!     routine is intended to set values of uninitialized column entries
+!!     only.  To update existing entries, use the ZZEKUExx routines, or
+!!     at the user level, the EKUCEx routines.
+!!
+!!     This routine does not participate in shadowing functions.  If the
+!!     target EK is shadowed, the caller is responsible for performing
+!!     necessary backup operations.  If the target EK is not shadowed,
+!!     the target record's status is not modified.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKACEI.
+!!
+!! ## Restrictions
+!!
+!!     1) This routine cannot be used to update existing column entries.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 26-SEP-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Add a column entry to a specified record in a class 4 column.
-!     The entries of class 4 columns are arrays of integer values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment in which
-!                    the specified column entry is to be written.
-!
-!     COLDSC         is the descriptor of the column in which
-!                    the specified column entry is to be written.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to be written.
-!
-!     NVALS,
-!     IVALS          are, respectively, the number of values to add to
-!                    the specified column and the set of values
-!                    themselves.  The data values are written into the
-!                    specified column and record.
-!
-!                    If the column has fixed-size entries, then NVALS
-!                    must equal the entry size for the specified column.
-!
-!                    Only one value can be added to a virtual column.
-!
-!     ISNULL         is a logical flag indicating whether the entry is
-!                    null.  If ISNULL is .FALSE., the column entry
-!                    defined by NVALS and IVALS is added to the
-!                    specified kernel file.
-!
-!                    If ISNULL is .TRUE., NVALS and IVALS are ignored.
-!                    The contents of the column entry are undefined.
-!                    If the column has fixed-length, variable-size
-!                    entries, the number of entries is considered to
-!                    be 1.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file is not modified.
-!
-!     2)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!         The file is not modified.
-!
-!     3)  If the input flag ISNULL is .TRUE. but the target column
-!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
-!         signaled.  The file is not modified.
-!
-!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
-!         error in *not* trapped in advance.  This routine assumes that
-!         a valid value of RECPTR has been supplied by the caller.
-!
-!     3)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it sets the value of a
-!     column entry in an EK segment.  If the column is indexed, the
-!     index is updated to reflect the presence of the new entry.  This
-!     routine is intended to set values of uninitialized column entries
-!     only.  To update existing entries, use the ZZEKUExx routines, or
-!     at the user level, the EKUCEx routines.
-!
-!     This routine does not participate in shadowing functions.  If the
-!     target EK is shadowed, the caller is responsible for performing
-!     necessary backup operations.  If the target EK is not shadowed,
-!     the target record's status is not modified.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKACEI.
-!
-! $ Restrictions
-!
-!     1) This routine cannot be used to update existing column entries.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 26-SEP-1995 (NJB)
-!
-!-&
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           colidx
       integer(ip)           datptr
       integer(ip)           lastw
@@ -4686,156 +4572,148 @@ contains
 !$Procedure     ZZEKAD05 ( EK, add data to class 5 column )
 
       module procedure zzekad05
+!! ## Abstract
+!!
+!!     Add a column entry to a specified record in a class 5 column.
+!!     The entries of class 5 columns are arrays of d.p. values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGNO          is the index of the segment to which data is to
+!!                    be added.
+!!
+!!     RECNO          is the index of the record to which data is to be
+!!                    added.  This record number is relative to the start
+!!                    of the segment indicated by SEGNO; the first
+!!                    record in the segment has index 1.
+!!
+!!     COLUMN         is the name of the column to which data is to be
+!!                    added.
+!!
+!!     NVALS,
+!!     DVALS          are, respectively, the number of values to add to
+!!                    the specified column and the set of values
+!!                    themselves.  The data values are written into the
+!!                    specified column and record.
+!!
+!!                    If the  column has fixed-size entries, then NVALS
+!!                    must equal the entry size for the specified column.
+!!
+!!                    Only one value can be added to a virtual column.
+!!
+!!     ISNULL         is a logical flag indicating whether the entry is
+!!                    null.  If ISNULL is .FALSE., the column entry
+!!                    defined by NVALS and DVALS is added to the
+!!                    specified kernel file.
+!!
+!!                    If ISNULL is .TRUE., NVALS and DVALS are ignored.
+!!                    The contents of the column entry are undefined.
+!!                    If the column has fixed-length, variable-size
+!!                    entries, the number of entries is considered to
+!!                    be 1.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file is not modified.
+!!
+!!     2)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!         The file is not modified.
+!!
+!!     3)  If the input flag ISNULL is .TRUE. but the target column
+!!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
+!!         signaled.  The file is not modified.
+!!
+!!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
+!!         error in *not* trapped in advance.  This routine assumes that
+!!         a valid value of RECPTR has been supplied by the caller.
+!!
+!!     3)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it sets the value of a
+!!     column entry in an EK segment.  If the column is indexed, the
+!!     index is updated to reflect the presence of the new entry.  This
+!!     routine is intended to set values of uninitialized column entries
+!!     only.  To update existing entries, use the ZZEKUExx routines, or
+!!     at the user level, the EKUCEx routines.
+!!
+!!     This routine does not participate in shadowing functions.  If the
+!!     target EK is shadowed, the caller is responsible for performing
+!!     necessary backup operations.  If the target EK is not shadowed,
+!!     the target record's status is not modified.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKACED.
+!!
+!! ## Restrictions
+!!
+!!     1) This routine cannot be used to update existing column entries.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Add a column entry to a specified record in a class 5 column.
-!     The entries of class 5 columns are arrays of d.p. values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGNO          is the index of the segment to which data is to
-!                    be added.
-!
-!     RECNO          is the index of the record to which data is to be
-!                    added.  This record number is relative to the start
-!                    of the segment indicated by SEGNO; the first
-!                    record in the segment has index 1.
-!
-!     COLUMN         is the name of the column to which data is to be
-!                    added.
-!
-!     NVALS,
-!     DVALS          are, respectively, the number of values to add to
-!                    the specified column and the set of values
-!                    themselves.  The data values are written into the
-!                    specified column and record.
-!
-!                    If the  column has fixed-size entries, then NVALS
-!                    must equal the entry size for the specified column.
-!
-!                    Only one value can be added to a virtual column.
-!
-!     ISNULL         is a logical flag indicating whether the entry is
-!                    null.  If ISNULL is .FALSE., the column entry
-!                    defined by NVALS and DVALS is added to the
-!                    specified kernel file.
-!
-!                    If ISNULL is .TRUE., NVALS and DVALS are ignored.
-!                    The contents of the column entry are undefined.
-!                    If the column has fixed-length, variable-size
-!                    entries, the number of entries is considered to
-!                    be 1.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file is not modified.
-!
-!     2)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!         The file is not modified.
-!
-!     3)  If the input flag ISNULL is .TRUE. but the target column
-!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
-!         signaled.  The file is not modified.
-!
-!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
-!         error in *not* trapped in advance.  This routine assumes that
-!         a valid value of RECPTR has been supplied by the caller.
-!
-!     3)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it sets the value of a
-!     column entry in an EK segment.  If the column is indexed, the
-!     index is updated to reflect the presence of the new entry.  This
-!     routine is intended to set values of uninitialized column entries
-!     only.  To update existing entries, use the ZZEKUExx routines, or
-!     at the user level, the EKUCEx routines.
-!
-!     This routine does not participate in shadowing functions.  If the
-!     target EK is shadowed, the caller is responsible for performing
-!     necessary backup operations.  If the target EK is not shadowed,
-!     the target record's status is not modified.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKACED.
-!
-! $ Restrictions
-!
-!     1) This routine cannot be used to update existing column entries.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           colidx
       integer(ip)           datptr
       integer(ip)           lastw
@@ -5053,176 +4931,157 @@ contains
       end procedure zzekad05
 
       module procedure zzekad06
-
-! $ Abstract
-!
-!     Add a column entry to a specified record in a class 6 column.
-!     The entries of class 6 columns are arrays of character string
-!     values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is the handle of an EK file that is open for write
-!                    access.
-!
-!     SEGNO          is the index of the segment to which data is to
-!                    be added.
-!
-!     RECNO          is the index of the record to which data is to be
-!                    added.  This record number is relative to the start
-!                    of the segment indicated by SEGNO; the first
-!                    record in the segment has index 1.
-!
-!     COLUMN         is the name of the column to which data is to be
-!                    added.
-!
-!     NVALS,
-!     CVALS          are, respectively, the number of values to add to
-!                    the specified column and the set of values
-!                    themselves.  The data values are written into the
-!                    specified column and record.
-!
-!                    If the  column has fixed-size entries, then NVALS
-!                    must equal the entry size for the specified column.
-!
-!                    Only one value can be added to a virtual column.
-!
-!     ISNULL         is a logical flag indicating whether the entry is
-!                    null.  If ISNULL is .FALSE., the column entry
-!                    defined by NVALS and CVALS is added to the
-!                    specified kernel file.
-!
-!                    If ISNULL is .TRUE., NVALS and CVALS are ignored.
-!                    The contents of the column entry are undefined.
-!                    If the column has fixed-length, variable-size
-!                    entries, the number of entries is considered to
-!                    be 1.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file is not modified.
-!
-!     2)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!         The file is not modified.
-!
-!     3)  If the input flag ISNULL is .TRUE. but the target column
-!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
-!         signaled.  The file is not modified.
-!
-!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
-!         error in *not* trapped in advance.  This routine assumes that
-!         a valid value of RECPTR has been supplied by the caller.
-!
-!     3)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it sets the value of a
-!     column entry in an EK segment.  If the column is indexed, the
-!     index is updated to reflect the presence of the new entry.  This
-!     routine is intended to set values of uninitialized column entries
-!     only.  To update existing entries, use the ZZEKUExx routines, or
-!     at the user level, the EKUCEx routines.
-!
-!     This routine does not participate in shadowing functions.  If the
-!     target EK is shadowed, the caller is responsible for performing
-!     necessary backup operations.  If the target EK is not shadowed,
-!     the target record's status is not modified.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKACEC.
-!
-! $ Restrictions
-!
-!     1) This routine cannot be used to update existing column entries.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
+!! ## Abstract
+!!
+!!     Add a column entry to a specified record in a class 6 column.
+!!     The entries of class 6 columns are arrays of character string
+!!     values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is the handle of an EK file that is open for write
+!!                    access.
+!!
+!!     SEGNO          is the index of the segment to which data is to
+!!                    be added.
+!!
+!!     RECNO          is the index of the record to which data is to be
+!!                    added.  This record number is relative to the start
+!!                    of the segment indicated by SEGNO; the first
+!!                    record in the segment has index 1.
+!!
+!!     COLUMN         is the name of the column to which data is to be
+!!                    added.
+!!
+!!     NVALS,
+!!     CVALS          are, respectively, the number of values to add to
+!!                    the specified column and the set of values
+!!                    themselves.  The data values are written into the
+!!                    specified column and record.
+!!
+!!                    If the  column has fixed-size entries, then NVALS
+!!                    must equal the entry size for the specified column.
+!!
+!!                    Only one value can be added to a virtual column.
+!!
+!!     ISNULL         is a logical flag indicating whether the entry is
+!!                    null.  If ISNULL is .FALSE., the column entry
+!!                    defined by NVALS and CVALS is added to the
+!!                    specified kernel file.
+!!
+!!                    If ISNULL is .TRUE., NVALS and CVALS are ignored.
+!!                    The contents of the column entry are undefined.
+!!                    If the column has fixed-length, variable-size
+!!                    entries, the number of entries is considered to
+!!                    be 1.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file is not modified.
+!!
+!!     2)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!         The file is not modified.
+!!
+!!     3)  If the input flag ISNULL is .TRUE. but the target column
+!!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
+!!         signaled.  The file is not modified.
+!!
+!!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
+!!         error in *not* trapped in advance.  This routine assumes that
+!!         a valid value of RECPTR has been supplied by the caller.
+!!
+!!     3)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it sets the value of a
+!!     column entry in an EK segment.  If the column is indexed, the
+!!     index is updated to reflect the presence of the new entry.  This
+!!     routine is intended to set values of uninitialized column entries
+!!     only.  To update existing entries, use the ZZEKUExx routines, or
+!!     at the user level, the EKUCEx routines.
+!!
+!!     This routine does not participate in shadowing functions.  If the
+!!     target EK is shadowed, the caller is responsible for performing
+!!     necessary backup operations.  If the target EK is not shadowed,
+!!     the target record's status is not modified.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKACEC.
+!!
+!! ## Restrictions
+!!
+!!     1) This routine cannot be used to update existing column entries.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
       use pepper_kinds, only: ip
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip), parameter :: maxpad = 100
       integer(ip) :: mbase
       integer(ip) :: nwrite
@@ -5573,127 +5432,117 @@ contains
 !$Procedure      ZZEKDE05 ( EK, delete column entry, class 5 )
 
       module procedure zzekde05
+!! ## Abstract
+!!
+!!     Delete a specified class 5 column entry from an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment from which to
+!!                    delete the specified column entry.
+!!
+!!     COLDSC         is the descriptor of the column from which to
+!!                    delete the specified column entry.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to delete.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file will not be modified.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it deletes a column entry
+!!     from an EK segment.  The status of the record containing the entry
+!!     is set to `updated'.  The deleted entry is marked as
+!!     `uninitialized'.
+!!
+!!     The link counts for the pages containing the deleted column entry
+!!     are decremented.  If the count for a page becomes zero, that page
+!!     is freed.  If the entry to be deleted is already uninitialized
+!!     upon entry to this routine, no link counts are modified.  The
+!!     record containing the entry is still marked `updated' in this
+!!     case.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKDELR.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error message.
+!!
+!!        Deleted unneeded declarations and code.
+!!
+!!-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-
-! $ Abstract
-!
-!     Delete a specified class 5 column entry from an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment from which to
-!                    delete the specified column entry.
-!
-!     COLDSC         is the descriptor of the column from which to
-!                    delete the specified column entry.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to delete.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file will not be modified.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it deletes a column entry
-!     from an EK segment.  The status of the record containing the entry
-!     is set to `updated'.  The deleted entry is marked as
-!     `uninitialized'.
-!
-!     The link counts for the pages containing the deleted column entry
-!     are decremented.  If the count for a page becomes zero, that page
-!     is freed.  If the entry to be deleted is already uninitialized
-!     upon entry to this routine, no link counts are modified.  The
-!     record containing the entry is still marked `updated' in this
-!     case.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKDELR.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error message.
-!
-!        Deleted unneeded declarations and code.
-!
-!-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       real(wp)              dpnelt
 
       integer(ip)           base
@@ -5850,32 +5699,31 @@ contains
 !$Procedure      ZZEKDE06 ( EK, delete column entry, class 6 )
 
       module procedure zzekde06
+!! ## Abstract
+!!
+!!     Delete a specified class 6 column entry from an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Delete a specified class 6 column entry from an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -6127,104 +5975,96 @@ contains
 !$Procedure ZZEKESIZ ( EK, element entry size )
 
       module procedure zzekesiz
+!! ## Abstract
+!!
+!!     Return the size of a specified column entry.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column containing
+!!                    the entry whose size is requested.
+!!
+!!     RECPTR         is a pointer to the EK record containing the
+!!                    column entry of interest.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns the number of elements in the specified
+!!     column entry.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading the indicated file,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This utility centralizes the commonly performed function of
+!!     determining the element count of a column entry.
+!!
+!! ## Examples
+!!
+!!     See EKRCEI.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error message.
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the size of a specified column entry.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekcnamsz.inc'
-      include 'eksegdsc.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column containing
-!                    the entry whose size is requested.
-!
-!     RECPTR         is a pointer to the EK record containing the
-!                    column entry of interest.
-!
-! $ Detailed_Output
-!
-!     The function returns the number of elements in the specified
-!     column entry.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading the indicated file,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This utility centralizes the commonly performed function of
-!     determining the element count of a column entry.
-!
-! $ Examples
-!
-!     See EKRCEI.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error message.
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_eksegdsc
       character(cnamsz)     column
 
       integer(ip)           class
@@ -6307,111 +6147,103 @@ contains
 !$Procedure      ZZEKGCDP ( EK, get column data pointer )
 
       module procedure zzekgcdp
+!! ## Abstract
+!!
+!!     Return the data pointer for a specified EK column entry.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for read or write
+!!                    access.
+!!
+!!     SEGDSC         is the descriptor of the segment containing
+!!                    the specified column entry.
+!!
+!!     COLDSC         is the descriptor of the column containing
+!!                    the specified column entry.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry whose data pointer is desired.
+!!
+!! ## Detailed Output
+!!
+!!     DATPTR         is the data pointer of the specified column entry.
+!!                    When DATPTR is positive, it represents a pointer
+!!                    to a data value.  The interpretation of the
+!!                    pointer depends on the class of the column entry.
+!!                    DATPTR may also take on the distinguished values
+!!
+!!                       UNINIT  (indicated uninitialized entry)
+!!                       NULL    (indicated null entry)
+!!                       NOBACK  (indicated uninitialized backup entry)
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading the indicated file, the
+!!         error will be diagnosed by routines called by this routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine hides details of column entry data pointer access.
+!!
+!! ## Examples
+!!
+!!     See ZZEKRFIL.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ekrecptr
+      use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-
-! $ Abstract
-!
-!     Return the data pointer for a specified EK column entry.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ekrecptr.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for read or write
-!                    access.
-!
-!     SEGDSC         is the descriptor of the segment containing
-!                    the specified column entry.
-!
-!     COLDSC         is the descriptor of the column containing
-!                    the specified column entry.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry whose data pointer is desired.
-!
-! $ Detailed_Output
-!
-!     DATPTR         is the data pointer of the specified column entry.
-!                    When DATPTR is positive, it represents a pointer
-!                    to a data value.  The interpretation of the
-!                    pointer depends on the class of the column entry.
-!                    DATPTR may also take on the distinguished values
-!
-!                       UNINIT  (indicated uninitialized entry)
-!                       NULL    (indicated null entry)
-!                       NOBACK  (indicated uninitialized backup entry)
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading the indicated file, the
-!         error will be diagnosed by routines called by this routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine hides details of column entry data pointer access.
-!
-! $ Examples
-!
-!     See ZZEKRFIL.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           colidx
       integer(ip)           ncols
       integer(ip)           ptrloc
@@ -6453,110 +6285,102 @@ contains
 !$Procedure ZZEKIF01 ( EK, initialize type 1 segment for fast load )
 
       module procedure zzekif01
+!! ## Abstract
+!!
+!!     Initialize a new type 1 EK segment to allow fast loading.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is the handle of an EK file open for write access.
+!!                    A new type 1 segment is to be created in this file
+!!                    via a fast load.  The segment's metadata has
+!!                    already been set up by EKBSEG.
+!!
+!!     SEGNO          is the number of the segment to prepare for a
+!!                    fast load.
+!!
+!! ## Detailed Output
+!!
+!!     RCPTRS         is an array of record pointers for the input
+!!                    segment.  This array must not be modified by the
+!!                    caller.
+!!
+!!                    The array RCPTRS must be passed as an input to
+!!                    each column addition routine called while
+!!                    writing the specified segment.
+!!
+!!                    RCPTRS must be declared with dimension equal to
+!!                    the number of rows in the segment.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine carries out the type-1-specific preparation for
+!!     populating a type 1 EK segment with data via the fast column
+!!     loader routines.  This routine expects the segment's metadata to
+!!     already have been written by EKBSEG.
+!!
+!! ## Examples
+!!
+!!     See EKIFLD.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 06-SEP-2006 (NJB)
+!!
+!!        Added Restrictions section to header.  Changed
+!!        previous version line's product from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 06-NOV-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Initialize a new type 1 EK segment to allow fast loading.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is the handle of an EK file open for write access.
-!                    A new type 1 segment is to be created in this file
-!                    via a fast load.  The segment's metadata has
-!                    already been set up by EKBSEG.
-!
-!     SEGNO          is the number of the segment to prepare for a
-!                    fast load.
-!
-! $ Detailed_Output
-!
-!     RCPTRS         is an array of record pointers for the input
-!                    segment.  This array must not be modified by the
-!                    caller.
-!
-!                    The array RCPTRS must be passed as an input to
-!                    each column addition routine called while
-!                    writing the specified segment.
-!
-!                    RCPTRS must be declared with dimension equal to
-!                    the number of rows in the segment.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine carries out the type-1-specific preparation for
-!     populating a type 1 EK segment with data via the fast column
-!     loader routines.  This routine expects the segment's metadata to
-!     already have been written by EKBSEG.
-!
-! $ Examples
-!
-!     See EKIFLD.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 06-SEP-2006 (NJB)
-!
-!        Added Restrictions section to header.  Changed
-!        previous version line's product from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 06-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           base
       integer(ip)           i
       integer(ip)           j
@@ -6653,107 +6477,99 @@ contains
 !$Procedure ZZEKIF02 ( EK, initialize type 2 segment for fast load )
 
       module procedure zzekif02
+!! ## Abstract
+!!
+!!     Initialize a new type 2 EK segment to allow fast loading.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is the handle of an EK file open for write access.
+!!                    A new type 2 segment is to be created in this file
+!!                    via a fast load.  The segment's metadata has
+!!                    already been set up by EKBSEG.
+!!
+!!     SEGNO          is the number of the segment to prepare for a
+!!                    fast load.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine carries out the type-2-specific preparation for
+!!     populating a type 2 EK segment with data via the fast column
+!!     loader routines.  This routine expects the segment's metadata to
+!!     already have been written by EKBSEG.
+!!
+!!     This routine expects the segment to contain columns having class
+!!     7, 8, or 9.
+!!
+!! ## Examples
+!!
+!!     See EKIFLD.
+!!
+!! ## Restrictions
+!!
+!!     1)  Assumes total number of words required for column metadata
+!!         is no greater than IPSIZE.  Currently, with a maximum of 100
+!!         columns and a maximum metadata size of 2 words per column,
+!!         this condition is met.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_ekclas07
+      use pepper_inc_ekclas08
+      use pepper_inc_ekclas09
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: class_1(1)  !! one-element copy of class (array argument)
-
-! $ Abstract
-!
-!     Initialize a new type 2 EK segment to allow fast loading.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include 'ekclas07.inc'
-      include 'ekclas08.inc'
-      include 'ekclas09.inc'
-      include 'ekcoldsc.inc'
-      include 'ekpage.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is the handle of an EK file open for write access.
-!                    A new type 2 segment is to be created in this file
-!                    via a fast load.  The segment's metadata has
-!                    already been set up by EKBSEG.
-!
-!     SEGNO          is the number of the segment to prepare for a
-!                    fast load.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine carries out the type-2-specific preparation for
-!     populating a type 2 EK segment with data via the fast column
-!     loader routines.  This routine expects the segment's metadata to
-!     already have been written by EKBSEG.
-!
-!     This routine expects the segment to contain columns having class
-!     7, 8, or 9.
-!
-! $ Examples
-!
-!     See EKIFLD.
-!
-! $ Restrictions
-!
-!     1)  Assumes total number of words required for column metadata
-!         is no greater than IPSIZE.  Currently, with a maximum of 100
-!         columns and a maximum metadata size of 2 words per column,
-!         this condition is met.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           base
       integer(ip)           class
       integer(ip)           dscbas
@@ -6839,34 +6655,33 @@ contains
 !$Procedure   ZZEKRD01 ( EK, read class 1 column entry )
 
       module procedure zzekrd01
+!! ## Abstract
+!!
+!!     Read a column entry from a specified record in a class 1 column.
+!!     Class 1 columns contain scalar integer values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Read a column entry from a specified record in a class 1 column.
-!     Class 1 columns contain scalar integer values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -7044,34 +6859,33 @@ contains
 !$Procedure   ZZEKRD02 ( EK, read class 2 column entry )
 
       module procedure zzekrd02
+!! ## Abstract
+!!
+!!     Read a column entry from a specified record in a class 2 column.
+!!     Class 2 columns contain scalar double precision values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a column entry from a specified record in a class 2 column.
-!     Class 2 columns contain scalar double precision values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -7241,183 +7055,173 @@ contains
 !$Procedure   ZZEKRD03 ( EK, read class 3 column entry elements )
 
       module procedure zzekrd03
+!! ## Abstract
+!!
+!!     Read a column entry from a specified record in a class 3 column.
+!!     Class 3 columns contain scalar character values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.
+!!
+!!     SEGDSC         is the descriptor of the segment from which data is
+!!                    to be read.
+!!
+!!     COLDSC         is the descriptor of the column from which data is
+!!                    to be read.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to be written.
+!!
+!! ## Detailed Output
+!!
+!!     CVLEN          is the length of the returned string value.  This
+!!                    is the index of the last non-blank character of
+!!                    the string.  This definition applies to both fixed-
+!!                    and variable-length strings.
+!!
+!!                    CVLEN is set to 1 if the column entry is null.
+!!
+!!     CVAL           is the value read from the specified column entry.
+!!                    If CVAL has insufficient length to hold the
+!!                    returned string value, the output value is
+!!                    truncated on the right.  Entries that are shorter
+!!                    than the string length of CVAL are padded with
+!!                    trailing blanks.
+!!
+!!     ISNULL         is a logical flag indicating whether the entry is
+!!                    null.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the specified column entry has not been initialized, the
+!!         error SPICE(UNINITIALIZED) is signaled.
+!!
+!!     3)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!
+!!     4)  If the output string CVAL is too short to accommodate the
+!!         returned string value, the output value is truncated on the
+!!         right.  No error is signaled.
+!!
+!!     5)  If an I/O error occurs while reading the indicated file,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility for reading data from class 3 columns.
+!!
+!! ## Examples
+!!
+!!     See EKRCEC.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.4.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!        Bug fix: changed max column index in long error
+!!        message from NREC to NCOLS.
+!!
+!!-    SPICELIB Version 1.3.0, 31-MAY-2010 (NJB)
+!!
+!!        Bug fix: call to DASRDI was overwriting local memory. This
+!!        problem did not affect operation of the routine except on
+!!        the Mac/Intel/OSX/ifort/32-bit platform, on which it caused
+!!        a segmentation fault when this routine was compiled with
+!!        default optimization.
+!!
+!!-    SPICELIB Version 1.2.0, 23-JUL-1999 (NJB)
+!!
+!!        Error check for string truncation on output was removed.
+!!        This error check interfered with the use of this routine
+!!        (via a call to ZZEKRSC) within ZZEKJSRT, which relies on
+!!        being able to read into a buffer initial substrings of scalar
+!!        data.
+!!
+!!-    SPICELIB Version 1.1.0, 28-JUL-1997 (NJB)
+!!
+!!        Error check for string truncation on output was added.
+!!        SHORT error message SPICE(UNINITIALIZEDVALUE) was shortened
+!!        to SPICE(UNINITIALIZED).  Error messages were enhanced so
+!!        as to use column names rather than indices.  Miscellaneous
+!!        header fixes were made.
+!!
+!!-    SPICELIB Version 1.0.0, 18-OCT-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.2.0, 23-JUL-1999 (NJB)
+!!
+!!        Error check for string truncation on output was removed.
+!!        This error check interfered with the use of this routine
+!!        (via a call to ZZEKRSC) within ZZEKJSRT, which relies on
+!!        being able to read into a buffer initial substrings of scalar
+!!        data.
+!!
+!!-    SPICELIB Version 1.1.0, 25-JUL-1997 (NJB)
+!!
+!!        Error check for string truncation on output was added.
+!!        SHORT error message SPICE(UNINITIALIZEDVALUE) was shortened
+!!        to SPICE(UNINITIALIZED), since the previous string exceeded
+!!        the maximum allowed length for the short error message.
+!!
+!!        Error messages were enhanced so as to use column names rather
+!!        than indices.
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
 
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-
-! $ Abstract
-!
-!     Read a column entry from a specified record in a class 3 column.
-!     Class 3 columns contain scalar character values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekcnamsz.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.
-!
-!     SEGDSC         is the descriptor of the segment from which data is
-!                    to be read.
-!
-!     COLDSC         is the descriptor of the column from which data is
-!                    to be read.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to be written.
-!
-! $ Detailed_Output
-!
-!     CVLEN          is the length of the returned string value.  This
-!                    is the index of the last non-blank character of
-!                    the string.  This definition applies to both fixed-
-!                    and variable-length strings.
-!
-!                    CVLEN is set to 1 if the column entry is null.
-!
-!     CVAL           is the value read from the specified column entry.
-!                    If CVAL has insufficient length to hold the
-!                    returned string value, the output value is
-!                    truncated on the right.  Entries that are shorter
-!                    than the string length of CVAL are padded with
-!                    trailing blanks.
-!
-!     ISNULL         is a logical flag indicating whether the entry is
-!                    null.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the specified column entry has not been initialized, the
-!         error SPICE(UNINITIALIZED) is signaled.
-!
-!     3)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!
-!     4)  If the output string CVAL is too short to accommodate the
-!         returned string value, the output value is truncated on the
-!         right.  No error is signaled.
-!
-!     5)  If an I/O error occurs while reading the indicated file,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine is a utility for reading data from class 3 columns.
-!
-! $ Examples
-!
-!     See EKRCEC.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.4.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!        Bug fix: changed max column index in long error
-!        message from NREC to NCOLS.
-!
-!-    SPICELIB Version 1.3.0, 31-MAY-2010 (NJB)
-!
-!        Bug fix: call to DASRDI was overwriting local memory. This
-!        problem did not affect operation of the routine except on
-!        the Mac/Intel/OSX/ifort/32-bit platform, on which it caused
-!        a segmentation fault when this routine was compiled with
-!        default optimization.
-!
-!-    SPICELIB Version 1.2.0, 23-JUL-1999 (NJB)
-!
-!        Error check for string truncation on output was removed.
-!        This error check interfered with the use of this routine
-!        (via a call to ZZEKRSC) within ZZEKJSRT, which relies on
-!        being able to read into a buffer initial substrings of scalar
-!        data.
-!
-!-    SPICELIB Version 1.1.0, 28-JUL-1997 (NJB)
-!
-!        Error check for string truncation on output was added.
-!        SHORT error message SPICE(UNINITIALIZEDVALUE) was shortened
-!        to SPICE(UNINITIALIZED).  Error messages were enhanced so
-!        as to use column names rather than indices.  Miscellaneous
-!        header fixes were made.
-!
-!-    SPICELIB Version 1.0.0, 18-OCT-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.2.0, 23-JUL-1999 (NJB)
-!
-!        Error check for string truncation on output was removed.
-!        This error check interfered with the use of this routine
-!        (via a call to ZZEKRSC) within ZZEKJSRT, which relies on
-!        being able to read into a buffer initial substrings of scalar
-!        data.
-!
-!-    SPICELIB Version 1.1.0, 25-JUL-1997 (NJB)
-!
-!        Error check for string truncation on output was added.
-!        SHORT error message SPICE(UNINITIALIZEDVALUE) was shortened
-!        to SPICE(UNINITIALIZED), since the previous string exceeded
-!        the maximum allowed length for the short error message.
-!
-!        Error messages were enhanced so as to use column names rather
-!        than indices.
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(cnamsz)     column
 
       integer(ip)           avail
@@ -7586,37 +7390,36 @@ contains
 !$Procedure   ZZEKRD04 ( EK, read class 4 column entry elements )
 
       module procedure zzekrd04
+!! ## Abstract
+!!
+!!     Read a specified element range from a column entry in a specified
+!!     record in a class 4 column.  Class 4 columns have integer arrays
+!!     as column entries.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Read a specified element range from a column entry in a specified
-!     record in a class 4 column.  Class 4 columns have integer arrays
-!     as column entries.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: p_1(1)  !! one-element copy of p (array argument)
       integer(ip) :: nelt_1(1)  !! one-element copy of nelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -7935,164 +7738,152 @@ contains
 !$Procedure   ZZEKRD05 ( EK, read class 5 column entry elements )
 
       module procedure zzekrd05
+!! ## Abstract
+!!
+!!     Read a specified element range from a column entry in a specified
+!!     record in a class 5 column.  Class 5 columns have d.p. arrays
+!!     as column entries.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.
+!!
+!!     SEGDSC         is the descriptor of the segment from which data is
+!!                    to be read.
+!!
+!!     COLDSC         is the descriptor of the column from which data is
+!!                    to be read.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to be written.
+!!
+!!     BEG,
+!!     END            are, respectively, the start and end indices of
+!!                    the contiguous range of elements to be read from
+!!                    the specified column entry.
+!!
+!! ## Detailed Output
+!!
+!!     DVALS          are the values read from the specified column
+!!                    entry.  The mapping of elements of the column entry
+!!                    to elements of DVALS is as shown below:
+!!
+!!                       Column entry element       DVALS element
+!!                       --------------------       -------------
+!!                       BEG                        1
+!!                       BEG+1                      2
+!!                       .                          .
+!!                       .                          .
+!!                       .                          .
+!!                       END                        END-BEG+1
+!!
+!!                    DVALS is valid only if the output argument
+!!                    FOUND is returned .TRUE.
+!!
+!!     ISNULL         is a logical flag indicating whether the entry is
+!!                    null.  ISNULL is set on output whether or not
+!!                    the range of elements designated by BEG and END
+!!                    exists.
+!!
+!!     FOUND          is a logical flag indicating whether the range
+!!                    of elements designated by BEG and END exists.
+!!                    If the number of elements in the specified column
+!!                    entry is not at least END, FOUND will be returned
+!!                    .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the specified column entry has not been initialized, the
+!!         error SPICE(UNINITIALIZEDVALUE) is signaled.
+!!
+!!     3)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!
+!!     4)  If an I/O error occurs while reading the indicated file,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility for reading data from class 5 columns.
+!!
+!! ## Examples
+!!
+!!     See EKRCED.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!        Bug fix: changed max column index in long error
+!!        message from NREC to NCOLS.
+!!
+!!-    SPICELIB Version 1.1.0, 12-SEP-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in ZZEKGFWD calls.
+!!
+!!-    SPICELIB Version 1.0.0, 18-OCT-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 12-SEP-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in ZZEKGFWD calls.
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-
-! $ Abstract
-!
-!     Read a specified element range from a column entry in a specified
-!     record in a class 5 column.  Class 5 columns have d.p. arrays
-!     as column entries.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.
-!
-!     SEGDSC         is the descriptor of the segment from which data is
-!                    to be read.
-!
-!     COLDSC         is the descriptor of the column from which data is
-!                    to be read.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to be written.
-!
-!     BEG,
-!     END            are, respectively, the start and end indices of
-!                    the contiguous range of elements to be read from
-!                    the specified column entry.
-!
-! $ Detailed_Output
-!
-!     DVALS          are the values read from the specified column
-!                    entry.  The mapping of elements of the column entry
-!                    to elements of DVALS is as shown below:
-!
-!                       Column entry element       DVALS element
-!                       --------------------       -------------
-!                       BEG                        1
-!                       BEG+1                      2
-!                       .                          .
-!                       .                          .
-!                       .                          .
-!                       END                        END-BEG+1
-!
-!                    DVALS is valid only if the output argument
-!                    FOUND is returned .TRUE.
-!
-!     ISNULL         is a logical flag indicating whether the entry is
-!                    null.  ISNULL is set on output whether or not
-!                    the range of elements designated by BEG and END
-!                    exists.
-!
-!     FOUND          is a logical flag indicating whether the range
-!                    of elements designated by BEG and END exists.
-!                    If the number of elements in the specified column
-!                    entry is not at least END, FOUND will be returned
-!                    .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the specified column entry has not been initialized, the
-!         error SPICE(UNINITIALIZEDVALUE) is signaled.
-!
-!     3)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!
-!     4)  If an I/O error occurs while reading the indicated file,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine is a utility for reading data from class 5 columns.
-!
-! $ Examples
-!
-!     See EKRCED.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!        Bug fix: changed max column index in long error
-!        message from NREC to NCOLS.
-!
-!-    SPICELIB Version 1.1.0, 12-SEP-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in ZZEKGFWD calls.
-!
-!-    SPICELIB Version 1.0.0, 18-OCT-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 12-SEP-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in ZZEKGFWD calls.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       real(wp)              dpnelt
 
       integer(ip)           base
@@ -8285,180 +8076,168 @@ contains
 !$Procedure   ZZEKRD06 ( EK, read class 6 column entry elements )
 
       module procedure zzekrd06
+!! ## Abstract
+!!
+!!     Read a specified element range from a column entry in a specified
+!!     record in a class 6 column.  Class 6 columns have character arrays
+!!     as column entries.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.
+!!
+!!     SEGDSC         is the descriptor of the segment from which data is
+!!                    to be read.
+!!
+!!     COLDSC         is the descriptor of the column from which data is
+!!                    to be read.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to be written.
+!!
+!!     BEG,
+!!     END            are, respectively, the start and end indices of
+!!                    the contiguous range of elements to be read from
+!!                    the specified column entry.
+!!
+!! ## Detailed Output
+!!
+!!     CVALS          are the values read from the specified column
+!!                    entry.  The mapping of elements of the column entry
+!!                    to elements of CVALS is as shown below:
+!!
+!!                       Column entry element       CVALS element
+!!                       --------------------       -------------
+!!                       BEG                        1
+!!                       BEG+1                      2
+!!                       .                          .
+!!                       .                          .
+!!                       .                          .
+!!                       END                        END-BEG+1
+!!
+!!                    CVALS must have sufficient string length to hold
+!!                    the longest returned string value.  Entries that
+!!                    are shorter than the string length of CVALS are
+!!                    padded with trailing blanks.
+!!
+!!                    CVALS is valid only if the output argument
+!!                    FOUND is returned .TRUE.
+!!
+!!     ISNULL         is a logical flag indicating whether the entry is
+!!                    null.  ISNULL is set on output whether or not
+!!                    the range of elements designated by BEG and END
+!!                    exists.
+!!
+!!     FOUND          is a logical flag indicating whether the range
+!!                    of elements designated by BEG and END exists.
+!!                    If the number of elements in the specified column
+!!                    entry is not at least END, FOUND will be returned
+!!                    .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the specified column entry has not been initialized, the
+!!         error SPICE(UNINITIALIZED) is signaled.
+!!
+!!     3)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!
+!!     4)  If the string length of CVALS is shorter than the declared
+!!         string length of the specified column, the error
+!!         SPICE(STRINGTRUNCATED) is signaled.
+!!
+!!     5)  If an I/O error occurs while reading the indicated file,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility for reading data from class 6 columns.
+!!
+!! ## Examples
+!!
+!!     See EKRCEC.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!        Bug fix: changed max column index in long error
+!!        message from NREC to NCOLS.
+!!
+!!-    SPICELIB Version 1.1.0, 28-JUL-1997 (NJB)
+!!
+!!        Error check for string truncation on output was added.
+!!        SHORT error message SPICE(UNINITIALIZEDVALUE) was shortened
+!!        to SPICE(UNINITIALIZED).  Error messages were enhanced so
+!!        as to use column names rather than indices.
+!!
+!!-    SPICELIB Version 1.0.0, 18-OCT-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 28-JUL-1997 (NJB)
+!!
+!!        Error check for string truncation on output was added.
+!!        SHORT error message SPICE(UNINITIALIZEDVALUE) was shortened
+!!        to SPICE(UNINITIALIZED).  Error messages were enhanced so
+!!        as to use column names rather than indices.
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
 
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-
-! $ Abstract
-!
-!     Read a specified element range from a column entry in a specified
-!     record in a class 6 column.  Class 6 columns have character arrays
-!     as column entries.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.
-!
-!     SEGDSC         is the descriptor of the segment from which data is
-!                    to be read.
-!
-!     COLDSC         is the descriptor of the column from which data is
-!                    to be read.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to be written.
-!
-!     BEG,
-!     END            are, respectively, the start and end indices of
-!                    the contiguous range of elements to be read from
-!                    the specified column entry.
-!
-! $ Detailed_Output
-!
-!     CVALS          are the values read from the specified column
-!                    entry.  The mapping of elements of the column entry
-!                    to elements of CVALS is as shown below:
-!
-!                       Column entry element       CVALS element
-!                       --------------------       -------------
-!                       BEG                        1
-!                       BEG+1                      2
-!                       .                          .
-!                       .                          .
-!                       .                          .
-!                       END                        END-BEG+1
-!
-!                    CVALS must have sufficient string length to hold
-!                    the longest returned string value.  Entries that
-!                    are shorter than the string length of CVALS are
-!                    padded with trailing blanks.
-!
-!                    CVALS is valid only if the output argument
-!                    FOUND is returned .TRUE.
-!
-!     ISNULL         is a logical flag indicating whether the entry is
-!                    null.  ISNULL is set on output whether or not
-!                    the range of elements designated by BEG and END
-!                    exists.
-!
-!     FOUND          is a logical flag indicating whether the range
-!                    of elements designated by BEG and END exists.
-!                    If the number of elements in the specified column
-!                    entry is not at least END, FOUND will be returned
-!                    .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the specified column entry has not been initialized, the
-!         error SPICE(UNINITIALIZED) is signaled.
-!
-!     3)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!
-!     4)  If the string length of CVALS is shorter than the declared
-!         string length of the specified column, the error
-!         SPICE(STRINGTRUNCATED) is signaled.
-!
-!     5)  If an I/O error occurs while reading the indicated file,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine is a utility for reading data from class 6 columns.
-!
-! $ Examples
-!
-!     See EKRCEC.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!        Bug fix: changed max column index in long error
-!        message from NREC to NCOLS.
-!
-!-    SPICELIB Version 1.1.0, 28-JUL-1997 (NJB)
-!
-!        Error check for string truncation on output was added.
-!        SHORT error message SPICE(UNINITIALIZEDVALUE) was shortened
-!        to SPICE(UNINITIALIZED).  Error messages were enhanced so
-!        as to use column names rather than indices.
-!
-!-    SPICELIB Version 1.0.0, 18-OCT-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 28-JUL-1997 (NJB)
-!
-!        Error check for string truncation on output was added.
-!        SHORT error message SPICE(UNINITIALIZEDVALUE) was shortened
-!        to SPICE(UNINITIALIZED).  Error messages were enhanced so
-!        as to use column names rather than indices.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(cnamsz)     column
 
       integer(ip)           avail
@@ -8775,117 +8554,109 @@ contains
 !$Procedure   ZZEKRD07 ( EK, read class 7 column entry )
 
       module procedure zzekrd07
+!! ## Abstract
+!!
+!!     Read a column entry from a specified record in a class 7 column.
+!!     Class 7 columns contain fixed-count, scalar integer values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.
+!!
+!!     SEGDSC         is the descriptor of the segment from which data is
+!!                    to be read.
+!!
+!!     COLDSC         is the descriptor of the column from which data is
+!!                    to be read.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to be written.  For class 7 columns, record
+!!                    pointers are identical to record numbers.
+!!
+!! ## Detailed Output
+!!
+!!     IVAL           is the value read from the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the column
+!!                    entry is null.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!
+!!     3)  If an I/O error occurs while reading the indicated file,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility for reading data from class 7 columns.
+!!
+!! ## Examples
+!!
+!!     See EKRCEI.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!        Bug fix: changed max column index in long error
+!!        message from NREC to NCOLS.
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas07
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
-
-! $ Abstract
-!
-!     Read a column entry from a specified record in a class 7 column.
-!     Class 7 columns contain fixed-count, scalar integer values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekclas07.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekpage.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.
-!
-!     SEGDSC         is the descriptor of the segment from which data is
-!                    to be read.
-!
-!     COLDSC         is the descriptor of the column from which data is
-!                    to be read.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to be written.  For class 7 columns, record
-!                    pointers are identical to record numbers.
-!
-! $ Detailed_Output
-!
-!     IVAL           is the value read from the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the column
-!                    entry is null.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!
-!     3)  If an I/O error occurs while reading the indicated file,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine is a utility for reading data from class 7 columns.
-!
-! $ Examples
-!
-!     See EKRCEI.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!        Bug fix: changed max column index in long error
-!        message from NREC to NCOLS.
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(1)          cflag
 
       integer(ip)           addrss
@@ -8984,118 +8755,110 @@ contains
 !$Procedure   ZZEKRD08 ( EK, read class 8 column entry )
 
       module procedure zzekrd08
+!! ## Abstract
+!!
+!!     Read a column entry from a specified record in a class 8 column.
+!!     Class 8 columns contain fixed-count, scalar, double precision
+!!     values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.
+!!
+!!     SEGDSC         is the descriptor of the segment from which data is
+!!                    to be read.
+!!
+!!     COLDSC         is the descriptor of the column from which data is
+!!                    to be read.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to be written.  For class 8 columns, record
+!!                    pointers are identical to record numbers.
+!!
+!! ## Detailed Output
+!!
+!!     DVAL           is the value read from the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the entry is
+!!                    null.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!
+!!     3)  If an I/O error occurs while reading the indicated file,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility for reading data from class 8 columns.
+!!
+!! ## Examples
+!!
+!!     See EKRCED.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!        Bug fix: changed max column index in long error
+!!        message from NREC to NCOLS.
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas08
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
-
-! $ Abstract
-!
-!     Read a column entry from a specified record in a class 8 column.
-!     Class 8 columns contain fixed-count, scalar, double precision
-!     values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekclas08.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekpage.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.
-!
-!     SEGDSC         is the descriptor of the segment from which data is
-!                    to be read.
-!
-!     COLDSC         is the descriptor of the column from which data is
-!                    to be read.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to be written.  For class 8 columns, record
-!                    pointers are identical to record numbers.
-!
-! $ Detailed_Output
-!
-!     DVAL           is the value read from the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the entry is
-!                    null.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!
-!     3)  If an I/O error occurs while reading the indicated file,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine is a utility for reading data from class 8 columns.
-!
-! $ Examples
-!
-!     See EKRCED.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!        Bug fix: changed max column index in long error
-!        message from NREC to NCOLS.
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(1)          cflag
 
       integer(ip)           addrss
@@ -9194,121 +8957,111 @@ contains
 !$Procedure      ZZEKSCDP ( EK, set column data pointer )
 
       module procedure zzekscdp
+!! ## Abstract
+!!
+!!     Set the data pointer for a specified EK column entry.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment containing
+!!                    the specified column entry.
+!!
+!!     COLDSC         is the descriptor of the column containing
+!!                    the specified column entry.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry whose data pointer is to be set.
+!!
+!!     DATPTR         is the data pointer of the specified column entry.
+!!                    When DATPTR is positive, it represents a pointer
+!!                    to a data value.  The interpretation of the
+!!                    pointer depends on the class of the column entry.
+!!                    DATPTR may also take on the distinguished values
+!!
+!!                       UNINIT  (indicated uninitialized entry)
+!!                       NULL    (indicated null entry)
+!!                       NOBACK  (indicated uninitialized backup entry)
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the action of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine hides details of column entry data pointer access.
+!!     The inverse of this routine is ZZEKGCDP.
+!!
+!! ## Examples
+!!
+!!     1)  Set a column's data pointer to indicate that a column entry
+!!         is uninitialized.  The parameter UNINIT is defined in
+!!         ekrecptr.inc
+!!
+!!           CALL ZZEKSCDP ( HANDLE, SEGDSC, COLDSC, RECPTR, UNINIT )
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 09-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Set the data pointer for a specified EK column entry.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ekrecptr.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment containing
-!                    the specified column entry.
-!
-!     COLDSC         is the descriptor of the column containing
-!                    the specified column entry.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry whose data pointer is to be set.
-!
-!     DATPTR         is the data pointer of the specified column entry.
-!                    When DATPTR is positive, it represents a pointer
-!                    to a data value.  The interpretation of the
-!                    pointer depends on the class of the column entry.
-!                    DATPTR may also take on the distinguished values
-!
-!                       UNINIT  (indicated uninitialized entry)
-!                       NULL    (indicated null entry)
-!                       NOBACK  (indicated uninitialized backup entry)
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the action of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine hides details of column entry data pointer access.
-!     The inverse of this routine is ZZEKGCDP.
-!
-! $ Examples
-!
-!     1)  Set a column's data pointer to indicate that a column entry
-!         is uninitialized.  The parameter UNINIT is defined in
-!         ekrecptr.inc
-!
-!           CALL ZZEKSCDP ( HANDLE, SEGDSC, COLDSC, RECPTR, UNINIT )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 09-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ekrecptr
       integer(ip)           colidx
       integer(ip)           ncols
       integer(ip)           ptrloc
@@ -9357,139 +9110,131 @@ contains
 !$Procedure     ZZEKWPAC ( EK, write paged array, character )
 
       module procedure zzekwpac
+!! ## Abstract
+!!
+!!     Write a character array out to a contiguous set of EK pages.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     NVALS          is the number of character values to write.
+!!
+!!     L              is the length of the input values.  The input
+!!                    strings are expected to be short compared to the
+!!                    size of a character page.
+!!
+!!     CVALS          is an array of character values.  The first L
+!!                    characters of each element of CVALS will be
+!!                    written.  The strings are not split across pages;
+!!                    instead, unused space is left at the end of each
+!!                    page if the string length does not divide the
+!!                    page size evenly.
+!!
+!! ## Detailed Output
+!!
+!!     P              is the number of the first page to which the
+!!                    input values are written.  CVALS(1) is written to
+!!                    a range of DAS character words starting with the
+!!                    the first word of page P.  The values are written
+!!                    to a contiguous set of pages in increasing order.
+!!
+!!     BASE           is the base address of P.  BASE is the predecessor
+!!                    of the first DAS address belonging to page P.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     3)  If L is negative or greater than the input string length,
+!!         the error SPICE(INVALIDSIZE) is signaled.
+!!
+!!     4)  If L is greater than the size of the data area of a
+!!         character page, the error SPICE(INVALIDSIZE) is signaled.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine writes an array of character values to a contiguous
+!!     set of new character pages.  The first element of the input array
+!!     is written to a range of values starting at the first DAS address
+!!     of the first page of the set.
+!!
+!!     Note that the values do not occupy a contiguous range of DAS
+!!     character words, since each page contains several addresses
+!!     reserved for bookkeeping information, and since there may be
+!!     unused space at the end of a data page.  However, since each page
+!!     contains exactly CPSIZE characters and has size PGSIZC, it's easy
+!!     to compute the DAS address of the Ith element in the array:
+!!
+!!        N          =   IPSIZE  / L
+!!        Q          =   I       / N
+!!        R          =   I  -  Q * N
+!!
+!!        ADDRSS(I)  =  BASE  +  Q * PGSIZC  +  (R-1) * L  +  1
+!!
+!! ## Examples
+!!
+!!     See ZZEKAC07.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 07-NOV-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Write a character array out to a contiguous set of EK pages.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     NVALS          is the number of character values to write.
-!
-!     L              is the length of the input values.  The input
-!                    strings are expected to be short compared to the
-!                    size of a character page.
-!
-!     CVALS          is an array of character values.  The first L
-!                    characters of each element of CVALS will be
-!                    written.  The strings are not split across pages;
-!                    instead, unused space is left at the end of each
-!                    page if the string length does not divide the
-!                    page size evenly.
-!
-! $ Detailed_Output
-!
-!     P              is the number of the first page to which the
-!                    input values are written.  CVALS(1) is written to
-!                    a range of DAS character words starting with the
-!                    the first word of page P.  The values are written
-!                    to a contiguous set of pages in increasing order.
-!
-!     BASE           is the base address of P.  BASE is the predecessor
-!                    of the first DAS address belonging to page P.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-!     3)  If L is negative or greater than the input string length,
-!         the error SPICE(INVALIDSIZE) is signaled.
-!
-!     4)  If L is greater than the size of the data area of a
-!         character page, the error SPICE(INVALIDSIZE) is signaled.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine writes an array of character values to a contiguous
-!     set of new character pages.  The first element of the input array
-!     is written to a range of values starting at the first DAS address
-!     of the first page of the set.
-!
-!     Note that the values do not occupy a contiguous range of DAS
-!     character words, since each page contains several addresses
-!     reserved for bookkeeping information, and since there may be
-!     unused space at the end of a data page.  However, since each page
-!     contains exactly CPSIZE characters and has size PGSIZC, it's easy
-!     to compute the DAS address of the Ith element in the array:
-!
-!        N          =   IPSIZE  / L
-!        Q          =   I       / N
-!        R          =   I  -  Q * N
-!
-!        ADDRSS(I)  =  BASE  +  Q * PGSIZC  +  (R-1) * L  +  1
-!
-! $ Examples
-!
-!     See ZZEKAC07.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 07-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(pgsizc)     page
 
       integer(ip)           from
@@ -9574,117 +9319,109 @@ contains
 !$Procedure     ZZEKWPAI ( EK, write paged array, integer )
 
       module procedure zzekwpai
+!! ## Abstract
+!!
+!!     Write an integer array out to a contiguous set of EK pages.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     NVALS          is the number of integer values to write.
+!!
+!!     IVALS          is an array of integer values.
+!!
+!! ## Detailed Output
+!!
+!!     P              is the number of the first page to which the
+!!                    input values are written.  IVALS(1) is written to
+!!                    the first word of page P.  The values are written
+!!                    to a contiguous set of pages in increasing order.
+!!
+!!     BASE           is the base address of P.  BASE is the predecessor
+!!                    of the first DAS address belonging to page P.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine writes an array of integer values to a contiguous
+!!     set of new integer pages.  The first element of the input array
+!!     is written to the first DAS address of the first page of the set.
+!!
+!!     Note that the values do not occupy a contiguous range of DAS
+!!     integer words, since each page contains several addresses
+!!     reserved for bookkeeping information.  However, since each page
+!!     contains exactly IPSIZE integers and has size PGSIZI, it's easy
+!!     to compute the DAS address of the Ith element in the array:
+!!
+!!        Q          =   (I-1)  /  IPSIZE
+!!        R          =   I  -  Q * IPSIZE
+!!
+!!        ADDRSS(I)  =  BASE +  Q * PGSIZI + R
+!!
+!! ## Examples
+!!
+!!     See ZZEKAC07.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: cleari
-
-! $ Abstract
-!
-!     Write an integer array out to a contiguous set of EK pages.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     NVALS          is the number of integer values to write.
-!
-!     IVALS          is an array of integer values.
-!
-! $ Detailed_Output
-!
-!     P              is the number of the first page to which the
-!                    input values are written.  IVALS(1) is written to
-!                    the first word of page P.  The values are written
-!                    to a contiguous set of pages in increasing order.
-!
-!     BASE           is the base address of P.  BASE is the predecessor
-!                    of the first DAS address belonging to page P.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine writes an array of integer values to a contiguous
-!     set of new integer pages.  The first element of the input array
-!     is written to the first DAS address of the first page of the set.
-!
-!     Note that the values do not occupy a contiguous range of DAS
-!     integer words, since each page contains several addresses
-!     reserved for bookkeeping information.  However, since each page
-!     contains exactly IPSIZE integers and has size PGSIZI, it's easy
-!     to compute the DAS address of the Ith element in the array:
-!
-!        Q          =   (I-1)  /  IPSIZE
-!        R          =   I  -  Q * IPSIZE
-!
-!        ADDRSS(I)  =  BASE +  Q * PGSIZI + R
-!
-! $ Examples
-!
-!     See ZZEKAC07.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           from
       integer(ip)           npage
       integer(ip)           page   ( pgsizi )
@@ -9747,118 +9484,110 @@ contains
 !$Procedure     ZZEKWPAL ( EK, write paged array, logical )
 
       module procedure zzekwpal
+!! ## Abstract
+!!
+!!     Write a logical array out to a contiguous set of EK pages.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     NVALS          is the number of logical values to write.
+!!
+!!     LVALS          is an array of logical values.  The values will
+!!                    be stored as characters, with one character used
+!!                    per element of LVALS.
+!!
+!! ## Detailed Output
+!!
+!!     P              is the number of the first page to which the
+!!                    input values are written.  The character
+!!                    representing LVALS(1) is written to the first DAS
+!!                    character of page P.  The values are written
+!!                    to a contiguous set of pages in increasing order.
+!!
+!!     BASE           is the base address of P.  BASE is the predecessor
+!!                    of the first DAS address belonging to page P.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine writes an array of logical values to a contiguous
+!!     set of new character pages.  The first element of the input array
+!!     is written to a range of values starting at the first DAS address
+!!     of the first page of the set.
+!!
+!!     This routine supports creation of null flag arrays for fixed-count
+!!     column classes.
+!!
+!!     Note that the values do not occupy a contiguous range of DAS
+!!     character words, since each page contains several addresses
+!!     reserved for bookkeeping information, and since there may be
+!!     unused space at the end of a data page.
+!!
+!! ## Examples
+!!
+!!     See ZZEKAC07.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Write a logical array out to a contiguous set of EK pages.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     NVALS          is the number of logical values to write.
-!
-!     LVALS          is an array of logical values.  The values will
-!                    be stored as characters, with one character used
-!                    per element of LVALS.
-!
-! $ Detailed_Output
-!
-!     P              is the number of the first page to which the
-!                    input values are written.  The character
-!                    representing LVALS(1) is written to the first DAS
-!                    character of page P.  The values are written
-!                    to a contiguous set of pages in increasing order.
-!
-!     BASE           is the base address of P.  BASE is the predecessor
-!                    of the first DAS address belonging to page P.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine writes an array of logical values to a contiguous
-!     set of new character pages.  The first element of the input array
-!     is written to a range of values starting at the first DAS address
-!     of the first page of the set.
-!
-!     This routine supports creation of null flag arrays for fixed-count
-!     column classes.
-!
-!     Note that the values do not occupy a contiguous range of DAS
-!     character words, since each page contains several addresses
-!     reserved for bookkeeping information, and since there may be
-!     unused space at the end of a data page.
-!
-! $ Examples
-!
-!     See ZZEKAC07.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(pgsizc)     page
 
       integer(ip)           from
@@ -9932,31 +9661,30 @@ contains
 !$Procedure EKAPPR ( EK, append record onto segment )
 
       module procedure ekappr
+!! ## Abstract
+!!
+!!     Append a new, empty record at the end of a specified E-kernel
+!!     segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Append a new, empty record at the end of a specified E-kernel
-!     segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekdatpag.inc'
-      include 'ekpage.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -10375,26 +10103,25 @@ contains
 !$Procedure EKIFLD ( EK, initialize segment for fast write )
 
       module procedure ekifld
+!! ## Abstract
+!!
+!!     Initialize a new E-kernel segment to allow fast writing.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Initialize a new E-kernel segment to allow fast writing.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -10975,29 +10702,28 @@ contains
 !$Procedure EKRCEC ( EK, read column entry element, character )
 
       module procedure ekrcec
+!! ## Abstract
+!!
+!!     Read data from a character column in a specified EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Read data from a character column in a specified EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -11479,30 +11205,29 @@ contains
 !$Procedure EKRCED ( EK, read column entry element, d.p. )
 
       module procedure ekrced
+!! ## Abstract
+!!
+!!     Read data from a double precision column in a specified EK
+!!     record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read data from a double precision column in a specified EK
-!     record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -11752,29 +11477,28 @@ contains
 !$Procedure EKRCEI ( EK, read column entry element, integer )
 
       module procedure ekrcei
+!! ## Abstract
+!!
+!!     Read data from an integer column in a specified EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Read data from an integer column in a specified EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -12024,146 +11748,138 @@ contains
 !$Procedure     ZZEKAC07 ( EK, add class 7 column to segment )
 
       module procedure zzekac07
+!! ## Abstract
+!!
+!!     Add an entire class 7 column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!                    A `begin segment for fast load' operation must
+!!                    have already been performed for the designated
+!!                    segment.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     COLDSC         is a descriptor for the column to be added.  The
+!!                    column attributes must be filled in, but any
+!!                    pointers may be uninitialized.
+!!
+!!     IVALS          is an array containing the entire set of column
+!!                    entries for the specified column.  The entries
+!!                    are listed in row-order:  the column entry for the
+!!                    first row of the segment is first, followed by the
+!!                    column entry for the second row, and so on.  The
+!!                    number of column entries must match the declared
+!!                    number of rows in the segment.  Elements must be
+!!                    allocated for each column entry, including null
+!!                    entries.
+!!
+!!     NLFLGS         is an array of logical flags indicating whether
+!!                    the corresponding entries are null.  If the Ith
+!!                    element of NLFLGS is .FALSE., the Ith column entry
+!!                    defined by IVALS is added to the specified segment
+!!                    in the specified kernel file.
+!!
+!!                    If the Ith element of NLFGLS is .TRUE., the
+!!                    contents of the Ith column entry are undefined.
+!!
+!!                    NLFLGS is used only for columns that allow null
+!!                    values; it's ignored for other columns.
+!!
+!!     WKINDX         is a work space array used for building a column
+!!                    index.  If the column is indexed, the dimension of
+!!                    WKINDX must be at NROWS, where NROWS is the number
+!!                    of rows in the column.  If the column is not
+!!                    indexed, this work space is not used, so the
+!!                    dimension may be any positive value.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it modifies the named
+!!     EK file by adding data to the specified column.  This routine
+!!     writes the entire contents of the specified column in one shot.
+!!     This routine creates columns much more efficiently than can be
+!!     done by sequential calls to EKACEI, but has the drawback that
+!!     the caller must use more memory for the routine's inputs.  This
+!!     routine cannot be used to add data to a partially completed
+!!     column.
+!!
+!!     Class 7 columns have fixed record counts and contain scalar,
+!!     integer data.
+!!
+!! ## Examples
+!!
+!!     See EKACLI.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes the EK file has been set up
+!!         properly for a fast load operation.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 13-NOV-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: cleari
-
-! $ Abstract
-!
-!     Add an entire class 7 column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekclas07.inc'
-      include  'ekcoldsc.inc'
-      include  'ekcnamsz.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!                    A `begin segment for fast load' operation must
-!                    have already been performed for the designated
-!                    segment.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     COLDSC         is a descriptor for the column to be added.  The
-!                    column attributes must be filled in, but any
-!                    pointers may be uninitialized.
-!
-!     IVALS          is an array containing the entire set of column
-!                    entries for the specified column.  The entries
-!                    are listed in row-order:  the column entry for the
-!                    first row of the segment is first, followed by the
-!                    column entry for the second row, and so on.  The
-!                    number of column entries must match the declared
-!                    number of rows in the segment.  Elements must be
-!                    allocated for each column entry, including null
-!                    entries.
-!
-!     NLFLGS         is an array of logical flags indicating whether
-!                    the corresponding entries are null.  If the Ith
-!                    element of NLFLGS is .FALSE., the Ith column entry
-!                    defined by IVALS is added to the specified segment
-!                    in the specified kernel file.
-!
-!                    If the Ith element of NLFGLS is .TRUE., the
-!                    contents of the Ith column entry are undefined.
-!
-!                    NLFLGS is used only for columns that allow null
-!                    values; it's ignored for other columns.
-!
-!     WKINDX         is a work space array used for building a column
-!                    index.  If the column is indexed, the dimension of
-!                    WKINDX must be at NROWS, where NROWS is the number
-!                    of rows in the column.  If the column is not
-!                    indexed, this work space is not used, so the
-!                    dimension may be any positive value.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it modifies the named
-!     EK file by adding data to the specified column.  This routine
-!     writes the entire contents of the specified column in one shot.
-!     This routine creates columns much more efficiently than can be
-!     done by sequential calls to EKACEI, but has the drawback that
-!     the caller must use more memory for the routine's inputs.  This
-!     routine cannot be used to add data to a partially completed
-!     column.
-!
-!     Class 7 columns have fixed record counts and contain scalar,
-!     integer data.
-!
-! $ Examples
-!
-!     See EKACLI.
-!
-! $ Restrictions
-!
-!     1)  This routine assumes the EK file has been set up
-!         properly for a fast load operation.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 13-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas07
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           class
@@ -12334,146 +12050,138 @@ contains
 !$Procedure     ZZEKAC08 ( EK, add class 8 column to segment )
 
       module procedure zzekac08
+!! ## Abstract
+!!
+!!     Add an entire class 8 column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!                    A `begin segment for fast load' operation must
+!!                    have already been performed for the designated
+!!                    segment.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     COLDSC         is a descriptor for the column to be added.  The
+!!                    column attributes must be filled in, but any
+!!                    pointers may be uninitialized.
+!!
+!!     DVALS          is an array containing the entire set of column
+!!                    entries for the specified column.  The entries
+!!                    are listed in row-order:  the column entry for the
+!!                    first row of the segment is first, followed by the
+!!                    column entry for the second row, and so on.  The
+!!                    number of column entries must match the declared
+!!                    number of rows in the segment.  Elements must be
+!!                    allocated for each column entry, including null
+!!                    entries.
+!!
+!!     NLFLGS         is an array of logical flags indicating whether
+!!                    the corresponding entries are null.  If the Ith
+!!                    element of NLFLGS is .FALSE., the Ith column entry
+!!                    defined by DVALS is added to the specified segment
+!!                    in the specified kernel file.
+!!
+!!                    If the Ith element of NLFGLS is .TRUE., the
+!!                    contents of the Ith column entry are undefined.
+!!
+!!                    NLFLGS is used only for columns that allow null
+!!                    values; it's ignored for other columns.
+!!
+!!     WKINDX         is a work space array used for building a column
+!!                    index.  If the column is indexed, the dimension of
+!!                    WKINDX must be at NROWS, where NROWS is the number
+!!                    of rows in the column.  If the column is not
+!!                    indexed, this work space is not used, so the
+!!                    dimension may be any positive value.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it modifies the named
+!!     EK file by adding data to the specified column.  This routine
+!!     writes the entire contents of the specified column in one shot.
+!!     This routine creates columns much more efficiently than can be
+!!     done by sequential calls to EKACED, but has the drawback that
+!!     the caller must use more memory for the routine's inputs.  This
+!!     routine cannot be used to add data to a partially completed
+!!     column.
+!!
+!!     Class 8 columns have fixed record counts and contain scalar,
+!!     double precision data.
+!!
+!! ## Examples
+!!
+!!     See EKACLD.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes the EK file has been set up
+!!         properly for a fast load operation.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 13-NOV-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
-
-! $ Abstract
-!
-!     Add an entire class 8 column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekclas08.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!                    A `begin segment for fast load' operation must
-!                    have already been performed for the designated
-!                    segment.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     COLDSC         is a descriptor for the column to be added.  The
-!                    column attributes must be filled in, but any
-!                    pointers may be uninitialized.
-!
-!     DVALS          is an array containing the entire set of column
-!                    entries for the specified column.  The entries
-!                    are listed in row-order:  the column entry for the
-!                    first row of the segment is first, followed by the
-!                    column entry for the second row, and so on.  The
-!                    number of column entries must match the declared
-!                    number of rows in the segment.  Elements must be
-!                    allocated for each column entry, including null
-!                    entries.
-!
-!     NLFLGS         is an array of logical flags indicating whether
-!                    the corresponding entries are null.  If the Ith
-!                    element of NLFLGS is .FALSE., the Ith column entry
-!                    defined by DVALS is added to the specified segment
-!                    in the specified kernel file.
-!
-!                    If the Ith element of NLFGLS is .TRUE., the
-!                    contents of the Ith column entry are undefined.
-!
-!                    NLFLGS is used only for columns that allow null
-!                    values; it's ignored for other columns.
-!
-!     WKINDX         is a work space array used for building a column
-!                    index.  If the column is indexed, the dimension of
-!                    WKINDX must be at NROWS, where NROWS is the number
-!                    of rows in the column.  If the column is not
-!                    indexed, this work space is not used, so the
-!                    dimension may be any positive value.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it modifies the named
-!     EK file by adding data to the specified column.  This routine
-!     writes the entire contents of the specified column in one shot.
-!     This routine creates columns much more efficiently than can be
-!     done by sequential calls to EKACED, but has the drawback that
-!     the caller must use more memory for the routine's inputs.  This
-!     routine cannot be used to add data to a partially completed
-!     column.
-!
-!     Class 8 columns have fixed record counts and contain scalar,
-!     double precision data.
-!
-! $ Examples
-!
-!     See EKACLD.
-!
-! $ Restrictions
-!
-!     1)  This routine assumes the EK file has been set up
-!         properly for a fast load operation.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 13-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas08
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       real(wp)              page   ( pgsizd )
@@ -12645,145 +12353,137 @@ contains
 !$Procedure     ZZEKAC09 ( EK, add class 9 column to segment )
 
       module procedure zzekac09
+!! ## Abstract
+!!
+!!     Add an entire class 9 column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         the handle of an EK file that is open for writing.
+!!                    A `begin segment for fast load' operation must
+!!                    have already been performed for the designated
+!!                    segment.
+!!
+!!     SEGDSC         is a descriptor for the segment to which data is
+!!                    to be added.  The segment descriptor is not
+!!                    updated by this routine, but some fields in the
+!!                    descriptor will become invalid after this routine
+!!                    returns.
+!!
+!!     COLDSC         is a descriptor for the column to be added.  The
+!!                    column attributes must be filled in, but any
+!!                    pointers may be uninitialized.
+!!
+!!     CVALS          is an array containing the entire set of column
+!!                    entries for the specified column.  The entries
+!!                    are listed in row-order:  the column entry for the
+!!                    first row of the segment is first, followed by the
+!!                    column entry for the second row, and so on.  The
+!!                    number of column entries must match the declared
+!!                    number of rows in the segment.  Elements must be
+!!                    allocated for each column entry, including null
+!!                    entries.
+!!
+!!     NLFLGS         is an array of logical flags indicating whether
+!!                    the corresponding entries are null.  If the Ith
+!!                    element of NLFLGS is .FALSE., the Ith column entry
+!!                    defined by CVALS is added to the specified segment
+!!                    in the specified kernel file.
+!!
+!!                    If the Ith element of NLFGLS is .TRUE., the
+!!                    contents of the Ith column entry are undefined.
+!!
+!!                    NLFLGS is used only for columns that allow null
+!!                    values; it's ignored for other columns.
+!!
+!!     WKINDX         is a work space array used for building a column
+!!                    index.  If the column is indexed, the dimension of
+!!                    WKINDX must be at NROWS, where NROWS is the number
+!!                    of rows in the column.  If the column is not
+!!                    indexed, this work space is not used, so the
+!!                    dimension may be any positive value.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See $Particulars for a description of the effect of this
+!!     routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it modifies the named
+!!     EK file by adding data to the specified column.  This routine
+!!     writes the entire contents of the specified column in one shot.
+!!     This routine creates columns much more efficiently than can be
+!!     done by sequential calls to EKACEC, but has the drawback that
+!!     the caller must use more memory for the routine's inputs.  This
+!!     routine cannot be used to add data to a partially completed
+!!     column.
+!!
+!!     Class 9 columns have fixed record counts, and contain
+!!     fixed-length strings.
+!!
+!! ## Examples
+!!
+!!     See EKACLC.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes the EK file has been set up
+!!         properly for a fast load operation.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Add an entire class 9 column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
-      include  'ekbool.inc'
-      include  'ekclas09.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekdatpag.inc'
-      include  'ekpage.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         the handle of an EK file that is open for writing.
-!                    A `begin segment for fast load' operation must
-!                    have already been performed for the designated
-!                    segment.
-!
-!     SEGDSC         is a descriptor for the segment to which data is
-!                    to be added.  The segment descriptor is not
-!                    updated by this routine, but some fields in the
-!                    descriptor will become invalid after this routine
-!                    returns.
-!
-!     COLDSC         is a descriptor for the column to be added.  The
-!                    column attributes must be filled in, but any
-!                    pointers may be uninitialized.
-!
-!     CVALS          is an array containing the entire set of column
-!                    entries for the specified column.  The entries
-!                    are listed in row-order:  the column entry for the
-!                    first row of the segment is first, followed by the
-!                    column entry for the second row, and so on.  The
-!                    number of column entries must match the declared
-!                    number of rows in the segment.  Elements must be
-!                    allocated for each column entry, including null
-!                    entries.
-!
-!     NLFLGS         is an array of logical flags indicating whether
-!                    the corresponding entries are null.  If the Ith
-!                    element of NLFLGS is .FALSE., the Ith column entry
-!                    defined by CVALS is added to the specified segment
-!                    in the specified kernel file.
-!
-!                    If the Ith element of NLFGLS is .TRUE., the
-!                    contents of the Ith column entry are undefined.
-!
-!                    NLFLGS is used only for columns that allow null
-!                    values; it's ignored for other columns.
-!
-!     WKINDX         is a work space array used for building a column
-!                    index.  If the column is indexed, the dimension of
-!                    WKINDX must be at NROWS, where NROWS is the number
-!                    of rows in the column.  If the column is not
-!                    indexed, this work space is not used, so the
-!                    dimension may be any positive value.
-!
-! $ Detailed_Output
-!
-!     None.  See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it modifies the named
-!     EK file by adding data to the specified column.  This routine
-!     writes the entire contents of the specified column in one shot.
-!     This routine creates columns much more efficiently than can be
-!     done by sequential calls to EKACEC, but has the drawback that
-!     the caller must use more memory for the routine's inputs.  This
-!     routine cannot be used to add data to a partially completed
-!     column.
-!
-!     Class 9 columns have fixed record counts, and contain
-!     fixed-length strings.
-!
-! $ Examples
-!
-!     See EKACLC.
-!
-! $ Restrictions
-!
-!     1)  This routine assumes the EK file has been set up
-!         properly for a fast load operation.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas09
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
       character(pgsizc)     page
 
@@ -12992,146 +12692,138 @@ contains
 !$Procedure   ZZEKRSC ( EK, read scalar, character )
 
       module procedure zzekrsc
+!! ## Abstract
+!!
+!!     Read scalar data from a character column in a specified EK
+!!     record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.
+!!
+!!     SEGDSC         is the descriptor of the segment from which data is
+!!                    to be read.
+!!
+!!     COLDSC         is the column descriptor corresponding to the
+!!                    column from which data is to be read.
+!!
+!!     RECPTR         is a pointer to the record from which data is to be
+!!                    read.
+!!
+!!     ELTIDX         is the index of the column entry element to read.
+!!                    If the column entry is scalar, this argument is
+!!                    ignored.
+!!
+!! ## Detailed Output
+!!
+!!     CVLEN          is the length of the stored character string value.
+!!                    This is the actual number of characters stored;
+!!                    CVLEN may be less than the declared length of
+!!                    the column to which the value belongs, if the
+!!                    column is declared to contain fixed-length strings.
+!!                    CVLEN is valid only when FOUND is set to .TRUE.
+!!
+!!     CVAL           is the specified column entry.  CVAL is valid only
+!!                    when FOUND is set to .TRUE.
+!!
+!!     ISNULL         is a logical flag indicating whether the entry is
+!!                    null.  ISNULL is valid only when FOUND is set to
+!!                    .TRUE.
+!!
+!!     FOUND          is a logical flag indicating whether the specified
+!!                    column entry element was found.  For vector-valued
+!!                    columns, if ELTIDX refers to a non-existent
+!!                    column entry element, FOUND is set to .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If COLDSC is not the name of a declared column, the error
+!!         will be diagnosed by routines called by this routine.
+!!
+!!     3)  If COLDSC specifies a column of whose data type is not
+!!         character, the error SPICE(WRONGDATATYPE) will be signaled.
+!!
+!!     4)  If COLDSC specifies a column of whose class is not
+!!         a character class known to this routine, the error
+!!         SPICE(NOCLASS) will be signaled.
+!!
+!!     5)  If the indicated column is array-valued, and if ELTIDX is
+!!         non-positive, the error will be diagnosed by routines called
+!!         by this routine.  However, if ELTIDX is greater than the
+!!         number of elements in the specified column entry, FOUND is
+!!         set to .FALSE. and no error is signaled.
+!!
+!!     6)  If an I/O error occurs while reading the indicated file,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     The ZZEKRSx routines are low-level readers that expect column
+!!     entries to be defined by descriptors.  Since these routines do not
+!!     look up descriptors, in cases where many successive accesses to
+!!     the same segment and column are required, these routines are
+!!     considerably more efficient than the high-level readers.
+!!
+!!     These routines do not participate in tracing.
+!!
+!! ## Examples
+!!
+!!     See ZZEKECMP.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 06-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Read scalar data from a character column in a specified EK
-!     record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.
-!
-!     SEGDSC         is the descriptor of the segment from which data is
-!                    to be read.
-!
-!     COLDSC         is the column descriptor corresponding to the
-!                    column from which data is to be read.
-!
-!     RECPTR         is a pointer to the record from which data is to be
-!                    read.
-!
-!     ELTIDX         is the index of the column entry element to read.
-!                    If the column entry is scalar, this argument is
-!                    ignored.
-!
-! $ Detailed_Output
-!
-!     CVLEN          is the length of the stored character string value.
-!                    This is the actual number of characters stored;
-!                    CVLEN may be less than the declared length of
-!                    the column to which the value belongs, if the
-!                    column is declared to contain fixed-length strings.
-!                    CVLEN is valid only when FOUND is set to .TRUE.
-!
-!     CVAL           is the specified column entry.  CVAL is valid only
-!                    when FOUND is set to .TRUE.
-!
-!     ISNULL         is a logical flag indicating whether the entry is
-!                    null.  ISNULL is valid only when FOUND is set to
-!                    .TRUE.
-!
-!     FOUND          is a logical flag indicating whether the specified
-!                    column entry element was found.  For vector-valued
-!                    columns, if ELTIDX refers to a non-existent
-!                    column entry element, FOUND is set to .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If COLDSC is not the name of a declared column, the error
-!         will be diagnosed by routines called by this routine.
-!
-!     3)  If COLDSC specifies a column of whose data type is not
-!         character, the error SPICE(WRONGDATATYPE) will be signaled.
-!
-!     4)  If COLDSC specifies a column of whose class is not
-!         a character class known to this routine, the error
-!         SPICE(NOCLASS) will be signaled.
-!
-!     5)  If the indicated column is array-valued, and if ELTIDX is
-!         non-positive, the error will be diagnosed by routines called
-!         by this routine.  However, if ELTIDX is greater than the
-!         number of elements in the specified column entry, FOUND is
-!         set to .FALSE. and no error is signaled.
-!
-!     6)  If an I/O error occurs while reading the indicated file,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     The ZZEKRSx routines are low-level readers that expect column
-!     entries to be defined by descriptors.  Since these routines do not
-!     look up descriptors, in cases where many successive accesses to
-!     the same segment and column are required, these routines are
-!     considerably more efficient than the high-level readers.
-!
-!     These routines do not participate in tracing.
-!
-! $ Examples
-!
-!     See ZZEKECMP.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 06-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           class
@@ -13225,31 +12917,30 @@ contains
 !$Procedure   ZZEKRSD ( EK, read scalar, double precision )
 
       module procedure zzekrsd
+!! ## Abstract
+!!
+!!     Read scalar data from a double precision column in a specified EK
+!!     record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read scalar data from a double precision column in a specified EK
-!     record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
 
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -13452,30 +13143,29 @@ contains
 !$Procedure   ZZEKRSI ( EK, read scalar, integer )
 
       module procedure zzekrsi
+!! ## Abstract
+!!
+!!     Read scalar data from an integer column in a specified EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Read scalar data from an integer column in a specified EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
 
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -13683,114 +13373,106 @@ contains
 !$Procedure      ZZEKUE04 ( EK, update column entry, class 4 )
 
       module procedure zzekue04
+!! ## Abstract
+!!
+!!     Update a specified class 4 column entry in an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment containing
+!!                    the specified column entry.
+!!
+!!     COLDSC         is the descriptor of the column containing
+!!                    the specified column entry.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to update.
+!!
+!!     NVALS          is the number of values in the replacement
+!!                    column entry.
+!!
+!!     IVALS          is an array of integer values with which to update
+!!                    the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the value
+!!                    of the specified column entry is to be set to NULL.
+!!                    If so, the input IVALS is ignored.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file will not be modified.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it updates a column entry
+!!     in an EK segment.  The status of the record containing the entry
+!!     is set to `updated'.  If the column containing the entry is
+!!     indexed, the corresponding index is updated.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKUCEI.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Update a specified class 4 column entry in an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment containing
-!                    the specified column entry.
-!
-!     COLDSC         is the descriptor of the column containing
-!                    the specified column entry.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to update.
-!
-!     NVALS          is the number of values in the replacement
-!                    column entry.
-!
-!     IVALS          is an array of integer values with which to update
-!                    the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the value
-!                    of the specified column entry is to be set to NULL.
-!                    If so, the input IVALS is ignored.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file will not be modified.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it updates a column entry
-!     in an EK segment.  The status of the record containing the entry
-!     is set to `updated'.  If the column containing the entry is
-!     indexed, the corresponding index is updated.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKUCEI.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Standard SPICE error handling.
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       if ( ctx%failed() ) return
 
 !
@@ -13812,114 +13494,106 @@ contains
 !$Procedure      ZZEKUE05 ( EK, update column entry, class 5 )
 
       module procedure zzekue05
+!! ## Abstract
+!!
+!!     Update a specified class 5 column entry in an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment containing
+!!                    the specified column entry.
+!!
+!!     COLDSC         is the descriptor of the column containing
+!!                    the specified column entry.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to update.
+!!
+!!     NVALS          is the number of values in the replacement
+!!                    column entry.
+!!
+!!     DVALS          is an array of double precision values with which
+!!                    to update the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the value
+!!                    of the specified column entry is to be set to NULL.
+!!                    If so, the input DVALS is ignored.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file will not be modified.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it updates a column entry
+!!     in an EK segment.  The status of the record containing the entry
+!!     is set to `updated'.  If the column containing the entry is
+!!     indexed, the corresponding index is updated.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKUCED.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Update a specified class 5 column entry in an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment containing
-!                    the specified column entry.
-!
-!     COLDSC         is the descriptor of the column containing
-!                    the specified column entry.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to update.
-!
-!     NVALS          is the number of values in the replacement
-!                    column entry.
-!
-!     DVALS          is an array of double precision values with which
-!                    to update the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the value
-!                    of the specified column entry is to be set to NULL.
-!                    If so, the input DVALS is ignored.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file will not be modified.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it updates a column entry
-!     in an EK segment.  The status of the record containing the entry
-!     is set to `updated'.  If the column containing the entry is
-!     indexed, the corresponding index is updated.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKUCED.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Standard SPICE error handling.
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       if ( ctx%failed() ) return
 
 !
@@ -13941,117 +13615,109 @@ contains
 !$Procedure      ZZEKUE06 ( EK, update column entry, class 6 )
 
       module procedure zzekue06
+!! ## Abstract
+!!
+!!     Update a specified class 6 column entry in an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment containing
+!!                    the specified column entry.
+!!
+!!     COLDSC         is the descriptor of the column containing
+!!                    the specified column entry.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to update.
+!!
+!!     NVALS          is the number of values in the replacement
+!!                    column entry.
+!!
+!!     CVALS          is an array of character string values with which
+!!                    to update the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the value
+!!                    of the specified column entry is to be set to NULL.
+!!                    If so, the input CVALS is ignored.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file will not be modified.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it updates a column entry
+!!     in an EK segment.  The status of the record containing the entry
+!!     is set to `updated'.  If the column containing the entry is
+!!     indexed, the corresponding index is updated.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKUCEC.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Update a specified class 6 column entry in an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment containing
-!                    the specified column entry.
-!
-!     COLDSC         is the descriptor of the column containing
-!                    the specified column entry.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to update.
-!
-!     NVALS          is the number of values in the replacement
-!                    column entry.
-!
-!     CVALS          is an array of character string values with which
-!                    to update the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the value
-!                    of the specified column entry is to be set to NULL.
-!                    If so, the input CVALS is ignored.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file will not be modified.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it updates a column entry
-!     in an EK segment.  The status of the record containing the entry
-!     is set to `updated'.  If the column containing the entry is
-!     indexed, the corresponding index is updated.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKUCEC.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Standard SPICE error handling.
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       if ( ctx%failed() ) return
 
 !
@@ -14074,27 +13740,26 @@ contains
 !$Procedure EKACLC ( EK, add character column to segment )
 
       module procedure ekaclc
+!! ## Abstract
+!!
+!!     Add an entire character column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Add an entire character column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include  'ekcoldsc.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -14588,27 +14253,26 @@ contains
 !$Procedure EKACLD ( EK, add d.p. column to segment )
 
       module procedure ekacld
+!! ## Abstract
+!!
+!!     Add an entire double precision column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Add an entire double precision column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include  'ekcoldsc.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -15101,27 +14765,26 @@ contains
 !$Procedure EKACLI ( EK, add integer column to segment )
 
       module procedure ekacli
+!! ## Abstract
+!!
+!!     Add an entire integer column to an EK segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Add an entire integer column to an EK segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include  'ekcoldsc.inc'
-      include  'eksegdsc.inc'
-      include  'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -15613,143 +15276,137 @@ contains
 !$Procedure      ZZEKECMP ( EK, column entry element comparison )
 
       module procedure zzekecmp
+!! ## Abstract
+!!
+!!     Compare two column entry elements, and return the relation of the
+!!     first to the second:  LT, EQ, or GT.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     COMPARE
+!!     EK
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANS           is an array containing file handles of two EKs
+!!                    containing column entry elements to be compared.
+!!
+!!     SGDSCS         is an array containing segment descriptors of
+!!                    the segments that contain the elements to be
+!!                    compared.
+!!
+!!     CLDSCS         is an array containing column descriptors for the
+!!                    columns containing the elements to be compared.
+!!
+!!     ROWS           is an array containing row numbers of the
+!!                    elements to be compared.
+!!
+!!     ELTS           is an array containing element indices of the
+!!                    elements to be compared.  These indices locate
+!!                    an element within the column entry it belongs to.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns a parameter indicating the order relation
+!!     satisfied by the input arguments.  Possible values are LT, EQ,
+!!     and GT.  If OP is the returned value, the scalar values
+!!     specified by the input arguments satisfy the relation
+!!
+!!        <row 1> OP <row 2>
+!!
+!! ## Parameters
+!!
+!!     See the include file ekopcd.inc.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the either of input file handles is invalid, the error
+!!         will be diagnosed by routines called by this routine.
+!!         The function value is EQ in this case.
+!!
+!!     2)  If an I/O error occurs while attempting to look up
+!!         the specified column entry elements, the error will
+!!         be diagnosed by routines called by this routine.  The
+!!         function value is EQ in this case.
+!!
+!!     3)  If any of the input segment descriptors, column descriptors,
+!!         or row numbers are invalid, this routine may fail in
+!!         unpredictable, but possibly spectacular, ways.  Except
+!!         as described in this header section, no attempt is made to
+!!         handle these errors.
+!!
+!!     4)  If the data type code in the input column descriptor is not
+!!         recognized, the error SPICE(INVALIDDATATYPE) is signaled.
+!!         The function value is EQ in this case.
+!!
+!! ## Files
+!!
+!!     See the descriptions of the arguments HAN(1) and HAN(2) in
+!!     $Detailed_Input.
+!!
+!! ## Particulars
+!!
+!!     This routine is an EK utility intended to centralize a frequently
+!!     performed comparison operation.
+!!
+!! ## Examples
+!!
+!!     See ZZEKRCMP, ZZEKVCMP, ZZEKVMCH.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine must execute quickly.  Therefore, it checks in
+!!         only if it detects an error.  If an error is signaled by a
+!!         routine called by this routine, this routine will not appear
+!!         in the SPICELIB traceback display.  Also, in the interest
+!!         of speed, this routine does not test the value of the SPICELIB
+!!         function RETURN upon entry.
+!!
+!!     2)  This routine depends on the requested comparison to have
+!!         been semantically checked. Semantically invalid comparisons
+!!         are treated as bugs.
+!!
+!!     3)  Only the first MAXSTR characters of character strings are
+!!         used in comparisons.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!-    SPICELIB Version 1.1.0, 26-MAY-2010 (NJB)
+!!
+!!        Bug fix: subscript out of range error caused by
+!!        column entry strings longer than MAXLEN has been
+!!        corrected. Also updated Restrictions header section.
+!!
+!!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compare two column entry elements, and return the relation of the
-!     first to the second:  LT, EQ, or GT.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     COMPARE
-!     EK
-!     UTILITY
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANS           is an array containing file handles of two EKs
-!                    containing column entry elements to be compared.
-!
-!     SGDSCS         is an array containing segment descriptors of
-!                    the segments that contain the elements to be
-!                    compared.
-!
-!     CLDSCS         is an array containing column descriptors for the
-!                    columns containing the elements to be compared.
-!
-!     ROWS           is an array containing row numbers of the
-!                    elements to be compared.
-!
-!     ELTS           is an array containing element indices of the
-!                    elements to be compared.  These indices locate
-!                    an element within the column entry it belongs to.
-!
-! $ Detailed_Output
-!
-!     The function returns a parameter indicating the order relation
-!     satisfied by the input arguments.  Possible values are LT, EQ,
-!     and GT.  If OP is the returned value, the scalar values
-!     specified by the input arguments satisfy the relation
-!
-!        <row 1> OP <row 2>
-!
-! $ Parameters
-!
-!     See the include file ekopcd.inc.
-!
-! $ Exceptions
-!
-!     1)  If the either of input file handles is invalid, the error
-!         will be diagnosed by routines called by this routine.
-!         The function value is EQ in this case.
-!
-!     2)  If an I/O error occurs while attempting to look up
-!         the specified column entry elements, the error will
-!         be diagnosed by routines called by this routine.  The
-!         function value is EQ in this case.
-!
-!     3)  If any of the input segment descriptors, column descriptors,
-!         or row numbers are invalid, this routine may fail in
-!         unpredictable, but possibly spectacular, ways.  Except
-!         as described in this header section, no attempt is made to
-!         handle these errors.
-!
-!     4)  If the data type code in the input column descriptor is not
-!         recognized, the error SPICE(INVALIDDATATYPE) is signaled.
-!         The function value is EQ in this case.
-!
-! $ Files
-!
-!     See the descriptions of the arguments HAN(1) and HAN(2) in
-!     $Detailed_Input.
-!
-! $ Particulars
-!
-!     This routine is an EK utility intended to centralize a frequently
-!     performed comparison operation.
-!
-! $ Examples
-!
-!     See ZZEKRCMP, ZZEKVCMP, ZZEKVMCH.
-!
-! $ Restrictions
-!
-!     1)  This routine must execute quickly.  Therefore, it checks in
-!         only if it detects an error.  If an error is signaled by a
-!         routine called by this routine, this routine will not appear
-!         in the SPICELIB traceback display.  Also, in the interest
-!         of speed, this routine does not test the value of the SPICELIB
-!         function RETURN upon entry.
-!
-!     2)  This routine depends on the requested comparison to have
-!         been semantically checked. Semantically invalid comparisons
-!         are treated as bugs.
-!
-!     3)  Only the first MAXSTR characters of character strings are
-!         used in comparisons.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!-    SPICELIB Version 1.1.0, 26-MAY-2010 (NJB)
-!
-!        Bug fix: subscript out of range error caused by
-!        column entry strings longer than MAXLEN has been
-!        corrected. Also updated Restrictions header section.
-!
-!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(maxstr)     cval   ( 2 )
 
       real(wp)              dval   ( 2 )
@@ -16136,32 +15793,31 @@ contains
 !$Procedure      ZZEKSCMP ( EK, scalar value comparison )
 
       module procedure zzekscmp
+!! ## Abstract
+!!
+!!     Compare a specified scalar EK column entry with a scalar value.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     EK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: matchi
-
-! $ Abstract
-!
-!     Compare a specified scalar EK column entry with a scalar value.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     EK
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
+      use pepper_inc_ekwild
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-      include 'ekwild.inc'
 
 
 ! $ Detailed_Input
@@ -16654,158 +16310,147 @@ contains
 !$Procedure ZZEKERC1 ( EK, LLE using record pointers, char, type 1 )
 
       module procedure zzekerc1
+!! ## Abstract
+!!
+!!     Find the last column value less than or equal to a specified key,
+!!     for a specified character EK column having a type 1 index, using
+!!     dictionary ordering on character data values and record pointers.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for read or write
+!!                    access.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     CKEY,
+!!     RECPTR         are, respectively, a character key and a pointer
+!!                    to an EK record containing that key.  The last
+!!                    column entry less than or equal to this key is
+!!                    sought.  The order relation used is dictionary
+!!                    ordering on the pair (CKEY, RECPTR).
+!!
+!!     NULL           is a logical flag indicating whether the input
+!!                    key is null.  When NULL is .TRUE., CKEY is
+!!                    ignored by this routine.
+!!
+!! ## Detailed Output
+!!
+!!     PRVIDX         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than or
+!!                    equal to CKEY, where the order relation is
+!!                    as indicated above.  If the column contains
+!!                    elements equal to CKEY, PRVIDX is the index of the
+!!                    record designated by the input RECPTR.
+!!
+!!                    If all elements of the column are greater than
+!!                    CKEY, PRVIDX is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVIDX.
+!!
+!!                    If all elements of the column are greater than
+!!                    CKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     3)  If the tree is empty, PRVIDX and PRVPTR are set to zero.
+!!         This case is not considered an error.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than or equal
+!!     to a specified character key, within a specified segment and
+!!     column.  The column must be indexed by a type 1 index.  The order
+!!     relation used is dictionary ordering on ordered pairs consisting
+!!     of data values and record pointers:  if the data values in two
+!!     column entries are equal, the associated record pointers determine
+!!     the order relation of the column entries.
+!!
+!!     Type 1 indexes are implemented as DAS B*-trees.  The data
+!!     pointers of an index tree contain record pointers.  Therefore, the
+!!     tree implements an abstract order vector.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKLERC.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typo in comments.
+!!
+!!-    Beta Version 1.1.0, 18-MAY-1997 (NJB)
+!!
+!!        Errors in comparisons of items of equal value were fixed.
+!!        In such cases, items are compared according to order of
+!!        their record pointers.
+!!
+!!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than or equal to a specified key,
-!     for a specified character EK column having a type 1 index, using
-!     dictionary ordering on character data values and record pointers.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for read or write
-!                    access.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     CKEY,
-!     RECPTR         are, respectively, a character key and a pointer
-!                    to an EK record containing that key.  The last
-!                    column entry less than or equal to this key is
-!                    sought.  The order relation used is dictionary
-!                    ordering on the pair (CKEY, RECPTR).
-!
-!     NULL           is a logical flag indicating whether the input
-!                    key is null.  When NULL is .TRUE., CKEY is
-!                    ignored by this routine.
-!
-! $ Detailed_Output
-!
-!     PRVIDX         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than or
-!                    equal to CKEY, where the order relation is
-!                    as indicated above.  If the column contains
-!                    elements equal to CKEY, PRVIDX is the index of the
-!                    record designated by the input RECPTR.
-!
-!                    If all elements of the column are greater than
-!                    CKEY, PRVIDX is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVIDX.
-!
-!                    If all elements of the column are greater than
-!                    CKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-!     3)  If the tree is empty, PRVIDX and PRVPTR are set to zero.
-!         This case is not considered an error.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than or equal
-!     to a specified character key, within a specified segment and
-!     column.  The column must be indexed by a type 1 index.  The order
-!     relation used is dictionary ordering on ordered pairs consisting
-!     of data values and record pointers:  if the data values in two
-!     column entries are equal, the associated record pointers determine
-!     the order relation of the column entries.
-!
-!     Type 1 indexes are implemented as DAS B*-trees.  The data
-!     pointers of an index tree contain record pointers.  Therefore, the
-!     tree implements an abstract order vector.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKLERC.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typo in comments.
-!
-!-    Beta Version 1.1.0, 18-MAY-1997 (NJB)
-!
-!        Errors in comparisons of items of equal value were fixed.
-!        In such cases, items are compared according to order of
-!        their record pointers.
-!
-!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           begin
       integer(ip)           begptr
       integer(ip)           end
@@ -17005,157 +16650,147 @@ contains
 !$Procedure ZZEKERD1 ( EK, LLE using record pointers, d.p., type 1 )
 
       module procedure zzekerd1
+!! ## Abstract
+!!
+!!     Find the last column value less than or equal to a specified key,
+!!     for a specified d.p. EK column having a type 1 index, using
+!!     dictionary ordering on d.p. data values and record pointers.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     DKEY,
+!!     RECPTR         are, respectively, a d.p. key and a pointer to
+!!                    an EK record containing that key. The last column
+!!                    entry less than or equal to this key is sought.
+!!                    The order relation used is dictionary ordering on
+!!                    the pair (DKEY, RECPTR).
+!!
+!!     NULL           is a logical flag indicating whether the input
+!!                    key is null.  When NULL is .TRUE., DKEY is
+!!                    ignored by this routine.
+!!
+!! ## Detailed Output
+!!
+!!     PRVIDX         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than or
+!!                    equal to DKEY, where the order relation is
+!!                    as indicated above.  If the column contains
+!!                    elements equal to DKEY, PRVIDX is the index of the
+!!                    record designated by the input RECPTR.
+!!
+!!                    If all elements of the column are greater than
+!!                    DKEY, PRVIDX is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVIDX.
+!!
+!!                    If all elements of the column are greater than
+!!                    DKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     3)  If the tree is empty, PRVLOC and PRVPTR are set to zero.
+!!         This case is not considered an error.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than or equal
+!!     to a specified d.p. key, within a specified segment and
+!!     column.  The column must be indexed by a type 1 index.  The order
+!!     relation used is dictionary ordering on ordered pairs consisting
+!!     of data values and record pointers:  if the data values in two
+!!     column entries are equal, the associated record pointers determine
+!!     the order relation of the column entries.
+!!
+!!     Type 1 indexes are implemented as DAS B*-trees.  The data
+!!     pointers of an index tree contain record pointers.  Therefore, the
+!!     tree implements an abstract order vector.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKLERD.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typo in comments.
+!!
+!!-    Beta Version 1.1.0, 18-MAY-1997 (NJB)
+!!
+!!        Errors in comparisons of items of equal value were fixed.
+!!        In such cases, items are compared according to order of
+!!        their record pointers.
+!!
+!!-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than or equal to a specified key,
-!     for a specified d.p. EK column having a type 1 index, using
-!     dictionary ordering on d.p. data values and record pointers.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     DKEY,
-!     RECPTR         are, respectively, a d.p. key and a pointer to
-!                    an EK record containing that key. The last column
-!                    entry less than or equal to this key is sought.
-!                    The order relation used is dictionary ordering on
-!                    the pair (DKEY, RECPTR).
-!
-!     NULL           is a logical flag indicating whether the input
-!                    key is null.  When NULL is .TRUE., DKEY is
-!                    ignored by this routine.
-!
-! $ Detailed_Output
-!
-!     PRVIDX         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than or
-!                    equal to DKEY, where the order relation is
-!                    as indicated above.  If the column contains
-!                    elements equal to DKEY, PRVIDX is the index of the
-!                    record designated by the input RECPTR.
-!
-!                    If all elements of the column are greater than
-!                    DKEY, PRVIDX is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVIDX.
-!
-!                    If all elements of the column are greater than
-!                    DKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-!     3)  If the tree is empty, PRVLOC and PRVPTR are set to zero.
-!         This case is not considered an error.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than or equal
-!     to a specified d.p. key, within a specified segment and
-!     column.  The column must be indexed by a type 1 index.  The order
-!     relation used is dictionary ordering on ordered pairs consisting
-!     of data values and record pointers:  if the data values in two
-!     column entries are equal, the associated record pointers determine
-!     the order relation of the column entries.
-!
-!     Type 1 indexes are implemented as DAS B*-trees.  The data
-!     pointers of an index tree contain record pointers.  Therefore, the
-!     tree implements an abstract order vector.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKLERD.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typo in comments.
-!
-!-    Beta Version 1.1.0, 18-MAY-1997 (NJB)
-!
-!        Errors in comparisons of items of equal value were fixed.
-!        In such cases, items are compared according to order of
-!        their record pointers.
-!
-!-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           begin
       integer(ip)           begptr
       integer(ip)           end
@@ -17355,158 +16990,147 @@ contains
 !$Procedure ZZEKERI1 ( EK, LLE using record pointers, integer, type 1 )
 
       module procedure zzekeri1
+!! ## Abstract
+!!
+!!     Find the last column value less than or equal to a specified key,
+!!     for a specified integer EK column having a type 1 index, using
+!!     dictionary ordering on integer data values and record pointers.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     IKEY,
+!!     RECPTR         are, respectively, an integer key and a pointer to
+!!                    an EK record containing that key. The last column
+!!                    entry less than or equal to this key is sought.
+!!                    The order relation used is dictionary ordering on
+!!                    the pair (IKEY, RECPTR).
+!!
+!!     NULL           is a logical flag indicating whether the input
+!!                    key is null.  When NULL is .TRUE., IKEY is
+!!                    ignored by this routine.
+!!
+!! ## Detailed Output
+!!
+!!     PRVIDX         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than or
+!!                    equal to IKEY, where the order relation is
+!!                    as indicated above.  If the column contains
+!!                    elements equal to IKEY, PRVIDX is the index of the
+!!                    record designated by the input RECPTR.
+!!
+!!                    If all elements of the column are greater than
+!!                    IKEY, PRVIDX is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVIDX.
+!!
+!!                    If all elements of the column are greater than
+!!                    IKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     3)  If the tree is empty, PRVIDX and PRVPTR are set to zero.
+!!         This case is not considered an error.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than or equal
+!!     to a specified integer key, within a specified segment and
+!!     column.  The column must be indexed by a type 1 index.  The order
+!!     relation used is dictionary ordering on ordered pairs consisting
+!!     of data values and record pointers:  if the data values in two
+!!     column entries are equal, the associated record pointers determine
+!!     the order relation of the column entries.
+!!
+!!     Type 1 indexes are implemented as DAS B*-trees.  The data
+!!     pointers of an index tree contain record pointers.  Therefore, the
+!!     tree implements an abstract order vector.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKLERI.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typo in comments.
+!!
+!!-    Beta Version 1.1.0, 07-FEB-1997 (NJB)
+!!
+!!        Errors in comparisons of items of equal value were fixed.
+!!        In such cases, items are compared according to order of
+!!        their record pointers.
+!!
+!!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than or equal to a specified key,
-!     for a specified integer EK column having a type 1 index, using
-!     dictionary ordering on integer data values and record pointers.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     IKEY,
-!     RECPTR         are, respectively, an integer key and a pointer to
-!                    an EK record containing that key. The last column
-!                    entry less than or equal to this key is sought.
-!                    The order relation used is dictionary ordering on
-!                    the pair (IKEY, RECPTR).
-!
-!     NULL           is a logical flag indicating whether the input
-!                    key is null.  When NULL is .TRUE., IKEY is
-!                    ignored by this routine.
-!
-! $ Detailed_Output
-!
-!     PRVIDX         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than or
-!                    equal to IKEY, where the order relation is
-!                    as indicated above.  If the column contains
-!                    elements equal to IKEY, PRVIDX is the index of the
-!                    record designated by the input RECPTR.
-!
-!                    If all elements of the column are greater than
-!                    IKEY, PRVIDX is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVIDX.
-!
-!                    If all elements of the column are greater than
-!                    IKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-!     3)  If the tree is empty, PRVIDX and PRVPTR are set to zero.
-!         This case is not considered an error.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than or equal
-!     to a specified integer key, within a specified segment and
-!     column.  The column must be indexed by a type 1 index.  The order
-!     relation used is dictionary ordering on ordered pairs consisting
-!     of data values and record pointers:  if the data values in two
-!     column entries are equal, the associated record pointers determine
-!     the order relation of the column entries.
-!
-!     Type 1 indexes are implemented as DAS B*-trees.  The data
-!     pointers of an index tree contain record pointers.  Therefore, the
-!     tree implements an abstract order vector.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKLERI.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typo in comments.
-!
-!-    Beta Version 1.1.0, 07-FEB-1997 (NJB)
-!
-!        Errors in comparisons of items of equal value were fixed.
-!        In such cases, items are compared according to order of
-!        their record pointers.
-!
-!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           begin
       integer(ip)           begptr
       integer(ip)           end
@@ -17706,138 +17330,130 @@ contains
 !$Procedure ZZEKLLEC ( EK, last less than or equal to, character )
 
       module procedure zzekllec
+!! ## Abstract
+!!
+!!     Find the last column value less than or equal to a specified key,
+!!     for a specified, indexed character EK column.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     CKEY           is a character string key.  The last column entry
+!!                    less than this key is sought.
+!!
+!! ## Detailed Output
+!!
+!!     PRVLOC         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than or
+!!                    equal to CKEY.  If the column contains elements
+!!                    equal to CKEY, PRVLOC is the index of the last
+!!                    such element.
+!!
+!!                    If all elements of the column are greater than
+!!                    CKEY, PRVLOC is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVLOC.
+!!
+!!                    If all elements of the column are greater than
+!!                    CKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not character,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than or equal
+!!     to a specified character key, within a specified segment and
+!!     column.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKILLE.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than or equal to a specified key,
-!     for a specified, indexed character EK column.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     CKEY           is a character string key.  The last column entry
-!                    less than this key is sought.
-!
-! $ Detailed_Output
-!
-!     PRVLOC         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than or
-!                    equal to CKEY.  If the column contains elements
-!                    equal to CKEY, PRVLOC is the index of the last
-!                    such element.
-!
-!                    If all elements of the column are greater than
-!                    CKEY, PRVLOC is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVLOC.
-!
-!                    If all elements of the column are greater than
-!                    CKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not character,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than or equal
-!     to a specified character key, within a specified segment and
-!     column.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKILLE.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           begin
@@ -17977,138 +17593,130 @@ contains
 !$Procedure ZZEKLLED ( EK, last less than or equal to, d.p. )
 
       module procedure zzeklled
+!! ## Abstract
+!!
+!!     Find the last column value less than or equal to a specified key,
+!!     for a specified, indexed double precision EK column.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     DKEY           is an double precision string key.  The last column
+!!                    entry less than this key is sought.
+!!
+!! ## Detailed Output
+!!
+!!     PRVLOC         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than or
+!!                    equal to DKEY.  If the column contains elements
+!!                    equal to DKEY, PRVLOC is the index of the last
+!!                    such element.
+!!
+!!                    If all elements of the column are greater than
+!!                    DKEY, PRVLOC is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVLOC.
+!!
+!!                    If all elements of the column are greater than
+!!                    DKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not character,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than or equal
+!!     to a specified double precision key, within a specified segment
+!!     and column.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKILLE.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than or equal to a specified key,
-!     for a specified, indexed double precision EK column.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     DKEY           is an double precision string key.  The last column
-!                    entry less than this key is sought.
-!
-! $ Detailed_Output
-!
-!     PRVLOC         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than or
-!                    equal to DKEY.  If the column contains elements
-!                    equal to DKEY, PRVLOC is the index of the last
-!                    such element.
-!
-!                    If all elements of the column are greater than
-!                    DKEY, PRVLOC is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVLOC.
-!
-!                    If all elements of the column are greater than
-!                    DKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not character,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than or equal
-!     to a specified double precision key, within a specified segment
-!     and column.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKILLE.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           begin
@@ -18248,138 +17856,130 @@ contains
 !$Procedure ZZEKLLEI ( EK, last less than or equal to, integer )
 
       module procedure zzekllei
+!! ## Abstract
+!!
+!!     Find the last column value less than or equal to a specified key,
+!!     for a specified, indexed integer EK column.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     IKEY           is an integer key.  The last column entry
+!!                    less than or equal to this key is sought.
+!!
+!! ## Detailed Output
+!!
+!!     PRVLOC         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than or
+!!                    equal to IKEY.  If the column contains elements
+!!                    equal to IKEY, PRVLOC is the index of the last
+!!                    such element.
+!!
+!!                    If all elements of the column are greater than
+!!                    IKEY, PRVLOC is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVLOC.
+!!
+!!                    If all elements of the column are greater than
+!!                    IKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not character,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than or equal
+!!     to a specified integer key, within a specified segment and
+!!     column.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKILLE.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than or equal to a specified key,
-!     for a specified, indexed integer EK column.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     IKEY           is an integer key.  The last column entry
-!                    less than or equal to this key is sought.
-!
-! $ Detailed_Output
-!
-!     PRVLOC         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than or
-!                    equal to IKEY.  If the column contains elements
-!                    equal to IKEY, PRVLOC is the index of the last
-!                    such element.
-!
-!                    If all elements of the column are greater than
-!                    IKEY, PRVLOC is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVLOC.
-!
-!                    If all elements of the column are greater than
-!                    IKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not character,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than or equal
-!     to a specified integer key, within a specified segment and
-!     column.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKILLE.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           begin
@@ -18519,134 +18119,126 @@ contains
 !$Procedure ZZEKLLTC ( EK, last less than, character )
 
       module procedure zzeklltc
+!! ## Abstract
+!!
+!!     Find the last column value less than a specified key,
+!!     for a specified, indexed character EK column.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     CKEY           is a character string key.  The last column entry
+!!                    less than this key is sought.
+!!
+!! ## Detailed Output
+!!
+!!     PRVLOC         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than CKEY.
+!!
+!!                    If all elements of the column are greater than
+!!                    or equal to CKEY, PRVLOC is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVLOC.
+!!
+!!                    If all elements of the column are greater than
+!!                    or equal to CKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not character,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than a specified
+!!     character key, within a specified segment and column.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKILLT.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than a specified key,
-!     for a specified, indexed character EK column.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     CKEY           is a character string key.  The last column entry
-!                    less than this key is sought.
-!
-! $ Detailed_Output
-!
-!     PRVLOC         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than CKEY.
-!
-!                    If all elements of the column are greater than
-!                    or equal to CKEY, PRVLOC is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVLOC.
-!
-!                    If all elements of the column are greater than
-!                    or equal to CKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not character,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than a specified
-!     character key, within a specified segment and column.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKILLT.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           begin
@@ -18787,133 +18379,125 @@ contains
 !$Procedure ZZEKLLTD ( EK, last less than, d.p. )
 
       module procedure zzeklltd
+!! ## Abstract
+!!
+!!     Find the last column value less than a specified key,
+!!     for a specified, indexed double precision EK column.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     DKEY           is a double precision key.  The last column entry
+!!                    less than this key is sought.
+!!
+!! ## Detailed Output
+!!
+!!     PRVLOC         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than DKEY.
+!!
+!!                    If all elements of the column are greater than
+!!                    or equal to DKEY, PRVLOC is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVLOC.
+!!
+!!                    If all elements of the column are greater than
+!!                    or equal to DKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not double precision,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than a specified
+!!     double precision key, within a specified segment and column.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKILLT.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than a specified key,
-!     for a specified, indexed double precision EK column.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     DKEY           is a double precision key.  The last column entry
-!                    less than this key is sought.
-!
-! $ Detailed_Output
-!
-!     PRVLOC         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than DKEY.
-!
-!                    If all elements of the column are greater than
-!                    or equal to DKEY, PRVLOC is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVLOC.
-!
-!                    If all elements of the column are greater than
-!                    or equal to DKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not double precision,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than a specified
-!     double precision key, within a specified segment and column.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKILLT.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           begin
@@ -19054,134 +18638,126 @@ contains
 !$Procedure ZZEKLLTI ( EK, last less than, integer )
 
       module procedure zzekllti
+!! ## Abstract
+!!
+!!     Find the last column value less than a specified key,
+!!     for a specified, indexed integer EK column.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     IKEY           is an integer key.  The last column entry
+!!                    less than this key is sought.
+!!
+!! ## Detailed Output
+!!
+!!     PRVLOC         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than IKEY.
+!!
+!!                    If all elements of the column are greater than
+!!                    or equal to IKEY, PRVLOC is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVLOC.
+!!
+!!                    If all elements of the column are greater than
+!!                    or equal to IKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not character,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than a specified
+!!     integer key, within a specified segment and column.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKILLT.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than a specified key,
-!     for a specified, indexed integer EK column.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     IKEY           is an integer key.  The last column entry
-!                    less than this key is sought.
-!
-! $ Detailed_Output
-!
-!     PRVLOC         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than IKEY.
-!
-!                    If all elements of the column are greater than
-!                    or equal to IKEY, PRVLOC is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVLOC.
-!
-!                    If all elements of the column are greater than
-!                    or equal to IKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not character,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than a specified
-!     integer key, within a specified segment and column.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKILLT.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           begin
@@ -19322,215 +18898,207 @@ contains
 !$Procedure ZZEKRCMP ( EK, row comparison )
 
       module procedure zzekrcmp
+!! ## Abstract
+!!
+!!     Compare two EK rows, using as the order relation dictionary
+!!     ordering on a specified list of columns.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     OP             is an integer code representing a binary operator
+!!                    that expresses an order relation.  The allowed
+!!                    values of OP are the parameters
+!!
+!!                       EQ
+!!                       GE
+!!                       GT
+!!                       LE
+!!                       LT
+!!                       NE
+!!
+!!                    This routine test whether the input rows satisfy
+!!                    the order relation
+!!
+!!                       <row1> OP <row2>
+!!
+!!     NCOLS          is the number of columns used to define a
+!!                    dictionary ordering.
+!!
+!!     HAN1           is the file handle of the EK containing the first
+!!                    row.
+!!
+!!     SGDSC1         is the segment descriptor of the EK segment
+!!                    containing the first of the two rows to be
+!!                    compared.
+!!
+!!     CDLST1         is a list of column descriptors.  These descriptors
+!!                    identify the columns that define the dictionary
+!!                    ordering used to compare the input rows.
+!!
+!!     ROW1           is the row number of the first row to be compared.
+!!
+!!     ELTS1          is a list of column entry element indices for the
+!!                    first row.  These indices identify the elements
+!!                    to be used in the row comparison.  The value of
+!!                    ELTS1(I) is used only if the column specified by
+!!                    the Ith column descriptor of CDLST1 is
+!!                    array-valued.
+!!
+!!     HAN2           is the file handle of the EK containing the second
+!!                    row to be compared.
+!!
+!!     SGDSC2         is the segment descriptor of the EK segment
+!!                    containing the second row.
+!!
+!!     CDLST2         is a list of column descriptors for the second row.
+!!                    This list parallels CDLST1:  the Nth descriptor
+!!                    in CDLST2 is for a column having the same name and
+!!                    attributes as that designated by the Nth descriptor
+!!                    in CDLST1.
+!!
+!!     ROW2           is the row number of the second row.
+!!
+!!     ELTS2          is a list of column entry element indices for the
+!!                    second row.  These indices identify the elements
+!!                    to be used in the row comparison.  The value of
+!!                    ELTS2(I) is used only if the column specified by
+!!                    the Ith column descriptor of CDLST2 is
+!!                    array-valued.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns .TRUE. if and only if the two rows satisfy
+!!     the order relation specified by the input arguments:
+!!
+!!        <row 1> OP <row 2>
+!!
+!!     The ordering used to compare the rows is a dictionary ordering
+!!     defined by the column descriptor lists CDLST1 and CDLST2.  The
+!!     order relationship between the columns is determined by comparing
+!!     the entries in both rows in the column identified by CDLST1(*,1)
+!!     and CDLST2(*,1); if these column entries are equal, the entries
+!!     identified by CDLST1(*,2) and CDLST2(*,2) are compared, and so
+!!     on, until the tie is broken or all of the specified column entries
+!!     have been compared.
+!!
+!! ## Parameters
+!!
+!!     Within the EK system, relational operators used in EK queries are
+!!     represented by integer codes.  The codes and their meanings are
+!!     listed below.
+!!
+!!     Relational expressions in EK queries have the form
+!!
+!!        <column name> <operator> <value>
+!!
+!!     For columns containing numeric values, the operators
+!!
+!!        EQ,  GE,  GT,  LE,  LT,  NE
+!!
+!!     may be used; these operators have the same meanings as their
+!!     Fortran counterparts.  In the character case, the same operators
+!!     may be used; the meanings of the parameters
+!!
+!!        GE,  GT,  LE,  LT
+!!
+!!     match those of the Fortran lexical functions
+!!
+!!        LGE, LGT, LLE, LLT
+!!
+!!     Null values are considered to precede all non-null values.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the either of input file handles is invalid, the error
+!!         will be diagnosed by routines called by this routine.
+!!         The function value is .FALSE. in this case.
+!!
+!!     2)  If an I/O error occurs while attempting to find the address
+!!         range of the specified column entry element, the error will
+!!         be diagnosed by routines called by this routine.  The
+!!         function value is .FALSE. in this case.
+!!
+!!     3)  If any of the input segment descriptors, column descriptors,
+!!         or row numbers are invalid, this routine may fail in
+!!         unpredictable, but possibly spectacular, ways.  Except
+!!         as described in this header section, no attempt is made to
+!!         handle these errors.
+!!
+!!     4)  If the data type code in the input column descriptor is not
+!!         recognized, the error SPICE(INVALIDDATATYPE) is signaled.
+!!         The function value is .FALSE. in this case.
+!!
+!!     5)  If the relational operator code OP is not recognized, the
+!!         error SPICE(UNNATURALRELATION) is signaled.
+!!         The function value is .FALSE. in this case.
+!!
+!! ## Files
+!!
+!!     See the descriptions of the arguments HAN1 and HAN2 in
+!!     $Detailed_Input.
+!!
+!! ## Particulars
+!!
+!!     This routine is an EK utility intended to centralize a frequently
+!!     performed comparison operation.
+!!
+!! ## Examples
+!!
+!!     See EKSRCH.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine must execute quickly.  Therefore, it checks in
+!!         only if it detects an error.  If an error is signaled by a
+!!         routine called by this routine, this routine will not appear
+!!         in the SPICELIB traceback display.  Also, in the interest
+!!         of speed, this routine does not test the value of the SPICELIB
+!!         function RETURN upon entry.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.2, 02-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    SPICELIB Version 1.0.1, 02-JAN-2007 (EDW)
+!!
+!!        Edited to remove typo in function declaration.
+!!        Declaration included an extraneous continuation
+!!        marker.
+!!
+!!-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: movei
-
-! $ Abstract
-!
-!     Compare two EK rows, using as the order relation dictionary
-!     ordering on a specified list of columns.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     UTILITY
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     OP             is an integer code representing a binary operator
-!                    that expresses an order relation.  The allowed
-!                    values of OP are the parameters
-!
-!                       EQ
-!                       GE
-!                       GT
-!                       LE
-!                       LT
-!                       NE
-!
-!                    This routine test whether the input rows satisfy
-!                    the order relation
-!
-!                       <row1> OP <row2>
-!
-!     NCOLS          is the number of columns used to define a
-!                    dictionary ordering.
-!
-!     HAN1           is the file handle of the EK containing the first
-!                    row.
-!
-!     SGDSC1         is the segment descriptor of the EK segment
-!                    containing the first of the two rows to be
-!                    compared.
-!
-!     CDLST1         is a list of column descriptors.  These descriptors
-!                    identify the columns that define the dictionary
-!                    ordering used to compare the input rows.
-!
-!     ROW1           is the row number of the first row to be compared.
-!
-!     ELTS1          is a list of column entry element indices for the
-!                    first row.  These indices identify the elements
-!                    to be used in the row comparison.  The value of
-!                    ELTS1(I) is used only if the column specified by
-!                    the Ith column descriptor of CDLST1 is
-!                    array-valued.
-!
-!     HAN2           is the file handle of the EK containing the second
-!                    row to be compared.
-!
-!     SGDSC2         is the segment descriptor of the EK segment
-!                    containing the second row.
-!
-!     CDLST2         is a list of column descriptors for the second row.
-!                    This list parallels CDLST1:  the Nth descriptor
-!                    in CDLST2 is for a column having the same name and
-!                    attributes as that designated by the Nth descriptor
-!                    in CDLST1.
-!
-!     ROW2           is the row number of the second row.
-!
-!     ELTS2          is a list of column entry element indices for the
-!                    second row.  These indices identify the elements
-!                    to be used in the row comparison.  The value of
-!                    ELTS2(I) is used only if the column specified by
-!                    the Ith column descriptor of CDLST2 is
-!                    array-valued.
-!
-! $ Detailed_Output
-!
-!     The function returns .TRUE. if and only if the two rows satisfy
-!     the order relation specified by the input arguments:
-!
-!        <row 1> OP <row 2>
-!
-!     The ordering used to compare the rows is a dictionary ordering
-!     defined by the column descriptor lists CDLST1 and CDLST2.  The
-!     order relationship between the columns is determined by comparing
-!     the entries in both rows in the column identified by CDLST1(*,1)
-!     and CDLST2(*,1); if these column entries are equal, the entries
-!     identified by CDLST1(*,2) and CDLST2(*,2) are compared, and so
-!     on, until the tie is broken or all of the specified column entries
-!     have been compared.
-!
-! $ Parameters
-!
-!     Within the EK system, relational operators used in EK queries are
-!     represented by integer codes.  The codes and their meanings are
-!     listed below.
-!
-!     Relational expressions in EK queries have the form
-!
-!        <column name> <operator> <value>
-!
-!     For columns containing numeric values, the operators
-!
-!        EQ,  GE,  GT,  LE,  LT,  NE
-!
-!     may be used; these operators have the same meanings as their
-!     Fortran counterparts.  In the character case, the same operators
-!     may be used; the meanings of the parameters
-!
-!        GE,  GT,  LE,  LT
-!
-!     match those of the Fortran lexical functions
-!
-!        LGE, LGT, LLE, LLT
-!
-!     Null values are considered to precede all non-null values.
-!
-! $ Exceptions
-!
-!     1)  If the either of input file handles is invalid, the error
-!         will be diagnosed by routines called by this routine.
-!         The function value is .FALSE. in this case.
-!
-!     2)  If an I/O error occurs while attempting to find the address
-!         range of the specified column entry element, the error will
-!         be diagnosed by routines called by this routine.  The
-!         function value is .FALSE. in this case.
-!
-!     3)  If any of the input segment descriptors, column descriptors,
-!         or row numbers are invalid, this routine may fail in
-!         unpredictable, but possibly spectacular, ways.  Except
-!         as described in this header section, no attempt is made to
-!         handle these errors.
-!
-!     4)  If the data type code in the input column descriptor is not
-!         recognized, the error SPICE(INVALIDDATATYPE) is signaled.
-!         The function value is .FALSE. in this case.
-!
-!     5)  If the relational operator code OP is not recognized, the
-!         error SPICE(UNNATURALRELATION) is signaled.
-!         The function value is .FALSE. in this case.
-!
-! $ Files
-!
-!     See the descriptions of the arguments HAN1 and HAN2 in
-!     $Detailed_Input.
-!
-! $ Particulars
-!
-!     This routine is an EK utility intended to centralize a frequently
-!     performed comparison operation.
-!
-! $ Examples
-!
-!     See EKSRCH.
-!
-! $ Restrictions
-!
-!     1)  This routine must execute quickly.  Therefore, it checks in
-!         only if it detects an error.  If an error is signaled by a
-!         routine called by this routine, this routine will not appear
-!         in the SPICELIB traceback display.  Also, in the interest
-!         of speed, this routine does not test the value of the SPICELIB
-!         function RETURN upon entry.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.2, 02-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    SPICELIB Version 1.0.1, 02-JAN-2007 (EDW)
-!
-!        Edited to remove typo in function declaration.
-!        Declaration included an extraneous continuation
-!        marker.
-!
-!-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           cldscs ( cdscsz, 2 )
       integer(ip)           col
       integer(ip)           elts   ( 2 )
@@ -19633,31 +19201,29 @@ contains
 !$Procedure      ZZEKRMCH ( EK, row match )
 
       module procedure zzekrmch
+!! ## Abstract
+!!
+!!     Determine whether a specified row in an EK file satisfies
+!!     a specified set of constraints.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine whether a specified row in an EK file satisfies
-!     a specified set of constraints.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ektype.inc'
-      include 'ekopcd.inc'
-      include 'ekwild.inc'
-      include 'ekqlimit.inc'
-
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ektype
+      use pepper_inc_ekopcd
+      use pepper_inc_ekwild
+      use pepper_inc_ekqlimit
       integer(ip), parameter :: maxcol = 10
 
 
@@ -19869,32 +19435,30 @@ contains
 !$Procedure      ZZEKVCMP ( EK, row vector comparison )
 
       module procedure zzekvcmp
+!! ## Abstract
+!!
+!!     Compare two row vectors, using dictionary ordering on a
+!!     specified list of columns as the order relation.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: movei
-
-! $ Abstract
-!
-!     Compare two row vectors, using dictionary ordering on a
-!     specified list of columns as the order relation.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip), parameter :: lbpool = -5
 
 
@@ -20250,234 +19814,225 @@ contains
 !$Procedure      ZZEKVMCH ( EK, vector match )
 
       module procedure zzekvmch
+!! ## Abstract
+!!
+!!     Determine whether a vector of constraints involving comparisons of
+!!     specified EK column elements is satisfied.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     NCNSTR         is the number of input join constraints.   Each
+!!                    input constraint relates two EK column entries;
+!!                    abstractly, the form of the constraints is:
+!!
+!!                       <col entry 1> <relational op> <col entry 2>
+!!
+!!                    The compared entries are defined by handles,
+!!                    segment base addresses, column descriptors, and row
+!!                    numbers.
+!!
+!!     ACTIVE         is an array of logical flags indicating which
+!!                    constraints are currently applicable.  The Nth
+!!                    element of ACTIVE indicates whether or not to apply
+!!                    the Nth constraint:  if ACTIVE(N) is .TRUE., the
+!!                    constraint is applicable, otherwise it isn't.
+!!
+!!                    The elements of the other input arguments that
+!!                    define constraints are defined when the
+!!                    corresponding element of ACTIVE is .TRUE.  For
+!!                    example, when the second constraint is not active,
+!!                    the second column descriptor in LDSCRS may not be
+!!                    defined.
+!!
+!!     LHANS          is an array of EK file handles for the left-hand-
+!!                    sides of the constraints.
+!!
+!!     LSDSCS         is an array of segment descriptors for the
+!!                    left-hand-sides of the constraints.
+!!
+!!     LDSCRS         is an array of column descriptors for the
+!!                    left-hand-sides of the constraints.
+!!
+!!     LROWS          is an array of row numbers for the left-hand-sides
+!!                    of the constraints.
+!!
+!!     LELTS          is an array of column entry element indices for the
+!!                    left-hand-sides of the constraints.  These
+!!                    indices are ignored unless the columns they apply
+!!                    to are array-valued.
+!!
+!!     OPS            is an array of relational operators used in the
+!!                    input constraints.  The elements of OPS are any of
+!!                    the integer parameters
+!!
+!!                       EQ, GE, GT, LE, LT, NE, LIKE, ISNULL, NOTNUL
+!!
+!!                    The Ith element of OPS corresponds to the Ith
+!!                    constraint.
+!!
+!!     RHANS          is an array of EK file handles for the right-hand-
+!!                    sides of the constraints.
+!!
+!!     RSDSCS         is an array of segment descriptors for the
+!!                    right-hand-sides of the constraints.
+!!
+!!     RDSCRS         is an array of column descriptors for the
+!!                    right-hand-sides of the constraints.
+!!
+!!     RROWS          is an array of row numbers for the right-hand-sides
+!!                    of the constraints.
+!!
+!!     RELTS          is an array of column entry element indices for the
+!!                    right-hand-sides of the constraints.  These
+!!                    indices are ignored unless the columns they apply
+!!                    to are array-valued.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns .TRUE. if and only if all of the relational
+!!     constraints specified by the input arguments are satisfied.
+!!
+!! ## Parameters
+!!
+!!     Within the EK system, operators used in EK queries are
+!!     represented by integer codes.  The codes and their meanings are
+!!     listed below.
+!!
+!!     Relational expressions in EK queries have the form
+!!
+!!        <column name> <operator> <value>
+!!
+!!     For columns containing numeric values, the operators
+!!
+!!        EQ,  GE,  GT,  LE,  LT,  NE
+!!
+!!     may be used; these operators have the same meanings as their
+!!     Fortran counterparts.  For columns containing character values,
+!!     the list of allowed operators includes those in the above list,
+!!     and in addition includes the operator
+!!
+!!        LIKE
+!!
+!!     which is used to compare strings to a template.  In the character
+!!     case, the meanings of the parameters
+!!
+!!        GE,  GT,  LE,  LT
+!!
+!!     match those of the Fortran lexical functions
+!!
+!!        LGE, LGT, LLE, LLT
+!!
+!!     The additional unary operators
+!!
+!!        ISNULL, NOTNUL
+!!
+!!     are used to test whether a value of any type is null.
+!!
+!! ## Exceptions
+!!
+!!     1)  If any of the input file handles is invalid, the error
+!!         will be diagnosed by routines called by this routine.
+!!         The function value is .FALSE. in this case.
+!!
+!!     2)  If an I/O error occurs while attempting to find the address
+!!         range of a column entry element, the error will
+!!         be diagnosed by routines called by this routine.  The
+!!         function value is .FALSE. in this case.
+!!
+!!     3)  If any of the input segment descriptors, column descriptors,
+!!         or row numbers are invalid, this routine may fail in
+!!         unpredictable, but possibly spectacular, ways.  Except
+!!         as described in this header section, no attempt is made to
+!!         handle these errors.
+!!
+!!     4)  If the data type code in an input column descriptor is not
+!!         recognized, the error SPICE(INVALIDDATATYPE) is signaled.
+!!         The function value is .FALSE. in this case.
+!!
+!!     5)  If a relational operator code is not recognized, the
+!!         error SPICE(UNNATURALRELATION) is signaled.
+!!         The function value is .FALSE. in this case.
+!!
+!! ## Files
+!!
+!!     See the descriptions of the arguments LHAN and RHAN in
+!!     $Detailed_Input.
+!!
+!! ## Particulars
+!!
+!!     This routine is an EK utility intended to centralize a frequently
+!!     performed comparison operation.
+!!
+!! ## Examples
+!!
+!!     See EKSRCH.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine must execute quickly.  Therefore, it checks in
+!!         only if it detects an error.  If an error is signaled by a
+!!         routine called by this routine, this routine will not appear
+!!         in the SPICELIB traceback display.  Also, in the interest
+!!         of speed, this routine does not test the value of the SPICELIB
+!!         function RETURN upon entry.
+!!
+!!     2)  This routine depends on the requested comparison to have
+!!         been semantically checked. Semantically invalid comparisons
+!!         are treated as bugs.
+!!
+!!     3)  Only the first MAXSTR characters of character strings are
+!!         used in comparisons.
+!!C
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 05-FEB-2015 (NJB)
+!!
+!!        Updated to use ERRHAN.
+!!
+!!-    SPICELIB Version 1.1.0, 01-JUN-2010 (NJB)
+!!
+!!        Bug fix: subscript out of range error caused by
+!!        column entry strings longer than MAXLEN has been
+!!        corrected. Also updated Restrictions header section.
+!!
+!!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: movei
       use pepper_strings, only: matchi
-
-! $ Abstract
-!
-!     Determine whether a vector of constraints involving comparisons of
-!     specified EK column elements is satisfied.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekopcd.inc'
-      include 'ektype.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ekwild.inc'
-      include 'ekqlimit.inc'
-
-
-! $ Detailed_Input
-!
-!     NCNSTR         is the number of input join constraints.   Each
-!                    input constraint relates two EK column entries;
-!                    abstractly, the form of the constraints is:
-!
-!                       <col entry 1> <relational op> <col entry 2>
-!
-!                    The compared entries are defined by handles,
-!                    segment base addresses, column descriptors, and row
-!                    numbers.
-!
-!     ACTIVE         is an array of logical flags indicating which
-!                    constraints are currently applicable.  The Nth
-!                    element of ACTIVE indicates whether or not to apply
-!                    the Nth constraint:  if ACTIVE(N) is .TRUE., the
-!                    constraint is applicable, otherwise it isn't.
-!
-!                    The elements of the other input arguments that
-!                    define constraints are defined when the
-!                    corresponding element of ACTIVE is .TRUE.  For
-!                    example, when the second constraint is not active,
-!                    the second column descriptor in LDSCRS may not be
-!                    defined.
-!
-!     LHANS          is an array of EK file handles for the left-hand-
-!                    sides of the constraints.
-!
-!     LSDSCS         is an array of segment descriptors for the
-!                    left-hand-sides of the constraints.
-!
-!     LDSCRS         is an array of column descriptors for the
-!                    left-hand-sides of the constraints.
-!
-!     LROWS          is an array of row numbers for the left-hand-sides
-!                    of the constraints.
-!
-!     LELTS          is an array of column entry element indices for the
-!                    left-hand-sides of the constraints.  These
-!                    indices are ignored unless the columns they apply
-!                    to are array-valued.
-!
-!     OPS            is an array of relational operators used in the
-!                    input constraints.  The elements of OPS are any of
-!                    the integer parameters
-!
-!                       EQ, GE, GT, LE, LT, NE, LIKE, ISNULL, NOTNUL
-!
-!                    The Ith element of OPS corresponds to the Ith
-!                    constraint.
-!
-!     RHANS          is an array of EK file handles for the right-hand-
-!                    sides of the constraints.
-!
-!     RSDSCS         is an array of segment descriptors for the
-!                    right-hand-sides of the constraints.
-!
-!     RDSCRS         is an array of column descriptors for the
-!                    right-hand-sides of the constraints.
-!
-!     RROWS          is an array of row numbers for the right-hand-sides
-!                    of the constraints.
-!
-!     RELTS          is an array of column entry element indices for the
-!                    right-hand-sides of the constraints.  These
-!                    indices are ignored unless the columns they apply
-!                    to are array-valued.
-!
-! $ Detailed_Output
-!
-!     The function returns .TRUE. if and only if all of the relational
-!     constraints specified by the input arguments are satisfied.
-!
-! $ Parameters
-!
-!     Within the EK system, operators used in EK queries are
-!     represented by integer codes.  The codes and their meanings are
-!     listed below.
-!
-!     Relational expressions in EK queries have the form
-!
-!        <column name> <operator> <value>
-!
-!     For columns containing numeric values, the operators
-!
-!        EQ,  GE,  GT,  LE,  LT,  NE
-!
-!     may be used; these operators have the same meanings as their
-!     Fortran counterparts.  For columns containing character values,
-!     the list of allowed operators includes those in the above list,
-!     and in addition includes the operator
-!
-!        LIKE
-!
-!     which is used to compare strings to a template.  In the character
-!     case, the meanings of the parameters
-!
-!        GE,  GT,  LE,  LT
-!
-!     match those of the Fortran lexical functions
-!
-!        LGE, LGT, LLE, LLT
-!
-!     The additional unary operators
-!
-!        ISNULL, NOTNUL
-!
-!     are used to test whether a value of any type is null.
-!
-! $ Exceptions
-!
-!     1)  If any of the input file handles is invalid, the error
-!         will be diagnosed by routines called by this routine.
-!         The function value is .FALSE. in this case.
-!
-!     2)  If an I/O error occurs while attempting to find the address
-!         range of a column entry element, the error will
-!         be diagnosed by routines called by this routine.  The
-!         function value is .FALSE. in this case.
-!
-!     3)  If any of the input segment descriptors, column descriptors,
-!         or row numbers are invalid, this routine may fail in
-!         unpredictable, but possibly spectacular, ways.  Except
-!         as described in this header section, no attempt is made to
-!         handle these errors.
-!
-!     4)  If the data type code in an input column descriptor is not
-!         recognized, the error SPICE(INVALIDDATATYPE) is signaled.
-!         The function value is .FALSE. in this case.
-!
-!     5)  If a relational operator code is not recognized, the
-!         error SPICE(UNNATURALRELATION) is signaled.
-!         The function value is .FALSE. in this case.
-!
-! $ Files
-!
-!     See the descriptions of the arguments LHAN and RHAN in
-!     $Detailed_Input.
-!
-! $ Particulars
-!
-!     This routine is an EK utility intended to centralize a frequently
-!     performed comparison operation.
-!
-! $ Examples
-!
-!     See EKSRCH.
-!
-! $ Restrictions
-!
-!     1)  This routine must execute quickly.  Therefore, it checks in
-!         only if it detects an error.  If an error is signaled by a
-!         routine called by this routine, this routine will not appear
-!         in the SPICELIB traceback display.  Also, in the interest
-!         of speed, this routine does not test the value of the SPICELIB
-!         function RETURN upon entry.
-!
-!     2)  This routine depends on the requested comparison to have
-!         been semantically checked. Semantically invalid comparisons
-!         are treated as bugs.
-!
-!     3)  Only the first MAXSTR characters of character strings are
-!         used in comparisons.
-!C
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 05-FEB-2015 (NJB)
-!
-!        Updated to use ERRHAN.
-!
-!-    SPICELIB Version 1.1.0, 01-JUN-2010 (NJB)
-!
-!        Bug fix: subscript out of range error caused by
-!        column entry strings longer than MAXLEN has been
-!        corrected. Also updated Restrictions header section.
-!
-!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekopcd
+      use pepper_inc_ektype
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ekwild
+      use pepper_inc_ekqlimit
       character(maxstr)     cval   ( 2 )
 
       integer(ip)           cldscs ( cdscsz, 2 )
@@ -20680,132 +20235,124 @@ contains
 !$Procedure    ZZEKILLE ( EK, indirect, last elt less than or equal to )
 
       module procedure zzekille
+!! ## Abstract
+!!
+!!     Find the ordinal position of the row, in an specified EK segment,
+!!     whose value in a specified column is the last last element less
+!!     than or equal to a specified value, where the order relation is
+!!     given by an order vector in a specified DAS file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     FILES
+!!     SORT
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is the file handle of the EK containing the
+!!                    segment of interest.
+!!
+!!     SEGDSC         is the segment descriptor of the EK
+!!                    segment of interest.
+!!
+!!     COLDSC         is a column descriptor for the column whose
+!!                    entries are to be compared with an input scalar
+!!                    value.  The column must be indexed.
+!!
+!!     NROWS          is the number of rows in the segment of interest.
+!!
+!!     DTYPE          is the data type of the input scalar value.
+!!
+!!     CVAL,
+!!     DVAL,
+!!     IVAL           are a set of scalar variables of character,
+!!                    double precision, and integer type.  Whichever
+!!                    of these has the same data type as the column
+!!                    indicated by COLDSC is used to compare rows
+!!                    against.  If COLDSC has data type TIME, DVAL
+!!                    is used in the comparison.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns the index of the last order vector element
+!!     that points to a column entry that is less than or equal to
+!!     whichever of CVAL, DVAL, or IVAL has the same data type as the
+!!     input column.  If the least element of the column is greater than
+!!     the input value of the matching type, the function returns the
+!!     value zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the array size NROWS is non-positive, the error
+!!         SPICE(INVALIDSIZE) will be signaled.
+!!
+!!     2)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     3)  If an I/O error occurs during any access to the file
+!!         specified by HANDLE, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     4)  If any of SEGBAS, COLDSC, or NROWS are invalid, this routine
+!!         may fail in unpredictable, but possibly spectacular, ways.
+!!         Except as described in this header section, no attempt is
+!!         made to handle these errors.
+!!
+!! ## Files
+!!
+!!     See the description of the argument HANDLE in $Detailed_Input.
+!!
+!! ## Particulars
+!!
+!!     This routine supports allow rapid look-up of elements in indexed
+!!     EK columns.
+!!
+!! ## Examples
+!!
+!!     See ZZEKKEY.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the ordinal position of the row, in an specified EK segment,
-!     whose value in a specified column is the last last element less
-!     than or equal to a specified value, where the order relation is
-!     given by an order vector in a specified DAS file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     EK
-!
-! $ Keywords
-!
-!     ARRAY
-!     FILES
-!     SORT
-!     UTILITY
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is the file handle of the EK containing the
-!                    segment of interest.
-!
-!     SEGDSC         is the segment descriptor of the EK
-!                    segment of interest.
-!
-!     COLDSC         is a column descriptor for the column whose
-!                    entries are to be compared with an input scalar
-!                    value.  The column must be indexed.
-!
-!     NROWS          is the number of rows in the segment of interest.
-!
-!     DTYPE          is the data type of the input scalar value.
-!
-!     CVAL,
-!     DVAL,
-!     IVAL           are a set of scalar variables of character,
-!                    double precision, and integer type.  Whichever
-!                    of these has the same data type as the column
-!                    indicated by COLDSC is used to compare rows
-!                    against.  If COLDSC has data type TIME, DVAL
-!                    is used in the comparison.
-!
-! $ Detailed_Output
-!
-!     The function returns the index of the last order vector element
-!     that points to a column entry that is less than or equal to
-!     whichever of CVAL, DVAL, or IVAL has the same data type as the
-!     input column.  If the least element of the column is greater than
-!     the input value of the matching type, the function returns the
-!     value zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the array size NROWS is non-positive, the error
-!         SPICE(INVALIDSIZE) will be signaled.
-!
-!     2)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     3)  If an I/O error occurs during any access to the file
-!         specified by HANDLE, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     4)  If any of SEGBAS, COLDSC, or NROWS are invalid, this routine
-!         may fail in unpredictable, but possibly spectacular, ways.
-!         Except as described in this header section, no attempt is
-!         made to handle these errors.
-!
-! $ Files
-!
-!     See the description of the argument HANDLE in $Detailed_Input.
-!
-! $ Particulars
-!
-!     This routine supports allow rapid look-up of elements in indexed
-!     EK columns.
-!
-! $ Examples
-!
-!     See ZZEKKEY.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       real(wp)              dnum
 
       integer(ip)           coltyp
@@ -20885,129 +20432,121 @@ contains
 !$Procedure      ZZEKILLT ( EK, indirect, last element less than )
 
       module procedure zzekillt
+!! ## Abstract
+!!
+!!     Find the ordinal position of the row, in an specified EK segment,
+!!     whose value in a specified column is the last last element less
+!!     than a specified value, where the order relation is given by an
+!!     order vector in a specified DAS file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is the file handle of the EK containing the
+!!                    segment of interest.
+!!
+!!     SEGDSC         is the segment descriptor of the EK
+!!                    segment of interest.
+!!
+!!     COLDSC         is a column descriptor for the column whose
+!!                    entries are to be compared with an input scalar
+!!                    value.  The column must be indexed.
+!!
+!!     NROWS          is the number of rows in the segment of interest.
+!!
+!!     DTYPE          is the data type of the input scalar value.
+!!
+!!     CVAL,
+!!     DVAL,
+!!     IVAL           are a set of scalar variables of character,
+!!                    double precision, and integer type.  Whichever
+!!                    of these has the same data type as the column
+!!                    indicated by COLDSC is used to compare rows
+!!                    against.  If COLDSC has data type TIME, DVAL
+!!                    is used in the comparison.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns the index of the last order vector element
+!!     that points to a column entry that is less than whichever of
+!!     CVAL, DVAL, or IVAL has the same data type as the input column.
+!!     If the least element of the column is greater than the input
+!!     value of the matching type, the function returns the value zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the array size NROWS is non-positive, the error
+!!         SPICE(INVALIDSIZE) will be signaled.
+!!
+!!     2)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     3)  If an I/O error occurs during any access to the file
+!!         specified by HANDLE, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     4)  If any of SEGDSC, COLDSC, or NROWS are invalid, this routine
+!!         may fail in unpredictable, but possibly spectacular, ways.
+!!         Except as described in this header section, no attempt is
+!!         made to handle these errors.
+!!
+!! ## Files
+!!
+!!     See the description of the argument HANDLE in $Detailed_Input.
+!!
+!! ## Particulars
+!!
+!!     This routine supports allow rapid look-up of elements in indexed
+!!     EK columns.
+!!
+!! ## Examples
+!!
+!!     See ZZEKKEY.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the ordinal position of the row, in an specified EK segment,
-!     whose value in a specified column is the last last element less
-!     than a specified value, where the order relation is given by an
-!     order vector in a specified DAS file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is the file handle of the EK containing the
-!                    segment of interest.
-!
-!     SEGDSC         is the segment descriptor of the EK
-!                    segment of interest.
-!
-!     COLDSC         is a column descriptor for the column whose
-!                    entries are to be compared with an input scalar
-!                    value.  The column must be indexed.
-!
-!     NROWS          is the number of rows in the segment of interest.
-!
-!     DTYPE          is the data type of the input scalar value.
-!
-!     CVAL,
-!     DVAL,
-!     IVAL           are a set of scalar variables of character,
-!                    double precision, and integer type.  Whichever
-!                    of these has the same data type as the column
-!                    indicated by COLDSC is used to compare rows
-!                    against.  If COLDSC has data type TIME, DVAL
-!                    is used in the comparison.
-!
-! $ Detailed_Output
-!
-!     The function returns the index of the last order vector element
-!     that points to a column entry that is less than whichever of
-!     CVAL, DVAL, or IVAL has the same data type as the input column.
-!     If the least element of the column is greater than the input
-!     value of the matching type, the function returns the value zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the array size NROWS is non-positive, the error
-!         SPICE(INVALIDSIZE) will be signaled.
-!
-!     2)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     3)  If an I/O error occurs during any access to the file
-!         specified by HANDLE, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     4)  If any of SEGDSC, COLDSC, or NROWS are invalid, this routine
-!         may fail in unpredictable, but possibly spectacular, ways.
-!         Except as described in this header section, no attempt is
-!         made to handle these errors.
-!
-! $ Files
-!
-!     See the description of the argument HANDLE in $Detailed_Input.
-!
-! $ Particulars
-!
-!     This routine supports allow rapid look-up of elements in indexed
-!     EK columns.
-!
-! $ Examples
-!
-!     See ZZEKKEY.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       real(wp)              dnum
 
       integer(ip)           coltyp
@@ -21085,305 +20624,262 @@ contains
       end procedure zzekillt
 
       module procedure zzekjsrt
-
-! $ Abstract
-!
-!     Sort the row vectors of a join row set union, given an order
-!     relation defined by a set of qualified order-by columns.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-
-
-
-
-! $ Detailed_Input
-!
-!     NJRS,
-!     UBASES         are, respectively, the number of join row sets in
-!                    the input join row set union, and the base
-!                    addresses of those join row sets.
-!
-!     NORDER         is the number of order-by columns used to define
-!                    the order relation used for sorting.
-!
-!     OTABS          is an array of indices identifying the parent
-!                    tables of the order-by columns.  These indices
-!                    are the ordinal positions of the parent tables
-!                    in the FROM clause of the query to which the
-!                    input joint row set corresponds.
-!
-!     OCOLS          is an array of indices identifying the order-by
-!                    columns.  These indices are the ordinal positions
-!                    of the columns in their virtual parent tables.
-!                    The order of columns in virtual tables is set
-!                    when EKs are loaded by the routine EKLEF.  The
-!                    Nth element of OCOLS applies to the Nth order-by
-!                    column.
-!
-!     OELTS          is an array of element indices identifying the
-!                    order-by column entry elements to use when making
-!                    order comparisons.  These indices are ignored for
-!                    scalar order-by columns, but must be set properly
-!                    for vector-valued order-by columns.  For example,
-!                    if an order-by column has size 5, one could make
-!                    order comparisons using the third elements of
-!                    entries in this column.  The Nth element of OELTS
-!                    applies to the Nth order-by column.
-!
-!     SENSES         is an array of parameters indicating the ordering
-!                    sense for each order-by column.  An ordering sense
-!                    can be ascending (the default) or descending.  The
-!                    values indicating these senses are EQASND and
-!                    EQDSND respectively.  These parameters are defined
-!                    in the include file ekquery.inc.  The Nth element
-!                    of SENSES applies to the Nth order-by column.
-!
-!     STHAN          is an array of EK handles corresponding to loaded
-!                    segments.  STHAN is expected to be the array of
-!                    the same name maintained by EKQMGR.
-!
-!     STSDSC         is an array of descriptors of loaded segments.
-!                    STSDSC is expected to be the array of the same name
-!                    maintained by EKQMGR.
-!
-!     STDTPT         is an array of pointers that map segments to lists
-!                    of column descriptors in the column descriptor
-!                    pool.  The Nth element of STDTPT is the head node
-!                    number for the column descriptor list of the Nth
-!                    loaded segment.  The column descriptor list is
-!                    indexed by the linked list pool DTPOOL.  STDTPT is
-!                    expected to be the array of the same name
-!                    maintained by EKQMGR.
-!
-!     DTPOOL         is a linked list pool used to index the column
-!                    descriptor array DTDSCS.  DTPOOL is expected to be
-!                    the array of the same name maintained by EKQMGR.
-!
-!     DTDSCS         is an array of column descriptors for each loaded
-!                    column.  There is a separate descriptor for each
-!                    column in each segment.  The Nth node of DTPOOL
-!                    is considered to point to the Nth element of
-!                    DTDSCS.  DTDSCS is expected to be the array of the
-!                    same name maintained by EKQMGR.
-!
-! $ Detailed_Output
-!
-!     ORDBAS         is the scratch area base address of the order
-!                    vector created by this routine.  This address is
-!                    the predecessor of the first scratch area address
-!                    occupied by the order vector.
-!
-!                    The order vector indicates the order of the row
-!                    vectors of the input join row set union, where the
-!                    order relation is defined by the order-by columns,
-!                    column entry element indices, and order senses.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the number of order-by columns NORDER is non-positive,
-!         the error SPICE(INVALIDCOUNT) is signaled.
-!
-!     2)  If an I/O error occurs while attempting to create an order
-!         vector for the specified row set, the error will be diagnosed
-!         by routines called by this routine.
-!
-!     3)  If the first order-by column descriptor in the list has
-!         an invalid data type code, the error SPICE(INVALIDTYPE)
-!         is signaled.
-! $ Files
-!
-!     The input join row set is presumed to refer to EK files currently
-!     loaded via EKLEF.
-!
-! $ Particulars
-!
-!     This routine writes to the EK scratch area an order vector for the
-!     specified join row set union.  The order vector is written in
-!     ascending order starting at the location following ORDBAS.  The
-!     order relation is defined by the order-by columns, column entry
-!     element indices, and order senses.
-!
-! $ Examples
-!
-!     See EKGC.
-!
-! $ Restrictions
-!
-!     1)  This routine modifies the EK scratch area, and therefore
-!         should not be used by routines outside of the EK system.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.2.1, 01-OCT-2021 (NJB)
-!
-!        Corrected typo in comments.
-!
-!-    SPICELIB Version 2.2.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!-    SPICELIB Version 2.1.0, 07-AUG-2006 (NJB)
-!
-!        Bug fix:  added initialization of variable PRVBAS to support
-!                  operation under the Macintosh Intel Fortran
-!                  compiler. Note that this bug did not affect
-!                  operation of this routine on other platforms.
-!
-!-    SPICELIB Version 2.0.0, 09-SEP-2005 (NJB)
-!
-!        Increased buffer size parameter LIMIT1 from 25K to 250K.
-!        Declared large buffers SAVED to prevent memory errors
-!        under CYGWIN.
-!
-!-    SPICELIB Version 1.1.0, 18-JUN-1999 (WLT)
-!
-!        Removed several redundant calls to CHKIN
-!
-!-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.1.0, 07-AUG-2006 (NJB)
-!
-!        Bug fix:  added initialization of variable PRVBAS to support
-!                  operation under the Macintosh Intel Fortran
-!                  compiler. Note that this bug did not affect
-!                  operation of this routine on other platforms. The
-!                  statement referencing the uninitialized variable
-!                  was:
-!
-!           IF (  ( I .EQ. 1 ) .OR. ( SGVBAS .NE. PRVBAS )  ) THEN
-!
-!        In the previous version of the code, PRVBAS is uninitialized
-!        when the loop counter I is 1.  PRVBAS *is* initialized when I
-!        is greater than 1, so the logical value of the IF expression
-!        is not affected by the lack of proper initialization.
-!
-!        However, the Intel Fortran compiler for the Mac flags a runtime
-!        error when the above code is exercised.  So PRVBAS is now
-!        initialized prior to the above IF statement.
-!
-!-    SPICELIB Version 2.0.0, 08-SEP-2005 (NJB)
-!
-!        Increased buffer size parameter LIMIT1 from 25K to 250K.
-!        Declared large buffers SAVED to prevent memory errors
-!        under CYGWIN.  The saved buffers are
-!
-!          CDAT
-!          DDAT
-!          IDAT
-!          NF
-!          ORDVEC
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Other functions
-!
-
-!
-!     Other local parameters
-!
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-!     The following variables are saved in order to prevent
-!     memory errors under Cygwin and in shared object libraries
-!     under various Unix systems.
-!
-
-!
-!     Statement functions
-!
-
-!
-!     The following functions test whether two column entries
-!     are equal.  In the integer and d.p. cases, the test is conclusive.
-!     In the character case, the test indicates whether the initial
-!     substrings consisting of the first INISUB characters of each of
-!     the two entries are equal.
-!
-
-
-
-
-!
-!     The following functions indicate whether the first of two column
-!     entries is less than or equal to the second.  In the integer and
-!     d.p. cases, the test is conclusive.  In the character case, the
-!     test indicates whether the initial substring consisting of the
-!     first INISUB characters of the first entry is less than or equal
-!     to the corresponding initial substring of length INISUB of the
-!     second entry.
-!
-
-
-
-
-
-
-
-
-
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Sort the row vectors of a join row set union, given an order
+!!     relation defined by a set of qualified order-by columns.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     NJRS,
+!!     UBASES         are, respectively, the number of join row sets in
+!!                    the input join row set union, and the base
+!!                    addresses of those join row sets.
+!!
+!!     NORDER         is the number of order-by columns used to define
+!!                    the order relation used for sorting.
+!!
+!!     OTABS          is an array of indices identifying the parent
+!!                    tables of the order-by columns.  These indices
+!!                    are the ordinal positions of the parent tables
+!!                    in the FROM clause of the query to which the
+!!                    input joint row set corresponds.
+!!
+!!     OCOLS          is an array of indices identifying the order-by
+!!                    columns.  These indices are the ordinal positions
+!!                    of the columns in their virtual parent tables.
+!!                    The order of columns in virtual tables is set
+!!                    when EKs are loaded by the routine EKLEF.  The
+!!                    Nth element of OCOLS applies to the Nth order-by
+!!                    column.
+!!
+!!     OELTS          is an array of element indices identifying the
+!!                    order-by column entry elements to use when making
+!!                    order comparisons.  These indices are ignored for
+!!                    scalar order-by columns, but must be set properly
+!!                    for vector-valued order-by columns.  For example,
+!!                    if an order-by column has size 5, one could make
+!!                    order comparisons using the third elements of
+!!                    entries in this column.  The Nth element of OELTS
+!!                    applies to the Nth order-by column.
+!!
+!!     SENSES         is an array of parameters indicating the ordering
+!!                    sense for each order-by column.  An ordering sense
+!!                    can be ascending (the default) or descending.  The
+!!                    values indicating these senses are EQASND and
+!!                    EQDSND respectively.  These parameters are defined
+!!                    in the include file ekquery.inc.  The Nth element
+!!                    of SENSES applies to the Nth order-by column.
+!!
+!!     STHAN          is an array of EK handles corresponding to loaded
+!!                    segments.  STHAN is expected to be the array of
+!!                    the same name maintained by EKQMGR.
+!!
+!!     STSDSC         is an array of descriptors of loaded segments.
+!!                    STSDSC is expected to be the array of the same name
+!!                    maintained by EKQMGR.
+!!
+!!     STDTPT         is an array of pointers that map segments to lists
+!!                    of column descriptors in the column descriptor
+!!                    pool.  The Nth element of STDTPT is the head node
+!!                    number for the column descriptor list of the Nth
+!!                    loaded segment.  The column descriptor list is
+!!                    indexed by the linked list pool DTPOOL.  STDTPT is
+!!                    expected to be the array of the same name
+!!                    maintained by EKQMGR.
+!!
+!!     DTPOOL         is a linked list pool used to index the column
+!!                    descriptor array DTDSCS.  DTPOOL is expected to be
+!!                    the array of the same name maintained by EKQMGR.
+!!
+!!     DTDSCS         is an array of column descriptors for each loaded
+!!                    column.  There is a separate descriptor for each
+!!                    column in each segment.  The Nth node of DTPOOL
+!!                    is considered to point to the Nth element of
+!!                    DTDSCS.  DTDSCS is expected to be the array of the
+!!                    same name maintained by EKQMGR.
+!!
+!! ## Detailed Output
+!!
+!!     ORDBAS         is the scratch area base address of the order
+!!                    vector created by this routine.  This address is
+!!                    the predecessor of the first scratch area address
+!!                    occupied by the order vector.
+!!
+!!                    The order vector indicates the order of the row
+!!                    vectors of the input join row set union, where the
+!!                    order relation is defined by the order-by columns,
+!!                    column entry element indices, and order senses.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the number of order-by columns NORDER is non-positive,
+!!         the error SPICE(INVALIDCOUNT) is signaled.
+!!
+!!     2)  If an I/O error occurs while attempting to create an order
+!!         vector for the specified row set, the error will be diagnosed
+!!         by routines called by this routine.
+!!
+!!     3)  If the first order-by column descriptor in the list has
+!!         an invalid data type code, the error SPICE(INVALIDTYPE)
+!!         is signaled.
+!!
+!! ## Files
+!!
+!!     The input join row set is presumed to refer to EK files currently
+!!     loaded via EKLEF.
+!!
+!! ## Particulars
+!!
+!!     This routine writes to the EK scratch area an order vector for the
+!!     specified join row set union.  The order vector is written in
+!!     ascending order starting at the location following ORDBAS.  The
+!!     order relation is defined by the order-by columns, column entry
+!!     element indices, and order senses.
+!!
+!! ## Examples
+!!
+!!     See EKGC.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine modifies the EK scratch area, and therefore
+!!         should not be used by routines outside of the EK system.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.2.1, 01-OCT-2021 (NJB)
+!!
+!!        Corrected typo in comments.
+!!
+!!-    SPICELIB Version 2.2.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!-    SPICELIB Version 2.1.0, 07-AUG-2006 (NJB)
+!!
+!!        Bug fix:  added initialization of variable PRVBAS to support
+!!                  operation under the Macintosh Intel Fortran
+!!                  compiler. Note that this bug did not affect
+!!                  operation of this routine on other platforms.
+!!
+!!-    SPICELIB Version 2.0.0, 09-SEP-2005 (NJB)
+!!
+!!        Increased buffer size parameter LIMIT1 from 25K to 250K.
+!!        Declared large buffers SAVED to prevent memory errors
+!!        under CYGWIN.
+!!
+!!-    SPICELIB Version 1.1.0, 18-JUN-1999 (WLT)
+!!
+!!        Removed several redundant calls to CHKIN
+!!
+!!-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 2.1.0, 07-AUG-2006 (NJB)
+!!
+!!        Bug fix:  added initialization of variable PRVBAS to support
+!!                  operation under the Macintosh Intel Fortran
+!!                  compiler. Note that this bug did not affect
+!!                  operation of this routine on other platforms. The
+!!                  statement referencing the uninitialized variable
+!!                  was:
+!!
+!!           IF (  ( I .EQ. 1 ) .OR. ( SGVBAS .NE. PRVBAS )  ) THEN
+!!
+!!        In the previous version of the code, PRVBAS is uninitialized
+!!        when the loop counter I is 1.  PRVBAS *is* initialized when I
+!!        is greater than 1, so the logical value of the IF expression
+!!        is not affected by the lack of proper initialization.
+!!
+!!        However, the Intel Fortran compiler for the Mac flags a runtime
+!!        error when the above code is exercised.  So PRVBAS is now
+!!        initialized prior to the above IF statement.
+!!
+!!-    SPICELIB Version 2.0.0, 08-SEP-2005 (NJB)
+!!
+!!        Increased buffer size parameter LIMIT1 from 25K to 250K.
+!!        Declared large buffers SAVED to prevent memory errors
+!!        under CYGWIN.  The saved buffers are
+!!
+!!          CDAT
+!!          DDAT
+!!          IDAT
+!!          NF
+!!          ORDVEC
+!!
+!!     SPICELIB functions
+!!
+!!     Other functions
+!!
+!!     Other local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     The following variables are saved in order to prevent
+!!     memory errors under Cygwin and in shared object libraries
+!!     under various Unix systems.
+!!
+!!     Statement functions
+!!
+!!     The following functions test whether two column entries
+!!     are equal.  In the integer and d.p. cases, the test is conclusive.
+!!     In the character case, the test indicates whether the initial
+!!     substrings consisting of the first INISUB characters of each of
+!!     the two entries are equal.
+!!
+!!     The following functions indicate whether the first of two column
+!!     entries is less than or equal to the second.  In the integer and
+!!     d.p. cases, the test is conclusive.  In the character case, the
+!!     test indicates whether the initial substring consisting of the
+!!     first INISUB characters of the first entry is less than or equal
+!!     to the corresponding initial substring of length INISUB of the
+!!     second entry.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapi
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: rjg_1(1)  !! one-element copy of rjg (array argument)
       integer(ip) :: rj_1(1)  !! one-element copy of rj (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
       integer(ip) :: nr_1(1)  !! one-element copy of nr (array argument)
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekjrs.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: inisub = 32
       integer(ip), parameter :: limit1 = 250000
@@ -22053,150 +21549,142 @@ contains
 !$Procedure ZZEKLERC  ( EK, LLE, using record pointers, character  )
 
       module procedure zzeklerc
+!! ## Abstract
+!!
+!!     Find the last column value less than or equal to a specified key,
+!!     for a specified, indexed character EK column, using dictionary
+!!     ordering on character data values and record pointers.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK that is open for read or
+!!                    write access.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     CKEY,
+!!     RECPTR         are, respectively, a character key and a pointer
+!!                    to the EK record containing that key.
+!!                    The last column entry less than or equal to
+!!                    this key is sought.  The order relation used
+!!                    is dictionary ordering on the pair (CKEY, RECPTR).
+!!
+!!     NULL           is a logical flag indicating whether the input
+!!                    key is null.  When NULL is .TRUE., CKEY is
+!!                    ignored by this routine.
+!!
+!! ## Detailed Output
+!!
+!!     PRVIDX         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than or
+!!                    equal to CKEY, where the order relation is
+!!                    as indicated above.  If the column contains
+!!                    elements equal to CKEY, PRVIDX is the index of the
+!!                    last such element.
+!!
+!!                    If all elements of the column are greater than
+!!                    CKEY, PRVIDX is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVIDX.
+!!
+!!                    If all elements of the column are greater than
+!!                    CKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not character,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than or equal
+!!     to a specified character key, within a specified segment and
+!!     column.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKIIXC.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.1.0, 18-JUN-1999 (WLT)
+!!
+!!        Removed an unbalanced call to CHKOUT.
+!!
+!!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the last column value less than or equal to a specified key,
-!     for a specified, indexed character EK column, using dictionary
-!     ordering on character data values and record pointers.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK that is open for read or
-!                    write access.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     CKEY,
-!     RECPTR         are, respectively, a character key and a pointer
-!                    to the EK record containing that key.
-!                    The last column entry less than or equal to
-!                    this key is sought.  The order relation used
-!                    is dictionary ordering on the pair (CKEY, RECPTR).
-!
-!     NULL           is a logical flag indicating whether the input
-!                    key is null.  When NULL is .TRUE., CKEY is
-!                    ignored by this routine.
-!
-! $ Detailed_Output
-!
-!     PRVIDX         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than or
-!                    equal to CKEY, where the order relation is
-!                    as indicated above.  If the column contains
-!                    elements equal to CKEY, PRVIDX is the index of the
-!                    last such element.
-!
-!                    If all elements of the column are greater than
-!                    CKEY, PRVIDX is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVIDX.
-!
-!                    If all elements of the column are greater than
-!                    CKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not character,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than or equal
-!     to a specified character key, within a specified segment and
-!     column.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKIIXC.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.1.0, 18-JUN-1999 (WLT)
-!
-!        Removed an unbalanced call to CHKOUT.
-!
-!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           dtype
@@ -22268,150 +21756,143 @@ contains
 !$Procedure ZZEKLERD ( EK, LLE, using record numbers, d.p. )
 
       module procedure zzeklerd
+!! ## Abstract
+!!
+!!     Find the last column value less than or equal to a specified key,
+!!     for a specified, indexed d.p. EK column, using dictionary
+!!     ordering on d.p. data values and record pointers.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     DKEY,
+!!     RECPTR         are, respectively, a double precision key and
+!!                    a pointer to the EK record containing that key.
+!!                    The last column entry less than or equal to
+!!                    this key is sought.  The order relation used
+!!                    is dictionary ordering on the pair (DKEY, RECPTR).
+!!
+!!     NULL           is a logical flag indicating whether the input
+!!                    key is null.  When NULL is .TRUE., DKEY is
+!!                    ignored by this routine.
+!!
+!! ## Detailed Output
+!!
+!!     PRVIDX         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than or
+!!                    equal to DKEY, where the order relation is
+!!                    as indicated above.  If the column contains
+!!                    elements equal to DKEY, PRVIDX is the index of the
+!!                    last such element.
+!!
+!!                    If all elements of the column are greater than
+!!                    DKEY, PRVIDX is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVIDX.
+!!
+!!                    If all elements of the column are greater than
+!!                    DKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not d.p.,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than or equal
+!!     to a specified d.p. key, within a specified segment and
+!!     column.  The order relation used is dictionary ordering on the
+!!     pair (DKEY, RECPTR).
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKIID1.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.1.0, 18-JUN-1999 (WLT)
+!!
+!!        Removed an unbalanced call to CHKOUT.
+!!
+!!-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the last column value less than or equal to a specified key,
-!     for a specified, indexed d.p. EK column, using dictionary
-!     ordering on d.p. data values and record pointers.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     DKEY,
-!     RECPTR         are, respectively, a double precision key and
-!                    a pointer to the EK record containing that key.
-!                    The last column entry less than or equal to
-!                    this key is sought.  The order relation used
-!                    is dictionary ordering on the pair (DKEY, RECPTR).
-!
-!     NULL           is a logical flag indicating whether the input
-!                    key is null.  When NULL is .TRUE., DKEY is
-!                    ignored by this routine.
-!
-! $ Detailed_Output
-!
-!     PRVIDX         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than or
-!                    equal to DKEY, where the order relation is
-!                    as indicated above.  If the column contains
-!                    elements equal to DKEY, PRVIDX is the index of the
-!                    last such element.
-!
-!                    If all elements of the column are greater than
-!                    DKEY, PRVIDX is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVIDX.
-!
-!                    If all elements of the column are greater than
-!                    DKEY, PRVPTR is set to zero.
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not d.p.,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than or equal
-!     to a specified d.p. key, within a specified segment and
-!     column.  The order relation used is dictionary ordering on the
-!     pair (DKEY, RECPTR).
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKIID1.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.1.0, 18-JUN-1999 (WLT)
-!
-!        Removed an unbalanced call to CHKOUT.
-!
-!-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           dtype
@@ -22483,151 +21964,143 @@ contains
 !$Procedure ZZEKLERI ( EK, LLE, using record pointers, integer )
 
       module procedure zzekleri
+!! ## Abstract
+!!
+!!     Find the last column value less than or equal to a specified key,
+!!     for a specified, indexed integer EK column, using dictionary
+!!     ordering on integer data values and record pointers.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     IKEY,
+!!     RECPTR         are, respectively, an integer key and a
+!!                    pointer to the EK record containing that key.
+!!                    The last column entry less than or equal to
+!!                    this key is sought.  The order relation used
+!!                    is dictionary ordering on the pair (IKEY, RECPTR).
+!!
+!!     NULL           is a logical flag indicating whether the input
+!!                    key is null.  When NULL is .TRUE., IKEY is
+!!                    ignored by this routine.
+!!
+!! ## Detailed Output
+!!
+!!     PRVIDX         is the ordinal position, according to the order
+!!                    relation implied by the column's index, of the
+!!                    record containing the last element less than or
+!!                    equal to IKEY, where the order relation is
+!!                    as indicated above.  If the column contains
+!!                    elements equal to IKEY, PRVIDX is the index of the
+!!                    last such element.
+!!
+!!                    If all elements of the column are greater than
+!!                    IKEY, PRVIDX is set to zero.
+!!
+!!     PRVPTR         is a pointer to the record containing the element
+!!                    whose ordinal position is PRVIDX.
+!!
+!!                    If all elements of the column are greater than
+!!                    IKEY, PRVPTR is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not integer,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine finds the last column element less than or equal
+!!     to a specified integer key, within a specified segment and
+!!     column.  The order relation used is dictionary ordering on the
+!!     pair (IKEY, RECPTR).
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that the number of elements referenced by the
+!!     input column's index match the pointer of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKIII1.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.1.0, 18-JUN-1999 (WLT)
+!!
+!!        Removed an unbalanced call to CHKOUT
+!!
+!!-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the last column value less than or equal to a specified key,
-!     for a specified, indexed integer EK column, using dictionary
-!     ordering on integer data values and record pointers.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     IKEY,
-!     RECPTR         are, respectively, an integer key and a
-!                    pointer to the EK record containing that key.
-!                    The last column entry less than or equal to
-!                    this key is sought.  The order relation used
-!                    is dictionary ordering on the pair (IKEY, RECPTR).
-!
-!     NULL           is a logical flag indicating whether the input
-!                    key is null.  When NULL is .TRUE., IKEY is
-!                    ignored by this routine.
-!
-! $ Detailed_Output
-!
-!     PRVIDX         is the ordinal position, according to the order
-!                    relation implied by the column's index, of the
-!                    record containing the last element less than or
-!                    equal to IKEY, where the order relation is
-!                    as indicated above.  If the column contains
-!                    elements equal to IKEY, PRVIDX is the index of the
-!                    last such element.
-!
-!                    If all elements of the column are greater than
-!                    IKEY, PRVIDX is set to zero.
-!
-!     PRVPTR         is a pointer to the record containing the element
-!                    whose ordinal position is PRVIDX.
-!
-!                    If all elements of the column are greater than
-!                    IKEY, PRVPTR is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not integer,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine finds the last column element less than or equal
-!     to a specified integer key, within a specified segment and
-!     column.  The order relation used is dictionary ordering on the
-!     pair (IKEY, RECPTR).
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that the number of elements referenced by the
-!     input column's index match the pointer of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKIII1.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.1.0, 18-JUN-1999 (WLT)
-!
-!        Removed an unbalanced call to CHKOUT
-!
-!-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           dtype
@@ -22699,121 +22172,111 @@ contains
 !$Procedure     ZZEKFRX ( EK, find record in index )
 
       module procedure zzekfrx
+!! ## Abstract
+!!
+!!     Find the ordinal position of a specified record in a specified,
+!!     indexed EK column.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is an EK file handle.  The file may be open for
+!!                    reading or writing.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column to be searched.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     RECPTR         is a pointer to the record whose ordinal position
+!!                    is to be found.
+!!
+!! ## Detailed Output
+!!
+!!     POS            is the ordinal position in the specified column
+!!                    of the input record, where the order relation is
+!!                    specified by the column's index.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     Various EK write operations require the capability of locating
+!!     the index key that maps to a given record number.  An example is
+!!     updating a column's index to reflect deletion of a specified
+!!     record:  the key that maps to the record must be deleted.
+!!     Locating this key is the inverse of the problem that the index
+!!     is meant to solve.
+!!
+!! ## Examples
+!!
+!!     See ZZEKIXDL.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error message.
+!!
+!!-    SPICELIB Version 2.0.0, 31-MAY-2010 (NJB)
+!!
+!!        Bug fix: substring bound out-of-range violation
+!!        in reference to local variable CVAL has been
+!!        corrected. This error could occur if the a
+!!        class 3 column entry had length exceeding MAXSTR.
+!!
+!!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the ordinal position of a specified record in a specified,
-!     indexed EK column.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekqlimit.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is an EK file handle.  The file may be open for
-!                    reading or writing.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column to be searched.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     RECPTR         is a pointer to the record whose ordinal position
-!                    is to be found.
-!
-! $ Detailed_Output
-!
-!     POS            is the ordinal position in the specified column
-!                    of the input record, where the order relation is
-!                    specified by the column's index.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     Various EK write operations require the capability of locating
-!     the index key that maps to a given record number.  An example is
-!     updating a column's index to reflect deletion of a specified
-!     record:  the key that maps to the record must be deleted.
-!     Locating this key is the inverse of the problem that the index
-!     is meant to solve.
-!
-! $ Examples
-!
-!     See ZZEKIXDL.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error message.
-!
-!-    SPICELIB Version 2.0.0, 31-MAY-2010 (NJB)
-!
-!        Bug fix: substring bound out-of-range violation
-!        in reference to local variable CVAL has been
-!        corrected. This error could occur if the a
-!        class 3 column entry had length exceeding MAXSTR.
-!
-!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(maxstr)     cval
 
       real(wp)              dval
@@ -22945,137 +22408,129 @@ contains
 !$Procedure ZZEKIIC1 ( EK, insert into index, character, type 1 )
 
       module procedure zzekiic1
+!! ## Abstract
+!!
+!!     Insert into a type 1 EK index a record pointer associated with a
+!!     character key.  The key and record pointer determine the insertion
+!!     point via dictionary ordering on (value, record pointer) pairs.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to
+!!                    which the index corresponds.
+!!
+!!     CKEY           is a character string key.
+!!
+!!     RECPTR         is a record pointer associated with the input key.
+!!
+!!     NULL           is a logical flag indicating whether the input
+!!                    value is null.
+!!
+!! ## Detailed Output
+!!
+!!     None.  This routine operates by side effects.  See $Particulars
+!!     for a description of the effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not character,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine updates the index of an EK segment to reflect the
+!!     addition of a record to the segment.  The index must be
+!!     associated with a character, scalar column.  The type of the
+!!     index must be 1.
+!!
+!!     The ordinal position of the new item is determined by the key
+!!     CKEY.  The new item will follow the last item already present
+!!     in the column having a value less than or equal to CKEY.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKAD03.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    SPICELIB Version 1.1.0, 18-JUN-1999 (WLT)
+!!
+!!        Removed an unbalanced call to CHKOUT
+!!
+!!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Insert into a type 1 EK index a record pointer associated with a
-!     character key.  The key and record pointer determine the insertion
-!     point via dictionary ordering on (value, record pointer) pairs.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to
-!                    which the index corresponds.
-!
-!     CKEY           is a character string key.
-!
-!     RECPTR         is a record pointer associated with the input key.
-!
-!     NULL           is a logical flag indicating whether the input
-!                    value is null.
-!
-! $ Detailed_Output
-!
-!     None.  This routine operates by side effects.  See $Particulars
-!     for a description of the effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not character,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine updates the index of an EK segment to reflect the
-!     addition of a record to the segment.  The index must be
-!     associated with a character, scalar column.  The type of the
-!     index must be 1.
-!
-!     The ordinal position of the new item is determined by the key
-!     CKEY.  The new item will follow the last item already present
-!     in the column having a value less than or equal to CKEY.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKAD03.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    SPICELIB Version 1.1.0, 18-JUN-1999 (WLT)
-!
-!        Removed an unbalanced call to CHKOUT
-!
-!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           dtype
@@ -23158,137 +22613,129 @@ contains
 !$Procedure ZZEKIID1 ( EK, insert into index, d.p., type 1 )
 
       module procedure zzekiid1
+!! ## Abstract
+!!
+!!     Insert into a type 1 EK index a record pointer associated with a
+!!     d.p. key.  The key and record pointer determine the insertion
+!!     point via dictionary ordering on (value, record pointer) pairs.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to
+!!                    which the index corresponds.
+!!
+!!     DKEY           is a double precision key.
+!!
+!!     RECPTR         is a record pointer associated with the input key.
+!!
+!!     NULL           is a logical flag indicating whether the input
+!!                    value is null.
+!!
+!! ## Detailed Output
+!!
+!!     None.  This routine operates by side effects.  See $Particulars
+!!     for a description of the effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not double precision,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine updates the index of an EK segment to reflect the
+!!     addition of a record to the segment.  The index must be
+!!     associated with a double precision, scalar column.  The type of
+!!     the double precision index must be 1.
+!!
+!!     The ordinal position of the new item is determined by the key
+!!     DKEY.  The new item will follow the last item already present
+!!     in the column having a value less than or equal to DKEY.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKAD02.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.1.0, 18-JUN-1999 (WLT)
+!!
+!!        Removed an unbalanced call to CHKOUT.
+!!
+!!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Insert into a type 1 EK index a record pointer associated with a
-!     d.p. key.  The key and record pointer determine the insertion
-!     point via dictionary ordering on (value, record pointer) pairs.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to
-!                    which the index corresponds.
-!
-!     DKEY           is a double precision key.
-!
-!     RECPTR         is a record pointer associated with the input key.
-!
-!     NULL           is a logical flag indicating whether the input
-!                    value is null.
-!
-! $ Detailed_Output
-!
-!     None.  This routine operates by side effects.  See $Particulars
-!     for a description of the effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not double precision,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine updates the index of an EK segment to reflect the
-!     addition of a record to the segment.  The index must be
-!     associated with a double precision, scalar column.  The type of
-!     the double precision index must be 1.
-!
-!     The ordinal position of the new item is determined by the key
-!     DKEY.  The new item will follow the last item already present
-!     in the column having a value less than or equal to DKEY.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKAD02.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.1.0, 18-JUN-1999 (WLT)
-!
-!        Removed an unbalanced call to CHKOUT.
-!
-!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           dtype
@@ -23371,132 +22818,125 @@ contains
 !$Procedure ZZEKIII1 ( EK, insert into index, integer, type 1 )
 
       module procedure zzekiii1
+!! ## Abstract
+!!
+!!     Insert into a type 1 EK index a record pointer associated with an
+!!     integer key.  The key and record pointer determine the insertion
+!!     point via dictionary ordering on (value, record pointer) pairs.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column specified by COLDSC.
+!!
+!!     COLDSC         is the column descriptor of the column to
+!!                    which the index corresponds.
+!!
+!!     IKEY           is an integer key.
+!!
+!!     RECPTR         is a record pointer associated with the input key.
+!!
+!!     NULL           is a logical flag indicating whether the input
+!!                    value is null.
+!!
+!! ## Detailed Output
+!!
+!!     None.  This routine operates by side effects.  See $Particulars
+!!     for a description of the effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If the data type of the input column is not integer,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     3)  If the input column is not indexed, the error
+!!         SPICE(NOTINDEXED) is signaled.
+!!
+!!     4)  If the index type of the input column is not recognized,
+!!         the error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine updates the index of an EK segment to reflect the
+!!     addition of a record to the segment.  The index must be
+!!     associated with an integer, scalar column.  The type of the
+!!     index must be 1.
+!!
+!!     The ordinal position of the new item is determined by the key
+!!     IKEY.  The new item will follow the last item already present
+!!     in the column having a value less than or equal to IKEY.
+!!
+!!     In order to support the capability of creating an index for a
+!!     column that has already been populated with data, this routine
+!!     does not require that number of elements referenced by the
+!!     input column's index match the number of elements in the column;
+!!     the index is allowed to reference fewer elements.  However,
+!!     every record referenced by the index must be populated with data.
+!!
+!! ## Examples
+!!
+!!     See ZZEKAD01.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Insert into a type 1 EK index a record pointer associated with an
-!     integer key.  The key and record pointer determine the insertion
-!     point via dictionary ordering on (value, record pointer) pairs.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column specified by COLDSC.
-!
-!     COLDSC         is the column descriptor of the column to
-!                    which the index corresponds.
-!
-!     IKEY           is an integer key.
-!
-!     RECPTR         is a record pointer associated with the input key.
-!
-!     NULL           is a logical flag indicating whether the input
-!                    value is null.
-!
-! $ Detailed_Output
-!
-!     None.  This routine operates by side effects.  See $Particulars
-!     for a description of the effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If the data type of the input column is not integer,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     3)  If the input column is not indexed, the error
-!         SPICE(NOTINDEXED) is signaled.
-!
-!     4)  If the index type of the input column is not recognized,
-!         the error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine updates the index of an EK segment to reflect the
-!     addition of a record to the segment.  The index must be
-!     associated with an integer, scalar column.  The type of the
-!     index must be 1.
-!
-!     The ordinal position of the new item is determined by the key
-!     IKEY.  The new item will follow the last item already present
-!     in the column having a value less than or equal to IKEY.
-!
-!     In order to support the capability of creating an index for a
-!     column that has already been populated with data, this routine
-!     does not require that number of elements referenced by the
-!     input column's index match the number of elements in the column;
-!     the index is allowed to reference fewer elements.  However,
-!     every record referenced by the index must be populated with data.
-!
-! $ Examples
-!
-!     See ZZEKAD01.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(cnamsz)     column
 
       integer(ip)           dtype
@@ -23708,254 +23148,251 @@ contains
 !     Saved variables
 
       module procedure zzekjprp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Prepare to test a set of candidate row vectors, all corresponding
-!     to the same segment vector, against join constraints.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               SEGVEC ( * )
-!     INTEGER               JBASE1
-!     INTEGER               NT1
-!     INTEGER               RB1
-!     INTEGER               NR1
-!     INTEGER               JBASE2
-!     INTEGER               NT2
-!     INTEGER               RB2
-!     INTEGER               NR2
-!     INTEGER               NJCNST
-!     LOGICAL               ACTIVE ( * )
-!     INTEGER               CPIDX1 ( * )
-!     INTEGER               CLIDX1 ( * )
-!     INTEGER               OPS    ( * )
-!     INTEGER               CPIDX2 ( * )
-!     INTEGER               CLIDX2 ( * )
-!     INTEGER               STHAN  ( * )
-!     INTEGER               STSDSC ( 3, * )
-!     INTEGER               STDTPT ( * )
-!     INTEGER               DTPOOL ( 2,      LBPOOL : * )
-!     INTEGER               DTDSCS ( CDSCSZ,          * )
-!
-! $ Detailed_Input
-!
-!     SEGVEC         is a composite segment vector for the output row
-!                    vectors resulting from the join done by these
-!                    routines.  SEGVEC has been created by suffixing
-!                    a segment vector from the second input join row
-!                    set onto a segment vector from the first join row
-!                    set.
-!
-!     JBASE1         is the EK scratch area base address of the first
-!                    input join row set.  This address is one less than
-!                    the first address occupied by the join row set.
-!                    See the $Particulars section for a description of
-!                    join row sets.
-!
-!     NT1            is the number of tables in the first join row set.
-!
-!     RB1            is the scratch area base address of the considered
-!                    row vectors from the first join row set.  This
-!                    address is base-relative:  JBASE1+RB1 is the actual
-!                    base address of the row vectors.
-!
-!     NR1            is the number of rows in the considered portion of
-!                    the first join row set.  The portion in question
-!                    is the set of row vectors corresponding to a
-!                    single segment vector, namely, the one occupying
-!                    the first NT1 elements of SEGVEC.
-!
-!     JBASE2,
-!     NT2,
-!     RB2,
-!     NR2            are analogous quantities to JBASE1, NT2, RB1, and
-!                    NR1; the quantities here apply to the second input
-!                    join row set.  The segment vector qualifying the
-!                    input row vectors from the second join row set
-!                    occupies elements NT1+1 through NT1+NT2 of SEGVEC.
-!
-!     NJCNST         is the number of join constraints that must be
-!                    satisfied by the output join row set.  Each of the
-!                    input arrays CPIDX1, CLIDX1, OPS, CPIDX2, and
-!                    CLIDX2 contains NJCNST elements.
-!
-!     ACTIVE         is an array of logical flags indicating which
-!                    constraints are currently applicable.  The Nth
-!                    element of ACTIVE indicates whether or not to apply
-!                    the Nth constraint:  if ACTIVE(N) is .TRUE., the
-!                    constraint is applicable, otherwise it isn't.
-!
-!                    In order for a join constraint to be active, it
-!                    must relate a column in the first join row set
-!                    to a column in the second join row set.  The LHS
-!                    and RHS of the constraint need not refer
-!                    to the first and second join row sets respectively.
-!
-!                    The elements of the other input arguments that
-!                    define constraints are defined when the
-!                    corresponding element of ACTIVE is .TRUE.  For
-!                    example, when the second constraint is not active,
-!                    the second column descriptor in DTDSCS may not be
-!                    defined.
-!
-!     CPIDX1,
-!     CLIDX1         are, respectively, a set of cross product indices
-!                    and column indices that define the columns on the
-!                    left-hand sides of the input constraints.  If the
-!                    first input join row set contains rows from NT1
-!                    tables and the second input join row set contains
-!                    rows from NT2 tables, then there are (NT1+NT2)
-!                    components in the cross product of the tables
-!                    specified by the input join row sets.  We'll index
-!                    these from 1 to (NT1+NT2), with table 1 being the
-!                    first table of the first input join row set, table
-!                    2 being the second table of the first input join
-!                    row set, table (NT1+1) being the first table of the
-!                    second input join row set, and so on.  Each element
-!                    of the argument CPIDX1 designates a table by this
-!                    counting scheme.  The corresponding element of the
-!                    argument CLIDX1 is the index of a column in the
-!                    specified table.  The index is the ordinal position
-!                    of the column's attributes in the column attribute
-!                    list for the table containing the column.
-!
-!     ELTS1          is an array of element indices that apply to the
-!                    columns on the left-hand-sides of constraints.  The
-!                    Ith element of ELTS1 is the column entry index
-!                    that applies to the Ith constraint.
-!
-!     OPS            is an array of relational operator codes.  The
-!                    Ith code applies to the Ith join constraint.
-!
-!     CPIDX2,
-!     CLIDX2         are, respectively, a set of cross product indices
-!                    and column indices that define the columns on the
-!                    right-hand sides of the input constraints.  The
-!                    meanings of these arrays are analogous to those
-!                    of CPIDX1 and CLIDX1.  Note that the indices are
-!                    relative to the combined table of width NT1+NT2,
-!                    *not* to the second table.
-!
-!     ELTS2          is an array of element indices that apply to the
-!                    columns on the right-hand-sides of constraints.
-!                    The Ith element of ELTS2 is the column entry index
-!                    that applies to the Ith constraint.
-!
-!     STHAN          is an array of EK file handles.  The Ith element
-!                    of STHAN is the handle of the EK containing the
-!                    Ith loaded segment.
-!
-!     STSDSC         is an array of segment descriptors for all
-!                    loaded segments.
-!
-!     STDTPT         is an array of descriptor table pointers all of
-!                    the loaded segments.  For the Ith loaded segment,
-!
-!                       STDTPT(I)
-!
-!                    contains the node number of the descriptor entry
-!                    of the first column in the Ith segment, where the
-!                    order of columns is determined by the order in
-!                    which the columns appear in the parent table's
-!                    column attribute list.
-!
-!     DTPOOL,
-!     DTDSCS         are, respectively, the linked list pool for
-!                    the column descriptor array and the column
-!                    descriptor array itself.  The latter contains
-!                    a descriptor for each loaded column.
-!
-! $ Detailed_Output
-!
-!     None.  This routine operates entirely by side effects.
-!
-! $ Parameters
-!
-!     See the include files.
-!
-! $ Exceptions
-!
-!     1) This routine
-!
-!     All other error checking must be performed by the caller of this
-!     routine.  Presently, that caller is ZZEKJOIN.
-!
-! $ Files
-!
-!     1)  This routine uses the EK scratch area, which employs a scratch
-!         DAS file.
-!
-! $ Particulars
-!
-!     This routine prepares ZZEKJNXT to return row vectors satisfying
-!     a specified set of join constraints.  The principal job of this
-!     routine is to determine key columns to guide the order in which
-!     candidate row vectors are tested.  When key columns are
-!     available, this routine produces order vectors for those columns.
-!
-!     This routine writes to the EK scratch area.  The caller of this
-!     routine must take this fact into account, because this routine
-!     will normally be called during the construction of a join row set,
-!     and scratch area addresses claimed by this routine will be
-!     interspersed with those owned by the caller.
-!
-!     The territory occupied by this routine may be reclaimed later by
-!     `squeezing' unused addresses out of the final join row set.  This
-!     operation can be performed by ZZEKJSQZ.
-!
-! $ Examples
-!
-!     See ZZEKJOIN.
-!
-! $ Restrictions
-!
-!     1)  This routine should not be called by routines outside of the
-!         EK system.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 20-JUL-1998 (NJB)
-!
-!        Modified entry point to set CASE to EMPTY when either
-!        input row count is zero.
-!
-!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-!
-!-&
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Prepare to test a set of candidate row vectors, all corresponding
+!!     to the same segment vector, against join constraints.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               SEGVEC ( * )
+!!     INTEGER               JBASE1
+!!     INTEGER               NT1
+!!     INTEGER               RB1
+!!     INTEGER               NR1
+!!     INTEGER               JBASE2
+!!     INTEGER               NT2
+!!     INTEGER               RB2
+!!     INTEGER               NR2
+!!     INTEGER               NJCNST
+!!     LOGICAL               ACTIVE ( * )
+!!     INTEGER               CPIDX1 ( * )
+!!     INTEGER               CLIDX1 ( * )
+!!     INTEGER               OPS    ( * )
+!!     INTEGER               CPIDX2 ( * )
+!!     INTEGER               CLIDX2 ( * )
+!!     INTEGER               STHAN  ( * )
+!!     INTEGER               STSDSC ( 3, * )
+!!     INTEGER               STDTPT ( * )
+!!     INTEGER               DTPOOL ( 2,      LBPOOL : * )
+!!     INTEGER               DTDSCS ( CDSCSZ,          * )
+!!
+!! ## Detailed Input
+!!
+!!     SEGVEC         is a composite segment vector for the output row
+!!                    vectors resulting from the join done by these
+!!                    routines.  SEGVEC has been created by suffixing
+!!                    a segment vector from the second input join row
+!!                    set onto a segment vector from the first join row
+!!                    set.
+!!
+!!     JBASE1         is the EK scratch area base address of the first
+!!                    input join row set.  This address is one less than
+!!                    the first address occupied by the join row set.
+!!                    See the $Particulars section for a description of
+!!                    join row sets.
+!!
+!!     NT1            is the number of tables in the first join row set.
+!!
+!!     RB1            is the scratch area base address of the considered
+!!                    row vectors from the first join row set.  This
+!!                    address is base-relative:  JBASE1+RB1 is the actual
+!!                    base address of the row vectors.
+!!
+!!     NR1            is the number of rows in the considered portion of
+!!                    the first join row set.  The portion in question
+!!                    is the set of row vectors corresponding to a
+!!                    single segment vector, namely, the one occupying
+!!                    the first NT1 elements of SEGVEC.
+!!
+!!     JBASE2,
+!!     NT2,
+!!     RB2,
+!!     NR2            are analogous quantities to JBASE1, NT2, RB1, and
+!!                    NR1; the quantities here apply to the second input
+!!                    join row set.  The segment vector qualifying the
+!!                    input row vectors from the second join row set
+!!                    occupies elements NT1+1 through NT1+NT2 of SEGVEC.
+!!
+!!     NJCNST         is the number of join constraints that must be
+!!                    satisfied by the output join row set.  Each of the
+!!                    input arrays CPIDX1, CLIDX1, OPS, CPIDX2, and
+!!                    CLIDX2 contains NJCNST elements.
+!!
+!!     ACTIVE         is an array of logical flags indicating which
+!!                    constraints are currently applicable.  The Nth
+!!                    element of ACTIVE indicates whether or not to apply
+!!                    the Nth constraint:  if ACTIVE(N) is .TRUE., the
+!!                    constraint is applicable, otherwise it isn't.
+!!
+!!                    In order for a join constraint to be active, it
+!!                    must relate a column in the first join row set
+!!                    to a column in the second join row set.  The LHS
+!!                    and RHS of the constraint need not refer
+!!                    to the first and second join row sets respectively.
+!!
+!!                    The elements of the other input arguments that
+!!                    define constraints are defined when the
+!!                    corresponding element of ACTIVE is .TRUE.  For
+!!                    example, when the second constraint is not active,
+!!                    the second column descriptor in DTDSCS may not be
+!!                    defined.
+!!
+!!     CPIDX1,
+!!     CLIDX1         are, respectively, a set of cross product indices
+!!                    and column indices that define the columns on the
+!!                    left-hand sides of the input constraints.  If the
+!!                    first input join row set contains rows from NT1
+!!                    tables and the second input join row set contains
+!!                    rows from NT2 tables, then there are (NT1+NT2)
+!!                    components in the cross product of the tables
+!!                    specified by the input join row sets.  We'll index
+!!                    these from 1 to (NT1+NT2), with table 1 being the
+!!                    first table of the first input join row set, table
+!!                    2 being the second table of the first input join
+!!                    row set, table (NT1+1) being the first table of the
+!!                    second input join row set, and so on.  Each element
+!!                    of the argument CPIDX1 designates a table by this
+!!                    counting scheme.  The corresponding element of the
+!!                    argument CLIDX1 is the index of a column in the
+!!                    specified table.  The index is the ordinal position
+!!                    of the column's attributes in the column attribute
+!!                    list for the table containing the column.
+!!
+!!     ELTS1          is an array of element indices that apply to the
+!!                    columns on the left-hand-sides of constraints.  The
+!!                    Ith element of ELTS1 is the column entry index
+!!                    that applies to the Ith constraint.
+!!
+!!     OPS            is an array of relational operator codes.  The
+!!                    Ith code applies to the Ith join constraint.
+!!
+!!     CPIDX2,
+!!     CLIDX2         are, respectively, a set of cross product indices
+!!                    and column indices that define the columns on the
+!!                    right-hand sides of the input constraints.  The
+!!                    meanings of these arrays are analogous to those
+!!                    of CPIDX1 and CLIDX1.  Note that the indices are
+!!                    relative to the combined table of width NT1+NT2,
+!!                    *not* to the second table.
+!!
+!!     ELTS2          is an array of element indices that apply to the
+!!                    columns on the right-hand-sides of constraints.
+!!                    The Ith element of ELTS2 is the column entry index
+!!                    that applies to the Ith constraint.
+!!
+!!     STHAN          is an array of EK file handles.  The Ith element
+!!                    of STHAN is the handle of the EK containing the
+!!                    Ith loaded segment.
+!!
+!!     STSDSC         is an array of segment descriptors for all
+!!                    loaded segments.
+!!
+!!     STDTPT         is an array of descriptor table pointers all of
+!!                    the loaded segments.  For the Ith loaded segment,
+!!
+!!                       STDTPT(I)
+!!
+!!                    contains the node number of the descriptor entry
+!!                    of the first column in the Ith segment, where the
+!!                    order of columns is determined by the order in
+!!                    which the columns appear in the parent table's
+!!                    column attribute list.
+!!
+!!     DTPOOL,
+!!     DTDSCS         are, respectively, the linked list pool for
+!!                    the column descriptor array and the column
+!!                    descriptor array itself.  The latter contains
+!!                    a descriptor for each loaded column.
+!!
+!! ## Detailed Output
+!!
+!!     None.  This routine operates entirely by side effects.
+!!
+!! ## Parameters
+!!
+!!     See the include files.
+!!
+!! ## Exceptions
+!!
+!!     1) This routine
+!!
+!!     All other error checking must be performed by the caller of this
+!!     routine.  Presently, that caller is ZZEKJOIN.
+!!
+!! ## Files
+!!
+!!     1)  This routine uses the EK scratch area, which employs a scratch
+!!         DAS file.
+!!
+!! ## Particulars
+!!
+!!     This routine prepares ZZEKJNXT to return row vectors satisfying
+!!     a specified set of join constraints.  The principal job of this
+!!     routine is to determine key columns to guide the order in which
+!!     candidate row vectors are tested.  When key columns are
+!!     available, this routine produces order vectors for those columns.
+!!
+!!     This routine writes to the EK scratch area.  The caller of this
+!!     routine must take this fact into account, because this routine
+!!     will normally be called during the construction of a join row set,
+!!     and scratch area addresses claimed by this routine will be
+!!     interspersed with those owned by the caller.
+!!
+!!     The territory occupied by this routine may be reclaimed later by
+!!     `squeezing' unused addresses out of the final join row set.  This
+!!     operation can be performed by ZZEKJSQZ.
+!!
+!! ## Examples
+!!
+!!     See ZZEKJOIN.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine should not be called by routines outside of the
+!!         EK system.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0, 20-JUL-1998 (NJB)
+!!
+!!        Modified entry point to set CASE to EMPTY when either
+!!        input row count is zero.
+!!
+!!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: movei
-      include 'ekcoldsc.inc'
-      include 'ekjrs.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'eksegdsc.inc'
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: equi = 1
       integer(ip), parameter :: noneq = 2
@@ -24391,125 +23828,121 @@ contains
       end procedure zzekjprp
 
       module procedure zzekjnxt
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Return row vectors resulting from the join of two collections
-!     of row vectors from two join row sets.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-!
-!     LOGICAL               FOUND
-!     INTEGER               ROWVEC ( * )
-!
-! $ Detailed_Input
-!
-!     None.  Inputs are set up by calling ZZEKJPRP.
-!
-! $ Detailed_Output
-!
-!     FOUND          is a logical flag indicating whether a row vector
-!                    was found on the current call to this routine.
-!
-!     ROWVEC         is a row vector that satisfies the join
-!                    constraints specified by the last set-up call to
-!                    ZZEKJPRP.  ROWVEC is a composite of two row
-!                    vectors from the join row sets specified by inputs
-!                    to ZZEKJPRP.  This row vector does not have the
-!                    segment vector pointer filled in.  ROWVEC is
-!                    valid only when FOUND is TRUE.
-!
-! $ Parameters
-!
-!     See the include files.
-!
-! $ Exceptions
-!
-!     All error checking must be performed by the caller of this
-!     routine.  Presently, that caller is ZZEKJOIN.
-!
-! $ Files
-!
-!     1)  This routine uses the EK scratch area, which employs a scratch
-!         DAS file.
-!
-! $ Particulars
-!
-!     This routine takes advantage of the preparation performed by
-!     ZZEKJPRP to find with reasonable efficiency row vectors satisfying
-!     a specified set of join constraints.
-!
-! $ Examples
-!
-!     The normal usage of this routine is to call it repeatedly to
-!     retrieve one row vector at a time, after setting up the
-!     operation by calling ZZEKJPRP:
-!
-!         CALL ZZEKJPRP ( ... )
-!
-!         CALL ZZEKJNXT ( FOUND, ROWVEC )
-!
-!         DO WHILE ( FOUND )
-!
-!            .
-!            .
-!            .
-!
-!            CALL ZZEKJNXT ( FOUND, ROWVEC )
-!
-!         END DO
-!
-! $ Restrictions
-!
-!     1)  This routine should not be called by routines outside of the
-!         EK system.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 20-JUL-1998 (NJB)
-!
-!        Modified entry point ZZEKJNXT to set FOUND to .FALSE. on the
-!        first pass when CASE is EMPTY.
-!
-!-    Beta Version 1.0.0, 08-AUG-1995 (NJB)
-!
-!-&
-
-!
-!     No row vector found to start with.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Return row vectors resulting from the join of two collections
+!!     of row vectors from two join row sets.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!!     LOGICAL               FOUND
+!!     INTEGER               ROWVEC ( * )
+!!
+!! ## Detailed Input
+!!
+!!     None.  Inputs are set up by calling ZZEKJPRP.
+!!
+!! ## Detailed Output
+!!
+!!     FOUND          is a logical flag indicating whether a row vector
+!!                    was found on the current call to this routine.
+!!
+!!     ROWVEC         is a row vector that satisfies the join
+!!                    constraints specified by the last set-up call to
+!!                    ZZEKJPRP.  ROWVEC is a composite of two row
+!!                    vectors from the join row sets specified by inputs
+!!                    to ZZEKJPRP.  This row vector does not have the
+!!                    segment vector pointer filled in.  ROWVEC is
+!!                    valid only when FOUND is TRUE.
+!!
+!! ## Parameters
+!!
+!!     See the include files.
+!!
+!! ## Exceptions
+!!
+!!     All error checking must be performed by the caller of this
+!!     routine.  Presently, that caller is ZZEKJOIN.
+!!
+!! ## Files
+!!
+!!     1)  This routine uses the EK scratch area, which employs a scratch
+!!         DAS file.
+!!
+!! ## Particulars
+!!
+!!     This routine takes advantage of the preparation performed by
+!!     ZZEKJPRP to find with reasonable efficiency row vectors satisfying
+!!     a specified set of join constraints.
+!!
+!! ## Examples
+!!
+!!     The normal usage of this routine is to call it repeatedly to
+!!     retrieve one row vector at a time, after setting up the
+!!     operation by calling ZZEKJPRP:
+!!
+!!         CALL ZZEKJPRP ( ... )
+!!
+!!         CALL ZZEKJNXT ( FOUND, ROWVEC )
+!!
+!!         DO WHILE ( FOUND )
+!!
+!!            .
+!!            .
+!!            .
+!!
+!!            CALL ZZEKJNXT ( FOUND, ROWVEC )
+!!
+!!         END DO
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine should not be called by routines outside of the
+!!         EK system.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0, 20-JUL-1998 (NJB)
+!!
+!!        Modified entry point ZZEKJNXT to set FOUND to .FALSE. on the
+!!        first pass when CASE is EMPTY.
+!!
+!!-    Beta Version 1.0.0, 08-AUG-1995 (NJB)
+!!
+!!     No row vector found to start with.
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
       integer(ip) :: rrow_1(1)  !! one-element copy of rrow (array argument)
       integer(ip) :: lrow_1(1)  !! one-element copy of lrow (array argument)
       integer(ip) :: rrvidx_1(1)  !! one-element copy of rrvidx (array argument)
       integer(ip) :: lrvidx_1(1)  !! one-element copy of lrvidx (array argument)
-      include 'ekcoldsc.inc'
-      include 'ekjrs.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'eksegdsc.inc'
       integer(ip), parameter :: lbpool = -5
       logical               return
       integer(ip), parameter :: equi = 1
@@ -25000,267 +24433,255 @@ contains
 !$Procedure  ZZEKKEY  ( EK, determine key column )
 
       module procedure zzekkey
+!! ## Abstract
+!!
+!!     Determine the key column to use when searching an EK segment
+!!     for rows matching query constraints.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is the handle of the EK file containing the
+!!                    segment currently being searched for matching rows.
+!!
+!!     SEGDSC         the descriptor of the segment.
+!!
+!!     NROWS          is the number of rows in the segment designated by
+!!                    HANDLE and SEGDSC.
+!!
+!!     NCNSTR         is the number of input relational constraints.
+!!                    The input arrays CLIDXS, DSCLST, OPS, CHRBUF,
+!!                    CBEGS, CENDS, DVALS, and IVALS define these
+!!                    constraints.  Not all of the constraints may
+!!                    be applicable; the applicable constraints are
+!!                    identified by the input argument ACTIVE, which
+!!                    is described below.  Each *applicable* constraint
+!!                    has the form
+!!
+!!                       <table1.column1> <op> <value>
+!!
+!!     CLIDXS         is an array of column indices; the Nth index
+!!                    identifies the column on the left hand side of the
+!!                    Nth constraint.  Each index indicates the ordinal
+!!                    position of the attribute information for the
+!!                    corresponding column within the column attribute
+!!                    list for the column's parent table.  See the
+!!                    local variable declarations in EKBSR for further
+!!                    information on the column attribute list.
+!!
+!!     DSCLST         is an array of column descriptors for the columns
+!!                    referenced in the input constraints.  The Ith
+!!                    descriptor corresponds to the Ith constraint.
+!!
+!!     OPS            are relational operators used in the input
+!!                    constraints.  The elements of OPS are any of the
+!!                    integer parameters
+!!
+!!                       EQ, GE, GT, LE, LT, NE, LIKE, UNLIKE
+!!
+!!                    The Nth element of OPS corresponds to the Nth
+!!                    constraint.
+!!
+!!     DTYPES         is an array of data type codes for the values on
+!!                    the right hand sides of the input constraints.
+!!                    The Ith element of DTYPES applies to the Ith
+!!                    constraint.
+!!
+!!     CHRBUF,
+!!     CBEGS,
+!!     CENDS          are, respectively, a string containing character
+!!                    tokens representing values on the right hand sides
+!!                    of query constraints, and arrays of begin and end
+!!                    indices of these tokens within CHRBUF.  If the Nth
+!!                    constraint has a character value on the right hand
+!!                    side, that value is CHRBUF( CBEGS(N) : CENDS(N) ).
+!!                    For constraints whose right hand sides do not
+!!                    specify character values, the corresponding
+!!                    elements of CBEGS and CENDS are not used.
+!!
+!!     DVALS,
+!!     IVALS          are, respectively, arrays of double precision and
+!!                    integer values appearing on the right hand sides of
+!!                    input constraints.  The contents of DVALS and IVALS
+!!                    are meaningful only for those constraints whose
+!!                    right hand sides specify values having these data
+!!                    types.
+!!
+!!     ACTIVE         is an array of logical flags indicating which
+!!                    constraints are currently applicable.  The Nth
+!!                    element of ACTIVE indicates whether or not to apply
+!!                    the Nth constraint:  if ACTIVE(N) is .TRUE., the
+!!                    constraint is applicable, otherwise it isn't.
+!!
+!!                    The elements of the other input arguments that
+!!                    define constraints are defined when the
+!!                    corresponding element of ACTIVE is .TRUE.  For
+!!                    example, when the second constraint is not active,
+!!                    the second column descriptor in DSCLST may not be
+!!                    defined.
+!!
+!!                    Only constraints relating column entries to literal
+!!                    values may be active.
+!!
+!! ## Detailed Output
+!!
+!!     ACTIVE         indicates, on output, which constraints are still
+!!                    active.  All constraints satisfied by the candidate
+!!                    row set are turned off on output.
+!!
+!!     KEY            is the index of the key column.  This index is
+!!                    taken from the input argument CLIDXS.
+!!
+!!     KEYDSC         is the column descriptor for the key column.  Note
+!!                    that this descriptor indicates whether the key
+!!                    column is indexed.
+!!
+!!     BEGIDX,
+!!     ENDIDX         are, respectively, begin and end indices for the
+!!                    candidate matching rows in the segment being
+!!                    searched.  These indices refer to positions in the
+!!                    key column's index:  the candidate rows are pointed
+!!                    to index elements having indices ranging from
+!!                    BEGIDX to ENDIDX, inclusively.  The actual
+!!                    candidate rows are referred to with one level of
+!!                    indirection.
+!!
+!!                    If the constraints on the key column entirely
+!!                    eliminate all rows in the segment, the returned
+!!                    values of BEGIDX and ENDIDX are, respectively, 1
+!!                    and 0.
+!!
+!!     FOUND          is a logical flag indicating whether a key column
+!!                    was determined.  The other outputs of this routine
+!!                    are valid only if a key column was found.  This
+!!                    routine will fail to find a key column if there are
+!!                    no active constraints on indexed columns.
+!!
+!! ## Parameters
+!!
+!!     MAXCON         is the maximum number of constraints that may
+!!                    be used in a query.
+!!
+!!     CDSCSZ         is the size of a column descriptor.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the segment contains no indexed columns on which there are
+!!         active constraints, the output argument FOUND is set to
+!!         .FALSE.  The other output arguments are undefined in this
+!!         case.
+!!
+!!     2)  If the constraints on the key column entirely eliminate all
+!!         rows in the segment, the returned values of BEGIDX and ENDIDX
+!!         are, respectively, 1 and 0.
+!!
+!!     3)  If the number of input constraints is out of range, the error
+!!         SPICE(INVALIDCOUNT) is signaled.
+!!
+!! ## Files
+!!
+!!     See the description of the input argument HANDLE.
+!!
+!! ## Particulars
+!!
+!!     The EKSRCH algorithm for finding rows matching a given set
+!!     of constraints attempts to use constraints on indexed columns
+!!     to enable the matching process to be performed efficiently.
+!!     The idea is to find the indexed column whose constraints limit
+!!     the possible set of matching rows to the smallest number; then
+!!     to linearly search through this set of candidate rows to see
+!!     which ones satisfy the remaining applicable constraints.  The
+!!     column used to initially limit the set of candidate rows is
+!!     called the `key column'.  The constraints on the key column that
+!!     are of interest are ones involving order relations or equality:
+!!     these constraints use the operators
+!!
+!!        EQ  GE  GT  LE  LT
+!!
+!!     Note that the NE operator is not of much use here.
+!!
+!!     The set of candidate rows simultaneously satisfies all such
+!!     constraints on the key column, and therefore is the intersection
+!!     of the set of rows satisfying each such constraint.  This method
+!!     of selecting candidate rows can rapidly eliminate large numbers of
+!!     rows from consideration, because the index on the key column can
+!!     be employed in finding rows that match constraints involving order
+!!     relations:  the start and end indices of such rows can be found
+!!     by a binary, rather than linear, search.
+!!
+!!     A segment may have multiple indexed columns on which there are
+!!     constraints involving order or equality relations; in this case
+!!     the column whose constraints are most restrictive is selected as
+!!     the key column.
+!!
+!!     It may also happen that a segment contains no indexed columns.
+!!     In such a case, the key column is not useful for narrowing the
+!!     set of candidate rows.  The first column of the segment is
+!!     arbitrarily selected as the key column in this case.
+!!
+!! ## Examples
+!!
+!!     See EKSRCH.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.1, 02-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    SPICELIB Version 1.2.0, 26-JUL-1996 (NJB)
+!!
+!!        Added check of FAILED after calls to the EK search functions.
+!!
+!!-    SPICELIB Version 1.1.0, 17-APR-1996 (WLT)
+!!
+!!        Removed spurious periods that appeared at the
+!!        end of lines 524 and 577 in previous edition.
+!!
+!!-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.2.0, 26-JUL-1996 (NJB)
+!!
+!!        Added check of FAILED after calls to the EK search functions.
+!!
+!!     SPICELIB functions
+!!
+!!     Other functions
+!!
+!!     Local parameters
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: movei
-
-! $ Abstract
-!
-!     Determine the key column to use when searching an EK segment
-!     for rows matching query constraints.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is the handle of the EK file containing the
-!                    segment currently being searched for matching rows.
-!
-!     SEGDSC         the descriptor of the segment.
-!
-!     NROWS          is the number of rows in the segment designated by
-!                    HANDLE and SEGDSC.
-!
-!     NCNSTR         is the number of input relational constraints.
-!                    The input arrays CLIDXS, DSCLST, OPS, CHRBUF,
-!                    CBEGS, CENDS, DVALS, and IVALS define these
-!                    constraints.  Not all of the constraints may
-!                    be applicable; the applicable constraints are
-!                    identified by the input argument ACTIVE, which
-!                    is described below.  Each *applicable* constraint
-!                    has the form
-!
-!                       <table1.column1> <op> <value>
-!
-!     CLIDXS         is an array of column indices; the Nth index
-!                    identifies the column on the left hand side of the
-!                    Nth constraint.  Each index indicates the ordinal
-!                    position of the attribute information for the
-!                    corresponding column within the column attribute
-!                    list for the column's parent table.  See the
-!                    local variable declarations in EKBSR for further
-!                    information on the column attribute list.
-!
-!     DSCLST         is an array of column descriptors for the columns
-!                    referenced in the input constraints.  The Ith
-!                    descriptor corresponds to the Ith constraint.
-!
-!     OPS            are relational operators used in the input
-!                    constraints.  The elements of OPS are any of the
-!                    integer parameters
-!
-!                       EQ, GE, GT, LE, LT, NE, LIKE, UNLIKE
-!
-!                    The Nth element of OPS corresponds to the Nth
-!                    constraint.
-!
-!     DTYPES         is an array of data type codes for the values on
-!                    the right hand sides of the input constraints.
-!                    The Ith element of DTYPES applies to the Ith
-!                    constraint.
-!
-!     CHRBUF,
-!     CBEGS,
-!     CENDS          are, respectively, a string containing character
-!                    tokens representing values on the right hand sides
-!                    of query constraints, and arrays of begin and end
-!                    indices of these tokens within CHRBUF.  If the Nth
-!                    constraint has a character value on the right hand
-!                    side, that value is CHRBUF( CBEGS(N) : CENDS(N) ).
-!                    For constraints whose right hand sides do not
-!                    specify character values, the corresponding
-!                    elements of CBEGS and CENDS are not used.
-!
-!     DVALS,
-!     IVALS          are, respectively, arrays of double precision and
-!                    integer values appearing on the right hand sides of
-!                    input constraints.  The contents of DVALS and IVALS
-!                    are meaningful only for those constraints whose
-!                    right hand sides specify values having these data
-!                    types.
-!
-!     ACTIVE         is an array of logical flags indicating which
-!                    constraints are currently applicable.  The Nth
-!                    element of ACTIVE indicates whether or not to apply
-!                    the Nth constraint:  if ACTIVE(N) is .TRUE., the
-!                    constraint is applicable, otherwise it isn't.
-!
-!                    The elements of the other input arguments that
-!                    define constraints are defined when the
-!                    corresponding element of ACTIVE is .TRUE.  For
-!                    example, when the second constraint is not active,
-!                    the second column descriptor in DSCLST may not be
-!                    defined.
-!
-!                    Only constraints relating column entries to literal
-!                    values may be active.
-!
-! $ Detailed_Output
-!
-!     ACTIVE         indicates, on output, which constraints are still
-!                    active.  All constraints satisfied by the candidate
-!                    row set are turned off on output.
-!
-!     KEY            is the index of the key column.  This index is
-!                    taken from the input argument CLIDXS.
-!
-!     KEYDSC         is the column descriptor for the key column.  Note
-!                    that this descriptor indicates whether the key
-!                    column is indexed.
-!
-!     BEGIDX,
-!     ENDIDX         are, respectively, begin and end indices for the
-!                    candidate matching rows in the segment being
-!                    searched.  These indices refer to positions in the
-!                    key column's index:  the candidate rows are pointed
-!                    to index elements having indices ranging from
-!                    BEGIDX to ENDIDX, inclusively.  The actual
-!                    candidate rows are referred to with one level of
-!                    indirection.
-!
-!                    If the constraints on the key column entirely
-!                    eliminate all rows in the segment, the returned
-!                    values of BEGIDX and ENDIDX are, respectively, 1
-!                    and 0.
-!
-!     FOUND          is a logical flag indicating whether a key column
-!                    was determined.  The other outputs of this routine
-!                    are valid only if a key column was found.  This
-!                    routine will fail to find a key column if there are
-!                    no active constraints on indexed columns.
-!
-! $ Parameters
-!
-!     MAXCON         is the maximum number of constraints that may
-!                    be used in a query.
-!
-!     CDSCSZ         is the size of a column descriptor.
-!
-! $ Exceptions
-!
-!     1)  If the segment contains no indexed columns on which there are
-!         active constraints, the output argument FOUND is set to
-!         .FALSE.  The other output arguments are undefined in this
-!         case.
-!
-!     2)  If the constraints on the key column entirely eliminate all
-!         rows in the segment, the returned values of BEGIDX and ENDIDX
-!         are, respectively, 1 and 0.
-!
-!     3)  If the number of input constraints is out of range, the error
-!         SPICE(INVALIDCOUNT) is signaled.
-!
-! $ Files
-!
-!     See the description of the input argument HANDLE.
-!
-! $ Particulars
-!
-!     The EKSRCH algorithm for finding rows matching a given set
-!     of constraints attempts to use constraints on indexed columns
-!     to enable the matching process to be performed efficiently.
-!     The idea is to find the indexed column whose constraints limit
-!     the possible set of matching rows to the smallest number; then
-!     to linearly search through this set of candidate rows to see
-!     which ones satisfy the remaining applicable constraints.  The
-!     column used to initially limit the set of candidate rows is
-!     called the `key column'.  The constraints on the key column that
-!     are of interest are ones involving order relations or equality:
-!     these constraints use the operators
-!
-!        EQ  GE  GT  LE  LT
-!
-!     Note that the NE operator is not of much use here.
-!
-!     The set of candidate rows simultaneously satisfies all such
-!     constraints on the key column, and therefore is the intersection
-!     of the set of rows satisfying each such constraint.  This method
-!     of selecting candidate rows can rapidly eliminate large numbers of
-!     rows from consideration, because the index on the key column can
-!     be employed in finding rows that match constraints involving order
-!     relations:  the start and end indices of such rows can be found
-!     by a binary, rather than linear, search.
-!
-!     A segment may have multiple indexed columns on which there are
-!     constraints involving order or equality relations; in this case
-!     the column whose constraints are most restrictive is selected as
-!     the key column.
-!
-!     It may also happen that a segment contains no indexed columns.
-!     In such a case, the key column is not useful for narrowing the
-!     set of candidate rows.  The first column of the segment is
-!     arbitrarily selected as the key column in this case.
-!
-! $ Examples
-!
-!     See EKSRCH.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 02-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    SPICELIB Version 1.2.0, 26-JUL-1996 (NJB)
-!
-!        Added check of FAILED after calls to the EK search functions.
-!
-!-    SPICELIB Version 1.1.0, 17-APR-1996 (WLT)
-!
-!        Removed spurious periods that appeared at the
-!        end of lines 524 and 577 in previous edition.
-!
-!-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.2.0, 26-JUL-1996 (NJB)
-!
-!        Added check of FAILED after calls to the EK search functions.
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Other functions
-!
-
-!
-!     Local parameters
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip), parameter :: lbcell = -5
 
 !
@@ -25625,139 +25046,131 @@ contains
 !$Procedure     ZZEKAD01 ( EK, add data to class 1 column )
 
       module procedure zzekad01
+!! ## Abstract
+!!
+!!     Add a column entry to a class 1 column in a specified EK record.
+!!     Class 1 columns contain scalar, integer values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment in which
+!!                    the specified column entry is to be written.
+!!
+!!     COLDSC         is the descriptor of the column in which
+!!                    the specified column entry is to be written.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to be written.
+!!
+!!     IVAL           is the integer value that will be written
+!!                    to the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the value
+!!                    of the specified column entry is to be set to NULL.
+!!                    If so, the input IVAL is ignored.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file is not modified.
+!!
+!!     2)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!         The file is not modified.
+!!
+!!     3)  If the input flag ISNULL is .TRUE. but the target column
+!!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
+!!         signaled.  The file is not modified.
+!!
+!!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
+!!         error in *not* trapped in advance.  This routine assumes that
+!!         a valid value of RECPTR has been supplied by the caller.
+!!
+!!     3)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it sets the value of a
+!!     column entry in an EK segment.  If the column is indexed, the
+!!     index is updated to reflect the presence of the new entry.  This
+!!     routine is intended to set values of uninitialized column entries
+!!     only.  To update existing entries, use the ZZEKUExx routines, or
+!!     at the user level, the EKUCEx routines.
+!!
+!!     This routine does not participate in shadowing functions.  If the
+!!     target EK is shadowed, the caller is responsible for performing
+!!     necessary backup operations.  If the target EK is not shadowed,
+!!     the target record's status is not modified.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKACEI.
+!!
+!! ## Restrictions
+!!
+!!     1) This routine cannot be used to update existing column entries.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-
-! $ Abstract
-!
-!     Add a column entry to a class 1 column in a specified EK record.
-!     Class 1 columns contain scalar, integer values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment in which
-!                    the specified column entry is to be written.
-!
-!     COLDSC         is the descriptor of the column in which
-!                    the specified column entry is to be written.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to be written.
-!
-!     IVAL           is the integer value that will be written
-!                    to the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the value
-!                    of the specified column entry is to be set to NULL.
-!                    If so, the input IVAL is ignored.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file is not modified.
-!
-!     2)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!         The file is not modified.
-!
-!     3)  If the input flag ISNULL is .TRUE. but the target column
-!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
-!         signaled.  The file is not modified.
-!
-!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
-!         error in *not* trapped in advance.  This routine assumes that
-!         a valid value of RECPTR has been supplied by the caller.
-!
-!     3)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it sets the value of a
-!     column entry in an EK segment.  If the column is indexed, the
-!     index is updated to reflect the presence of the new entry.  This
-!     routine is intended to set values of uninitialized column entries
-!     only.  To update existing entries, use the ZZEKUExx routines, or
-!     at the user level, the EKUCEx routines.
-!
-!     This routine does not participate in shadowing functions.  If the
-!     target EK is shadowed, the caller is responsible for performing
-!     necessary backup operations.  If the target EK is not shadowed,
-!     the target record's status is not modified.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKACEI.
-!
-! $ Restrictions
-!
-!     1) This routine cannot be used to update existing column entries.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           colidx
       integer(ip)           datptr
       integer(ip)           itype
@@ -25943,140 +25356,132 @@ contains
 !$Procedure     ZZEKAD02 ( EK, add data to class 2 column )
 
       module procedure zzekad02
+!! ## Abstract
+!!
+!!     Add a column entry to a specified record in a class 2 column.
+!!     Class 2 columns contain scalar double precision values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment in which
+!!                    the specified column entry is to be written.
+!!
+!!     COLDSC         is the descriptor of the column in which
+!!                    the specified column entry is to be written.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to be written.
+!!
+!!     DVAL           is the double precision value that will be written
+!!                    to the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the value
+!!                    of the specified column entry is to be set to NULL.
+!!                    If so, the input DVAL is ignored.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file is not modified.
+!!
+!!     2)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!         The file is not modified.
+!!
+!!     3)  If the input flag ISNULL is .TRUE. but the target column
+!!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
+!!         signaled.  The file is not modified.
+!!
+!!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
+!!         error in *not* trapped in advance.  This routine assumes that
+!!         a valid value of RECPTR has been supplied by the caller.
+!!
+!!     3)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it sets the value of a
+!!     column entry in an EK segment.  If the column is indexed, the
+!!     index is updated to reflect the presence of the new entry.  This
+!!     routine is intended to set values of uninitialized column entries
+!!     only.  To update existing entries, use the ZZEKUExx routines, or
+!!     at the user level, the EKUCEx routines.
+!!
+!!     This routine does not participate in shadowing functions.  If the
+!!     target EK is shadowed, the caller is responsible for performing
+!!     necessary backup operations.  If the target EK is not shadowed,
+!!     the target record's status is not modified.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKACED.
+!!
+!! ## Restrictions
+!!
+!!     1) This routine cannot be used to update existing column entries.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-
-! $ Abstract
-!
-!     Add a column entry to a specified record in a class 2 column.
-!     Class 2 columns contain scalar double precision values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment in which
-!                    the specified column entry is to be written.
-!
-!     COLDSC         is the descriptor of the column in which
-!                    the specified column entry is to be written.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to be written.
-!
-!     DVAL           is the double precision value that will be written
-!                    to the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the value
-!                    of the specified column entry is to be set to NULL.
-!                    If so, the input DVAL is ignored.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file is not modified.
-!
-!     2)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!         The file is not modified.
-!
-!     3)  If the input flag ISNULL is .TRUE. but the target column
-!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
-!         signaled.  The file is not modified.
-!
-!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
-!         error in *not* trapped in advance.  This routine assumes that
-!         a valid value of RECPTR has been supplied by the caller.
-!
-!     3)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it sets the value of a
-!     column entry in an EK segment.  If the column is indexed, the
-!     index is updated to reflect the presence of the new entry.  This
-!     routine is intended to set values of uninitialized column entries
-!     only.  To update existing entries, use the ZZEKUExx routines, or
-!     at the user level, the EKUCEx routines.
-!
-!     This routine does not participate in shadowing functions.  If the
-!     target EK is shadowed, the caller is responsible for performing
-!     necessary backup operations.  If the target EK is not shadowed,
-!     the target record's status is not modified.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKACED.
-!
-! $ Restrictions
-!
-!     1) This routine cannot be used to update existing column entries.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           colidx
       integer(ip)           datptr
       integer(ip)           itype
@@ -26256,143 +25661,133 @@ contains
 !$Procedure     ZZEKAD03 ( EK, add data to class 3 column )
 
       module procedure zzekad03
+!! ## Abstract
+!!
+!!     Add a column entry to a class 3 column in a specified EK record.
+!!     Class 3 columns contain scalar, character values.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment in which
+!!                    the specified column entry is to be written.
+!!
+!!     COLDSC         is the descriptor of the column in which
+!!                    the specified column entry is to be written.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to be written.
+!!
+!!     CVAL           is the character string value that will be written
+!!                    to the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the value
+!!                    of the specified column entry is to be set to NULL.
+!!                    If so, the input CVAL is ignored.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file is not modified.
+!!
+!!     2)  If the ordinal position of the column specified by COLDSC
+!!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
+!!         The file is not modified.
+!!
+!!     3)  If the input flag ISNULL is .TRUE. but the target column
+!!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
+!!         signaled.  The file is not modified.
+!!
+!!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
+!!         error in *not* trapped in advance.  This routine assumes that
+!!         a valid value of RECPTR has been supplied by the caller.
+!!
+!!     3)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it sets the value of a
+!!     column entry in an EK segment.  If the column is indexed, the
+!!     index is updated to reflect the presence of the new entry.  This
+!!     routine is intended to set values of uninitialized column entries
+!!     only.  To update existing entries, use the ZZEKUExx routines, or
+!!     at the user level, the EKUCEx routines.
+!!
+!!     This routine does not participate in shadowing functions.  If the
+!!     target EK is shadowed, the caller is responsible for performing
+!!     necessary backup operations.  If the target EK is not shadowed,
+!!     the target record's status is not modified.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKACEC.
+!!
+!! ## Restrictions
+!!
+!!     1) This routine cannot be used to update existing column entries.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
-
-! $ Abstract
-!
-!     Add a column entry to a class 3 column in a specified EK record.
-!     Class 3 columns contain scalar, character values.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment in which
-!                    the specified column entry is to be written.
-!
-!     COLDSC         is the descriptor of the column in which
-!                    the specified column entry is to be written.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to be written.
-!
-!     CVAL           is the character string value that will be written
-!                    to the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the value
-!                    of the specified column entry is to be set to NULL.
-!                    If so, the input CVAL is ignored.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file is not modified.
-!
-!     2)  If the ordinal position of the column specified by COLDSC
-!         is out of range, the error SPICE(INVALIDINDEX) is signaled.
-!         The file is not modified.
-!
-!     3)  If the input flag ISNULL is .TRUE. but the target column
-!         does not allow nulls, the error SPICE(BADATTRIBUTE) is
-!         signaled.  The file is not modified.
-!
-!     4)  If RECPTR is invalid, a DAS addressing error may occur.  The
-!         error in *not* trapped in advance.  This routine assumes that
-!         a valid value of RECPTR has been supplied by the caller.
-!
-!     3)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it sets the value of a
-!     column entry in an EK segment.  If the column is indexed, the
-!     index is updated to reflect the presence of the new entry.  This
-!     routine is intended to set values of uninitialized column entries
-!     only.  To update existing entries, use the ZZEKUExx routines, or
-!     at the user level, the EKUCEx routines.
-!
-!     This routine does not participate in shadowing functions.  If the
-!     target EK is shadowed, the caller is responsible for performing
-!     necessary backup operations.  If the target EK is not shadowed,
-!     the target record's status is not modified.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKACEC.
-!
-! $ Restrictions
-!
-!     1) This routine cannot be used to update existing column entries.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           colidx
       integer(ip)           datptr
       integer(ip)           itype
@@ -26641,109 +26036,99 @@ contains
 !$Procedure     ZZEKIXDL ( EK, delete record from index )
 
       module procedure zzekixdl
+!! ## Abstract
+!!
+!!     Update an EK column index to reflect deletion of a record
+!!     specified by a record pointer.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a handle of an EK file open for write access.
+!!
+!!     SEGDSC         is the segment descriptor of the segment
+!!                    containing the column to be searched.
+!!
+!!     COLDSC         is the column descriptor of the column to be
+!!                    searched.
+!!
+!!     RECPTR         is a pointer to a record whose corresponding
+!!                    index entry is to be deleted.
+!!
+!! ## Detailed Output
+!!
+!!     None.  This routine operates by side effects.  See $Particulars
+!!     for a discussion of the action of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine supports EK update or delete operations, both of
+!!     which involve removing pointers to records from column indexes.
+!!
+!! ## Examples
+!!
+!!     See ZZEKDE01.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Update an EK column index to reflect deletion of a record
-!     specified by a record pointer.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a handle of an EK file open for write access.
-!
-!     SEGDSC         is the segment descriptor of the segment
-!                    containing the column to be searched.
-!
-!     COLDSC         is the column descriptor of the column to be
-!                    searched.
-!
-!     RECPTR         is a pointer to a record whose corresponding
-!                    index entry is to be deleted.
-!
-! $ Detailed_Output
-!
-!     None.  This routine operates by side effects.  See $Particulars
-!     for a discussion of the action of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine supports EK update or delete operations, both of
-!     which involve removing pointers to records from column indexes.
-!
-! $ Examples
-!
-!     See ZZEKDE01.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip)           idx
       integer(ip)           idxtyp
       integer(ip)           recno
@@ -26808,7 +26193,27 @@ contains
 !$Procedure  ZZEKJOIN  ( Perform join on two join row sets )
 
       module procedure zzekjoin
+!! ## Abstract
+!!
+!!     Perform join of two EK join row sets, subject to a specified set
+!!     of EK join constraints, yielding an EK join row set.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
       integer(ip) :: nr2_1(1)  !! one-element copy of nr2 (array argument)
       integer(ip) :: rb2_1(1)  !! one-element copy of rb2 (array argument)
       integer(ip) :: nr1_1(1)  !! one-element copy of nr1 (array argument)
@@ -26817,28 +26222,6 @@ contains
       integer(ip) :: nt2_1(1)  !! one-element copy of nt2 (array argument)
       integer(ip) :: nsv1_1(1)  !! one-element copy of nsv1 (array argument)
       integer(ip) :: nt1_1(1)  !! one-element copy of nt1 (array argument)
-
-! $ Abstract
-!
-!     Perform join of two EK join row sets, subject to a specified set
-!     of EK join constraints, yielding an EK join row set.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekcoldsc.inc'
-      include 'ekjrs.inc'
-      include 'ekqlimit.inc'
-      include 'eksegdsc.inc'
-
       integer(ip), parameter :: lbpool = -5
 
 
@@ -27367,29 +26750,28 @@ contains
 !$Procedure EKACEC ( EK, add character data to column )
 
       module procedure ekacec
+!! ## Abstract
+!!
+!!     Add data to a character column in a specified EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Add data to a character column in a specified EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -28187,29 +27569,28 @@ contains
 !$Procedure EKACED ( EK, add d.p. data to column )
 
       module procedure ekaced
+!! ## Abstract
+!!
+!!     Add data to an double precision column in a specified EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Add data to an double precision column in a specified EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -28948,29 +28329,28 @@ contains
 !$Procedure EKACEI ( EK, add integer data to column )
 
       module procedure ekacei
+!! ## Abstract
+!!
+!!     Add data to an integer column in a specified EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Add data to an integer column in a specified EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -30445,413 +29825,407 @@ contains
 !     Standard SPICE error handling.
 
       module procedure eklef
-
-! $ Abstract
-!
-!     Load an EK file, making it accessible to the EK readers.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     SEARCH
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         FNAME
-!     INTEGER               HANDLE
-!
-! $ Detailed_Input
-!
-!     FNAME    is the name of a binary EK file to be loaded.
-!
-! $ Detailed_Output
-!
-!     HANDLE   is the handle of the EK file. The file is
-!              accessible by the EK reader routines once it
-!              has been loaded.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the EK file indicated by FNAME contains a column whose
-!         name matches that of a column in an already loaded EK, but
-!         whose declared attributes don't match those of the loaded
-!         column of the same name, the error SPICE(BADATTRIBUTES) is
-!         signaled. HANDLE is is undefined in this case.
-!
-!     2)  Loading an EK file that is already loaded does not cause side
-!         effects. The handle already associated with the file will be
-!         returned.
-!
-!     3)  If a file open error occurs, the error is signaled by a
-!         routine in the call tree of this routine. HANDLE is undefined
-!         in this case.
-!
-!     4)  If loading the input file would cause the maximum number of
-!         loaded EK files to be exceeded, the error
-!         SPICE(EKFILETABLEFULL) is signaled. HANDLE is undefined in
-!         this case. This routine will attempt to unload the file
-!         from the DAS system.
-!
-!     5)  If loading the input file would cause the maximum number of
-!         loaded DAS files to be exceeded, an error is signaled by a
-!         routine in the call tree of this routine. HANDLE is undefined
-!         in this case. This routine will attempt to unload the file
-!         from the DAS system.
-!
-!     6)  If loading the input file would cause the maximum number of
-!         segments allowed in loaded EK files to be exceeded, the error
-!         SPICE(EKSEGMENTTABLEFULL) is signaled. HANDLE is undefined in
-!         this case. This routine will attempt to unload the file from
-!         the DAS system.
-!
-!     7)  If loading the input file would cause the maximum number of
-!         columns allowed in loaded EK files to be exceeded, the error
-!         SPICE(EKCOLDESCTABLEFULL) is signaled. HANDLE is undefined in
-!         this case. This routine will attempt to unload the file from
-!         the DAS system.
-!
-!     8)  If loading the input file would cause the maximum allowed
-!         number of columns having distinct attributes in loaded EK
-!         files to be exceeded, the error SPICE(EKCOLATTRTABLEFULL) is
-!         signaled. HANDLE is undefined in this case. This routine will
-!         attempt to unload the file from the DAS system.
-!
-!     9)  If loading the input file would cause the maximum number of
-!         instrument codes allowed in loaded EK files to be exceeded,
-!         the error SPICE(EKIDTABLEFULL) is signaled. HANDLE is
-!         undefined in this case. This routine will attempt to unload
-!         the file from the DAS system.
-!
-!     10) If the input file does not contain at least one segment, the
-!         error SPICE(EKNOSEGMENTS) is signaled.
-!
-! $ Files
-!
-!     See description of FNAME in $Detailed_Input.
-!
-! $ Particulars
-!
-!     This routine makes EK files known to the EK system. It is
-!     necessary to load EK files using this routine in order to
-!     query the files using the EK readers.
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Load two EK files and perform a query on them. During query
-!        execution, all files will be searched.
-!
-!        Use the EK kernel below to load the Cassini Science Plan
-!        SPICE E-Kernel File based upon the integrated science
-!        plan #78.
-!
-!           S78_CIMSSSUPa.bep
-!
-!        Use the EK kernel below to load the data based upon the
-!        integrated science plan #79.
-!
-!           S79_CIMSSSUPa.bep
-!
-!        Example code begins here.
-!
-!              PROGRAM EKLEF_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Maximum length of an input query,
-!        C     MAXQRY.
-!        C
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               EKNMLN
-!              PARAMETER           ( EKNMLN = 17 )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(EKNMLN)    EKNAMS ( 2 )
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               N
-!              INTEGER               NMROWS
-!
-!              LOGICAL               ERROR
-!
-!        C
-!        C     Set up the array holding the EK file names.
-!        C
-!              DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
-!             .                               'S79_CIMSSSUPa.bep'  /
-!
-!        C
-!        C     Load the EK files. This call could be replaced by a call
-!        C     to FURNSH (in this case, a meta-kernel listing the EKs
-!        C     to be loaded could also be used).
-!        C
-!              DO I = 1, 2
-!
-!                 CALL EKLEF ( EKNAMS(I), HANDLE )
-!                 WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
-!
-!              END DO
-!
-!        C
-!        C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
-!        C     that contains columns named:
-!        C
-!        C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
-!        C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
-!        C        SUBSYSTEM
-!        C
-!        C     Define a set of constraints to perform a query on all
-!        C     loaded EK files (the SELECT clause).
-!        C
-!              QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
-!             .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
-!             .   //   'order by SUBSYSTEM'
-!
-!        C
-!        C     Query the EK system for data rows matching the
-!        C     SELECT constraints.
-!        C
-!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C     Check whether an error occurred while processing the
-!        C     SELECT clause. If so, output the error message.
-!        C
-!              WRITE(*,*)
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
-!
-!              ELSE
-!
-!        C
-!        C        If no error, NMROWS contains the number of rows
-!        C        matching the constraints specified in the query
-!        C        string.
-!        C
-!                 WRITE(*,'(A,I3)') 'Number of matching rows: ', NMROWS
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Loading EK: S78_CIMSSSUPa.bep
-!        Loading EK: S79_CIMSSSUPa.bep
-!
-!        Number of matching rows:   9
-!
-!     2) Repeat the previous exercise, using the same input kernels,
-!        but this time unloading the previous file before each new
-!        file is loaded. Unloading files prevents them from being
-!        searched during query execution.
-!
-!        Example code begins here.
-!
-!              PROGRAM EKLEF_EX2
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Maximum length of an input query,
-!        C     MAXQRY.
-!        C
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               EKNMLN
-!              PARAMETER           ( EKNMLN = 17 )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(EKNMLN)    EKNAMS ( 2 )
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               N
-!              INTEGER               NMROWS
-!
-!              LOGICAL               ERROR
-!
-!        C
-!        C     Set up the array holding the EK file names.
-!        C
-!              DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
-!             .                               'S79_CIMSSSUPa.bep'  /
-!
-!        C
-!        C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
-!        C     that contains columns named:
-!        C
-!        C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
-!        C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
-!        C        SUBSYSTEM
-!        C
-!        C     Define a set of constraints to perform a query on all
-!        C     loaded EK files (the SELECT clause).
-!        C
-!              QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
-!             .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
-!             .   //   'order by SUBSYSTEM'
-!
-!        C
-!        C     Load the EK files. This call could be replaced by a call
-!        C     to FURNSH.
-!        C
-!              DO I = 1, 2
-!
-!                 CALL EKLEF ( EKNAMS(I), HANDLE )
-!                 WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
-!
-!        C
-!        C        Query the EK system for data rows matching the
-!        C        SELECT constraints.
-!        C
-!                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C        Check whether an error occurred while processing the
-!        C        SELECT clause. If so, output the error message.
-!        C
-!                 IF ( ERROR ) THEN
-!
-!                    WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
-!
-!                 ELSE
-!
-!        C
-!        C           If no error, NMROWS contains the number of rows
-!        C           matching the constraints specified in the query
-!        C           string.
-!        C
-!                    WRITE(*,'(A,I3)') 'Number of matching rows: ',
-!             .                        NMROWS
-!
-!                 END IF
-!
-!        C
-!        C        Unload the current file. Unloading files prevents
-!        C        them from being searched during query execution.
-!        C
-!                 CALL EKUEF ( HANDLE )
-!                 WRITE(*,'(2A)') 'Unloading EK: ', EKNAMS(I)
-!                 WRITE(*,*)
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Loading EK: S78_CIMSSSUPa.bep
-!        Number of matching rows:   4
-!        Unloading EK: S78_CIMSSSUPa.bep
-!
-!        Loading EK: S79_CIMSSSUPa.bep
-!        Number of matching rows:   5
-!        Unloading EK: S79_CIMSSSUPa.bep
-!
-! $ Restrictions
-!
-!     1)  EK files containing columns having the same name but
-!         inconsistent declarations are not diagnosed. Such kernels
-!         are invalid in any case.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.2.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code examples based on existing fragments.
-!
-!-    SPICELIB Version 2.1.0, 09-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
-!
-!        Previous version line was changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     load EK file
-!     load E-Kernel
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Load an EK file, making it accessible to the EK readers.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         FNAME
+!!     INTEGER               HANDLE
+!!
+!! ## Detailed Input
+!!
+!!     FNAME    is the name of a binary EK file to be loaded.
+!!
+!! ## Detailed Output
+!!
+!!     HANDLE   is the handle of the EK file. The file is
+!!              accessible by the EK reader routines once it
+!!              has been loaded.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the EK file indicated by FNAME contains a column whose
+!!         name matches that of a column in an already loaded EK, but
+!!         whose declared attributes don't match those of the loaded
+!!         column of the same name, the error SPICE(BADATTRIBUTES) is
+!!         signaled. HANDLE is is undefined in this case.
+!!
+!!     2)  Loading an EK file that is already loaded does not cause side
+!!         effects. The handle already associated with the file will be
+!!         returned.
+!!
+!!     3)  If a file open error occurs, the error is signaled by a
+!!         routine in the call tree of this routine. HANDLE is undefined
+!!         in this case.
+!!
+!!     4)  If loading the input file would cause the maximum number of
+!!         loaded EK files to be exceeded, the error
+!!         SPICE(EKFILETABLEFULL) is signaled. HANDLE is undefined in
+!!         this case. This routine will attempt to unload the file
+!!         from the DAS system.
+!!
+!!     5)  If loading the input file would cause the maximum number of
+!!         loaded DAS files to be exceeded, an error is signaled by a
+!!         routine in the call tree of this routine. HANDLE is undefined
+!!         in this case. This routine will attempt to unload the file
+!!         from the DAS system.
+!!
+!!     6)  If loading the input file would cause the maximum number of
+!!         segments allowed in loaded EK files to be exceeded, the error
+!!         SPICE(EKSEGMENTTABLEFULL) is signaled. HANDLE is undefined in
+!!         this case. This routine will attempt to unload the file from
+!!         the DAS system.
+!!
+!!     7)  If loading the input file would cause the maximum number of
+!!         columns allowed in loaded EK files to be exceeded, the error
+!!         SPICE(EKCOLDESCTABLEFULL) is signaled. HANDLE is undefined in
+!!         this case. This routine will attempt to unload the file from
+!!         the DAS system.
+!!
+!!     8)  If loading the input file would cause the maximum allowed
+!!         number of columns having distinct attributes in loaded EK
+!!         files to be exceeded, the error SPICE(EKCOLATTRTABLEFULL) is
+!!         signaled. HANDLE is undefined in this case. This routine will
+!!         attempt to unload the file from the DAS system.
+!!
+!!     9)  If loading the input file would cause the maximum number of
+!!         instrument codes allowed in loaded EK files to be exceeded,
+!!         the error SPICE(EKIDTABLEFULL) is signaled. HANDLE is
+!!         undefined in this case. This routine will attempt to unload
+!!         the file from the DAS system.
+!!
+!!     10) If the input file does not contain at least one segment, the
+!!         error SPICE(EKNOSEGMENTS) is signaled.
+!!
+!! ## Files
+!!
+!!     See description of FNAME in $Detailed_Input.
+!!
+!! ## Particulars
+!!
+!!     This routine makes EK files known to the EK system. It is
+!!     necessary to load EK files using this routine in order to
+!!     query the files using the EK readers.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for these examples may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Load two EK files and perform a query on them. During query
+!!        execution, all files will be searched.
+!!
+!!        Use the EK kernel below to load the Cassini Science Plan
+!!        SPICE E-Kernel File based upon the integrated science
+!!        plan #78.
+!!
+!!           S78_CIMSSSUPa.bep
+!!
+!!        Use the EK kernel below to load the data based upon the
+!!        integrated science plan #79.
+!!
+!!           S79_CIMSSSUPa.bep
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKLEF_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Maximum length of an input query,
+!!        C     MAXQRY.
+!!        C
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               EKNMLN
+!!              PARAMETER           ( EKNMLN = 17 )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(EKNMLN)    EKNAMS ( 2 )
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              INTEGER               HANDLE
+!!              INTEGER               I
+!!              INTEGER               N
+!!              INTEGER               NMROWS
+!!
+!!              LOGICAL               ERROR
+!!
+!!        C
+!!        C     Set up the array holding the EK file names.
+!!        C
+!!              DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
+!!             .                               'S79_CIMSSSUPa.bep'  /
+!!
+!!        C
+!!        C     Load the EK files. This call could be replaced by a call
+!!        C     to FURNSH (in this case, a meta-kernel listing the EKs
+!!        C     to be loaded could also be used).
+!!        C
+!!              DO I = 1, 2
+!!
+!!                 CALL EKLEF ( EKNAMS(I), HANDLE )
+!!                 WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
+!!
+!!              END DO
+!!
+!!        C
+!!        C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
+!!        C     that contains columns named:
+!!        C
+!!        C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
+!!        C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
+!!        C        SUBSYSTEM
+!!        C
+!!        C     Define a set of constraints to perform a query on all
+!!        C     loaded EK files (the SELECT clause).
+!!        C
+!!              QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
+!!             .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
+!!             .   //   'order by SUBSYSTEM'
+!!
+!!        C
+!!        C     Query the EK system for data rows matching the
+!!        C     SELECT constraints.
+!!        C
+!!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C     Check whether an error occurred while processing the
+!!        C     SELECT clause. If so, output the error message.
+!!        C
+!!              WRITE(*,*)
+!!              IF ( ERROR ) THEN
+!!
+!!                 WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
+!!
+!!              ELSE
+!!
+!!        C
+!!        C        If no error, NMROWS contains the number of rows
+!!        C        matching the constraints specified in the query
+!!        C        string.
+!!        C
+!!                 WRITE(*,'(A,I3)') 'Number of matching rows: ', NMROWS
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Loading EK: S78_CIMSSSUPa.bep
+!!        Loading EK: S79_CIMSSSUPa.bep
+!!
+!!        Number of matching rows:   9
+!!
+!!     2) Repeat the previous exercise, using the same input kernels,
+!!        but this time unloading the previous file before each new
+!!        file is loaded. Unloading files prevents them from being
+!!        searched during query execution.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKLEF_EX2
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Maximum length of an input query,
+!!        C     MAXQRY.
+!!        C
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               EKNMLN
+!!              PARAMETER           ( EKNMLN = 17 )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(EKNMLN)    EKNAMS ( 2 )
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              INTEGER               HANDLE
+!!              INTEGER               I
+!!              INTEGER               N
+!!              INTEGER               NMROWS
+!!
+!!              LOGICAL               ERROR
+!!
+!!        C
+!!        C     Set up the array holding the EK file names.
+!!        C
+!!              DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
+!!             .                               'S79_CIMSSSUPa.bep'  /
+!!
+!!        C
+!!        C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
+!!        C     that contains columns named:
+!!        C
+!!        C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
+!!        C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
+!!        C        SUBSYSTEM
+!!        C
+!!        C     Define a set of constraints to perform a query on all
+!!        C     loaded EK files (the SELECT clause).
+!!        C
+!!              QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
+!!             .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
+!!             .   //   'order by SUBSYSTEM'
+!!
+!!        C
+!!        C     Load the EK files. This call could be replaced by a call
+!!        C     to FURNSH.
+!!        C
+!!              DO I = 1, 2
+!!
+!!                 CALL EKLEF ( EKNAMS(I), HANDLE )
+!!                 WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
+!!
+!!        C
+!!        C        Query the EK system for data rows matching the
+!!        C        SELECT constraints.
+!!        C
+!!                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C        Check whether an error occurred while processing the
+!!        C        SELECT clause. If so, output the error message.
+!!        C
+!!                 IF ( ERROR ) THEN
+!!
+!!                    WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
+!!
+!!                 ELSE
+!!
+!!        C
+!!        C           If no error, NMROWS contains the number of rows
+!!        C           matching the constraints specified in the query
+!!        C           string.
+!!        C
+!!                    WRITE(*,'(A,I3)') 'Number of matching rows: ',
+!!             .                        NMROWS
+!!
+!!                 END IF
+!!
+!!        C
+!!        C        Unload the current file. Unloading files prevents
+!!        C        them from being searched during query execution.
+!!        C
+!!                 CALL EKUEF ( HANDLE )
+!!                 WRITE(*,'(2A)') 'Unloading EK: ', EKNAMS(I)
+!!                 WRITE(*,*)
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Loading EK: S78_CIMSSSUPa.bep
+!!        Number of matching rows:   4
+!!        Unloading EK: S78_CIMSSSUPa.bep
+!!
+!!        Loading EK: S79_CIMSSSUPa.bep
+!!        Number of matching rows:   5
+!!        Unloading EK: S79_CIMSSSUPa.bep
+!!
+!! ## Restrictions
+!!
+!!     1)  EK files containing columns having the same name but
+!!         inconsistent declarations are not diagnosed. Such kernels
+!!         are invalid in any case.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.2.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code examples based on existing fragments.
+!!
+!!-    SPICELIB Version 2.1.0, 09-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
+!!
+!!        Previous version line was changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     load EK file
+!!     load E-Kernel
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc, movec, movei
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -31923,248 +31297,242 @@ contains
       end procedure eklef
 
       module procedure ekuef
-
-! $ Abstract
-!
-!     Unload an EK file, making its contents inaccessible to the
-!     EK reader routines, and clearing space in order to allow other
-!     EK files to be loaded.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!
-! $ Declarations
-!
-!     INTEGER               HANDLE
-!
-! $ Detailed_Input
-!
-!     HANDLE   is a file handle returned by EKLEF.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-!     See $Particulars for a description of the effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  Unloading a file that is not loaded has no effect.
-!
-! $ Files
-!
-!     This routine unloads a binary EK file from the EK query system.
-!
-! $ Particulars
-!
-!     This routine removes information about an EK file from the
-!     EK system, freeing space to increase the number of other EK
-!     files that can be loaded. The file is also unloaded from
-!     the DAS system and closed.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Load two EK files and perform a query on them. During query
-!        execution, all files will be searched. Unload the previous
-!        file before each new file is loaded. Unloading files prevents
-!        them from being searched during query execution.
-!
-!        Use the EK kernel below to load the Cassini Science Plan
-!        SPICE E-Kernel File based upon the integrated science
-!        plan #78.
-!
-!           S78_CIMSSSUPa.bep
-!
-!        Use the EK kernel below to load the data based upon the
-!        integrated science plan #79.
-!
-!           S79_CIMSSSUPa.bep
-!
-!        Example code begins here.
-!
-!              PROGRAM EKUEF_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Maximum length of an input query,
-!        C     MAXQRY.
-!        C
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               EKNMLN
-!              PARAMETER           ( EKNMLN = 17 )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(EKNMLN)    EKNAMS ( 2 )
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               N
-!              INTEGER               NMROWS
-!
-!              LOGICAL               ERROR
-!
-!        C
-!        C     Set up the array holding the EK file names.
-!        C
-!              DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
-!             .                               'S79_CIMSSSUPa.bep'  /
-!
-!        C
-!        C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
-!        C     that contains columns named:
-!        C
-!        C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
-!        C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
-!        C        SUBSYSTEM
-!        C
-!        C     Define a set of constraints to perform a query on all
-!        C     loaded EK files (the SELECT clause).
-!        C
-!              QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
-!             .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
-!             .   //   'order by SUBSYSTEM'
-!
-!        C
-!        C     Load the EK files. This call could be replaced by a call
-!        C     to FURNSH.
-!        C
-!              DO I = 1, 2
-!
-!                 CALL EKLEF ( EKNAMS(I), HANDLE )
-!                 WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
-!
-!        C
-!        C        Query the EK system for data rows matching the
-!        C        SELECT constraints.
-!        C
-!                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C        Check whether an error occurred while processing the
-!        C        SELECT clause. If so, output the error message.
-!        C
-!                 IF ( ERROR ) THEN
-!
-!                    WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
-!
-!                 ELSE
-!
-!        C
-!        C           If no error, NMROWS contains the number of rows
-!        C           matching the constraints specified in the query
-!        C           string.
-!        C
-!                    WRITE(*,'(A,I3)') 'Number of matching rows: ',
-!             .                        NMROWS
-!
-!                 END IF
-!
-!        C
-!        C        Unload the current file. Unloading files prevents
-!        C        them from being searched during query execution.
-!        C
-!                 CALL EKUEF ( HANDLE )
-!                 WRITE(*,'(2A)') 'Unloading EK: ', EKNAMS(I)
-!                 WRITE(*,*)
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Loading EK: S78_CIMSSSUPa.bep
-!        Number of matching rows:   4
-!        Unloading EK: S78_CIMSSSUPa.bep
-!
-!        Loading EK: S79_CIMSSSUPa.bep
-!        Number of matching rows:   5
-!        Unloading EK: S79_CIMSSSUPa.bep
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
-!
-!        Previous version line was changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     unload EK file
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Unload an EK file, making its contents inaccessible to the
+!!     EK reader routines, and clearing space in order to allow other
+!!     EK files to be loaded.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     INTEGER               HANDLE
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE   is a file handle returned by EKLEF.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!!     See $Particulars for a description of the effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  Unloading a file that is not loaded has no effect.
+!!
+!! ## Files
+!!
+!!     This routine unloads a binary EK file from the EK query system.
+!!
+!! ## Particulars
+!!
+!!     This routine removes information about an EK file from the
+!!     EK system, freeing space to increase the number of other EK
+!!     files that can be loaded. The file is also unloaded from
+!!     the DAS system and closed.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Load two EK files and perform a query on them. During query
+!!        execution, all files will be searched. Unload the previous
+!!        file before each new file is loaded. Unloading files prevents
+!!        them from being searched during query execution.
+!!
+!!        Use the EK kernel below to load the Cassini Science Plan
+!!        SPICE E-Kernel File based upon the integrated science
+!!        plan #78.
+!!
+!!           S78_CIMSSSUPa.bep
+!!
+!!        Use the EK kernel below to load the data based upon the
+!!        integrated science plan #79.
+!!
+!!           S79_CIMSSSUPa.bep
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKUEF_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Maximum length of an input query,
+!!        C     MAXQRY.
+!!        C
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               EKNMLN
+!!              PARAMETER           ( EKNMLN = 17 )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(EKNMLN)    EKNAMS ( 2 )
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              INTEGER               HANDLE
+!!              INTEGER               I
+!!              INTEGER               N
+!!              INTEGER               NMROWS
+!!
+!!              LOGICAL               ERROR
+!!
+!!        C
+!!        C     Set up the array holding the EK file names.
+!!        C
+!!              DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
+!!             .                               'S79_CIMSSSUPa.bep'  /
+!!
+!!        C
+!!        C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
+!!        C     that contains columns named:
+!!        C
+!!        C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
+!!        C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
+!!        C        SUBSYSTEM
+!!        C
+!!        C     Define a set of constraints to perform a query on all
+!!        C     loaded EK files (the SELECT clause).
+!!        C
+!!              QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
+!!             .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
+!!             .   //   'order by SUBSYSTEM'
+!!
+!!        C
+!!        C     Load the EK files. This call could be replaced by a call
+!!        C     to FURNSH.
+!!        C
+!!              DO I = 1, 2
+!!
+!!                 CALL EKLEF ( EKNAMS(I), HANDLE )
+!!                 WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
+!!
+!!        C
+!!        C        Query the EK system for data rows matching the
+!!        C        SELECT constraints.
+!!        C
+!!                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C        Check whether an error occurred while processing the
+!!        C        SELECT clause. If so, output the error message.
+!!        C
+!!                 IF ( ERROR ) THEN
+!!
+!!                    WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
+!!
+!!                 ELSE
+!!
+!!        C
+!!        C           If no error, NMROWS contains the number of rows
+!!        C           matching the constraints specified in the query
+!!        C           string.
+!!        C
+!!                    WRITE(*,'(A,I3)') 'Number of matching rows: ',
+!!             .                        NMROWS
+!!
+!!                 END IF
+!!
+!!        C
+!!        C        Unload the current file. Unloading files prevents
+!!        C        them from being searched during query execution.
+!!        C
+!!                 CALL EKUEF ( HANDLE )
+!!                 WRITE(*,'(2A)') 'Unloading EK: ', EKNAMS(I)
+!!                 WRITE(*,*)
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Loading EK: S78_CIMSSSUPa.bep
+!!        Number of matching rows:   4
+!!        Unloading EK: S78_CIMSSSUPa.bep
+!!
+!!        Loading EK: S79_CIMSSSUPa.bep
+!!        Number of matching rows:   5
+!!        Unloading EK: S79_CIMSSSUPa.bep
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
+!!
+!!        Previous version line was changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     unload EK file
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -32492,177 +31860,172 @@ contains
       end procedure ekuef
 
       module procedure ekntab
-
-! $ Abstract
-!
-!     Return the number of loaded EK tables.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!
-! $ Declarations
-!
-!     INTEGER               N
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     N        is the number of loaded tables. The count refers
-!              to the number of logical tables; if multiple
-!              segments contain data for the same table, these
-!              segments collectively contribute only one table
-!              to the count.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     The returned count is based on the currently loaded EK files.
-!
-! $ Particulars
-!
-!     This routine is a utility that provides the caller with the
-!     number of loaded tables. Callers of EKTNAM can use this count
-!     as the upper bound on set of table indices when looking up table
-!     names.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Suppose we have several EK files. Load one at a time and
-!        display, right after, the number of loaded EK tables in the
-!        system.
-!
-!        Use the EK kernel below to load the Cassini Science Plan
-!        SPICE E-Kernel File based upon integrated science plan. This
-!        kernel contains 3 tables.
-!
-!           S79_CIMSSSUPa.bep
-!
-!        Use the EK kernel below to load the Cassini Spacecraft
-!        Sequence Status SPICE E-Kernel File based upon integrated
-!        Predicted Events File. This kernel contains 1 table.
-!
-!           S79_status_pf.bes
-!
-!        Example code begins here.
-!
-!              PROGRAM EKNTAB_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local variables
-!        C
-!              INTEGER               N
-!
-!        C
-!        C     Load the first EK.
-!        C
-!              CALL FURNSH ( 'S79_CIMSSSUPa.bep' )
-!
-!        C
-!        C     Display the number of EK tables in the system after
-!        C     the first EK file is loaded.
-!        C
-!              CALL EKNTAB ( N )
-!              WRITE(*,'(A,I3)') 'EK tables in the system (1 EK):', N
-!
-!        C
-!        C     Load the second EK.
-!        C
-!              CALL FURNSH ( 'S79_status_pf.bes' )
-!
-!        C
-!        C     Display the number of EK tables in the system after
-!        C     the second EK file is loaded.
-!        C
-!              CALL EKNTAB ( N )
-!              WRITE(*,'(A,I3)') 'EK tables in the system (2 EK):', N
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        EK tables in the system (1 EK):  3
-!        EK tables in the system (2 EK):  4
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example based on existing fragments.
-!
-!        Removed the requirement of loading the files via EKELF from the
-!        $Files section.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
-!
-!        Previous version line was changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return number of loaded tables
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Return the number of loaded EK tables.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     INTEGER               N
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     N        is the number of loaded tables. The count refers
+!!              to the number of logical tables; if multiple
+!!              segments contain data for the same table, these
+!!              segments collectively contribute only one table
+!!              to the count.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     The returned count is based on the currently loaded EK files.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility that provides the caller with the
+!!     number of loaded tables. Callers of EKTNAM can use this count
+!!     as the upper bound on set of table indices when looking up table
+!!     names.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Suppose we have several EK files. Load one at a time and
+!!        display, right after, the number of loaded EK tables in the
+!!        system.
+!!
+!!        Use the EK kernel below to load the Cassini Science Plan
+!!        SPICE E-Kernel File based upon integrated science plan. This
+!!        kernel contains 3 tables.
+!!
+!!           S79_CIMSSSUPa.bep
+!!
+!!        Use the EK kernel below to load the Cassini Spacecraft
+!!        Sequence Status SPICE E-Kernel File based upon integrated
+!!        Predicted Events File. This kernel contains 1 table.
+!!
+!!           S79_status_pf.bes
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKNTAB_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              INTEGER               N
+!!
+!!        C
+!!        C     Load the first EK.
+!!        C
+!!              CALL FURNSH ( 'S79_CIMSSSUPa.bep' )
+!!
+!!        C
+!!        C     Display the number of EK tables in the system after
+!!        C     the first EK file is loaded.
+!!        C
+!!              CALL EKNTAB ( N )
+!!              WRITE(*,'(A,I3)') 'EK tables in the system (1 EK):', N
+!!
+!!        C
+!!        C     Load the second EK.
+!!        C
+!!              CALL FURNSH ( 'S79_status_pf.bes' )
+!!
+!!        C
+!!        C     Display the number of EK tables in the system after
+!!        C     the second EK file is loaded.
+!!        C
+!!              CALL EKNTAB ( N )
+!!              WRITE(*,'(A,I3)') 'EK tables in the system (2 EK):', N
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        EK tables in the system (1 EK):  3
+!!        EK tables in the system (2 EK):  4
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example based on existing fragments.
+!!
+!!        Removed the requirement of loading the files via EKELF from the
+!!        $Files section.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
+!!
+!!        Previous version line was changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     return number of loaded tables
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -32717,230 +32080,224 @@ contains
       end procedure ekntab
 
       module procedure ektnam
-
-! $ Abstract
-!
-!     Return the name of a specified, loaded table.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!
-! $ Declarations
-!
-!     INTEGER               N
-!     CHARACTER*(*)         TABLE
-!
-! $ Detailed_Input
-!
-!     N        is the index of the table whose name is desired.
-!              The value of N ranges from 1 to the number of
-!              loaded tables, which count may be obtained from
-!              EKNTAB.
-!
-! $ Detailed_Output
-!
-!     TABLE    is the name of the N'th loaded table. If TABLE
-!              is too small to accommodate the name, the name will
-!              be truncated on the right.
-!
-! $ Parameters
-!
-!     TNAMSZ   is the maximum allowed table name length. See the
-!              include file ektnamsz.inc for the actual value of
-!              this parameter.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called when no files are loaded, the
-!         error SPICE(NOLOADEDFILES) is signaled.
-!
-!     2)  If the input N is out of range, the error SPICE(INVALDINDEX)
-!         is signaled.
-!
-! $ Files
-!
-!     The returned name is based on the currently loaded EK files.
-!
-! $ Particulars
-!
-!     This routine is a utility that provides the caller with the
-!     name of a specified loaded table. The index of a table with
-!     a given name depends on the kernels loaded and possibly on
-!     the order in which the files have been loaded.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Dump the names of all the loaded tables.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File name: ektnam_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                 Contents
-!              ---------                 --------
-!              S78_CIMSSSUPa.bep         Cassini Science Plan #78
-!              S79_CIMSSSUPa.bep         Cassini Science Plan #79
-!              S79_status_pf.bes         Cassini Spacecraft Sequence
-!                                        Status #79
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'S78_CIMSSSUPa.bep',
-!                                  'S79_CIMSSSUPa.bep',
-!                                  'S79_status_pf.bes'  )
-!
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM EKTNAM_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include EK parameter declarations:
-!        C
-!        C        EK Table Name Size
-!        C
-!              INCLUDE 'ektnamsz.inc'
-!
-!        C
-!        C     Local parameters.
-!        C
-!              CHARACTER*(*)         META
-!              PARAMETER           ( META   = 'ektnam_ex1.tm' )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(TNAMSZ)      TABNAM
-!
-!              INTEGER                 NTAB
-!              INTEGER                 TAB
-!
-!        C
-!        C     Load the EK files. Use a meta-kernel for convenience.
-!        C
-!              CALL FURNSH ( META )
-!
-!        C
-!        C     Get the number of loaded tables. The count refers to the
-!        C     number of logical tables; if multiple EKs contain data
-!        C     for the same table, these EKs collectively contribute
-!        C     only one table to the count.
-!        C
-!              CALL EKNTAB ( NTAB )
-!
-!              WRITE(*,'(A,I3)') 'Number of tables in EK subsystem:',
-!             .                   NTAB
-!
-!              DO TAB = 1, NTAB
-!
-!        C
-!        C        Get the name of the current table, and display it.
-!        C
-!                 CALL EKTNAM ( TAB, TABNAM )
-!                 WRITE(*,'(2A)') '   TABLE = ', TABNAM
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Number of tables in EK subsystem:  4
-!           TABLE = CASSINI_SP_REQUEST
-!           TABLE = CASSINI_SP_OBSERVATION
-!           TABLE = CASSINI_SP_REQ_OBS
-!           TABLE = CASSINI_STATUS
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example.
-!
-!        Added description of TNAMSZ parameter.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
-!
-!        Previous version line was changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return name of a loaded table
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the name of a specified, loaded table.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     INTEGER               N
+!!     CHARACTER*(*)         TABLE
+!!
+!! ## Detailed Input
+!!
+!!     N        is the index of the table whose name is desired.
+!!              The value of N ranges from 1 to the number of
+!!              loaded tables, which count may be obtained from
+!!              EKNTAB.
+!!
+!! ## Detailed Output
+!!
+!!     TABLE    is the name of the N'th loaded table. If TABLE
+!!              is too small to accommodate the name, the name will
+!!              be truncated on the right.
+!!
+!! ## Parameters
+!!
+!!     TNAMSZ   is the maximum allowed table name length. See the
+!!              include file ektnamsz.inc for the actual value of
+!!              this parameter.
+!!
+!! ## Exceptions
+!!
+!!     1)  If this routine is called when no files are loaded, the
+!!         error SPICE(NOLOADEDFILES) is signaled.
+!!
+!!     2)  If the input N is out of range, the error SPICE(INVALDINDEX)
+!!         is signaled.
+!!
+!! ## Files
+!!
+!!     The returned name is based on the currently loaded EK files.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility that provides the caller with the
+!!     name of a specified loaded table. The index of a table with
+!!     a given name depends on the kernels loaded and possibly on
+!!     the order in which the files have been loaded.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Dump the names of all the loaded tables.
+!!
+!!        Use the meta-kernel shown below to load the required SPICE
+!!        kernels.
+!!
+!!           KPL/MK
+!!
+!!           File name: ektnam_ex1.tm
+!!
+!!           This meta-kernel is intended to support operation of SPICE
+!!           example programs. The kernels shown here should not be
+!!           assumed to contain adequate or correct versions of data
+!!           required by SPICE-based user applications.
+!!
+!!           In order for an application to use this meta-kernel, the
+!!           kernels referenced here must be present in the user's
+!!           current working directory.
+!!
+!!           The names and contents of the kernels referenced
+!!           by this meta-kernel are as follows:
+!!
+!!              File name                 Contents
+!!              ---------                 --------
+!!              S78_CIMSSSUPa.bep         Cassini Science Plan #78
+!!              S79_CIMSSSUPa.bep         Cassini Science Plan #79
+!!              S79_status_pf.bes         Cassini Spacecraft Sequence
+!!                                        Status #79
+!!
+!!           \begindata
+!!
+!!              KERNELS_TO_LOAD = ( 'S78_CIMSSSUPa.bep',
+!!                                  'S79_CIMSSSUPa.bep',
+!!                                  'S79_status_pf.bes'  )
+!!
+!!           \begintext
+!!
+!!           End of meta-kernel
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKTNAM_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include EK parameter declarations:
+!!        C
+!!        C        EK Table Name Size
+!!        C
+!!              INCLUDE 'ektnamsz.inc'
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              CHARACTER*(*)         META
+!!              PARAMETER           ( META   = 'ektnam_ex1.tm' )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(TNAMSZ)      TABNAM
+!!
+!!              INTEGER                 NTAB
+!!              INTEGER                 TAB
+!!
+!!        C
+!!        C     Load the EK files. Use a meta-kernel for convenience.
+!!        C
+!!              CALL FURNSH ( META )
+!!
+!!        C
+!!        C     Get the number of loaded tables. The count refers to the
+!!        C     number of logical tables; if multiple EKs contain data
+!!        C     for the same table, these EKs collectively contribute
+!!        C     only one table to the count.
+!!        C
+!!              CALL EKNTAB ( NTAB )
+!!
+!!              WRITE(*,'(A,I3)') 'Number of tables in EK subsystem:',
+!!             .                   NTAB
+!!
+!!              DO TAB = 1, NTAB
+!!
+!!        C
+!!        C        Get the name of the current table, and display it.
+!!        C
+!!                 CALL EKTNAM ( TAB, TABNAM )
+!!                 WRITE(*,'(2A)') '   TABLE = ', TABNAM
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Number of tables in EK subsystem:  4
+!!           TABLE = CASSINI_SP_REQUEST
+!!           TABLE = CASSINI_SP_OBSERVATION
+!!           TABLE = CASSINI_SP_REQ_OBS
+!!           TABLE = CASSINI_STATUS
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example.
+!!
+!!        Added description of TNAMSZ parameter.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
+!!
+!!        Previous version line was changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     return name of a loaded table
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -33035,372 +32392,366 @@ contains
       end procedure ektnam
 
       module procedure ekccnt
-
-! $ Abstract
-!
-!     Return the number of distinct columns in a specified, currently
-!     loaded table.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         TABLE
-!     INTEGER               CCOUNT
-!
-! $ Detailed_Input
-!
-!     TABLE    is the name of a currently loaded table. Case
-!              is not significant in the table name.
-!
-! $ Detailed_Output
-!
-!     CCOUNT   is the number of distinct columns in TABLE.
-!              Columns that have the same name but belong to
-!              different segments that are considered to be
-!              portions of the same column, if the segments
-!              containing those columns belong to TABLE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the specified table is not loaded, the error
-!         SPICE(TABLENOTLOADED) is signaled.
-!
-! $ Files
-!
-!     See the header of EKQMGR for a description of files used
-!     by this routine.
-!
-! $ Particulars
-!
-!     This routine is a utility intended for use in conjunction with
-!     the entry point EKCII. These routines can be used to find the
-!     names and attributes of the columns that are currently loaded.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Examine an EK. Dump the names and attributes of the columns in
-!        each loaded table. EKCCNT is used to obtain column counts.
-!
-!        Example code begins here.
-!
-!              PROGRAM EKCCNT_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include EK parameter declarations:
-!        C
-!        C        ekattdsc.inc: EK Column Attribute Descriptor
-!        C                      Parameters
-!        C        ekcnamsz.inc: EK Column Name Size
-!        C        ektnamsz.inc: EK Table Name Size
-!        C        ektype.inc:   EK Data Types
-!        C
-!              INCLUDE 'ekattdsc.inc'
-!              INCLUDE 'ekcnamsz.inc'
-!              INCLUDE 'ektnamsz.inc'
-!              INCLUDE 'ektype.inc'
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER                 FILEN
-!              PARAMETER             ( FILEN = 255 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(CNAMSZ)      COLNAM
-!              CHARACTER*(FILEN)       EKFILE
-!              CHARACTER*(TNAMSZ)      TABNAM
-!
-!              INTEGER                 ATTDSC ( ADSCSZ )
-!              INTEGER                 I
-!              INTEGER                 NCOLS
-!              INTEGER                 NTAB
-!              INTEGER                 TAB
-!
-!        C
-!        C     Prompt for the EK file name.
-!        C
-!              CALL PROMPT ( 'Enter name of EK to examine > ', EKFILE )
-!
-!              CALL FURNSH ( EKFILE )
-!
-!        C
-!        C     Get the number of loaded tables.
-!        C
-!              CALL EKNTAB ( NTAB )
-!
-!              WRITE(*,*) 'Number of tables in EK:', NTAB
-!
-!              DO TAB = 1, NTAB
-!
-!        C
-!        C        Get the name of the current table, and look up
-!        C        the column count for this table.
-!        C
-!                 CALL EKTNAM ( TAB,    TABNAM )
-!                 CALL EKCCNT ( TABNAM, NCOLS  )
-!
-!                 WRITE(*,*) '------------------------------'
-!             .           // '------------------------------'
-!                 WRITE(*,*) 'TABLE = ', TABNAM
-!                 WRITE(*,*) ' '
-!
-!        C
-!        C        For each column in the current table, look up the
-!        C        column's attributes.  The attribute block
-!        C        index parameters are defined in the include file
-!        C        ekattdsc.inc.
-!        C
-!                 DO I = 1, NCOLS
-!
-!                    CALL EKCII ( TABNAM, I, COLNAM, ATTDSC )
-!
-!                    WRITE (*,*) 'COLUMN = ', COLNAM
-!
-!        C
-!        C           Write out the current column's data type.
-!        C
-!                    IF ( ATTDSC(ATTTYP) .EQ. CHR ) THEN
-!
-!                       WRITE (*,*) '   TYPE   =  CHR'
-!
-!                       IF ( ATTDSC(ATTLEN) .EQ. -1 ) THEN
-!                          WRITE (*,*) '   STRING LENGTH = VARIABLE.'
-!                       ELSE
-!                          WRITE (*,'(A,I2)') '    STRING LENGTH = ',
-!             .                         ATTDSC(ATTLEN)
-!                       END IF
-!
-!                    ELSE IF ( ATTDSC(ATTTYP) .EQ. DP ) THEN
-!                       WRITE (*,*) '   TYPE   =  DP'
-!
-!                    ELSE IF ( ATTDSC(ATTTYP) .EQ. INT ) THEN
-!                       WRITE (*,*) '   TYPE   =  INT'
-!
-!                    ELSE
-!                       WRITE (*,*) '   TYPE   =  TIME'
-!                    END IF
-!
-!        C
-!        C           Write out the current column's entry size.
-!        C
-!                    WRITE (*,'(A,I2)') '    SIZE   = ', ATTDSC(ATTSIZ)
-!
-!        C
-!        C           Indicate whether the current column is indexed.
-!        C
-!                    IF ( ATTDSC(ATTIDX) .EQ. -1 ) THEN
-!                       WRITE (*,*) '   NOT INDEXED'
-!                    ELSE
-!                       WRITE (*,*) '   INDEXED'
-!                    END IF
-!
-!        C
-!        C           Indicate whether the current column allows
-!        C           null values.
-!        C
-!                    IF ( ATTDSC(ATTNFL) .EQ. -1 ) THEN
-!                       WRITE (*,*) '   NULL VALUES NOT ALLOWED'
-!                    ELSE
-!                       WRITE (*,*) '   NULL VALUES ALLOWED'
-!                    END IF
-!
-!                 END DO
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the EK named S79_CIMSSSUPa.bep to load the
-!        Cassini Science Plan SPICE E-Kernel File based upon the
-!        integrated science plan, the output was:
-!
-!        Enter name of EK to examine > S79_CIMSSSUPa.bep
-!         Number of tables in EK:           3
-!         ------------------------------------------------------------
-!         TABLE = CASSINI_SP_REQUEST
-!
-!         COLUMN = SUBSYSTEM
-!            TYPE   =  CHR
-!            STRING LENGTH = 32
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES NOT ALLOWED
-!         COLUMN = REQUEST_ID
-!            TYPE   =  CHR
-!            STRING LENGTH = VARIABLE.
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES NOT ALLOWED
-!         COLUMN = REQUEST_TITLE
-!            TYPE   =  CHR
-!            STRING LENGTH = VARIABLE.
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = BEGIN_TIME
-!            TYPE   =  TIME
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES NOT ALLOWED
-!         COLUMN = END_TIME
-!            TYPE   =  TIME
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES NOT ALLOWED
-!         COLUMN = SEQUENCE
-!            TYPE   =  CHR
-!            STRING LENGTH = 32
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES NOT ALLOWED
-!         COLUMN = POINTING_AGREEMENT
-!            TYPE   =  CHR
-!            STRING LENGTH = 80
-!            SIZE   = -1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = PRIMARY_POINTING
-!            TYPE   =  CHR
-!            STRING LENGTH = VARIABLE.
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = SECONDARY_POINTING
-!            TYPE   =  CHR
-!            STRING LENGTH = VARIABLE.
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = REQ_DESCRIPTION
-!            TYPE   =  CHR
-!            STRING LENGTH = 80
-!            SIZE   = -1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!         ------------------------------------------------------------
-!         TABLE = CASSINI_SP_OBSERVATION
-!
-!         COLUMN = SUBSYSTEM
-!            TYPE   =  CHR
-!            STRING LENGTH = 32
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES NOT ALLOWED
-!         COLUMN = OBSERVATION_ID
-!            TYPE   =  CHR
-!            STRING LENGTH = VARIABLE.
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES NOT ALLOWED
-!         COLUMN = OBSERVATION_TITLE
-!            TYPE   =  CHR
-!            STRING LENGTH = VARIABLE.
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES NOT ALLOWED
-!         COLUMN = SEQUENCE
-!            TYPE   =  CHR
-!            STRING LENGTH = 32
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES NOT ALLOWED
-!         COLUMN = SCIENCE_OBJECTIVE
-!            TYPE   =  CHR
-!            STRING LENGTH = 80
-!            SIZE   = -1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = OBS_DESCRIPTION
-!            TYPE   =  CHR
-!            STRING LENGTH = 80
-!            SIZE   = -1
-!
-!        [...]
-!
-!        Warning: incomplete output. Only 100 out of 129 lines have been
-!        provided.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example based on existing code fragment.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
-!
-!        Misspelling of "conjunction" was fixed.
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return the number of loaded EK columns
-!     return the count of loaded EK columns
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the number of distinct columns in a specified, currently
+!!     loaded table.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         TABLE
+!!     INTEGER               CCOUNT
+!!
+!! ## Detailed Input
+!!
+!!     TABLE    is the name of a currently loaded table. Case
+!!              is not significant in the table name.
+!!
+!! ## Detailed Output
+!!
+!!     CCOUNT   is the number of distinct columns in TABLE.
+!!              Columns that have the same name but belong to
+!!              different segments that are considered to be
+!!              portions of the same column, if the segments
+!!              containing those columns belong to TABLE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the specified table is not loaded, the error
+!!         SPICE(TABLENOTLOADED) is signaled.
+!!
+!! ## Files
+!!
+!!     See the header of EKQMGR for a description of files used
+!!     by this routine.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility intended for use in conjunction with
+!!     the entry point EKCII. These routines can be used to find the
+!!     names and attributes of the columns that are currently loaded.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Examine an EK. Dump the names and attributes of the columns in
+!!        each loaded table. EKCCNT is used to obtain column counts.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKCCNT_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include EK parameter declarations:
+!!        C
+!!        C        ekattdsc.inc: EK Column Attribute Descriptor
+!!        C                      Parameters
+!!        C        ekcnamsz.inc: EK Column Name Size
+!!        C        ektnamsz.inc: EK Table Name Size
+!!        C        ektype.inc:   EK Data Types
+!!        C
+!!              INCLUDE 'ekattdsc.inc'
+!!              INCLUDE 'ekcnamsz.inc'
+!!              INCLUDE 'ektnamsz.inc'
+!!              INCLUDE 'ektype.inc'
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER                 FILEN
+!!              PARAMETER             ( FILEN = 255 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(CNAMSZ)      COLNAM
+!!              CHARACTER*(FILEN)       EKFILE
+!!              CHARACTER*(TNAMSZ)      TABNAM
+!!
+!!              INTEGER                 ATTDSC ( ADSCSZ )
+!!              INTEGER                 I
+!!              INTEGER                 NCOLS
+!!              INTEGER                 NTAB
+!!              INTEGER                 TAB
+!!
+!!        C
+!!        C     Prompt for the EK file name.
+!!        C
+!!              CALL PROMPT ( 'Enter name of EK to examine > ', EKFILE )
+!!
+!!              CALL FURNSH ( EKFILE )
+!!
+!!        C
+!!        C     Get the number of loaded tables.
+!!        C
+!!              CALL EKNTAB ( NTAB )
+!!
+!!              WRITE(*,*) 'Number of tables in EK:', NTAB
+!!
+!!              DO TAB = 1, NTAB
+!!
+!!        C
+!!        C        Get the name of the current table, and look up
+!!        C        the column count for this table.
+!!        C
+!!                 CALL EKTNAM ( TAB,    TABNAM )
+!!                 CALL EKCCNT ( TABNAM, NCOLS  )
+!!
+!!                 WRITE(*,*) '------------------------------'
+!!             .           // '------------------------------'
+!!                 WRITE(*,*) 'TABLE = ', TABNAM
+!!                 WRITE(*,*) ' '
+!!
+!!        C
+!!        C        For each column in the current table, look up the
+!!        C        column's attributes.  The attribute block
+!!        C        index parameters are defined in the include file
+!!        C        ekattdsc.inc.
+!!        C
+!!                 DO I = 1, NCOLS
+!!
+!!                    CALL EKCII ( TABNAM, I, COLNAM, ATTDSC )
+!!
+!!                    WRITE (*,*) 'COLUMN = ', COLNAM
+!!
+!!        C
+!!        C           Write out the current column's data type.
+!!        C
+!!                    IF ( ATTDSC(ATTTYP) .EQ. CHR ) THEN
+!!
+!!                       WRITE (*,*) '   TYPE   =  CHR'
+!!
+!!                       IF ( ATTDSC(ATTLEN) .EQ. -1 ) THEN
+!!                          WRITE (*,*) '   STRING LENGTH = VARIABLE.'
+!!                       ELSE
+!!                          WRITE (*,'(A,I2)') '    STRING LENGTH = ',
+!!             .                         ATTDSC(ATTLEN)
+!!                       END IF
+!!
+!!                    ELSE IF ( ATTDSC(ATTTYP) .EQ. DP ) THEN
+!!                       WRITE (*,*) '   TYPE   =  DP'
+!!
+!!                    ELSE IF ( ATTDSC(ATTTYP) .EQ. INT ) THEN
+!!                       WRITE (*,*) '   TYPE   =  INT'
+!!
+!!                    ELSE
+!!                       WRITE (*,*) '   TYPE   =  TIME'
+!!                    END IF
+!!
+!!        C
+!!        C           Write out the current column's entry size.
+!!        C
+!!                    WRITE (*,'(A,I2)') '    SIZE   = ', ATTDSC(ATTSIZ)
+!!
+!!        C
+!!        C           Indicate whether the current column is indexed.
+!!        C
+!!                    IF ( ATTDSC(ATTIDX) .EQ. -1 ) THEN
+!!                       WRITE (*,*) '   NOT INDEXED'
+!!                    ELSE
+!!                       WRITE (*,*) '   INDEXED'
+!!                    END IF
+!!
+!!        C
+!!        C           Indicate whether the current column allows
+!!        C           null values.
+!!        C
+!!                    IF ( ATTDSC(ATTNFL) .EQ. -1 ) THEN
+!!                       WRITE (*,*) '   NULL VALUES NOT ALLOWED'
+!!                    ELSE
+!!                       WRITE (*,*) '   NULL VALUES ALLOWED'
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, using the EK named S79_CIMSSSUPa.bep to load the
+!!        Cassini Science Plan SPICE E-Kernel File based upon the
+!!        integrated science plan, the output was:
+!!
+!!        Enter name of EK to examine > S79_CIMSSSUPa.bep
+!!         Number of tables in EK:           3
+!!         ------------------------------------------------------------
+!!         TABLE = CASSINI_SP_REQUEST
+!!
+!!         COLUMN = SUBSYSTEM
+!!            TYPE   =  CHR
+!!            STRING LENGTH = 32
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES NOT ALLOWED
+!!         COLUMN = REQUEST_ID
+!!            TYPE   =  CHR
+!!            STRING LENGTH = VARIABLE.
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES NOT ALLOWED
+!!         COLUMN = REQUEST_TITLE
+!!            TYPE   =  CHR
+!!            STRING LENGTH = VARIABLE.
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = BEGIN_TIME
+!!            TYPE   =  TIME
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES NOT ALLOWED
+!!         COLUMN = END_TIME
+!!            TYPE   =  TIME
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES NOT ALLOWED
+!!         COLUMN = SEQUENCE
+!!            TYPE   =  CHR
+!!            STRING LENGTH = 32
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES NOT ALLOWED
+!!         COLUMN = POINTING_AGREEMENT
+!!            TYPE   =  CHR
+!!            STRING LENGTH = 80
+!!            SIZE   = -1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = PRIMARY_POINTING
+!!            TYPE   =  CHR
+!!            STRING LENGTH = VARIABLE.
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = SECONDARY_POINTING
+!!            TYPE   =  CHR
+!!            STRING LENGTH = VARIABLE.
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = REQ_DESCRIPTION
+!!            TYPE   =  CHR
+!!            STRING LENGTH = 80
+!!            SIZE   = -1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!         ------------------------------------------------------------
+!!         TABLE = CASSINI_SP_OBSERVATION
+!!
+!!         COLUMN = SUBSYSTEM
+!!            TYPE   =  CHR
+!!            STRING LENGTH = 32
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES NOT ALLOWED
+!!         COLUMN = OBSERVATION_ID
+!!            TYPE   =  CHR
+!!            STRING LENGTH = VARIABLE.
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES NOT ALLOWED
+!!         COLUMN = OBSERVATION_TITLE
+!!            TYPE   =  CHR
+!!            STRING LENGTH = VARIABLE.
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES NOT ALLOWED
+!!         COLUMN = SEQUENCE
+!!            TYPE   =  CHR
+!!            STRING LENGTH = 32
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES NOT ALLOWED
+!!         COLUMN = SCIENCE_OBJECTIVE
+!!            TYPE   =  CHR
+!!            STRING LENGTH = 80
+!!            SIZE   = -1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = OBS_DESCRIPTION
+!!            TYPE   =  CHR
+!!            STRING LENGTH = 80
+!!            SIZE   = -1
+!!
+!!        [...]
+!!
+!!        Warning: incomplete output. Only 100 out of 129 lines have been
+!!        provided.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example based on existing code fragment.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
+!!
+!!        Misspelling of "conjunction" was fixed.
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     return the number of loaded EK columns
+!!     return the count of loaded EK columns
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -33505,401 +32856,395 @@ contains
       end procedure ekccnt
 
       module procedure ekcii
-
-! $ Abstract
-!
-!     Return attribute information about a column belonging to a loaded
-!     EK table, specifying the column by table and index.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         TABLE
-!     INTEGER               CINDEX
-!     CHARACTER*(*)         COLUMN
-!     INTEGER               ATTDSC ( ADSCSZ )
-!
-! $ Detailed_Input
-!
-!     TABLE    is the name of a loaded EK table. Case is not
-!              significant.
-!
-!     CINDEX   is the index, within TABLE's column attribute
-!              table, of the column whose attributes are to be
-!              found. The indices of the column table entries
-!              range from 1 to CCOUNT, where CCOUNT is the value
-!              returned by the entry point EKCCNT.
-!
-! $ Detailed_Output
-!
-!     COLUMN   is the name of the specified column.
-!
-!     ATTDSC   is a column attribute descriptor. ATTDSC is an
-!              integer array containing descriptive information
-!              that applies uniformly to all loaded columns
-!              having the name COLUMN. The following parameter
-!              values occur in ATTDSC:
-!
-!                 IFALSE:  -1
-!                 ITRUE:    1
-!                 CHR:      1
-!                 DP:       2
-!                 INT:      3
-!                 TIME:     4
-!
-!              The meanings of the elements of ATTDSC are given
-!              below. The indices of the elements are
-!              parameterized; the parameter values are defined
-!              in the include file ekattdsc.inc.
-!
-!                 ATTDSC(ATTCLS):   Column class code
-!
-!                 ATTDSC(ATTTYP):   Data type code---CHR, DP, INT,
-!                                   or TIME
-!
-!                 ATTDSC(ATTLEN):   String length; applies to CHR
-!                                   type. Value is IFALSE for
-!                                   variable-length strings.
-!
-!                 ATTDSC(ATTSIZ):   Column entry size; value is
-!                                   IFALSE for variable-size
-!                                   columns. Here `size' refers
-!                                   to the number of array
-!                                   elements in a column entry.
-!
-!                 ATTDSC(ATTIDX):   Index flag; value is ITRUE if
-!                                   column is indexed, IFALSE
-!                                   otherwise.
-!
-!                 ATTDSC(ATTNFL):   Null flag; value is ITRUE if
-!                                   column may contain null
-!                                   values, IFALSE otherwise.
-!
-! $ Parameters
-!
-!     ADSCSZ   is the size of column attribute descriptor.
-!              (Defined in ekattdsc.inc.)
-!
-! $ Exceptions
-!
-!     1)  If the specified table is not loaded, the error
-!         SPICE(TABLENOTLOADED) is signaled.
-!
-!     2)  If the input argument CINDEX is out of range, the error
-!         SPICE(INVALIDINDEX) is signaled.
-!
-! $ Files
-!
-!     See the header of EKQMGR for a description of files used
-!     by this routine.
-!
-! $ Particulars
-!
-!     This routine is a utility that allows a calling routine to
-!     determine the attributes of the currently loaded columns.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Dump the names and attributes of the columns in each loaded
-!        table.
-!
-!        Example code begins here.
-!
-!              PROGRAM EKCII_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include EK parameter declarations:
-!        C
-!        C        ekattdsc.inc: EK Column Attribute Descriptor
-!        C                      Parameters
-!        C        ekcnamsz.inc: EK Column Name Size
-!        C        ektnamsz.inc: EK Table Name Size
-!        C        ektype.inc:   EK Data Types
-!        C
-!              INCLUDE 'ekattdsc.inc'
-!              INCLUDE 'ekcnamsz.inc'
-!              INCLUDE 'ektnamsz.inc'
-!              INCLUDE 'ektype.inc'
-!
-!        C
-!        C     Local constants.
-!        C
-!              INTEGER                 FILEN
-!              PARAMETER             ( FILEN = 255 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(CNAMSZ)      COLNAM
-!              CHARACTER*(FILEN)       EKFILE
-!              CHARACTER*(TNAMSZ)      TABNAM
-!
-!              INTEGER                 ATTDSC ( ADSCSZ )
-!              INTEGER                 I
-!              INTEGER                 NCOLS
-!              INTEGER                 NTAB
-!              INTEGER                 TAB
-!
-!        C
-!        C     Prompt for the EK file name.
-!        C
-!              CALL PROMPT ( 'Enter name of EK to examine > ', EKFILE )
-!
-!              CALL FURNSH ( EKFILE )
-!
-!        C
-!        C     Get the number of loaded tables.
-!        C
-!              CALL EKNTAB ( NTAB )
-!
-!              WRITE(*,*) 'Number of tables in EK:', NTAB
-!
-!              DO TAB = 1, NTAB
-!
-!        C
-!        C        Get the name of the current table, and look up
-!        C        the column count for this table.
-!        C
-!                 CALL EKTNAM ( TAB,    TABNAM )
-!                 CALL EKCCNT ( TABNAM, NCOLS  )
-!
-!                 WRITE(*,*) '------------------------------'
-!             .           // '------------------------------'
-!                 WRITE(*,*) 'TABLE = ', TABNAM
-!                 WRITE(*,*) ' '
-!
-!        C
-!        C        For each column in the current table, look up the
-!        C        column's attributes.  The attribute block
-!        C        index parameters are defined in the include file
-!        C        ekattdsc.inc.
-!        C
-!                 DO I = 1, NCOLS
-!
-!                    CALL EKCII ( TABNAM, I, COLNAM, ATTDSC )
-!
-!                    WRITE (*,*) 'COLUMN = ', COLNAM
-!
-!        C
-!        C           Write out the current column's data type.
-!        C
-!                    IF ( ATTDSC(ATTTYP) .EQ. CHR ) THEN
-!
-!                       WRITE (*,*) '   TYPE   =  CHR'
-!
-!                       IF ( ATTDSC(ATTLEN) .EQ. -1 ) THEN
-!                          WRITE (*,*) '   STRING LENGTH = VARIABLE.'
-!                       ELSE
-!                          WRITE (*,'(A,I2)') '    STRING LENGTH = ',
-!             .                         ATTDSC(ATTLEN)
-!                       END IF
-!
-!                    ELSE IF ( ATTDSC(ATTTYP) .EQ. DP ) THEN
-!                       WRITE (*,*) '   TYPE   =  DP'
-!
-!                    ELSE IF ( ATTDSC(ATTTYP) .EQ. INT ) THEN
-!                       WRITE (*,*) '   TYPE   =  INT'
-!
-!                    ELSE
-!                       WRITE (*,*) '   TYPE   =  TIME'
-!                    END IF
-!
-!        C
-!        C           Write out the current column's entry size.
-!        C
-!                    WRITE (*,'(A,I2)') '    SIZE   = ', ATTDSC(ATTSIZ)
-!
-!        C
-!        C           Indicate whether the current column is indexed.
-!        C
-!                    IF ( ATTDSC(ATTIDX) .EQ. -1 ) THEN
-!                       WRITE (*,*) '   NOT INDEXED'
-!                    ELSE
-!                       WRITE (*,*) '   INDEXED'
-!                    END IF
-!
-!        C
-!        C           Indicate whether the current column allows
-!        C           null values.
-!        C
-!                    IF ( ATTDSC(ATTNFL) .EQ. -1 ) THEN
-!                       WRITE (*,*) '   NULL VALUES NOT ALLOWED'
-!                    ELSE
-!                       WRITE (*,*) '   NULL VALUES ALLOWED'
-!                    END IF
-!
-!                 END DO
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the EK file named vo_sedr.bdb to load the
-!        Viking Orbiter Image SEDR Data, the output was:
-!
-!        Enter name of EK to examine > vo_sedr.bdb
-!         Number of tables in EK:           1
-!         ------------------------------------------------------------
-!         TABLE = VIKING_SEDR_DATA
-!
-!         COLUMN = IMAGE_ID
-!            TYPE   =  CHR
-!            STRING LENGTH =  6
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = IMAGE_NUMBER
-!            TYPE   =  INT
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = SPACECRAFT_ID
-!            TYPE   =  CHR
-!            STRING LENGTH =  3
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = IMAGE_TIME
-!            TYPE   =  TIME
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = INSTRUMENT_ID
-!            TYPE   =  CHR
-!            STRING LENGTH =  4
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = GAIN_MODE_ID
-!            TYPE   =  CHR
-!            STRING LENGTH =  4
-!            SIZE   =  1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = FLOOD_MODE_ID
-!            TYPE   =  CHR
-!            STRING LENGTH =  3
-!            SIZE   =  1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = OFFSET_MODE_ID
-!            TYPE   =  CHR
-!            STRING LENGTH =  3
-!            SIZE   =  1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = FILTER_ID
-!            TYPE   =  INT
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = EXPOSURE_DURATION
-!            TYPE   =  DP
-!            SIZE   =  1
-!            INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = PLATFORM_IN_MOTION
-!            TYPE   =  CHR
-!            STRING LENGTH =  3
-!            SIZE   =  1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = PLATFORM_CONE
-!            TYPE   =  DP
-!            SIZE   =  1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = PLATFORM_CLOCK
-!            TYPE   =  DP
-!            SIZE   =  1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!         COLUMN = PLATFORM_TWIST
-!            TYPE   =  DP
-!            SIZE   =  1
-!            NOT INDEXED
-!            NULL VALUES ALLOWED
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited header to comply with NAIF standard.
-!        Added complete code example from existing code fragment.
-!
-!-    SPICELIB Version 2.0.1, 10-FEB-2014 (BVS)
-!
-!        Added description of ADSCSZ to the $Parameters section of the
-!        header.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
-!
-!        Previous version line was changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return information on loaded EK column specified by index
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return attribute information about a column belonging to a loaded
+!!     EK table, specifying the column by table and index.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         TABLE
+!!     INTEGER               CINDEX
+!!     CHARACTER*(*)         COLUMN
+!!     INTEGER               ATTDSC ( ADSCSZ )
+!!
+!! ## Detailed Input
+!!
+!!     TABLE    is the name of a loaded EK table. Case is not
+!!              significant.
+!!
+!!     CINDEX   is the index, within TABLE's column attribute
+!!              table, of the column whose attributes are to be
+!!              found. The indices of the column table entries
+!!              range from 1 to CCOUNT, where CCOUNT is the value
+!!              returned by the entry point EKCCNT.
+!!
+!! ## Detailed Output
+!!
+!!     COLUMN   is the name of the specified column.
+!!
+!!     ATTDSC   is a column attribute descriptor. ATTDSC is an
+!!              integer array containing descriptive information
+!!              that applies uniformly to all loaded columns
+!!              having the name COLUMN. The following parameter
+!!              values occur in ATTDSC:
+!!
+!!                 IFALSE:  -1
+!!                 ITRUE:    1
+!!                 CHR:      1
+!!                 DP:       2
+!!                 INT:      3
+!!                 TIME:     4
+!!
+!!              The meanings of the elements of ATTDSC are given
+!!              below. The indices of the elements are
+!!              parameterized; the parameter values are defined
+!!              in the include file ekattdsc.inc.
+!!
+!!                 ATTDSC(ATTCLS):   Column class code
+!!
+!!                 ATTDSC(ATTTYP):   Data type code---CHR, DP, INT,
+!!                                   or TIME
+!!
+!!                 ATTDSC(ATTLEN):   String length; applies to CHR
+!!                                   type. Value is IFALSE for
+!!                                   variable-length strings.
+!!
+!!                 ATTDSC(ATTSIZ):   Column entry size; value is
+!!                                   IFALSE for variable-size
+!!                                   columns. Here `size' refers
+!!                                   to the number of array
+!!                                   elements in a column entry.
+!!
+!!                 ATTDSC(ATTIDX):   Index flag; value is ITRUE if
+!!                                   column is indexed, IFALSE
+!!                                   otherwise.
+!!
+!!                 ATTDSC(ATTNFL):   Null flag; value is ITRUE if
+!!                                   column may contain null
+!!                                   values, IFALSE otherwise.
+!!
+!! ## Parameters
+!!
+!!     ADSCSZ   is the size of column attribute descriptor.
+!!              (Defined in ekattdsc.inc.)
+!!
+!! ## Exceptions
+!!
+!!     1)  If the specified table is not loaded, the error
+!!         SPICE(TABLENOTLOADED) is signaled.
+!!
+!!     2)  If the input argument CINDEX is out of range, the error
+!!         SPICE(INVALIDINDEX) is signaled.
+!!
+!! ## Files
+!!
+!!     See the header of EKQMGR for a description of files used
+!!     by this routine.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility that allows a calling routine to
+!!     determine the attributes of the currently loaded columns.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Dump the names and attributes of the columns in each loaded
+!!        table.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKCII_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include EK parameter declarations:
+!!        C
+!!        C        ekattdsc.inc: EK Column Attribute Descriptor
+!!        C                      Parameters
+!!        C        ekcnamsz.inc: EK Column Name Size
+!!        C        ektnamsz.inc: EK Table Name Size
+!!        C        ektype.inc:   EK Data Types
+!!        C
+!!              INCLUDE 'ekattdsc.inc'
+!!              INCLUDE 'ekcnamsz.inc'
+!!              INCLUDE 'ektnamsz.inc'
+!!              INCLUDE 'ektype.inc'
+!!
+!!        C
+!!        C     Local constants.
+!!        C
+!!              INTEGER                 FILEN
+!!              PARAMETER             ( FILEN = 255 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(CNAMSZ)      COLNAM
+!!              CHARACTER*(FILEN)       EKFILE
+!!              CHARACTER*(TNAMSZ)      TABNAM
+!!
+!!              INTEGER                 ATTDSC ( ADSCSZ )
+!!              INTEGER                 I
+!!              INTEGER                 NCOLS
+!!              INTEGER                 NTAB
+!!              INTEGER                 TAB
+!!
+!!        C
+!!        C     Prompt for the EK file name.
+!!        C
+!!              CALL PROMPT ( 'Enter name of EK to examine > ', EKFILE )
+!!
+!!              CALL FURNSH ( EKFILE )
+!!
+!!        C
+!!        C     Get the number of loaded tables.
+!!        C
+!!              CALL EKNTAB ( NTAB )
+!!
+!!              WRITE(*,*) 'Number of tables in EK:', NTAB
+!!
+!!              DO TAB = 1, NTAB
+!!
+!!        C
+!!        C        Get the name of the current table, and look up
+!!        C        the column count for this table.
+!!        C
+!!                 CALL EKTNAM ( TAB,    TABNAM )
+!!                 CALL EKCCNT ( TABNAM, NCOLS  )
+!!
+!!                 WRITE(*,*) '------------------------------'
+!!             .           // '------------------------------'
+!!                 WRITE(*,*) 'TABLE = ', TABNAM
+!!                 WRITE(*,*) ' '
+!!
+!!        C
+!!        C        For each column in the current table, look up the
+!!        C        column's attributes.  The attribute block
+!!        C        index parameters are defined in the include file
+!!        C        ekattdsc.inc.
+!!        C
+!!                 DO I = 1, NCOLS
+!!
+!!                    CALL EKCII ( TABNAM, I, COLNAM, ATTDSC )
+!!
+!!                    WRITE (*,*) 'COLUMN = ', COLNAM
+!!
+!!        C
+!!        C           Write out the current column's data type.
+!!        C
+!!                    IF ( ATTDSC(ATTTYP) .EQ. CHR ) THEN
+!!
+!!                       WRITE (*,*) '   TYPE   =  CHR'
+!!
+!!                       IF ( ATTDSC(ATTLEN) .EQ. -1 ) THEN
+!!                          WRITE (*,*) '   STRING LENGTH = VARIABLE.'
+!!                       ELSE
+!!                          WRITE (*,'(A,I2)') '    STRING LENGTH = ',
+!!             .                         ATTDSC(ATTLEN)
+!!                       END IF
+!!
+!!                    ELSE IF ( ATTDSC(ATTTYP) .EQ. DP ) THEN
+!!                       WRITE (*,*) '   TYPE   =  DP'
+!!
+!!                    ELSE IF ( ATTDSC(ATTTYP) .EQ. INT ) THEN
+!!                       WRITE (*,*) '   TYPE   =  INT'
+!!
+!!                    ELSE
+!!                       WRITE (*,*) '   TYPE   =  TIME'
+!!                    END IF
+!!
+!!        C
+!!        C           Write out the current column's entry size.
+!!        C
+!!                    WRITE (*,'(A,I2)') '    SIZE   = ', ATTDSC(ATTSIZ)
+!!
+!!        C
+!!        C           Indicate whether the current column is indexed.
+!!        C
+!!                    IF ( ATTDSC(ATTIDX) .EQ. -1 ) THEN
+!!                       WRITE (*,*) '   NOT INDEXED'
+!!                    ELSE
+!!                       WRITE (*,*) '   INDEXED'
+!!                    END IF
+!!
+!!        C
+!!        C           Indicate whether the current column allows
+!!        C           null values.
+!!        C
+!!                    IF ( ATTDSC(ATTNFL) .EQ. -1 ) THEN
+!!                       WRITE (*,*) '   NULL VALUES NOT ALLOWED'
+!!                    ELSE
+!!                       WRITE (*,*) '   NULL VALUES ALLOWED'
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, using the EK file named vo_sedr.bdb to load the
+!!        Viking Orbiter Image SEDR Data, the output was:
+!!
+!!        Enter name of EK to examine > vo_sedr.bdb
+!!         Number of tables in EK:           1
+!!         ------------------------------------------------------------
+!!         TABLE = VIKING_SEDR_DATA
+!!
+!!         COLUMN = IMAGE_ID
+!!            TYPE   =  CHR
+!!            STRING LENGTH =  6
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = IMAGE_NUMBER
+!!            TYPE   =  INT
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = SPACECRAFT_ID
+!!            TYPE   =  CHR
+!!            STRING LENGTH =  3
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = IMAGE_TIME
+!!            TYPE   =  TIME
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = INSTRUMENT_ID
+!!            TYPE   =  CHR
+!!            STRING LENGTH =  4
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = GAIN_MODE_ID
+!!            TYPE   =  CHR
+!!            STRING LENGTH =  4
+!!            SIZE   =  1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = FLOOD_MODE_ID
+!!            TYPE   =  CHR
+!!            STRING LENGTH =  3
+!!            SIZE   =  1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = OFFSET_MODE_ID
+!!            TYPE   =  CHR
+!!            STRING LENGTH =  3
+!!            SIZE   =  1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = FILTER_ID
+!!            TYPE   =  INT
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = EXPOSURE_DURATION
+!!            TYPE   =  DP
+!!            SIZE   =  1
+!!            INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = PLATFORM_IN_MOTION
+!!            TYPE   =  CHR
+!!            STRING LENGTH =  3
+!!            SIZE   =  1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = PLATFORM_CONE
+!!            TYPE   =  DP
+!!            SIZE   =  1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = PLATFORM_CLOCK
+!!            TYPE   =  DP
+!!            SIZE   =  1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!         COLUMN = PLATFORM_TWIST
+!!            TYPE   =  DP
+!!            SIZE   =  1
+!!            NOT INDEXED
+!!            NULL VALUES ALLOWED
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited header to comply with NAIF standard.
+!!        Added complete code example from existing code fragment.
+!!
+!!-    SPICELIB Version 2.0.1, 10-FEB-2014 (BVS)
+!!
+!!        Added description of ADSCSZ to the $Parameters section of the
+!!        header.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
+!!
+!!        Previous version line was changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     return information on loaded EK column specified by index
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -34053,165 +33398,159 @@ contains
       end procedure ekcii
 
       module procedure eksrch
-
-! $ Abstract
-!
-!     Search for EK events matching a specified set of constraints.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     EVENT
-!     FILES
-!     SEARCH
-!
-! $ Declarations
-!
-!     INTEGER               EQRYI  ( LBCELL : * )
-!     CHARACTER*(*)         EQRYC
-!     DOUBLE PRECISION      EQRYD  ( * )
-!     INTEGER               NMROWS
-!     LOGICAL               SEMERR
-!     CHARACTER*(*)         ERRMSG
-!
-! $ Detailed_Input
-!
-!     EQRYI,
-!     EQRYC,
-!     EQRYD    are, respectively, the integer, character, and
-!              double precision portions of an encoded query.
-!              The query must have been parsed and must have
-!              its table and column names resolved. Time values
-!              must have been resolved. The query is expected
-!              to be semantically correct.
-!
-! $ Detailed_Output
-!
-!     NMROWS   is the number of rows matching the input query
-!              constraints.
-!
-!     SEMERR   is a logical flag indicating whether a semantic
-!              error was detected while attempting to respond to
-!              the input query.
-!
-!     ERRMSG   is a descriptive error message that is set if a
-!              semantic error is detected. Otherwise, ERRMSG
-!              is returned blank.
-!
-! $ Parameters
-!
-!     LBCELL   is the SPICE cell lower bound.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called when no files are loaded, the
-!         error SPICE(NOLOADEDFILES) is signaled.
-!
-!     2)  If the structure of the input query is invalid, this routine
-!         may fail in mysterious ways.
-!
-! $ Files
-!
-!     See the header of EKQMGR for a description of files used
-!     by this routine.
-!
-! $ Particulars
-!
-!     NAIF Toolkit-based applications will rarely need to call this
-!     routine directly; the high-level routine EKFIND should normally
-!     be used to query the EK system.
-!
-!     Because the structure of encoded queries is not part of the
-!     SPICELIB user interface, we strongly recommend that users'
-!     applications not call this routine directly.
-!
-! $ Examples
-!
-!     See the header of the umbrella subroutine EKQMGR for a
-!     comprehensive example of the use of EKQMGR's entry points.
-!
-! $ Restrictions
-!
-!     1)  This routine should normally not be called directly from
-!         users' applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 27-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.1, 10-FEB-2014 (BVS)
-!
-!        Added description of LBCELL to the $Parameters section of the
-!        header.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.2.0, 21-JUL-1998 (NJB)
-!
-!        ZZEKJSQZ call was added after the ZZEKJOIN call. This change
-!        reduces the scratch area usage for intermediate results of
-!        joins. It also prevents ZZEKJOIN from being handed a join
-!        row set containing a segment vector having no corresponding
-!        row vectors.
-!
-!        Removed a comment in the join loop indicating that non-join
-!        constraints involving comparisons of column entries in the
-!        table were being activated. This comment was incorrect; the
-!        constraints in question were applied earlier.
-!
-!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
-!
-!        Previous version line was changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     search for events in loaded EK files
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Search for EK events matching a specified set of constraints.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     EVENT
+!!     FILES
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!     INTEGER               EQRYI  ( LBCELL : * )
+!!     CHARACTER*(*)         EQRYC
+!!     DOUBLE PRECISION      EQRYD  ( * )
+!!     INTEGER               NMROWS
+!!     LOGICAL               SEMERR
+!!     CHARACTER*(*)         ERRMSG
+!!
+!! ## Detailed Input
+!!
+!!     EQRYI,
+!!     EQRYC,
+!!     EQRYD    are, respectively, the integer, character, and
+!!              double precision portions of an encoded query.
+!!              The query must have been parsed and must have
+!!              its table and column names resolved. Time values
+!!              must have been resolved. The query is expected
+!!              to be semantically correct.
+!!
+!! ## Detailed Output
+!!
+!!     NMROWS   is the number of rows matching the input query
+!!              constraints.
+!!
+!!     SEMERR   is a logical flag indicating whether a semantic
+!!              error was detected while attempting to respond to
+!!              the input query.
+!!
+!!     ERRMSG   is a descriptive error message that is set if a
+!!              semantic error is detected. Otherwise, ERRMSG
+!!              is returned blank.
+!!
+!! ## Parameters
+!!
+!!     LBCELL   is the SPICE cell lower bound.
+!!
+!! ## Exceptions
+!!
+!!     1)  If this routine is called when no files are loaded, the
+!!         error SPICE(NOLOADEDFILES) is signaled.
+!!
+!!     2)  If the structure of the input query is invalid, this routine
+!!         may fail in mysterious ways.
+!!
+!! ## Files
+!!
+!!     See the header of EKQMGR for a description of files used
+!!     by this routine.
+!!
+!! ## Particulars
+!!
+!!     NAIF Toolkit-based applications will rarely need to call this
+!!     routine directly; the high-level routine EKFIND should normally
+!!     be used to query the EK system.
+!!
+!!     Because the structure of encoded queries is not part of the
+!!     SPICELIB user interface, we strongly recommend that users'
+!!     applications not call this routine directly.
+!!
+!! ## Examples
+!!
+!!     See the header of the umbrella subroutine EKQMGR for a
+!!     comprehensive example of the use of EKQMGR's entry points.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine should normally not be called directly from
+!!         users' applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 27-AUG-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.1, 10-FEB-2014 (BVS)
+!!
+!!        Added description of LBCELL to the $Parameters section of the
+!!        header.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.2.0, 21-JUL-1998 (NJB)
+!!
+!!        ZZEKJSQZ call was added after the ZZEKJOIN call. This change
+!!        reduces the scratch area usage for intermediate results of
+!!        joins. It also prevents ZZEKJOIN from being handed a join
+!!        row set containing a segment vector having no corresponding
+!!        row vectors.
+!!
+!!        Removed a comment in the join loop indicating that non-join
+!!        constraints involving comparisons of column entries in the
+!!        table were being activated. This comment was incorrect; the
+!!        constraints in question were applied earlier.
+!!
+!!-    SPICELIB Version 1.0.1, 07-JUL-1996 (NJB)
+!!
+!!        Previous version line was changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     search for events in loaded EK files
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleari, movei
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: cjrows_1(1)  !! one-element copy of cjrows (array argument)
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -35062,505 +34401,499 @@ contains
       end procedure eksrch
 
       module procedure eknelt
-
-! $ Abstract
-!
-!     Return the number of elements in a specified column entry in
-!     the current row.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!
-! $ Declarations
-!
-!     INTEGER               SELIDX
-!     INTEGER               ROW
-!     INTEGER               NELT
-!
-! $ Detailed_Input
-!
-!     SELIDX   is the SELECT clause index of the column to
-!              fetch from.
-!
-!     ROW      is the index of the row containing the element.
-!              This number refers to a member of the set of rows
-!              matching a query. ROW must be in the range
-!
-!                 1 : NMROWS
-!
-!              where NMROWS is the matching row count returned
-!              by EKSRCH.
-!
-! $ Detailed_Output
-!
-!     NELT     is the number of elements in the column entry
-!              belonging to the specified column in the current
-!              row.
-!
-!              Null entries in variable-size columns are
-!              considered to have size 1.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called when no E-kernels have been loaded,
-!         the error SPICE(NOLOADEDFILES) is signaled.
-!
-!     2)  If SELIDX is outside of the range established by the
-!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
-!         is signaled.
-!
-!     3)  If ROW is outside of the range established by the
-!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
-!         is signaled.
-!
-! $ Files
-!
-!     See the header of EKQMGR for a description of files used
-!     by this routine.
-!
-! $ Particulars
-!
-!     This routine is meant to be used in conjunction with the EKQMGR
-!     fetch entry points EKGC, EKGD, and EKGI. This routine
-!     allows the caller of those routines to determine appropriate
-!     loop bounds to use to fetch each column entry in the current row.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) This example demonstrates how to fetch integer, double
-!        precision and character string values from a column when such
-!        column corresponds to either a variable-size array or to a
-!        static-size array.
-!
-!        Create an EK that contains a table TAB that has the following
-!        columns:
-!
-!            Column name   Data Type   Size
-!            -----------   ---------   ----
-!            IARRAY        INT         3
-!            DARRAY        DP          VARIABLE
-!            CARRAY        CHR         VARIABLE
-!
-!        Issue the following query
-!
-!            QUERY = 'SELECT IARRAY, DARRAY, CARRAY FROM TAB'
-!
-!        to fetch and dump column values from the rows that satisfy the
-!        query.
-!
-!        Example code begins here.
-!
-!              PROGRAM EKNELT_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Column Name Size (CNAMSZ)
-!        C     and EK Query Limit Parameters (MAXQRY)
-!        C
-!              INCLUDE 'ekcnamsz.inc'
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               RTRIM
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME  = 'eknelt_ex1.bdb' )
-!
-!              CHARACTER*(*)         TABLE
-!              PARAMETER           ( TABLE   = 'TAB' )
-!
-!              INTEGER               CHRSLN
-!              PARAMETER           ( CHRSLN = 5   )
-!
-!              INTEGER               COL1SZ
-!              PARAMETER           ( COL1SZ = 3   )
-!
-!              INTEGER               DECLEN
-!              PARAMETER           ( DECLEN = 200 )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!              INTEGER               MXC2SZ
-!              PARAMETER           ( MXC2SZ = 4   )
-!
-!              INTEGER               MXC3SZ
-!              PARAMETER           ( MXC3SZ = 7   )
-!
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 40  )
-!
-!              INTEGER               NCOLS
-!              PARAMETER           ( NCOLS  = 3   )
-!
-!              INTEGER               NROWS
-!              PARAMETER           ( NROWS  = 4   )
-!
-!              INTEGER               STRSIZ
-!              PARAMETER           ( STRSIZ  = 30 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-!              CHARACTER*(CHRSLN)    COL3   ( MXC3SZ )
-!              CHARACTER*(STRSIZ)    CVALS  ( MXC3SZ )
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(NAMLEN)    IFNAME
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              DOUBLE PRECISION      COL2   ( MXC2SZ )
-!              DOUBLE PRECISION      DVALS  ( MXC2SZ )
-!
-!              INTEGER               COL1   ( COL1SZ )
-!              INTEGER               ELTIDX
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               IVALS ( COL1SZ )
-!              INTEGER               J
-!              INTEGER               NELT
-!              INTEGER               NMROWS
-!              INTEGER               NRESVC
-!              INTEGER               RECNO
-!              INTEGER               ROW
-!              INTEGER               SEGNO
-!              INTEGER               SELIDX
-!
-!              LOGICAL               ERROR
-!              LOGICAL               FOUND
-!              LOGICAL               ISNULL
-!
-!        C
-!        C     Open a new EK file.  For simplicity, we will not
-!        C     reserve any space for the comment area, so the
-!        C     number of reserved comment characters is zero.
-!        C     The variable IFNAME is the internal file name.
-!        C
-!              NRESVC  =  0
-!              IFNAME  =  'Test EK/Created 13-JUN-2019'
-!
-!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-!
-!        C
-!        C     Set up the column names and declarations
-!        C     for the TAB segment.  We'll index all of
-!        C     the columns.
-!        C
-!              CNAMES(1) = 'IARRAY'
-!              CDECLS(1) = 'DATATYPE = INTEGER, SIZE = 3'
-!
-!              CNAMES(2) = 'DARRAY'
-!              CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
-!             .            'SIZE = VARIABLE'
-!
-!              CNAMES(3) = 'CARRAY'
-!              CDECLS(3) = 'DATATYPE = CHARACTER*(5), ' //
-!             .            'SIZE = VARIABLE'
-!
-!        C
-!        C     Start the segment.
-!        C
-!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-!             .              CNAMES, CDECLS, SEGNO )
-!
-!        C
-!        C     At the records to the table.
-!        C
-!              DO I = 1, NROWS
-!
-!        C
-!        C        Append a new record to the EK.
-!        C
-!                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-!
-!        C
-!        C        Add 3 items to IARRAY
-!        C
-!                 DO J = 1, COL1SZ
-!                    COL1(J) =  I + J*100.D0
-!                 END DO
-!
-!                 CALL EKACEI ( HANDLE,    SEGNO,  RECNO,
-!             .                 CNAMES(1), COL1SZ, COL1,  .FALSE. )
-!
-!        C
-!        C        Add I items to DARRAY
-!        C
-!                 DO J = 1, I
-!                    COL2(J) = J + I*200.D0
-!                 END DO
-!
-!                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(2), I,     COL2,  .FALSE. )
-!
-!        C
-!        C        Add 3+I items to CARRAY
-!        C
-!                 DO J = 1, 3+I
-!                    CALL REPMI ( 'ST#', '#', J + I*100, COL3(J) )
-!                 END DO
-!
-!                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(3), I+3,   COL3,  .FALSE. )
-!
-!              END DO
-!
-!        C
-!        C     Close the file.
-!        C
-!              CALL EKCLS ( HANDLE )
-!
-!        C
-!        C     Open the created file. Perform the query and show the
-!        C     results.
-!        C
-!              CALL FURNSH ( EKNAME )
-!
-!              QUERY = 'SELECT IARRAY, DARRAY, CARRAY FROM TAB'
-!
-!        C
-!        C     Query the EK system for data rows matching the
-!        C     SELECT constraints.
-!        C
-!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C     Check whether an error occurred while processing the
-!        C     SELECT clause. If so, output the error message.
-!        C
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
-!
-!              ELSE
-!
-!                 DO ROW = 1, NMROWS
-!
-!                    WRITE(*,*) ' '
-!                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
-!
-!        C
-!        C           Fetch values from column IARRAY in the current
-!        C           row.  Since IARRAY was the first column selected,
-!        C           the selection index SELIDX is set to 1.
-!        C
-!                    SELIDX = 1
-!                    ELTIDX = 1
-!                    ISNULL = .FALSE.
-!
-!                    DO WHILE (       ( ELTIDX .LE.  COL1SZ )
-!             .                 .AND. (        .NOT. ISNULL )  )
-!        C
-!        C              If the column entry is null, we'll be kicked
-!        C              out of this loop after the first iteration.
-!        C
-!                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
-!             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
-!
-!                       ELTIDX = ELTIDX + 1
-!
-!                    END DO
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,'(A)') '   COLUMN = IARRAY: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE(*,'(A,3I6)') '   COLUMN = IARRAY:',
-!             .                            ( IVALS(I), I = 1, COL1SZ )
-!
-!                    END IF
-!
-!        C
-!        C           Fetch values from column DARRAY in the current
-!        C           row.  Since DARRAY contains variable-size array
-!        C           elements, we call EKNELT to determine how many
-!        C           elements to fetch.
-!        C
-!                    SELIDX = 2
-!                    CALL EKNELT ( SELIDX, ROW, NELT )
-!
-!                    ELTIDX = 1
-!                    ISNULL = .FALSE.
-!
-!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-!             .                 .AND. (        .NOT. ISNULL )  )
-!
-!                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
-!             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
-!
-!                       ELTIDX = ELTIDX + 1
-!
-!                    END DO
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,'(A)') '   COLUMN = DARRAY: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE(*,'(A,4F6.1)') '   COLUMN = DARRAY:',
-!             .                              ( DVALS(I), I = 1, NELT )
-!
-!                    END IF
-!
-!        C
-!        C           Fetch values from column CARRAY in the current
-!        C           row.
-!        C
-!                    SELIDX = 3
-!                    CALL EKNELT ( SELIDX, ROW, NELT )
-!
-!                    ELTIDX = 1
-!                    ISNULL = .FALSE.
-!
-!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-!             .                 .AND. (        .NOT. ISNULL )  )
-!
-!                       CALL EKGC ( SELIDX,         ROW,     ELTIDX,
-!             .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
-!
-!                       ELTIDX = ELTIDX + 1
-!
-!                    END DO
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,'(A)') '   COLUMN = CARRAY: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE(*,'(8A)') '   COLUMN = CARRAY: ',
-!             .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
-!             .                                         I = 1, NELT   )
-!
-!                    END IF
-!
-!                 END DO
-!
-!        C
-!        C     We either parsed the SELECT clause or had an error.
-!        C
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        ROW  =   1
-!           COLUMN = IARRAY:   101   201   301
-!           COLUMN = DARRAY: 201.0
-!           COLUMN = CARRAY: ST101 ST102 ST103 ST104
-!
-!        ROW  =   2
-!           COLUMN = IARRAY:   102   202   302
-!           COLUMN = DARRAY: 401.0 402.0
-!           COLUMN = CARRAY: ST201 ST202 ST203 ST204 ST205
-!
-!        ROW  =   3
-!           COLUMN = IARRAY:   103   203   303
-!           COLUMN = DARRAY: 601.0 602.0 603.0
-!           COLUMN = CARRAY: ST301 ST302 ST303 ST304 ST305 ST306
-!
-!        ROW  =   4
-!           COLUMN = IARRAY:   104   204   304
-!           COLUMN = DARRAY: 801.0 802.0 803.0 804.0
-!           COLUMN = CARRAY: ST401 ST402 ST403 ST404 ST405 ST406 ST407
-!
-!        Note that after run completion, a new EK file exists in the
-!        output directory.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete code example from existing fragment.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.2.0, 12-FEB-1999 (NJB)
-!
-!        Bug fix: There was a error handling branch that called CHKOUT
-!        where CHKIN should have been called. This has been fixed.
-!
-!-    SPICELIB Version 1.1.0, 09-JUL-1996 (NJB)
-!
-!        Bug fix: EKNELT now initiates a sort operation if sorted
-!        outputs are required and EKNELT is called after query
-!        resolution but before the fetch routines. Also, addressing
-!        for sorted query results has been fixed.
-!
-!        Misspelling of "issued" was fixed. Previous version line was
-!        changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return the number of elements in a column entry
-!
-!-&
-
-!
-!     Use discovery check-in for speed.
-!
+!! ## Abstract
+!!
+!!     Return the number of elements in a specified column entry in
+!!     the current row.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!
+!! ## Declarations
+!!
+!!     INTEGER               SELIDX
+!!     INTEGER               ROW
+!!     INTEGER               NELT
+!!
+!! ## Detailed Input
+!!
+!!     SELIDX   is the SELECT clause index of the column to
+!!              fetch from.
+!!
+!!     ROW      is the index of the row containing the element.
+!!              This number refers to a member of the set of rows
+!!              matching a query. ROW must be in the range
+!!
+!!                 1 : NMROWS
+!!
+!!              where NMROWS is the matching row count returned
+!!              by EKSRCH.
+!!
+!! ## Detailed Output
+!!
+!!     NELT     is the number of elements in the column entry
+!!              belonging to the specified column in the current
+!!              row.
+!!
+!!              Null entries in variable-size columns are
+!!              considered to have size 1.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If this routine is called when no E-kernels have been loaded,
+!!         the error SPICE(NOLOADEDFILES) is signaled.
+!!
+!!     2)  If SELIDX is outside of the range established by the
+!!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
+!!         is signaled.
+!!
+!!     3)  If ROW is outside of the range established by the
+!!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
+!!         is signaled.
+!!
+!! ## Files
+!!
+!!     See the header of EKQMGR for a description of files used
+!!     by this routine.
+!!
+!! ## Particulars
+!!
+!!     This routine is meant to be used in conjunction with the EKQMGR
+!!     fetch entry points EKGC, EKGD, and EKGI. This routine
+!!     allows the caller of those routines to determine appropriate
+!!     loop bounds to use to fetch each column entry in the current row.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) This example demonstrates how to fetch integer, double
+!!        precision and character string values from a column when such
+!!        column corresponds to either a variable-size array or to a
+!!        static-size array.
+!!
+!!        Create an EK that contains a table TAB that has the following
+!!        columns:
+!!
+!!            Column name   Data Type   Size
+!!            -----------   ---------   ----
+!!            IARRAY        INT         3
+!!            DARRAY        DP          VARIABLE
+!!            CARRAY        CHR         VARIABLE
+!!
+!!        Issue the following query
+!!
+!!            QUERY = 'SELECT IARRAY, DARRAY, CARRAY FROM TAB'
+!!
+!!        to fetch and dump column values from the rows that satisfy the
+!!        query.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKNELT_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Column Name Size (CNAMSZ)
+!!        C     and EK Query Limit Parameters (MAXQRY)
+!!        C
+!!              INCLUDE 'ekcnamsz.inc'
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              INTEGER               RTRIM
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         EKNAME
+!!              PARAMETER           ( EKNAME  = 'eknelt_ex1.bdb' )
+!!
+!!              CHARACTER*(*)         TABLE
+!!              PARAMETER           ( TABLE   = 'TAB' )
+!!
+!!              INTEGER               CHRSLN
+!!              PARAMETER           ( CHRSLN = 5   )
+!!
+!!              INTEGER               COL1SZ
+!!              PARAMETER           ( COL1SZ = 3   )
+!!
+!!              INTEGER               DECLEN
+!!              PARAMETER           ( DECLEN = 200 )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!              INTEGER               MXC2SZ
+!!              PARAMETER           ( MXC2SZ = 4   )
+!!
+!!              INTEGER               MXC3SZ
+!!              PARAMETER           ( MXC3SZ = 7   )
+!!
+!!              INTEGER               NAMLEN
+!!              PARAMETER           ( NAMLEN = 40  )
+!!
+!!              INTEGER               NCOLS
+!!              PARAMETER           ( NCOLS  = 3   )
+!!
+!!              INTEGER               NROWS
+!!              PARAMETER           ( NROWS  = 4   )
+!!
+!!              INTEGER               STRSIZ
+!!              PARAMETER           ( STRSIZ  = 30 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+!!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+!!              CHARACTER*(CHRSLN)    COL3   ( MXC3SZ )
+!!              CHARACTER*(STRSIZ)    CVALS  ( MXC3SZ )
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(NAMLEN)    IFNAME
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              DOUBLE PRECISION      COL2   ( MXC2SZ )
+!!              DOUBLE PRECISION      DVALS  ( MXC2SZ )
+!!
+!!              INTEGER               COL1   ( COL1SZ )
+!!              INTEGER               ELTIDX
+!!              INTEGER               HANDLE
+!!              INTEGER               I
+!!              INTEGER               IVALS ( COL1SZ )
+!!              INTEGER               J
+!!              INTEGER               NELT
+!!              INTEGER               NMROWS
+!!              INTEGER               NRESVC
+!!              INTEGER               RECNO
+!!              INTEGER               ROW
+!!              INTEGER               SEGNO
+!!              INTEGER               SELIDX
+!!
+!!              LOGICAL               ERROR
+!!              LOGICAL               FOUND
+!!              LOGICAL               ISNULL
+!!
+!!        C
+!!        C     Open a new EK file.  For simplicity, we will not
+!!        C     reserve any space for the comment area, so the
+!!        C     number of reserved comment characters is zero.
+!!        C     The variable IFNAME is the internal file name.
+!!        C
+!!              NRESVC  =  0
+!!              IFNAME  =  'Test EK/Created 13-JUN-2019'
+!!
+!!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+!!
+!!        C
+!!        C     Set up the column names and declarations
+!!        C     for the TAB segment.  We'll index all of
+!!        C     the columns.
+!!        C
+!!              CNAMES(1) = 'IARRAY'
+!!              CDECLS(1) = 'DATATYPE = INTEGER, SIZE = 3'
+!!
+!!              CNAMES(2) = 'DARRAY'
+!!              CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
+!!             .            'SIZE = VARIABLE'
+!!
+!!              CNAMES(3) = 'CARRAY'
+!!              CDECLS(3) = 'DATATYPE = CHARACTER*(5), ' //
+!!             .            'SIZE = VARIABLE'
+!!
+!!        C
+!!        C     Start the segment.
+!!        C
+!!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+!!             .              CNAMES, CDECLS, SEGNO )
+!!
+!!        C
+!!        C     At the records to the table.
+!!        C
+!!              DO I = 1, NROWS
+!!
+!!        C
+!!        C        Append a new record to the EK.
+!!        C
+!!                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+!!
+!!        C
+!!        C        Add 3 items to IARRAY
+!!        C
+!!                 DO J = 1, COL1SZ
+!!                    COL1(J) =  I + J*100.D0
+!!                 END DO
+!!
+!!                 CALL EKACEI ( HANDLE,    SEGNO,  RECNO,
+!!             .                 CNAMES(1), COL1SZ, COL1,  .FALSE. )
+!!
+!!        C
+!!        C        Add I items to DARRAY
+!!        C
+!!                 DO J = 1, I
+!!                    COL2(J) = J + I*200.D0
+!!                 END DO
+!!
+!!                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(2), I,     COL2,  .FALSE. )
+!!
+!!        C
+!!        C        Add 3+I items to CARRAY
+!!        C
+!!                 DO J = 1, 3+I
+!!                    CALL REPMI ( 'ST#', '#', J + I*100, COL3(J) )
+!!                 END DO
+!!
+!!                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(3), I+3,   COL3,  .FALSE. )
+!!
+!!              END DO
+!!
+!!        C
+!!        C     Close the file.
+!!        C
+!!              CALL EKCLS ( HANDLE )
+!!
+!!        C
+!!        C     Open the created file. Perform the query and show the
+!!        C     results.
+!!        C
+!!              CALL FURNSH ( EKNAME )
+!!
+!!              QUERY = 'SELECT IARRAY, DARRAY, CARRAY FROM TAB'
+!!
+!!        C
+!!        C     Query the EK system for data rows matching the
+!!        C     SELECT constraints.
+!!        C
+!!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C     Check whether an error occurred while processing the
+!!        C     SELECT clause. If so, output the error message.
+!!        C
+!!              IF ( ERROR ) THEN
+!!
+!!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+!!
+!!              ELSE
+!!
+!!                 DO ROW = 1, NMROWS
+!!
+!!                    WRITE(*,*) ' '
+!!                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+!!
+!!        C
+!!        C           Fetch values from column IARRAY in the current
+!!        C           row.  Since IARRAY was the first column selected,
+!!        C           the selection index SELIDX is set to 1.
+!!        C
+!!                    SELIDX = 1
+!!                    ELTIDX = 1
+!!                    ISNULL = .FALSE.
+!!
+!!                    DO WHILE (       ( ELTIDX .LE.  COL1SZ )
+!!             .                 .AND. (        .NOT. ISNULL )  )
+!!        C
+!!        C              If the column entry is null, we'll be kicked
+!!        C              out of this loop after the first iteration.
+!!        C
+!!                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
+!!             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
+!!
+!!                       ELTIDX = ELTIDX + 1
+!!
+!!                    END DO
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,'(A)') '   COLUMN = IARRAY: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE(*,'(A,3I6)') '   COLUMN = IARRAY:',
+!!             .                            ( IVALS(I), I = 1, COL1SZ )
+!!
+!!                    END IF
+!!
+!!        C
+!!        C           Fetch values from column DARRAY in the current
+!!        C           row.  Since DARRAY contains variable-size array
+!!        C           elements, we call EKNELT to determine how many
+!!        C           elements to fetch.
+!!        C
+!!                    SELIDX = 2
+!!                    CALL EKNELT ( SELIDX, ROW, NELT )
+!!
+!!                    ELTIDX = 1
+!!                    ISNULL = .FALSE.
+!!
+!!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
+!!             .                 .AND. (        .NOT. ISNULL )  )
+!!
+!!                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
+!!             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
+!!
+!!                       ELTIDX = ELTIDX + 1
+!!
+!!                    END DO
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,'(A)') '   COLUMN = DARRAY: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE(*,'(A,4F6.1)') '   COLUMN = DARRAY:',
+!!             .                              ( DVALS(I), I = 1, NELT )
+!!
+!!                    END IF
+!!
+!!        C
+!!        C           Fetch values from column CARRAY in the current
+!!        C           row.
+!!        C
+!!                    SELIDX = 3
+!!                    CALL EKNELT ( SELIDX, ROW, NELT )
+!!
+!!                    ELTIDX = 1
+!!                    ISNULL = .FALSE.
+!!
+!!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
+!!             .                 .AND. (        .NOT. ISNULL )  )
+!!
+!!                       CALL EKGC ( SELIDX,         ROW,     ELTIDX,
+!!             .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
+!!
+!!                       ELTIDX = ELTIDX + 1
+!!
+!!                    END DO
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,'(A)') '   COLUMN = CARRAY: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE(*,'(8A)') '   COLUMN = CARRAY: ',
+!!             .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
+!!             .                                         I = 1, NELT   )
+!!
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!        C
+!!        C     We either parsed the SELECT clause or had an error.
+!!        C
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        ROW  =   1
+!!           COLUMN = IARRAY:   101   201   301
+!!           COLUMN = DARRAY: 201.0
+!!           COLUMN = CARRAY: ST101 ST102 ST103 ST104
+!!
+!!        ROW  =   2
+!!           COLUMN = IARRAY:   102   202   302
+!!           COLUMN = DARRAY: 401.0 402.0
+!!           COLUMN = CARRAY: ST201 ST202 ST203 ST204 ST205
+!!
+!!        ROW  =   3
+!!           COLUMN = IARRAY:   103   203   303
+!!           COLUMN = DARRAY: 601.0 602.0 603.0
+!!           COLUMN = CARRAY: ST301 ST302 ST303 ST304 ST305 ST306
+!!
+!!        ROW  =   4
+!!           COLUMN = IARRAY:   104   204   304
+!!           COLUMN = DARRAY: 801.0 802.0 803.0 804.0
+!!           COLUMN = CARRAY: ST401 ST402 ST403 ST404 ST405 ST406 ST407
+!!
+!!        Note that after run completion, a new EK file exists in the
+!!        output directory.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!        Added complete code example from existing fragment.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.2.0, 12-FEB-1999 (NJB)
+!!
+!!        Bug fix: There was a error handling branch that called CHKOUT
+!!        where CHKIN should have been called. This has been fixed.
+!!
+!!-    SPICELIB Version 1.1.0, 09-JUL-1996 (NJB)
+!!
+!!        Bug fix: EKNELT now initiates a sort operation if sorted
+!!        outputs are required and EKNELT is called after query
+!!        resolution but before the fetch routines. Also, addressing
+!!        for sorted query results has been fixed.
+!!
+!!        Misspelling of "issued" was fixed. Previous version line was
+!!        changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     return the number of elements in a column entry
+!!
+!!     Use discovery check-in for speed.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -35702,663 +35035,657 @@ contains
       end procedure eknelt
 
       module procedure ekgc
-
-! $ Abstract
-!
-!     Return an element of an entry in a column of character
-!     type in a specified row.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     EK
-!
-! $ Declarations
-!
-!     INTEGER               SELIDX
-!     INTEGER               ROW
-!     INTEGER               ELMENT
-!     CHARACTER*(*)         CDATA
-!     LOGICAL               NULL
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     SELIDX   is the SELECT clause index of the column to
-!              fetch from.
-!
-!     ROW      is the output row containing the entry to fetch
-!              from.
-!
-!     ELMENT   is the index of the element of the column entry
-!              to fetch. The normal range of ELMENT is from 1 to
-!              the size of the column's entry, but ELMENT is
-!              allowed to exceed the number of elements in the
-!              column entry; if it does, FOUND is returned .FALSE.
-!              This allows the caller to read data from the column
-!              entry in a loop without checking the number of
-!              available elements first.
-!
-!              Null values in variable-sized columns are
-!              considered to have size 1.
-!
-! $ Detailed_Output
-!
-!     CDATA    is the requested element of the specified column
-!              entry. If the entry is null, CDATA is undefined.
-!
-!              If CDATA is too short to accommodate the requested
-!              column entry element, the element is truncated on
-!              the right to fit CDATA. If CDATA is longer than
-!              the element, CDATA is returned blank-padded on
-!              the right.
-!
-!     NULL     is a logical flag indicating whether the entry
-!              belonging to the specified column in the specified
-!              row is null.
-!
-!     FOUND    is a logical flag indicating whether the specified
-!              element was found. If the element does not exist,
-!              FOUND is returned .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input argument ELMENT is less than 1, the error
-!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
-!         However, ELMENT is allowed to be greater than the number of
-!         elements in the specified column entry; this allows the caller
-!         to read data from the column entry in a loop without checking
-!         the number of available elements first. If ELMENT is greater
-!         than the number of available elements, FOUND is returned
-!         .FALSE.
-!
-!     2)  If SELIDX is outside of the range established by the
-!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
-!         is signaled and FOUND is returned .FALSE.
-!
-!     3)  If the input argument ROW is less than 1 or greater than the
-!         number of rows matching the query, the error
-!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
-!
-!     4)  If the specified column does not have character type, the
-!         error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If this routine is called when no E-kernels have been loaded,
-!         the error SPICE(NOLOADEDFILES) is signaled.
-!
-! $ Files
-!
-!     See the header of EKQMGR for a description of files used
-!     by this routine.
-!
-! $ Particulars
-!
-!     This routine allows retrieval of data from character columns.
-!
-!     This routine returns one element at a time in order to save the
-!     caller from imposing a limit on the size of the column entries
-!     that can be handled.
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Perform a query on an EK file that contains a database with
-!        the Supplementary Engineering Data Records of the Viking
-!        Project in order to retrieve the IMAGE_ID values (character
-!        strings) that correspond to the images with IMAGE_NUMBER
-!        smaller than a given value, ordered by IMAGE_NUMBER.
-!
-!        Use the EK kernel below to load the information from the
-!        original Supplementary Engineering Data Record (SEDR) data
-!        set generated by the Viking Project.
-!
-!           vo_sedr.bdb
-!
-!        Example code begins here.
-!
-!              PROGRAM EKGC_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Maximum length of an input query,
-!        C     MAXQRY, and the maximum length of literal string
-!        C     values, MAXSTR, from eklimit.inc.
-!        C
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(MAXSTR)    CDATA
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              INTEGER               ELTIDX
-!              INTEGER               NMROWS
-!              INTEGER               ROWNO
-!              INTEGER               SELIDX
-!
-!              LOGICAL               ERROR
-!              LOGICAL               FOUND
-!              LOGICAL               ISNULL
-!
-!        C
-!        C     Open an EK file.
-!        C
-!              CALL FURNSH ( EKNAME )
-!
-!        C
-!        C     The table 'VIKING_SEDR_DATA' has a column 'IMAGE_ID'
-!        C     of scalar strings.
-!        C
-!        C     Define a set of constraints to perform a query on
-!        C     all loaded EK files (the SELECT clause). In this
-!        C     case select the column 'IMAGE_ID' from table
-!        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
-!        C
-!              QUERY = 'Select IMAGE_ID from VIKING_SEDR_DATA '
-!             .   //   'where IMAGE_NUMBER < 25860000 '
-!             .   //   'order by IMAGE_NUMBER'
-!
-!        C
-!        C     Query the EK system for data rows matching the
-!        C     SELECT constraints.
-!        C
-!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C     Check whether an error occurred while processing the
-!        C     SELECT clause. If so, output the error message.
-!        C
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
-!
-!              ELSE
-!
-!        C
-!        C        Fetch the character data. We know the query returned
-!        C        one column and the column contains only scalar data,
-!        C        so the index of all elements is 1.
-!        C
-!                 SELIDX = 1
-!                 ELTIDX = 1
-!
-!        C
-!        C        Loop over each row found matching the query.
-!        C
-!                 DO ROWNO = 1, NMROWS
-!
-!        C
-!        C           Use EKGC to retrieve the string from
-!        C
-!                    CALL EKGC ( SELIDX,  ROWNO,  ELTIDX,
-!             .                  CDATA,   ISNULL, FOUND   )
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
-!             .                  ': Character data: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE (*,'(A,I3,2A)') 'Row ', ROWNO,
-!             .                  ': Character data: ', CDATA
-!                    END IF
-!
-!                 END DO
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Row   1: Character data: 168C09
-!        Row   2: Character data: 168C10
-!        Row   3: Character data: 168C11
-!        Row   4: Character data: 168C12
-!        Row   5: Character data: 169C01
-!        Row   6: Character data: 169C02
-!        Row   7: Character data: 169C03
-!        Row   8: Character data: 169C04
-!        Row   9: Character data: 169C05
-!        Row  10: Character data: 169C09
-!        Row  11: Character data: 169C11
-!        Row  12: Character data: 169C19
-!        Row  13: Character data: 169C23
-!        Row  14: Character data: 169C25
-!        Row  15: Character data: 169C26
-!        Row  16: Character data: 169C30
-!        Row  17: Character data: 169C32
-!        Row  18: Character data: 169C33
-!        Row  19: Character data: 169C37
-!        Row  20: Character data: 169C39
-!        Row  21: Character data: 169C40
-!        Row  22: Character data: 169C44
-!        Row  23: Character data: 169C46
-!        Row  24: Character data: 169C47
-!        Row  25: Character data: 169C51
-!        Row  26: Character data: 169C53
-!
-!     2) This example demonstrates how to fetch string values from a
-!        column in three different cases: single values, variable-size
-!        arrays and static-size arrays.
-!
-!        Create an EK that contains a table TAB that has the following
-!        columns:
-!
-!           Column name   Data Type   Size
-!           -----------   ---------   ----
-!           CHR_COL_1     CHR         1
-!           CHR_COL_2     CHR         VARIABLE
-!           CHR_COL_3     CHR         3
-!
-!        Issue the following query
-!
-!            QUERY = 'SELECT CHR_COL_1, CHR_COL_2, CHR_COL_3 FROM TAB'
-!
-!        to fetch and dump column values from the rows that satisfy the
-!        query.
-!
-!        Example code begins here.
-!
-!              PROGRAM EKGC_EX2
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Column Name Size (CNAMSZ)
-!        C     and EK Query Limit Parameters (MAXQRY)
-!        C
-!              INCLUDE 'ekcnamsz.inc'
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               RTRIM
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME  = 'ekgc_ex2.bdb' )
-!
-!              CHARACTER*(*)         TABLE
-!              PARAMETER           ( TABLE   = 'TAB' )
-!
-!              INTEGER               CHRSLN
-!              PARAMETER           ( CHRSLN = 3   )
-!
-!              INTEGER               COL3SZ
-!              PARAMETER           ( COL3SZ = 3   )
-!
-!              INTEGER               DECLEN
-!              PARAMETER           ( DECLEN = 200 )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!              INTEGER               MXC2SZ
-!              PARAMETER           ( MXC2SZ = 8   )
-!
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 40  )
-!
-!              INTEGER               NCOLS
-!              PARAMETER           ( NCOLS  = 3   )
-!
-!              INTEGER               NROWS
-!              PARAMETER           ( NROWS  = 4   )
-!
-!              INTEGER               STRSIZ
-!              PARAMETER           ( STRSIZ  = 30 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-!              CHARACTER*(STRSIZ)    COL1
-!              CHARACTER*(CHRSLN)    COL2   ( MXC2SZ )
-!              CHARACTER*(CHRSLN)    COL3   ( COL3SZ )
-!              CHARACTER*(STRSIZ)    CVALS  ( MXC2SZ )
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(NAMLEN)    IFNAME
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              INTEGER               ELTIDX
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               NELT
-!              INTEGER               NMROWS
-!              INTEGER               NRESVC
-!              INTEGER               RECNO
-!              INTEGER               ROW
-!              INTEGER               SEGNO
-!              INTEGER               SELIDX
-!
-!              LOGICAL               ERROR
-!              LOGICAL               FOUND
-!              LOGICAL               ISNULL
-!
-!        C
-!        C     Open a new EK file.  For simplicity, we will not
-!        C     reserve any space for the comment area, so the
-!        C     number of reserved comment characters is zero.
-!        C     The variable IFNAME is the internal file name.
-!        C
-!              NRESVC  =  0
-!              IFNAME  =  'Test EK/Created 13-JUN-2019'
-!
-!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-!
-!        C
-!        C     Set up the column names and declarations
-!        C     for the TAB segment.  We'll index all of
-!        C     the columns.
-!        C
-!              CNAMES(1) = 'CHR_COL_1'
-!              CDECLS(1) = 'DATATYPE = CHARACTER*(*), ' //
-!             .            'INDEXED  = TRUE'
-!
-!              CNAMES(2) = 'CHR_COL_2'
-!              CDECLS(2) = 'DATATYPE = CHARACTER*(3), ' //
-!             .            'SIZE = VARIABLE'
-!
-!              CNAMES(3) = 'CHR_COL_3'
-!              CDECLS(3) = 'DATATYPE = CHARACTER*(3), ' //
-!             .            'SIZE = 3'
-!
-!        C
-!        C     Start the segment.
-!        C
-!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-!             .              CNAMES, CDECLS, SEGNO )
-!
-!        C
-!        C     At the records to the table.
-!        C
-!              DO I = 1, NROWS
-!
-!        C
-!        C        Append a new record to the EK.
-!        C
-!                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-!
-!        C
-!        C        Add CHR_COL_1
-!        C
-!                 CALL REPMI ( 'Column #2 has $ elements.',
-!             .                '$', I*2, COL1              )
-!
-!                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(1), 1,     COL1, .FALSE. )
-!
-!        C
-!        C        Add I*2 items to CHR_COL_2
-!        C
-!                 DO J = 1, I*2
-!                    CALL INTSTR( J + I*100, COL2(J) )
-!                 END DO
-!
-!                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(2), I*2,   COL2, .FALSE. )
-!
-!        C
-!        C        Add 3 items to CHR_COL_3
-!        C
-!                 DO J = 1, 3
-!                    CALL INTSTR( I + J*100, COL3(J) )
-!                 END DO
-!
-!                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(3), 3,     COL3, .FALSE. )
-!
-!              END DO
-!
-!        C
-!        C     Close the file.
-!        C
-!              CALL EKCLS ( HANDLE )
-!
-!        C
-!        C     Open the created file. Perform the query and show the
-!        C     results.
-!        C
-!              CALL FURNSH ( EKNAME )
-!
-!              QUERY = 'SELECT CHR_COL_1, CHR_COL_2, CHR_COL_3 FROM TAB'
-!
-!        C
-!        C     Query the EK system for data rows matching the
-!        C     SELECT constraints.
-!        C
-!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C     Check whether an error occurred while processing the
-!        C     SELECT clause. If so, output the error message.
-!        C
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
-!
-!              ELSE
-!
-!                 DO ROW = 1, NMROWS
-!
-!                    WRITE(*,*) ' '
-!                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
-!
-!        C
-!        C           Fetch values from column CHR_COL_1.  Since
-!        C           CHR_COL_1 was the first column selected, the
-!        C           selection index SELIDX is set to 1.
-!        C
-!                    SELIDX = 1
-!                    ELTIDX = 1
-!                    CALL EKGC ( SELIDX,    ROW,     ELTIDX,
-!             .                  CVALS(1),  ISNULL,  FOUND   )
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,*) '  COLUMN = CHR_COL_1: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE(*,*) '  COLUMN = CHR_COL_1: ', CVALS(1)
-!
-!                    END IF
-!
-!        C
-!        C           Fetch values from column CHR_COL_2 in the current
-!        C           row.  Since CHR_COL_2 contains variable-size array
-!        C           elements, we call EKNELT to determine how many
-!        C           elements to fetch.
-!        C
-!                    SELIDX = 2
-!                    CALL EKNELT ( SELIDX, ROW, NELT )
-!
-!                    ELTIDX = 1
-!                    ISNULL = .FALSE.
-!
-!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-!             .                 .AND. (        .NOT. ISNULL )  )
-!
-!                       CALL EKGC ( SELIDX,         ROW,     ELTIDX,
-!             .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
-!
-!                       ELTIDX = ELTIDX + 1
-!
-!        C
-!        C           If the column entry is null, we'll be kicked
-!        C           out of this loop after the first iteration.
-!        C
-!                    END DO
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,*) '  COLUMN = CHR_COL_2: <Null>'
-!
-!                    ELSE
-!
-!                        WRITE(*,*) '  COLUMN = CHR_COL_2: ',
-!             .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
-!             .                                           I = 1, NELT )
-!
-!                    END IF
-!
-!        C
-!        C           Fetch values from column CHR_COL_3 in the current
-!        C           row.  We need not call EKNELT since we know how
-!        C           many elements are in each column entry.
-!        C
-!                    SELIDX = 3
-!                    ELTIDX = 1
-!                    ISNULL = .FALSE.
-!
-!                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
-!             .                 .AND. (        .NOT. ISNULL )  )
-!
-!                       CALL EKGC ( SELIDX,         ROW,     ELTIDX,
-!             .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
-!
-!                       ELTIDX = ELTIDX + 1
-!
-!                    END DO
-!
-!                    IF ( ISNULL ) THEN
-!                       WRITE(*,*) '  COLUMN = CHR_COL_3: <Null>'
-!                    ELSE
-!                        WRITE(*,*) '  COLUMN = CHR_COL_3: ',
-!             .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
-!             .                                         I = 1, COL3SZ )
-!                    END IF
-!
-!                 END DO
-!
-!        C
-!        C     We either parsed the SELECT clause or had an error.
-!        C
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        ROW  =   1
-!           COLUMN = CHR_COL_1: Column #2 has 2 elements.
-!           COLUMN = CHR_COL_2: 101 102
-!           COLUMN = CHR_COL_3: 101 201 301
-!
-!        ROW  =   2
-!           COLUMN = CHR_COL_1: Column #2 has 4 elements.
-!           COLUMN = CHR_COL_2: 201 202 203 204
-!           COLUMN = CHR_COL_3: 102 202 302
-!
-!        ROW  =   3
-!           COLUMN = CHR_COL_1: Column #2 has 6 elements.
-!           COLUMN = CHR_COL_2: 301 302 303 304 305 306
-!           COLUMN = CHR_COL_3: 103 203 303
-!
-!        ROW  =   4
-!           COLUMN = CHR_COL_1: Column #2 has 8 elements.
-!           COLUMN = CHR_COL_2: 401 402 403 404 405 406 407 408
-!           COLUMN = CHR_COL_3: 104 204 304
-!
-!        Note that after run completion, a new EK file exists in the
-!        output directory.
-!
-!     3) See $Examples in EKQMGR.
-!
-!        In this example, the names and data types of the columns from
-!        which to fetch data are not known in advance.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete code examples from existing fragments.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
-!
-!        Redundant CHKIN call removed from SELIDX error check.
-!        Misspelling of "issued" was fixed. Previous version line
-!        was changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     fetch element from character column entry
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return an element of an entry in a column of character
+!!     type in a specified row.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     EK
+!!
+!! ## Declarations
+!!
+!!     INTEGER               SELIDX
+!!     INTEGER               ROW
+!!     INTEGER               ELMENT
+!!     CHARACTER*(*)         CDATA
+!!     LOGICAL               NULL
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     SELIDX   is the SELECT clause index of the column to
+!!              fetch from.
+!!
+!!     ROW      is the output row containing the entry to fetch
+!!              from.
+!!
+!!     ELMENT   is the index of the element of the column entry
+!!              to fetch. The normal range of ELMENT is from 1 to
+!!              the size of the column's entry, but ELMENT is
+!!              allowed to exceed the number of elements in the
+!!              column entry; if it does, FOUND is returned .FALSE.
+!!              This allows the caller to read data from the column
+!!              entry in a loop without checking the number of
+!!              available elements first.
+!!
+!!              Null values in variable-sized columns are
+!!              considered to have size 1.
+!!
+!! ## Detailed Output
+!!
+!!     CDATA    is the requested element of the specified column
+!!              entry. If the entry is null, CDATA is undefined.
+!!
+!!              If CDATA is too short to accommodate the requested
+!!              column entry element, the element is truncated on
+!!              the right to fit CDATA. If CDATA is longer than
+!!              the element, CDATA is returned blank-padded on
+!!              the right.
+!!
+!!     NULL     is a logical flag indicating whether the entry
+!!              belonging to the specified column in the specified
+!!              row is null.
+!!
+!!     FOUND    is a logical flag indicating whether the specified
+!!              element was found. If the element does not exist,
+!!              FOUND is returned .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input argument ELMENT is less than 1, the error
+!!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
+!!         However, ELMENT is allowed to be greater than the number of
+!!         elements in the specified column entry; this allows the caller
+!!         to read data from the column entry in a loop without checking
+!!         the number of available elements first. If ELMENT is greater
+!!         than the number of available elements, FOUND is returned
+!!         .FALSE.
+!!
+!!     2)  If SELIDX is outside of the range established by the
+!!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
+!!         is signaled and FOUND is returned .FALSE.
+!!
+!!     3)  If the input argument ROW is less than 1 or greater than the
+!!         number of rows matching the query, the error
+!!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
+!!
+!!     4)  If the specified column does not have character type, the
+!!         error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If this routine is called when no E-kernels have been loaded,
+!!         the error SPICE(NOLOADEDFILES) is signaled.
+!!
+!! ## Files
+!!
+!!     See the header of EKQMGR for a description of files used
+!!     by this routine.
+!!
+!! ## Particulars
+!!
+!!     This routine allows retrieval of data from character columns.
+!!
+!!     This routine returns one element at a time in order to save the
+!!     caller from imposing a limit on the size of the column entries
+!!     that can be handled.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for these examples may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Perform a query on an EK file that contains a database with
+!!        the Supplementary Engineering Data Records of the Viking
+!!        Project in order to retrieve the IMAGE_ID values (character
+!!        strings) that correspond to the images with IMAGE_NUMBER
+!!        smaller than a given value, ordered by IMAGE_NUMBER.
+!!
+!!        Use the EK kernel below to load the information from the
+!!        original Supplementary Engineering Data Record (SEDR) data
+!!        set generated by the Viking Project.
+!!
+!!           vo_sedr.bdb
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKGC_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Maximum length of an input query,
+!!        C     MAXQRY, and the maximum length of literal string
+!!        C     values, MAXSTR, from eklimit.inc.
+!!        C
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         EKNAME
+!!              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(MAXSTR)    CDATA
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              INTEGER               ELTIDX
+!!              INTEGER               NMROWS
+!!              INTEGER               ROWNO
+!!              INTEGER               SELIDX
+!!
+!!              LOGICAL               ERROR
+!!              LOGICAL               FOUND
+!!              LOGICAL               ISNULL
+!!
+!!        C
+!!        C     Open an EK file.
+!!        C
+!!              CALL FURNSH ( EKNAME )
+!!
+!!        C
+!!        C     The table 'VIKING_SEDR_DATA' has a column 'IMAGE_ID'
+!!        C     of scalar strings.
+!!        C
+!!        C     Define a set of constraints to perform a query on
+!!        C     all loaded EK files (the SELECT clause). In this
+!!        C     case select the column 'IMAGE_ID' from table
+!!        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
+!!        C
+!!              QUERY = 'Select IMAGE_ID from VIKING_SEDR_DATA '
+!!             .   //   'where IMAGE_NUMBER < 25860000 '
+!!             .   //   'order by IMAGE_NUMBER'
+!!
+!!        C
+!!        C     Query the EK system for data rows matching the
+!!        C     SELECT constraints.
+!!        C
+!!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C     Check whether an error occurred while processing the
+!!        C     SELECT clause. If so, output the error message.
+!!        C
+!!              IF ( ERROR ) THEN
+!!
+!!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+!!
+!!              ELSE
+!!
+!!        C
+!!        C        Fetch the character data. We know the query returned
+!!        C        one column and the column contains only scalar data,
+!!        C        so the index of all elements is 1.
+!!        C
+!!                 SELIDX = 1
+!!                 ELTIDX = 1
+!!
+!!        C
+!!        C        Loop over each row found matching the query.
+!!        C
+!!                 DO ROWNO = 1, NMROWS
+!!
+!!        C
+!!        C           Use EKGC to retrieve the string from
+!!        C
+!!                    CALL EKGC ( SELIDX,  ROWNO,  ELTIDX,
+!!             .                  CDATA,   ISNULL, FOUND   )
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
+!!             .                  ': Character data: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE (*,'(A,I3,2A)') 'Row ', ROWNO,
+!!             .                  ': Character data: ', CDATA
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Row   1: Character data: 168C09
+!!        Row   2: Character data: 168C10
+!!        Row   3: Character data: 168C11
+!!        Row   4: Character data: 168C12
+!!        Row   5: Character data: 169C01
+!!        Row   6: Character data: 169C02
+!!        Row   7: Character data: 169C03
+!!        Row   8: Character data: 169C04
+!!        Row   9: Character data: 169C05
+!!        Row  10: Character data: 169C09
+!!        Row  11: Character data: 169C11
+!!        Row  12: Character data: 169C19
+!!        Row  13: Character data: 169C23
+!!        Row  14: Character data: 169C25
+!!        Row  15: Character data: 169C26
+!!        Row  16: Character data: 169C30
+!!        Row  17: Character data: 169C32
+!!        Row  18: Character data: 169C33
+!!        Row  19: Character data: 169C37
+!!        Row  20: Character data: 169C39
+!!        Row  21: Character data: 169C40
+!!        Row  22: Character data: 169C44
+!!        Row  23: Character data: 169C46
+!!        Row  24: Character data: 169C47
+!!        Row  25: Character data: 169C51
+!!        Row  26: Character data: 169C53
+!!
+!!     2) This example demonstrates how to fetch string values from a
+!!        column in three different cases: single values, variable-size
+!!        arrays and static-size arrays.
+!!
+!!        Create an EK that contains a table TAB that has the following
+!!        columns:
+!!
+!!           Column name   Data Type   Size
+!!           -----------   ---------   ----
+!!           CHR_COL_1     CHR         1
+!!           CHR_COL_2     CHR         VARIABLE
+!!           CHR_COL_3     CHR         3
+!!
+!!        Issue the following query
+!!
+!!            QUERY = 'SELECT CHR_COL_1, CHR_COL_2, CHR_COL_3 FROM TAB'
+!!
+!!        to fetch and dump column values from the rows that satisfy the
+!!        query.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKGC_EX2
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Column Name Size (CNAMSZ)
+!!        C     and EK Query Limit Parameters (MAXQRY)
+!!        C
+!!              INCLUDE 'ekcnamsz.inc'
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              INTEGER               RTRIM
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         EKNAME
+!!              PARAMETER           ( EKNAME  = 'ekgc_ex2.bdb' )
+!!
+!!              CHARACTER*(*)         TABLE
+!!              PARAMETER           ( TABLE   = 'TAB' )
+!!
+!!              INTEGER               CHRSLN
+!!              PARAMETER           ( CHRSLN = 3   )
+!!
+!!              INTEGER               COL3SZ
+!!              PARAMETER           ( COL3SZ = 3   )
+!!
+!!              INTEGER               DECLEN
+!!              PARAMETER           ( DECLEN = 200 )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!              INTEGER               MXC2SZ
+!!              PARAMETER           ( MXC2SZ = 8   )
+!!
+!!              INTEGER               NAMLEN
+!!              PARAMETER           ( NAMLEN = 40  )
+!!
+!!              INTEGER               NCOLS
+!!              PARAMETER           ( NCOLS  = 3   )
+!!
+!!              INTEGER               NROWS
+!!              PARAMETER           ( NROWS  = 4   )
+!!
+!!              INTEGER               STRSIZ
+!!              PARAMETER           ( STRSIZ  = 30 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+!!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+!!              CHARACTER*(STRSIZ)    COL1
+!!              CHARACTER*(CHRSLN)    COL2   ( MXC2SZ )
+!!              CHARACTER*(CHRSLN)    COL3   ( COL3SZ )
+!!              CHARACTER*(STRSIZ)    CVALS  ( MXC2SZ )
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(NAMLEN)    IFNAME
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              INTEGER               ELTIDX
+!!              INTEGER               HANDLE
+!!              INTEGER               I
+!!              INTEGER               J
+!!              INTEGER               NELT
+!!              INTEGER               NMROWS
+!!              INTEGER               NRESVC
+!!              INTEGER               RECNO
+!!              INTEGER               ROW
+!!              INTEGER               SEGNO
+!!              INTEGER               SELIDX
+!!
+!!              LOGICAL               ERROR
+!!              LOGICAL               FOUND
+!!              LOGICAL               ISNULL
+!!
+!!        C
+!!        C     Open a new EK file.  For simplicity, we will not
+!!        C     reserve any space for the comment area, so the
+!!        C     number of reserved comment characters is zero.
+!!        C     The variable IFNAME is the internal file name.
+!!        C
+!!              NRESVC  =  0
+!!              IFNAME  =  'Test EK/Created 13-JUN-2019'
+!!
+!!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+!!
+!!        C
+!!        C     Set up the column names and declarations
+!!        C     for the TAB segment.  We'll index all of
+!!        C     the columns.
+!!        C
+!!              CNAMES(1) = 'CHR_COL_1'
+!!              CDECLS(1) = 'DATATYPE = CHARACTER*(*), ' //
+!!             .            'INDEXED  = TRUE'
+!!
+!!              CNAMES(2) = 'CHR_COL_2'
+!!              CDECLS(2) = 'DATATYPE = CHARACTER*(3), ' //
+!!             .            'SIZE = VARIABLE'
+!!
+!!              CNAMES(3) = 'CHR_COL_3'
+!!              CDECLS(3) = 'DATATYPE = CHARACTER*(3), ' //
+!!             .            'SIZE = 3'
+!!
+!!        C
+!!        C     Start the segment.
+!!        C
+!!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+!!             .              CNAMES, CDECLS, SEGNO )
+!!
+!!        C
+!!        C     At the records to the table.
+!!        C
+!!              DO I = 1, NROWS
+!!
+!!        C
+!!        C        Append a new record to the EK.
+!!        C
+!!                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+!!
+!!        C
+!!        C        Add CHR_COL_1
+!!        C
+!!                 CALL REPMI ( 'Column #2 has $ elements.',
+!!             .                '$', I*2, COL1              )
+!!
+!!                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(1), 1,     COL1, .FALSE. )
+!!
+!!        C
+!!        C        Add I*2 items to CHR_COL_2
+!!        C
+!!                 DO J = 1, I*2
+!!                    CALL INTSTR( J + I*100, COL2(J) )
+!!                 END DO
+!!
+!!                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(2), I*2,   COL2, .FALSE. )
+!!
+!!        C
+!!        C        Add 3 items to CHR_COL_3
+!!        C
+!!                 DO J = 1, 3
+!!                    CALL INTSTR( I + J*100, COL3(J) )
+!!                 END DO
+!!
+!!                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(3), 3,     COL3, .FALSE. )
+!!
+!!              END DO
+!!
+!!        C
+!!        C     Close the file.
+!!        C
+!!              CALL EKCLS ( HANDLE )
+!!
+!!        C
+!!        C     Open the created file. Perform the query and show the
+!!        C     results.
+!!        C
+!!              CALL FURNSH ( EKNAME )
+!!
+!!              QUERY = 'SELECT CHR_COL_1, CHR_COL_2, CHR_COL_3 FROM TAB'
+!!
+!!        C
+!!        C     Query the EK system for data rows matching the
+!!        C     SELECT constraints.
+!!        C
+!!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C     Check whether an error occurred while processing the
+!!        C     SELECT clause. If so, output the error message.
+!!        C
+!!              IF ( ERROR ) THEN
+!!
+!!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+!!
+!!              ELSE
+!!
+!!                 DO ROW = 1, NMROWS
+!!
+!!                    WRITE(*,*) ' '
+!!                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+!!
+!!        C
+!!        C           Fetch values from column CHR_COL_1.  Since
+!!        C           CHR_COL_1 was the first column selected, the
+!!        C           selection index SELIDX is set to 1.
+!!        C
+!!                    SELIDX = 1
+!!                    ELTIDX = 1
+!!                    CALL EKGC ( SELIDX,    ROW,     ELTIDX,
+!!             .                  CVALS(1),  ISNULL,  FOUND   )
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,*) '  COLUMN = CHR_COL_1: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE(*,*) '  COLUMN = CHR_COL_1: ', CVALS(1)
+!!
+!!                    END IF
+!!
+!!        C
+!!        C           Fetch values from column CHR_COL_2 in the current
+!!        C           row.  Since CHR_COL_2 contains variable-size array
+!!        C           elements, we call EKNELT to determine how many
+!!        C           elements to fetch.
+!!        C
+!!                    SELIDX = 2
+!!                    CALL EKNELT ( SELIDX, ROW, NELT )
+!!
+!!                    ELTIDX = 1
+!!                    ISNULL = .FALSE.
+!!
+!!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
+!!             .                 .AND. (        .NOT. ISNULL )  )
+!!
+!!                       CALL EKGC ( SELIDX,         ROW,     ELTIDX,
+!!             .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
+!!
+!!                       ELTIDX = ELTIDX + 1
+!!
+!!        C
+!!        C           If the column entry is null, we'll be kicked
+!!        C           out of this loop after the first iteration.
+!!        C
+!!                    END DO
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,*) '  COLUMN = CHR_COL_2: <Null>'
+!!
+!!                    ELSE
+!!
+!!                        WRITE(*,*) '  COLUMN = CHR_COL_2: ',
+!!             .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
+!!             .                                           I = 1, NELT )
+!!
+!!                    END IF
+!!
+!!        C
+!!        C           Fetch values from column CHR_COL_3 in the current
+!!        C           row.  We need not call EKNELT since we know how
+!!        C           many elements are in each column entry.
+!!        C
+!!                    SELIDX = 3
+!!                    ELTIDX = 1
+!!                    ISNULL = .FALSE.
+!!
+!!                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
+!!             .                 .AND. (        .NOT. ISNULL )  )
+!!
+!!                       CALL EKGC ( SELIDX,         ROW,     ELTIDX,
+!!             .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
+!!
+!!                       ELTIDX = ELTIDX + 1
+!!
+!!                    END DO
+!!
+!!                    IF ( ISNULL ) THEN
+!!                       WRITE(*,*) '  COLUMN = CHR_COL_3: <Null>'
+!!                    ELSE
+!!                        WRITE(*,*) '  COLUMN = CHR_COL_3: ',
+!!             .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
+!!             .                                         I = 1, COL3SZ )
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!        C
+!!        C     We either parsed the SELECT clause or had an error.
+!!        C
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        ROW  =   1
+!!           COLUMN = CHR_COL_1: Column #2 has 2 elements.
+!!           COLUMN = CHR_COL_2: 101 102
+!!           COLUMN = CHR_COL_3: 101 201 301
+!!
+!!        ROW  =   2
+!!           COLUMN = CHR_COL_1: Column #2 has 4 elements.
+!!           COLUMN = CHR_COL_2: 201 202 203 204
+!!           COLUMN = CHR_COL_3: 102 202 302
+!!
+!!        ROW  =   3
+!!           COLUMN = CHR_COL_1: Column #2 has 6 elements.
+!!           COLUMN = CHR_COL_2: 301 302 303 304 305 306
+!!           COLUMN = CHR_COL_3: 103 203 303
+!!
+!!        ROW  =   4
+!!           COLUMN = CHR_COL_1: Column #2 has 8 elements.
+!!           COLUMN = CHR_COL_2: 401 402 403 404 405 406 407 408
+!!           COLUMN = CHR_COL_3: 104 204 304
+!!
+!!        Note that after run completion, a new EK file exists in the
+!!        output directory.
+!!
+!!     3) See $Examples in EKQMGR.
+!!
+!!        In this example, the names and data types of the columns from
+!!        which to fetch data are not known in advance.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!        Added complete code examples from existing fragments.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
+!!
+!!        Redundant CHKIN call removed from SELIDX error check.
+!!        Misspelling of "issued" was fixed. Previous version line
+!!        was changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     fetch element from character column entry
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -36554,823 +35881,817 @@ contains
       end procedure ekgc
 
       module procedure ekgd
-
-! $ Abstract
-!
-!     Return an element of an entry in a column of double precision
-!     or `time' type in a specified row.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     EK
-!
-! $ Declarations
-!
-!     INTEGER               SELIDX
-!     INTEGER               ROW
-!     INTEGER               ELMENT
-!     DOUBLE PRECISION      DDATA
-!     LOGICAL               NULL
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     SELIDX   is the SELECT clause index of the column to
-!              fetch from.
-!
-!     ROW      is the output row containing the entry to fetch
-!              from.
-!
-!     ELMENT   is the index of the element of the column entry
-!              to fetch. The normal range of ELMENT is from 1 to
-!              the size of the column's entry, but ELMENT is
-!              allowed to exceed the number of elements in the
-!              column entry; if it does, FOUND is returned .FALSE.
-!              This allows the caller to read data from the column
-!              entry in a loop without checking the number of
-!              available elements first.
-!
-!              Null values in variable-sized columns are
-!              considered to have size 1.
-!
-! $ Detailed_Output
-!
-!     DDATA    is the requested element of the specified column
-!              entry. If the entry is null, DDATA is undefined.
-!
-!     NULL     is a logical flag indicating whether the entry
-!              belonging to the specified column in the specified
-!              row is null.
-!
-!     FOUND    is a logical flag indicating whether the specified
-!              element was found. If the element does not exist,
-!              FOUND is returned .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input argument ELMENT is less than 1, the error
-!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
-!         However, ELMENT is allowed to be greater than the number of
-!         elements in the specified column entry; this allows the caller
-!         to read data from the column entry in a loop without checking
-!         the number of available elements first. If ELMENT is greater
-!         than the number of available elements, FOUND is returned
-!         .FALSE.
-!
-!     2)  If SELIDX is outside of the range established by the
-!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
-!         is signaled and FOUND is returned .FALSE.
-!
-!     3)  If the input argument ROW is less than 1 or greater than the
-!         number of rows matching the query, the error
-!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
-!
-!     4)  If the specified column does not have DP or TIME type, the
-!         error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If this routine is called when no E-kernels have been loaded,
-!         the error SPICE(NOLOADEDFILES) is signaled.
-!
-! $ Files
-!
-!     See the header of EKQMGR for a description of files used
-!     by this routine.
-!
-! $ Particulars
-!
-!     This routine allows retrieval of data from double precision or
-!     `time' columns.
-!
-!     This routine returns one element at a time in order to save the
-!     caller from imposing a limit on the size of the column entries
-!     that can be handled.
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Perform a query on an EK file that contains a database with
-!        the Supplementary Engineering Data Records of the Viking
-!        Project in order to retrieve the PLATFORM_CLOCK values (double
-!        precision) that correspond to the images with IMAGE_NUMBER
-!        smaller than a given value, ordered by IMAGE_NUMBER.
-!
-!        Use the EK kernel below to load the information from the
-!        original Supplementary Engineering Data Record (SEDR) data
-!        set generated by the Viking Project.
-!
-!           vo_sedr.bdb
-!
-!        Example code begins here.
-!
-!              PROGRAM EKGD_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Maximum length of an input query,
-!        C     MAXQRY, and the maximum length of literal string
-!        C     values, MAXSTR, from eklimit.inc.
-!        C
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              DOUBLE PRECISION      DDATA
-!
-!              INTEGER               ELTIDX
-!              INTEGER               NMROWS
-!              INTEGER               ROWNO
-!              INTEGER               SELIDX
-!
-!              LOGICAL               ERROR
-!              LOGICAL               FOUND
-!              LOGICAL               ISNULL
-!
-!        C
-!        C     Open an EK file.
-!        C
-!              CALL FURNSH ( EKNAME )
-!
-!        C
-!        C     The table 'VIKING_SEDR_DATA' has a column
-!        C     'PLATFORM_CLOCK' of double precision values.
-!        C
-!        C     Define a set of constraints to perform a query on
-!        C     all loaded EK files (the SELECT clause). In this
-!        C     case select the column 'PLATFORM_CLOCK' from table
-!        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
-!        C
-!              QUERY = 'Select PLATFORM_CLOCK from VIKING_SEDR_DATA '
-!             .   //   'where IMAGE_NUMBER < 25860000 '
-!             .   //   'order by IMAGE_NUMBER'
-!
-!        C
-!        C     Query the EK system for data rows matching the
-!        C     SELECT constraints.
-!        C
-!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C     Check whether an error occurred while processing the
-!        C     SELECT clause. If so, output the error message.
-!        C
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
-!
-!              ELSE
-!
-!        C
-!        C        Fetch the character data. We know the query returned
-!        C        one column and the column contains only scalar data,
-!        C        so the index of all elements is 1.
-!        C
-!                 SELIDX = 1
-!                 ELTIDX = 1
-!
-!        C
-!        C        Loop over each row found matching the query.
-!        C
-!                 DO ROWNO = 1, NMROWS
-!
-!        C
-!        C           Use EKGD to retrieve the string from
-!        C
-!                    CALL EKGD ( SELIDX, ROWNO,  ELTIDX,
-!             .                  DDATA,  ISNULL, FOUND   )
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
-!             .                  ': Double precision data: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE (*,'(A,I3,A,F10.6)') 'Row ', ROWNO,
-!             .                  ': Double precision data: ', DDATA
-!
-!                    END IF
-!
-!                 END DO
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Row   1: Double precision data: 119.880000
-!        Row   2: Double precision data: 119.270000
-!        Row   3: Double precision data: 119.880000
-!        Row   4: Double precision data: 119.270000
-!        Row   5: Double precision data: 119.880000
-!        Row   6: Double precision data: 119.270000
-!        Row   7: Double precision data: 120.140000
-!        Row   8: Double precision data: 119.520000
-!        Row   9: Double precision data: 120.140000
-!        Row  10: Double precision data: 120.140000
-!        Row  11: Double precision data: 120.140000
-!        Row  12: Double precision data: 221.920000
-!        Row  13: Double precision data: 221.920000
-!        Row  14: Double precision data: 221.920000
-!        Row  15: Double precision data: 120.140000
-!        Row  16: Double precision data: 120.140000
-!        Row  17: Double precision data: 120.140000
-!        Row  18: Double precision data: 120.220000
-!        Row  19: Double precision data: 120.220000
-!        Row  20: Double precision data: 120.220000
-!        Row  21: Double precision data: 120.370000
-!        Row  22: Double precision data: 120.370000
-!        Row  23: Double precision data: 120.370000
-!        Row  24: Double precision data: 120.290000
-!        Row  25: Double precision data: 120.290000
-!        Row  26: Double precision data: 120.290000
-!
-!     2) Perform a query on an EK file that contains a database with
-!        the Supplementary Engineering Data Records of the Viking
-!        Project in order to retrieve the IMAGE_TIME values (double
-!        precision time) that correspond to the images with
-!        IMAGE_NUMBER smaller than a given value, ordered by
-!        IMAGE_NUMBER.
-!
-!        Use the EK kernel below to load the information from the
-!        original Supplementary Engineering Data Record (SEDR) data
-!        set generated by the Viking Project.
-!
-!           vo_sedr.bdb
-!
-!        Use the LSK kernel below to load the leap seconds and time
-!        constants required for the conversions.
-!
-!           naif0012.tls
-!
-!        Example code begins here.
-!
-!              PROGRAM EKGD_EX2
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Maximum length of an input query,
-!        C     MAXQRY, and the maximum length of literal string
-!        C     values, MAXSTR, from eklimit.inc.
-!        C
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
-!
-!              CHARACTER*(*)         LSKNAM
-!              PARAMETER           ( LSKNAM = 'naif0012.tls' )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!              INTEGER               TIMLEN
-!              PARAMETER           ( TIMLEN = 24   )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(MAXQRY)    QUERY
-!              CHARACTER*(TIMLEN)    UTCSTR
-!
-!              DOUBLE PRECISION      DDATA
-!
-!              INTEGER               ELTIDX
-!              INTEGER               NMROWS
-!              INTEGER               ROWNO
-!              INTEGER               SELIDX
-!
-!              LOGICAL               ERROR
-!              LOGICAL               FOUND
-!              LOGICAL               ISNULL
-!
-!        C
-!        C     Load leapseconds file for time conversion.
-!        C
-!              CALL FURNSH ( LSKNAM )
-!
-!        C
-!        C     Open an EK file.
-!        C
-!              CALL FURNSH ( EKNAME )
-!
-!        C
-!        C     The table 'VIKING_SEDR_DATA' has a column
-!        C     'IMAGE_TIME' of time values (stored as double
-!        C     precision items).
-!        C
-!        C     Define a set of constraints to perform a query on
-!        C     all loaded EK files (the SELECT clause). In this
-!        C     case select the column 'IMAGE_TIME' from table
-!        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
-!        C
-!              QUERY = 'Select IMAGE_TIME from VIKING_SEDR_DATA '
-!             .   //   'where IMAGE_NUMBER < 25860000 '
-!             .   //   'order by IMAGE_NUMBER'
-!
-!        C
-!        C     Query the EK system for data rows matching the
-!        C     SELECT constraints.
-!        C
-!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C     Check whether an error occurred while processing the
-!        C     SELECT clause. If so, output the error message.
-!        C
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
-!
-!              ELSE
-!
-!        C
-!        C        Fetch the character data. We know the query returned
-!        C        one column and the column contains only scalar data,
-!        C        so the index of all elements is 1.
-!        C
-!                 SELIDX = 1
-!                 ELTIDX = 1
-!
-!        C
-!        C        Loop over each row found matching the query.
-!        C
-!                 DO ROWNO = 1, NMROWS
-!
-!        C
-!        C           Use EKGD to retrieve the string from
-!        C
-!                    CALL EKGD ( SELIDX, ROWNO,  ELTIDX,
-!             .                  DDATA,  ISNULL, FOUND   )
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
-!             .                              ': Time data: <Null>'
-!
-!                    ELSE
-!
-!                       CALL ET2UTC ( DDATA, 'C', 3, UTCSTR )
-!
-!                       WRITE (*,'(A,I3,2A)') 'Row ', ROWNO,
-!             .                               ': Time data:  ', UTCSTR
-!
-!                    END IF
-!
-!                 END DO
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Row   1: Time data:  1976 JUN 16 16:50:55.925
-!        Row   2: Time data:  1976 JUN 16 16:51:00.269
-!        Row   3: Time data:  1976 JUN 16 20:56:53.051
-!        Row   4: Time data:  1976 JUN 16 20:56:57.395
-!        Row   5: Time data:  1976 JUN 17 01:02:50.177
-!        Row   6: Time data:  1976 JUN 17 01:02:54.521
-!        Row   7: Time data:  1976 JUN 17 05:08:56.263
-!        Row   8: Time data:  1976 JUN 17 05:09:00.607
-!        Row   9: Time data:  1976 JUN 17 06:30:28.424
-!        Row  10: Time data:  1976 JUN 17 06:30:46.174
-!        Row  11: Time data:  1976 JUN 17 06:30:55.168
-!        Row  12: Time data:  1976 JUN 17 11:17:47.471
-!        Row  13: Time data:  1976 JUN 17 11:18:05.221
-!        Row  14: Time data:  1976 JUN 17 11:18:14.215
-!        Row  15: Time data:  1976 JUN 17 13:20:23.634
-!        Row  16: Time data:  1976 JUN 17 13:20:41.384
-!        Row  17: Time data:  1976 JUN 17 13:20:50.378
-!        Row  18: Time data:  1976 JUN 17 15:23:17.717
-!        Row  19: Time data:  1976 JUN 17 15:23:35.467
-!        Row  20: Time data:  1976 JUN 17 15:23:44.461
-!        Row  21: Time data:  1976 JUN 17 17:26:20.760
-!        Row  22: Time data:  1976 JUN 17 17:26:38.510
-!        Row  23: Time data:  1976 JUN 17 17:26:47.504
-!        Row  24: Time data:  1976 JUN 17 19:29:23.803
-!        Row  25: Time data:  1976 JUN 17 19:29:41.553
-!        Row  26: Time data:  1976 JUN 17 19:29:50.547
-!
-!     3) This example demonstrates how to fetch double precision values
-!        from a column in three different cases: single values,
-!        variable-size arrays and static-size arrays.
-!
-!        Create an EK that contains a table TAB that has the following
-!        columns:
-!
-!           Column name   Data Type   Size
-!           -----------   ---------   ----
-!           DP_COL_1      DP          1
-!           DP_COL_2      DP          VARIABLE
-!           DP_COL_3      DP          3
-!
-!        Issue the following query
-!
-!            QUERY = 'SELECT DP_COL_1, DP_COL_2, DP_COL_3 FROM TAB'
-!
-!        to fetch and dump column values from the rows that satisfy the
-!        query.
-!
-!        Example code begins here.
-!
-!              PROGRAM EKGD_EX3
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Column Name Size (CNAMSZ)
-!        C     and EK Query Limit Parameters (MAXQRY)
-!        C
-!              INCLUDE 'ekcnamsz.inc'
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME  = 'ekgd_ex3.bdb' )
-!
-!              CHARACTER*(*)         TABLE
-!              PARAMETER           ( TABLE   = 'TAB' )
-!
-!              INTEGER               COL3SZ
-!              PARAMETER           ( COL3SZ = 3   )
-!
-!              INTEGER               DECLEN
-!              PARAMETER           ( DECLEN = 200 )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!              INTEGER               MXC2SZ
-!              PARAMETER           ( MXC2SZ = 4   )
-!
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 40  )
-!
-!              INTEGER               NCOLS
-!              PARAMETER           ( NCOLS  = 3   )
-!
-!              INTEGER               NROWS
-!              PARAMETER           ( NROWS  = 4   )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(NAMLEN)    IFNAME
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              DOUBLE PRECISION      COL1
-!              DOUBLE PRECISION      COL2   ( MXC2SZ )
-!              DOUBLE PRECISION      COL3   ( COL3SZ )
-!              DOUBLE PRECISION      DVALS  ( MXC2SZ )
-!
-!              INTEGER               ELTIDX
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               NELT
-!              INTEGER               NMROWS
-!              INTEGER               NRESVC
-!              INTEGER               RECNO
-!              INTEGER               ROW
-!              INTEGER               SEGNO
-!              INTEGER               SELIDX
-!
-!              LOGICAL               ERROR
-!              LOGICAL               FOUND
-!              LOGICAL               ISNULL
-!
-!        C
-!        C     Open a new EK file.  For simplicity, we will not
-!        C     reserve any space for the comment area, so the
-!        C     number of reserved comment characters is zero.
-!        C     The variable IFNAME is the internal file name.
-!        C
-!              NRESVC  =  0
-!              IFNAME  =  'Test EK/Created 13-JUN-2019'
-!
-!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-!
-!        C
-!        C     Set up the column names and declarations
-!        C     for the TAB segment.  We'll index all of
-!        C     the columns.
-!        C
-!              CNAMES(1) = 'DP_COL_1'
-!              CDECLS(1) = 'DATATYPE = DOUBLE PRECISION, ' //
-!             .            'INDEXED  = TRUE'
-!
-!              CNAMES(2) = 'DP_COL_2'
-!              CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
-!             .            'SIZE = VARIABLE'
-!
-!              CNAMES(3) = 'DP_COL_3'
-!              CDECLS(3) = 'DATATYPE = DOUBLE PRECISION, ' //
-!             .            'SIZE = 3'
-!
-!        C
-!        C     Start the segment.
-!        C
-!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-!             .              CNAMES, CDECLS, SEGNO )
-!
-!        C
-!        C     At the records to the table.
-!        C
-!              DO I = 1, NROWS
-!
-!        C
-!        C        Append a new record to the EK.
-!        C
-!                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-!
-!        C
-!        C        Add DP_COL_1
-!        C
-!                 COL1 = I * 100.D0
-!
-!                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(1), 1,     COL1,  .FALSE. )
-!
-!        C
-!        C        Add I items to DP_COL_2
-!        C
-!                 DO J = 1, I
-!                    COL2(J) = J + I*200.D0
-!                 END DO
-!
-!                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(2), I,     COL2,  .FALSE. )
-!
-!        C
-!        C        Add 3 items to DP_COL_3
-!        C
-!                 DO J = 1, 3
-!                    COL3(J) =  I + J*100.D0
-!                 END DO
-!
-!                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(3), 3,     COL3, .FALSE. )
-!
-!              END DO
-!
-!        C
-!        C     Close the file.
-!        C
-!              CALL EKCLS ( HANDLE )
-!
-!        C
-!        C     Open the created file. Perform the query and show the
-!        C     results.
-!        C
-!              CALL FURNSH ( EKNAME )
-!
-!              QUERY = 'SELECT DP_COL_1, DP_COL_2, DP_COL_3 FROM TAB'
-!
-!        C
-!        C     Query the EK system for data rows matching the
-!        C     SELECT constraints.
-!        C
-!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C     Check whether an error occurred while processing the
-!        C     SELECT clause. If so, output the error message.
-!        C
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
-!
-!              ELSE
-!
-!                 DO ROW = 1, NMROWS
-!
-!                    WRITE(*,*) ' '
-!                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
-!
-!        C
-!        C           Fetch values from column DP_COL_1.  Since
-!        C           DP_COL_1 was the first column selected, the
-!        C           selection index SELIDX is set to 1.
-!        C
-!                    SELIDX = 1
-!                    ELTIDX = 1
-!                    CALL EKGD ( SELIDX,    ROW,     ELTIDX,
-!             .                  DVALS(1),  ISNULL,  FOUND   )
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,*) '  COLUMN = DP_COL_1: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE(*,*) '  COLUMN = DP_COL_1:', DVALS(1)
-!
-!                    END IF
-!
-!        C
-!        C           Fetch values from column DP_COL_2 in the current
-!        C           row.  Since DP_COL_2 contains variable-size array
-!        C           elements, we call EKNELT to determine how many
-!        C           elements to fetch.
-!        C
-!                    SELIDX = 2
-!                    CALL EKNELT ( SELIDX, ROW, NELT )
-!
-!                    ELTIDX = 1
-!                    ISNULL = .FALSE.
-!
-!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-!             .                 .AND. (        .NOT. ISNULL )  )
-!
-!                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
-!             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
-!
-!                       ELTIDX = ELTIDX + 1
-!
-!        C
-!        C           If the column entry is null, we'll be kicked
-!        C           out of this loop after the first iteration.
-!        C
-!                    END DO
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,*) '  COLUMN = DP_COL_2: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE(*,'(A,4F6.1)') '   COLUMN = DP_COL_2:',
-!             .                              ( DVALS(I), I = 1, NELT )
-!
-!                    END IF
-!
-!        C
-!        C           Fetch values from column DP_COL_3 in the current
-!        C           row.  We need not call EKNELT since we know how
-!        C           many elements are in each column entry.
-!        C
-!                    SELIDX = 3
-!                    ELTIDX = 1
-!                    ISNULL = .FALSE.
-!
-!                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
-!             .                 .AND. (        .NOT. ISNULL )  )
-!
-!                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
-!             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
-!
-!                       ELTIDX = ELTIDX + 1
-!
-!                    END DO
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,*) '  COLUMN = DP_COL_3: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE(*,'(A,3F6.1)') '   COLUMN = DP_COL_3:',
-!             .                              ( DVALS(I), I = 1, COL3SZ )
-!
-!                    END IF
-!
-!                 END DO
-!
-!        C
-!        C     We either parsed the SELECT clause or had an error.
-!        C
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        ROW  =   1
-!           COLUMN = DP_COL_1:   100.00000000000000
-!           COLUMN = DP_COL_2: 201.0
-!           COLUMN = DP_COL_3: 101.0 201.0 301.0
-!
-!        ROW  =   2
-!           COLUMN = DP_COL_1:   200.00000000000000
-!           COLUMN = DP_COL_2: 401.0 402.0
-!           COLUMN = DP_COL_3: 102.0 202.0 302.0
-!
-!        ROW  =   3
-!           COLUMN = DP_COL_1:   300.00000000000000
-!           COLUMN = DP_COL_2: 601.0 602.0 603.0
-!           COLUMN = DP_COL_3: 103.0 203.0 303.0
-!
-!        ROW  =   4
-!           COLUMN = DP_COL_1:   400.00000000000000
-!           COLUMN = DP_COL_2: 801.0 802.0 803.0 804.0
-!           COLUMN = DP_COL_3: 104.0 204.0 304.0
-!
-!        Note that after run completion, a new EK file exists in the
-!        output directory.
-!
-!     4) See $Examples in EKQMGR.
-!
-!        In this example, the names and data types of the columns from
-!        which to fetch data are not known in advance.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete code examples from existing fragments.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
-!
-!        Redundant CHKIN call removed from SELIDX error check.
-!        Misspelling of "issued" was fixed. Previous version line
-!        was changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     fetch element from double precision column entry
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return an element of an entry in a column of double precision
+!!     or `time' type in a specified row.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     EK
+!!
+!! ## Declarations
+!!
+!!     INTEGER               SELIDX
+!!     INTEGER               ROW
+!!     INTEGER               ELMENT
+!!     DOUBLE PRECISION      DDATA
+!!     LOGICAL               NULL
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     SELIDX   is the SELECT clause index of the column to
+!!              fetch from.
+!!
+!!     ROW      is the output row containing the entry to fetch
+!!              from.
+!!
+!!     ELMENT   is the index of the element of the column entry
+!!              to fetch. The normal range of ELMENT is from 1 to
+!!              the size of the column's entry, but ELMENT is
+!!              allowed to exceed the number of elements in the
+!!              column entry; if it does, FOUND is returned .FALSE.
+!!              This allows the caller to read data from the column
+!!              entry in a loop without checking the number of
+!!              available elements first.
+!!
+!!              Null values in variable-sized columns are
+!!              considered to have size 1.
+!!
+!! ## Detailed Output
+!!
+!!     DDATA    is the requested element of the specified column
+!!              entry. If the entry is null, DDATA is undefined.
+!!
+!!     NULL     is a logical flag indicating whether the entry
+!!              belonging to the specified column in the specified
+!!              row is null.
+!!
+!!     FOUND    is a logical flag indicating whether the specified
+!!              element was found. If the element does not exist,
+!!              FOUND is returned .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input argument ELMENT is less than 1, the error
+!!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
+!!         However, ELMENT is allowed to be greater than the number of
+!!         elements in the specified column entry; this allows the caller
+!!         to read data from the column entry in a loop without checking
+!!         the number of available elements first. If ELMENT is greater
+!!         than the number of available elements, FOUND is returned
+!!         .FALSE.
+!!
+!!     2)  If SELIDX is outside of the range established by the
+!!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
+!!         is signaled and FOUND is returned .FALSE.
+!!
+!!     3)  If the input argument ROW is less than 1 or greater than the
+!!         number of rows matching the query, the error
+!!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
+!!
+!!     4)  If the specified column does not have DP or TIME type, the
+!!         error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If this routine is called when no E-kernels have been loaded,
+!!         the error SPICE(NOLOADEDFILES) is signaled.
+!!
+!! ## Files
+!!
+!!     See the header of EKQMGR for a description of files used
+!!     by this routine.
+!!
+!! ## Particulars
+!!
+!!     This routine allows retrieval of data from double precision or
+!!     `time' columns.
+!!
+!!     This routine returns one element at a time in order to save the
+!!     caller from imposing a limit on the size of the column entries
+!!     that can be handled.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for these examples may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Perform a query on an EK file that contains a database with
+!!        the Supplementary Engineering Data Records of the Viking
+!!        Project in order to retrieve the PLATFORM_CLOCK values (double
+!!        precision) that correspond to the images with IMAGE_NUMBER
+!!        smaller than a given value, ordered by IMAGE_NUMBER.
+!!
+!!        Use the EK kernel below to load the information from the
+!!        original Supplementary Engineering Data Record (SEDR) data
+!!        set generated by the Viking Project.
+!!
+!!           vo_sedr.bdb
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKGD_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Maximum length of an input query,
+!!        C     MAXQRY, and the maximum length of literal string
+!!        C     values, MAXSTR, from eklimit.inc.
+!!        C
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         EKNAME
+!!              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              DOUBLE PRECISION      DDATA
+!!
+!!              INTEGER               ELTIDX
+!!              INTEGER               NMROWS
+!!              INTEGER               ROWNO
+!!              INTEGER               SELIDX
+!!
+!!              LOGICAL               ERROR
+!!              LOGICAL               FOUND
+!!              LOGICAL               ISNULL
+!!
+!!        C
+!!        C     Open an EK file.
+!!        C
+!!              CALL FURNSH ( EKNAME )
+!!
+!!        C
+!!        C     The table 'VIKING_SEDR_DATA' has a column
+!!        C     'PLATFORM_CLOCK' of double precision values.
+!!        C
+!!        C     Define a set of constraints to perform a query on
+!!        C     all loaded EK files (the SELECT clause). In this
+!!        C     case select the column 'PLATFORM_CLOCK' from table
+!!        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
+!!        C
+!!              QUERY = 'Select PLATFORM_CLOCK from VIKING_SEDR_DATA '
+!!             .   //   'where IMAGE_NUMBER < 25860000 '
+!!             .   //   'order by IMAGE_NUMBER'
+!!
+!!        C
+!!        C     Query the EK system for data rows matching the
+!!        C     SELECT constraints.
+!!        C
+!!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C     Check whether an error occurred while processing the
+!!        C     SELECT clause. If so, output the error message.
+!!        C
+!!              IF ( ERROR ) THEN
+!!
+!!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+!!
+!!              ELSE
+!!
+!!        C
+!!        C        Fetch the character data. We know the query returned
+!!        C        one column and the column contains only scalar data,
+!!        C        so the index of all elements is 1.
+!!        C
+!!                 SELIDX = 1
+!!                 ELTIDX = 1
+!!
+!!        C
+!!        C        Loop over each row found matching the query.
+!!        C
+!!                 DO ROWNO = 1, NMROWS
+!!
+!!        C
+!!        C           Use EKGD to retrieve the string from
+!!        C
+!!                    CALL EKGD ( SELIDX, ROWNO,  ELTIDX,
+!!             .                  DDATA,  ISNULL, FOUND   )
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
+!!             .                  ': Double precision data: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE (*,'(A,I3,A,F10.6)') 'Row ', ROWNO,
+!!             .                  ': Double precision data: ', DDATA
+!!
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Row   1: Double precision data: 119.880000
+!!        Row   2: Double precision data: 119.270000
+!!        Row   3: Double precision data: 119.880000
+!!        Row   4: Double precision data: 119.270000
+!!        Row   5: Double precision data: 119.880000
+!!        Row   6: Double precision data: 119.270000
+!!        Row   7: Double precision data: 120.140000
+!!        Row   8: Double precision data: 119.520000
+!!        Row   9: Double precision data: 120.140000
+!!        Row  10: Double precision data: 120.140000
+!!        Row  11: Double precision data: 120.140000
+!!        Row  12: Double precision data: 221.920000
+!!        Row  13: Double precision data: 221.920000
+!!        Row  14: Double precision data: 221.920000
+!!        Row  15: Double precision data: 120.140000
+!!        Row  16: Double precision data: 120.140000
+!!        Row  17: Double precision data: 120.140000
+!!        Row  18: Double precision data: 120.220000
+!!        Row  19: Double precision data: 120.220000
+!!        Row  20: Double precision data: 120.220000
+!!        Row  21: Double precision data: 120.370000
+!!        Row  22: Double precision data: 120.370000
+!!        Row  23: Double precision data: 120.370000
+!!        Row  24: Double precision data: 120.290000
+!!        Row  25: Double precision data: 120.290000
+!!        Row  26: Double precision data: 120.290000
+!!
+!!     2) Perform a query on an EK file that contains a database with
+!!        the Supplementary Engineering Data Records of the Viking
+!!        Project in order to retrieve the IMAGE_TIME values (double
+!!        precision time) that correspond to the images with
+!!        IMAGE_NUMBER smaller than a given value, ordered by
+!!        IMAGE_NUMBER.
+!!
+!!        Use the EK kernel below to load the information from the
+!!        original Supplementary Engineering Data Record (SEDR) data
+!!        set generated by the Viking Project.
+!!
+!!           vo_sedr.bdb
+!!
+!!        Use the LSK kernel below to load the leap seconds and time
+!!        constants required for the conversions.
+!!
+!!           naif0012.tls
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKGD_EX2
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Maximum length of an input query,
+!!        C     MAXQRY, and the maximum length of literal string
+!!        C     values, MAXSTR, from eklimit.inc.
+!!        C
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         EKNAME
+!!              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+!!
+!!              CHARACTER*(*)         LSKNAM
+!!              PARAMETER           ( LSKNAM = 'naif0012.tls' )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!              INTEGER               TIMLEN
+!!              PARAMETER           ( TIMLEN = 24   )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(MAXQRY)    QUERY
+!!              CHARACTER*(TIMLEN)    UTCSTR
+!!
+!!              DOUBLE PRECISION      DDATA
+!!
+!!              INTEGER               ELTIDX
+!!              INTEGER               NMROWS
+!!              INTEGER               ROWNO
+!!              INTEGER               SELIDX
+!!
+!!              LOGICAL               ERROR
+!!              LOGICAL               FOUND
+!!              LOGICAL               ISNULL
+!!
+!!        C
+!!        C     Load leapseconds file for time conversion.
+!!        C
+!!              CALL FURNSH ( LSKNAM )
+!!
+!!        C
+!!        C     Open an EK file.
+!!        C
+!!              CALL FURNSH ( EKNAME )
+!!
+!!        C
+!!        C     The table 'VIKING_SEDR_DATA' has a column
+!!        C     'IMAGE_TIME' of time values (stored as double
+!!        C     precision items).
+!!        C
+!!        C     Define a set of constraints to perform a query on
+!!        C     all loaded EK files (the SELECT clause). In this
+!!        C     case select the column 'IMAGE_TIME' from table
+!!        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
+!!        C
+!!              QUERY = 'Select IMAGE_TIME from VIKING_SEDR_DATA '
+!!             .   //   'where IMAGE_NUMBER < 25860000 '
+!!             .   //   'order by IMAGE_NUMBER'
+!!
+!!        C
+!!        C     Query the EK system for data rows matching the
+!!        C     SELECT constraints.
+!!        C
+!!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C     Check whether an error occurred while processing the
+!!        C     SELECT clause. If so, output the error message.
+!!        C
+!!              IF ( ERROR ) THEN
+!!
+!!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+!!
+!!              ELSE
+!!
+!!        C
+!!        C        Fetch the character data. We know the query returned
+!!        C        one column and the column contains only scalar data,
+!!        C        so the index of all elements is 1.
+!!        C
+!!                 SELIDX = 1
+!!                 ELTIDX = 1
+!!
+!!        C
+!!        C        Loop over each row found matching the query.
+!!        C
+!!                 DO ROWNO = 1, NMROWS
+!!
+!!        C
+!!        C           Use EKGD to retrieve the string from
+!!        C
+!!                    CALL EKGD ( SELIDX, ROWNO,  ELTIDX,
+!!             .                  DDATA,  ISNULL, FOUND   )
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
+!!             .                              ': Time data: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       CALL ET2UTC ( DDATA, 'C', 3, UTCSTR )
+!!
+!!                       WRITE (*,'(A,I3,2A)') 'Row ', ROWNO,
+!!             .                               ': Time data:  ', UTCSTR
+!!
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Row   1: Time data:  1976 JUN 16 16:50:55.925
+!!        Row   2: Time data:  1976 JUN 16 16:51:00.269
+!!        Row   3: Time data:  1976 JUN 16 20:56:53.051
+!!        Row   4: Time data:  1976 JUN 16 20:56:57.395
+!!        Row   5: Time data:  1976 JUN 17 01:02:50.177
+!!        Row   6: Time data:  1976 JUN 17 01:02:54.521
+!!        Row   7: Time data:  1976 JUN 17 05:08:56.263
+!!        Row   8: Time data:  1976 JUN 17 05:09:00.607
+!!        Row   9: Time data:  1976 JUN 17 06:30:28.424
+!!        Row  10: Time data:  1976 JUN 17 06:30:46.174
+!!        Row  11: Time data:  1976 JUN 17 06:30:55.168
+!!        Row  12: Time data:  1976 JUN 17 11:17:47.471
+!!        Row  13: Time data:  1976 JUN 17 11:18:05.221
+!!        Row  14: Time data:  1976 JUN 17 11:18:14.215
+!!        Row  15: Time data:  1976 JUN 17 13:20:23.634
+!!        Row  16: Time data:  1976 JUN 17 13:20:41.384
+!!        Row  17: Time data:  1976 JUN 17 13:20:50.378
+!!        Row  18: Time data:  1976 JUN 17 15:23:17.717
+!!        Row  19: Time data:  1976 JUN 17 15:23:35.467
+!!        Row  20: Time data:  1976 JUN 17 15:23:44.461
+!!        Row  21: Time data:  1976 JUN 17 17:26:20.760
+!!        Row  22: Time data:  1976 JUN 17 17:26:38.510
+!!        Row  23: Time data:  1976 JUN 17 17:26:47.504
+!!        Row  24: Time data:  1976 JUN 17 19:29:23.803
+!!        Row  25: Time data:  1976 JUN 17 19:29:41.553
+!!        Row  26: Time data:  1976 JUN 17 19:29:50.547
+!!
+!!     3) This example demonstrates how to fetch double precision values
+!!        from a column in three different cases: single values,
+!!        variable-size arrays and static-size arrays.
+!!
+!!        Create an EK that contains a table TAB that has the following
+!!        columns:
+!!
+!!           Column name   Data Type   Size
+!!           -----------   ---------   ----
+!!           DP_COL_1      DP          1
+!!           DP_COL_2      DP          VARIABLE
+!!           DP_COL_3      DP          3
+!!
+!!        Issue the following query
+!!
+!!            QUERY = 'SELECT DP_COL_1, DP_COL_2, DP_COL_3 FROM TAB'
+!!
+!!        to fetch and dump column values from the rows that satisfy the
+!!        query.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKGD_EX3
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Column Name Size (CNAMSZ)
+!!        C     and EK Query Limit Parameters (MAXQRY)
+!!        C
+!!              INCLUDE 'ekcnamsz.inc'
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         EKNAME
+!!              PARAMETER           ( EKNAME  = 'ekgd_ex3.bdb' )
+!!
+!!              CHARACTER*(*)         TABLE
+!!              PARAMETER           ( TABLE   = 'TAB' )
+!!
+!!              INTEGER               COL3SZ
+!!              PARAMETER           ( COL3SZ = 3   )
+!!
+!!              INTEGER               DECLEN
+!!              PARAMETER           ( DECLEN = 200 )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!              INTEGER               MXC2SZ
+!!              PARAMETER           ( MXC2SZ = 4   )
+!!
+!!              INTEGER               NAMLEN
+!!              PARAMETER           ( NAMLEN = 40  )
+!!
+!!              INTEGER               NCOLS
+!!              PARAMETER           ( NCOLS  = 3   )
+!!
+!!              INTEGER               NROWS
+!!              PARAMETER           ( NROWS  = 4   )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+!!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(NAMLEN)    IFNAME
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              DOUBLE PRECISION      COL1
+!!              DOUBLE PRECISION      COL2   ( MXC2SZ )
+!!              DOUBLE PRECISION      COL3   ( COL3SZ )
+!!              DOUBLE PRECISION      DVALS  ( MXC2SZ )
+!!
+!!              INTEGER               ELTIDX
+!!              INTEGER               HANDLE
+!!              INTEGER               I
+!!              INTEGER               J
+!!              INTEGER               NELT
+!!              INTEGER               NMROWS
+!!              INTEGER               NRESVC
+!!              INTEGER               RECNO
+!!              INTEGER               ROW
+!!              INTEGER               SEGNO
+!!              INTEGER               SELIDX
+!!
+!!              LOGICAL               ERROR
+!!              LOGICAL               FOUND
+!!              LOGICAL               ISNULL
+!!
+!!        C
+!!        C     Open a new EK file.  For simplicity, we will not
+!!        C     reserve any space for the comment area, so the
+!!        C     number of reserved comment characters is zero.
+!!        C     The variable IFNAME is the internal file name.
+!!        C
+!!              NRESVC  =  0
+!!              IFNAME  =  'Test EK/Created 13-JUN-2019'
+!!
+!!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+!!
+!!        C
+!!        C     Set up the column names and declarations
+!!        C     for the TAB segment.  We'll index all of
+!!        C     the columns.
+!!        C
+!!              CNAMES(1) = 'DP_COL_1'
+!!              CDECLS(1) = 'DATATYPE = DOUBLE PRECISION, ' //
+!!             .            'INDEXED  = TRUE'
+!!
+!!              CNAMES(2) = 'DP_COL_2'
+!!              CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
+!!             .            'SIZE = VARIABLE'
+!!
+!!              CNAMES(3) = 'DP_COL_3'
+!!              CDECLS(3) = 'DATATYPE = DOUBLE PRECISION, ' //
+!!             .            'SIZE = 3'
+!!
+!!        C
+!!        C     Start the segment.
+!!        C
+!!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+!!             .              CNAMES, CDECLS, SEGNO )
+!!
+!!        C
+!!        C     At the records to the table.
+!!        C
+!!              DO I = 1, NROWS
+!!
+!!        C
+!!        C        Append a new record to the EK.
+!!        C
+!!                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+!!
+!!        C
+!!        C        Add DP_COL_1
+!!        C
+!!                 COL1 = I * 100.D0
+!!
+!!                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(1), 1,     COL1,  .FALSE. )
+!!
+!!        C
+!!        C        Add I items to DP_COL_2
+!!        C
+!!                 DO J = 1, I
+!!                    COL2(J) = J + I*200.D0
+!!                 END DO
+!!
+!!                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(2), I,     COL2,  .FALSE. )
+!!
+!!        C
+!!        C        Add 3 items to DP_COL_3
+!!        C
+!!                 DO J = 1, 3
+!!                    COL3(J) =  I + J*100.D0
+!!                 END DO
+!!
+!!                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(3), 3,     COL3, .FALSE. )
+!!
+!!              END DO
+!!
+!!        C
+!!        C     Close the file.
+!!        C
+!!              CALL EKCLS ( HANDLE )
+!!
+!!        C
+!!        C     Open the created file. Perform the query and show the
+!!        C     results.
+!!        C
+!!              CALL FURNSH ( EKNAME )
+!!
+!!              QUERY = 'SELECT DP_COL_1, DP_COL_2, DP_COL_3 FROM TAB'
+!!
+!!        C
+!!        C     Query the EK system for data rows matching the
+!!        C     SELECT constraints.
+!!        C
+!!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C     Check whether an error occurred while processing the
+!!        C     SELECT clause. If so, output the error message.
+!!        C
+!!              IF ( ERROR ) THEN
+!!
+!!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+!!
+!!              ELSE
+!!
+!!                 DO ROW = 1, NMROWS
+!!
+!!                    WRITE(*,*) ' '
+!!                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+!!
+!!        C
+!!        C           Fetch values from column DP_COL_1.  Since
+!!        C           DP_COL_1 was the first column selected, the
+!!        C           selection index SELIDX is set to 1.
+!!        C
+!!                    SELIDX = 1
+!!                    ELTIDX = 1
+!!                    CALL EKGD ( SELIDX,    ROW,     ELTIDX,
+!!             .                  DVALS(1),  ISNULL,  FOUND   )
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,*) '  COLUMN = DP_COL_1: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE(*,*) '  COLUMN = DP_COL_1:', DVALS(1)
+!!
+!!                    END IF
+!!
+!!        C
+!!        C           Fetch values from column DP_COL_2 in the current
+!!        C           row.  Since DP_COL_2 contains variable-size array
+!!        C           elements, we call EKNELT to determine how many
+!!        C           elements to fetch.
+!!        C
+!!                    SELIDX = 2
+!!                    CALL EKNELT ( SELIDX, ROW, NELT )
+!!
+!!                    ELTIDX = 1
+!!                    ISNULL = .FALSE.
+!!
+!!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
+!!             .                 .AND. (        .NOT. ISNULL )  )
+!!
+!!                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
+!!             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
+!!
+!!                       ELTIDX = ELTIDX + 1
+!!
+!!        C
+!!        C           If the column entry is null, we'll be kicked
+!!        C           out of this loop after the first iteration.
+!!        C
+!!                    END DO
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,*) '  COLUMN = DP_COL_2: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE(*,'(A,4F6.1)') '   COLUMN = DP_COL_2:',
+!!             .                              ( DVALS(I), I = 1, NELT )
+!!
+!!                    END IF
+!!
+!!        C
+!!        C           Fetch values from column DP_COL_3 in the current
+!!        C           row.  We need not call EKNELT since we know how
+!!        C           many elements are in each column entry.
+!!        C
+!!                    SELIDX = 3
+!!                    ELTIDX = 1
+!!                    ISNULL = .FALSE.
+!!
+!!                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
+!!             .                 .AND. (        .NOT. ISNULL )  )
+!!
+!!                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
+!!             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
+!!
+!!                       ELTIDX = ELTIDX + 1
+!!
+!!                    END DO
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,*) '  COLUMN = DP_COL_3: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE(*,'(A,3F6.1)') '   COLUMN = DP_COL_3:',
+!!             .                              ( DVALS(I), I = 1, COL3SZ )
+!!
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!        C
+!!        C     We either parsed the SELECT clause or had an error.
+!!        C
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        ROW  =   1
+!!           COLUMN = DP_COL_1:   100.00000000000000
+!!           COLUMN = DP_COL_2: 201.0
+!!           COLUMN = DP_COL_3: 101.0 201.0 301.0
+!!
+!!        ROW  =   2
+!!           COLUMN = DP_COL_1:   200.00000000000000
+!!           COLUMN = DP_COL_2: 401.0 402.0
+!!           COLUMN = DP_COL_3: 102.0 202.0 302.0
+!!
+!!        ROW  =   3
+!!           COLUMN = DP_COL_1:   300.00000000000000
+!!           COLUMN = DP_COL_2: 601.0 602.0 603.0
+!!           COLUMN = DP_COL_3: 103.0 203.0 303.0
+!!
+!!        ROW  =   4
+!!           COLUMN = DP_COL_1:   400.00000000000000
+!!           COLUMN = DP_COL_2: 801.0 802.0 803.0 804.0
+!!           COLUMN = DP_COL_3: 104.0 204.0 304.0
+!!
+!!        Note that after run completion, a new EK file exists in the
+!!        output directory.
+!!
+!!     4) See $Examples in EKQMGR.
+!!
+!!        In this example, the names and data types of the columns from
+!!        which to fetch data are not known in advance.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!        Added complete code examples from existing fragments.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
+!!
+!!        Redundant CHKIN call removed from SELIDX error check.
+!!        Misspelling of "issued" was fixed. Previous version line
+!!        was changed from "Beta" to "SPICELIB."
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     fetch element from double precision column entry
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -37565,652 +36886,646 @@ contains
       end procedure ekgd
 
       module procedure ekgi
-
-! $ Abstract
-!
-!     Return an element of an entry in a column of integer
-!     type in a specified row.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     EK
-!
-! $ Declarations
-!
-!     INTEGER               SELIDX
-!     INTEGER               ROW
-!     INTEGER               ELMENT
-!     INTEGER               IDATA
-!     LOGICAL               NULL
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     SELIDX   is the SELECT clause index of the column to
-!              fetch from.
-!
-!     ROW      is the output row containing the entry to fetch
-!              from.
-!
-!     ELMENT   is the index of the element of the column entry
-!              to fetch. The normal range of ELMENT is from 1 to
-!              the size of the column's entry, but ELMENT is
-!              allowed to exceed the number of elements in the
-!              column entry; if it does, FOUND is returned .FALSE.
-!              This allows the caller to read data from the column
-!              entry in a loop without checking the number of
-!              available elements first.
-!
-!              Null values in variable-sized columns are
-!              considered to have size 1.
-!
-! $ Detailed_Output
-!
-!     IDATA    is the requested element of the specified column
-!              entry. If the entry is null, IDATA is undefined.
-!
-!     NULL     is a logical flag indicating whether the entry
-!              belonging to the specified column in the specified
-!              row is null.
-!
-!     FOUND    is a logical flag indicating whether the specified
-!              element was found. If the element does not exist,
-!              FOUND is returned .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input argument ELMENT is less than 1, the error
-!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
-!         However, ELMENT is allowed to be greater than the number of
-!         elements in the specified column entry; this allows the caller
-!         to read data from the column entry in a loop without checking
-!         the number of available elements first. If ELMENT is greater
-!         than the number of available elements, FOUND is returned
-!         .FALSE.
-!
-!     2)  If SELIDX is outside of the range established by the
-!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
-!         is signaled and FOUND is returned .FALSE.
-!
-!     3)  If the input argument ROW is less than 1 or greater than the
-!         number of rows matching the query, the error
-!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
-!
-!     4)  If the specified column does not have integer type, the
-!         error SPICE(INVALIDTYPE) is signaled.
-!
-!     5)  If this routine is called when no E-kernels have been loaded,
-!         the error SPICE(NOLOADEDFILES) is signaled.
-!
-! $ Files
-!
-!     See the header of EKQMGR for a description of files used
-!     by this routine.
-!
-! $ Particulars
-!
-!     This routine allows retrieval of data from integer columns.
-!
-!     This routine returns one element at a time in order to save the
-!     caller from imposing a limit on the size of the column entries
-!     that can be handled.
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Perform a query on an EK file that contains a database with
-!        the Supplementary Engineering Data Records of the Viking
-!        Project in order to retrieve the IMAGE_NUMBER values (integer
-!        numbers) that correspond to the images with IMAGE_NUMBER
-!        smaller than a given value, ordered by IMAGE_NUMBER.
-!
-!        Use the EK kernel below to load the information from the
-!        original Supplementary Engineering Data Record (SEDR) data
-!        set generated by the Viking Project.
-!
-!           vo_sedr.bdb
-!
-!        Example code begins here.
-!
-!              PROGRAM EKGI_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Maximum length of an input query,
-!        C     MAXQRY, and the maximum length of literal string
-!        C     values, MAXSTR, from eklimit.inc.
-!        C
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              INTEGER               ELTIDX
-!              INTEGER               IDATA
-!              INTEGER               NMROWS
-!              INTEGER               ROWNO
-!              INTEGER               SELIDX
-!
-!              LOGICAL               ERROR
-!              LOGICAL               FOUND
-!              LOGICAL               ISNULL
-!
-!        C
-!        C     Open an EK file.
-!        C
-!              CALL FURNSH ( EKNAME )
-!
-!        C
-!        C     The table 'VIKING_SEDR_DATA' has a column
-!        C     'IMAGE_NUMBER' of double precision values.
-!        C
-!        C     Define a set of constraints to perform a query on
-!        C     all loaded EK files (the SELECT clause). In this
-!        C     case select the column 'IMAGE_NUMBER' from table
-!        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
-!        C
-!              QUERY = 'Select IMAGE_NUMBER from VIKING_SEDR_DATA '
-!             .   //   'where IMAGE_NUMBER < 25860000 '
-!             .   //   'order by IMAGE_NUMBER'
-!
-!        C
-!        C     Query the EK system for data rows matching the
-!        C     SELECT constraints.
-!        C
-!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C     Check whether an error occurred while processing the
-!        C     SELECT clause. If so, output the error message.
-!        C
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
-!
-!              ELSE
-!
-!        C
-!        C        Fetch the character data. We know the query returned
-!        C        one column and the column contains only scalar data,
-!        C        so the index of all elements is 1.
-!        C
-!                 SELIDX = 1
-!                 ELTIDX = 1
-!
-!        C
-!        C        Loop over each row found matching the query.
-!        C
-!                 DO ROWNO = 1, NMROWS
-!
-!        C
-!        C           Use EKGD to retrieve the string from
-!        C
-!                    CALL EKGI ( SELIDX, ROWNO,  ELTIDX,
-!             .                  IDATA,  ISNULL, FOUND   )
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
-!             .                  ': Integer data: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE (*,'(A,I3,A,I10)') 'Row ', ROWNO,
-!             .                  ': Integer data: ', IDATA
-!
-!                    END IF
-!
-!                 END DO
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Row   1: Integer data:   25837050
-!        Row   2: Integer data:   25837051
-!        Row   3: Integer data:   25840344
-!        Row   4: Integer data:   25840345
-!        Row   5: Integer data:   25843638
-!        Row   6: Integer data:   25843639
-!        Row   7: Integer data:   25846934
-!        Row   8: Integer data:   25846935
-!        Row   9: Integer data:   25848026
-!        Row  10: Integer data:   25848030
-!        Row  11: Integer data:   25848032
-!        Row  12: Integer data:   25851874
-!        Row  13: Integer data:   25851878
-!        Row  14: Integer data:   25851880
-!        Row  15: Integer data:   25853516
-!        Row  16: Integer data:   25853520
-!        Row  17: Integer data:   25853522
-!        Row  18: Integer data:   25855162
-!        Row  19: Integer data:   25855166
-!        Row  20: Integer data:   25855168
-!        Row  21: Integer data:   25856810
-!        Row  22: Integer data:   25856814
-!        Row  23: Integer data:   25856816
-!        Row  24: Integer data:   25858458
-!        Row  25: Integer data:   25858462
-!        Row  26: Integer data:   25858464
-!
-!     2) This example demonstrates how to fetch integer values
-!        from a column in three different cases: single values,
-!        variable-size arrays and static-size arrays.
-!
-!        Create an EK that contains a table TAB that has the following
-!        columns:
-!
-!           Column name   Data Type   Size
-!           -----------   ---------   ----
-!           INT_COL_1     INT         1
-!           INT_COL_2     INT         VARIABLE
-!           INT_COL_3     INT         3
-!
-!        Issue the following query
-!
-!            QUERY = 'SELECT INT_COL_1, INT_COL2, INT_COL3 FROM TAB'
-!
-!        to fetch and dump column values from the rows that satisfy the
-!        query.
-!
-!        Example code begins here.
-!
-!              PROGRAM EKGI_EX2
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include the EK Column Name Size (CNAMSZ)
-!        C     and EK Query Limit Parameters (MAXQRY)
-!        C
-!              INCLUDE 'ekcnamsz.inc'
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME  = 'ekgi_ex2.bdb' )
-!
-!              CHARACTER*(*)         TABLE
-!              PARAMETER           ( TABLE   = 'TAB' )
-!
-!              INTEGER               COL3SZ
-!              PARAMETER           ( COL3SZ = 3   )
-!
-!              INTEGER               DECLEN
-!              PARAMETER           ( DECLEN = 200 )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!              INTEGER               MXC2SZ
-!              PARAMETER           ( MXC2SZ = 4   )
-!
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 40  )
-!
-!              INTEGER               NCOLS
-!              PARAMETER           ( NCOLS  = 3   )
-!
-!              INTEGER               NROWS
-!              PARAMETER           ( NROWS  = 4   )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(NAMLEN)    IFNAME
-!              CHARACTER*(MAXQRY)    QUERY
-!
-!              INTEGER               COL1
-!              INTEGER               COL2   ( MXC2SZ )
-!              INTEGER               COL3   ( COL3SZ )
-!              INTEGER               ELTIDX
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               IVALS  ( MXC2SZ )
-!              INTEGER               J
-!              INTEGER               NELT
-!              INTEGER               NMROWS
-!              INTEGER               NRESVC
-!              INTEGER               RECNO
-!              INTEGER               ROW
-!              INTEGER               SEGNO
-!              INTEGER               SELIDX
-!
-!              LOGICAL               ERROR
-!              LOGICAL               FOUND
-!              LOGICAL               ISNULL
-!
-!        C
-!        C     Open a new EK file.  For simplicity, we will not
-!        C     reserve any space for the comment area, so the
-!        C     number of reserved comment characters is zero.
-!        C     The variable IFNAME is the internal file name.
-!        C
-!              NRESVC  =  0
-!              IFNAME  =  'Test EK/Created 13-JUN-2019'
-!
-!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-!
-!        C
-!        C     Set up the column names and declarations
-!        C     for the TAB segment.  We'll index all of
-!        C     the columns.
-!        C
-!              CNAMES(1) = 'INT_COL_1'
-!              CDECLS(1) = 'DATATYPE = INTEGER, INDEXED  = TRUE'
-!
-!              CNAMES(2) = 'INT_COL_2'
-!              CDECLS(2) = 'DATATYPE = INTEGER, SIZE = VARIABLE'
-!
-!              CNAMES(3) = 'INT_COL_3'
-!              CDECLS(3) = 'DATATYPE = INTEGER, SIZE = 3'
-!
-!        C
-!        C     Start the segment.
-!        C
-!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-!             .              CNAMES, CDECLS, SEGNO )
-!
-!        C
-!        C     At the records to the table.
-!        C
-!              DO I = 1, NROWS
-!
-!        C
-!        C        Append a new record to the EK.
-!        C
-!                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-!
-!        C
-!        C        Add INT_COL_1
-!        C
-!                 COL1 = I * 100
-!
-!                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(1), 1,     COL1,  .FALSE. )
-!
-!        C
-!        C        Add I items to INT_COL_2
-!        C
-!                 DO J = 1, I
-!                    COL2(J) = J + I*200
-!                 END DO
-!
-!                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(2), I,     COL2,  .FALSE. )
-!
-!        C
-!        C        Add 3 items to INT_COL_3
-!        C
-!                 DO J = 1, 3
-!                    COL3(J) =  I + J*100.D0
-!                 END DO
-!
-!                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
-!             .                 CNAMES(3), 3,     COL3, .FALSE. )
-!
-!              END DO
-!
-!        C
-!        C     Close the file.
-!        C
-!              CALL EKCLS ( HANDLE )
-!
-!        C
-!        C     Open the created file. Perform the query and show the
-!        C     results.
-!        C
-!              CALL FURNSH ( EKNAME )
-!
-!              QUERY = 'SELECT INT_COL_1, INT_COL_2, INT_COL_3 '
-!             .   //   'FROM TAB'
-!
-!        C
-!        C     Query the EK system for data rows matching the
-!        C     SELECT constraints.
-!        C
-!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!        C
-!        C     Check whether an error occurred while processing the
-!        C     SELECT clause. If so, output the error message.
-!        C
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
-!
-!              ELSE
-!
-!                 DO ROW = 1, NMROWS
-!
-!                    WRITE(*,*) ' '
-!                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
-!
-!        C
-!        C           Fetch values from column INT_COL_1.  Since
-!        C           INT_COL_1 was the first column selected, the
-!        C           selection index SELIDX is set to 1.
-!        C
-!                    SELIDX = 1
-!                    ELTIDX = 1
-!                    CALL EKGI ( SELIDX,    ROW,     ELTIDX,
-!             .                  IVALS(1),  ISNULL,  FOUND   )
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,*) '  COLUMN = INT_COL_1: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE(*,'(A,I6)') '   COLUMN = INT_COL_1:',
-!             .                           IVALS(1)
-!
-!                    END IF
-!
-!        C
-!        C           Fetch values from column INT_COL_2 in the current
-!        C           row.  Since INT_COL_2 contains variable-size array
-!        C           elements, we call EKNELT to determine how many
-!        C           elements to fetch.
-!        C
-!                    SELIDX = 2
-!                    CALL EKNELT ( SELIDX, ROW, NELT )
-!
-!                    ELTIDX = 1
-!                    ISNULL = .FALSE.
-!
-!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-!             .                 .AND. (        .NOT. ISNULL )  )
-!
-!                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
-!             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
-!
-!                       ELTIDX = ELTIDX + 1
-!
-!        C
-!        C           If the column entry is null, we'll be kicked
-!        C           out of this loop after the first iteration.
-!        C
-!                    END DO
-!
-!                    IF ( ISNULL ) THEN
-!                       WRITE(*,*) '  COLUMN = INT_COL_2: <Null>'
-!                    ELSE
-!
-!                       WRITE(*,'(A,4I6)') '   COLUMN = INT_COL_2:',
-!             .                            ( IVALS(I), I = 1, NELT )
-!
-!                    END IF
-!
-!        C
-!        C           Fetch values from column INT_COL_3 in the current
-!        C           row.  We need not call EKNELT since we know how
-!        C           many elements are in each column entry.
-!        C
-!                    SELIDX = 3
-!                    ELTIDX = 1
-!                    ISNULL = .FALSE.
-!
-!                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
-!             .                 .AND. (        .NOT. ISNULL )  )
-!
-!                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
-!             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
-!
-!                       ELTIDX = ELTIDX + 1
-!
-!                    END DO
-!
-!                    IF ( ISNULL ) THEN
-!
-!                       WRITE(*,*) '  COLUMN = INT_COL_3: <Null>'
-!
-!                    ELSE
-!
-!                       WRITE(*,'(A,3I6)') '   COLUMN = INT_COL_3:',
-!             .                            ( IVALS(I), I = 1, COL3SZ )
-!
-!                    END IF
-!
-!                 END DO
-!
-!        C
-!        C     We either parsed the SELECT clause or had an error.
-!        C
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        ROW  =   1
-!           COLUMN = INT_COL_1:   100
-!           COLUMN = INT_COL_2:   201
-!           COLUMN = INT_COL_3:   101   201   301
-!
-!        ROW  =   2
-!           COLUMN = INT_COL_1:   200
-!           COLUMN = INT_COL_2:   401   402
-!           COLUMN = INT_COL_3:   102   202   302
-!
-!        ROW  =   3
-!           COLUMN = INT_COL_1:   300
-!           COLUMN = INT_COL_2:   601   602   603
-!           COLUMN = INT_COL_3:   103   203   303
-!
-!        ROW  =   4
-!           COLUMN = INT_COL_1:   400
-!           COLUMN = INT_COL_2:   801   802   803   804
-!           COLUMN = INT_COL_3:   104   204   304
-!
-!        Note that after run completion, a new EK file exists in the
-!        output directory.
-!
-!     3) See $Examples in EKQMGR.
-!
-!        In this example, the names and data types of the columns from
-!        which to fetch data are not known in advance.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete code examples from existing fragments.
-!
-!-    SPICELIB Version 2.0.1, 22-SEP-2004 (EDW)
-!
-!        Edited version 1.1.0 entry to not include
-!        the token used to mark the $Procedure section.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
-!
-!        Redundant CHKIN call removed from SELIDX error check.
-!        Misspelling of "issued" was fixed. Previous version line
-!        was changed from "Beta" to "SPICELIB." Header $Procedure
-!        line was corrected to indicate integer data type.
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     fetch element from integer column entry
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return an element of an entry in a column of integer
+!!     type in a specified row.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     EK
+!!
+!! ## Declarations
+!!
+!!     INTEGER               SELIDX
+!!     INTEGER               ROW
+!!     INTEGER               ELMENT
+!!     INTEGER               IDATA
+!!     LOGICAL               NULL
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     SELIDX   is the SELECT clause index of the column to
+!!              fetch from.
+!!
+!!     ROW      is the output row containing the entry to fetch
+!!              from.
+!!
+!!     ELMENT   is the index of the element of the column entry
+!!              to fetch. The normal range of ELMENT is from 1 to
+!!              the size of the column's entry, but ELMENT is
+!!              allowed to exceed the number of elements in the
+!!              column entry; if it does, FOUND is returned .FALSE.
+!!              This allows the caller to read data from the column
+!!              entry in a loop without checking the number of
+!!              available elements first.
+!!
+!!              Null values in variable-sized columns are
+!!              considered to have size 1.
+!!
+!! ## Detailed Output
+!!
+!!     IDATA    is the requested element of the specified column
+!!              entry. If the entry is null, IDATA is undefined.
+!!
+!!     NULL     is a logical flag indicating whether the entry
+!!              belonging to the specified column in the specified
+!!              row is null.
+!!
+!!     FOUND    is a logical flag indicating whether the specified
+!!              element was found. If the element does not exist,
+!!              FOUND is returned .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input argument ELMENT is less than 1, the error
+!!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
+!!         However, ELMENT is allowed to be greater than the number of
+!!         elements in the specified column entry; this allows the caller
+!!         to read data from the column entry in a loop without checking
+!!         the number of available elements first. If ELMENT is greater
+!!         than the number of available elements, FOUND is returned
+!!         .FALSE.
+!!
+!!     2)  If SELIDX is outside of the range established by the
+!!         last query passed to EKSRCH, the error SPICE(INVALIDINDEX)
+!!         is signaled and FOUND is returned .FALSE.
+!!
+!!     3)  If the input argument ROW is less than 1 or greater than the
+!!         number of rows matching the query, the error
+!!         SPICE(INVALIDINDEX) is signaled and FOUND is returned .FALSE.
+!!
+!!     4)  If the specified column does not have integer type, the
+!!         error SPICE(INVALIDTYPE) is signaled.
+!!
+!!     5)  If this routine is called when no E-kernels have been loaded,
+!!         the error SPICE(NOLOADEDFILES) is signaled.
+!!
+!! ## Files
+!!
+!!     See the header of EKQMGR for a description of files used
+!!     by this routine.
+!!
+!! ## Particulars
+!!
+!!     This routine allows retrieval of data from integer columns.
+!!
+!!     This routine returns one element at a time in order to save the
+!!     caller from imposing a limit on the size of the column entries
+!!     that can be handled.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for these examples may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Perform a query on an EK file that contains a database with
+!!        the Supplementary Engineering Data Records of the Viking
+!!        Project in order to retrieve the IMAGE_NUMBER values (integer
+!!        numbers) that correspond to the images with IMAGE_NUMBER
+!!        smaller than a given value, ordered by IMAGE_NUMBER.
+!!
+!!        Use the EK kernel below to load the information from the
+!!        original Supplementary Engineering Data Record (SEDR) data
+!!        set generated by the Viking Project.
+!!
+!!           vo_sedr.bdb
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKGI_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Maximum length of an input query,
+!!        C     MAXQRY, and the maximum length of literal string
+!!        C     values, MAXSTR, from eklimit.inc.
+!!        C
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         EKNAME
+!!              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              INTEGER               ELTIDX
+!!              INTEGER               IDATA
+!!              INTEGER               NMROWS
+!!              INTEGER               ROWNO
+!!              INTEGER               SELIDX
+!!
+!!              LOGICAL               ERROR
+!!              LOGICAL               FOUND
+!!              LOGICAL               ISNULL
+!!
+!!        C
+!!        C     Open an EK file.
+!!        C
+!!              CALL FURNSH ( EKNAME )
+!!
+!!        C
+!!        C     The table 'VIKING_SEDR_DATA' has a column
+!!        C     'IMAGE_NUMBER' of double precision values.
+!!        C
+!!        C     Define a set of constraints to perform a query on
+!!        C     all loaded EK files (the SELECT clause). In this
+!!        C     case select the column 'IMAGE_NUMBER' from table
+!!        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
+!!        C
+!!              QUERY = 'Select IMAGE_NUMBER from VIKING_SEDR_DATA '
+!!             .   //   'where IMAGE_NUMBER < 25860000 '
+!!             .   //   'order by IMAGE_NUMBER'
+!!
+!!        C
+!!        C     Query the EK system for data rows matching the
+!!        C     SELECT constraints.
+!!        C
+!!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C     Check whether an error occurred while processing the
+!!        C     SELECT clause. If so, output the error message.
+!!        C
+!!              IF ( ERROR ) THEN
+!!
+!!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+!!
+!!              ELSE
+!!
+!!        C
+!!        C        Fetch the character data. We know the query returned
+!!        C        one column and the column contains only scalar data,
+!!        C        so the index of all elements is 1.
+!!        C
+!!                 SELIDX = 1
+!!                 ELTIDX = 1
+!!
+!!        C
+!!        C        Loop over each row found matching the query.
+!!        C
+!!                 DO ROWNO = 1, NMROWS
+!!
+!!        C
+!!        C           Use EKGD to retrieve the string from
+!!        C
+!!                    CALL EKGI ( SELIDX, ROWNO,  ELTIDX,
+!!             .                  IDATA,  ISNULL, FOUND   )
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
+!!             .                  ': Integer data: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE (*,'(A,I3,A,I10)') 'Row ', ROWNO,
+!!             .                  ': Integer data: ', IDATA
+!!
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Row   1: Integer data:   25837050
+!!        Row   2: Integer data:   25837051
+!!        Row   3: Integer data:   25840344
+!!        Row   4: Integer data:   25840345
+!!        Row   5: Integer data:   25843638
+!!        Row   6: Integer data:   25843639
+!!        Row   7: Integer data:   25846934
+!!        Row   8: Integer data:   25846935
+!!        Row   9: Integer data:   25848026
+!!        Row  10: Integer data:   25848030
+!!        Row  11: Integer data:   25848032
+!!        Row  12: Integer data:   25851874
+!!        Row  13: Integer data:   25851878
+!!        Row  14: Integer data:   25851880
+!!        Row  15: Integer data:   25853516
+!!        Row  16: Integer data:   25853520
+!!        Row  17: Integer data:   25853522
+!!        Row  18: Integer data:   25855162
+!!        Row  19: Integer data:   25855166
+!!        Row  20: Integer data:   25855168
+!!        Row  21: Integer data:   25856810
+!!        Row  22: Integer data:   25856814
+!!        Row  23: Integer data:   25856816
+!!        Row  24: Integer data:   25858458
+!!        Row  25: Integer data:   25858462
+!!        Row  26: Integer data:   25858464
+!!
+!!     2) This example demonstrates how to fetch integer values
+!!        from a column in three different cases: single values,
+!!        variable-size arrays and static-size arrays.
+!!
+!!        Create an EK that contains a table TAB that has the following
+!!        columns:
+!!
+!!           Column name   Data Type   Size
+!!           -----------   ---------   ----
+!!           INT_COL_1     INT         1
+!!           INT_COL_2     INT         VARIABLE
+!!           INT_COL_3     INT         3
+!!
+!!        Issue the following query
+!!
+!!            QUERY = 'SELECT INT_COL_1, INT_COL2, INT_COL3 FROM TAB'
+!!
+!!        to fetch and dump column values from the rows that satisfy the
+!!        query.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EKGI_EX2
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include the EK Column Name Size (CNAMSZ)
+!!        C     and EK Query Limit Parameters (MAXQRY)
+!!        C
+!!              INCLUDE 'ekcnamsz.inc'
+!!              INCLUDE 'ekqlimit.inc'
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         EKNAME
+!!              PARAMETER           ( EKNAME  = 'ekgi_ex2.bdb' )
+!!
+!!              CHARACTER*(*)         TABLE
+!!              PARAMETER           ( TABLE   = 'TAB' )
+!!
+!!              INTEGER               COL3SZ
+!!              PARAMETER           ( COL3SZ = 3   )
+!!
+!!              INTEGER               DECLEN
+!!              PARAMETER           ( DECLEN = 200 )
+!!
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN = 1840 )
+!!
+!!              INTEGER               MXC2SZ
+!!              PARAMETER           ( MXC2SZ = 4   )
+!!
+!!              INTEGER               NAMLEN
+!!              PARAMETER           ( NAMLEN = 40  )
+!!
+!!              INTEGER               NCOLS
+!!              PARAMETER           ( NCOLS  = 3   )
+!!
+!!              INTEGER               NROWS
+!!              PARAMETER           ( NROWS  = 4   )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+!!              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+!!              CHARACTER*(ERRLEN)    ERRMSG
+!!              CHARACTER*(NAMLEN)    IFNAME
+!!              CHARACTER*(MAXQRY)    QUERY
+!!
+!!              INTEGER               COL1
+!!              INTEGER               COL2   ( MXC2SZ )
+!!              INTEGER               COL3   ( COL3SZ )
+!!              INTEGER               ELTIDX
+!!              INTEGER               HANDLE
+!!              INTEGER               I
+!!              INTEGER               IVALS  ( MXC2SZ )
+!!              INTEGER               J
+!!              INTEGER               NELT
+!!              INTEGER               NMROWS
+!!              INTEGER               NRESVC
+!!              INTEGER               RECNO
+!!              INTEGER               ROW
+!!              INTEGER               SEGNO
+!!              INTEGER               SELIDX
+!!
+!!              LOGICAL               ERROR
+!!              LOGICAL               FOUND
+!!              LOGICAL               ISNULL
+!!
+!!        C
+!!        C     Open a new EK file.  For simplicity, we will not
+!!        C     reserve any space for the comment area, so the
+!!        C     number of reserved comment characters is zero.
+!!        C     The variable IFNAME is the internal file name.
+!!        C
+!!              NRESVC  =  0
+!!              IFNAME  =  'Test EK/Created 13-JUN-2019'
+!!
+!!              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+!!
+!!        C
+!!        C     Set up the column names and declarations
+!!        C     for the TAB segment.  We'll index all of
+!!        C     the columns.
+!!        C
+!!              CNAMES(1) = 'INT_COL_1'
+!!              CDECLS(1) = 'DATATYPE = INTEGER, INDEXED  = TRUE'
+!!
+!!              CNAMES(2) = 'INT_COL_2'
+!!              CDECLS(2) = 'DATATYPE = INTEGER, SIZE = VARIABLE'
+!!
+!!              CNAMES(3) = 'INT_COL_3'
+!!              CDECLS(3) = 'DATATYPE = INTEGER, SIZE = 3'
+!!
+!!        C
+!!        C     Start the segment.
+!!        C
+!!              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+!!             .              CNAMES, CDECLS, SEGNO )
+!!
+!!        C
+!!        C     At the records to the table.
+!!        C
+!!              DO I = 1, NROWS
+!!
+!!        C
+!!        C        Append a new record to the EK.
+!!        C
+!!                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+!!
+!!        C
+!!        C        Add INT_COL_1
+!!        C
+!!                 COL1 = I * 100
+!!
+!!                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(1), 1,     COL1,  .FALSE. )
+!!
+!!        C
+!!        C        Add I items to INT_COL_2
+!!        C
+!!                 DO J = 1, I
+!!                    COL2(J) = J + I*200
+!!                 END DO
+!!
+!!                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(2), I,     COL2,  .FALSE. )
+!!
+!!        C
+!!        C        Add 3 items to INT_COL_3
+!!        C
+!!                 DO J = 1, 3
+!!                    COL3(J) =  I + J*100.D0
+!!                 END DO
+!!
+!!                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
+!!             .                 CNAMES(3), 3,     COL3, .FALSE. )
+!!
+!!              END DO
+!!
+!!        C
+!!        C     Close the file.
+!!        C
+!!              CALL EKCLS ( HANDLE )
+!!
+!!        C
+!!        C     Open the created file. Perform the query and show the
+!!        C     results.
+!!        C
+!!              CALL FURNSH ( EKNAME )
+!!
+!!              QUERY = 'SELECT INT_COL_1, INT_COL_2, INT_COL_3 '
+!!             .   //   'FROM TAB'
+!!
+!!        C
+!!        C     Query the EK system for data rows matching the
+!!        C     SELECT constraints.
+!!        C
+!!              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!!
+!!        C
+!!        C     Check whether an error occurred while processing the
+!!        C     SELECT clause. If so, output the error message.
+!!        C
+!!              IF ( ERROR ) THEN
+!!
+!!                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+!!
+!!              ELSE
+!!
+!!                 DO ROW = 1, NMROWS
+!!
+!!                    WRITE(*,*) ' '
+!!                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+!!
+!!        C
+!!        C           Fetch values from column INT_COL_1.  Since
+!!        C           INT_COL_1 was the first column selected, the
+!!        C           selection index SELIDX is set to 1.
+!!        C
+!!                    SELIDX = 1
+!!                    ELTIDX = 1
+!!                    CALL EKGI ( SELIDX,    ROW,     ELTIDX,
+!!             .                  IVALS(1),  ISNULL,  FOUND   )
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,*) '  COLUMN = INT_COL_1: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE(*,'(A,I6)') '   COLUMN = INT_COL_1:',
+!!             .                           IVALS(1)
+!!
+!!                    END IF
+!!
+!!        C
+!!        C           Fetch values from column INT_COL_2 in the current
+!!        C           row.  Since INT_COL_2 contains variable-size array
+!!        C           elements, we call EKNELT to determine how many
+!!        C           elements to fetch.
+!!        C
+!!                    SELIDX = 2
+!!                    CALL EKNELT ( SELIDX, ROW, NELT )
+!!
+!!                    ELTIDX = 1
+!!                    ISNULL = .FALSE.
+!!
+!!                    DO WHILE (       ( ELTIDX .LE.  NELT   )
+!!             .                 .AND. (        .NOT. ISNULL )  )
+!!
+!!                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
+!!             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
+!!
+!!                       ELTIDX = ELTIDX + 1
+!!
+!!        C
+!!        C           If the column entry is null, we'll be kicked
+!!        C           out of this loop after the first iteration.
+!!        C
+!!                    END DO
+!!
+!!                    IF ( ISNULL ) THEN
+!!                       WRITE(*,*) '  COLUMN = INT_COL_2: <Null>'
+!!                    ELSE
+!!
+!!                       WRITE(*,'(A,4I6)') '   COLUMN = INT_COL_2:',
+!!             .                            ( IVALS(I), I = 1, NELT )
+!!
+!!                    END IF
+!!
+!!        C
+!!        C           Fetch values from column INT_COL_3 in the current
+!!        C           row.  We need not call EKNELT since we know how
+!!        C           many elements are in each column entry.
+!!        C
+!!                    SELIDX = 3
+!!                    ELTIDX = 1
+!!                    ISNULL = .FALSE.
+!!
+!!                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
+!!             .                 .AND. (        .NOT. ISNULL )  )
+!!
+!!                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
+!!             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
+!!
+!!                       ELTIDX = ELTIDX + 1
+!!
+!!                    END DO
+!!
+!!                    IF ( ISNULL ) THEN
+!!
+!!                       WRITE(*,*) '  COLUMN = INT_COL_3: <Null>'
+!!
+!!                    ELSE
+!!
+!!                       WRITE(*,'(A,3I6)') '   COLUMN = INT_COL_3:',
+!!             .                            ( IVALS(I), I = 1, COL3SZ )
+!!
+!!                    END IF
+!!
+!!                 END DO
+!!
+!!        C
+!!        C     We either parsed the SELECT clause or had an error.
+!!        C
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        ROW  =   1
+!!           COLUMN = INT_COL_1:   100
+!!           COLUMN = INT_COL_2:   201
+!!           COLUMN = INT_COL_3:   101   201   301
+!!
+!!        ROW  =   2
+!!           COLUMN = INT_COL_1:   200
+!!           COLUMN = INT_COL_2:   401   402
+!!           COLUMN = INT_COL_3:   102   202   302
+!!
+!!        ROW  =   3
+!!           COLUMN = INT_COL_1:   300
+!!           COLUMN = INT_COL_2:   601   602   603
+!!           COLUMN = INT_COL_3:   103   203   303
+!!
+!!        ROW  =   4
+!!           COLUMN = INT_COL_1:   400
+!!           COLUMN = INT_COL_2:   801   802   803   804
+!!           COLUMN = INT_COL_3:   104   204   304
+!!
+!!        Note that after run completion, a new EK file exists in the
+!!        output directory.
+!!
+!!     3) See $Examples in EKQMGR.
+!!
+!!        In this example, the names and data types of the columns from
+!!        which to fetch data are not known in advance.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!        Added complete code examples from existing fragments.
+!!
+!!-    SPICELIB Version 2.0.1, 22-SEP-2004 (EDW)
+!!
+!!        Edited version 1.1.0 entry to not include
+!!        the token used to mark the $Procedure section.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!!
+!!        Bug fix: When an already loaded kernel is opened with EKOPR,
+!!        it now has its link count reset to 1 via a call to EKCLS.
+!!
+!!-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
+!!
+!!        Redundant CHKIN call removed from SELIDX error check.
+!!        Misspelling of "issued" was fixed. Previous version line
+!!        was changed from "Beta" to "SPICELIB." Header $Procedure
+!!        line was corrected to indicate integer data type.
+!!
+!!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     fetch element from integer column entry
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      include  'ekattdsc.inc'
-      include  'ekbool.inc'
-      include  'ekcnamsz.inc'
-      include  'ekcoldsc.inc'
-      include  'ekjrs.inc'
-      include  'ekopcd.inc'
-      include  'ekqlimit.inc'
-      include  'ekquery.inc'
-      include  'eksegdsc.inc'
-      include  'ektnamsz.inc'
-      include  'ektype.inc'
       integer(ip), parameter :: ftsize = 20
       integer(ip), parameter :: stsize = 200
       integer(ip), parameter :: mxtbld = 100
@@ -38406,32 +37721,31 @@ contains
 !$Procedure      ZZEKDE01 ( EK, delete column entry, class 1 )
 
       module procedure zzekde01
+!! ## Abstract
+!!
+!!     Delete a specified class 1 column entry from an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Delete a specified class 1 column entry from an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -38654,32 +37968,31 @@ contains
 !$Procedure      ZZEKDE02 ( EK, delete column entry, class 2 )
 
       module procedure zzekde02
+!! ## Abstract
+!!
+!!     Delete a specified class 2 column entry from an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Delete a specified class 2 column entry from an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -38903,130 +38216,120 @@ contains
 !$Procedure      ZZEKDE03 ( EK, delete column entry, class 3 )
 
       module procedure zzekde03
+!! ## Abstract
+!!
+!!     Delete a specified class 3 column entry from an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment from which to
+!!                    delete the specified column entry.
+!!
+!!     COLDSC         is the descriptor of the column from which to
+!!                    delete the specified column entry.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to delete.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file will not be modified.
+!!
+!!     2)  If RECNO is out of range, the error SPICE(INVALIDINDEX)
+!!         will be signaled.  The file will not be modified.
+!!
+!!     3)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it deletes a column entry
+!!     from an EK segment.  The deleted entry is marked as
+!!     `uninitialized'.  If the column containing the entry is indexed,
+!!     the corresponding entry in the index is removed.  The entry must
+!!     be replaced with a new entry in order to be readable.
+!!
+!!     The link count for the page containing the deleted column entry
+!!     is decremented.  If the count becomes zero, the page is freed.
+!!     If the entry to be deleted is already uninitialized upon entry
+!!     to this routine, no link counts are modified.  The record
+!!     containing the entry is still marked `updated' in this
+!!     case.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKDELR.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error message.
+!!
+!!        Deleted unneeded declarations and code.
+!!
+!!-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-
-! $ Abstract
-!
-!     Delete a specified class 3 column entry from an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment from which to
-!                    delete the specified column entry.
-!
-!     COLDSC         is the descriptor of the column from which to
-!                    delete the specified column entry.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to delete.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file will not be modified.
-!
-!     2)  If RECNO is out of range, the error SPICE(INVALIDINDEX)
-!         will be signaled.  The file will not be modified.
-!
-!     3)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it deletes a column entry
-!     from an EK segment.  The deleted entry is marked as
-!     `uninitialized'.  If the column containing the entry is indexed,
-!     the corresponding entry in the index is removed.  The entry must
-!     be replaced with a new entry in order to be readable.
-!
-!     The link count for the page containing the deleted column entry
-!     is decremented.  If the count becomes zero, the page is freed.
-!     If the entry to be deleted is already uninitialized upon entry
-!     to this routine, no link counts are modified.  The record
-!     containing the entry is still marked `updated' in this
-!     case.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKDELR.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error message.
-!
-!        Deleted unneeded declarations and code.
-!
-!-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           base
       integer(ip)           datptr
       integer(ip)           idxtyp
@@ -39202,32 +38505,31 @@ contains
 !$Procedure      ZZEKUE01 ( EK, update column entry, class 1 )
 
       module procedure zzekue01
+!! ## Abstract
+!!
+!!     Update a specified class 1 column entry in an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Update a specified class 1 column entry in an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -39490,135 +38792,125 @@ contains
 !$Procedure      ZZEKUE02 ( EK, update column entry, class 2 )
 
       module procedure zzekue02
+!! ## Abstract
+!!
+!!     Update a specified class 2 column entry in an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment containing
+!!                    the specified column entry.
+!!
+!!     COLDSC         is the descriptor of the column containing
+!!                    the specified column entry.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to update.
+!!
+!!     DVAL           is the double precision value with which to update
+!!                    the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the value
+!!                    of the specified column entry is to be set to NULL.
+!!                    If so, the input DVAL is ignored.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file will not be modified.
+!!
+!!     2)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it updates a column entry
+!!     in an EK segment.  This routine does not participate in shadowing
+!!     functions.  If the target EK is shadowed, the caller is
+!!     responsible for performing necessary backup operations.  If the
+!!     target EK is not shadowed, the target record's status is not
+!!     modified.
+!!
+!!     If the column containing the entry is indexed, the corresponding
+!!     index is updated.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKUCED.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 09-FEB-2015 (NJB)
+!!
+!!        Now uses ERRHAN to insert DAS file name into
+!!        long error messages.
+!!
+!!        Deleted unnecessary code and variable declarations.
+!!
+!!-    SPICELIB Version 1.1.0, 18-JUN-1999 (WLT)
+!!
+!!        Removed redundant calls to CHKIN.
+!!
+!!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Non-SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-
-! $ Abstract
-!
-!     Update a specified class 2 column entry in an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment containing
-!                    the specified column entry.
-!
-!     COLDSC         is the descriptor of the column containing
-!                    the specified column entry.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to update.
-!
-!     DVAL           is the double precision value with which to update
-!                    the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the value
-!                    of the specified column entry is to be set to NULL.
-!                    If so, the input DVAL is ignored.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file will not be modified.
-!
-!     2)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it updates a column entry
-!     in an EK segment.  This routine does not participate in shadowing
-!     functions.  If the target EK is shadowed, the caller is
-!     responsible for performing necessary backup operations.  If the
-!     target EK is not shadowed, the target record's status is not
-!     modified.
-!
-!     If the column containing the entry is indexed, the corresponding
-!     index is updated.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKUCED.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 09-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!        Deleted unnecessary code and variable declarations.
-!
-!-    SPICELIB Version 1.1.0, 18-JUN-1999 (WLT)
-!
-!        Removed redundant calls to CHKIN.
-!
-!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Non-SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           datptr
       integer(ip)           idxtyp
       integer(ip)           nlinks
@@ -39776,30 +39068,29 @@ contains
 !$Procedure EKDELR ( EK, delete record from segment )
 
       module procedure ekdelr
+!! ## Abstract
+!!
+!!     Delete a specified record from a specified E-kernel segment.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Delete a specified record from a specified E-kernel segment.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekcnamsz.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -40131,29 +39422,28 @@ contains
 !$Procedure EKUCED ( EK, update d.p. column entry )
 
       module procedure ekuced
+!! ## Abstract
+!!
+!!     Update a double precision column entry in a specified EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Update a double precision column entry in a specified EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -40429,29 +39719,28 @@ contains
 !$Procedure EKUCEI ( EK, update integer column entry )
 
       module procedure ekucei
+!! ## Abstract
+!!
+!!     Update an integer column entry in a specified EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Update an integer column entry in a specified EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -40722,23 +40011,22 @@ contains
 !$Procedure STCG01 ( STAR catalog type 1, get star data )
 
       module procedure stcg01
+!! ## Abstract
+!!
+!!     Get data for a single star from a SPICE type 1 star catalog.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: rpd
-
-! $ Abstract
-!
-!     Get data for a single star from a SPICE type 1 star catalog.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
       implicit none
 
 
@@ -40990,23 +40278,22 @@ contains
 !$Procedure STCL01 ( STAR catalog type 1, load catalog file )
 
       module procedure stcl01
+!! ## Abstract
+!!
+!!     Load SPICE type 1 star catalog and return the catalog's
+!!     table name.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Load SPICE type 1 star catalog and return the catalog's
-!     table name.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
       implicit none
 
 
@@ -41186,34 +40473,32 @@ contains
 !$Procedure  ZZEKCCHK ( Private: EK, check names in encoded query )
 
       module procedure zzekcchk
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Check and resolve a specified column name in an encoded EK query.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchc
       use pepper_strings, only: repmc
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Check and resolve a specified column name in an encoded EK query.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekattdsc.inc'
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
       integer(ip), parameter :: lbcell = -5
 
 
@@ -41562,39 +40847,37 @@ contains
 !$Procedure  ZZEKPCOL ( Private: EK, parse column name )
 
       module procedure zzekpcol
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Given an encoded query, parse the name of a column appearing in
+!!     that query, returning full particulars concerning the column and
+!!     its parent table.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc
       use pepper_strings, only: repmc, ucase
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Given an encoded query, parse the name of a column appearing in
-!     that query, returning full particulars concerning the column and
-!     its parent table.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekattdsc.inc'
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'ektnamsz.inc'
-      include 'ektokn.inc'
-
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektokn
       integer(ip), parameter :: lbcell = -5
 
 
@@ -41997,183 +41280,164 @@ contains
       end procedure zzekpcol
 
       module procedure zzeksemc
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Semantically check an encoded EK query.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     QUERY          is the original query from which EQRYI and EQRYC
-!                    were obtained.  QUERY is used only for
-!                    construction of error messages.
-!
-!     EQRYI          is the integer portion of an encoded EK query.
-!                    The query must have been parsed and must have
-!                    its table and column names resolved.  Time values
-!                    must also have been resolved.
-!
-!     EQRYC          is the character portion of an encoded EK query.
-!
-! $ Detailed_Output
-!
-!     EQRYI          is the integer portion of an encoded EK query.
-!                    On output, semantic checking will have been
-!                    performed.
-!
-!     EQRYC          is the character portion of an encoded EK query.
-!
-!     ERROR          is a logical flag indicating whether a semantic
-!                    error was detected.
-!
-!     ERRMSG         is an error message describing a semantic error,
-!                    if such an error was detected.  If ERROR is
-!                    returned .FALSE., then ERRPTR is undefined.
-!
-!     ERRPTR         is the character position in the original query
-!                    at which a semantic error was detected, if the
-!                    input query contains a semantic error.  This
-!                    index refers to the offending lexeme's position in
-!                    the original query represented by the input encoded
-!                    query.  If ERROR is returned .FALSE., ERRPTR is
-!                    undefined.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If no EK files are loaded at the time this routine is called,
-!         the error will be diagnosed by routines called by this
-!         routine.
-!
-!     2)  If the input query is not initialized, the error will be
-!         diagnosed by routines called by this routine.  The outputs
-!         will not be modified.
-!
-!     3)  If the input query has not had its names resolved, the error
-!         SPICE(UNRESOLVEDNAMES) will be signaled.  The outputs
-!         will not be modified.
-!
-!     4)  If the input query contains time values that have not been
-!         resolved, the error SPICE(UNRESOLVEDTIMES) will be signaled.
-!         The outputs will not be modified.
-!
-!     5)  If any sort of semantic error is detected in the input query,
-!         the output flag ERROR is set, an error message is returned,
-!         and LXBEG and LXEND are set to indicate the location of the
-!         first lexeme at which an error was detected.
-!
-!         The checks performed by this routine are listed below:
-!
-!           - Constraints comparing values from two columns must
-!             refer to columns having identical data types, or else
-!             both types must be numeric.
-!
-!           - Constraints comparing values from a column with literal
-!             values must refer to columns having the data type of the
-!             literal value.
-!
-!           - The LIKE and NOT LIKE operators may be used only with
-!             string values.
-!
-!           - Columns named in constraints must be scalar-valued.
-!
-!           - Columns named as order-by columns must be scalar-valued.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The semantic checking performed by this routine is dependent on
-!     the kernels loaded at the time this routine is called.
-!
-!     This routine assumes that encoded EK query architecture version
-!     1 is to be used with the query to be initialized; this routine
-!     will not work with any other architecture version.
-!
-! $ Examples
-!
-!     See EKFIND.
-!
-! $ Restrictions
-!
-!     1) Loading or unloading EK files between name resolution of the
-!        the input query and passing the query to this routine will
-!        invalidate the checking done by this routine, and may cause
-!        the routine to fail.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Semantically check an encoded EK query.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     QUERY          is the original query from which EQRYI and EQRYC
+!!                    were obtained.  QUERY is used only for
+!!                    construction of error messages.
+!!
+!!     EQRYI          is the integer portion of an encoded EK query.
+!!                    The query must have been parsed and must have
+!!                    its table and column names resolved.  Time values
+!!                    must also have been resolved.
+!!
+!!     EQRYC          is the character portion of an encoded EK query.
+!!
+!! ## Detailed Output
+!!
+!!     EQRYI          is the integer portion of an encoded EK query.
+!!                    On output, semantic checking will have been
+!!                    performed.
+!!
+!!     EQRYC          is the character portion of an encoded EK query.
+!!
+!!     ERROR          is a logical flag indicating whether a semantic
+!!                    error was detected.
+!!
+!!     ERRMSG         is an error message describing a semantic error,
+!!                    if such an error was detected.  If ERROR is
+!!                    returned .FALSE., then ERRPTR is undefined.
+!!
+!!     ERRPTR         is the character position in the original query
+!!                    at which a semantic error was detected, if the
+!!                    input query contains a semantic error.  This
+!!                    index refers to the offending lexeme's position in
+!!                    the original query represented by the input encoded
+!!                    query.  If ERROR is returned .FALSE., ERRPTR is
+!!                    undefined.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If no EK files are loaded at the time this routine is called,
+!!         the error will be diagnosed by routines called by this
+!!         routine.
+!!
+!!     2)  If the input query is not initialized, the error will be
+!!         diagnosed by routines called by this routine.  The outputs
+!!         will not be modified.
+!!
+!!     3)  If the input query has not had its names resolved, the error
+!!         SPICE(UNRESOLVEDNAMES) will be signaled.  The outputs
+!!         will not be modified.
+!!
+!!     4)  If the input query contains time values that have not been
+!!         resolved, the error SPICE(UNRESOLVEDTIMES) will be signaled.
+!!         The outputs will not be modified.
+!!
+!!     5)  If any sort of semantic error is detected in the input query,
+!!         the output flag ERROR is set, an error message is returned,
+!!         and LXBEG and LXEND are set to indicate the location of the
+!!         first lexeme at which an error was detected.
+!!
+!!         The checks performed by this routine are listed below:
+!!
+!!           - Constraints comparing values from two columns must
+!!             refer to columns having identical data types, or else
+!!             both types must be numeric.
+!!
+!!           - Constraints comparing values from a column with literal
+!!             values must refer to columns having the data type of the
+!!             literal value.
+!!
+!!           - The LIKE and NOT LIKE operators may be used only with
+!!             string values.
+!!
+!!           - Columns named in constraints must be scalar-valued.
+!!
+!!           - Columns named as order-by columns must be scalar-valued.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The semantic checking performed by this routine is dependent on
+!!     the kernels loaded at the time this routine is called.
+!!
+!!     This routine assumes that encoded EK query architecture version
+!!     1 is to be used with the query to be initialized; this routine
+!!     will not work with any other architecture version.
+!!
+!! ## Examples
+!!
+!!     See EKFIND.
+!!
+!! ## Restrictions
+!!
+!!     1) Loading or unloading EK files between name resolution of the
+!!        the input query and passing the query to this routine will
+!!        invalidate the checking done by this routine, and may cause
+!!        the routine to fail.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: repmc
-      include 'ekattdsc.inc'
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekopcd.inc'
-      include 'ekquery.inc'
-      include 'ektnamsz.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekopcd
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: short = 32
       character(tnamsz)     alias
@@ -42490,37 +41754,35 @@ contains
 !$Procedure  ZZEKTRES ( Private: EK, resolve times in encoded query )
 
       module procedure zzektres
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Resolve time values in an encoded EK query.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: movei
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Resolve time values in an encoded EK query.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekattdsc.inc'
-      include 'ekbool.inc'
-      include 'ekcnamsz.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'ektnamsz.inc'
-      include 'ektype.inc'
-
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       integer(ip), parameter :: lbcell = -5
 
 
@@ -42790,126 +42052,118 @@ contains
 !$Procedure      ZZEKUE03 ( EK, update column entry, class 3 )
 
       module procedure zzekue03
+!! ## Abstract
+!!
+!!     Update a specified class 3 column entry in an EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE         is a file handle of an EK open for write access.
+!!
+!!     SEGDSC         is the descriptor of the segment containing
+!!                    the specified column entry.
+!!
+!!     COLDSC         is the descriptor of the column containing
+!!                    the specified column entry.
+!!
+!!     RECPTR         is a pointer to the record containing the column
+!!                    entry to update.
+!!
+!!     CVAL           is the character string value with which to update
+!!                    the specified column entry.
+!!
+!!     ISNULL         is a logical flag indicating whether the value
+!!                    of the specified column entry is to be set to NULL.
+!!                    If so, the input CVAL is ignored.
+!!
+!! ## Detailed Output
+!!
+!!     None.  See the $Particulars section for a description of the
+!!     effect of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If HANDLE is invalid, the error will be diagnosed by routines
+!!         called by this routine.  The file will not be modified.
+!!
+!!     2)  If RECNO is out of range, the error SPICE(INVALIDINDEX)
+!!         will be signaled.  The file will not be modified.
+!!
+!!     3)  If an I/O error occurs while reading or writing the indicated
+!!         file, the error will be diagnosed by routines called by this
+!!         routine.  The file may be corrupted.
+!!
+!! ## Files
+!!
+!!     See the EK Required Reading for a discussion of the EK file
+!!     format.
+!!
+!! ## Particulars
+!!
+!!     This routine operates by side effects:  it updates a column entry
+!!     in an EK segment.  This routine does not participate in shadowing
+!!     functions.  If the target EK is shadowed, the caller is
+!!     responsible for performing necessary backup operations.  If the
+!!     target EK is not shadowed, the target record's status is not
+!!     modified.
+!!
+!!     If the column containing the entry is indexed, the corresponding
+!!     index is updated.
+!!
+!!     The changes made by this routine to the target EK file become
+!!     permanent when the file is closed.  Failure to close the file
+!!     properly will leave it in an indeterminate state.
+!!
+!! ## Examples
+!!
+!!     See EKUCEC.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Update a specified class 3 column entry in an EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
-
-
-! $ Detailed_Input
-!
-!     HANDLE         is a file handle of an EK open for write access.
-!
-!     SEGDSC         is the descriptor of the segment containing
-!                    the specified column entry.
-!
-!     COLDSC         is the descriptor of the column containing
-!                    the specified column entry.
-!
-!     RECPTR         is a pointer to the record containing the column
-!                    entry to update.
-!
-!     CVAL           is the character string value with which to update
-!                    the specified column entry.
-!
-!     ISNULL         is a logical flag indicating whether the value
-!                    of the specified column entry is to be set to NULL.
-!                    If so, the input CVAL is ignored.
-!
-! $ Detailed_Output
-!
-!     None.  See the $Particulars section for a description of the
-!     effect of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If HANDLE is invalid, the error will be diagnosed by routines
-!         called by this routine.  The file will not be modified.
-!
-!     2)  If RECNO is out of range, the error SPICE(INVALIDINDEX)
-!         will be signaled.  The file will not be modified.
-!
-!     3)  If an I/O error occurs while reading or writing the indicated
-!         file, the error will be diagnosed by routines called by this
-!         routine.  The file may be corrupted.
-!
-! $ Files
-!
-!     See the EK Required Reading for a discussion of the EK file
-!     format.
-!
-! $ Particulars
-!
-!     This routine operates by side effects:  it updates a column entry
-!     in an EK segment.  This routine does not participate in shadowing
-!     functions.  If the target EK is shadowed, the caller is
-!     responsible for performing necessary backup operations.  If the
-!     target EK is not shadowed, the target record's status is not
-!     modified.
-!
-!     If the column containing the entry is indexed, the corresponding
-!     index is updated.
-!
-!     The changes made by this routine to the target EK file become
-!     permanent when the file is closed.  Failure to close the file
-!     properly will leave it in an indeterminate state.
-!
-! $ Examples
-!
-!     See EKUCEC.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Standard SPICE error handling.
-!
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       if ( ctx%failed() ) return
 
 !
@@ -42931,29 +42185,28 @@ contains
 !$Procedure EKUCEC ( EK, update character column entry )
 
       module procedure ekucec
+!! ## Abstract
+!!
+!!     Update a character column entry in a specified EK record.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     FILES
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Update a character column entry in a specified EK record.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     FILES
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -43463,35 +42716,33 @@ contains
 !$Procedure  ZZEKNRES ( Private: EK, resolve names in encoded query )
 
       module procedure zzeknres
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Resolve and semantically check table names, aliases, and column
+!!     names in an encoded EK query.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchc
       use pepper_strings, only: repmc
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Resolve and semantically check table names, aliases, and column
-!     names in an encoded EK query.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekbool.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'ektnamsz.inc'
-
+      use pepper_inc_ekbool
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
       integer(ip), parameter :: lbcell = -5
 
 
@@ -43891,31 +43142,30 @@ contains
 !$Procedure EKFIND ( EK, find data )
 
       module procedure ekfind
+!! ## Abstract
+!!
+!!     Find E-kernel data that satisfy a set of constraints.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PARSE
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find E-kernel data that satisfy a set of constraints.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PARSE
-!     SEARCH
-!
-! $ Declarations
-
+      use pepper_inc_ekquery
+      use pepper_inc_ekqlimit
+      use pepper_inc_ektype
+      use pepper_inc_ekopcd
+      use pepper_inc_ekcnamsz
       implicit none
 
-      include 'ekquery.inc'
-      include 'ekqlimit.inc'
-      include 'ektype.inc'
-      include 'ekopcd.inc'
-      include 'ekcnamsz.inc'
 
 
 ! $ Detailed_Input
@@ -44659,28 +43909,26 @@ contains
 !$Procedure      ZZEKENCD ( EK, encode query )
 
       module procedure zzekencd
+!! ## Abstract
+!!
+!!     Convert an EK query to encoded form.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     EK
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Convert an EK query to encoded form.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     EK
-!     PRIVATE
-!
-! $ Declarations
-
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'ektype.inc'
-
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektype
       integer(ip), parameter :: lbcell = -5
 
 
@@ -44853,31 +44101,30 @@ contains
 !$Procedure EKPSEL ( EK, parse SELECT clause )
 
       module procedure ekpsel
+!! ## Abstract
+!!
+!!     Parse the SELECT clause of an EK query, returning full particulars
+!!     concerning each selected item.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Parse the SELECT clause of an EK query, returning full particulars
-!     concerning each selected item.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE
-!
-! $ Declarations
-
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       implicit none
 
-      include 'ekattdsc.inc'
-      include 'ekcnamsz.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'ektnamsz.inc'
-      include 'ektype.inc'
 
 
 ! $ Detailed_Input
@@ -45470,25 +44717,24 @@ contains
 !$Procedure STCF01 (STAR catalog type 1, find stars in RA-DEC box)
 
       module procedure stcf01
+!! ## Abstract
+!!
+!!     Search through a type 1 star catalog and return the number of
+!!     stars within a specified RA - DEC rectangle.
+!!
+!! ## Required Reading
+!!
+!!     EK
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
       use pepper_strings, only: repmc
-
-! $ Abstract
-!
-!     Search through a type 1 star catalog and return the number of
-!     stars within a specified RA - DEC rectangle.
-!
-! $ Required_Reading
-!
-!     EK
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
       implicit none
 
 

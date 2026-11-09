@@ -8,14 +8,14 @@
 module pepper_state_zzsrftrn
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
+      use pepper_inc_zzsrftrn
 
    implicit none
 
    private
 
-   include 'srftrn.inc'
-   include 'zzctr.inc'
-   include 'zzsrftrn.inc'
 
    public :: init_zzsrftrn_state
 

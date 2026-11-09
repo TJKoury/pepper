@@ -108,10 +108,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_frmtyp
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
       implicit none
-      include 'frmtyp.inc'
-      include 'ninert.inc'
-      include 'nninrt.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: frmcls  !! Frame class.
       integer(ip) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
@@ -261,7 +261,7 @@
       call ctx%dxtrct ( keywd, maxwds, string, nfound, parsed, values )
       end subroutine dxtrct
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
       !> NAIF supports EV2LIN only for backward compatibility.
       !>
@@ -289,8 +289,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       real(wp) :: et  !! Epoch in seconds past ephemeris epoch J2000.
       real(wp) :: geophs (  8 )  !! Geophysical constants
       real(wp) :: elems  ( 10 )  !! Two-line element data
@@ -430,7 +430,7 @@
       call ctx%hyptof ( ma, ecc, f )
       end subroutine hyptof
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine ILUMIN. This routine is supported for purposes of
       !> backward compatibility only.
       !>
@@ -439,8 +439,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in ephemeris seconds past J2000.
       character(*) :: abcorr  !! Desired aberration correction.
@@ -471,7 +471,7 @@
       call ctx%irftrn ( refa, refb, rotab )
       end subroutine irftrn
 
-      !> Deprecated: This routine is deprecated because all high-level
+      !> **Deprecated:** This routine is deprecated because all high-level
       !> time conversion routines (STR2ET, UTC2ET, TPARSE) were updated
       !> to accept ISO formatted times on input.  This routine is
       !> supported for purposes of backward compatibility only.
@@ -512,10 +512,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_frmtyp
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
       implicit none
-      include 'frmtyp.inc'
-      include 'ninert.inc'
-      include 'nninrt.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: frmcls  !! Frame class.
       integer(ip) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
@@ -550,8 +550,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: body  !! Name of central body.
       real(wp) :: et  !! Epoch in seconds past J2000 TDB.
       character(*) :: abcorr  !! Aberration correction.
@@ -810,8 +810,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: from  !! Name of the frame to transform from.
       character(*) :: to  !! Name of the frame to transform to.
       real(wp) :: etfrom  !! Evaluation time of FROM frame.
@@ -901,8 +901,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
       implicit none
-      include               'sclk.inc'
       integer(ip) :: sc  !! NAIF spacecraft ID code.
       character(*) :: clkstr  !! Character representation of a clock count.
       logical :: error  !! Parsing error flag.
@@ -974,8 +974,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       integer(ip) :: handle  !! File handle.
       real(wp) :: descr    ( 5 )  !! Segment descriptor.
       real(wp) :: et  !! Target epoch.
@@ -1157,8 +1157,8 @@
       use pepper_instance, only: pepper_context, pepper_zzchrlat => zzchrlat
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       real(wp) :: midlat  !! is the latitude of the midpoint of a chord of a latitude circle.
       real(wp) :: dlon  !! is the longitude extent of the chord.
       real(wp) :: eptlat  !! is the latitude of the endpoints of the chord.
@@ -1230,11 +1230,11 @@
       use pepper_instance, only: pepper_context, pepper_zzdskbbl => zzdskbbl
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'zzctr.inc'
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip) :: bodyid  !! Body ID code.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1252,9 +1252,9 @@
       use pepper_instance, only: pepper_context, pepper_zzdsksbi => zzdsksbi
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
       integer(ip) :: maxbod  !! Maximum size of body table.
       integer(ip) :: stsize  !! Maximum size of segment table.
       integer(ip) :: btbody ( * )  !! Body table's body ID array.
@@ -1285,9 +1285,9 @@
       use pepper_instance, only: pepper_context, pepper_zzdsksbr => zzdsksbr
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
       integer(ip) :: needed  !! Number of segment table entries needed.
       integer(ip) :: maxbod  !! Maximum size of body table.
       integer(ip) :: stsize  !! Maximum size of segment table.
@@ -1317,9 +1317,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: bodyid  !! ID code of target body.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1336,9 +1336,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
       integer(ip) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
       real(wp) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -1357,9 +1357,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
       integer(ip) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
       real(wp) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -1378,9 +1378,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: nsurf  !! Surface ID count.
       integer(ip) :: srflst ( * )  !! Surface ID list.
       integer(ip) :: bodyid  !! ID code of target body.
@@ -1400,9 +1400,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
       integer(ip) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
       real(wp) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -1421,9 +1421,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: bodyid  !! ID code of target body.
       real(wp) :: cor1  !! First coordinate.
       real(wp) :: cor2  !! Second coordinate.
@@ -1443,9 +1443,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
       integer(ip) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
       real(wp) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -1464,9 +1464,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: surfid  !! ID code of target surface.
       integer(ip) :: bodyid  !! ID code of target body.
       integer(ip) :: corsys  !! Coordinate system code.
@@ -1490,9 +1490,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
       integer(ip) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
       real(wp) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -1511,9 +1511,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: surfid  !! ID code of target surface.
       integer(ip) :: bodyid  !! ID code of target body.
       integer(ip) :: dclass  !! Data class of segment.
@@ -1535,9 +1535,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
       integer(ip) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
       real(wp) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -1555,8 +1555,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdsksgr => zzdsksgr
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dskdsc
       implicit none
-      include 'dskdsc.inc'
       real(wp) :: dskdsc ( * )  !! is a DSK descriptor.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1697,8 +1697,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgrav => zzgrav
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_zzsgp4
       implicit none
-      include               'zzsgp4.inc'
       real(wp) :: grav( ngravs, ngravc )  !! Array of geophysical constants.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1714,8 +1714,8 @@
       use pepper_instance, only: pepper_context, pepper_zzholdd => zzholdd
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzholdd
       implicit none
-      include               'zzholdd.inc'
       integer(ip) :: op  !! Key for operation to execute.
       integer(ip) :: id  !! The ID for the item to apply OP.
       logical :: ok  !! Boolean indicating success of get operation.
@@ -2002,9 +2002,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_zzsfx_maxrad, bridge_zzsfx_near, bridge_zzsfx_rayx, current_zzsfx_maxrad, current_zzsfx_near, current_zzsfx_rayx, legacy_zzsfx_maxrad, legacy_zzsfx_near, legacy_zzsfx_rayx
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'frmtyp.inc'
-      include 'zzabcorr.inc'
       integer(ip) :: trgcde  !! Target body ID code.
       real(wp) :: et  !! Epoch at observer.
       character(*) :: abcorr  !! Aberration correction string.
@@ -2071,8 +2071,8 @@
       use pepper_instance, only: pepper_context, pepper_zzspin => zzspin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: targ1  !! Name for first target
       character(*) :: shape1  !! Shape corresponding to TARG1
       character(*) :: frame1  !! Body fixed frame for TARG1
@@ -2090,7 +2090,7 @@
       call pepper_zzspin ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, obsrvr, abcorr, bods, frames, mxrad, obs )
       end subroutine zzspin
 
-      !> Deprecated: This routine has been superseded by SPKAPS. This
+      !> **Deprecated:** This routine has been superseded by SPKAPS. This
       !> routine is supported for purposes of backward compatibility only.
       !>
       !> Legacy interface: calls zz routine zzspkap0 with the legacy context.
@@ -2111,7 +2111,7 @@
       call pepper_zzspkap0 ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
       end subroutine zzspkap0
 
-      !> Deprecated: This routine has been superseded by SPKAPS. This
+      !> **Deprecated:** This routine has been superseded by SPKAPS. This
       !> routine is supported for purposes of backward compatibility only.
       !>
       !> Legacy interface: calls zz routine zzspkap1 with the legacy context.
@@ -2144,9 +2144,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
+      use pepper_inc_srftrn
+      use pepper_inc_zzsrftrn
       implicit none
-      include              'srftrn.inc'
-      include              'zzsrftrn.inc'
       character(*) :: nornam (          * )  !! Array of normalized surface names
       integer(ip) :: codes  (          * )  !! Array of surface ID codes for NAMES/NORNAM
       integer(ip) :: bodies (          * )  !! Array of body ID codes
@@ -2270,8 +2270,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: body  !! Body with which coordinate system is associated.
       real(wp) :: x  !! X-coordinate of point.
       real(wp) :: y  !! Y-coordinate of point.
@@ -2292,8 +2292,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: body  !! Name of body with which coordinates are associated.
       real(wp) :: lon  !! Planetographic longitude of a point (radians).
       real(wp) :: lat  !! Planetographic latitude of a point (radians).
@@ -2331,8 +2331,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: trmtyp  !! Terminator type.
       character(*) :: source  !! Light source.
       character(*) :: target  !! Target body.
@@ -2375,8 +2375,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: inst  !! Name of an instrument.
       integer(ip) :: room  !! Maximum number of vectors that can be returned.
       character(*) :: shape  !! Instrument FOV shape.
@@ -2418,8 +2418,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
       use pepper_constants, only: dpmax
+      use pepper_inc_oscltx
       implicit none
-      include 'oscltx.inc'
       real(wp) :: state  ( 6 )  !! State of body at epoch of elements.
       real(wp) :: et  !! Epoch of elements.
       real(wp) :: mu  !! Gravitational parameter (GM) of primary body.
@@ -2436,8 +2436,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: body  !! Body with which coordinate system is associated.
       real(wp) :: lon  !! Planetographic longitude of a point (radians).
       real(wp) :: lat  !! Planetographic latitude of a point (radians).
@@ -2457,8 +2457,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: body  !! Body with which coordinate system is associated.
       real(wp) :: rectan ( 3 )  !! Rectangular coordinates of a point.
       real(wp) :: re  !! Equatorial radius of the reference spheroid.
@@ -2497,8 +2497,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
       implicit none
-      include               'sclk.inc'
       integer(ip) :: sc  !! NAIF spacecraft identification code.
       character(*) :: sclkch  !! Character representation of a spacecraft clock.
       logical :: error  !! Flag to indicate if string parsed correctly.
@@ -2509,7 +2509,7 @@
       call ctx%scpars ( sc, sclkch, error, msg, sclkdp )
       end subroutine scpars
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine SUBPNT. This routine is supported for purposes of
       !> backward compatibility only.
       !>
@@ -2518,8 +2518,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -2532,7 +2532,7 @@
       call ctx%subpt ( method, target, et, abcorr, obsrvr, spoint, alt )
       end subroutine subpt
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine SUBSLR. This routine is supported for purposes of
       !> backward compatibility only.
       !>
@@ -2541,8 +2541,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -2600,9 +2600,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
       implicit none
-      include 'zzabcorr.inc'
-      include 'zzdyn.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       character(*) :: targ1  !! First target body name.
       character(*) :: shape1  !! First target body shape.
@@ -2712,12 +2712,12 @@
       use pepper_instance, only: pepper_context, pepper_zzdsksph => zzdsksph
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_dla
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'errhnd.inc'
-      include 'dla.inc'
-      include 'dsk.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       integer(ip) :: bodyid  !! ID code of target body.
       integer(ip) :: nsurf  !! Number of IDs in surface list.
       integer(ip) :: srflst ( * )  !! List of surface IDs.
@@ -2757,8 +2757,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       real(wp) :: r  !! Radius of point.
       real(wp) :: lon  !! Planetocentric longitude of point.
       real(wp) :: lat  !! Planetocentric latitude of point.
@@ -2878,9 +2878,9 @@
       use pepper_instance, only: pepper_context, pepper_zzpdtbox => zzpdtbox
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_dskdsc
+      use pepper_inc_dsktol
       implicit none
-      include 'dskdsc.inc'
-      include 'dsktol.inc'
       real(wp) :: bounds ( 2, 3 )  !! Array of coordinate bounds for segment.
       real(wp) :: corpar ( * )  !! Array containing coordinate parameters.
       real(wp) :: center ( 3 )  !! Center of bounding box.
@@ -2923,9 +2923,9 @@
       use pepper_instance, only: pepper_context, pepper_zzsrfker => zzsrfker
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_srftrn
+      use pepper_inc_zzsrftrn
       implicit none
-      include              'srftrn.inc'
-      include              'zzsrftrn.inc'
       character(sfnmln) :: kernam (          * )  !! Array of surface names from kernel pool.
       character(sfnmln) :: nornam (          * )  !! Array of normalized surface names.
       integer(ip) :: kersid (          * )  !! Array of surface ID codes from kernel pool.
@@ -2962,7 +2962,7 @@
       call ctx%cgv2el ( center, vec1, vec2, ellips )
       end subroutine cgv2el
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
       !> NAIF supports DPSPCE only for backward compatibility.
       !>
@@ -3071,8 +3071,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       real(wp) :: istate(6)  !! Input state.
       character(*) :: icosys  !! Current (input) coordinate system.
       character(*) :: ocosys  !! Desired (output) coordinate system.
@@ -3094,8 +3094,8 @@
       use pepper_instance, only: pepper_context, pepper_zzilusta => zzilusta
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body associated with surface point.
       character(*) :: illum  !! Name of illumination source.
@@ -3123,8 +3123,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, twopi
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       real(wp) :: p      ( 3 )  !! Input point.
       real(wp) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
       real(wp) :: margin  !! Margin used for inclusion testing.
@@ -3145,8 +3145,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       real(wp) :: p      ( 3 )  !! Cartesian coordinates of point.
       real(wp) :: lon  !! Planetocentric longitude of point.
       real(wp) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
@@ -3189,7 +3189,7 @@
       use pepper_instance, only: pepper_context, pepper_zzsegbox => zzsegbox
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'dskdsc.inc'
+      use pepper_inc_dskdsc
       real(wp) :: dskdsc ( * )  !! DSK segment descriptor.
       real(wp) :: boxctr ( 3 )  !! Center of bounding box.
       real(wp) :: maxr  !! Radius of box.
@@ -3208,10 +3208,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
+      use pepper_inc_zzsrftrn
       implicit none
-      include 'srftrn.inc'
-      include 'zzctr.inc'
-      include 'zzsrftrn.inc'
       integer(ip) :: bodyid  !! Body ID code.
       character(*) :: srfnam  !! Surface name.
       integer(ip) :: surfid  !! Surface ID code.
@@ -3231,10 +3231,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
+      use pepper_inc_zzsrftrn
       implicit none
-      include 'srftrn.inc'
-      include 'zzctr.inc'
-      include 'zzsrftrn.inc'
       integer(ip) :: bodyid  !! Body ID code.
       character(*) :: srfnam  !! Surface name.
       integer(ip) :: surfid  !! Surface ID code.
@@ -3254,10 +3254,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
+      use pepper_inc_zzsrftrn
       implicit none
-      include 'srftrn.inc'
-      include 'zzctr.inc'
-      include 'zzsrftrn.inc'
       integer(ip) :: usrctr ( 2 )  !! User counter.
       logical :: update  !! Update flag.
       type(pepper_context), pointer :: ctx
@@ -3392,9 +3392,9 @@
       use pepper_instance, only: pepper_context, pepper_zzdsksba => zzdsksba
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
       integer(ip) :: bodyid  !! Body ID code.
       integer(ip) :: maxbod  !! Maximum size of body table.
       integer(ip) :: stsize  !! Maximum size of segment table.
@@ -3422,8 +3422,8 @@
       use pepper_instance, only: pepper_context, pepper_zzelvupy => zzelvupy
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
       implicit none
-      include 'errhnd.inc'
       integer(ip), parameter :: ubel = 9
       real(wp) :: ellips ( ubel )  !! A SPICELIB ellipse.
       real(wp) :: vertex ( 3 )  !! Vertex of a pyramid.
@@ -3445,8 +3445,8 @@
       use pepper_instance, only: pepper_context, pepper_zzinpdt => zzinpdt
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       real(wp) :: p      ( 3 )  !! Input point.
       real(wp) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
       real(wp) :: corpar ( * )  !! Coordinate system parameters.
@@ -3467,8 +3467,8 @@
       use pepper_instance, only: pepper_context, pepper_zzrytlat => zzrytlat
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       real(wp) :: vertex ( 3 )  !! Ray's vertex.
       real(wp) :: raydir ( 3 )  !! Ray's direction vector.
       real(wp) :: bounds ( 2, 3 )  !! Bounds of latitudinal volume element.
@@ -3531,9 +3531,9 @@
       use pepper_instance, only: pepper_context, pepper_zzinvelt => zzinvelt
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsktol.inc'
-      include 'dskdsc.inc'
       real(wp) :: p      ( 3 )  !! Input point.
       integer(ip) :: corsys  !! Coordinate system code.
       real(wp) :: corpar ( * )  !! Coordinate system parameters.
@@ -3581,8 +3581,8 @@
       use pepper_instance, only: pepper_context, pepper_zzrytpdt => zzrytpdt
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       real(wp) :: vertex ( 3 )  !! Ray's vertex.
       real(wp) :: raydir ( 3 )  !! Ray's direction vector.
       real(wp) :: bounds ( 2, 3 )  !! Bounds of planetodetic volume element.
@@ -3604,11 +3604,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
+      use pepper_inc_dsktol
       implicit none
-      include              'dla.inc'
-      include              'dskdsc.inc'
-      include              'dsk02.inc'
-      include              'dsktol.inc'
       integer(ip) :: handle  !! Handle of DSK kernel containing plate model.
       integer(ip) :: dladsc   ( * )  !! DLA descriptor of plate model segment.
       real(wp) :: vertex   ( 3 )  !! Ray's vertex in the  body fixed frame.
@@ -3621,7 +3621,7 @@
       call ctx%dskx02 ( handle, dladsc, vertex, raydir, plid, xpt, found )
       end subroutine dskx02
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine SINCPT. This routine is supported for purposes of
       !> backward compatibility only.
       !>
@@ -3630,9 +3630,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include              'frmtyp.inc'
-      include               'zzctr.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -3660,10 +3660,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -3693,8 +3693,8 @@
       use pepper_instance, only: pepper_context, pepper_zzocced => zzocced
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzocced
       implicit none
-      include 'zzocced.inc'
       real(wp) :: viewpt ( 3 )  !! Observation location.
       real(wp) :: centr1 ( 3 )  !! Center of first ellipsoid.
       real(wp) :: semax1 ( 3, 3 )  !! Semi-major axis matrix for first ellipsoid.
@@ -3714,11 +3714,11 @@
       use pepper_instance, only: pepper_context, pepper_zzptpl02 => zzptpl02
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
+      use pepper_inc_dsktol
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
-      include 'dsktol.inc'
       integer(ip) :: handle  !! DSK file handle.
       integer(ip) :: dladsc ( * )  !! DLA descriptor of segment.
       real(wp) :: dskdsc ( * )  !! DSK descriptor of segment.
@@ -3742,8 +3742,8 @@
       use pepper_instance, only: pepper_context, pepper_zzrytelt => zzrytelt
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dskdsc
       implicit none
-      include 'dskdsc.inc'
       real(wp) :: vertex ( 3 )  !! Ray's vertex.
       real(wp) :: raydir ( 3 )  !! Ray's direction vector.
       real(wp) :: dskdsc ( dskdsz )  !! DSK descriptor of segment.
@@ -3766,11 +3766,11 @@
       use pepper_instance, only: pepper_context, pepper_zzdskbun => zzdskbun
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsktol
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsktol.inc'
-      include 'zzctr.inc'
       integer(ip) :: bodyid  !! ID code of target body.
       integer(ip) :: nsurf  !! Number of IDs in surface list.
       integer(ip) :: srflst ( * )  !! List of surface IDs.
@@ -3828,11 +3828,11 @@
       use pepper_instance, only: pepper_context, pepper_zzdskbux => zzdskbux
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsktol
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsktol.inc'
-      include 'zzctr.inc'
       integer(ip) :: bodyid  !! ID code of target body.
       integer(ip) :: nsurf  !! Number of IDs in surface list.
       integer(ip) :: srflst ( * )  !! List of surface IDs.
@@ -3866,10 +3866,10 @@
       use pepper_instance, only: pepper_context, pepper_zzsbfxr => zzsbfxr
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       integer(ip) :: bodyid  !! ID code of target body.
       integer(ip) :: nsurf  !! Number of surface IDs in list.
       integer(ip) :: srflst ( * )  !! Surface ID list.
@@ -3893,10 +3893,10 @@
       use pepper_instance, only: pepper_context, pepper_zzsbfxri => zzsbfxri
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       integer(ip) :: bodyid  !! ID code of target body.
       integer(ip) :: nsurf  !! Number of surface IDs in list.
       integer(ip) :: srflst ( * )  !! Surface ID list.
@@ -3925,10 +3925,10 @@
       use pepper_instance, only: pepper_context, pepper_zzsbfnrm => zzsbfnrm
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       integer(ip) :: bodyid  !! ID code of target body.
       integer(ip) :: nsurf  !! Number of surface IDs in list.
       integer(ip) :: srflst ( * )  !! Surface ID list.
@@ -3952,12 +3952,12 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_dsktol
+      use pepper_inc_dsksrc
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
       implicit none
-      include 'dsk.inc'
-      include 'dsktol.inc'
-      include 'dsksrc.inc'
-      include 'srftrn.inc'
-      include 'zzctr.inc'
       logical :: pri  !! Data prioritization flag.
       character(*) :: target  !! Target body name.
       integer(ip) :: nsurf  !! Number of surface IDs in list.
@@ -3988,9 +3988,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
+      use pepper_inc_zzctr
       implicit none
-      include 'dsktol.inc'
-      include 'zzctr.inc'
       logical :: pri  !! Data prioritization flag.
       character(*) :: target  !! Target body name.
       integer(ip) :: nsurf  !! Number of surface IDs in list.
@@ -4015,12 +4015,12 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
       implicit none
-      include               'dsk.inc'
-      include               'gf.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
-      include               'zzdsk.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       character(*) :: ilusrc  !! Name of illumination source.
@@ -4047,12 +4047,12 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_dsktol
+      use pepper_inc_gf
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
       implicit none
-      include 'dsk.inc'
-      include 'dsktol.inc'
-      include 'gf.inc'
-      include 'zzctr.inc'
-      include 'zzdsk.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in TDB seconds past J2000 TDB.
@@ -4074,8 +4074,8 @@
       use pepper_instance, only: pepper_context, pepper_zzsuelin => zzsuelin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
       implicit none
-      include 'dsk.inc'
       integer(ip) :: trgcde  !! Target body ID code.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -4091,8 +4091,8 @@
       use pepper_instance, only: pepper_context, pepper_zzsudski => zzsudski
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
       implicit none
-      include 'dsk.inc'
       integer(ip) :: trgcde  !! Target body ID code.
       integer(ip) :: nsurf  !! Number of surface IDs in surface list.
       integer(ip) :: srflst ( * )  !! Surface list.
@@ -4111,8 +4111,8 @@
       use pepper_instance, only: pepper_context, pepper_zzraysfx => zzraysfx
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
       implicit none
-      include 'dsk.inc'
       real(wp) :: et  !! Evaluation epoch, seconds past J2000 TDB.
       real(wp) :: vertex ( 3 )  !! Ray's vertex.
       real(wp) :: raydir ( 3 )  !! Ray's direction vector.
@@ -4132,8 +4132,8 @@
       use pepper_instance, only: pepper_context, pepper_zzmaxrad => zzmaxrad
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
       implicit none
-      include 'dsk.inc'
       real(wp) :: maxrad  !! Radius of outer bounding sphere for target body.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -4149,8 +4149,8 @@
       use pepper_instance, only: pepper_context, pepper_zzminrad => zzminrad
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
       implicit none
-      include 'dsk.inc'
       real(wp) :: minrad  !! Radius of inner bounding sphere for target body.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -4166,8 +4166,8 @@
       use pepper_instance, only: pepper_context, pepper_zzraynp => zzraynp
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
       implicit none
-      include 'dsk.inc'
       real(wp) :: et  !! Evaluation epoch, seconds past J2000 TDB.
       real(wp) :: vertex ( 3 )  !! Ray's vertex.
       real(wp) :: raydir ( 3 )  !! Ray's direction vector.
@@ -4189,12 +4189,12 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
       implicit none
-      include               'dsk.inc'
-      include               'gf.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
-      include               'zzdsk.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       character(*) :: ilusrc  !! Name of illumination source.
@@ -4251,11 +4251,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
       implicit none
-      include 'dsk.inc'
-      include 'gf.inc'
-      include 'zzctr.inc'
-      include 'zzdsk.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in TDB seconds past J2000 TDB.
@@ -4278,13 +4278,13 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
       implicit none
-      include               'dsk.inc'
-      include               'frmtyp.inc'
-      include               'gf.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
-      include               'zzdsk.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -4311,13 +4311,13 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
       implicit none
-      include               'dsk.inc'
-      include               'frmtyp.inc'
-      include               'gf.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
-      include               'zzdsk.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -4341,13 +4341,13 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
       implicit none
-      include               'dsk.inc'
-      include               'frmtyp.inc'
-      include               'gf.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
-      include               'zzdsk.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -4371,8 +4371,8 @@
       use pepper_instance, only: pepper_context, pepper_zztanini => zztanini
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzdsk
       implicit none
-      include 'zzdsk.inc'
       integer(ip) :: curve  !! Type of curve: limb or terminator type.
       real(wp) :: srcrad  !! Radius of illumination source.
       integer(ip) :: shape  !! Target shape.
@@ -4397,8 +4397,8 @@
       use pepper_instance, only: pepper_context, pepper_zztansta => zztansta
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzdsk
       implicit none
-      include 'zzdsk.inc'
       real(wp) :: angle  !! Angle of ray.
       logical :: ocultd  !! Occultation state flag. True if ray is occulted.
       real(wp) :: point  ( 3 )  !! Tangent point on target.
@@ -4418,8 +4418,8 @@
       use pepper_instance, only: pepper_context, pepper_zztangnt => zztangnt
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzdsk
       implicit none
-      include 'zzdsk.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: curve  !! Type of curve: limb or terminator type.
       real(wp) :: srcrad  !! Radius of illumination source.
@@ -4450,13 +4450,13 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
        use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
       implicit none
-      include               'dsk.inc'
-      include               'frmtyp.inc'
-      include               'gf.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
-      include               'zzdsk.inc'
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Name of target body.
       real(wp) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -4488,13 +4488,13 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
        use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
       implicit none
-      include               'dsk.inc'
-      include               'frmtyp.inc'
-      include               'gf.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
-      include               'zzdsk.inc'
       character(*) :: method  !! Computation method.
       character(*) :: ilusrc  !! Illumination source.
       character(*) :: target  !! Name of target body.
@@ -4548,9 +4548,9 @@
       !> Umbrella of the ZZDSKSEL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzdsksel ( surfid, nsurf, srflst, bodyid, dclass, corsys, corpar, cor1, cor2, framid, pos, et, handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
       implicit none
-      include 'dsk.inc'
-      include 'dskdsc.inc'
       integer(ip) :: surfid
       integer(ip) :: nsurf
       integer(ip) :: srflst ( * )
@@ -4598,10 +4598,10 @@
       !> Umbrella of the ZZSRFTRN routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzsrftrn ( bodyid, srfnam, surfid, usrctr, found, update )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
+      use pepper_inc_zzsrftrn
       implicit none
-      include 'srftrn.inc'
-      include 'zzctr.inc'
-      include 'zzsrftrn.inc'
       integer(ip) :: bodyid
       character(*) :: srfnam
       integer(ip) :: surfid
@@ -4617,10 +4617,10 @@
       !> Umbrella of the ZZDSKSBF routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzdsksbf ( bodyid, nsurf, srflst, et, fixfid, vertex, raydir, point, xpt, handle, dladsc, dskdsc, dc, ic, found, normal )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       integer(ip) :: bodyid
       integer(ip) :: nsurf
       integer(ip) :: srflst ( * )
@@ -4644,8 +4644,8 @@
       !> Umbrella of the ZZSINUTL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzsinutl ( trgcde, nsurf, srflst, et, fixfid, vertex, raydir, spoint, found, minrad, maxrad, pnear, dist )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
       implicit none
-      include 'dsk.inc'
       integer(ip) :: trgcde
       integer(ip) :: nsurf
       integer(ip) :: srflst ( * )
@@ -4666,8 +4666,8 @@
       !> Umbrella of the ZZTANUTL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zztanutl ( curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis, angle, ocultd, point )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzdsk
       implicit none
-      include 'zzdsk.inc'
       integer(ip) :: curve
       real(wp) :: srcrad
       integer(ip) :: shape

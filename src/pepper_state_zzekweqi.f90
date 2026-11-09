@@ -8,12 +8,12 @@
 module pepper_state_zzekweqi
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekquery
 
    implicit none
 
    private
 
-   include 'ekquery.inc'
    integer(ip), parameter :: namlen = 32
 
    public :: init_zzekweqi_state

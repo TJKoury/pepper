@@ -8,15 +8,15 @@
 module pepper_state_zzdskbbl
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
 
    implicit none
 
    private
 
-   include 'zzctr.inc'
-   include 'dla.inc'
-   include 'dskdsc.inc'
-   include 'dsk02.inc'
 
    public :: init_zzdskbbl_state
 

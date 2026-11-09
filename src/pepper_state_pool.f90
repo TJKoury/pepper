@@ -8,12 +8,12 @@
 module pepper_state_pool
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include              'zzctr.inc'
    integer(ip) :: maxvar
    parameter ( maxvar =  26003 )
    integer(ip) :: maxval

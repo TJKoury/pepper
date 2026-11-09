@@ -15,24 +15,23 @@ contains
 !$Procedure DACOSH ( Double precision arc hyperbolic cosine )
 
       module procedure dacosh
+!! ## Abstract
+!!
+!!     Return the inverse hyperbolic cosine of a double precision
+!!     argument.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     HYPERBOLIC
+!!     MATH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return the inverse hyperbolic cosine of a double precision
-!     argument.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     HYPERBOLIC
-!     MATH
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -163,30 +162,29 @@ contains
 !$Procedure DACOSN (arc cosine of bracketed argument)
 
       module procedure dacosn
+!! ## Abstract
+!!
+!!     Compute arc cosine of a bracketed argument.
+!!
+!!     This routine produces a SPICE error if the |argument| exceeds
+!!     1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
+!!     evaluated as if it equaled 1.D0, if ARG is less than -1.,
+!!     the argument is evaluated as if it equaled -1.D0.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERVALS
+!!     INVERSE TRIGONOMETRIC FUNCTION
+!!     NUMBERS
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute arc cosine of a bracketed argument.
-!
-!     This routine produces a SPICE error if the |argument| exceeds
-!     1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
-!     evaluated as if it equaled 1.D0, if ARG is less than -1.,
-!     the argument is evaluated as if it equaled -1.D0.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERVALS
-!     INVERSE TRIGONOMETRIC FUNCTION
-!     NUMBERS
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -313,30 +311,29 @@ contains
 !$Procedure DASINE (arc sine of bracketed argument)
 
       module procedure dasine
+!! ## Abstract
+!!
+!!     Compute arc sine of a bracketed argument.
+!!
+!!     This routine produces a SPICE error if the |argument| exceeds
+!!     1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
+!!     evaluated as if it equaled 1.D0, if ARG is less than -1.,
+!!     the argument is evaluated as if it equaled -1.D0.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERVALS
+!!     INVERSE TRIGONOMETRIC FUNCTION
+!!     NUMBERS
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute arc sine of a bracketed argument.
-!
-!     This routine produces a SPICE error if the |argument| exceeds
-!     1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
-!     evaluated as if it equaled 1.D0, if ARG is less than -1.,
-!     the argument is evaluated as if it equaled -1.D0.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERVALS
-!     INVERSE TRIGONOMETRIC FUNCTION
-!     NUMBERS
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -463,24 +460,23 @@ contains
 !$Procedure DATANH  ( Double precision arc hyperbolic tangent )
 
       module procedure datanh
+!! ## Abstract
+!!
+!!     Return the inverse hyperbolic tangent of a double precision
+!!     argument.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     HYPERBOLIC
+!!     MATH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return the inverse hyperbolic tangent of a double precision
-!     argument.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     HYPERBOLIC
-!     MATH
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -609,25 +605,24 @@ contains
 !$Procedure DAZLDR ( Derivative of AZ/EL w.r.t. rectangular )
 
       module procedure dazldr
+!! ## Abstract
+!!
+!!     Compute the Jacobian matrix of the transformation from
+!!     rectangular to azimuth/elevation coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATES
+!!     DERIVATIVES
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the Jacobian matrix of the transformation from
-!     rectangular to azimuth/elevation coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATES
-!     DERIVATIVES
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1080,26 +1075,25 @@ contains
 !$Procedure DCYLDR (Derivative of cylindrical w.r.t. rectangular )
 
       module procedure dcyldr
+!! ## Abstract
+!!
+!!     Compute the Jacobian matrix of the transformation from
+!!     rectangular to cylindrical coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATES
+!!     DERIVATIVES
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: drdcyl, reccyl, vpack
-
-! $ Abstract
-!
-!     Compute the Jacobian matrix of the transformation from
-!     rectangular to cylindrical coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATES
-!     DERIVATIVES
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1455,26 +1449,25 @@ contains
 !$Procedure DLATDR ( Derivative of latitudinal w.r.t. rectangular )
 
       module procedure dlatdr
+!! ## Abstract
+!!
+!!     Compute the Jacobian matrix of the transformation from
+!!     rectangular to latitudinal coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATES
+!!     DERIVATIVES
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: drdlat, reclat, vpack
-
-! $ Abstract
-!
-!     Compute the Jacobian matrix of the transformation from
-!     rectangular to latitudinal coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATES
-!     DERIVATIVES
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1831,26 +1824,25 @@ contains
 !$Procedure DRDAZL ( Derivative of rectangular w.r.t. AZ/EL )
 
       module procedure drdazl
+!! ## Abstract
+!!
+!!     Compute the Jacobian matrix of the transformation from
+!!     azimuth/elevation to rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATES
+!!     DERIVATIVES
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: drdlat
-
-! $ Abstract
-!
-!     Compute the Jacobian matrix of the transformation from
-!     azimuth/elevation to rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATES
-!     DERIVATIVES
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -2392,25 +2384,24 @@ contains
 !$Procedure DRDGEO ( Derivative of rectangular w.r.t. geodetic )
 
       module procedure drdgeo
+!! ## Abstract
+!!
+!!     Compute the Jacobian matrix of the transformation from geodetic
+!!     to rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATES
+!!     DERIVATIVES
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the Jacobian matrix of the transformation from geodetic
-!     to rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATES
-!     DERIVATIVES
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -3005,26 +2996,25 @@ contains
 !$Procedure DSPHDR ( Derivative of spherical w.r.t. rectangular )
 
       module procedure dsphdr
+!! ## Abstract
+!!
+!!     Compute the Jacobian matrix of the transformation from
+!!     rectangular to spherical coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATES
+!!     DERIVATIVES
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: drdsph, recsph, vpack
-
-! $ Abstract
-!
-!     Compute the Jacobian matrix of the transformation from
-!     rectangular to spherical coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATES
-!     DERIVATIVES
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -3382,26 +3372,25 @@ contains
 !$Procedure EQNCPV (Equinoctial Elements to position and velocity)
 
       module procedure eqncpv
+!! ## Abstract
+!!
+!!     Compute the state (position and velocity) of an object whose
+!!     trajectory is described via equinoctial elements relative to some
+!!     fixed plane (usually the equatorial plane of some planet).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
       use pepper_math, only: mxv, vlcom, vlcom3
-
-! $ Abstract
-!
-!     Compute the state (position and velocity) of an object whose
-!     trajectory is described via equinoctial elements relative to some
-!     fixed plane (usually the equatorial plane of some planet).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -3941,28 +3930,27 @@ contains
 !$Procedure EDPNT ( Ellipsoid point  )
 
       module procedure edpnt
+!! ## Abstract
+!!
+!!     Scale a point so that it lies on the surface of a specified
+!!     triaxial ellipsoid that is centered at the origin and aligned
+!!     with the Cartesian coordinate axes.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ELLIPSOID
+!!     GEOMETRY
+!!     MATH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_arrays, only: touchd
       use pepper_math, only: vzero
-
-! $ Abstract
-!
-!     Scale a point so that it lies on the surface of a specified
-!     triaxial ellipsoid that is centered at the origin and aligned
-!     with the Cartesian coordinate axes.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ELLIPSOID
-!     GEOMETRY
-!     MATH
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -4174,27 +4162,26 @@ contains
 !$Procedure EDNMPT ( Ellipsoid normal vector to surface point )
 
       module procedure ednmpt
+!! ## Abstract
+!!
+!!     Return the unique point on an ellipsoid's surface where the
+!!     outward normal direction is a given vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ELLIPSOID
+!!     GEOMETRY
+!!     NORMAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_arrays, only: touchd
       use pepper_math, only: vzero
-
-! $ Abstract
-!
-!     Return the unique point on an ellipsoid's surface where the
-!     outward normal direction is a given vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ELLIPSOID
-!     GEOMETRY
-!     NORMAL
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -4597,26 +4584,25 @@ contains
 !$Procedure ELLTOF ( Elliptic time of flight )
 
       module procedure elltof
+!! ## Abstract
+!!
+!!     Solve the time of flight equation MA = E - e sin(E) for the
+!!     elliptic eccentric anomaly E, given mean anomaly the MA and
+!!     the eccentricity ECC.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONIC
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi, twopi
       use pepper_math, only: dcbrt
-
-! $ Abstract
-!
-!     Solve the time of flight equation MA = E - e sin(E) for the
-!     elliptic eccentric anomaly E, given mean anomaly the MA and
-!     the eccentricity ECC.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONIC
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -4925,25 +4911,24 @@ contains
 !$Procedure HRMESP ( Hermite polynomial interpolation, equal spacing )
 
       module procedure hrmesp
+!! ## Abstract
+!!
+!!     Evaluate, at a specified point, a Hermite interpolating polynomial
+!!     for a specified set of equally spaced abscissa values and
+!!     corresponding pairs of function and function derivative values.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERPOLATION
+!!     POLYNOMIAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Evaluate, at a specified point, a Hermite interpolating polynomial
-!     for a specified set of equally spaced abscissa values and
-!     corresponding pairs of function and function derivative values.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERPOLATION
-!     POLYNOMIAL
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -5338,24 +5323,23 @@ contains
 !$Procedure HRMINT ( Hermite polynomial interpolation  )
 
       module procedure hrmint
+!! ## Abstract
+!!
+!!     Evaluate a Hermite interpolating polynomial at a specified
+!!     abscissa value.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERPOLATION
+!!     POLYNOMIAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Evaluate a Hermite interpolating polynomial at a specified
-!     abscissa value.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERPOLATION
-!     POLYNOMIAL
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -5741,25 +5725,24 @@ contains
 !$Procedure LGRESP ( Lagrange interpolation on equally spaced points )
 
       module procedure lgresp
+!! ## Abstract
+!!
+!!     Evaluate a Lagrange interpolating polynomial for a specified
+!!     set of coordinate pairs whose first components are equally
+!!     spaced, at a specified abscissa value.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERPOLATION
+!!     POLYNOMIAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Evaluate a Lagrange interpolating polynomial for a specified
-!     set of coordinate pairs whose first components are equally
-!     spaced, at a specified abscissa value.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERPOLATION
-!     POLYNOMIAL
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -6160,25 +6143,24 @@ contains
 !$Procedure LGRIND (Lagrange polynomial interpolation with derivative)
 
       module procedure lgrind
+!! ## Abstract
+!!
+!!     Evaluate a Lagrange interpolating polynomial, for a specified
+!!     set of coordinate pairs, at a specified abscissa value. Return
+!!     both the value of the polynomial and its derivative.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERPOLATION
+!!     POLYNOMIAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Evaluate a Lagrange interpolating polynomial, for a specified
-!     set of coordinate pairs, at a specified abscissa value. Return
-!     both the value of the polynomial and its derivative.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERPOLATION
-!     POLYNOMIAL
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -6540,24 +6522,23 @@ contains
 !$Procedure LGRINT ( Lagrange polynomial interpolation )
 
       module procedure lgrint
+!! ## Abstract
+!!
+!!     Evaluate a Lagrange interpolating polynomial for a specified
+!!     set of coordinate pairs, at a specified abscissa value.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERPOLATION
+!!     POLYNOMIAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Evaluate a Lagrange interpolating polynomial for a specified
-!     set of coordinate pairs, at a specified abscissa value.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERPOLATION
-!     POLYNOMIAL
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -6894,28 +6875,27 @@ contains
 !$Procedure CHBIGR ( Chebyshev expansion integral )
 
       module procedure chbigr
+!! ## Abstract
+!!
+!!     Evaluate an indefinite integral of a Chebyshev expansion at a
+!!     specified point X and return the value of the input expansion at
+!!     X as well. The constant of integration is selected to make the
+!!     integral zero when X equals the abscissa value X2S(1).
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHEBYSHEV
+!!     EPHEMERIS
+!!     INTEGRAL
+!!     MATH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Evaluate an indefinite integral of a Chebyshev expansion at a
-!     specified point X and return the value of the input expansion at
-!     X as well. The constant of integration is selected to make the
-!     integral zero when X equals the abscissa value X2S(1).
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHEBYSHEV
-!     EPHEMERIS
-!     INTEGRAL
-!     MATH
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -7588,27 +7568,26 @@ contains
 !$Procedure INELPL ( Intersection of ellipse and plane )
 
       module procedure inelpl
+!! ## Abstract
+!!
+!!     Find the intersection of an ellipse and a plane.
+!!
+!! ## Required Reading
+!!
+!!     ELLIPSES
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     ELLIPSE
+!!     GEOMETRY
+!!     MATH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: el2cgv, pl2nvc, pl2nvp, vdot, vequ, vlcom3, vnormg, vsep, vsub, vzero, vzerog
-
-! $ Abstract
-!
-!     Find the intersection of an ellipse and a plane.
-!
-! $ Required_Reading
-!
-!     ELLIPSES
-!     PLANES
-!
-! $ Keywords
-!
-!     ELLIPSE
-!     GEOMETRY
-!     MATH
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: ubel = 9
@@ -8132,25 +8111,24 @@ contains
 !$Procedure INRYPL ( Intersection of ray and plane )
 
       module procedure inrypl
+!! ## Abstract
+!!
+!!     Find the intersection of a ray and a plane.
+!!
+!! ## Required Reading
+!!
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: cleard
       use pepper_math, only: pl2nvc, smsgnd, vdot, vequ, vhat, vlcom, vnorm, vscl, vsclip, vzero
-
-! $ Abstract
-!
-!     Find the intersection of a ray and a plane.
-!
-! $ Required_Reading
-!
-!     PLANES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           ubpl
@@ -8891,27 +8869,26 @@ contains
 !$Procedure INVORT ( Invert nearly orthogonal matrices )
 
       module procedure invort
+!! ## Abstract
+!!
+!!     Construct the inverse of a 3x3 matrix with orthogonal columns and
+!!     non-zero column norms using a numerically stable algorithm. The
+!!     rows of the output matrix are the columns of the input matrix
+!!     divided by the length squared of the corresponding columns.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: unorm, vsclip, xpose
-
-! $ Abstract
-!
-!     Construct the inverse of a 3x3 matrix with orthogonal columns and
-!     non-zero column norms using a numerically stable algorithm. The
-!     rows of the output matrix are the columns of the input matrix
-!     divided by the length squared of the corresponding columns.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -9173,24 +9150,23 @@ contains
 !$Procedure INVSTM ( Inverse of state transformation matrix )
 
       module procedure invstm
+!! ## Abstract
+!!
+!!     Return the inverse of a state transformation matrix.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     MATRIX
+!!     TRANSFORMATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the inverse of a state transformation matrix.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     MATH
-!     MATRIX
-!     TRANSFORMATION
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -9440,25 +9416,24 @@ contains
 !$Procedure ISROT ( Indicate whether a matrix is a rotation matrix )
 
       module procedure isrot
+!! ## Abstract
+!!
+!!     Indicate whether a 3x3 matrix is a rotation matrix.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     ERROR
+!!     MATRIX
+!!     ROTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: brcktd, det, unorm
-
-! $ Abstract
-!
-!     Indicate whether a 3x3 matrix is a rotation matrix.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     ERROR
-!     MATRIX
-!     ROTATION
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -9701,22 +9676,21 @@ contains
 !$Procedure KEPLEQ ( Solve Kepler's Equation --- Equinoctial Form )
 
       module procedure kepleq
+!! ## Abstract
+!!
+!!     Solve the equinoctial version of Kepler's equation.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     SPK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Solve the equinoctial version of Kepler's equation.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     SPK
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -9906,24 +9880,23 @@ contains
 !$Procedure KPSOLV ( Solve Kepler's Equation --- Vector Form )
 
       module procedure kpsolv
+!! ## Abstract
+!!
+!!     Solve the equation X = < EVEC, U(X) > where U(X) is the unit
+!!     vector [ COS(X), SIN(X) ] and  < , > denotes the two-dimensional
+!!     dot product.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ROOTS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Solve the equation X = < EVEC, U(X) > where U(X) is the unit
-!     vector [ COS(X), SIN(X) ] and  < , > denotes the two-dimensional
-!     dot product.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ROOTS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -10180,25 +10153,24 @@ contains
 !$Procedure M2Q ( Matrix to quaternion )
 
       module procedure m2q
+!! ## Abstract
+!!
+!!     Find a unit quaternion corresponding to a specified rotation
+!!     matrix.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     MATRIX
+!!     ROTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Find a unit quaternion corresponding to a specified rotation
-!     matrix.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     MATH
-!     MATRIX
-!     ROTATION
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -10790,26 +10762,25 @@ contains
 !$Procedure NPLNPT ( Nearest point on line to point )
 
       module procedure nplnpt
+!! ## Abstract
+!!
+!!     Find the nearest point on a line to a specified point, and find
+!!     the distance between the two points.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: vadd, vdist, vproj, vsub, vzero
-
-! $ Abstract
-!
-!     Find the nearest point on a line to a specified point, and find
-!     the distance between the two points.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -10967,24 +10938,23 @@ contains
 !$Procedure NPSGPT ( Nearest point on line segment )
 
       module procedure npsgpt
+!! ## Abstract
+!!
+!!     Find the nearest point on a line segment to a given point.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: vdist, vdot, vequ, vsub, vzero
-
-! $ Abstract
-!
-!     Find the nearest point on a line segment to a given point.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -11208,25 +11178,24 @@ contains
 !$Procedure NVC2PL ( Normal vector and constant to plane )
 
       module procedure nvc2pl
+!! ## Abstract
+!!
+!!     Make a SPICE plane from a normal vector and a constant.
+!!
+!! ## Required Reading
+!!
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     PLANE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: unorm, vequ, vminus
-
-! $ Abstract
-!
-!     Make a SPICE plane from a normal vector and a constant.
-!
-! $ Required_Reading
-!
-!     PLANES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     PLANE
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           ubpl
@@ -11596,25 +11565,24 @@ contains
 !$Procedure NVP2PL ( Normal vector and point to plane )
 
       module procedure nvp2pl
+!! ## Abstract
+!!
+!!     Make a SPICE plane from a normal vector and a point.
+!!
+!! ## Required Reading
+!!
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     PLANE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdot, vequ, vhat, vminus, vzero
-
-! $ Abstract
-!
-!     Make a SPICE plane from a normal vector and a point.
-!
-! $ Required_Reading
-!
-!     PLANES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     PLANE
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           ubpl
@@ -11810,25 +11778,24 @@ contains
 !$Procedure PSV2PL ( Point and spanning vectors to plane )
 
       module procedure psv2pl
+!! ## Abstract
+!!
+!!     Make a SPICE plane from a point and two spanning vectors.
+!!
+!! ## Required Reading
+!!
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     PLANE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ucrss, vdot, vequ, vminus, vzero
-
-! $ Abstract
-!
-!     Make a SPICE plane from a point and two spanning vectors.
-!
-! $ Required_Reading
-!
-!     PLANES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     PLANE
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           ubpl
@@ -12033,26 +12000,25 @@ contains
 !$Procedure PLTAR ( Compute area of plate set )
 
       module procedure pltar
+!! ## Abstract
+!!
+!!     Compute the total area of a collection of triangular plates.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DSK
+!!     GEOMETRY
+!!     MATH
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vcrss, vnorm, vsub
-
-! $ Abstract
-!
-!     Compute the total area of a collection of triangular plates.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     DSK
-!     GEOMETRY
-!     MATH
-!     TOPOGRAPHY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -12372,24 +12338,23 @@ contains
 !$Procedure PLTNP ( Nearest point on triangular plate )
 
       module procedure pltnp
+!! ## Abstract
+!!
+!!     Find the nearest point on a triangular plate to a given point.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: vadd, vcrss, vdist, vdot, vequ, vnorm, vperp, vsub, vzero
-
-! $ Abstract
-!
-!     Find the nearest point on a triangular plate to a given point.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -12748,27 +12713,26 @@ contains
 !$Procedure PLTVOL ( Compute volume of plate model )
 
       module procedure pltvol
+!! ## Abstract
+!!
+!!     Compute the volume of a three-dimensional region bounded by a
+!!     collection of triangular plates.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DSK
+!!     GEOMETRY
+!!     MATH
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: det, vequ
-
-! $ Abstract
-!
-!     Compute the volume of a three-dimensional region bounded by a
-!     collection of triangular plates.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     DSK
-!     GEOMETRY
-!     MATH
-!     TOPOGRAPHY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -13287,27 +13251,26 @@ contains
 !$Procedure QDERIV ( Quadratic derivative )
 
       module procedure qderiv
+!! ## Abstract
+!!
+!!     Estimate the derivative of a function by finding the derivative
+!!     of a quadratic approximating function. This derivative estimate
+!!     is equivalent to that found by computing the average of forward
+!!     and backward differences.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vlcomg
-
-! $ Abstract
-!
-!     Estimate the derivative of a function by finding the derivative
-!     of a quadratic approximating function. This derivative estimate
-!     is equivalent to that found by computing the average of forward
-!     and backward differences.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -13486,27 +13449,26 @@ contains
 !$Procedure RAXISA ( Rotation axis of a matrix )
 
       module procedure raxisa
+!! ## Abstract
+!!
+!!     Compute the axis of the rotation given by an input matrix
+!!     and the angle of the rotation about that axis.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     ANGLE
+!!     MATRIX
+!!     ROTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: pi
       use pepper_math, only: vhat, vnorm, vzero
-
-! $ Abstract
-!
-!     Compute the axis of the rotation given by an input matrix
-!     and the angle of the rotation about that axis.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     ANGLE
-!     MATRIX
-!     ROTATION
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -13932,25 +13894,24 @@ contains
 !$Procedure RQUAD ( Roots of a quadratic equation )
 
       module procedure rquad
+!! ## Abstract
+!!
+!!     Find the roots of a quadratic equation.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     POLYNOMIAL
+!!     ROOT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Find the roots of a quadratic equation.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     POLYNOMIAL
-!     ROOT
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -14252,24 +14213,23 @@ contains
 !$Procedure RMAIND ( Remainder --- double precision )
 
       module procedure rmaind
+!! ## Abstract
+!!
+!!     Compute the integer quotient and non-negative remainder
+!!     of NUM and DENOM.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the integer quotient and non-negative remainder
-!     of NUM and DENOM.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -14385,24 +14345,23 @@ contains
 !$Procedure RMAINI ( Remainder --- integer )
 
       module procedure rmaini
+!! ## Abstract
+!!
+!!     Compute the integer quotient and non-negative remainder
+!!     of NUM and DENOM.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the integer quotient and non-negative remainder
-!     of NUM and DENOM.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -14509,26 +14468,25 @@ contains
 !$Procedure VPRJP ( Vector projection onto plane )
 
       module procedure vprjp
+!! ## Abstract
+!!
+!!     Project a vector onto a specified plane, orthogonally.
+!!
+!! ## Required Reading
+!!
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     PLANE
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: approx, pl2nvc, vdot, vlcom, vnorm
-
-! $ Abstract
-!
-!     Project a vector onto a specified plane, orthogonally.
-!
-! $ Required_Reading
-!
-!     PLANES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     PLANE
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           ubpl
@@ -14766,28 +14724,27 @@ contains
 !$Procedure VPRJPI ( Vector projection onto plane, inverted )
 
       module procedure vprjpi
+!! ## Abstract
+!!
+!!     Find the vector in a specified plane that maps to a specified
+!!     vector in another plane under orthogonal projection.
+!!
+!! ## Required Reading
+!!
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     PLANE
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: approx, pl2nvc, vdot, vlcom, vnorm
-
-! $ Abstract
-!
-!     Find the vector in a specified plane that maps to a specified
-!     vector in another plane under orthogonal projection.
-!
-! $ Required_Reading
-!
-!     PLANES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     PLANE
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           ubpl
@@ -15143,26 +15100,25 @@ contains
 !$Procedure STELAB     ( Stellar Aberration )
 
       module procedure stelab
+!! ## Abstract
+!!
+!!     Correct the apparent position of an object for stellar
+!!     aberration.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: clight
       use pepper_arrays, only: moved
       use pepper_math, only: vcrss, vdot, vhat, vnorm, vrotv, vscl
-
-! $ Abstract
-!
-!     Correct the apparent position of an object for stellar
-!     aberration.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -15532,25 +15488,24 @@ contains
 !$Procedure STLABX ( Stellar aberration, transmission case )
 
       module procedure stlabx
+!! ## Abstract
+!!
+!!     Correct the position of a target for the stellar aberration
+!!     effect on radiation transmitted from a specified observer to
+!!     the target.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: vminus
-
-! $ Abstract
-!
-!     Correct the position of a target for the stellar aberration
-!     effect on radiation transmitted from a specified observer to
-!     the target.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -15850,24 +15805,23 @@ contains
 !$Procedure XPOSBL ( Transpose a matrix by blocks    )
 
       module procedure xposbl
+!! ## Abstract
+!!
+!!     Transpose the square blocks within a matrix.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     MATRIX
+!!     TRANSFORMATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Transpose the square blocks within a matrix.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     MATRIX
-!     TRANSFORMATION
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input

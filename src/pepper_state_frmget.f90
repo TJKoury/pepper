@@ -7,12 +7,12 @@
 module pepper_state_frmget
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
 
    implicit none
 
    private
 
-   include              'frmtyp.inc'
 
    public :: init_frmget_state
 

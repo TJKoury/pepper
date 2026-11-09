@@ -7,14 +7,14 @@
 module pepper_state_bltfrm
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
 
    implicit none
 
    private
 
-   include 'frmtyp.inc'
-   include 'ninert.inc'
-   include 'nninrt.inc'
    integer(ip), parameter :: nframe = ninert + nninrt
    integer(ip), parameter :: frnmln = 32
    integer(ip), parameter :: lbpool = -5

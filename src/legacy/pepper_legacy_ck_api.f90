@@ -30,9 +30,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzctr.inc'
       integer(ip) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
       real(wp) :: sclkdp  !! Encoded spacecraft clock time.
       real(wp) :: tol  !! Time tolerance.
@@ -53,9 +53,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzctr.inc'
       integer(ip) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
       real(wp) :: sclkdp  !! Encoded spacecraft clock time.
       real(wp) :: tol  !! Time tolerance.
@@ -151,8 +151,8 @@
       use pepper_instance, only: pepper_context, pepper_zzckcv04 => zzckcv04
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ckparam
       implicit none
-      include              'ckparam.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: handle  !! Handle of a C-kernel open for read access
       integer(ip) :: arrbeg  !! Beginning DAF address
@@ -176,8 +176,8 @@
       use pepper_instance, only: pepper_context, pepper_zzckcv05 => zzckcv05
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ck05
       implicit none
-      include              'ck05.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: handle  !! Handle of a C-kernel open for read access
       integer(ip) :: arrbeg  !! Beginning DAF address
@@ -202,8 +202,8 @@
       use pepper_instance, only: pepper_context, pepper_zzckcv06 => zzckcv06
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ck06
       implicit none
-      include              'ck06.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: handle  !! Handle of a C-kernel open for read access.
       integer(ip) :: arrbeg  !! Beginning DAF address.

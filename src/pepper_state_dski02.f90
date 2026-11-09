@@ -6,14 +6,14 @@
 module pepper_state_dski02
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
 
    implicit none
 
    private
 
-   include 'dla.inc'
-   include 'dskdsc.inc'
-   include 'dsk02.inc'
 
    public :: init_dski02_state
 

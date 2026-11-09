@@ -1,4 +1,4 @@
-!> Deprecated: This routine has been superseded by SPKAPS. This
+!> **Deprecated:** This routine has been superseded by SPKAPS. This
 !> routine is supported for purposes of backward compatibility only.
 !>
 !> The state of SPICELIB's ZZSPKAP0 routines (entry points zzspkap0),

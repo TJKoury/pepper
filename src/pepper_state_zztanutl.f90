@@ -8,12 +8,12 @@
 module pepper_state_zztanutl
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzdsk
 
    implicit none
 
    private
 
-   include 'zzdsk.inc'
 
    public :: init_zztanutl_state
 

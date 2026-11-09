@@ -8,15 +8,15 @@
 module pepper_state_zzptpl02
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
+      use pepper_inc_dsktol
 
    implicit none
 
    private
 
-   include 'dla.inc'
-   include 'dskdsc.inc'
-   include 'dsk02.inc'
-   include 'dsktol.inc'
 
    public :: init_zzptpl02_state
 

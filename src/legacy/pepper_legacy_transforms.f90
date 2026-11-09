@@ -15,8 +15,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
       real(wp) :: et  !! An epoch in seconds past J2000.
       real(wp) :: xform ( 6, 6 )  !! A state transformation matrix.
@@ -35,8 +35,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
       real(wp) :: et  !! An epoch in seconds past J2000.
       real(wp) :: rotate ( 3, 3 )  !! A rotation matrix.
@@ -55,9 +55,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
       integer(ip) :: frame1  !! the frame id-code for some reference frame
       integer(ip) :: frame2  !! the frame id-code for some reference frame
       real(wp) :: et  !! an epoch in TDB seconds past J2000.
@@ -75,9 +75,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
       integer(ip) :: frame1  !! the frame id-code for some reference frame
       integer(ip) :: frame2  !! the frame id-code for some reference frame
       real(wp) :: et  !! an epoch in TDB seconds past J2000.
@@ -95,8 +95,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: from  !! Name of the frame to transform from.
       character(*) :: to  !! Name of the frame to transform to.
       real(wp) :: et  !! Epoch of the rotation matrix.
@@ -114,8 +114,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: from  !! Name of the frame to transform from.
       character(*) :: to  !! Name of the frame to transform to.
       real(wp) :: et  !! Epoch of the state transformation matrix.

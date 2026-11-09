@@ -32,8 +32,8 @@
       use pepper_instance, only: pepper_context, pepper_zzpltchk => zzpltchk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       logical :: ok  !! Logical indicating the runtime environment is ok.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -47,8 +47,8 @@
       use pepper_instance, only: pepper_context, pepper_zzftpstr => zzftpstr
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzftprms
       implicit none
-      include              'zzftprms.inc'
       character(*) :: tstcom  !! The FTP test component string.
       character(*) :: lend  !! String that brackets TSTCOM on the left in a file.
       character(*) :: rend  !! String that brackets TSTCOM on the right in a file.
@@ -66,8 +66,8 @@
       use pepper_instance, only: pepper_context, pepper_zzftpchk => zzftpchk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzftprms
       implicit none
-      include              'zzftprms.inc'
       character(*) :: string  !! String that may contain the FTP validation string.
       logical :: ftperr  !! Logical indicating if FTP corruption occurred.
       type(pepper_context), pointer :: ctx
@@ -114,8 +114,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhini => zzddhini
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip) :: natbff  !! Native binary file format.
       integer(ip) :: supbff ( * )  !! List of supported binary file formats for reading.
       integer(ip) :: numsup  !! Number of entries returned in SUPBFF.
@@ -136,8 +136,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgetbff => zzgetbff
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip) :: bffid  !! Binary file format code for this system.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -153,8 +153,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhgsd => zzddhgsd
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       character(*) :: class  !! String indicating the class of label requested.
       integer(ip) :: id  !! Integer ID desired for the decoding.
       character(*) :: label  !! Corresponding label for the CLASS/ID pair.
@@ -172,8 +172,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhmnm => zzddhmnm
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip) :: unit  !! Logical unit attached to a file.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -189,9 +189,9 @@
       use pepper_instance, only: pepper_context, pepper_zzddhppf => zzddhppf
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
+      use pepper_inc_zzftprms
       implicit none
-      include              'zzddhman.inc'
-      include              'zzftprms.inc'
       integer(ip) :: unit  !! Logical unit attached to the binary file.
       integer(ip) :: arch  !! Integer code indicating the file architecture.
       integer(ip) :: bff  !! Integer code indicating the binary file format.
@@ -226,8 +226,8 @@
       use pepper_instance, only: pepper_context, pepper_zzxlatei => zzxlatei
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip) :: inbff  !! Binary file format code for integers in INPUT.
       character(*) :: input  !! String containing integers read as characters.
       integer(ip) :: space  !! Number of integers that can be placed in OUTPUT.
@@ -246,8 +246,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhivf => zzddhivf
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       character(*) :: nsum  !! String storing the 8 bytes of the FDREC NSUM DP.
       integer(ip) :: bff  !! Integer code indicating the binary file format.
       logical :: found  !! Logical indicating that BFF was determined.
@@ -268,8 +268,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhf2h => zzddhf2h
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       character(*) :: fname  !! Name of the file to convert to a handle.
       integer(ip) :: ftabs ( * )  !! File table.
       integer(ip) :: ftamh ( * )  !! File table.
@@ -322,8 +322,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhgtu => zzddhgtu
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip) :: utcst  ( * )  !! Unit table.
       integer(ip) :: uthan  ( * )  !! Unit table.
       logical :: utlck  ( * )  !! Unit table.
@@ -345,8 +345,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhrmu => zzddhrmu
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include               'zzddhman.inc'
       integer(ip) :: uindex  !! Row index to remove from the unit table.
       integer(ip) :: nft  !! Number of entries in the file table.
       integer(ip) :: utcst ( * )  !! Unit table.
@@ -385,8 +385,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhnfc => zzddhnfc
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include 'zzddhman.inc'
       integer(ip) :: natbff  !! Native binary file format code.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -402,8 +402,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhopn => zzddhopn
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       character(*) :: arch  !! Expected architecture of the file to load.
       character(*) :: fname  !! Name of file to be loaded.
       character(*) :: method  !! Access method used to load the file.
@@ -422,8 +422,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhcls => zzddhcls
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       character(*) :: arch  !! Expected architecture of the handle to close.
       integer(ip) :: handle  !! File handle associated with the file to close.
       logical :: kill  !! Logical indicating whether to delete the file.
@@ -441,8 +441,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhhlu => zzddhhlu
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       logical :: lock  !! Logical indicating to lock UNIT to HANDLE.
       character(*) :: arch  !! Expected file architecture.
       integer(ip) :: handle  !! Handle associated with the file of interest.
@@ -461,8 +461,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhunl => zzddhunl
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       character(*) :: arch  !! Expected architecture of the handle to unlock.
       integer(ip) :: handle  !! File handle assigned to the file to unlock.
       type(pepper_context), pointer :: ctx
@@ -479,8 +479,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhnfo => zzddhnfo
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       character(*) :: fname  !! Name of the file associated with HANDLE.
       integer(ip) :: handle  !! File handle assigned to file of interest.
       integer(ip) :: intamh  !! Integer code for FNAME's access method.
@@ -501,8 +501,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhisn => zzddhisn
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip) :: handle  !! File handle assigned to file to determine format.
       logical :: native  !! Indicates if the file format is native.
       logical :: found  !! Indicates if HANDLE is currently attached to file.
@@ -520,8 +520,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhfnh => zzddhfnh
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       character(*) :: fname  !! Name of a file previously loaded with ZZDDHOPN.
       integer(ip) :: handle  !! Corresponding file handle.
       logical :: found  !! Logical indicating whether HANDLE was located.
@@ -539,8 +539,8 @@
       use pepper_instance, only: pepper_context, pepper_zzddhluh => zzddhluh
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip) :: handle  !! Corresponding handle.
       integer(ip) :: unit  !! Logical unit connected to a file.
       logical :: found  !! Logical indicating the handle was located.

@@ -8,12 +8,12 @@
 module pepper_state_zzsinutl
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
 
    implicit none
 
    private
 
-   include 'dsk.inc'
 
    public :: init_zzsinutl_state
 

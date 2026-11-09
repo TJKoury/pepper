@@ -10,16 +10,16 @@
 module pepper_state_dskxsi
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_dsktol
+      use pepper_inc_dsksrc
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include 'dsk.inc'
-   include 'dsktol.inc'
-   include 'dsksrc.inc'
-   include 'srftrn.inc'
-   include 'zzctr.inc'
    integer(ip), parameter :: bdnmln = 36
    integer(ip), parameter :: frnmln = 32
 

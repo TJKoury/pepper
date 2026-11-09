@@ -7,19 +7,19 @@
 module pepper_state_zzekjsrt
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
 
    implicit none
 
    private
 
-   include 'ekbool.inc'
-   include 'ekcoldsc.inc'
-   include 'ekjrs.inc'
-   include 'ekopcd.inc'
-   include 'ekqlimit.inc'
-   include 'ekquery.inc'
-   include 'eksegdsc.inc'
-   include 'ektype.inc'
    integer(ip), parameter :: inisub = 32
    integer(ip), parameter :: limit1 = 250000
 

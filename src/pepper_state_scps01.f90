@@ -7,12 +7,12 @@
 module pepper_state_scps01
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
 
    implicit none
 
    private
 
-   include               'sclk.inc'
    integer(ip), parameter :: errlen = 240
    integer(ip), parameter :: namlen = 60
    integer(ip), parameter :: nflidx = 1

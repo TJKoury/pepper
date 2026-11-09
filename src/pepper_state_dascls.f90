@@ -6,12 +6,12 @@
 module pepper_state_dascls
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_das
 
    implicit none
 
    private
 
-   include 'das.inc'
    integer(ip), parameter :: lbcell = -5
 
    public :: init_dascls_state

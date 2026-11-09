@@ -242,86 +242,80 @@ contains
 !     Standard SPICE error handling.
 
       module procedure zzctruin
-
-! $ Abstract
-!
-!     Set counter array to the initial values for the user routines.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               OLDCTR ( CTRSIZ )
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     OLDCTR      is the counter array set to the initial values for
-!                 the user routines.
-!
-! $ Parameters
-!
-!     CTRSIZ      is the dimension of the counter array used by
-!                 various SPICE subsystems to identify
-!                 changes in their states.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This type of initialization must be done by all user routines
-!     to ensure update on the first check.
-!
-! $ Examples
-!
-!     See umbrella Examples.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     initialize counter array to user values
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Set counter array to the initial values for the user routines.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               OLDCTR ( CTRSIZ )
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     OLDCTR      is the counter array set to the initial values for
+!!                 the user routines.
+!!
+!! ## Parameters
+!!
+!!     CTRSIZ      is the dimension of the counter array used by
+!!                 various SPICE subsystems to identify
+!!                 changes in their states.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This type of initialization must be done by all user routines
+!!     to ensure update on the first check.
+!!
+!! ## Examples
+!!
+!!     See umbrella Examples.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     initialize counter array to user values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
+      use pepper_inc_zzctr
       implicit none
-      include                'zzctr.inc'
       integer(ip), parameter :: ctrhgh = intmax
       integer(ip), parameter :: ctrlow = intmin
       if ( ctx%failed() ) return
@@ -340,87 +334,81 @@ contains
       end procedure zzctruin
 
       module procedure zzctrsin
-
-! $ Abstract
-!
-!     Set counter array to the initial values for the subsystem
-!     routines.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               OLDCTR ( CTRSIZ )
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     OLDCTR      is the counter array set to the initial values for
-!                 the subsystem routines.
-!
-! $ Parameters
-!
-!     CTRSIZ      is the dimension of the counter array used by
-!                 various SPICE subsystems to identify
-!                 changes in their states.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This type of initialization must be done by all subsystem
-!     routines to set the counters to the lowest initial values.
-!
-! $ Examples
-!
-!     See umbrella Examples.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     initialize counter array to subsystem values
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Set counter array to the initial values for the subsystem
+!!     routines.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               OLDCTR ( CTRSIZ )
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     OLDCTR      is the counter array set to the initial values for
+!!                 the subsystem routines.
+!!
+!! ## Parameters
+!!
+!!     CTRSIZ      is the dimension of the counter array used by
+!!                 various SPICE subsystems to identify
+!!                 changes in their states.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This type of initialization must be done by all subsystem
+!!     routines to set the counters to the lowest initial values.
+!!
+!! ## Examples
+!!
+!!     See umbrella Examples.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     initialize counter array to subsystem values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
+      use pepper_inc_zzctr
       implicit none
-      include                'zzctr.inc'
       integer(ip), parameter :: ctrhgh = intmax
       integer(ip), parameter :: ctrlow = intmin
       if ( ctx%failed() ) return
@@ -439,85 +427,79 @@ contains
       end procedure zzctrsin
 
       module procedure zzctrinc
-
-! $ Abstract
-!
-!     Increment counter array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               OLDCTR ( CTRSIZ )
-!
-! $ Detailed_Input
-!
-!     OLDCTR      is the counter array to be incremented.
-!
-! $ Detailed_Output
-!
-!     OLDCTR      is the counter array that was incremented.
-!
-! $ Parameters
-!
-!     CTRSIZ      is the dimension of the counter array used by
-!                 various SPICE subsystems to identify
-!                 changes in their states.
-!
-! $ Exceptions
-!
-!     1) If all elements of the counter array on the input are equal
-!        to INTMAX, the error '(SPICEISTIRED)' is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     See umbrella Examples.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     increment counter array
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Increment counter array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               OLDCTR ( CTRSIZ )
+!!
+!! ## Detailed Input
+!!
+!!     OLDCTR      is the counter array to be incremented.
+!!
+!! ## Detailed Output
+!!
+!!     OLDCTR      is the counter array that was incremented.
+!!
+!! ## Parameters
+!!
+!!     CTRSIZ      is the dimension of the counter array used by
+!!                 various SPICE subsystems to identify
+!!                 changes in their states.
+!!
+!! ## Exceptions
+!!
+!!     1) If all elements of the counter array on the input are equal
+!!        to INTMAX, the error '(SPICEISTIRED)' is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     See umbrella Examples.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     increment counter array
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
+      use pepper_inc_zzctr
       implicit none
-      include                'zzctr.inc'
       integer(ip), parameter :: ctrhgh = intmax
       integer(ip), parameter :: ctrlow = intmin
       if ( ctx%failed() ) return
@@ -564,94 +546,88 @@ contains
       end procedure zzctrinc
 
       module procedure zzctrchk
-
-! $ Abstract
-!
-!     Check and update, if needed, counter array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               NEWCTR ( CTRSIZ )
-!     INTEGER               OLDCTR ( CTRSIZ )
-!     LOGICAL               UPDATE
-!
-! $ Detailed_Input
-!
-!     NEWCTR      is the new counter value against which the old
-!                 value should be checked.
-!
-!     OLDCTR      is the old counter value.
-!
-! $ Detailed_Output
-!
-!     OLDCTR      is the updated the old counter value, set equal to
-!                 the new counter value if counters were different or
-!                 kept the same if counters were the same.
-!
-!     UPDATE      is the logical flag indicating whether the old
-!                 counter was updated.
-!
-! $ Parameters
-!
-!     CTRSIZ      is the dimension of the counter array used by
-!                 various SPICE subsystems to identify
-!                 changes in their states.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     See umbrella Examples.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     check and update counter array
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Check and update, if needed, counter array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               NEWCTR ( CTRSIZ )
+!!     INTEGER               OLDCTR ( CTRSIZ )
+!!     LOGICAL               UPDATE
+!!
+!! ## Detailed Input
+!!
+!!     NEWCTR      is the new counter value against which the old
+!!                 value should be checked.
+!!
+!!     OLDCTR      is the old counter value.
+!!
+!! ## Detailed Output
+!!
+!!     OLDCTR      is the updated the old counter value, set equal to
+!!                 the new counter value if counters were different or
+!!                 kept the same if counters were the same.
+!!
+!!     UPDATE      is the logical flag indicating whether the old
+!!                 counter was updated.
+!!
+!! ## Parameters
+!!
+!!     CTRSIZ      is the dimension of the counter array used by
+!!                 various SPICE subsystems to identify
+!!                 changes in their states.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     See umbrella Examples.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     check and update counter array
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
+      use pepper_inc_zzctr
       implicit none
-      include                'zzctr.inc'
       integer(ip), parameter :: ctrhgh = intmax
       integer(ip), parameter :: ctrlow = intmin
       if ( ctx%failed() ) return
@@ -677,26 +653,25 @@ contains
 !$Procedure IOERR ( I/O error message writer )
 
       module procedure ioerr
+!! ## Abstract
+!!
+!!     Set the long error message equal to a standard I/O error message
+!!     composed from an action, the name of a file, and a value of
+!!     IOSTAT.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ERROR
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, suffix
-
-! $ Abstract
-!
-!     Set the long error message equal to a standard I/O error message
-!     composed from an action, the name of a file, and a value of
-!     IOSTAT.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ERROR
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -902,28 +877,27 @@ contains
 !$Procedure      ZZCLN ( Private --- clean up )
 
       module procedure zzcln
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine cleans up changes to the kernel pool that were
+!!     made prior to the detection of a parsing error.  It is purely
+!!     a utility for use only by ZZRVAR.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!       PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine cleans up changes to the kernel pool that were
-!     made prior to the detection of a parsing error.  It is purely
-!     a utility for use only by ZZRVAR.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!       PRIVATE UTILITY
-!
-! $ Declarations
-
       implicit none
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
@@ -1073,504 +1047,486 @@ contains
       end procedure zzcln
 
       module procedure rdtext
-
-! $ Abstract
-!
-!     Read the next line of text from a text file.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FILES
-!     TEXT
-!
-! $ Declarations
-
-!
-!     PEPPER: the same limits on all platforms (SPICELIB used 128 and 20
-!     for Windows with the Intel compiler).
-!
-
-! $ Detailed_Input
-!
-!     FILE     is the name of the text file from which the next
-!              line is to be read. If the file is not currently
-!              open, it is opened with a logical unit determined
-!              at run time, and the first line of the file is
-!              returned. Otherwise, the next line not yet read
-!              from the file is read and returned.
-!
-! $ Detailed_Output
-!
-!     LINE     is next line of text in the specified file.
-!              If the end of the file is reached, LINE is blank.
-!
-!     EOF      is .TRUE. when the end of the file is reached, and is
-!              otherwise .FALSE.
-!
-! $ Parameters
-!
-!     MAXOPN   is the maximum number of files that can be kept
-!              open simultaneously by RDTEXT.
-!
-!              VAX:
-!
-!                 The default number of files that can be open at one
-!                 time during a user's process is determined by the
-!                 value of FILLM. This number is usually 20, but it
-!                 may be changed by a user with sufficient privileges.
-!
-!              IBM PC / Microsoft FORTRAN 5.0:
-!
-!                 The default value for the maximum number of files
-!                 open at one time is 20. This value may be changed
-!                 by modifying the appropriate startup files as
-!                 specified in the reference documentation.
-!
-!              IBM PC / Linux / Fort77:
-!
-!                 An experiment showed that a program can
-!                 simultaneously open one file for each available
-!                 logical unit; this amounts to 96 files.
-!
-!              Sun / Sun FORTRAN:
-!
-!                 "The maximum number of logical units that a program
-!                 can have open at one time is the same as the SunOS
-!                 system limit, currently 64."
-!
-!              HP-UX 9000/750, FORTRAN/9000 Series 700 computers and
-!              Silicon Graphics:
-!
-!                 NAIF used a program to determine this value. Also,
-!                 the values can be found by executing the command
-!                 "man limits" and reading the value for OPEN_MAX.
-!                 This value is listed as 60, but two units are used
-!                 for standard output and standard error.
-!
-!              DEC Alpha-OSF/1:
-!
-!                 The comment in the output from the command
-!                 "man limits" stated that the value of OPEN_MAX was
-!                 64, but that it was "OBSOLETE, sysconf() interface
-!                 should be used". Looking into sysconf did not produce
-!                 any numbers, so the value is set at 20 because it
-!                 works!
-!
-!              NeXT/Absoft Fortran:
-!
-!                 We couldn't find any documentation that addressed
-!                 this value, so we set it to 20.
-!
-!     MAXLEN   is the maximum length of the file names that may
-!              used to identify the files opened by RDTEXT.
-!
-! $ Exceptions
-!
-!     1)  If too many files are open already, the error
-!         SPICE(TOOMANYFILESOPEN) is signaled.
-!
-!     2)  If the attempt to open the file fails, the error
-!         SPICE(FILEOPENFAILED) is signaled.
-!
-!     3)  If the attempt to read from the file fails, the error
-!         SPICE(FILEREADFAILED) is signaled.
-!
-!     4)  If the attempt to "inquire" the status of the file fails,
-!         the error SPICE(INQUIREFAILED) is signaled.
-!
-! $ Files
-!
-!     See input FILE.
-!
-! $ Particulars
-!
-!     RDTEXT reads the next line from a text file. If the file is
-!     not currently open, it is opened with a logical unit determined
-!     at run time, and the first line of the file is returned.
-!     Otherwise, the next line not yet read from the file is returned.
-!
-!     If the end of the file is reached, a blank line is returned,
-!     the end-of-file indicator is .TRUE., and the file is closed.
-!
-!     Several files may be opened and read simultaneously. Thus,
-!     you may begin reading from one file before the end of another
-!     file has been reached. RDTEXT maintains a separate file pointer
-!     for each file.
-!
-! $ Examples
-!
-!     Let FILE.1 contain the following lines.
-!
-!        Mary had a little lamb
-!        Everywhere that Mary went
-!
-!     Let FILE.2 contain the following lines.
-!
-!        Its fleece was white as snow.
-!        The lamb was sure to go.
-!
-!     Then the code fragment
-!
-!        DO I = 1, 2
-!           CALL RDTEXT ( 'FILE.1', LINE, EOF )
-!           WRITE (6,*) LINE
-!
-!           CALL RDTEXT ( 'FILE.2', LINE, EOF )
-!           WRITE (6,*) LINE
-!        END DO
-!
-!     produces the following output
-!
-!        Mary had a little lamb
-!        Its fleece was white as snow.
-!        Everywhere that Mary went
-!        The lamb was sure to go.
-!
-! $ Restrictions
-!
-!     1)  The values of MAXOPN and MAXLEN should not exceed any
-!         corresponding limits imposed by the operating system.
-!
-!     2)  If the input file is a print file, the carriage control
-!         character at the beginning of a given line will be considered
-!         part of the line. (Text files have no carriage control
-!         characters.)
-!
-!     3)  In order to avoid access violations, the VAX/VMS version of
-!         RDTEXT uses the VAX READONLY qualifier to open files. This
-!         must be removed or replaced when the routine is ported to
-!         non-VAX/VMS systems.
-!
-!     4)  On VAX systems, caution should be exercised when using
-!         multiple logical names to point to the same file. Logical
-!         name translation supporting execution of the Fortran
-!         INQUIRE statement does not appear to work reliably in all
-!         cases, which may lead this routine to believe that different
-!         logical names indicate different files. The specific problem
-!         that has been observed is that logical names that include
-!         disk specifications are not always recognized as pointing
-!         to the file they actually name.
-!
-! $ Literature_References
-!
-!     [1]  "VAX/VMS Guide to VAX/VMS System Management and Daily
-!          Operations", Section 6.1.7, p 6-6, Digital Equipment
-!          Corporation, September 1984.
-!
-!     [2]  "Microsoft FORTRAN Reference", Section C.3, p 404, Microsoft
-!          Corporation, 1989.
-!
-!     [3]  "Sun FORTRAN Programmer's Guide", Section 7.2, p 73, Sun
-!          Microsystems, Revision A, 6 May 1988.
-!
-!     [4]  "The Unix Man Pages," for limits on the HP and Silicon
-!          Graphics. The value of OPEN_MAX refers to the number of files
-!          a process can have open.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     M.J. Spencer       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 6.27.0, 28-NOV-2021 (BVS)
-!
-!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!
-!-    SPICELIB Version 6.26.0, 13-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 6.25.0, 10-MAR-2014 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!
-!-    SPICELIB Version 6.24.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-IFORT.
-!
-!-    SPICELIB Version 6.23.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-GFORTRAN.
-!
-!-    SPICELIB Version 6.22.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 6.21.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!
-!-    SPICELIB Version 6.20.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL.
-!
-!-    SPICELIB Version 6.19.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!
-!-    SPICELIB Version 6.18.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!
-!-    SPICELIB Version 6.17.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!
-!-    SPICELIB Version 6.16.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-WINDOWS-64BIT-IFORT.
-!
-!-    SPICELIB Version 6.15.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 6.14.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-64BIT-MS_C.
-!
-!-    SPICELIB Version 6.13.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-INTEL_C.
-!
-!-    SPICELIB Version 6.12.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-IFORT.
-!
-!-    SPICELIB Version 6.11.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 6.10.0, 18-MAR-2009 (BVS)
-!
-!        Updated for PC-LINUX-GFORTRAN.
-!
-!-    SPICELIB Version 6.9.0, 18-MAR-2009 (BVS)
-!
-!        Updated for MAC-OSX-GFORTRAN.
-!
-!-    SPICELIB Version 6.8.0, 19-FEB-2008 (BVS)
-!
-!        Updated for PC-LINUX-IFORT.
-!
-!-    SPICELIB Version 6.7.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GCC_C.
-!
-!-    SPICELIB Version 6.6.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-INTEL_C.
-!
-!-    SPICELIB Version 6.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-IFORT.
-!
-!-    SPICELIB Version 6.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-WINDOWS-IFORT.
-!
-!-    SPICELIB Version 6.3.0, 26-OCT-2005 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!
-!-    SPICELIB Version 6.2.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN_C.
-!
-!-    SPICELIB Version 6.1.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN.
-!
-!-    SPICELIB Version 6.0.6, 24-APR-2003 (EDW)
-!
-!        Added MAC-OSX-F77 to the list of platforms
-!        that require READONLY to read write protected
-!        kernels.
-!
-!-    SPICELIB Version 6.0.5, 17-JUL-2002 (BVS)
-!
-!        Added MAC-OSX environments.
-!
-!-    SPICELIB Version 6.0.4, 08-OCT-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are WIN-NT
-!
-!-    SPICELIB Version 6.0.3, 16-SEP-1999 (NJB)
-!
-!        CSPICE environments were added. Some typos were corrected.
-!
-!-    SPICELIB Version 6.0.2, 28-JUL-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!
-!-    SPICELIB Version 6.0.1, 18-MAR-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. Previously,
-!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!        by the environment label SUN.
-!
-!-    SPICELIB Version 6.0.0, 07-APR-1998 (NJB)
-!
-!        Module was updated for the PC-LINUX platform.
-!
-!-    SPICELIB Version 5.0.0, 09-NOV-1993 (HAN)
-!
-!        Module was updated to include the values for MAXLEN and
-!        MAXOPN and the appropriate OPEN statement for the Silicon
-!        Graphics, DEC Alpha-OSF/1, and NeXT platforms. The previous
-!        value of 256 for Unix platforms was changed to 255.
-!
-!-    SPICELIB Version 4.1.0, 12-OCT-1992 (HAN)
-!
-!        Module was updated to include the parameters for the
-!        Hewlett Packard UX 9000/750 environment.
-!
-!-    SPICELIB Version 4.0.0, 20-MAY-1992 (MJS)
-!
-!        INDEX saved.
-!
-!-    SPICELIB Version 3.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 3.0.0, 19-JUL-1991 (NJB)
-!
-!        Version 2.0.0 of RDTEXT produced a Fortran run-time error
-!        if the input argument FILE was blank. This has been
-!        repaired.
-!
-!-    SPICELIB Version 2.0.0, 26-MAR-1991 (MJS) (NJB)
-!
-!        Value of N was initialized to zero. LINE is now filled
-!        with blanks when an error occurs or when an end of file
-!        is reached. Some small fix-ups in the header, including
-!        re-ordering the sections correctly.
-!
-!-    SPICELIB Version 1.0.1, 20-MAR-1990 (HAN)
-!
-!        $Parameters section was updated to include the values
-!        of MAXOPN for several machines. Sources of these values
-!        are listed in the Literature References section.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read a line from a text file
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 6.0.0, 07-APR-1998 (NJB)
-!
-!        Module was updated for the PC-LINUX platform.
-!
-!-    SPICELIB Version 5.0.0, 9-NOV-1993 (HAN)
-!
-!        Module was updated to include the values for MAXLEN and
-!        MAXOPN and the appropriate OPEN statement for the Silicon
-!        Graphics, DEC Alpha-OSF/1, and NeXT platforms. The previous
-!        value of 256 for Unix platforms was changed to 255.
-!
-!-    SPICELIB Version 4.1.0, 12-OCT-1992 (HAN)
-!
-!        Module was updated to include the parameters for the
-!        Hewlett Packard UX 9000/750 environment.
-!
-!        The code was also reformatted so that a utility program can
-!        create the source file for a specific environment given a
-!        master source file.
-!
-!-    SPICELIB Version 4.0.0, 20-MAY-1992 (MJS)
-!
-!        The variable INDEX was saved. Prior to this fix, when RDTEXT
-!        closed a file, INDEX was used without being assigned a value.
-!        Since INDEX always points to the current file (unit), saving
-!        INDEX fixed this problem.
-!
-!-    SPICELIB Version 3.0.0, 19-JUL-1991 (NJB)
-!
-!        Version 2.0.0 of RDTEXT produced a Fortran run-time error
-!        if the input argument FILE was blank. This has been
-!        repaired.
-!
-!-    SPICELIB Version 2.0.0, 26-MAR-1991 (MJS) (NJB)
-!
-!        In past versions when an end of file was reached or when error
-!        occurred while reading the text file, LINE was returned with
-!        its previous value. Now LINE is returned with blanks, in
-!        accordance with the specifications given in the header.
-!        The variable N, representing the number of files currently
-!        open, was initialized to zero.
-!
-!        The method of checking whether the file to be read is one
-!        already opened for reading by this routine has been improved.
-!        Formerly, the input file name was compared against a list of
-!        names of routines already opened by RDTEXT. If the input name
-!        pointed to a file that had been opened using a different name,
-!        RDTEXT would not recognize that the new name pointed to a file
-!        that was already open. The technique used now greatly reduces
-!        the chance of such an error. The input file name is compared
-!        to the previous input file name, and if the names do not agree,
-!        an INQUIRE is performed to test whether the file named by the
-!        input file name is already open. Only if this INQUIRE
-!        indicates that the file is not already open will RDTEXT attempt
-!        to open the file.
-!
-!-    Beta Version 1.1.0, 17-FEB-1989 (IMU) (NJB)
-!
-!        The primary change was the addition of error handling.
-!        At the same time, the parameters MAXOPN and MAXLEN were
-!        moved into the calling sequence. The call to IOERR was
-!        replaced by a call to SETMSG. The declaration of the unused
-!        function FAILED was deleted. Finally, all internal references
-!        to the entry point WRTEXT (which was dropped when the routine
-!        left OPTLIB) were removed.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
-
-!
-!     Save the names of the files, their associated logical units, and
-!     the number of files opened.
-!
-
-!
-!     Initial values
-!
-
-!
-!     Set up the error processing.
-!
+!! ## Abstract
+!!
+!!     Read the next line of text from a text file.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!     TEXT
+!!
+!! ## Declarations
+!!
+!!     PEPPER: the same limits on all platforms (SPICELIB used 128 and 20
+!!     for Windows with the Intel compiler).
+!!
+!! ## Detailed Input
+!!
+!!     FILE     is the name of the text file from which the next
+!!              line is to be read. If the file is not currently
+!!              open, it is opened with a logical unit determined
+!!              at run time, and the first line of the file is
+!!              returned. Otherwise, the next line not yet read
+!!              from the file is read and returned.
+!!
+!! ## Detailed Output
+!!
+!!     LINE     is next line of text in the specified file.
+!!              If the end of the file is reached, LINE is blank.
+!!
+!!     EOF      is .TRUE. when the end of the file is reached, and is
+!!              otherwise .FALSE.
+!!
+!! ## Parameters
+!!
+!!     MAXOPN   is the maximum number of files that can be kept
+!!              open simultaneously by RDTEXT.
+!!
+!!              VAX:
+!!
+!!                 The default number of files that can be open at one
+!!                 time during a user's process is determined by the
+!!                 value of FILLM. This number is usually 20, but it
+!!                 may be changed by a user with sufficient privileges.
+!!
+!!              IBM PC / Microsoft FORTRAN 5.0:
+!!
+!!                 The default value for the maximum number of files
+!!                 open at one time is 20. This value may be changed
+!!                 by modifying the appropriate startup files as
+!!                 specified in the reference documentation.
+!!
+!!              IBM PC / Linux / Fort77:
+!!
+!!                 An experiment showed that a program can
+!!                 simultaneously open one file for each available
+!!                 logical unit; this amounts to 96 files.
+!!
+!!              Sun / Sun FORTRAN:
+!!
+!!                 "The maximum number of logical units that a program
+!!                 can have open at one time is the same as the SunOS
+!!                 system limit, currently 64."
+!!
+!!              HP-UX 9000/750, FORTRAN/9000 Series 700 computers and
+!!              Silicon Graphics:
+!!
+!!                 NAIF used a program to determine this value. Also,
+!!                 the values can be found by executing the command
+!!                 "man limits" and reading the value for OPEN_MAX.
+!!                 This value is listed as 60, but two units are used
+!!                 for standard output and standard error.
+!!
+!!              DEC Alpha-OSF/1:
+!!
+!!                 The comment in the output from the command
+!!                 "man limits" stated that the value of OPEN_MAX was
+!!                 64, but that it was "OBSOLETE, sysconf() interface
+!!                 should be used". Looking into sysconf did not produce
+!!                 any numbers, so the value is set at 20 because it
+!!                 works!
+!!
+!!              NeXT/Absoft Fortran:
+!!
+!!                 We couldn't find any documentation that addressed
+!!                 this value, so we set it to 20.
+!!
+!!     MAXLEN   is the maximum length of the file names that may
+!!              used to identify the files opened by RDTEXT.
+!!
+!! ## Exceptions
+!!
+!!     1)  If too many files are open already, the error
+!!         SPICE(TOOMANYFILESOPEN) is signaled.
+!!
+!!     2)  If the attempt to open the file fails, the error
+!!         SPICE(FILEOPENFAILED) is signaled.
+!!
+!!     3)  If the attempt to read from the file fails, the error
+!!         SPICE(FILEREADFAILED) is signaled.
+!!
+!!     4)  If the attempt to "inquire" the status of the file fails,
+!!         the error SPICE(INQUIREFAILED) is signaled.
+!!
+!! ## Files
+!!
+!!     See input FILE.
+!!
+!! ## Particulars
+!!
+!!     RDTEXT reads the next line from a text file. If the file is
+!!     not currently open, it is opened with a logical unit determined
+!!     at run time, and the first line of the file is returned.
+!!     Otherwise, the next line not yet read from the file is returned.
+!!
+!!     If the end of the file is reached, a blank line is returned,
+!!     the end-of-file indicator is .TRUE., and the file is closed.
+!!
+!!     Several files may be opened and read simultaneously. Thus,
+!!     you may begin reading from one file before the end of another
+!!     file has been reached. RDTEXT maintains a separate file pointer
+!!     for each file.
+!!
+!! ## Examples
+!!
+!!     Let FILE.1 contain the following lines.
+!!
+!!        Mary had a little lamb
+!!        Everywhere that Mary went
+!!
+!!     Let FILE.2 contain the following lines.
+!!
+!!        Its fleece was white as snow.
+!!        The lamb was sure to go.
+!!
+!!     Then the code fragment
+!!
+!!        DO I = 1, 2
+!!           CALL RDTEXT ( 'FILE.1', LINE, EOF )
+!!           WRITE (6,*) LINE
+!!
+!!           CALL RDTEXT ( 'FILE.2', LINE, EOF )
+!!           WRITE (6,*) LINE
+!!        END DO
+!!
+!!     produces the following output
+!!
+!!        Mary had a little lamb
+!!        Its fleece was white as snow.
+!!        Everywhere that Mary went
+!!        The lamb was sure to go.
+!!
+!! ## Restrictions
+!!
+!!     1)  The values of MAXOPN and MAXLEN should not exceed any
+!!         corresponding limits imposed by the operating system.
+!!
+!!     2)  If the input file is a print file, the carriage control
+!!         character at the beginning of a given line will be considered
+!!         part of the line. (Text files have no carriage control
+!!         characters.)
+!!
+!!     3)  In order to avoid access violations, the VAX/VMS version of
+!!         RDTEXT uses the VAX READONLY qualifier to open files. This
+!!         must be removed or replaced when the routine is ported to
+!!         non-VAX/VMS systems.
+!!
+!!     4)  On VAX systems, caution should be exercised when using
+!!         multiple logical names to point to the same file. Logical
+!!         name translation supporting execution of the Fortran
+!!         INQUIRE statement does not appear to work reliably in all
+!!         cases, which may lead this routine to believe that different
+!!         logical names indicate different files. The specific problem
+!!         that has been observed is that logical names that include
+!!         disk specifications are not always recognized as pointing
+!!         to the file they actually name.
+!!
+!! ## Literature References
+!!
+!!     [1]  "VAX/VMS Guide to VAX/VMS System Management and Daily
+!!          Operations", Section 6.1.7, p 6-6, Digital Equipment
+!!          Corporation, September 1984.
+!!
+!!     [2]  "Microsoft FORTRAN Reference", Section C.3, p 404, Microsoft
+!!          Corporation, 1989.
+!!
+!!     [3]  "Sun FORTRAN Programmer's Guide", Section 7.2, p 73, Sun
+!!          Microsystems, Revision A, 6 May 1988.
+!!
+!!     [4]  "The Unix Man Pages," for limits on the HP and Silicon
+!!          Graphics. The value of OPEN_MAX refers to the number of files
+!!          a process can have open.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     H.A. Neilan        (JPL)
+!!     B.V. Semenov       (JPL)
+!!     M.J. Spencer       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 6.27.0, 28-NOV-2021 (BVS)
+!!
+!!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+!!
+!!-    SPICELIB Version 6.26.0, 13-AUG-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 6.25.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-64BIT-INTEL.
+!!
+!!-    SPICELIB Version 6.24.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for PC-LINUX-64BIT-IFORT.
+!!
+!!-    SPICELIB Version 6.23.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for PC-CYGWIN-GFORTRAN.
+!!
+!!-    SPICELIB Version 6.22.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+!!
+!!-    SPICELIB Version 6.21.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for PC-CYGWIN-64BIT-GCC_C.
+!!
+!!-    SPICELIB Version 6.20.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-INTEL.
+!!
+!!-    SPICELIB Version 6.19.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-INTEL-CC_C.
+!!
+!!-    SPICELIB Version 6.18.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+!!
+!!-    SPICELIB Version 6.17.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+!!
+!!-    SPICELIB Version 6.16.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for PC-WINDOWS-64BIT-IFORT.
+!!
+!!-    SPICELIB Version 6.15.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for PC-LINUX-64BIT-GFORTRAN.
+!!
+!!-    SPICELIB Version 6.14.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for PC-64BIT-MS_C.
+!!
+!!-    SPICELIB Version 6.13.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for MAC-OSX-64BIT-INTEL_C.
+!!
+!!-    SPICELIB Version 6.12.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for MAC-OSX-64BIT-IFORT.
+!!
+!!-    SPICELIB Version 6.11.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for MAC-OSX-64BIT-GFORTRAN.
+!!
+!!-    SPICELIB Version 6.10.0, 18-MAR-2009 (BVS)
+!!
+!!        Updated for PC-LINUX-GFORTRAN.
+!!
+!!-    SPICELIB Version 6.9.0, 18-MAR-2009 (BVS)
+!!
+!!        Updated for MAC-OSX-GFORTRAN.
+!!
+!!-    SPICELIB Version 6.8.0, 19-FEB-2008 (BVS)
+!!
+!!        Updated for PC-LINUX-IFORT.
+!!
+!!-    SPICELIB Version 6.7.0, 14-NOV-2006 (BVS)
+!!
+!!        Updated for PC-LINUX-64BIT-GCC_C.
+!!
+!!-    SPICELIB Version 6.6.0, 14-NOV-2006 (BVS)
+!!
+!!        Updated for MAC-OSX-INTEL_C.
+!!
+!!-    SPICELIB Version 6.5.0, 14-NOV-2006 (BVS)
+!!
+!!        Updated for MAC-OSX-IFORT.
+!!
+!!-    SPICELIB Version 6.4.0, 14-NOV-2006 (BVS)
+!!
+!!        Updated for PC-WINDOWS-IFORT.
+!!
+!!-    SPICELIB Version 6.3.0, 26-OCT-2005 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-64BIT-GCC_C.
+!!
+!!-    SPICELIB Version 6.2.0, 03-JAN-2005 (BVS)
+!!
+!!        Updated for PC-CYGWIN_C.
+!!
+!!-    SPICELIB Version 6.1.0, 03-JAN-2005 (BVS)
+!!
+!!        Updated for PC-CYGWIN.
+!!
+!!-    SPICELIB Version 6.0.6, 24-APR-2003 (EDW)
+!!
+!!        Added MAC-OSX-F77 to the list of platforms
+!!        that require READONLY to read write protected
+!!        kernels.
+!!
+!!-    SPICELIB Version 6.0.5, 17-JUL-2002 (BVS)
+!!
+!!        Added MAC-OSX environments.
+!!
+!!-    SPICELIB Version 6.0.4, 08-OCT-1999 (WLT)
+!!
+!!        The environment lines were expanded so that the supported
+!!        environments are now explicitly given. New
+!!        environments are WIN-NT
+!!
+!!-    SPICELIB Version 6.0.3, 16-SEP-1999 (NJB)
+!!
+!!        CSPICE environments were added. Some typos were corrected.
+!!
+!!-    SPICELIB Version 6.0.2, 28-JUL-1999 (WLT)
+!!
+!!        The environment lines were expanded so that the supported
+!!        environments are now explicitly given. New
+!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+!!
+!!-    SPICELIB Version 6.0.1, 18-MAR-1999 (WLT)
+!!
+!!        The environment lines were expanded so that the supported
+!!        environments are now explicitly given. Previously,
+!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+!!        by the environment label SUN.
+!!
+!!-    SPICELIB Version 6.0.0, 07-APR-1998 (NJB)
+!!
+!!        Module was updated for the PC-LINUX platform.
+!!
+!!-    SPICELIB Version 5.0.0, 09-NOV-1993 (HAN)
+!!
+!!        Module was updated to include the values for MAXLEN and
+!!        MAXOPN and the appropriate OPEN statement for the Silicon
+!!        Graphics, DEC Alpha-OSF/1, and NeXT platforms. The previous
+!!        value of 256 for Unix platforms was changed to 255.
+!!
+!!-    SPICELIB Version 4.1.0, 12-OCT-1992 (HAN)
+!!
+!!        Module was updated to include the parameters for the
+!!        Hewlett Packard UX 9000/750 environment.
+!!
+!!-    SPICELIB Version 4.0.0, 20-MAY-1992 (MJS)
+!!
+!!        INDEX saved.
+!!
+!!-    SPICELIB Version 3.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 3.0.0, 19-JUL-1991 (NJB)
+!!
+!!        Version 2.0.0 of RDTEXT produced a Fortran run-time error
+!!        if the input argument FILE was blank. This has been
+!!        repaired.
+!!
+!!-    SPICELIB Version 2.0.0, 26-MAR-1991 (MJS) (NJB)
+!!
+!!        Value of N was initialized to zero. LINE is now filled
+!!        with blanks when an error occurs or when an end of file
+!!        is reached. Some small fix-ups in the header, including
+!!        re-ordering the sections correctly.
+!!
+!!-    SPICELIB Version 1.0.1, 20-MAR-1990 (HAN)
+!!
+!!        $Parameters section was updated to include the values
+!!        of MAXOPN for several machines. Sources of these values
+!!        are listed in the Literature References section.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     read a line from a text file
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 6.0.0, 07-APR-1998 (NJB)
+!!
+!!        Module was updated for the PC-LINUX platform.
+!!
+!!-    SPICELIB Version 5.0.0, 9-NOV-1993 (HAN)
+!!
+!!        Module was updated to include the values for MAXLEN and
+!!        MAXOPN and the appropriate OPEN statement for the Silicon
+!!        Graphics, DEC Alpha-OSF/1, and NeXT platforms. The previous
+!!        value of 256 for Unix platforms was changed to 255.
+!!
+!!-    SPICELIB Version 4.1.0, 12-OCT-1992 (HAN)
+!!
+!!        Module was updated to include the parameters for the
+!!        Hewlett Packard UX 9000/750 environment.
+!!
+!!        The code was also reformatted so that a utility program can
+!!        create the source file for a specific environment given a
+!!        master source file.
+!!
+!!-    SPICELIB Version 4.0.0, 20-MAY-1992 (MJS)
+!!
+!!        The variable INDEX was saved. Prior to this fix, when RDTEXT
+!!        closed a file, INDEX was used without being assigned a value.
+!!        Since INDEX always points to the current file (unit), saving
+!!        INDEX fixed this problem.
+!!
+!!-    SPICELIB Version 3.0.0, 19-JUL-1991 (NJB)
+!!
+!!        Version 2.0.0 of RDTEXT produced a Fortran run-time error
+!!        if the input argument FILE was blank. This has been
+!!        repaired.
+!!
+!!-    SPICELIB Version 2.0.0, 26-MAR-1991 (MJS) (NJB)
+!!
+!!        In past versions when an end of file was reached or when error
+!!        occurred while reading the text file, LINE was returned with
+!!        its previous value. Now LINE is returned with blanks, in
+!!        accordance with the specifications given in the header.
+!!        The variable N, representing the number of files currently
+!!        open, was initialized to zero.
+!!
+!!        The method of checking whether the file to be read is one
+!!        already opened for reading by this routine has been improved.
+!!        Formerly, the input file name was compared against a list of
+!!        names of routines already opened by RDTEXT. If the input name
+!!        pointed to a file that had been opened using a different name,
+!!        RDTEXT would not recognize that the new name pointed to a file
+!!        that was already open. The technique used now greatly reduces
+!!        the chance of such an error. The input file name is compared
+!!        to the previous input file name, and if the names do not agree,
+!!        an INQUIRE is performed to test whether the file named by the
+!!        input file name is already open. Only if this INQUIRE
+!!        indicates that the file is not already open will RDTEXT attempt
+!!        to open the file.
+!!
+!!-    Beta Version 1.1.0, 17-FEB-1989 (IMU) (NJB)
+!!
+!!        The primary change was the addition of error handling.
+!!        At the same time, the parameters MAXOPN and MAXLEN were
+!!        moved into the calling sequence. The call to IOERR was
+!!        replaced by a call to SETMSG. The declaration of the unused
+!!        function FAILED was deleted. Finally, all internal references
+!!        to the entry point WRTEXT (which was dropped when the routine
+!!        left OPTLIB) were removed.
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
+!!     Save the names of the files, their associated logical units, and
+!!     the number of files opened.
+!!
+!!     Initial values
+!!
+!!     Set up the error processing.
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchi
       implicit none
@@ -1748,182 +1704,172 @@ contains
       end procedure rdtext
 
       module procedure cltext
-
-! $ Abstract
-!
-!     Close a text file currently opened by RDTEXT.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FILES
-!     TEXT
-!
-! $ Declarations
-!
-!     IMPLICIT NONE
-!
-!     CHARACTER*(*)       FILE
-!
-! $ Detailed_Input
-!
-!     FILE     is the name of a text file which is currently
-!              opened for reading or writing by RDTEXT.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the attempt to "inquire" the status of the file fails,
-!         the error SPICE(INQUIREFAILED) is signaled.
-!
-! $ Files
-!
-!     The text file, FILE, was previously opened by RDTEXT.
-!
-! $ Particulars
-!
-!     CLTEXT closes one of the files currently opened for reading or
-!     writing by RDTEXT. If the specified file is not open, nothing
-!     happens.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     1)  On VAX systems, caution should be exercised when using
-!         multiple logical names to point to the same file. Logical
-!         name translation supporting execution of the Fortran
-!         INQUIRE statement does not appear to work reliably in all
-!         cases, which may lead this routine to believe that different
-!         logical names indicate different files. The specific problem
-!         that has been observed is that logical names that include
-!         disk specifications are not always recognized as pointing
-!         to the file they actually name.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     M.J. Spencer       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 6.1.0, 03-JUN-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 6.0.5, 17-JUL-2002 (BVS)
-!
-!        Added MAC-OSX environments.
-!
-!-    SPICELIB Version 6.0.4, 08-OCT-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are WIN-NT
-!
-!-    SPICELIB Version 6.0.2, 28-JUL-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!
-!-    SPICELIB Version 6.0.1, 18-MAR-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. Previously,
-!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!        by the environment label SUN.
-!
-!-    SPICELIB Version 3.0.0, 27-SEP-1994 (WLT)
-!
-!        The check of RETURN was removed so that routines that need
-!        to close a text file can do so even if an error has been
-!        detected somewhere else in a user's program.
-!
-!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 2.0.0, 26-MAR-1991 (MJS) (NJB)
-!
-!        Method of recognizing whether input file name points to
-!        a file opened by RDTEXT has been improved. Header indentation
-!        fixed.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     close a text file opened by rdtext
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 6.1.0, 03-JUN-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!-    SPICELIB Version 3.0.0, 27-SEP-1994 (WLT)
-!
-!        The check of RETURN was removed so that routines that need
-!        to close a text file can do so even if an error has been
-!        detected somewhere else in a user's program.
-!
-!-    SPICELIB Version 2.0.0, 26-MAR-1991 (MJS) (NJB)
-!
-!        Method of recognizing whether input file name points to
-!        a file opened by RDTEXT has been improved. Formerly, CLTEXT
-!        compared the input file name to a list of names of files
-!        opened by RDTEXT. If the input name pointed to a file that
-!        had been opened using a different name, CLTEXT would not
-!        recognize that the new name pointed to a file that was already
-!        open. The technique used now greatly reduces the chance of
-!        such an error. Now, and INQUIRE is performed to obtain the
-!        unit number attached to the file named by the input file name.
-!        If this unit is attached to a file opened by RDTEXT, CLTEXT
-!        will close that file.
-!
-!        Header indentation was fixed.
-!
-!-    Beta Version 1.1.0, 8-JAN-1989 (IMU)
-!
-!        References to WRTEXT removed.
-!
-!-&
-
-!
-!     Set up the error processing.
-!
-
-!
-!     Which file?
-!
+!! ## Abstract
+!!
+!!     Close a text file currently opened by RDTEXT.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!     TEXT
+!!
+!! ## Declarations
+!!
+!!     IMPLICIT NONE
+!!
+!!     CHARACTER*(*)       FILE
+!!
+!! ## Detailed Input
+!!
+!!     FILE     is the name of a text file which is currently
+!!              opened for reading or writing by RDTEXT.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the attempt to "inquire" the status of the file fails,
+!!         the error SPICE(INQUIREFAILED) is signaled.
+!!
+!! ## Files
+!!
+!!     The text file, FILE, was previously opened by RDTEXT.
+!!
+!! ## Particulars
+!!
+!!     CLTEXT closes one of the files currently opened for reading or
+!!     writing by RDTEXT. If the specified file is not open, nothing
+!!     happens.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     1)  On VAX systems, caution should be exercised when using
+!!         multiple logical names to point to the same file. Logical
+!!         name translation supporting execution of the Fortran
+!!         INQUIRE statement does not appear to work reliably in all
+!!         cases, which may lead this routine to believe that different
+!!         logical names indicate different files. The specific problem
+!!         that has been observed is that logical names that include
+!!         disk specifications are not always recognized as pointing
+!!         to the file they actually name.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     M.J. Spencer       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 6.1.0, 03-JUN-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 6.0.5, 17-JUL-2002 (BVS)
+!!
+!!        Added MAC-OSX environments.
+!!
+!!-    SPICELIB Version 6.0.4, 08-OCT-1999 (WLT)
+!!
+!!        The environment lines were expanded so that the supported
+!!        environments are now explicitly given. New
+!!        environments are WIN-NT
+!!
+!!-    SPICELIB Version 6.0.2, 28-JUL-1999 (WLT)
+!!
+!!        The environment lines were expanded so that the supported
+!!        environments are now explicitly given. New
+!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+!!
+!!-    SPICELIB Version 6.0.1, 18-MAR-1999 (WLT)
+!!
+!!        The environment lines were expanded so that the supported
+!!        environments are now explicitly given. Previously,
+!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+!!        by the environment label SUN.
+!!
+!!-    SPICELIB Version 3.0.0, 27-SEP-1994 (WLT)
+!!
+!!        The check of RETURN was removed so that routines that need
+!!        to close a text file can do so even if an error has been
+!!        detected somewhere else in a user's program.
+!!
+!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 2.0.0, 26-MAR-1991 (MJS) (NJB)
+!!
+!!        Method of recognizing whether input file name points to
+!!        a file opened by RDTEXT has been improved. Header indentation
+!!        fixed.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     close a text file opened by rdtext
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 6.1.0, 03-JUN-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!-    SPICELIB Version 3.0.0, 27-SEP-1994 (WLT)
+!!
+!!        The check of RETURN was removed so that routines that need
+!!        to close a text file can do so even if an error has been
+!!        detected somewhere else in a user's program.
+!!
+!!-    SPICELIB Version 2.0.0, 26-MAR-1991 (MJS) (NJB)
+!!
+!!        Method of recognizing whether input file name points to
+!!        a file opened by RDTEXT has been improved. Formerly, CLTEXT
+!!        compared the input file name to a list of names of files
+!!        opened by RDTEXT. If the input name pointed to a file that
+!!        had been opened using a different name, CLTEXT would not
+!!        recognize that the new name pointed to a file that was already
+!!        open. The technique used now greatly reduces the chance of
+!!        such an error. Now, and INQUIRE is performed to obtain the
+!!        unit number attached to the file named by the input file name.
+!!        If this unit is attached to a file opened by RDTEXT, CLTEXT
+!!        will close that file.
+!!
+!!        Header indentation was fixed.
+!!
+!!-    Beta Version 1.1.0, 8-JAN-1989 (IMU)
+!!
+!!        References to WRTEXT removed.
+!!
+!!     Set up the error processing.
+!!
+!!     Which file?
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchi
       implicit none
@@ -2300,169 +2246,163 @@ contains
 !     Standard SPICE error handling.
 
       module procedure rdknew
-
-! $ Abstract
-!
-!     Open and initialize a SPICE ASCII kernel file.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         KERNEL
-!
-! $ Detailed_Input
-!
-!     KERNEL   is the name of the SPICE ASCII kernel file to be opened
-!              and initialized.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     The SPICE ASCII kernel file KERNEL is opened by RDKNEW and read
-!     by RDKDAT.
-!
-! $ Particulars
-!
-!     RDKNEW should be called prior to the first call to RDKDAT.
-!     RDKNEW opens the kernel file and RDKDAT reads the lines of
-!     data in the file.
-!
-! $ Examples
-!
-!     In the following example, RDKNEW and RDKDAT are used to read
-!     the contents of a kernel file.
-!
-!     Let the file KERNEL contain the following lines.
-!
-!        =============================================================
-!
-!        DELTA_T_A is defined to be 32.184 seconds, and should not
-!        be changed except under the most unusual circumstances.
-!
-!        \begindata
-!
-!        DELTA_T_A       =   32.184
-!
-!        \begintext
-!
-!        The next three items determine the relativistic correction
-!        in the difference ET - TAI. To turn the correction off,
-!        just set K to zero.
-!
-!        \begindata
-!
-!        K               =    1.657D-3
-!        ORBIT_ECC       =    1.671D-2
-!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
-!
-!        =============================================================
-!
-!     Then the code fragment
-!
-!        CALL RDKNEW ( KERNEL )
-!        CALL RDKDAT ( LINE, EOF )
-!
-!        DO WHILE ( (.NOT. EOF) .AND. ( .NOT. FAILED () ) )
-!           WRITE (6,*) LINE
-!           CALL RDKDAT ( LINE, EOF )
-!        END DO
-!
-!     prints the following lines.
-!
-!        =============================================================
-!        DELTA_T_A       =   32.184
-!        K               =    1.657D-3
-!        ORBIT_ECC       =    1.671D-2
-!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
-!        =============================================================
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     M.J. Spencer       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.0.1, 17-JUN-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 3.0.0, 11-FEB-2008 (NJB)
-!
-!        This entry point has been updated so as to be
-!        able to parse text kernel lines containing tab
-!        characters.
-!
-!-    SPICELIB Version 2.1.0, 03-OCT-2005 (EDW)
-!
-!        File rdker.f made a master file so as to
-!        add the ZZSETNNREAD call. This call will exist
-!        only in FORTRAN source intended for conversion
-!        to C by the f2c utility.
-!
-!        The ZZSETNNREAD call activates and deactivates
-!        the non-native text line read capability for the
-!        CSPICE toolkit.
-!
-!-    SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
-!
-!         The entry point RDKLIN was added.
-!
-!-    SPICELIB Version 1.2.0, 01-JUN-1992 (MJS)
-!
-!         RDKER now initializes the variables BEGDAT and BEGTXT
-!         in a portable way. On the first valid entry to this routine,
-!         the backslash character in the form CHAR(92) is concatenated
-!         individually to 'begindata' and 'begintext'.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!         Comment section for permuted index source lines was added
-!         following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     open and initialize a new kernel file
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Open and initialize a SPICE ASCII kernel file.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         KERNEL
+!!
+!! ## Detailed Input
+!!
+!!     KERNEL   is the name of the SPICE ASCII kernel file to be opened
+!!              and initialized.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     The SPICE ASCII kernel file KERNEL is opened by RDKNEW and read
+!!     by RDKDAT.
+!!
+!! ## Particulars
+!!
+!!     RDKNEW should be called prior to the first call to RDKDAT.
+!!     RDKNEW opens the kernel file and RDKDAT reads the lines of
+!!     data in the file.
+!!
+!! ## Examples
+!!
+!!     In the following example, RDKNEW and RDKDAT are used to read
+!!     the contents of a kernel file.
+!!
+!!     Let the file KERNEL contain the following lines.
+!!
+!!        =============================================================
+!!
+!!        DELTA_T_A is defined to be 32.184 seconds, and should not
+!!        be changed except under the most unusual circumstances.
+!!
+!!        \begindata
+!!
+!!        DELTA_T_A       =   32.184
+!!
+!!        \begintext
+!!
+!!        The next three items determine the relativistic correction
+!!        in the difference ET - TAI. To turn the correction off,
+!!        just set K to zero.
+!!
+!!        \begindata
+!!
+!!        K               =    1.657D-3
+!!        ORBIT_ECC       =    1.671D-2
+!!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
+!!
+!!        =============================================================
+!!
+!!     Then the code fragment
+!!
+!!        CALL RDKNEW ( KERNEL )
+!!        CALL RDKDAT ( LINE, EOF )
+!!
+!!        DO WHILE ( (.NOT. EOF) .AND. ( .NOT. FAILED () ) )
+!!           WRITE (6,*) LINE
+!!           CALL RDKDAT ( LINE, EOF )
+!!        END DO
+!!
+!!     prints the following lines.
+!!
+!!        =============================================================
+!!        DELTA_T_A       =   32.184
+!!        K               =    1.657D-3
+!!        ORBIT_ECC       =    1.671D-2
+!!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
+!!        =============================================================
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     M.J. Spencer       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.0.1, 17-JUN-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 3.0.0, 11-FEB-2008 (NJB)
+!!
+!!        This entry point has been updated so as to be
+!!        able to parse text kernel lines containing tab
+!!        characters.
+!!
+!!-    SPICELIB Version 2.1.0, 03-OCT-2005 (EDW)
+!!
+!!        File rdker.f made a master file so as to
+!!        add the ZZSETNNREAD call. This call will exist
+!!        only in FORTRAN source intended for conversion
+!!        to C by the f2c utility.
+!!
+!!        The ZZSETNNREAD call activates and deactivates
+!!        the non-native text line read capability for the
+!!        CSPICE toolkit.
+!!
+!!-    SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
+!!
+!!         The entry point RDKLIN was added.
+!!
+!!-    SPICELIB Version 1.2.0, 01-JUN-1992 (MJS)
+!!
+!!         RDKER now initializes the variables BEGDAT and BEGTXT
+!!         in a portable way. On the first valid entry to this routine,
+!!         the backslash character in the form CHAR(92) is concatenated
+!!         individually to 'begindata' and 'begintext'.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!         Comment section for permuted index source lines was added
+!!         following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     open and initialize a new kernel file
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ljust, rtrim
       implicit none
@@ -2584,187 +2524,179 @@ contains
       end procedure rdknew
 
       module procedure rdkdat
-
-! $ Abstract
-!
-!     Read the next line of data from a SPICE ASCII kernel file.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         LINE
-!     LOGICAL               EOF
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     LINE     is the next line of data from the kernel file most
-!              recently opened by NEWKER. Data lines are non-blank lines
-!              which lie between \begindata and \begintext markers.
-!              Lines are returned left justified.
-!
-!     EOF      is .TRUE. when the end of the kernel file has been
-!              reached, and is .FALSE. otherwise. The kernel file is
-!              closed automatically when the end of the file is reached.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     The SPICE ASCII kernel file KERNEL is opened by RDKNEW and read
-!     by RDKDAT.
-!
-! $ Particulars
-!
-!     RDKDAT is used internally by RDKVAR to retrieve successive lines
-!     of data from the current kernel file. It exists primarily to
-!     relieve RDKVAR of the responsibility of dealing with comment
-!     blocks and blank lines.
-!
-! $ Examples
-!
-!     In the following example, RDKNEW and RDKDAT are used to read
-!     the contents of a kernel file.
-!
-!     Let the file KERNEL contain the following lines.
-!
-!        =============================================================
-!
-!        DELTA_T_A is defined to be 32.184 seconds, and should not
-!        be changed except under the most unusual circumstances.
-!
-!        \begindata
-!
-!        DELTA_T_A       =   32.184
-!
-!        \begintext
-!
-!        The next three items determine the relativistic correction
-!        in the difference ET - TAI. To turn the correction off,
-!        just set K to zero.
-!
-!        \begindata
-!
-!        K               =    1.657D-3
-!        ORBIT_ECC       =    1.671D-2
-!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
-!
-!        =============================================================
-!
-!     Then the code fragment
-!
-!        CALL RDKNEW ( KERNEL )
-!        CALL RDKDAT ( LINE, EOF )
-!
-!        DO WHILE ( (.NOT. EOF) .AND. ( .NOT. FAILED () ) )
-!           WRITE (6,*) LINE
-!           CALL RDKDAT ( LINE, EOF )
-!        END DO
-!
-!     prints the following lines.
-!
-!        =============================================================
-!        DELTA_T_A       =   32.184
-!        K               =    1.657D-3
-!        ORBIT_ECC       =    1.671D-2
-!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
-!        =============================================================
-!
-! $ Restrictions
-!
-!     1)  The input file must be opened and initialized by NEWKER prior
-!         to the first call to RDKDAT.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.0.1, 17-JUN-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 3.0.0, 11-FEB-2008 (NJB)
-!
-!        This entry point has been updated so as to be
-!        able to parse text kernel lines containing tab
-!        characters.
-!
-!-    SPICELIB Version 2.1.0, 03-OCT-2005 (EDW)
-!
-!        File rdker.f made a master file so as to
-!        add the ZZSETNNREAD call. This call will exist
-!        only in FORTRAN source intended for conversion
-!        to C by the f2c utility.
-!
-!        The ZZSETNNREAD call activates and deactivates
-!        the non-native text line read capability for the
-!        CSPICE toolkit.
-!
-!-    SPICELIB Version 2.0.1, 22-AUG-2001 (EDW)
-!
-!        Corrected ENDIF to END IF.
-!
-!-    SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
-!
-!        The entry point RDKLIN was added.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read the next data line from a kernel file
-!
-!-&
-
-! $ Revisions
-!
-!-     Beta Version 2.0.0, 23-OCT-1989 (HAN)
-!
-!        A FAILED test was added to the DO-loop which reads
-!        lines in the kernel file.
-!
-!        If the error action was set to 'RETURN' an infinite loop
-!        could have resulted if RDTEXT failed and the loop conditions
-!        were satisfied.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Read the next line of data from a SPICE ASCII kernel file.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         LINE
+!!     LOGICAL               EOF
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     LINE     is the next line of data from the kernel file most
+!!              recently opened by NEWKER. Data lines are non-blank lines
+!!              which lie between \begindata and \begintext markers.
+!!              Lines are returned left justified.
+!!
+!!     EOF      is .TRUE. when the end of the kernel file has been
+!!              reached, and is .FALSE. otherwise. The kernel file is
+!!              closed automatically when the end of the file is reached.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     The SPICE ASCII kernel file KERNEL is opened by RDKNEW and read
+!!     by RDKDAT.
+!!
+!! ## Particulars
+!!
+!!     RDKDAT is used internally by RDKVAR to retrieve successive lines
+!!     of data from the current kernel file. It exists primarily to
+!!     relieve RDKVAR of the responsibility of dealing with comment
+!!     blocks and blank lines.
+!!
+!! ## Examples
+!!
+!!     In the following example, RDKNEW and RDKDAT are used to read
+!!     the contents of a kernel file.
+!!
+!!     Let the file KERNEL contain the following lines.
+!!
+!!        =============================================================
+!!
+!!        DELTA_T_A is defined to be 32.184 seconds, and should not
+!!        be changed except under the most unusual circumstances.
+!!
+!!        \begindata
+!!
+!!        DELTA_T_A       =   32.184
+!!
+!!        \begintext
+!!
+!!        The next three items determine the relativistic correction
+!!        in the difference ET - TAI. To turn the correction off,
+!!        just set K to zero.
+!!
+!!        \begindata
+!!
+!!        K               =    1.657D-3
+!!        ORBIT_ECC       =    1.671D-2
+!!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
+!!
+!!        =============================================================
+!!
+!!     Then the code fragment
+!!
+!!        CALL RDKNEW ( KERNEL )
+!!        CALL RDKDAT ( LINE, EOF )
+!!
+!!        DO WHILE ( (.NOT. EOF) .AND. ( .NOT. FAILED () ) )
+!!           WRITE (6,*) LINE
+!!           CALL RDKDAT ( LINE, EOF )
+!!        END DO
+!!
+!!     prints the following lines.
+!!
+!!        =============================================================
+!!        DELTA_T_A       =   32.184
+!!        K               =    1.657D-3
+!!        ORBIT_ECC       =    1.671D-2
+!!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
+!!        =============================================================
+!!
+!! ## Restrictions
+!!
+!!     1)  The input file must be opened and initialized by NEWKER prior
+!!         to the first call to RDKDAT.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.0.1, 17-JUN-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 3.0.0, 11-FEB-2008 (NJB)
+!!
+!!        This entry point has been updated so as to be
+!!        able to parse text kernel lines containing tab
+!!        characters.
+!!
+!!-    SPICELIB Version 2.1.0, 03-OCT-2005 (EDW)
+!!
+!!        File rdker.f made a master file so as to
+!!        add the ZZSETNNREAD call. This call will exist
+!!        only in FORTRAN source intended for conversion
+!!        to C by the f2c utility.
+!!
+!!        The ZZSETNNREAD call activates and deactivates
+!!        the non-native text line read capability for the
+!!        CSPICE toolkit.
+!!
+!!-    SPICELIB Version 2.0.1, 22-AUG-2001 (EDW)
+!!
+!!        Corrected ENDIF to END IF.
+!!
+!!-    SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The entry point RDKLIN was added.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     read the next data line from a kernel file
+!!
+!! ## Revisions
+!!
+!!-     Beta Version 2.0.0, 23-OCT-1989 (HAN)
+!!
+!!        A FAILED test was added to the DO-loop which reads
+!!        lines in the kernel file.
+!!
+!!        If the error action was set to 'RETURN' an infinite loop
+!!        could have resulted if RDTEXT failed and the loop conditions
+!!        were satisfied.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ljust, rtrim
       implicit none
@@ -2868,129 +2800,123 @@ contains
       end procedure rdkdat
 
       module procedure rdklin
-
-! $ Abstract
-!
-!     Return the name of file and line number of the last line read by
-!     the entry point RDKDAT.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         KERNEL
-!     INTEGER               NUMBER
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     KERNEL   is the name of the last file supplied via a call to
-!              RDKNEW. If no call to RDKNEW have been made KERNEL is
-!              returned as a blank. If KERNEL is not sufficiently long
-!              to hold th name of the file, the file name will be
-!              truncated on the right.
-!
-!     NUMBER   is the number of the last line in KERNEL returned by a
-!              call to RDKDAT. If no call to RDKNEW or RDKDAT have been
-!              made NUMBER is returned with the value 0.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If no calls to RDKNEW have been made, KERNEL is returned as
-!         a blank and NUMBER is returned with the value 0.
-!
-!     2)  If no calls to RDKDAT have been made but RDKNEW has been
-!         called, NUMBER is returned with the value 1.
-!
-!     3)  If KERNEL is not sufficiently long to hold the name of the
-!         file being read, the name will be truncated on the right.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is a utility to aid in determining the last
-!     line read in a text file that is being read via RDKDAT.
-!
-!     It is particular useful in pointing out the location of
-!     an error in an input file.
-!
-! $ Examples
-!
-!     Suppose that you are processing a file and have detected an
-!     error in the syntax in the file. The following code fragment
-!     illustrates how you can use this routine to inform a user of
-!     the location of the error in the file.
-!
-!        CALL RDKLIN ( FILE, NUMBER )
-!        R =  RTRIM  ( FILE )
-!
-!        WRITE (*,*) 'An error occurred while reading line ', NUMBER
-!        WRITE (*,*) 'of the file ''', FILE(1:R), ''''
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.1, 17-JUN-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Corrected
-!        output argument name in $Declarations section (changed FILE to
-!        KERNEL)
-!
-!-    SPICELIB Version 2.1.0, 03-OCT-2005 (EDW)
-!
-!        File rdker.f made a master file so as to
-!        add the ZZSETNNREAD call. This call will exist
-!        only in FORTRAN source intended for conversion
-!        to C by the f2c utility.
-!
-!        The ZZSETNNREAD call activates and deactivates
-!        the non-native text line read capability for the
-!        CSPICE toolkit.
-!
-!-    SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Determine the last line read from a kernel file.
-!
-!-&
-
-!
-!     Not much to do here.  Just copy the information and return.
-!
+!! ## Abstract
+!!
+!!     Return the name of file and line number of the last line read by
+!!     the entry point RDKDAT.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         KERNEL
+!!     INTEGER               NUMBER
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     KERNEL   is the name of the last file supplied via a call to
+!!              RDKNEW. If no call to RDKNEW have been made KERNEL is
+!!              returned as a blank. If KERNEL is not sufficiently long
+!!              to hold th name of the file, the file name will be
+!!              truncated on the right.
+!!
+!!     NUMBER   is the number of the last line in KERNEL returned by a
+!!              call to RDKDAT. If no call to RDKNEW or RDKDAT have been
+!!              made NUMBER is returned with the value 0.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1)  If no calls to RDKNEW have been made, KERNEL is returned as
+!!         a blank and NUMBER is returned with the value 0.
+!!
+!!     2)  If no calls to RDKDAT have been made but RDKNEW has been
+!!         called, NUMBER is returned with the value 1.
+!!
+!!     3)  If KERNEL is not sufficiently long to hold the name of the
+!!         file being read, the name will be truncated on the right.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility to aid in determining the last
+!!     line read in a text file that is being read via RDKDAT.
+!!
+!!     It is particular useful in pointing out the location of
+!!     an error in an input file.
+!!
+!! ## Examples
+!!
+!!     Suppose that you are processing a file and have detected an
+!!     error in the syntax in the file. The following code fragment
+!!     illustrates how you can use this routine to inform a user of
+!!     the location of the error in the file.
+!!
+!!        CALL RDKLIN ( FILE, NUMBER )
+!!        R =  RTRIM  ( FILE )
+!!
+!!        WRITE (*,*) 'An error occurred while reading line ', NUMBER
+!!        WRITE (*,*) 'of the file ''', FILE(1:R), ''''
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.1, 17-JUN-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Corrected
+!!        output argument name in $Declarations section (changed FILE to
+!!        KERNEL)
+!!
+!!-    SPICELIB Version 2.1.0, 03-OCT-2005 (EDW)
+!!
+!!        File rdker.f made a master file so as to
+!!        add the ZZSETNNREAD call. This call will exist
+!!        only in FORTRAN source intended for conversion
+!!        to C by the f2c utility.
+!!
+!!        The ZZSETNNREAD call activates and deactivates
+!!        the non-native text line read capability for the
+!!        CSPICE toolkit.
+!!
+!!-    SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Determine the last line read from a kernel file.
+!!
+!!     Not much to do here.  Just copy the information and return.
+!!
       use pepper_kinds, only: ip
       implicit none
       logical               return
@@ -3036,109 +2962,104 @@ contains
 !$Procedure  ZZTKNERR ( Create ZZTOKNS overflow error message )
 
       module procedure zztknerr
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Create an error message for ZZTOKNS token buffer and picture
+!!     overflow exceptions.
+!!
+!! ## Required Reading
+!!
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TEMPLT         is the input error message template. It should
+!!                    have two '#' characters in it.
+!!
+!!     STRING         is the string that should replace the first '#' in
+!!                    the template.
+!!
+!!     TOKEN          is the string that should replace the second '#'
+!!                    in the template.
+!!
+!! ## Detailed Output
+!!
+!!     ERROR          is the complete output error message.
+!!
+!!     STATUS         is the output status flag always set .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The sole purpose of this routine is to encapsulate in a single
+!!     routine the two REPMC calls and one ZZTOKNS = .FALSE. assignments
+!!     needed to make the error messages and returned status used in
+!!     numerous overflow check IF blocks in ZZTOKNS.
+!!
+!! ## Examples
+!!
+!!     For these inputs
+!!
+!!        TEMPLT = 'This time string ''#'' has a bad token ''#''.'
+!!
+!!        STRING = '2001-01-01 boo 00:00:00'
+!!
+!!        TOKEN  = 'boo'
+!!
+!!     this routine returns
+!!
+!!        ERROR  =  'This time string ''2001-01-01 boo 00:00:00'' has '
+!!       .          'a bad token ''boo''.'
+!!
+!!        STATUS = .FALSE.
+!!
+!! ## Restrictions
+!!
+!!     1) This is a private routine. SPICE user applications should not
+!!        call this routine.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 05-FEB-2014 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     create error message for ZZTOKNS overflow failure
+!!
       use pepper_strings, only: repmc
 
       implicit none
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Create an error message for ZZTOKNS token buffer and picture
-!     overflow exceptions.
-!
-! $ Required_Reading
-!
-!     TIME
-!
-! $ Keywords
-!
-!     TIME
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
-! $ Detailed_Input
-!
-!     TEMPLT         is the input error message template. It should
-!                    have two '#' characters in it.
-!
-!     STRING         is the string that should replace the first '#' in
-!                    the template.
-!
-!     TOKEN          is the string that should replace the second '#'
-!                    in the template.
-!
-! $ Detailed_Output
-!
-!     ERROR          is the complete output error message.
-!
-!     STATUS         is the output status flag always set .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The sole purpose of this routine is to encapsulate in a single
-!     routine the two REPMC calls and one ZZTOKNS = .FALSE. assignments
-!     needed to make the error messages and returned status used in
-!     numerous overflow check IF blocks in ZZTOKNS.
-!
-! $ Examples
-!
-!     For these inputs
-!
-!        TEMPLT = 'This time string ''#'' has a bad token ''#''.'
-!
-!        STRING = '2001-01-01 boo 00:00:00'
-!
-!        TOKEN  = 'boo'
-!
-!     this routine returns
-!
-!        ERROR  =  'This time string ''2001-01-01 boo 00:00:00'' has '
-!       .          'a bad token ''boo''.'
-!
-!        STATUS = .FALSE.
-!
-! $ Restrictions
-!
-!     1) This is a private routine. SPICE user applications should not
-!        call this routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 05-FEB-2014 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     create error message for ZZTOKNS overflow failure
-!
-!-&
-
       call repmc ( templt, '#', string, error )
       call repmc ( error,  '#', token,  error )
       status = .false.
@@ -3150,28 +3071,27 @@ contains
 !$Procedure      ZZMKPC ( Make a time format picture mark )
 
       module procedure zzmkpc
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Given a numeric pattern, construct the appropriate time format
+!!     picture component.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      Time --- PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: lastnb, zzrepsub
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Given a numeric pattern, construct the appropriate time format
-!     picture component.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      Time --- PRIVATE
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -3300,25 +3220,24 @@ contains
 !$Procedure      ZZREPT ( Private --- replace tokens )
 
       module procedure zzrept
-
-! $ Abstract
-!
-!    SPICE Private routine intended solely for the support of SPICE
-!    routines.  Users should not call this routine directly due
-!    to the volatile nature of this routine.
-!
-!    Replace matching tokens and remove the character "*"
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     TIME --- PRIVATE
-!
-! $ Declarations
-
+!! ## Abstract
+!!
+!!    SPICE Private routine intended solely for the support of SPICE
+!!    routines.  Users should not call this routine directly due
+!!    to the volatile nature of this routine.
+!!
+!!    Replace matching tokens and remove the character "*"
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     TIME --- PRIVATE
+!!
+!! ## Declarations
+!!
       implicit none
 
 ! $ Detailed_Input
@@ -3391,258 +3310,246 @@ contains
       end procedure zzrept
 
       module procedure tcheck
-
-! $ Abstract
-!
-!     Determine whether the components of a time vector are in the
-!     "usual" range for the components, if component checking is
-!     enabled.
-!
-!     If component checking is not enabled, this routine simply
-!     returns after setting the outputs.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
-! $ Detailed_Input
-!
-!     TVEC     is an array of double precision numbers that
-!              represent the components of some calendar epoch.
-!
-!     TYPE     is kind of calendar epoch represented by TVEC
-!              legitimate values are 'YMD' and 'YD'
-!
-!     MODS     is a logical flag indicating whether any of the
-!              items in MODIFY are non-blank. If some item
-!              in MODIFY is non-blank, MODS will be .TRUE. If
-!              all items in MODIFY are blank, MODS will be .FALSE.
-!
-!     MODIFY   is an array of strings indicating how the
-!              interpretation of the various components of TVEC
-!              should be modified. Blank values indicate that
-!              the default interpretation should be applied.
-!              Non-blank components will have the following values
-!              and meanings.
-!
-!               Component   Meaning   Possible Non-blank Modifier Values
-!               ---------   -------   ----------------------------------
-!               1           ERA       'A.D.', 'B.C.'
-!               2           Weekday   'SUN',  'MON', ... etc.
-!               3           AM/PM     'A.M.', 'P.M.'
-!               4           System    'UTC',  'TDB', 'TDT'
-!               5           Time Zone 'UTC+i:i', 'UTC-i:i'
-!
-! $ Detailed_Output
-!
-!     OK       is returned .TRUE. if all components of TVEC are within
-!              the normal range of values. If some problem arises,
-!              OK will be returned with the value .FALSE. Note that
-!              component checking has not been enabled by a call
-!              to TPARCH, the value of OK is automatically set to
-!              .TRUE.
-!
-!     ERROR    if OK is returned with the value .TRUE., ERROR will be
-!              returned as a blank. However, if OK is .FALSE., ERROR
-!              will contain a diagnostic indicating what was wrong
-!              with the components of TVEC. Note that
-!              component checking has not been enabled by a call
-!              to TPARCH, the value of ERROR is automatically set to
-!              a blank.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  All problems with TVEC are reported via the logical OK
-!         and the message ERROR.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine works in conjunction with the entry point TPARCH.
-!     If TPARCH has not been called with the input value 'YES' this
-!     routine simply sets the outputs as indicated above and returns.
-!
-!     Usually strings such as February 32, 1997 are regarded as
-!     erroneous. However, the SPICE time subsystem is capable
-!     of attaching meaning to such strings. The routines TPARCH and
-!     TCHECK allow you to treat such strings as erroneous throughout
-!     the SPICE time sub-system.
-!
-!     This routine examines the components of a time vector and
-!     determines whether or not all of the values in the vector
-!     are within the normal bounds.
-!
-!     To pass inspection:
-!
-!        Years must be integers.
-!
-!        Months must be in the range from 1 to 12 and must be integers.
-!
-!        Days of the month must be in the normal ranges. For example
-!             if the month specified is January, the day of the month
-!             must be greater than or equal to 1.0D0 and strictly less
-!             than 32.0D0 (The normal range for February is a function
-!             of whether the year specified is a leap year. The
-!             Gregorian calendar is used to determine leap years.)
-!
-!        Day of the year must be greater than or equal to 1.0D0
-!             and strictly less than 366.0D0  (367.0D0 in a leap year.
-!             The Gregorian calendar is used to determine leap years.)
-!
-!        Hours must be greater than or equal to 0.0D0 and strictly
-!             less than 24.0D0. If the AMPM modifier is included
-!             hours must be greater than or equal to 1.0D0 and strictly
-!             less than 13.0D0.
-!
-!        Minutes must be greater than or equal to 0.0D0 and must
-!             be strictly less than 60.0D0
-!
-!        Seconds must be greater than or equal to 0.0D0 and strictly
-!             less than 60.0D0 (61.0D0 during the last minute of the
-!             30th of June and the 31st of December).
-!
-!        If some component other than the seconds component is
-!        not an integer, all components of lesser significance must
-!        be zero.
-!
-!     This routine  is designed to work in conjunction
-!     with the SPICE routine TPARTV and it is anticipated that
-!     it will be called in the following fashion
-!
-!        CALL TPARTV ( STRING, TVEC, NTVEC,  TYPE,
-!       .              MODIFY, MODS, YABBRV, SUCCES, ERROR )
-!
-!        IF ( .NOT. SUCCES ) THEN
-!
-!           communicate the diagnostic message and
-!           take other actions as appropriate
-!
-!           RETURN
-!
-!        END IF
-!
-!        IF ( SUCCES .AND. CHECK ) THEN
-!            CALL TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERROR )
-!        END IF
-!
-!        IF ( .NOT. OK ) THEN
-!
-!           communicate the diagnostic message and
-!           take other actions as appropriate
-!
-!           RETURN
-!
-!        END IF
-!
-! $ Examples
-!
-!     Suppose that you have parsed a string (via TPARTV) and want
-!     to enforce normal ranges of the components. The following
-!     sequence of calls will perform the checks on components.
-!
-!        get the current checking setting
-!
-!        CALL TCHCKD ( CURNT )
-!
-!        turn on component checking.
-!
-!        CALL TPARCH ( 'YES' )
-!
-!        Check the components.
-!
-!        CALL TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERROR )
-!
-!        Reset the checking setting to the original value.
-!
-!        CALL TPARCH ( CURNT )
-!
-!        Now handle any problems that were diagnosed by TCHECK
-!
-!        IF ( .NOT. OK ) THEN
-!
-!           do something
-!
-!        END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 01-NOV-2021 (JDR) (EDW)
-!
-!        Added logic to prevent evaluation of MODIFY when MODS false.
-!
-!        Added text listing routines affected and not affected by
-!        explicit assignments to TPARCH.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.1.0, 31-JAN-2017 (NJB)
-!
-!        Bug fix: updated logic so that B.C. leap years are recognized.
-!
-!-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
-!
-!        Fixed typo in the $Declarations section in the TPARCH header:
-!        STRING -> TYPE.
-!
-!-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Check the components of a time vector
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     In-line Functions
-!
-
-!
-!     Local Variables
-!
-
-!
-!     The in-line function DIVBLE returns 1 if YEAR is divisible
-!     by I,  it returns 0 otherwise.
-!
-!     If checking isn't enabled, there is nothing to do.
-!
+!! ## Abstract
+!!
+!!     Determine whether the components of a time vector are in the
+!!     "usual" range for the components, if component checking is
+!!     enabled.
+!!
+!!     If component checking is not enabled, this routine simply
+!!     returns after setting the outputs.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TVEC     is an array of double precision numbers that
+!!              represent the components of some calendar epoch.
+!!
+!!     TYPE     is kind of calendar epoch represented by TVEC
+!!              legitimate values are 'YMD' and 'YD'
+!!
+!!     MODS     is a logical flag indicating whether any of the
+!!              items in MODIFY are non-blank. If some item
+!!              in MODIFY is non-blank, MODS will be .TRUE. If
+!!              all items in MODIFY are blank, MODS will be .FALSE.
+!!
+!!     MODIFY   is an array of strings indicating how the
+!!              interpretation of the various components of TVEC
+!!              should be modified. Blank values indicate that
+!!              the default interpretation should be applied.
+!!              Non-blank components will have the following values
+!!              and meanings.
+!!
+!!               Component   Meaning   Possible Non-blank Modifier Values
+!!               ---------   -------   ----------------------------------
+!!               1           ERA       'A.D.', 'B.C.'
+!!               2           Weekday   'SUN',  'MON', ... etc.
+!!               3           AM/PM     'A.M.', 'P.M.'
+!!               4           System    'UTC',  'TDB', 'TDT'
+!!               5           Time Zone 'UTC+i:i', 'UTC-i:i'
+!!
+!! ## Detailed Output
+!!
+!!     OK       is returned .TRUE. if all components of TVEC are within
+!!              the normal range of values. If some problem arises,
+!!              OK will be returned with the value .FALSE. Note that
+!!              component checking has not been enabled by a call
+!!              to TPARCH, the value of OK is automatically set to
+!!              .TRUE.
+!!
+!!     ERROR    if OK is returned with the value .TRUE., ERROR will be
+!!              returned as a blank. However, if OK is .FALSE., ERROR
+!!              will contain a diagnostic indicating what was wrong
+!!              with the components of TVEC. Note that
+!!              component checking has not been enabled by a call
+!!              to TPARCH, the value of ERROR is automatically set to
+!!              a blank.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1)  All problems with TVEC are reported via the logical OK
+!!         and the message ERROR.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine works in conjunction with the entry point TPARCH.
+!!     If TPARCH has not been called with the input value 'YES' this
+!!     routine simply sets the outputs as indicated above and returns.
+!!
+!!     Usually strings such as February 32, 1997 are regarded as
+!!     erroneous. However, the SPICE time subsystem is capable
+!!     of attaching meaning to such strings. The routines TPARCH and
+!!     TCHECK allow you to treat such strings as erroneous throughout
+!!     the SPICE time sub-system.
+!!
+!!     This routine examines the components of a time vector and
+!!     determines whether or not all of the values in the vector
+!!     are within the normal bounds.
+!!
+!!     To pass inspection:
+!!
+!!        Years must be integers.
+!!
+!!        Months must be in the range from 1 to 12 and must be integers.
+!!
+!!        Days of the month must be in the normal ranges. For example
+!!             if the month specified is January, the day of the month
+!!             must be greater than or equal to 1.0D0 and strictly less
+!!             than 32.0D0 (The normal range for February is a function
+!!             of whether the year specified is a leap year. The
+!!             Gregorian calendar is used to determine leap years.)
+!!
+!!        Day of the year must be greater than or equal to 1.0D0
+!!             and strictly less than 366.0D0  (367.0D0 in a leap year.
+!!             The Gregorian calendar is used to determine leap years.)
+!!
+!!        Hours must be greater than or equal to 0.0D0 and strictly
+!!             less than 24.0D0. If the AMPM modifier is included
+!!             hours must be greater than or equal to 1.0D0 and strictly
+!!             less than 13.0D0.
+!!
+!!        Minutes must be greater than or equal to 0.0D0 and must
+!!             be strictly less than 60.0D0
+!!
+!!        Seconds must be greater than or equal to 0.0D0 and strictly
+!!             less than 60.0D0 (61.0D0 during the last minute of the
+!!             30th of June and the 31st of December).
+!!
+!!        If some component other than the seconds component is
+!!        not an integer, all components of lesser significance must
+!!        be zero.
+!!
+!!     This routine  is designed to work in conjunction
+!!     with the SPICE routine TPARTV and it is anticipated that
+!!     it will be called in the following fashion
+!!
+!!        CALL TPARTV ( STRING, TVEC, NTVEC,  TYPE,
+!!       .              MODIFY, MODS, YABBRV, SUCCES, ERROR )
+!!
+!!        IF ( .NOT. SUCCES ) THEN
+!!
+!!           communicate the diagnostic message and
+!!           take other actions as appropriate
+!!
+!!           RETURN
+!!
+!!        END IF
+!!
+!!        IF ( SUCCES .AND. CHECK ) THEN
+!!            CALL TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERROR )
+!!        END IF
+!!
+!!        IF ( .NOT. OK ) THEN
+!!
+!!           communicate the diagnostic message and
+!!           take other actions as appropriate
+!!
+!!           RETURN
+!!
+!!        END IF
+!!
+!! ## Examples
+!!
+!!     Suppose that you have parsed a string (via TPARTV) and want
+!!     to enforce normal ranges of the components. The following
+!!     sequence of calls will perform the checks on components.
+!!
+!!        get the current checking setting
+!!
+!!        CALL TCHCKD ( CURNT )
+!!
+!!        turn on component checking.
+!!
+!!        CALL TPARCH ( 'YES' )
+!!
+!!        Check the components.
+!!
+!!        CALL TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERROR )
+!!
+!!        Reset the checking setting to the original value.
+!!
+!!        CALL TPARCH ( CURNT )
+!!
+!!        Now handle any problems that were diagnosed by TCHECK
+!!
+!!        IF ( .NOT. OK ) THEN
+!!
+!!           do something
+!!
+!!        END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 01-NOV-2021 (JDR) (EDW)
+!!
+!!        Added logic to prevent evaluation of MODIFY when MODS false.
+!!
+!!        Added text listing routines affected and not affected by
+!!        explicit assignments to TPARCH.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.1.0, 31-JAN-2017 (NJB)
+!!
+!!        Bug fix: updated logic so that B.C. leap years are recognized.
+!!
+!!-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
+!!
+!!        Fixed typo in the $Declarations section in the TPARCH header:
+!!        STRING -> TYPE.
+!!
+!!-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Check the components of a time vector
+!!
+!!     SPICELIB functions
+!!
+!!     In-line Functions
+!!
+!!     Local Variables
+!!
+!!     The in-line function DIVBLE returns 1 if YEAR is divisible
+!!     by I,  it returns 0 otherwise.
+!!
+!!     If checking isn't enabled, there is nothing to do.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc
       implicit none
@@ -3966,254 +3873,249 @@ contains
       end procedure tcheck
 
       module procedure tparch
-
-! $ Abstract
-!
-!     Restrict the set of strings that are recognized by SPICE time
-!     parsing routines to those that have standard values for all time
-!     components.
-!
-! $ Required_Reading
-!
-!     TIME
-!
-! $ Keywords
-!
-!     PARSING
-!     TIME
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         TYPE
-!
-! $ Detailed_Input
-!
-!     TYPE     is a character string that is used to adjust the set of
-!              strings that will be regarded as valid time strings by
-!              SPICE time parsing routines.
-!
-!              The default behavior of SPICE time software is to allow
-!              an extended range of values for the various components
-!              (tokens) of a time string. For example, using its default
-!              behavior, TPARSE would regard 1993 JAN 367 as a valid
-!              time string and return the UTC seconds past the J2000
-!              epoch value that corresponds to Jan 2, 1994.
-!
-!              While this is a "reasonable" interpretation of such a
-!              string, there may be occasions when such a string should
-!              be regarded as an error.
-!
-!              By calling TPARCH with a value of 'YES', the action of
-!              the time software will be modified. Strings that have
-!              components that are out of the range of values used in
-!              most English discourse will be regarded as errors. Thus
-!              the numeric values of MONTH, DAY, HOUR, MINUTE, and
-!              SECOND must satisfy the following conditions to be
-!              regarded as legitimate calendar time strings.
-!
-!                 ITEM     Valid Range
-!                 ------   -----------------------------------------
-!                 MONTH    1 to 13
-!                 DAY      1 to 365 (366 for leap years) when
-!                          DAY is interpreted as the day of year
-!                          i.e. the month token is empty.
-!                          1 to 31  if month is January
-!                          1 to 28  (29 in leap years) if month is
-!                                   February
-!                          1 to 31  if month is March
-!                          1 to 30  if month is April
-!                          1 to 31  if month is May
-!                          1 to 31  if month is June
-!                          1 to 30  if month is July
-!                          1 to 31  if month is August
-!                          1 to 30  if month is September
-!                          1 to 31  if month is October
-!                          1 to 30  if month is November
-!                          1 to 31  if month is December
-!                 HOUR     0 to 23
-!                 MINUTE   0 to 59
-!                 SECOND   0 up to but not including 60 on days that
-!                          can not have a leapsecond.
-!                          0 up to but not including 61 for times
-!                          that are the last second of June or
-!                          December. In other words,
-!                               JUN 30, 23:59:60.xxxxxx...x
-!                          and  DEC 31, 23:59:60.xxxxxx...x
-!
-!              To reset the action of time software to the default
-!              action, set TYPE to a value that is not equivalent to
-!              'YES' when case and spaces are ignored.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is used to alter the collections of strings
-!     that SPICE software regards as legitimate calendar strings. The
-!     default behavior of SPICE software is to accept strings such
-!     as FEB 34, 1993 and to interpret these in a "natural way"
-!     (FEB 34, 1993 is regarded as MARCH 6, 1993.) This behavior
-!     is sometimes useful for "private" programs that you write.
-!     However, such a string may be a typo (a finger accidentally hit
-!     two keys for the day instead of one). Given that this string
-!     does not appear in common usage, you may want to consider
-!     that it is more likely the result of erroneous input. You
-!     can alter the behavior of SPICE software so that it will
-!     treat such a string as an error. To do this call this entry
-!     point with TYPE having the value 'YES'.
-!
-!        CALL TPARCH ( 'YES' )
-!
-!     Until the behavior is reset by calling TPARCH with a value
-!     other than 'YES' (such as 'NO'), SPICE software will treat all
-!     out-of-bound components of time strings as errors.
-!
-!     If you are happy with the SPICE default interpretation of
-!     strings, you do not need to make any calls to TPARCH.
-!
-!     All time parsing routines --including the top-level APIs TPARSE
-!     and UTC2ET-- respect the setting assigned by TPARCH, except the
-!     SPICELIB routine STR2ET.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) When accepting times as input interactively, you usually
-!        read a string typed at a keyboard and then pass that string
-!        to the SPICE time system to convert it to an ephemeris time.
-!        The default behavior of SPICE software is to accept strings
-!        such as FEB 34, 1993 and to interpret these in a "natural way"
-!        (FEB 34, 1993 is regarded as MARCH 6, 1993.) The following
-!        example code demonstrates how to modify this behavior.
-!
-!        Example code begins here.
-!
-!              PROGRAM TPARCH_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              CHARACTER*(*)         TIMSTR
-!              PARAMETER           ( TIMSTR = 'FEB 34, 1993' )
-!
-!              INTEGER               ERRMLN
-!              PARAMETER           ( ERRMLN = 1000 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(ERRMLN)    ERRMSG
-!
-!              DOUBLE PRECISION      SP2000
-!
-!        C
-!        C     First, demonstrate the default behavior of SPICE.
-!        C     Let's get the number of UTC seconds past J2000 epoch.
-!        C
-!              CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
-!
-!              IF ( ERRMSG .EQ. ' ' ) THEN
-!
-!                 WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
-!
-!              ELSE
-!
-!                 WRITE(*,'(2A)') 'Error  : ', ERRMSG
-!
-!              END IF
-!
-!        C
-!        C     Now, turn error checking on and parse the time string
-!        C     again.
-!        C
-!              CALL TPARCH ( 'YES' )
-!              CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
-!
-!              IF ( ERRMSG .EQ. ' ' ) THEN
-!
-!                 WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
-!
-!              ELSE
-!
-!                 WRITE(*,'(2A)') 'Error  : ', ERRMSG
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        UTC (s):  -215352000.000000
-!        Error  : The day of the month specified for the month of Feb***
-!
-!        Warning: incomplete output. 1 line extended past the right
-!        margin of the header and has been truncated. This line is
-!        marked by "***" at the end of the line.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.2, 01-NOV-2021 (JDR) (EDW)
-!
-!        Added text listing routines affected and not affected by
-!        explicit assignments to TPARCH.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example.
-!
-!        Added TIME to $Required_Reading list.
-!
-!-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
-!
-!        Fixed typo in the $Declarations section: STRING -> TYPE.
-!
-!-    SPICELIB Version 1.0.0, 07-APR-1996 (WLT)
-!
-!        The entry point TPARCH was moved from TPARSE to the routine
-!        TCHECK so that all time parsing actions could be centralized.
-!
-!-&
-
-! $ Index_Entries
-!
-!     Restrict time strings to proper form
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Restrict the set of strings that are recognized by SPICE time
+!!     parsing routines to those that have standard values for all time
+!!     components.
+!!
+!! ## Required Reading
+!!
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     PARSING
+!!     TIME
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         TYPE
+!!
+!! ## Detailed Input
+!!
+!!     TYPE     is a character string that is used to adjust the set of
+!!              strings that will be regarded as valid time strings by
+!!              SPICE time parsing routines.
+!!
+!!              The default behavior of SPICE time software is to allow
+!!              an extended range of values for the various components
+!!              (tokens) of a time string. For example, using its default
+!!              behavior, TPARSE would regard 1993 JAN 367 as a valid
+!!              time string and return the UTC seconds past the J2000
+!!              epoch value that corresponds to Jan 2, 1994.
+!!
+!!              While this is a "reasonable" interpretation of such a
+!!              string, there may be occasions when such a string should
+!!              be regarded as an error.
+!!
+!!              By calling TPARCH with a value of 'YES', the action of
+!!              the time software will be modified. Strings that have
+!!              components that are out of the range of values used in
+!!              most English discourse will be regarded as errors. Thus
+!!              the numeric values of MONTH, DAY, HOUR, MINUTE, and
+!!              SECOND must satisfy the following conditions to be
+!!              regarded as legitimate calendar time strings.
+!!
+!!                 ITEM     Valid Range
+!!                 ------   -----------------------------------------
+!!                 MONTH    1 to 13
+!!                 DAY      1 to 365 (366 for leap years) when
+!!                          DAY is interpreted as the day of year
+!!                          i.e. the month token is empty.
+!!                          1 to 31  if month is January
+!!                          1 to 28  (29 in leap years) if month is
+!!                                   February
+!!                          1 to 31  if month is March
+!!                          1 to 30  if month is April
+!!                          1 to 31  if month is May
+!!                          1 to 31  if month is June
+!!                          1 to 30  if month is July
+!!                          1 to 31  if month is August
+!!                          1 to 30  if month is September
+!!                          1 to 31  if month is October
+!!                          1 to 30  if month is November
+!!                          1 to 31  if month is December
+!!                 HOUR     0 to 23
+!!                 MINUTE   0 to 59
+!!                 SECOND   0 up to but not including 60 on days that
+!!                          can not have a leapsecond.
+!!                          0 up to but not including 61 for times
+!!                          that are the last second of June or
+!!                          December. In other words,
+!!                               JUN 30, 23:59:60.xxxxxx...x
+!!                          and  DEC 31, 23:59:60.xxxxxx...x
+!!
+!!              To reset the action of time software to the default
+!!              action, set TYPE to a value that is not equivalent to
+!!              'YES' when case and spaces are ignored.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine is used to alter the collections of strings
+!!     that SPICE software regards as legitimate calendar strings. The
+!!     default behavior of SPICE software is to accept strings such
+!!     as FEB 34, 1993 and to interpret these in a "natural way"
+!!     (FEB 34, 1993 is regarded as MARCH 6, 1993.) This behavior
+!!     is sometimes useful for "private" programs that you write.
+!!     However, such a string may be a typo (a finger accidentally hit
+!!     two keys for the day instead of one). Given that this string
+!!     does not appear in common usage, you may want to consider
+!!     that it is more likely the result of erroneous input. You
+!!     can alter the behavior of SPICE software so that it will
+!!     treat such a string as an error. To do this call this entry
+!!     point with TYPE having the value 'YES'.
+!!
+!!        CALL TPARCH ( 'YES' )
+!!
+!!     Until the behavior is reset by calling TPARCH with a value
+!!     other than 'YES' (such as 'NO'), SPICE software will treat all
+!!     out-of-bound components of time strings as errors.
+!!
+!!     If you are happy with the SPICE default interpretation of
+!!     strings, you do not need to make any calls to TPARCH.
+!!
+!!     All time parsing routines --including the top-level APIs TPARSE
+!!     and UTC2ET-- respect the setting assigned by TPARCH, except the
+!!     SPICELIB routine STR2ET.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) When accepting times as input interactively, you usually
+!!        read a string typed at a keyboard and then pass that string
+!!        to the SPICE time system to convert it to an ephemeris time.
+!!        The default behavior of SPICE software is to accept strings
+!!        such as FEB 34, 1993 and to interpret these in a "natural way"
+!!        (FEB 34, 1993 is regarded as MARCH 6, 1993.) The following
+!!        example code demonstrates how to modify this behavior.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM TPARCH_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              CHARACTER*(*)         TIMSTR
+!!              PARAMETER           ( TIMSTR = 'FEB 34, 1993' )
+!!
+!!              INTEGER               ERRMLN
+!!              PARAMETER           ( ERRMLN = 1000 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(ERRMLN)    ERRMSG
+!!
+!!              DOUBLE PRECISION      SP2000
+!!
+!!        C
+!!        C     First, demonstrate the default behavior of SPICE.
+!!        C     Let's get the number of UTC seconds past J2000 epoch.
+!!        C
+!!              CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
+!!
+!!              IF ( ERRMSG .EQ. ' ' ) THEN
+!!
+!!                 WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
+!!
+!!              ELSE
+!!
+!!                 WRITE(*,'(2A)') 'Error  : ', ERRMSG
+!!
+!!              END IF
+!!
+!!        C
+!!        C     Now, turn error checking on and parse the time string
+!!        C     again.
+!!        C
+!!              CALL TPARCH ( 'YES' )
+!!              CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
+!!
+!!              IF ( ERRMSG .EQ. ' ' ) THEN
+!!
+!!                 WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
+!!
+!!              ELSE
+!!
+!!                 WRITE(*,'(2A)') 'Error  : ', ERRMSG
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        UTC (s):  -215352000.000000
+!!        Error  : The day of the month specified for the month of Feb***
+!!
+!!        Warning: incomplete output. 1 line extended past the right
+!!        margin of the header and has been truncated. This line is
+!!        marked by "***" at the end of the line.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.2, 01-NOV-2021 (JDR) (EDW)
+!!
+!!        Added text listing routines affected and not affected by
+!!        explicit assignments to TPARCH.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example.
+!!
+!!        Added TIME to $Required_Reading list.
+!!
+!!-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
+!!
+!!        Fixed typo in the $Declarations section: STRING -> TYPE.
+!!
+!!-    SPICELIB Version 1.0.0, 07-APR-1996 (WLT)
+!!
+!!        The entry point TPARCH was moved from TPARSE to the routine
+!!        TCHECK so that all time parsing actions could be centralized.
+!!
+!! ## Index Entries
+!!
+!!     Restrict time strings to proper form
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
@@ -4271,110 +4173,105 @@ contains
       end procedure tparch
 
       module procedure tchckd
-
-! $ Abstract
-!
-!     Determine whether component checking is enabled for time strings.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-!
-!     IMPLICIT NONE
-!     CHARACTER*(*)         TYPE
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     TYPE     is a string that gives the answer to the question
-!              "Is checking of components enabled?"  If checking
-!              is enabled, the value returned will be "YES" if
-!              checking is not enabled, the value returned will
-!              be "NO".
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point allows you to "fetch" the current settings
-!     regarding the checking of components of a time string. This
-!     allows you to temporarily set the action to whatever is desired
-!     in a particular piece of code and then reset the action to
-!     the setting in effect prior to the routines activities.
-!
-! $ Examples
-!
-!     Suppose you'd like to write a routine that always applies
-!     component checking to the components of a time string.
-!
-!     Use this entry point together with TPARCH and TCHECK to
-!     make use of the built-in SPICE capabilities
-!
-!        get the current setting.
-!
-!        CALL TCHCKD ( CURNT )
-!        CALL TPARCH ( 'YES' )
-!
-!           perform some time
-!           parsing activities.
-!
-!           check the components.
-!
-!        CALL TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERROR )
-!
-!        Set the checking activity back to the value prior
-!        to the work done here.
-!
-!        CALL TPARCH ( CURNT )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 07-APR-1996 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Get the current time component checking status
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Determine whether component checking is enabled for time strings.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
+!!     IMPLICIT NONE
+!!     CHARACTER*(*)         TYPE
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     TYPE     is a string that gives the answer to the question
+!!              "Is checking of components enabled?"  If checking
+!!              is enabled, the value returned will be "YES" if
+!!              checking is not enabled, the value returned will
+!!              be "NO".
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point allows you to "fetch" the current settings
+!!     regarding the checking of components of a time string. This
+!!     allows you to temporarily set the action to whatever is desired
+!!     in a particular piece of code and then reset the action to
+!!     the setting in effect prior to the routines activities.
+!!
+!! ## Examples
+!!
+!!     Suppose you'd like to write a routine that always applies
+!!     component checking to the components of a time string.
+!!
+!!     Use this entry point together with TPARCH and TCHECK to
+!!     make use of the built-in SPICE capabilities
+!!
+!!        get the current setting.
+!!
+!!        CALL TCHCKD ( CURNT )
+!!        CALL TPARCH ( 'YES' )
+!!
+!!           perform some time
+!!           parsing activities.
+!!
+!!           check the components.
+!!
+!!        CALL TCHECK ( TVEC, TYPE, MODS, MODIFY, OK, ERROR )
+!!
+!!        Set the checking activity back to the value prior
+!!        to the work done here.
+!!
+!!        CALL TPARCH ( CURNT )
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 07-APR-1996 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Get the current time component checking status
+!!
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip)           divble
@@ -4435,228 +4332,223 @@ contains
       end procedure tchckd
 
       module procedure texpyr
-
-! $ Abstract
-!
-!     Expand an abbreviated year to a full year specification.
-!
-! $ Required_Reading
-!
-!     TIME
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
-! $ Detailed_Input
-!
-!     YEAR     is an "abbreviated year." In other words the 98 of
-!              1998,  05 of 2005, etc.
-!
-! $ Detailed_Output
-!
-!     YEAR     is the expansion of the abbreviated year according
-!              to the lower bound established in the entry point
-!              TSETYR. By default if YEAR is 69 to 99, the output
-!              is 1900 + the input value of YEAR. If YEAR is 0 to 68
-!              the output value of YEAR is 2000 + the input value of
-!              YEAR.
-!
-!              See the entry point TSETRY to modify this behavior.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If on input YEAR is not in the inclusive interval from
-!         0 to 99, YEAR is returned unchanged.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine allows all of the SPICE time subsystem to handle
-!     uniformly the expansion of "abbreviated" years.  (i.e. the
-!     remainder after dividing the actual year by 100).
-!
-!     By using this routine together with the routine TSETYR you
-!     can recover the actual year to associate with an abbreviation.
-!
-!     The default behavior is as follows
-!
-!        YEAR Input      YEAR Output
-!        ----------      -----------
-!            00              2000
-!            01              2001
-!             .                .
-!             .                .
-!             .                .
-!            66              2066
-!            67              2067
-!            68              2068
-!            69              1969
-!             .                .
-!             .                .
-!             .                .
-!            99              1999
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Demonstrate the default behavior of routine TEXPYR and then
-!        modify it in order to set the lower bound of the expansion to
-!        1980.
-!
-!        Example code begins here.
-!
-!              PROGRAM TEXPYR_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               NYEARS
-!              PARAMETER           ( NYEARS = 10 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              INTEGER               I
-!              INTEGER               EXYEAR
-!              INTEGER               YEARS  ( NYEARS )
-!
-!        C
-!        C     Set the input years.
-!        C
-!              DATA                  YEARS /  0,  1, 68, 69, 70,
-!             .                              78, 79, 80, 81, 99  /
-!
-!        C
-!        C     Display the default behavior.
-!        C
-!              WRITE(*,'(A)') 'Default behavior:'
-!              WRITE(*,*)
-!
-!              WRITE(*,'(A)') 'In  Expansion'
-!              WRITE(*,'(A)') '--  ---------'
-!
-!              DO I=1, NYEARS
-!
-!                 EXYEAR = YEARS(I)
-!                 CALL TEXPYR ( EXYEAR )
-!
-!                 WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
-!
-!              END DO
-!
-!        C
-!        C     Set up the lower bound for the expansion of abbreviated
-!        C     years to 1980.
-!        C
-!              CALL TSETYR ( 1980 )
-!
-!        C
-!        C     Display the new behavior.
-!        C
-!              WRITE(*,*)
-!              WRITE(*,'(A)') 'Lower bound for expansion set to 1980:'
-!              WRITE(*,*)
-!
-!              WRITE(*,'(A)') 'In  Expansion'
-!              WRITE(*,'(A)') '--  ---------'
-!
-!              DO I=1, NYEARS
-!
-!                 EXYEAR = YEARS(I)
-!                 CALL TEXPYR ( EXYEAR )
-!
-!                 WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Default behavior:
-!
-!        In  Expansion
-!        --  ---------
-!        00     2000
-!        01     2001
-!        68     2068
-!        69     1969
-!        70     1970
-!        78     1978
-!        79     1979
-!        80     1980
-!        81     1981
-!        99     1999
-!
-!        Lower bound for expansion set to 1980:
-!
-!        In  Expansion
-!        --  ---------
-!        00     2000
-!        01     2001
-!        68     2068
-!        69     2069
-!        70     2070
-!        78     2078
-!        79     2079
-!        80     1980
-!        81     1981
-!        99     1999
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 23-SEP-2020 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        example code.
-!
-!        Added TIME to the list of Required Readings.
-!
-!-    SPICELIB Version 2.0.0, 18-NOV-1997 (WLT)
-!
-!        The default century was changed from 1950-2049 to 1969-2068
-!
-!-    SPICELIB Version 1.0.0, 08-APR-1996 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Expand an abbreviated year to a fully specified year.
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Expand an abbreviated year to a full year specification.
+!!
+!! ## Required Reading
+!!
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     YEAR     is an "abbreviated year." In other words the 98 of
+!!              1998,  05 of 2005, etc.
+!!
+!! ## Detailed Output
+!!
+!!     YEAR     is the expansion of the abbreviated year according
+!!              to the lower bound established in the entry point
+!!              TSETYR. By default if YEAR is 69 to 99, the output
+!!              is 1900 + the input value of YEAR. If YEAR is 0 to 68
+!!              the output value of YEAR is 2000 + the input value of
+!!              YEAR.
+!!
+!!              See the entry point TSETRY to modify this behavior.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1)  If on input YEAR is not in the inclusive interval from
+!!         0 to 99, YEAR is returned unchanged.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine allows all of the SPICE time subsystem to handle
+!!     uniformly the expansion of "abbreviated" years.  (i.e. the
+!!     remainder after dividing the actual year by 100).
+!!
+!!     By using this routine together with the routine TSETYR you
+!!     can recover the actual year to associate with an abbreviation.
+!!
+!!     The default behavior is as follows
+!!
+!!        YEAR Input      YEAR Output
+!!        ----------      -----------
+!!            00              2000
+!!            01              2001
+!!             .                .
+!!             .                .
+!!             .                .
+!!            66              2066
+!!            67              2067
+!!            68              2068
+!!            69              1969
+!!             .                .
+!!             .                .
+!!             .                .
+!!            99              1999
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Demonstrate the default behavior of routine TEXPYR and then
+!!        modify it in order to set the lower bound of the expansion to
+!!        1980.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM TEXPYR_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               NYEARS
+!!              PARAMETER           ( NYEARS = 10 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              INTEGER               I
+!!              INTEGER               EXYEAR
+!!              INTEGER               YEARS  ( NYEARS )
+!!
+!!        C
+!!        C     Set the input years.
+!!        C
+!!              DATA                  YEARS /  0,  1, 68, 69, 70,
+!!             .                              78, 79, 80, 81, 99  /
+!!
+!!        C
+!!        C     Display the default behavior.
+!!        C
+!!              WRITE(*,'(A)') 'Default behavior:'
+!!              WRITE(*,*)
+!!
+!!              WRITE(*,'(A)') 'In  Expansion'
+!!              WRITE(*,'(A)') '--  ---------'
+!!
+!!              DO I=1, NYEARS
+!!
+!!                 EXYEAR = YEARS(I)
+!!                 CALL TEXPYR ( EXYEAR )
+!!
+!!                 WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
+!!
+!!              END DO
+!!
+!!        C
+!!        C     Set up the lower bound for the expansion of abbreviated
+!!        C     years to 1980.
+!!        C
+!!              CALL TSETYR ( 1980 )
+!!
+!!        C
+!!        C     Display the new behavior.
+!!        C
+!!              WRITE(*,*)
+!!              WRITE(*,'(A)') 'Lower bound for expansion set to 1980:'
+!!              WRITE(*,*)
+!!
+!!              WRITE(*,'(A)') 'In  Expansion'
+!!              WRITE(*,'(A)') '--  ---------'
+!!
+!!              DO I=1, NYEARS
+!!
+!!                 EXYEAR = YEARS(I)
+!!                 CALL TEXPYR ( EXYEAR )
+!!
+!!                 WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Default behavior:
+!!
+!!        In  Expansion
+!!        --  ---------
+!!        00     2000
+!!        01     2001
+!!        68     2068
+!!        69     1969
+!!        70     1970
+!!        78     1978
+!!        79     1979
+!!        80     1980
+!!        81     1981
+!!        99     1999
+!!
+!!        Lower bound for expansion set to 1980:
+!!
+!!        In  Expansion
+!!        --  ---------
+!!        00     2000
+!!        01     2001
+!!        68     2068
+!!        69     2069
+!!        70     2070
+!!        78     2078
+!!        79     2079
+!!        80     1980
+!!        81     1981
+!!        99     1999
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 23-SEP-2020 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        example code.
+!!
+!!        Added TIME to the list of Required Readings.
+!!
+!!-    SPICELIB Version 2.0.0, 18-NOV-1997 (WLT)
+!!
+!!        The default century was changed from 1950-2049 to 1969-2068
+!!
+!!-    SPICELIB Version 1.0.0, 08-APR-1996 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Expand an abbreviated year to a fully specified year.
+!!
       use pepper_kinds, only: ip
       implicit none
       if ( .not. allocated ( ctx%spice%texpyr ) ) then
@@ -4678,196 +4570,191 @@ contains
       end procedure texpyr
 
       module procedure tsetyr
-
-! $ Abstract
-!
-!     Set the lower bound on the 100 year range.
-!
-! $ Required_Reading
-!
-!     TIME
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-!
-!     INTEGER               YEAR
-!
-! $ Detailed_Input
-!
-!     YEAR     is the year associated with the lower bound on all year
-!              expansions computed by the SPICELIB routine TEXPYR. For
-!              example if YEAR is 1980, then the range of years that can
-!              be abbreviated is from 1980 to 2079.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If YEAR is less than 1, no action is taken.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point is used to set the range to which years
-!     abbreviated to the last two digits will be expanded, allowing all
-!     of the SPICE time subsystem routines to handle uniformly the
-!     expansion those "abbreviated" years (i.e. the remainder after
-!     dividing the actual year by 100.) The input supplied to this
-!     routine represents the lower bound of the expansion interval. The
-!     upper bound of the expansion interval is YEAR + 99.
-!
-!     The default expansion interval is from 1969 to 2068.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Suppose that you need to manipulate time strings and that
-!        you want to treat years components in the range from 0 to 99
-!        as being abbreviations for years in the range from
-!        1980 to 2079 (provided that the years are not modified by
-!        an ERA substring). The example code below shows how you
-!        could go about this.
-!
-!        Use the LSK kernel below to load the leap seconds and time
-!        constants required for the conversions.
-!
-!           naif0012.tls
-!
-!        Example code begins here.
-!
-!              PROGRAM TSETYR_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               DATELN
-!              PARAMETER           ( DATELN = 11 )
-!
-!              INTEGER               NTSTRS
-!              PARAMETER           ( NTSTRS = 7 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(DATELN)    DATE   (NTSTRS)
-!              CHARACTER*(DATELN)    TIMSTR
-!
-!              DOUBLE PRECISION      ET
-!
-!              INTEGER               I
-!
-!        C
-!        C     Assign an array of calendar dates.
-!        C
-!              DATA                  DATE   / '00 JAN 21',
-!             .                               '01 FEB 22',
-!             .                               '48 MAR 23',
-!             .                               '49 APR 24',
-!             .                               '79 JUL 14',
-!             .                               '80 FEB 02',
-!             .                               '99 DEC 31' /
-!
-!        C
-!        C     Load the required LSK.
-!        C
-!              CALL FURNSH ( 'naif0012.tls' )
-!
-!        C
-!        C     Set up the lower bound for the
-!        C     expansion of abbreviated years.
-!        C
-!              CALL TSETYR ( 1980 )
-!
-!        C
-!        C     Expand the years in input time strings.
-!        C
-!              WRITE(*,*) 'Time string    Expansion'
-!              WRITE(*,*) '-----------    -----------'
-!
-!              DO I = 1, NTSTRS
-!
-!                 CALL STR2ET ( DATE(I), ET )
-!                 CALL TIMOUT ( ET, 'YYYY MON DD', TIMSTR )
-!
-!                 WRITE(*,*) DATE(I), '    ', TIMSTR
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Time string    Expansion
-!         -----------    -----------
-!         00 JAN 21      2000 JAN 21
-!         01 FEB 22      2001 FEB 22
-!         48 MAR 23      2048 MAR 23
-!         49 APR 24      2049 APR 24
-!         79 JUL 14      2079 JUL 14
-!         80 FEB 02      1980 FEB 02
-!         99 DEC 31      1999 DEC 31
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 23-SEP-2020 (JDR)
-!
-!        Fixed bug: Added check for "YEAR" to be positive in order to
-!        update the lower bound for the expansion.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example.
-!
-!        Added TIME to the list of Required Readings. Extended
-!        description in $Particulars to further describe the intended
-!        use of this routine.
-!
-!-    SPICELIB Version 2.0.0, 18-NOV-1997 (WLT)
-!
-!        The default century was change from 1950-2049 to 1969-2068.
-!
-!-    SPICELIB Version 1.0.0, 08-APR-1996 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Set the interval of expansion for abbreviated years
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Set the lower bound on the 100 year range.
+!!
+!! ## Required Reading
+!!
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
+!!     INTEGER               YEAR
+!!
+!! ## Detailed Input
+!!
+!!     YEAR     is the year associated with the lower bound on all year
+!!              expansions computed by the SPICELIB routine TEXPYR. For
+!!              example if YEAR is 1980, then the range of years that can
+!!              be abbreviated is from 1980 to 2079.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1)  If YEAR is less than 1, no action is taken.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point is used to set the range to which years
+!!     abbreviated to the last two digits will be expanded, allowing all
+!!     of the SPICE time subsystem routines to handle uniformly the
+!!     expansion those "abbreviated" years (i.e. the remainder after
+!!     dividing the actual year by 100.) The input supplied to this
+!!     routine represents the lower bound of the expansion interval. The
+!!     upper bound of the expansion interval is YEAR + 99.
+!!
+!!     The default expansion interval is from 1969 to 2068.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Suppose that you need to manipulate time strings and that
+!!        you want to treat years components in the range from 0 to 99
+!!        as being abbreviations for years in the range from
+!!        1980 to 2079 (provided that the years are not modified by
+!!        an ERA substring). The example code below shows how you
+!!        could go about this.
+!!
+!!        Use the LSK kernel below to load the leap seconds and time
+!!        constants required for the conversions.
+!!
+!!           naif0012.tls
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM TSETYR_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               DATELN
+!!              PARAMETER           ( DATELN = 11 )
+!!
+!!              INTEGER               NTSTRS
+!!              PARAMETER           ( NTSTRS = 7 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(DATELN)    DATE   (NTSTRS)
+!!              CHARACTER*(DATELN)    TIMSTR
+!!
+!!              DOUBLE PRECISION      ET
+!!
+!!              INTEGER               I
+!!
+!!        C
+!!        C     Assign an array of calendar dates.
+!!        C
+!!              DATA                  DATE   / '00 JAN 21',
+!!             .                               '01 FEB 22',
+!!             .                               '48 MAR 23',
+!!             .                               '49 APR 24',
+!!             .                               '79 JUL 14',
+!!             .                               '80 FEB 02',
+!!             .                               '99 DEC 31' /
+!!
+!!        C
+!!        C     Load the required LSK.
+!!        C
+!!              CALL FURNSH ( 'naif0012.tls' )
+!!
+!!        C
+!!        C     Set up the lower bound for the
+!!        C     expansion of abbreviated years.
+!!        C
+!!              CALL TSETYR ( 1980 )
+!!
+!!        C
+!!        C     Expand the years in input time strings.
+!!        C
+!!              WRITE(*,*) 'Time string    Expansion'
+!!              WRITE(*,*) '-----------    -----------'
+!!
+!!              DO I = 1, NTSTRS
+!!
+!!                 CALL STR2ET ( DATE(I), ET )
+!!                 CALL TIMOUT ( ET, 'YYYY MON DD', TIMSTR )
+!!
+!!                 WRITE(*,*) DATE(I), '    ', TIMSTR
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         Time string    Expansion
+!!         -----------    -----------
+!!         00 JAN 21      2000 JAN 21
+!!         01 FEB 22      2001 FEB 22
+!!         48 MAR 23      2048 MAR 23
+!!         49 APR 24      2049 APR 24
+!!         79 JUL 14      2079 JUL 14
+!!         80 FEB 02      1980 FEB 02
+!!         99 DEC 31      1999 DEC 31
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 23-SEP-2020 (JDR)
+!!
+!!        Fixed bug: Added check for "YEAR" to be positive in order to
+!!        update the lower bound for the expansion.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example.
+!!
+!!        Added TIME to the list of Required Readings. Extended
+!!        description in $Particulars to further describe the intended
+!!        use of this routine.
+!!
+!!-    SPICELIB Version 2.0.0, 18-NOV-1997 (WLT)
+!!
+!!        The default century was change from 1950-2049 to 1969-2068.
+!!
+!!-    SPICELIB Version 1.0.0, 08-APR-1996 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Set the interval of expansion for abbreviated years
+!!
       use pepper_kinds, only: ip
       implicit none
       if ( .not. allocated ( ctx%spice%texpyr ) ) then
@@ -4890,27 +4777,26 @@ contains
 !$Procedure ZZTPATS (Private, Time --- Time Patterns)
 
       module procedure zztpats
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Initialize the built-in time patterns.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderc, reordc
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Initialize the built-in time patterns.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      PRIVATE
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           count
@@ -5224,28 +5110,27 @@ contains
 !$Procedure TPARTV ( Time string ---parse to a time vector)
 
       module procedure tpartv
+!! ## Abstract
+!!
+!!     Parse the components of a time string and return a vector of the
+!!     components of that string. Also return an array of any modifiers
+!!     present in the input string; these may alter the interpretation
+!!     of the components.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_arrays, only: bsrchc, isrchc
       use pepper_strings, only: prefix, repmc, rtrim, suffix, ucase, zzinssub
-
-! $ Abstract
-!
-!     Parse the components of a time string and return a vector of the
-!     components of that string. Also return an array of any modifiers
-!     present in the input string; these may alter the interpretation
-!     of the components.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -6806,109 +6691,106 @@ contains
 !     the parameter NRECOG soon.
 
       module procedure zzcmbt
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Combine several token representatives into a single token.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      TIME --- PRIVATE
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         STRING
-!     CHARACTER*(1)         LETTER
-!     LOGICAL               L2R
-!
-! $ Detailed_Input
-!
-!     STRING     is a sequence of tokens to look for in the
-!                stored internal representation.
-!
-!     LETTER     is the replacement token to insert for STRING.
-!
-!                If letter is a blank, the combination is simply
-!                replaced by a blank.
-!
-!     L2R        is a logical. If TRUE, the internal representation
-!                is scanned left to right. If FALSE, the internal
-!                representation is scanned right to left.
-!
-! $ Detailed_Output
-!
-!     The function returns TRUE if a combination is performed.
-!     Otherwise it returns FALSE.
-!
-!     Note that the most important action of this function is a
-!     side-effect. The internal representation of a time string
-!     is modified to reflect the requested token combination.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error Free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This function allows you to alter the internal representation
-!     of a time string by combining two or more tokens into a single
-!     token.
-!
-! $ Examples
-!
-!     See TPARTV
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-!
-!     So far we haven't combined anything.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Combine several token representatives into a single token.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      TIME --- PRIVATE
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         STRING
+!!     CHARACTER*(1)         LETTER
+!!     LOGICAL               L2R
+!!
+!! ## Detailed Input
+!!
+!!     STRING     is a sequence of tokens to look for in the
+!!                stored internal representation.
+!!
+!!     LETTER     is the replacement token to insert for STRING.
+!!
+!!                If letter is a blank, the combination is simply
+!!                replaced by a blank.
+!!
+!!     L2R        is a logical. If TRUE, the internal representation
+!!                is scanned left to right. If FALSE, the internal
+!!                representation is scanned right to left.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns TRUE if a combination is performed.
+!!     Otherwise it returns FALSE.
+!!
+!!     Note that the most important action of this function is a
+!!     side-effect. The internal representation of a time string
+!!     is modified to reflect the requested token combination.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error Free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This function allows you to alter the internal representation
+!!     of a time string by combining two or more tokens into a single
+!!     token.
+!!
+!! ## Examples
+!!
+!!     See TPARTV
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
+!!     So far we haven't combined anything.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: pos, posr, zzrepsub
       implicit none
@@ -7004,90 +6886,87 @@ contains
       end procedure zzcmbt
 
       module procedure zzgrep
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Return the internal representation of the time string.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      TIME --- PRIVATE
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         STRING
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     STRING     is the current internal tokenized representation of
-!                the time string that was last supplied to ZZTIME
-!                via the entry point ZZTOKNS.
-!
-!     The function returns TRUE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This returns the current internal representation of the
-!     tokenized time string. The function always returns the
-!     value TRUE.
-!
-! $ Examples
-!
-!     See TPARTV.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Return the internal representation of the time string.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      TIME --- PRIVATE
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         STRING
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     STRING     is the current internal tokenized representation of
+!!                the time string that was last supplied to ZZTIME
+!!                via the entry point ZZTOKNS.
+!!
+!!     The function returns TRUE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This returns the current internal representation of the
+!!     tokenized time string. The function always returns the
+!!     value TRUE.
+!!
+!! ## Examples
+!!
+!!     See TPARTV.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
       use pepper_kinds, only: ip, wp
       implicit none
       logical               yes
@@ -7131,102 +7010,99 @@ contains
       end procedure zzgrep
 
       module procedure zzispt
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Determine if there is a pair of consecutive tokens from
-!     a user specified list of tokens.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      TIME --- PRIVATE
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         STRING
-!     INTEGER               B
-!     INTEGER               E
-!
-! $ Detailed_Input
-!
-!     STRING     is a character string that gives a list of tokens
-!                to search for in a string.
-!
-! $ Detailed_Output
-!
-!     B          is the location in the original time string supplied
-!                to ZZTOKNS of the beginning a pair of consecutive
-!                tokens from the list specified by STRING.
-!
-!     E          is the location in the original time string supplied
-!                to ZZTOKENS of the end a pair of consecutive
-!                tokens from the list specified by STRING.
-!
-!     The function returns the TRUE is a consecutive pair of tokens
-!     from STRING is located. Otherwise it returns FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error Free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine exists primarily to assist in the diagnosis
-!     of consecutive delimiters in a time string.
-!
-! $ Examples
-!
-!     See TPARTV
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Determine if there is a pair of consecutive tokens from
+!!     a user specified list of tokens.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      TIME --- PRIVATE
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         STRING
+!!     INTEGER               B
+!!     INTEGER               E
+!!
+!! ## Detailed Input
+!!
+!!     STRING     is a character string that gives a list of tokens
+!!                to search for in a string.
+!!
+!! ## Detailed Output
+!!
+!!     B          is the location in the original time string supplied
+!!                to ZZTOKNS of the beginning a pair of consecutive
+!!                tokens from the list specified by STRING.
+!!
+!!     E          is the location in the original time string supplied
+!!                to ZZTOKENS of the end a pair of consecutive
+!!                tokens from the list specified by STRING.
+!!
+!!     The function returns the TRUE is a consecutive pair of tokens
+!!     from STRING is located. Otherwise it returns FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error Free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine exists primarily to assist in the diagnosis
+!!     of consecutive delimiters in a time string.
+!!
+!! ## Examples
+!!
+!!     See TPARTV
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cpos
       implicit none
@@ -7303,94 +7179,91 @@ contains
       end procedure zzispt
 
       module procedure zzist
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Determine if a token is present in the internal representation
-!     of a tokenized time string.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      TIME --- PRIVATE
-!
-! $ Declarations
-!
-!     CHARACTER*(1)         LETTER
-!
-! $ Detailed_Input
-!
-!     LETTER     is a token to look for in the tokenized representation
-!                of a time string.
-!
-! $ Detailed_Output
-!
-!     The function returns TRUE is LETTER is present in the internal
-!     representation of the last time string passed to ZZTOKNS.
-!     Otherwise it returns FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine determines whether or not a particular token
-!     is present in a tokenized representation of a time.
-!
-! $ Examples
-!
-!     See TPARTV
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 03-SEP-2020 (EDW)
-!
-!        Added 'Z' to list of recognized tokens, marked as
-!        no op.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Determine if a token is present in the internal representation
+!!     of a tokenized time string.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      TIME --- PRIVATE
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(1)         LETTER
+!!
+!! ## Detailed Input
+!!
+!!     LETTER     is a token to look for in the tokenized representation
+!!                of a time string.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns TRUE is LETTER is present in the internal
+!!     representation of the last time string passed to ZZTOKNS.
+!!     Otherwise it returns FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine determines whether or not a particular token
+!!     is present in a tokenized representation of a time.
+!!
+!! ## Examples
+!!
+!!     See TPARTV
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.3.0, 03-SEP-2020 (EDW)
+!!
+!!        Added 'Z' to list of recognized tokens, marked as
+!!        no op.
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
       use pepper_kinds, only: ip, wp
       implicit none
       logical               yes
@@ -7432,107 +7305,104 @@ contains
       end procedure zzist
 
       module procedure zznote
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Return the beginning and ending of a token in a time string
-!     and remove the token from the internal representation.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      TIME --- PRIVATE
-!
-! $ Declarations
-!
-!     CHARACTER*(1)         LETTER
-!     INTEGER               B
-!     INTEGER               E
-!
-! $ Detailed_Input
-!
-!     LETTER     is a token to look for and remove from the
-!                current tokenization of a time string.
-!
-!                If located the token is removed from the string.
-!
-!                Note that this simply finds the first matching
-!                token. If others are present they are not
-!                affected.
-!
-! $ Detailed_Output
-!
-!     B          is the beginning of the requested token if it
-!                was found. Otherwise B is zero.
-!
-!     E          is the ending of the requested token if it was
-!                found. Otherwise E is zero.
-!
-!     The function returns the value TRUE if the token is located.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Look up and remove a token from the internal representation
-!     of a time string. This is useful in removing modifiers
-!     from a string (such as the ERA of an epoch, AM/PM of a time
-!     etc.)
-!
-! $ Examples
-!
-!     See TPARTV
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Return the beginning and ending of a token in a time string
+!!     and remove the token from the internal representation.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      TIME --- PRIVATE
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(1)         LETTER
+!!     INTEGER               B
+!!     INTEGER               E
+!!
+!! ## Detailed Input
+!!
+!!     LETTER     is a token to look for and remove from the
+!!                current tokenization of a time string.
+!!
+!!                If located the token is removed from the string.
+!!
+!!                Note that this simply finds the first matching
+!!                token. If others are present they are not
+!!                affected.
+!!
+!! ## Detailed Output
+!!
+!!     B          is the beginning of the requested token if it
+!!                was found. Otherwise B is zero.
+!!
+!!     E          is the ending of the requested token if it was
+!!                found. Otherwise E is zero.
+!!
+!!     The function returns the value TRUE if the token is located.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     Look up and remove a token from the internal representation
+!!     of a time string. This is useful in removing modifiers
+!!     from a string (such as the ERA of an epoch, AM/PM of a time
+!!     etc.)
+!!
+!! ## Examples
+!!
+!!     See TPARTV
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
       use pepper_kinds, only: ip, wp
       implicit none
       logical               yes
@@ -7611,95 +7481,92 @@ contains
       end procedure zznote
 
       module procedure zzremt
-
-! $ Abstract
-!
-!    SPICE Private routine intended solely for the support of SPICE
-!    routines. Users should not call this routine directly due
-!    to the volatile nature of this routine.
-!
-!    Remove a specified token from the internal representation
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     TIME --- Private
-!
-! $ Declarations
-!
-!     CHARACTER*(1)         LETTER
-!
-! $ Detailed_Input
-!
-!     LETTER     is a token to be removed from the internal
-!                representation of a tokenized time string.
-!                All instances of LETTER will be removed from
-!                the internal representation.
-!
-! $ Detailed_Output
-!
-!     The function returns TRUE if any instance of LETTER is removed
-!     from the internal representation of a tokenized time string.
-!     If no instances are removed the function returns FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is used to remove various delimiters that
-!     appear in a tokenized time string (although it could be
-!     used to remove any token from a tokenized time string).
-!
-! $ Examples
-!
-!     See TPARTV
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-
+!! ## Abstract
+!!
+!!    SPICE Private routine intended solely for the support of SPICE
+!!    routines. Users should not call this routine directly due
+!!    to the volatile nature of this routine.
+!!
+!!    Remove a specified token from the internal representation
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     TIME --- Private
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(1)         LETTER
+!!
+!! ## Detailed Input
+!!
+!!     LETTER     is a token to be removed from the internal
+!!                representation of a tokenized time string.
+!!                All instances of LETTER will be removed from
+!!                the internal representation.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns TRUE if any instance of LETTER is removed
+!!     from the internal representation of a tokenized time string.
+!!     If no instances are removed the function returns FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine is used to remove various delimiters that
+!!     appear in a tokenized time string (although it could be
+!!     used to remove any token from a tokenized time string).
+!!
+!! ## Examples
+!!
+!!     See TPARTV
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
       use pepper_kinds, only: ip, wp
       implicit none
       logical               yes
@@ -7774,127 +7641,124 @@ contains
       end procedure zzremt
 
       module procedure zzsubt
-
-! $ Abstract
-!
-!    SPICE Private routine intended solely for the support of SPICE
-!    routines. Users should not call this routine directly due
-!    to the volatile nature of this routine.
-!
-!    Substitute one token for another in the internal representation
-!    of a tokenized time string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     TIME --- Private
-!
-! $ Declarations
-!
-!     IMPLICIT NONE
-!     CHARACTER*(*)         STRING
-!     CHARACTER*(*)         TRANSL
-!     LOGICAL               L2R
-!
-! $ Detailed_Input
-!
-!     STRING     is a string of tokens to look for in the internal
-!                representation of a tokenized time string.
-!
-!                Only the first occurrence of STRING will be modified.
-!
-!                If the first character in STRING is '<', (and string
-!                is more than 1 character in length) substitutions
-!                will be performed in the4 tokenized string only if
-!                STRING exactly matches the tokenized string
-!                starting at the left most character.
-!
-!                If the last character in STRING is '>' (and string
-!                is more than 1 character in length) substitutions
-!                will be performed in the4 tokenized string only if
-!                STRING exactly matches the tokenized string
-!                ending at the right most character.
-!
-!                If first and last character of STRING are '<' and '>'
-!                respectively, the first case above is applied and the
-!                greater than character ('>') is regarded as just
-!                another character.
-!
-!     TRANSL     is a sequence of replacement tokens to substitute
-!                in place of STRING.
-!
-!     L2R        is a logical flag. If L2R is TRUE, the internal
-!                representation is scanned from left to right. If
-!                L2R is FALSE, the internal representation is scanned
-!                from right to left.
-!
-! $ Detailed_Output
-!
-!     The function returns TRUE if a substitution is performed.
-!     Otherwise it returns FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine searches for the first instance of a specified
-!     pattern in the internal representation of a tokenized
-!     time string. If the pattern is found, it is replaced
-!     by that value of TRANSL. Only one pattern substitution
-!     is performed per call to this function.
-!
-! $ Examples
-!
-!     See TPARTV
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-!
-!     So far we haven't combined anything.
-!
+!! ## Abstract
+!!
+!!    SPICE Private routine intended solely for the support of SPICE
+!!    routines. Users should not call this routine directly due
+!!    to the volatile nature of this routine.
+!!
+!!    Substitute one token for another in the internal representation
+!!    of a tokenized time string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     TIME --- Private
+!!
+!! ## Declarations
+!!
+!!     IMPLICIT NONE
+!!     CHARACTER*(*)         STRING
+!!     CHARACTER*(*)         TRANSL
+!!     LOGICAL               L2R
+!!
+!! ## Detailed Input
+!!
+!!     STRING     is a string of tokens to look for in the internal
+!!                representation of a tokenized time string.
+!!
+!!                Only the first occurrence of STRING will be modified.
+!!
+!!                If the first character in STRING is '<', (and string
+!!                is more than 1 character in length) substitutions
+!!                will be performed in the4 tokenized string only if
+!!                STRING exactly matches the tokenized string
+!!                starting at the left most character.
+!!
+!!                If the last character in STRING is '>' (and string
+!!                is more than 1 character in length) substitutions
+!!                will be performed in the4 tokenized string only if
+!!                STRING exactly matches the tokenized string
+!!                ending at the right most character.
+!!
+!!                If first and last character of STRING are '<' and '>'
+!!                respectively, the first case above is applied and the
+!!                greater than character ('>') is regarded as just
+!!                another character.
+!!
+!!     TRANSL     is a sequence of replacement tokens to substitute
+!!                in place of STRING.
+!!
+!!     L2R        is a logical flag. If L2R is TRUE, the internal
+!!                representation is scanned from left to right. If
+!!                L2R is FALSE, the internal representation is scanned
+!!                from right to left.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns TRUE if a substitution is performed.
+!!     Otherwise it returns FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine searches for the first instance of a specified
+!!     pattern in the internal representation of a tokenized
+!!     time string. If the pattern is found, it is replaced
+!!     by that value of TRANSL. Only one pattern substitution
+!!     is performed per call to this function.
+!!
+!! ## Examples
+!!
+!!     See TPARTV
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
+!!     So far we haven't combined anything.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: pos, posr
       implicit none
@@ -7994,157 +7858,153 @@ contains
       end procedure zzsubt
 
       module procedure zztokns
-
-! $ Abstract
-!
-!    SPICE Private routine intended solely for the support of SPICE
-!    routines. Users should not call this routine directly due
-!    to the volatile nature of this routine.
-!
-!    Construct an internal tokenized representation of STRING.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     TIME --- PRIVATE
-!
-! $ Declarations
-!
-!     IMPLICIT NONE
-!     CHARACTER*(*)         STRING
-!     CHARACTER*(*)         ERROR
-!
-! $ Detailed_Input
-!
-!     STRING     is a string that is intended to represent some
-!                epoch and that needs parsing.
-!
-! $ Detailed_Output
-!
-!     ERROR      is a diagnostic message that is returned if a
-!                problem occurs while trying to tokenize the
-!                input time string. If no problems arise, ERROR
-!                will be returned as a blank.
-!
-!     The function returns TRUE if the input string can be successfully
-!     tokenized. If a problem arises, the function returns FALSE
-!     and diagnostic is returned in ERROR.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is the first step in parsing a time string. The
-!     string is examined for integers, month, weekdays, time systems
-!     time zones, eras, am/pm and various separators. This
-!     representation is maintained and manipulated by the
-!     companion entry points in ZZTIME.
-!
-!     The various recognized tokens represented by this routine
-!     are:
-!
-!        '    --- the quote character (year abbreviation)
-!        ,    --- a comma  (delimiter)
-!        -    --- a dash   (delimiter)
-!        .    --- a period (delimiter)
-!        /    --- a slash  (delimiter)
-!        :    --- a colon  (delimiter)
-!        N    --- AM/PM marker
-!        O    --- UTC+  marker
-!        Z    --- US Time Zone Marker
-!        [    --- left parenthesis marker
-!        ]    --- right parenthesis marker
-!        b    --- stands for blanks, or tabs (delimiter)
-!        d    --- day of year marker (delimiter)
-!        e    --- era marker
-!        j    --- Julian date system marker
-!        m    --- month marker
-!        o    --- UTC- marker
-!        s    --- time system marker
-!        t    --- the "T" marker used in ISO formats.
-!        w    --- the weekday marker
-!        i    --- unsigned integer marker
-!
-!     Using the other entry points in ZZTIME, these markers are
-!     gradually removed and transformed to more meaningful markers.
-!
-! $ Examples
-!
-!     See TPARTV
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     B.V. Semenov    (JPL)
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.6.0, 05-JAN-2014 (NJB)
-!
-!        BUG FIX: added checks for token indexes overflowing the
-!        maximum number of tokens and for the character positions in
-!        the time picture overflowing the time picture length. Both
-!        overflows previously resulted in segmentation faults for
-!        invalid input time strings that contained too many
-!        recognizable tokens or were too long and required too many
-!        characters in the picture representation.
-!
-!-    SPICELIB Version 1.5.0, 08-MAR-2009 (NJB)
-!
-!        Bug fix: changed upper bound used to detect
-!        non-printing characters from 128 to 126.
-!
-!        Re-ordered header sections.
-!
-!-    SPICELIB Version 1.3.0, 27-OCT-2006 (BVS)
-!
-!        Fixed the bug that in the case of a one character long blank
-!        input time string caused the TO variable be set to the value
-!        greater than the string length, triggering an OUT OF BOUNDS
-!        runtime error on HP. Added a separate up-front check for the
-!        blank input string.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-
-!
-!     The first time in this routine we initialize our "tokenizing"
-!     table.
-!
+!! ## Abstract
+!!
+!!    SPICE Private routine intended solely for the support of SPICE
+!!    routines. Users should not call this routine directly due
+!!    to the volatile nature of this routine.
+!!
+!!    Construct an internal tokenized representation of STRING.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     TIME --- PRIVATE
+!!
+!! ## Declarations
+!!
+!!     IMPLICIT NONE
+!!     CHARACTER*(*)         STRING
+!!     CHARACTER*(*)         ERROR
+!!
+!! ## Detailed Input
+!!
+!!     STRING     is a string that is intended to represent some
+!!                epoch and that needs parsing.
+!!
+!! ## Detailed Output
+!!
+!!     ERROR      is a diagnostic message that is returned if a
+!!                problem occurs while trying to tokenize the
+!!                input time string. If no problems arise, ERROR
+!!                will be returned as a blank.
+!!
+!!     The function returns TRUE if the input string can be successfully
+!!     tokenized. If a problem arises, the function returns FALSE
+!!     and diagnostic is returned in ERROR.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This is the first step in parsing a time string. The
+!!     string is examined for integers, month, weekdays, time systems
+!!     time zones, eras, am/pm and various separators. This
+!!     representation is maintained and manipulated by the
+!!     companion entry points in ZZTIME.
+!!
+!!     The various recognized tokens represented by this routine
+!!     are:
+!!
+!!        '    --- the quote character (year abbreviation)
+!!        ,    --- a comma  (delimiter)
+!!        -    --- a dash   (delimiter)
+!!        .    --- a period (delimiter)
+!!        /    --- a slash  (delimiter)
+!!        :    --- a colon  (delimiter)
+!!        N    --- AM/PM marker
+!!        O    --- UTC+  marker
+!!        Z    --- US Time Zone Marker
+!!        [    --- left parenthesis marker
+!!        ]    --- right parenthesis marker
+!!        b    --- stands for blanks, or tabs (delimiter)
+!!        d    --- day of year marker (delimiter)
+!!        e    --- era marker
+!!        j    --- Julian date system marker
+!!        m    --- month marker
+!!        o    --- UTC- marker
+!!        s    --- time system marker
+!!        t    --- the "T" marker used in ISO formats.
+!!        w    --- the weekday marker
+!!        i    --- unsigned integer marker
+!!
+!!     Using the other entry points in ZZTIME, these markers are
+!!     gradually removed and transformed to more meaningful markers.
+!!
+!! ## Examples
+!!
+!!     See TPARTV
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     B.V. Semenov    (JPL)
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.6.0, 05-JAN-2014 (NJB)
+!!
+!!        BUG FIX: added checks for token indexes overflowing the
+!!        maximum number of tokens and for the character positions in
+!!        the time picture overflowing the time picture length. Both
+!!        overflows previously resulted in segmentation faults for
+!!        invalid input time strings that contained too many
+!!        recognizable tokens or were too long and required too many
+!!        characters in the picture representation.
+!!
+!!-    SPICELIB Version 1.5.0, 08-MAR-2009 (NJB)
+!!
+!!        Bug fix: changed upper bound used to detect
+!!        non-printing characters from 128 to 126.
+!!
+!!        Re-ordered header sections.
+!!
+!!-    SPICELIB Version 1.3.0, 27-OCT-2006 (BVS)
+!!
+!!        Fixed the bug that in the case of a one character long blank
+!!        input time string caused the TO variable be set to the value
+!!        greater than the string length, triggering an OUT OF BOUNDS
+!!        runtime error on HP. Added a separate up-front check for the
+!!        blank input string.
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
+!!     The first time in this routine we initialize our "tokenizing"
+!!     table.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lx4uns, prefix, repmc, rtrim, samchi, samsbi, suffix, ucase, zzinssub
       implicit none
@@ -9144,144 +9004,141 @@ contains
       end procedure zztokns
 
       module procedure zzunpck
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Unpack the time string and parse its components using the
-!     stored internal representation.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      TIME --- PRIVATE
-!
-! $ Declarations
-!
-!     IMPLICIT NONE
-!     CHARACTER*(*)         STRING
-!     LOGICAL               YABBRV
-!     DOUBLE PRECISION      TVEC ( * )
-!     INTEGER               E
-!     CHARACTER*(*)         TRANSL
-!     CHARACTER*(*)         ERROR
-!
-! $ Detailed_Input
-!
-!     STRING     is the original string from which the current
-!                internal representation was derived.
-!
-!     YABBRV     is a logical that indicates whether or not an
-!                abbreviated year was encountered in the string.
-!                YABBRV is TRUE if such an abbreviation was present
-!                otherwise it is FALSE.
-!
-! $ Detailed_Output
-!
-!     TVEC       is a double precision array of the parsed time
-!                components. TVEC will have either 5 or 6 values
-!                depending upon whether the string is Year, Month,
-!                and Day of Month, or Year and Day of Year.
-!
-!     E          is the actual number of components that were
-!                present in the internal representation.
-!
-!                If STRING cannot be fully resolved, E is returned
-!                as a zero.
-!
-!     TRANSL     is the type of time vector. The value will be
-!                'YD' (day of year) or 'YMD' (Year, Month, Day).
-!
-!                If STRING cannot be fully resolved, TRANSL is
-!                returned as a blank.
-!
-!     PIC        is a picture of the time format corresponding the
-!                the time string in the last call to ZZTOKNS.
-!
-!                If some part of the input string can't be identified
-!                PIC is returned as a blank. Note that there is a
-!                distinction between recognizable and parsable.
-!                The input string must be unambiguous to be parsable,
-!                However, even if a string is ambiguous it may
-!                correspond to a legitimate format picture. Since
-!                occasionally, that's what you want (an ambiguous
-!                format), we allow it in PIC.
-!
-!     ERROR      is a diagnostic that indicates some problem in
-!                resolving STRING. If no problems occur ERROR
-!                is returned as a blank.
-!
-!     The function returns TRUE if STRING was successfully unpacked.
-!     That is the string is parsed and is unambiguously recognized.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is the last routine that will normally be
-!     called by a time parsing routine. This call should be
-!     made after all combinations, replacements and removals
-!     that make sense to perform have been made.
-!
-! $ Examples
-!
-!     See TPARTV
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 29-APR-2013 (EDW)
-!
-!        Added error check on ITEM value. Failure to perform
-!        this check can cause BADSUBSCRIPT error signals
-!        from CSPICE code on invalid time strings.
-!
-!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Unpack the time string and parse its components using the
+!!     stored internal representation.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      TIME --- PRIVATE
+!!
+!! ## Declarations
+!!
+!!     IMPLICIT NONE
+!!     CHARACTER*(*)         STRING
+!!     LOGICAL               YABBRV
+!!     DOUBLE PRECISION      TVEC ( * )
+!!     INTEGER               E
+!!     CHARACTER*(*)         TRANSL
+!!     CHARACTER*(*)         ERROR
+!!
+!! ## Detailed Input
+!!
+!!     STRING     is the original string from which the current
+!!                internal representation was derived.
+!!
+!!     YABBRV     is a logical that indicates whether or not an
+!!                abbreviated year was encountered in the string.
+!!                YABBRV is TRUE if such an abbreviation was present
+!!                otherwise it is FALSE.
+!!
+!! ## Detailed Output
+!!
+!!     TVEC       is a double precision array of the parsed time
+!!                components. TVEC will have either 5 or 6 values
+!!                depending upon whether the string is Year, Month,
+!!                and Day of Month, or Year and Day of Year.
+!!
+!!     E          is the actual number of components that were
+!!                present in the internal representation.
+!!
+!!                If STRING cannot be fully resolved, E is returned
+!!                as a zero.
+!!
+!!     TRANSL     is the type of time vector. The value will be
+!!                'YD' (day of year) or 'YMD' (Year, Month, Day).
+!!
+!!                If STRING cannot be fully resolved, TRANSL is
+!!                returned as a blank.
+!!
+!!     PIC        is a picture of the time format corresponding the
+!!                the time string in the last call to ZZTOKNS.
+!!
+!!                If some part of the input string can't be identified
+!!                PIC is returned as a blank. Note that there is a
+!!                distinction between recognizable and parsable.
+!!                The input string must be unambiguous to be parsable,
+!!                However, even if a string is ambiguous it may
+!!                correspond to a legitimate format picture. Since
+!!                occasionally, that's what you want (an ambiguous
+!!                format), we allow it in PIC.
+!!
+!!     ERROR      is a diagnostic that indicates some problem in
+!!                resolving STRING. If no problems occur ERROR
+!!                is returned as a blank.
+!!
+!!     The function returns TRUE if STRING was successfully unpacked.
+!!     That is the string is parsed and is unambiguously recognized.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine is the last routine that will normally be
+!!     called by a time parsing routine. This call should be
+!!     made after all combinations, replacements and removals
+!!     that make sense to perform have been made.
+!!
+!! ## Examples
+!!
+!!     See TPARTV
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.3.0, 29-APR-2013 (EDW)
+!!
+!!        Added error check on ITEM value. Failure to perform
+!!        this check can cause BADSUBSCRIPT error signals
+!!        from CSPICE code on invalid time strings.
+!!
+!!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc
       use pepper_strings, only: nparsd, pos, prefix, repmc, suffix, ucase, zzinssub, zzrepsub
@@ -9902,108 +9759,106 @@ contains
       end procedure zzunpck
 
       module procedure zzvalt
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Examine the value of an integer token and if it is within the
-!     range from B to E replace the token with the new token
-!     specified by LETTER.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      TIME --- PRIVATE
-!
-! $ Declarations
-!
-!     IMPLICIT NONE
-!     CHARACTER*(*)         STRING
-!     INTEGER               B
-!     INTEGER               E
-!     CHARACTER*(1)         LETTER
-!
-! $ Detailed_Input
-!
-!     STRING     is an original time string as last supplied to ZZTOKNS.
-!
-!     B          is the lower bound of some test range of integers
-!
-!     E          is the upper bound of some test range of integers
-!
-!     LETTER     is the new token value to put in place of 'i' if
-!                the value of the integer is between B and E
-!                (inclusive).
-! $ Detailed_Output
-!
-!     The function returns TRUE if any substitutions are performed..
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This function replaces every occurrence of 'i' in the internal
-!     representation by the value LETTER if the numerical value
-!     of the token corresponding to 'i' is between B and E.
-!
-!     This is used primarily to identify YEAR tokens in a time
-!     string.
-!
-! $ Examples
-!
-!     See TPARTV
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
-!-&
-!
-!     So far no translations have been performed.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Examine the value of an integer token and if it is within the
+!!     range from B to E replace the token with the new token
+!!     specified by LETTER.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      TIME --- PRIVATE
+!!
+!! ## Declarations
+!!
+!!     IMPLICIT NONE
+!!     CHARACTER*(*)         STRING
+!!     INTEGER               B
+!!     INTEGER               E
+!!     CHARACTER*(1)         LETTER
+!!
+!! ## Detailed Input
+!!
+!!     STRING     is an original time string as last supplied to ZZTOKNS.
+!!
+!!     B          is the lower bound of some test range of integers
+!!
+!!     E          is the upper bound of some test range of integers
+!!
+!!     LETTER     is the new token value to put in place of 'i' if
+!!                the value of the integer is between B and E
+!!                (inclusive).
+!!
+!! ## Detailed Output
+!!
+!!     The function returns TRUE if any substitutions are performed..
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This function replaces every occurrence of 'i' in the internal
+!!     representation by the value LETTER if the numerical value
+!!     of the token corresponding to 'i' is between B and E.
+!!
+!!     This is used primarily to identify YEAR tokens in a time
+!!     string.
+!!
+!! ## Examples
+!!
+!!     See TPARTV
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.1, 08-MAR-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!!
+!!        The main routine (which should never be called) now returns
+!!        the value .FALSE.
+!!
+!!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!!
+!!        Added a RETURN statement at the end of the main routine.
+!!        Enhanced error message for the case when the input string
+!!        to ZZTOKNS has a non-printing character.
+!!
+!!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
+!!
+!!     So far no translations have been performed.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nparsi
       implicit none
@@ -10089,26 +9944,25 @@ contains
 !$Procedure TPARSE ( Parse a UTC time string )
 
       module procedure tparse
+!! ## Abstract
+!!
+!!     Parse a time string and return seconds past the J2000 epoch
+!!     on a formal calendar.
+!!
+!! ## Required Reading
+!!
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     PARSING
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_strings, only: repmc
-
-! $ Abstract
-!
-!     Parse a time string and return seconds past the J2000 epoch
-!     on a formal calendar.
-!
-! $ Required_Reading
-!
-!     TIME
-!
-! $ Keywords
-!
-!     PARSING
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -10811,32 +10665,31 @@ contains
 !$Procedure      ZZPINI ( Private --- kernel pool initialization )
 
       module procedure zzpini
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine initializes the data structures needed for
+!!     maintaining the kernel pool and initializes the hash function
+!!     used for the name list in the kernel pool.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!       PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: clearc, cleari
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine initializes the data structures needed for
-!     maintaining the kernel pool and initializes the hash function
-!     used for the name list in the kernel pool.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!       PRIVATE UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_zzctr
       implicit none
 
-      include              'zzctr.inc'
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
@@ -11061,29 +10914,28 @@ contains
 !$Procedure ZZRVAR ( Private --- Pool, read the next kernel variable )
 
       module procedure zzrvar
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Read the next variable from a SPICE ASCII kernel file into
+!!     the kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     PRIVATE KERNEL
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: lastnb, lastpc, nparsd, rtrim
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Read the next variable from a SPICE ASCII kernel file into
-!     the kernel pool.
-!
-! $ Required_Reading
-!
-!     PRIVATE KERNEL
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
       implicit none
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
@@ -12358,28 +12210,27 @@ contains
 !$Procedure ZZRVBF ( Private --- Pool, read the next buffer variable )
 
       module procedure zzrvbf
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Read the next variable from a text buffer into the kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     PRIVATE KERNEL
+!!
+!! ## Keywords
+!!
+!!     POOL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: lastpc, nparsd, rtrim
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Read the next variable from a text buffer into the kernel pool.
-!
-! $ Required_Reading
-!
-!     PRIVATE KERNEL
-!
-! $ Keywords
-!
-!     POOL
-!
-! $ Declarations
-
       implicit none
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
@@ -13561,30 +13412,29 @@ contains
 !$Procedure ZZGAPOOL ( Private: get agent set for watched variable )
 
       module procedure zzgapool
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Return a SPICE set containing the names of agents watching
+!!     a specified kernel variable.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     KERNEL
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Return a SPICE set containing the names of agents watching
-!     a specified kernel variable.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     KERNEL
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -13735,28 +13585,27 @@ contains
 !$Procedure      ZZGPNM ( Get position of a name )
 
       module procedure zzgpnm
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Locate the node in the array NAMES where a variable is located
+!!     or will be inserted.
+!!
+!! ## Required Reading
+!!
+!!     PRIVATE KERNEL
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Locate the node in the array NAMES where a variable is located
-!     or will be inserted.
-!
-! $ Required_Reading
-!
-!     PRIVATE KERNEL
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
       implicit none
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
@@ -13967,30 +13816,29 @@ contains
 !$Procedure ZZNWPOOL ( Private: notify watchers of update )
 
       module procedure zznwpool
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Union the set of agents for a specified, watched kernel variable
+!!     with the set of agents on the kernel pool's update notification
+!!     list.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     KERNEL
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Union the set of agents for a specified, watched kernel variable
-!     with the set of agents on the kernel pool's update notification
-!     list.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     KERNEL
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -14917,311 +14765,303 @@ contains
 !     Standard SPICE error handling.
 
       module procedure clpool
-
-! $ Abstract
-!
-!     Remove all kernel variables from the kernel pool. Watches
-!     on kernel variables are retained.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     None.
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  All known agents (those established through the SPICELIB
-!         routine SWPOOL) will be "notified" that their watched
-!         variables have been updated whenever CLPOOL is called.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     CLPOOL clears the pool of kernel variables maintained by
-!     the kernel POOL subsystem. All the variables in the pool are
-!     deleted. However, all watcher information is retained.
-!
-!     Each watched variable will be regarded as having been updated.
-!     Any agent associated with that variable will have a notice
-!     posted for it indicating that its watched variable has been
-!     updated.
-!
-!     Application programs can delete watches by calling the SPICELIB
-!     routine DWPOOL. See the header of that routine for details.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) This code example demonstrates how to assign values to kernel
-!        pool variables, how to check for the existence of kernel pool
-!        variables and how to clear the kernel pool, i.e. how to delete
-!        all variable assignments loaded into the kernel pool.
-!
-!        Place a value into the kernel pool and check for the variable
-!        to which the value has been assigned. Clear the kernel pool
-!        and check for that variable again.
-!
-!        Example code begins here.
-!
-!              PROGRAM CLPOOL_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local variables
-!        C
-!              DOUBLE PRECISION      DVALS ( 1 )
-!
-!              INTEGER               N
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Place a value into the kernel pool. Recall the routines
-!        C     for direct insertion of pool assignments have arrays for
-!        C     input.
-!        C
-!              DVALS( 1 ) = -666.D0
-!              CALL PDPOOL ( 'TEST_VAR', 1, DVALS )
-!
-!        C
-!        C     Check for the variable assignment to TEST_VAR.
-!        C
-!              CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
-!
-!              WRITE(*,'(A)') 'First call to GDPOOL:'
-!
-!              IF ( FOUND ) THEN
-!
-!                 WRITE(*,'(A,F8.2)') '   TEST_VAR value:', DVALS(1)
-!
-!              ELSE
-!
-!                 WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
-!
-!              END IF
-!
-!        C
-!        C     Now clear the kernel pool.
-!        C
-!              CALL CLPOOL ()
-!
-!        C
-!        C     Again, check for the TEST_VAR assignment.
-!        C
-!              CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
-!
-!              WRITE(*,'(A)') 'Second call to GDPOOL:'
-!
-!              IF ( FOUND ) THEN
-!
-!                 WRITE(*,'(A,F6.2)') '   TEST_VAR value:', DVALS(1)
-!
-!              ELSE
-!
-!                 WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        First call to GDPOOL:
-!           TEST_VAR value: -666.00
-!        Second call to GDPOOL:
-!           TEST_VAR not in kernel pool.
-!
-! $ Restrictions
-!
-!     1)  This routine should not be used to unload kernels that
-!         have been loaded via FURNSH.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.2.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example.
-!
-!        Routine declared error free.
-!
-!-    SPICELIB Version 8.2.0, 01-JUL-2014 (NJB) (BVS)
-!
-!        Description of behavior of watcher subsystem was expanded.
-!
-!        Last update was 30-JUL-2013 (BVS)
-!
-!           Updated to increment POOL state counter.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        Watcher update code was re-written for compatibility
-!        with new watcher system implementation. Updated $Restrictions
-!        header section. Updated code example to use TXTOPN.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        This entry point clears the string valued variables as well as
-!        the numeric valued variables.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL and CVPOOL were added.
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     CLEAR the pool of kernel variables
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 8.2.0, 01-JUL-2014 (NJB) (BVS)
-!
-!        Updated to increment POOL state counter.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        Watcher update code was re-written for compatibility
-!        with new watcher system implementation.
-!
-!        ZZNWPOOL is called to update the list of agents
-!        to notify of watched variable updates.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        This entry point clears the string valued variables as well as
-!        the numeric valued variables.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL (set watch on a pool variable)
-!        and CVPOOL (check variable for update) so that routines
-!        that buffer data stored in the kernel pool can fetch
-!        that data only when it is updated.
-!
-!        Also the control of initializations was modified to be
-!        consistent with other SPICELIB practices.
-!
-!        Finally, the revision history was upgraded so that the
-!        version number increases over time. This wasn't true
-!        before. In addition some early revision data that referred to
-!        pre-SPICELIB modifications were removed. This editing of
-!        the version numbers makes it unlikely that anyone can track
-!        down which previous version of this routine they have by
-!        looking at the version number. The best way to determine
-!        the routine you had previously is to compare the dates
-!        stored in the Version line of the routine.
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Remove all kernel variables from the kernel pool. Watches
+!!     on kernel variables are retained.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     None.
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1)  All known agents (those established through the SPICELIB
+!!         routine SWPOOL) will be "notified" that their watched
+!!         variables have been updated whenever CLPOOL is called.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     CLPOOL clears the pool of kernel variables maintained by
+!!     the kernel POOL subsystem. All the variables in the pool are
+!!     deleted. However, all watcher information is retained.
+!!
+!!     Each watched variable will be regarded as having been updated.
+!!     Any agent associated with that variable will have a notice
+!!     posted for it indicating that its watched variable has been
+!!     updated.
+!!
+!!     Application programs can delete watches by calling the SPICELIB
+!!     routine DWPOOL. See the header of that routine for details.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) This code example demonstrates how to assign values to kernel
+!!        pool variables, how to check for the existence of kernel pool
+!!        variables and how to clear the kernel pool, i.e. how to delete
+!!        all variable assignments loaded into the kernel pool.
+!!
+!!        Place a value into the kernel pool and check for the variable
+!!        to which the value has been assigned. Clear the kernel pool
+!!        and check for that variable again.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM CLPOOL_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              DOUBLE PRECISION      DVALS ( 1 )
+!!
+!!              INTEGER               N
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Place a value into the kernel pool. Recall the routines
+!!        C     for direct insertion of pool assignments have arrays for
+!!        C     input.
+!!        C
+!!              DVALS( 1 ) = -666.D0
+!!              CALL PDPOOL ( 'TEST_VAR', 1, DVALS )
+!!
+!!        C
+!!        C     Check for the variable assignment to TEST_VAR.
+!!        C
+!!              CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
+!!
+!!              WRITE(*,'(A)') 'First call to GDPOOL:'
+!!
+!!              IF ( FOUND ) THEN
+!!
+!!                 WRITE(*,'(A,F8.2)') '   TEST_VAR value:', DVALS(1)
+!!
+!!              ELSE
+!!
+!!                 WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
+!!
+!!              END IF
+!!
+!!        C
+!!        C     Now clear the kernel pool.
+!!        C
+!!              CALL CLPOOL ()
+!!
+!!        C
+!!        C     Again, check for the TEST_VAR assignment.
+!!        C
+!!              CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
+!!
+!!              WRITE(*,'(A)') 'Second call to GDPOOL:'
+!!
+!!              IF ( FOUND ) THEN
+!!
+!!                 WRITE(*,'(A,F6.2)') '   TEST_VAR value:', DVALS(1)
+!!
+!!              ELSE
+!!
+!!                 WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        First call to GDPOOL:
+!!           TEST_VAR value: -666.00
+!!        Second call to GDPOOL:
+!!           TEST_VAR not in kernel pool.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine should not be used to unload kernels that
+!!         have been loaded via FURNSH.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.2.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example.
+!!
+!!        Routine declared error free.
+!!
+!!-    SPICELIB Version 8.2.0, 01-JUL-2014 (NJB) (BVS)
+!!
+!!        Description of behavior of watcher subsystem was expanded.
+!!
+!!        Last update was 30-JUL-2013 (BVS)
+!!
+!!           Updated to increment POOL state counter.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        Watcher update code was re-written for compatibility
+!!        with new watcher system implementation. Updated $Restrictions
+!!        header section. Updated code example to use TXTOPN.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        This entry point clears the string valued variables as well as
+!!        the numeric valued variables.
+!!
+!!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!!
+!!        The entry points SWPOOL and CVPOOL were added.
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     CLEAR the pool of kernel variables
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 8.2.0, 01-JUL-2014 (NJB) (BVS)
+!!
+!!        Updated to increment POOL state counter.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        Watcher update code was re-written for compatibility
+!!        with new watcher system implementation.
+!!
+!!        ZZNWPOOL is called to update the list of agents
+!!        to notify of watched variable updates.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        This entry point clears the string valued variables as well as
+!!        the numeric valued variables.
+!!
+!!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!!
+!!        The entry points SWPOOL (set watch on a pool variable)
+!!        and CVPOOL (check variable for update) so that routines
+!!        that buffer data stored in the kernel pool can fetch
+!!        that data only when it is updated.
+!!
+!!        Also the control of initializations was modified to be
+!!        consistent with other SPICELIB practices.
+!!
+!!        Finally, the revision history was upgraded so that the
+!!        version number increases over time. This wasn't true
+!!        before. In addition some early revision data that referred to
+!!        pre-SPICELIB modifications were removed. This editing of
+!!        the version numbers makes it unlikely that anyone can track
+!!        down which previous version of this routine they have by
+!!        looking at the version number. The best way to determine
+!!        the routine you had previously is to compare the dates
+!!        stored in the Version line of the routine.
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -15377,389 +15217,381 @@ contains
       end procedure clpool
 
       module procedure ldpool
-
-! $ Abstract
-!
-!     Load the variables contained in a NAIF ASCII kernel file into the
-!     kernel pool.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         FNAME
-!
-! $ Detailed_Input
-!
-!     FNAME    is the name of the text kernel file whose variables will
-!              be loaded into the pool.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If an I/O error occurs while opening or reading a text kernel,
-!         the error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     2)  If any text kernel parsing error occurs, the error is signaled
-!         by a routine in the call tree of this routine.
-!
-!     3)  If a kernel pool overflow is detected, an error is signaled by
-!         a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See FNAME in $Detailed_Input.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) The following program demonstrates how to load the variables
-!        contained in a NAIF ASCII kernel file into the kernel pool
-!        and how to determine the properties of a stored kernel
-!        variable.
-!
-!        The program prompts for text kernel name and for the name of
-!        a kernel variable. If the variable is present in the kernel
-!        pool, the dimension and type of the variable are displayed.
-!
-!        Example code begins here.
-!
-!              PROGRAM LDPOOL_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               RTRIM
-!
-!        C
-!        C     Local constants
-!        C
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 256 )
-!
-!              INTEGER               KVNMLN
-!              PARAMETER           ( KVNMLN = 33 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    FNAME
-!              CHARACTER*(KVNMLN)    VARNAM
-!              CHARACTER*(1)         VTYPE
-!
-!              INTEGER               N
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for the name of a text-kernel file.
-!        C
-!              CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
-!
-!        C
-!        C     Load the kernel. The same operation could be done using
-!        C     a FURNSH call.
-!        C
-!              CALL LDPOOL ( FNAME )
-!
-!              CALL PROMPT ( 'Enter name of kernel variable > ',
-!             .               VARNAM )
-!
-!              CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
-!
-!              IF ( FOUND ) THEN
-!                 WRITE(*,*) ' '
-!                 WRITE(*,*) 'Properties of variable ',
-!             .               VARNAM(:RTRIM(VARNAM)), ':'
-!                 WRITE(*,*) ' '
-!                 WRITE(*,*) '   Size:   ', N
-!
-!                 IF ( VTYPE .EQ. 'C' ) THEN
-!
-!                    WRITE(*,*) '   Type:   Character'
-!
-!                 ELSE
-!
-!                    WRITE(*,*) '   Type:   Numeric'
-!                 END IF
-!
-!              ELSE
-!
-!                 WRITE(*,*) VARNAM,
-!             .              ' is not present in the kernel pool.'
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the PCK file gm_de431.tpc to ask for the
-!        variable 'BODY000_GMLIST', the output was:
-!
-!        Enter text-kernel name        > gm_de431.tpc
-!        Enter name of kernel variable > BODY000_GMLIST
-!
-!         Properties of variable BODY000_GMLIST:
-!
-!            Size:             65
-!            Type:   Numeric
-!
-! $ Restrictions
-!
-!     1)  Normally SPICE applications should load kernels via the
-!         FURNSH routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     R.E. Thurman       (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.3.0, 17-AUG-2021 (JDR)
-!
-!        Changed input argument name KERNEL to FNAME for consistency
-!        with other routines.
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete code example.
-!
-!-    SPICELIB Version 8.2.0, 30-JUL-2013 (BVS)
-!
-!        Updated to increment POOL state counter.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        Watcher update code was re-written for compatibility
-!        with new watcher system implementation.
-!
-!        Filled out $Exceptions section of header, which previously
-!        contained only the word "None."
-!
-!        Updated code example to use TXTOPN.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        In addition much greater error checking is performed on
-!        the input file to guarantee valid inputs.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL and CVPOOL were added.
-!
-!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
-!
-!        Increased value of parameter MAXVAL to 5000 to accommodate
-!        storage of SCLK coefficients in the kernel pool.
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
-!
-!        Added declaration of FAILED. FAILED is checked in the
-!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
-!
-!-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
-!
-!        A FAILED test was inserted into the control of the DO-loop
-!        which reads in each kernel variable in LDPOOL.
-!
-!-    SPICELIB Version 1.2.0, 09-MAR-1989 (HAN)
-!
-!        Parameters BEGDAT and BEGTXT have been moved into the
-!        $Declarations section.
-!
-!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
-!
-!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
-!        (Actually, MAXLEN was implicitly 32 characters, and has only
-!        now been made an explicit---and changeable---limit.)
-!
-!        Declaration of unused function FAILED removed.
-!
-!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     LOAD variables from a text kernel file into the pool
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!        The entry point RTPOOL should now be regarded as obsolete
-!        and is maintained solely for backward compatibility with
-!        existing routines that make use of it.
-!
-!        The basic data structure used to maintain the list of
-!        variable names and values was replaced with a hash table
-!        implementation. Data and names are accessed by means
-!        of a hash function and linked lists of pointers to existing
-!        variable names and data values.
-!
-!        In addition much greater error checking is performed on
-!        the input file to guarantee valid inputs.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL (set watch on a pool variable)
-!        and CVPOOL (check variable for update) so that routines
-!        that buffer data stored in the kernel pool can fetch
-!        that data only when it is updated.
-!
-!        In addition, the revision history was upgraded so that the
-!        version number increases over time. This wasn't true
-!        before. In addition some early revision data that referred to
-!        pre-SPICELIB modifications were removed. This editing of
-!        the version numbers makes it unlikely that anyone can track
-!        down which previous version of this routine they have by
-!        looking at the version number. The best way to determine
-!        the routine you had previously is to compare the dates
-!        stored in the Version line of the routine.
-!
-!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
-!
-!        Increased value of parameter MAXVAL to 5000 to accommodate
-!        storage of SCLK coefficients in the kernel pool.
-!
-!        Also, changed version number in previous revisions entry
-!        from SPICELIB Version 2.0.0 to SPICELIB Version 2.0.0. The
-!        last version entry in the $Version section had been
-!        Version 1.0.0, dated later than the entry for `version 2'
-!        in the $Revisions section!
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
-!
-!        Added declaration of FAILED. FAILED is checked in the
-!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
-!
-!-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
-!
-!       A FAILED test was inserted into the control of the DO-loop which
-!       reads in each kernel variable.
-!
-!       Previously, if the error action 'RETURN' had been set by a
-!       calling program, and the call to RDKNEW by LDPOOL failed,
-!       then execution would continue through LDPOOL, with SPICELIB
-!       routines returning upon entry. This meant that the routine
-!       RDKVAR never got a chance to set the EOF flag, which was the
-!       only control of the DO-loop. An infinite loop resulted in such
-!       cases. The FAILED test resolves that situation.
-!
-!-    SPICELIB Version 1.2.0, 9-MAR-1989 (HAN)
-!
-!        Parameters BEGDAT and BEGTXT have been moved into the
-!        $Declarations section.
-!
-!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
-!
-!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
-!        (Actually, MAXLEN was implicitly 32 characters, and has only
-!        now been made an explicit---and changeable---limit.)
-!
-!        Declaration of unused function FAILED removed.
-!
-!-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Load the variables contained in a NAIF ASCII kernel file into the
+!!     kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         FNAME
+!!
+!! ## Detailed Input
+!!
+!!     FNAME    is the name of the text kernel file whose variables will
+!!              be loaded into the pool.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If an I/O error occurs while opening or reading a text kernel,
+!!         the error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     2)  If any text kernel parsing error occurs, the error is signaled
+!!         by a routine in the call tree of this routine.
+!!
+!!     3)  If a kernel pool overflow is detected, an error is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See FNAME in $Detailed_Input.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) The following program demonstrates how to load the variables
+!!        contained in a NAIF ASCII kernel file into the kernel pool
+!!        and how to determine the properties of a stored kernel
+!!        variable.
+!!
+!!        The program prompts for text kernel name and for the name of
+!!        a kernel variable. If the variable is present in the kernel
+!!        pool, the dimension and type of the variable are displayed.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM LDPOOL_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              INTEGER               RTRIM
+!!
+!!        C
+!!        C     Local constants
+!!        C
+!!              INTEGER               FILSIZ
+!!              PARAMETER           ( FILSIZ = 256 )
+!!
+!!              INTEGER               KVNMLN
+!!              PARAMETER           ( KVNMLN = 33 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(FILSIZ)    FNAME
+!!              CHARACTER*(KVNMLN)    VARNAM
+!!              CHARACTER*(1)         VTYPE
+!!
+!!              INTEGER               N
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Prompt for the name of a text-kernel file.
+!!        C
+!!              CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
+!!
+!!        C
+!!        C     Load the kernel. The same operation could be done using
+!!        C     a FURNSH call.
+!!        C
+!!              CALL LDPOOL ( FNAME )
+!!
+!!              CALL PROMPT ( 'Enter name of kernel variable > ',
+!!             .               VARNAM )
+!!
+!!              CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
+!!
+!!              IF ( FOUND ) THEN
+!!                 WRITE(*,*) ' '
+!!                 WRITE(*,*) 'Properties of variable ',
+!!             .               VARNAM(:RTRIM(VARNAM)), ':'
+!!                 WRITE(*,*) ' '
+!!                 WRITE(*,*) '   Size:   ', N
+!!
+!!                 IF ( VTYPE .EQ. 'C' ) THEN
+!!
+!!                    WRITE(*,*) '   Type:   Character'
+!!
+!!                 ELSE
+!!
+!!                    WRITE(*,*) '   Type:   Numeric'
+!!                 END IF
+!!
+!!              ELSE
+!!
+!!                 WRITE(*,*) VARNAM,
+!!             .              ' is not present in the kernel pool.'
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, using the PCK file gm_de431.tpc to ask for the
+!!        variable 'BODY000_GMLIST', the output was:
+!!
+!!        Enter text-kernel name        > gm_de431.tpc
+!!        Enter name of kernel variable > BODY000_GMLIST
+!!
+!!         Properties of variable BODY000_GMLIST:
+!!
+!!            Size:             65
+!!            Type:   Numeric
+!!
+!! ## Restrictions
+!!
+!!     1)  Normally SPICE applications should load kernels via the
+!!         FURNSH routine.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     H.A. Neilan        (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     R.E. Thurman       (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.3.0, 17-AUG-2021 (JDR)
+!!
+!!        Changed input argument name KERNEL to FNAME for consistency
+!!        with other routines.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!        Added complete code example.
+!!
+!!-    SPICELIB Version 8.2.0, 30-JUL-2013 (BVS)
+!!
+!!        Updated to increment POOL state counter.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        Watcher update code was re-written for compatibility
+!!        with new watcher system implementation.
+!!
+!!        Filled out $Exceptions section of header, which previously
+!!        contained only the word "None."
+!!
+!!        Updated code example to use TXTOPN.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        In addition much greater error checking is performed on
+!!        the input file to guarantee valid inputs.
+!!
+!!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!!
+!!        The entry points SWPOOL and CVPOOL were added.
+!!
+!!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
+!!
+!!        Increased value of parameter MAXVAL to 5000 to accommodate
+!!        storage of SCLK coefficients in the kernel pool.
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
+!!
+!!        Added declaration of FAILED. FAILED is checked in the
+!!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
+!!
+!!-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
+!!
+!!        A FAILED test was inserted into the control of the DO-loop
+!!        which reads in each kernel variable in LDPOOL.
+!!
+!!-    SPICELIB Version 1.2.0, 09-MAR-1989 (HAN)
+!!
+!!        Parameters BEGDAT and BEGTXT have been moved into the
+!!        $Declarations section.
+!!
+!!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
+!!
+!!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
+!!        (Actually, MAXLEN was implicitly 32 characters, and has only
+!!        now been made an explicit---and changeable---limit.)
+!!
+!!        Declaration of unused function FAILED removed.
+!!
+!!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     LOAD variables from a text kernel file into the pool
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!!        to the routine.
+!!
+!!        The entry point RTPOOL should now be regarded as obsolete
+!!        and is maintained solely for backward compatibility with
+!!        existing routines that make use of it.
+!!
+!!        The basic data structure used to maintain the list of
+!!        variable names and values was replaced with a hash table
+!!        implementation. Data and names are accessed by means
+!!        of a hash function and linked lists of pointers to existing
+!!        variable names and data values.
+!!
+!!        In addition much greater error checking is performed on
+!!        the input file to guarantee valid inputs.
+!!
+!!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!!
+!!        The entry points SWPOOL (set watch on a pool variable)
+!!        and CVPOOL (check variable for update) so that routines
+!!        that buffer data stored in the kernel pool can fetch
+!!        that data only when it is updated.
+!!
+!!        In addition, the revision history was upgraded so that the
+!!        version number increases over time. This wasn't true
+!!        before. In addition some early revision data that referred to
+!!        pre-SPICELIB modifications were removed. This editing of
+!!        the version numbers makes it unlikely that anyone can track
+!!        down which previous version of this routine they have by
+!!        looking at the version number. The best way to determine
+!!        the routine you had previously is to compare the dates
+!!        stored in the Version line of the routine.
+!!
+!!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
+!!
+!!        Increased value of parameter MAXVAL to 5000 to accommodate
+!!        storage of SCLK coefficients in the kernel pool.
+!!
+!!        Also, changed version number in previous revisions entry
+!!        from SPICELIB Version 2.0.0 to SPICELIB Version 2.0.0. The
+!!        last version entry in the $Version section had been
+!!        Version 1.0.0, dated later than the entry for `version 2'
+!!        in the $Revisions section!
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
+!!
+!!        Added declaration of FAILED. FAILED is checked in the
+!!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
+!!
+!!-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
+!!
+!!       A FAILED test was inserted into the control of the DO-loop which
+!!       reads in each kernel variable.
+!!
+!!       Previously, if the error action 'RETURN' had been set by a
+!!       calling program, and the call to RDKNEW by LDPOOL failed,
+!!       then execution would continue through LDPOOL, with SPICELIB
+!!       routines returning upon entry. This meant that the routine
+!!       RDKVAR never got a chance to set the EOF flag, which was the
+!!       only control of the DO-loop. An infinite loop resulted in such
+!!       cases. The FAILED test resolves that situation.
+!!
+!!-    SPICELIB Version 1.2.0, 9-MAR-1989 (HAN)
+!!
+!!        Parameters BEGDAT and BEGTXT have been moved into the
+!!        $Declarations section.
+!!
+!!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
+!!
+!!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
+!!        (Actually, MAXLEN was implicitly 32 characters, and has only
+!!        now been made an explicit---and changeable---limit.)
+!!
+!!        Declaration of unused function FAILED removed.
+!!
+!!-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -15939,212 +15771,204 @@ contains
       end procedure ldpool
 
       module procedure rtpool
-
-! $ Abstract
-!
-!     Return the value of a kernel variable from the kernel pool.
-!
-!     This routine is maintained only for backward compatibility.
-!     It should be regarded as obsolete. Use one of the entry points
-!     GDPOOL, GIPOOL or GCPOOL in its place.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               N
-!     DOUBLE PRECISION      VALUES   ( * )
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the variable whose values are to be
-!              returned. If the variable is not in the pool, FOUND
-!              will be .FALSE.
-!
-! $ Detailed_Output
-!
-!     N        is the number of values associated with NAME.
-!              If NAME is not in the pool, no value is given to
-!              N.
-!
-!     VALUES   is the array of values associated with NAME.
-!              If NAME is not in the pool, no values are given to
-!              the elements of VALUES.
-!
-!     FOUND    is .TRUE. if the variable is in the pool, .FALSE. if it
-!              is not.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the output argument VALUES is not large enough to hold all
-!         of the values of the kernel variable designated by NAME,
-!         then memory will be corrupted. RTPOOL cannot detect this
-!         error.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     The following code fragment demonstrates how the data from
-!     several kernel files can be loaded into a kernel pool. After the
-!     pool is loaded, the values in the pool are written to a kernel
-!     file.
-!
-!     C
-!     C     Store in an array the names of the kernel files whose
-!     C     values will be loaded into the kernel pool.
-!     C
-!           FNAME (1) = 'AXES.KER'
-!           FNAME (2) = 'GM.KER'
-!           FNAME (3) = 'LEAP_SECONDS.KER'
-!
-!     C
-!     C     Clear the kernel pool. (This is optional.)
-!     C
-!           CALL CLPOOL
-!
-!     C
-!     C     Load the variables from the three kernel files into the
-!     C     the kernel pool.
-!     C
-!           DO I = 1, 3
-!             CALL LDPOOL ( FNAME (I) )
-!           END DO
-!
-!     C
-!     C     We can examine the values associated with any variable
-!     C     in the kernel pool using RTPOOL.
-!     C
-!           CALL RTPOOL ( VARIABLE, NUMVAL, VALUES, FOUND )
-!
-!     C
-!     C     Open the new text file 'NEWKERNEL.KER'.
-!     C
-!           CALL TXTOPN ( 'NEWKERNEL.KER', UNIT )
-!
-!     C
-!     C     Write the values in the kernel pool to the file.
-!     C
-!           CALL WRPOOL ( UNIT )
-!
-! $ Restrictions
-!
-!     See $Exceptions section.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR) (NJB)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!        Updated code example to use TXTOPN.
-!
-!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
-!
-!        Corrected an in-line comment relating to finding the
-!        head node of the conflict resolution list for NAME.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!        The entry point RTPOOL should now be regarded as obsolete
-!        and is maintained solely for backward compatibility with
-!        existing routines that make use of it.
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     RETURN the value of a pooled kernel variable
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the value of a kernel variable from the kernel pool.
+!!
+!!     This routine is maintained only for backward compatibility.
+!!     It should be regarded as obsolete. Use one of the entry points
+!!     GDPOOL, GIPOOL or GCPOOL in its place.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               N
+!!     DOUBLE PRECISION      VALUES   ( * )
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the variable whose values are to be
+!!              returned. If the variable is not in the pool, FOUND
+!!              will be .FALSE.
+!!
+!! ## Detailed Output
+!!
+!!     N        is the number of values associated with NAME.
+!!              If NAME is not in the pool, no value is given to
+!!              N.
+!!
+!!     VALUES   is the array of values associated with NAME.
+!!              If NAME is not in the pool, no values are given to
+!!              the elements of VALUES.
+!!
+!!     FOUND    is .TRUE. if the variable is in the pool, .FALSE. if it
+!!              is not.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the output argument VALUES is not large enough to hold all
+!!         of the values of the kernel variable designated by NAME,
+!!         then memory will be corrupted. RTPOOL cannot detect this
+!!         error.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     The following code fragment demonstrates how the data from
+!!     several kernel files can be loaded into a kernel pool. After the
+!!     pool is loaded, the values in the pool are written to a kernel
+!!     file.
+!!
+!!     C
+!!     C     Store in an array the names of the kernel files whose
+!!     C     values will be loaded into the kernel pool.
+!!     C
+!!           FNAME (1) = 'AXES.KER'
+!!           FNAME (2) = 'GM.KER'
+!!           FNAME (3) = 'LEAP_SECONDS.KER'
+!!
+!!     C
+!!     C     Clear the kernel pool. (This is optional.)
+!!     C
+!!           CALL CLPOOL
+!!
+!!     C
+!!     C     Load the variables from the three kernel files into the
+!!     C     the kernel pool.
+!!     C
+!!           DO I = 1, 3
+!!             CALL LDPOOL ( FNAME (I) )
+!!           END DO
+!!
+!!     C
+!!     C     We can examine the values associated with any variable
+!!     C     in the kernel pool using RTPOOL.
+!!     C
+!!           CALL RTPOOL ( VARIABLE, NUMVAL, VALUES, FOUND )
+!!
+!!     C
+!!     C     Open the new text file 'NEWKERNEL.KER'.
+!!     C
+!!           CALL TXTOPN ( 'NEWKERNEL.KER', UNIT )
+!!
+!!     C
+!!     C     Write the values in the kernel pool to the file.
+!!     C
+!!           CALL WRPOOL ( UNIT )
+!!
+!! ## Restrictions
+!!
+!!     See $Exceptions section.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR) (NJB)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!        Updated code example to use TXTOPN.
+!!
+!!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
+!!
+!!        Corrected an in-line comment relating to finding the
+!!        head node of the conflict resolution list for NAME.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!!        to the routine.
+!!
+!!        The entry point RTPOOL should now be regarded as obsolete
+!!        and is maintained solely for backward compatibility with
+!!        existing routines that make use of it.
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     RETURN the value of a pooled kernel variable
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -16333,309 +16157,301 @@ contains
       end procedure rtpool
 
       module procedure expool
-
-! $ Abstract
-!
-!     Confirm the existence of a numeric kernel variable in the kernel
-!     pool.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the numeric kernel variable whose
-!              existence in the kernel pool is to be checked.
-!
-! $ Detailed_Output
-!
-!     FOUND    is .TRUE. whenever the specified variable is included
-!              in the pool.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine determines whether or not a numeric kernel pool
-!     variable exists. It does not detect the existence of
-!     string valued kernel pool variables.
-!
-!     A better routine for determining the existence of numeric kernel
-!     pool variables is the routine DTPOOL which determines the
-!     existence, size and type of kernel pool variables.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) The following code example demonstrates how to use EXPOOL
-!        to confirm the existence of numeric kernel pool variables.
-!        In the example, we will look for different variables;
-!        some of them numeric, some string valued and some not
-!        present in the kernel pool.
-!
-!        Use the kernel shown below; an IK defining two keywords
-!        used to provide data for an instrument with NAIF ID -999001.
-!
-!           KPL/IK
-!
-!           File name: expool_ex1.ti
-!
-!           The keyword below define the three frequencies used by a
-!           hypothetical instrument (NAIF ID -999001). They correspond
-!           to three filters: red, green and blue. Frequencies are
-!           given in micrometers.
-!
-!           \begindata
-!
-!              INS-999001_FREQ_RGB   = (  0.65,  0.55, 0.475 )
-!              INS-999001_FREQ_UNITS = ( 'MICROMETERS'       )
-!
-!           \begintext
-!
-!           End of IK
-!
-!        Example code begins here.
-!
-!              PROGRAM EXPOOL_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              CHARACTER*(*)         IKNAME
-!              PARAMETER           ( IKNAME = 'expool_ex1.ti' )
-!
-!              INTEGER               KPVNLN
-!              PARAMETER           ( KPVNLN = 32 )
-!
-!              INTEGER               NKPVNM
-!              PARAMETER           ( NKPVNM = 3  )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(KPVNLN)    KEYWRD ( NKPVNM )
-!
-!              INTEGER               I
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Define the variable names
-!        C
-!              DATA                  KEYWRD   /
-!             .                             'INS-999001_FREQ_RGB',
-!             .                             'NOT_IN_THE_POOL',
-!             .                             'INS-999001_FREQ_UNITS' /
-!
-!        C
-!        C     Load the instrument kernel.
-!        C
-!              CALL FURNSH ( IKNAME )
-!
-!              DO I = 1, NKPVNM
-!
-!        C
-!        C        Check if the variable is numeric and present
-!        C        in the kernel pool.
-!        C
-!                 CALL EXPOOL ( KEYWRD(I), FOUND )
-!
-!                 WRITE(*,*) 'Variable name: ', KEYWRD(I)
-!
-!                 IF ( FOUND ) THEN
-!
-!                    WRITE(*,*) '   It is numeric and exists in the '
-!             .              // 'kernel pool.'
-!
-!                 ELSE
-!
-!                    WRITE(*,*) '   Either it is not numeric or it is '
-!             .              // 'not in the kernel pool.'
-!
-!                 END IF
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Variable name: INS-999001_FREQ_RGB
-!            It is numeric and exists in the kernel pool.
-!         Variable name: NOT_IN_THE_POOL
-!            Either it is not numeric or it is not in the kernel pool.
-!         Variable name: INS-999001_FREQ_UNITS
-!            Either it is not numeric or it is not in the kernel pool.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example.
-!
-!        Updated the header to reflect that only numeric variables
-!        present in the kernel pool will cause the routine to return
-!        .TRUE.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!        Fixed typos.
-!
-!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
-!
-!        Corrected an in-line comment relating to finding the
-!        head node of the conflict resolution list for NAME.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     CONFIRM the existence of a pooled numeric kernel variable
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!        The entry point RTPOOL should now be regarded as obsolete
-!        and is maintained solely for backward compatibility with
-!        existing routines that make use of it.
-!
-!        The basic data structure used to maintain the list of
-!        variable names and values was replaced with a hash table
-!        implementation. Data and names are accessed by means
-!        of a hash function and linked lists of pointers to existing
-!        variable names and data values.
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Confirm the existence of a numeric kernel variable in the kernel
+!!     pool.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the numeric kernel variable whose
+!!              existence in the kernel pool is to be checked.
+!!
+!! ## Detailed Output
+!!
+!!     FOUND    is .TRUE. whenever the specified variable is included
+!!              in the pool.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine determines whether or not a numeric kernel pool
+!!     variable exists. It does not detect the existence of
+!!     string valued kernel pool variables.
+!!
+!!     A better routine for determining the existence of numeric kernel
+!!     pool variables is the routine DTPOOL which determines the
+!!     existence, size and type of kernel pool variables.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) The following code example demonstrates how to use EXPOOL
+!!        to confirm the existence of numeric kernel pool variables.
+!!        In the example, we will look for different variables;
+!!        some of them numeric, some string valued and some not
+!!        present in the kernel pool.
+!!
+!!        Use the kernel shown below; an IK defining two keywords
+!!        used to provide data for an instrument with NAIF ID -999001.
+!!
+!!           KPL/IK
+!!
+!!           File name: expool_ex1.ti
+!!
+!!           The keyword below define the three frequencies used by a
+!!           hypothetical instrument (NAIF ID -999001). They correspond
+!!           to three filters: red, green and blue. Frequencies are
+!!           given in micrometers.
+!!
+!!           \begindata
+!!
+!!              INS-999001_FREQ_RGB   = (  0.65,  0.55, 0.475 )
+!!              INS-999001_FREQ_UNITS = ( 'MICROMETERS'       )
+!!
+!!           \begintext
+!!
+!!           End of IK
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM EXPOOL_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              CHARACTER*(*)         IKNAME
+!!              PARAMETER           ( IKNAME = 'expool_ex1.ti' )
+!!
+!!              INTEGER               KPVNLN
+!!              PARAMETER           ( KPVNLN = 32 )
+!!
+!!              INTEGER               NKPVNM
+!!              PARAMETER           ( NKPVNM = 3  )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(KPVNLN)    KEYWRD ( NKPVNM )
+!!
+!!              INTEGER               I
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Define the variable names
+!!        C
+!!              DATA                  KEYWRD   /
+!!             .                             'INS-999001_FREQ_RGB',
+!!             .                             'NOT_IN_THE_POOL',
+!!             .                             'INS-999001_FREQ_UNITS' /
+!!
+!!        C
+!!        C     Load the instrument kernel.
+!!        C
+!!              CALL FURNSH ( IKNAME )
+!!
+!!              DO I = 1, NKPVNM
+!!
+!!        C
+!!        C        Check if the variable is numeric and present
+!!        C        in the kernel pool.
+!!        C
+!!                 CALL EXPOOL ( KEYWRD(I), FOUND )
+!!
+!!                 WRITE(*,*) 'Variable name: ', KEYWRD(I)
+!!
+!!                 IF ( FOUND ) THEN
+!!
+!!                    WRITE(*,*) '   It is numeric and exists in the '
+!!             .              // 'kernel pool.'
+!!
+!!                 ELSE
+!!
+!!                    WRITE(*,*) '   Either it is not numeric or it is '
+!!             .              // 'not in the kernel pool.'
+!!
+!!                 END IF
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         Variable name: INS-999001_FREQ_RGB
+!!            It is numeric and exists in the kernel pool.
+!!         Variable name: NOT_IN_THE_POOL
+!!            Either it is not numeric or it is not in the kernel pool.
+!!         Variable name: INS-999001_FREQ_UNITS
+!!            Either it is not numeric or it is not in the kernel pool.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example.
+!!
+!!        Updated the header to reflect that only numeric variables
+!!        present in the kernel pool will cause the routine to return
+!!        .TRUE.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!        Fixed typos.
+!!
+!!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
+!!
+!!        Corrected an in-line comment relating to finding the
+!!        head node of the conflict resolution list for NAME.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!!        to the routine.
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     CONFIRM the existence of a pooled numeric kernel variable
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!!        to the routine.
+!!
+!!        The entry point RTPOOL should now be regarded as obsolete
+!!        and is maintained solely for backward compatibility with
+!!        existing routines that make use of it.
+!!
+!!        The basic data structure used to maintain the list of
+!!        variable names and values was replaced with a hash table
+!!        implementation. Data and names are accessed by means
+!!        of a hash function and linked lists of pointers to existing
+!!        variable names and data values.
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -16805,295 +16621,287 @@ contains
       end procedure expool
 
       module procedure wrpool
-
-! $ Abstract
-!
-!     Write to a specified unit a set of "keyword = value" assignments
-!     for all currently defined kernel variables. The assignments
-!     constitute a text kernel from which the current state of the
-!     kernel pool can be restored.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     INTEGER        UNIT
-!
-! $ Detailed_Input
-!
-!     UNIT     is the logical unit to which the variables in the pool
-!              will be written.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If writing a variable to the output file fails due to an I/O
-!         error, the error SPICE(WRITEERROR) is signaled.
-!
-! $ Files
-!
-!     This routine writes to the specified logical unit the kernel
-!     variables present in the kernel pool. Each variable consists of a
-!     name and a set of associated values. The variables are written in
-!     the form of a series of "keyword = value" assignments. The
-!     assignments are preceded by a SPICE text kernel "\begindata"
-!     marker.
-!
-!     The output of this routine, if written to a text file, is a SPICE
-!     text kernel. The current contents of the kernel pool can be
-!     restored by clearing the pool and then loading this text kernel.
-!
-!     If the values are to be written to an output kernel file, the
-!     file should be opened with a logical unit determined by the
-!     calling program.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     The following code fragment demonstrates how the data from
-!     several kernel files can be loaded into a kernel pool. After the
-!     pool is loaded, the values in the pool are written to a kernel
-!     file.
-!
-!     C
-!     C     Store in an array the names of the kernel files whose
-!     C     values will be loaded into the kernel pool.
-!     C
-!           FNAME (1) = 'AXES.KER'
-!           FNAME (2) = 'GM.KER'
-!           FNAME (3) = 'LEAP_SECONDS.KER'
-!
-!     C
-!     C     Clear the kernel pool. (This is optional.)
-!     C
-!           CALL CLPOOL
-!
-!     C
-!     C     Load the variables from the three kernel files into the
-!     C     the kernel pool.
-!     C
-!           DO I = 1, 3
-!             CALL LDPOOL ( FNAME (I) )
-!           END DO
-!
-!     C
-!     C     We can examine the values associated with any double
-!     C     precision variable in the kernel pool using GDPOOL.
-!     C
-!           CALL GDPOOL ( VARIABLE, 1, NMAX, NUMVAL, VALUES, FOUND )
-!
-!     C
-!     C     Open the new text file 'NEWKERNEL.KER'.
-!     C
-!           CALL TXTOPN ( 'NEWKERNEL.KER', UNIT )
-!
-!     C
-!     C     Write the values in the kernel pool to the file.
-!     C
-!           CALL WRPOOL ( UNIT )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.2, 17-AUG-2021 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Updated the $Exceptions section to document the actual error
-!        handling of the routine.
-!
-!-    SPICELIB Version 8.1.1, 30-JUN-2014 (NJB)
-!
-!        Updated header to more accurately describe the output
-!        of this routine.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        Updated code example to use TXTOPN.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued. Both types are supported
-!        by WRPOOL.
-!
-!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
-!
-!        Increased value of parameter MAXVAL to 5000 to accommodate
-!        storage of SCLK coefficients in the kernel pool.
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
-!
-!        Added declaration of FAILED. FAILED is checked in the
-!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
-!
-!-    SPICELIB Version 1.2.0, 09-MAR-1989 (HAN)
-!
-!        Parameters BEGDAT and BEGTXT have been moved into the
-!        $Declarations section.
-!
-!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
-!
-!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
-!        (Actually, MAXLEN was implicitly 32 characters, and has only
-!        now been made an explicit---and changeable---limit.)
-!
-!        Declaration of unused function FAILED removed.
-!
-!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     WRITE the values in pool to a specified unit
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The basic data structure used to maintain the list of
-!        variable names and values was replaced with a hash table
-!        implementation. Data and names are accessed by means
-!        of a hash function and linked lists of pointers to existing
-!        variable names and data values.
-!
-!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
-!
-!        Increased value of parameter MAXVAL to 5000 to accommodate
-!        storage of SCLK coefficients in the kernel pool.
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
-!
-!        Added declaration of FAILED. FAILED is checked in the
-!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
-!
-!-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
-!
-!       A FAILED test was inserted into the control of the DO-loop which
-!       reads in each kernel variable.
-!
-!       Previously, if the error action 'RETURN' had been set by a
-!       calling program, and the call to RDKNEW by LDPOOL failed,
-!       then execution would continue through LDPOOL, with SPICELIB
-!       routines returning upon entry. This meant that the routine
-!       RDKVAR never got a chance to set the EOF flag, which was the
-!       only control of the DO-loop. An infinite loop resulted in such
-!       cases. The FAILED test resolves that situation.
-!
-!-    SPICELIB Version 1.2.0, 9-MAR-1989 (HAN)
-!
-!        Parameters BEGDAT and BEGTXT have been moved into the
-!        $Declarations section.
-!
-!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
-!
-!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
-!        (Actually, MAXLEN was implicitly 32 characters, and has only
-!        now been made an explicit---and changeable---limit.)
-!
-!        Declaration of unused function FAILED removed.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Write to a specified unit a set of "keyword = value" assignments
+!!     for all currently defined kernel variables. The assignments
+!!     constitute a text kernel from which the current state of the
+!!     kernel pool can be restored.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     INTEGER        UNIT
+!!
+!! ## Detailed Input
+!!
+!!     UNIT     is the logical unit to which the variables in the pool
+!!              will be written.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If writing a variable to the output file fails due to an I/O
+!!         error, the error SPICE(WRITEERROR) is signaled.
+!!
+!! ## Files
+!!
+!!     This routine writes to the specified logical unit the kernel
+!!     variables present in the kernel pool. Each variable consists of a
+!!     name and a set of associated values. The variables are written in
+!!     the form of a series of "keyword = value" assignments. The
+!!     assignments are preceded by a SPICE text kernel "\begindata"
+!!     marker.
+!!
+!!     The output of this routine, if written to a text file, is a SPICE
+!!     text kernel. The current contents of the kernel pool can be
+!!     restored by clearing the pool and then loading this text kernel.
+!!
+!!     If the values are to be written to an output kernel file, the
+!!     file should be opened with a logical unit determined by the
+!!     calling program.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     The following code fragment demonstrates how the data from
+!!     several kernel files can be loaded into a kernel pool. After the
+!!     pool is loaded, the values in the pool are written to a kernel
+!!     file.
+!!
+!!     C
+!!     C     Store in an array the names of the kernel files whose
+!!     C     values will be loaded into the kernel pool.
+!!     C
+!!           FNAME (1) = 'AXES.KER'
+!!           FNAME (2) = 'GM.KER'
+!!           FNAME (3) = 'LEAP_SECONDS.KER'
+!!
+!!     C
+!!     C     Clear the kernel pool. (This is optional.)
+!!     C
+!!           CALL CLPOOL
+!!
+!!     C
+!!     C     Load the variables from the three kernel files into the
+!!     C     the kernel pool.
+!!     C
+!!           DO I = 1, 3
+!!             CALL LDPOOL ( FNAME (I) )
+!!           END DO
+!!
+!!     C
+!!     C     We can examine the values associated with any double
+!!     C     precision variable in the kernel pool using GDPOOL.
+!!     C
+!!           CALL GDPOOL ( VARIABLE, 1, NMAX, NUMVAL, VALUES, FOUND )
+!!
+!!     C
+!!     C     Open the new text file 'NEWKERNEL.KER'.
+!!     C
+!!           CALL TXTOPN ( 'NEWKERNEL.KER', UNIT )
+!!
+!!     C
+!!     C     Write the values in the kernel pool to the file.
+!!     C
+!!           CALL WRPOOL ( UNIT )
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     H.A. Neilan        (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.1.2, 17-AUG-2021 (JDR) (BVS)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Updated the $Exceptions section to document the actual error
+!!        handling of the routine.
+!!
+!!-    SPICELIB Version 8.1.1, 30-JUN-2014 (NJB)
+!!
+!!        Updated header to more accurately describe the output
+!!        of this routine.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        Updated code example to use TXTOPN.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued. Both types are supported
+!!        by WRPOOL.
+!!
+!!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
+!!
+!!        Increased value of parameter MAXVAL to 5000 to accommodate
+!!        storage of SCLK coefficients in the kernel pool.
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
+!!
+!!        Added declaration of FAILED. FAILED is checked in the
+!!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
+!!
+!!-    SPICELIB Version 1.2.0, 09-MAR-1989 (HAN)
+!!
+!!        Parameters BEGDAT and BEGTXT have been moved into the
+!!        $Declarations section.
+!!
+!!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
+!!
+!!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
+!!        (Actually, MAXLEN was implicitly 32 characters, and has only
+!!        now been made an explicit---and changeable---limit.)
+!!
+!!        Declaration of unused function FAILED removed.
+!!
+!!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     WRITE the values in pool to a specified unit
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The basic data structure used to maintain the list of
+!!        variable names and values was replaced with a hash table
+!!        implementation. Data and names are accessed by means
+!!        of a hash function and linked lists of pointers to existing
+!!        variable names and data values.
+!!
+!!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
+!!
+!!        Increased value of parameter MAXVAL to 5000 to accommodate
+!!        storage of SCLK coefficients in the kernel pool.
+!!
+!!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!!
+!!        All entry points except POOL and CLPOOL now initialize the
+!!        pool if it has not been done yet.
+!!
+!!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
+!!
+!!        Added declaration of FAILED. FAILED is checked in the
+!!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
+!!
+!!-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
+!!
+!!       A FAILED test was inserted into the control of the DO-loop which
+!!       reads in each kernel variable.
+!!
+!!       Previously, if the error action 'RETURN' had been set by a
+!!       calling program, and the call to RDKNEW by LDPOOL failed,
+!!       then execution would continue through LDPOOL, with SPICELIB
+!!       routines returning upon entry. This meant that the routine
+!!       RDKVAR never got a chance to set the EOF flag, which was the
+!!       only control of the DO-loop. An infinite loop resulted in such
+!!       cases. The FAILED test resolves that situation.
+!!
+!!-    SPICELIB Version 1.2.0, 9-MAR-1989 (HAN)
+!!
+!!        Parameters BEGDAT and BEGTXT have been moved into the
+!!        $Declarations section.
+!!
+!!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
+!!
+!!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
+!!        (Actually, MAXLEN was implicitly 32 characters, and has only
+!!        now been made an explicit---and changeable---limit.)
+!!
+!!        Declaration of unused function FAILED removed.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: rtrim
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -17357,295 +17165,287 @@ contains
       end procedure wrpool
 
       module procedure swpool
-
-! $ Abstract
-!
-!     Add a name to the list of agents to notify whenever a member of
-!     a list of kernel variables is updated.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         AGENT
-!     INTEGER               NNAMES
-!     CHARACTER*(*)         NAMES  ( * )
-!
-! $ Detailed_Input
-!
-!     AGENT    is the name of a routine or entry point (agency) that
-!              will want to know when the kernel pool variables
-!              designated by NAMES have been updated.
-!
-!     NNAMES   is the number of kernel pool variable names that will
-!              be associated with AGENT.
-!
-!     NAMES    is an array of names of variables in the kernel pool.
-!              Whenever any of these is updated, a notice will be
-!              posted for AGENT so that one can quickly check
-!              whether needed data has been modified.
-!
-!              Any kernel variable may be associated with multiple
-!              agents; this call adds AGENT to each set of agents
-!              associated with a member of NAMES.
-!
-!              The variables designated by NAMES need not exist in
-!              the kernel pool at the time a watch is set.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If sufficient room is not available to hold a new kernel
-!         variable name, the error SPICE(KERVARSETOVERFLOW) is signaled.
-!
-!     2)  If sufficient room is not available to hold a new agent
-!         name, the error SPICE(TOOMANYWATCHES) is signaled.
-!
-!     3)  If any kernel variable in the array NAMES is already watched
-!         by MAXAGT agents, and AGENT is not already associated with
-!         that kernel variable, the error SPICE(AGENTLISTOVERFLOW) is
-!         signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The kernel pool is a convenient place to store a wide
-!     variety of data needed by routines in SPICELIB and routines
-!     that interface with SPICELIB routines. However, when
-!     a single name has a large quantity of data associated with
-!     it, it becomes inefficient to constantly query the kernel
-!     pool for values that are not updated on a frequent basis.
-!
-!     This entry point allows a routine to instruct the kernel pool
-!     to post a message whenever a particular value gets updated.
-!     In this way, a routine can quickly determine whether or not
-!     data it requires has been updated since the last time the
-!     data was accessed. This makes it reasonable to buffer
-!     the data in local storage and update it only when
-!     a variable in the kernel pool that affects this data has
-!     been updated.
-!
-!     Note that SWPOOL has a side effect. Whenever a call to
-!     SWPOOL is made, the agent specified in the calling sequence
-!     is added to the list of agents that should be notified that
-!     an update of its variables has occurred. In other words
-!     the code
-!
-!         CALL SWPOOL ( AGENT, NNAMES, NAMES  )
-!         CALL CVPOOL ( AGENT,         UPDATE )
-!
-!     will always return UPDATE as .TRUE.
-!
-!     This feature allows for a slightly cleaner use of SWPOOL and
-!     CVPOOL as shown in the example below. Because SWPOOL
-!     automatically loads AGENT into the list of agents to notify of
-!     a kernel pool update, you do not have to include the code for
-!     fetching the initial values of the kernel variables in the
-!     initialization portion of a subroutine. Instead, the code for
-!     the first fetch from the pool is the same as the code for
-!     fetching when the pool is updated.
-!
-! $ Examples
-!
-!     Suppose that you have an application subroutine, MYTASK, that
-!     needs to access a large data set in the kernel pool. If this
-!     data could be kept in local storage and kernel pool queries
-!     performed only when the data in the kernel pool has been
-!     updated, the routine can perform much more efficiently.
-!
-!     The code fragment below illustrates how you might make use of this
-!     feature.
-!
-!     C
-!     C     On the first call to this routine establish those variables
-!     C     that we will want to read from the kernel pool only when
-!     C     new values have been established.
-!     C
-!           IF ( FIRST ) THEN
-!
-!              FIRST = .FALSE.
-!              HAVE  = .FALSE.
-!
-!              CALL SWPOOL ( 'MYTASK', NNAMES, NAMES )
-!
-!           END IF
-!
-!     C
-!     C     If any of the variables has been updated, fetch
-!     C     it from the kernel pool. (Note that this also
-!     C     handles getting variables for the first time.)
-!     C     We use HAVE to indicate the fetch succeeded. If it
-!     C     didn't, we need to attempt the fetch on the next
-!     C     pass into this routine.
-!     C
-!           CALL CVPOOL ( 'MYTASK', UPDATE )
-!
-!           IF (  UPDATE  .OR (.NOT. HAVE ) ) THEN
-!
-!              CALL GDPOOL ( 'MYTASK_VAR_1', 1, M, N1, VALS1, FOUND(1) )
-!              CALL GDPOOL ( 'MYTASK_VAR_2', 1, M, N2, VALS2, FOUND(2) )
-!                      .
-!                      .
-!                      .
-!              CALL GDPOOL ( 'MYTASK_VAR_N', 1, M, NN, VALSN, FOUND(N) )
-!
-!           END IF
-!
-!           IF ( FAILED() ) THEN
-!                 .
-!                 .
-!              do something about the failure
-!                 .
-!                 .
-!
-!           ELSE
-!
-!              HAVE = .TRUE.
-!
-!           END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.2.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 8.2.0, 30-JUL-2013 (BVS)
-!
-!        Updated to increment POOL state counter.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        This routine was re-written to work with the new
-!        watcher system implementation. Several bugs related
-!        to watch system overflow were fixed.
-!
-!        The code example was updated to handle kernel pool
-!        fetch failure.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL and CVPOOL were added.
-!
-!-&
-
-! $ Index_Entries
-!
-!     Watch for an update to a kernel pool variable
-!     Notify a routine of an update to a kernel pool variable
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        This routine was re-written to work with the new
-!        watcher system implementation.
-!
-!        Several bugs related to watch system overflow were fixed.
-!        Now overflow error checks are performed *before* the
-!        watcher system is updated, so a partial update won't
-!        occur if there's not enough room for a full update.
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The basic data structure used to maintain the list of
-!        variable names and values was replaced with a hash table
-!        implementation. Data and names are accessed by means
-!        of a hash function and linked lists of pointers to existing
-!        variable names and data values.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL (set watch on a pool variable)
-!        and CVPOOL (check variable for update) so that routines
-!        that buffer data stored in the kernel pool can fetch
-!        that data only when it is updated.
-!
-!        In addition, the revision history was upgraded so that the
-!        version number increases over time. This wasn't true
-!        before. In addition some early revision data that referred to
-!        pre-SPICELIB modifications were removed. This editing of
-!        the version numbers makes it unlikely that anyone can track
-!        down which previous version of this routine they have by
-!        looking at the version number. The best way to determine
-!        the routine you had previously is to compare the dates
-!        stored in the Version line of the routine.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Add a name to the list of agents to notify whenever a member of
+!!     a list of kernel variables is updated.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         AGENT
+!!     INTEGER               NNAMES
+!!     CHARACTER*(*)         NAMES  ( * )
+!!
+!! ## Detailed Input
+!!
+!!     AGENT    is the name of a routine or entry point (agency) that
+!!              will want to know when the kernel pool variables
+!!              designated by NAMES have been updated.
+!!
+!!     NNAMES   is the number of kernel pool variable names that will
+!!              be associated with AGENT.
+!!
+!!     NAMES    is an array of names of variables in the kernel pool.
+!!              Whenever any of these is updated, a notice will be
+!!              posted for AGENT so that one can quickly check
+!!              whether needed data has been modified.
+!!
+!!              Any kernel variable may be associated with multiple
+!!              agents; this call adds AGENT to each set of agents
+!!              associated with a member of NAMES.
+!!
+!!              The variables designated by NAMES need not exist in
+!!              the kernel pool at the time a watch is set.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If sufficient room is not available to hold a new kernel
+!!         variable name, the error SPICE(KERVARSETOVERFLOW) is signaled.
+!!
+!!     2)  If sufficient room is not available to hold a new agent
+!!         name, the error SPICE(TOOMANYWATCHES) is signaled.
+!!
+!!     3)  If any kernel variable in the array NAMES is already watched
+!!         by MAXAGT agents, and AGENT is not already associated with
+!!         that kernel variable, the error SPICE(AGENTLISTOVERFLOW) is
+!!         signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The kernel pool is a convenient place to store a wide
+!!     variety of data needed by routines in SPICELIB and routines
+!!     that interface with SPICELIB routines. However, when
+!!     a single name has a large quantity of data associated with
+!!     it, it becomes inefficient to constantly query the kernel
+!!     pool for values that are not updated on a frequent basis.
+!!
+!!     This entry point allows a routine to instruct the kernel pool
+!!     to post a message whenever a particular value gets updated.
+!!     In this way, a routine can quickly determine whether or not
+!!     data it requires has been updated since the last time the
+!!     data was accessed. This makes it reasonable to buffer
+!!     the data in local storage and update it only when
+!!     a variable in the kernel pool that affects this data has
+!!     been updated.
+!!
+!!     Note that SWPOOL has a side effect. Whenever a call to
+!!     SWPOOL is made, the agent specified in the calling sequence
+!!     is added to the list of agents that should be notified that
+!!     an update of its variables has occurred. In other words
+!!     the code
+!!
+!!         CALL SWPOOL ( AGENT, NNAMES, NAMES  )
+!!         CALL CVPOOL ( AGENT,         UPDATE )
+!!
+!!     will always return UPDATE as .TRUE.
+!!
+!!     This feature allows for a slightly cleaner use of SWPOOL and
+!!     CVPOOL as shown in the example below. Because SWPOOL
+!!     automatically loads AGENT into the list of agents to notify of
+!!     a kernel pool update, you do not have to include the code for
+!!     fetching the initial values of the kernel variables in the
+!!     initialization portion of a subroutine. Instead, the code for
+!!     the first fetch from the pool is the same as the code for
+!!     fetching when the pool is updated.
+!!
+!! ## Examples
+!!
+!!     Suppose that you have an application subroutine, MYTASK, that
+!!     needs to access a large data set in the kernel pool. If this
+!!     data could be kept in local storage and kernel pool queries
+!!     performed only when the data in the kernel pool has been
+!!     updated, the routine can perform much more efficiently.
+!!
+!!     The code fragment below illustrates how you might make use of this
+!!     feature.
+!!
+!!     C
+!!     C     On the first call to this routine establish those variables
+!!     C     that we will want to read from the kernel pool only when
+!!     C     new values have been established.
+!!     C
+!!           IF ( FIRST ) THEN
+!!
+!!              FIRST = .FALSE.
+!!              HAVE  = .FALSE.
+!!
+!!              CALL SWPOOL ( 'MYTASK', NNAMES, NAMES )
+!!
+!!           END IF
+!!
+!!     C
+!!     C     If any of the variables has been updated, fetch
+!!     C     it from the kernel pool. (Note that this also
+!!     C     handles getting variables for the first time.)
+!!     C     We use HAVE to indicate the fetch succeeded. If it
+!!     C     didn't, we need to attempt the fetch on the next
+!!     C     pass into this routine.
+!!     C
+!!           CALL CVPOOL ( 'MYTASK', UPDATE )
+!!
+!!           IF (  UPDATE  .OR (.NOT. HAVE ) ) THEN
+!!
+!!              CALL GDPOOL ( 'MYTASK_VAR_1', 1, M, N1, VALS1, FOUND(1) )
+!!              CALL GDPOOL ( 'MYTASK_VAR_2', 1, M, N2, VALS2, FOUND(2) )
+!!                      .
+!!                      .
+!!                      .
+!!              CALL GDPOOL ( 'MYTASK_VAR_N', 1, M, NN, VALSN, FOUND(N) )
+!!
+!!           END IF
+!!
+!!           IF ( FAILED() ) THEN
+!!                 .
+!!                 .
+!!              do something about the failure
+!!                 .
+!!                 .
+!!
+!!           ELSE
+!!
+!!              HAVE = .TRUE.
+!!
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.2.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 8.2.0, 30-JUL-2013 (BVS)
+!!
+!!        Updated to increment POOL state counter.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        This routine was re-written to work with the new
+!!        watcher system implementation. Several bugs related
+!!        to watch system overflow were fixed.
+!!
+!!        The code example was updated to handle kernel pool
+!!        fetch failure.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!!
+!!        The entry points SWPOOL and CVPOOL were added.
+!!
+!! ## Index Entries
+!!
+!!     Watch for an update to a kernel pool variable
+!!     Notify a routine of an update to a kernel pool variable
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        This routine was re-written to work with the new
+!!        watcher system implementation.
+!!
+!!        Several bugs related to watch system overflow were fixed.
+!!        Now overflow error checks are performed *before* the
+!!        watcher system is updated, so a partial update won't
+!!        occur if there's not enough room for a full update.
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The basic data structure used to maintain the list of
+!!        variable names and values was replaced with a hash table
+!!        implementation. Data and names are accessed by means
+!!        of a hash function and linked lists of pointers to existing
+!!        variable names and data values.
+!!
+!!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!!
+!!        The entry points SWPOOL (set watch on a pool variable)
+!!        and CVPOOL (check variable for update) so that routines
+!!        that buffer data stored in the kernel pool can fetch
+!!        that data only when it is updated.
+!!
+!!        In addition, the revision history was upgraded so that the
+!!        version number increases over time. This wasn't true
+!!        before. In addition some early revision data that referred to
+!!        pre-SPICELIB modifications were removed. This editing of
+!!        the version numbers makes it unlikely that anyone can track
+!!        down which previous version of this routine they have by
+!!        looking at the version number. The best way to determine
+!!        the routine you had previously is to compare the dates
+!!        stored in the Version line of the routine.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_arrays, only: bsrchc, lstltc
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -18033,305 +17833,297 @@ contains
       end procedure swpool
 
       module procedure cvpool
-
-! $ Abstract
-!
-!     Indicate whether or not any watched kernel variables that have a
-!     specified agent on their notification list have been updated.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     SYMBOLS
-!     UTILITY
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         AGENT
-!     LOGICAL               UPDATE
-!
-! $ Detailed_Input
-!
-!     AGENT    is the name of a subroutine, entry point, or significant
-!              portion of code that needs to access variables in the
-!              kernel pool. Generally this agent will buffer these
-!              variables internally and fetch them from the kernel
-!              pool only when they are updated.
-!
-! $ Detailed_Output
-!
-!     UPDATE   is a logical flag that will be set to .TRUE. if the
-!              variables in the kernel pool that are associated with
-!              AGENT have been updated since the last call to CVPOOL.
-!
-!              UPDATE will be set to .TRUE. on the first call made for
-!              the specified agent, whether or not the associated
-!              variables have been updated since the agent was placed
-!              on their notification list, as long as the agent is
-!              associated with any watched variables.
-!
-! $ Parameters
-!
-!     See the umbrella subroutine POOL.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point allows the calling program to determine
-!     whether or not variables associated with with AGENT have
-!     been updated. Making use of this entry point in conjunction
-!     with the entry point SWPOOL (set watch on pool variables)
-!     modules can buffer kernel pool variables they need and
-!     fetch values from the kernel pool only when variables have
-!     been updated.
-!
-!     Note that the call to CVPOOL has a side effect.
-!     Two consecutive calls to CVPOOL with the same
-!     AGENT will always result in the UPDATE being .FALSE.
-!     on the second call. In other words, if you embed
-!     the following two lines of code in a piece of code
-!
-!        CALL CVPOOL ( AGENT, UPDATE )
-!        CALL CVPOOL ( AGENT, UPDATE )
-!
-!     and then test UPDATE, it will be .FALSE. The idea is
-!     that once a call to CVPOOL has been made, the
-!     kernel pool has performed its duty and notified the
-!     calling routine that one of the AGENT's variables
-!     has been updated. Consequently, on the second call
-!     to CVPOOL above, the kernel pool will not have any
-!     updates to report about any of AGENT's variables.
-!
-!     If, on the other hand, you have code such as
-!
-!        CALL CVPOOL ( AGENT, UPDATE )
-!        CALL LDPOOL ( 'MYFILE.DAT'  )
-!        CALL CVPOOL ( AGENT, UPDATE )
-!
-!     the value of UPDATE will be true if one of the variables
-!     associated with AGENT was updated by the call to
-!     LDPOOL (and that variable has been specified as one
-!     to watch by call a call to SWPOOL).
-!
-!     It should also be noted that any call to CVPOOL that
-!     occurs immediately after a call to SWPOOL will result in
-!     UPDATE being returned as .TRUE. In other words, code
-!     such as shown below, will always result in the value
-!     of UPDATE as being returned .TRUE.
-!
-!        CALL SWPOOL ( AGENT, NNAMES, NAMES  )
-!        CALL CVPOOL ( AGENT,         UPDATE )
-!
-!     See the header for SWPOOL for a full discussion of this
-!     feature.
-!
-! $ Examples
-!
-!     Suppose that you have an application subroutine, MYTASK, that
-!     needs to access a large data set in the kernel pool. If this
-!     data could be kept in local storage and kernel pool queries
-!     performed only when the data in the kernel pool has been
-!     updated, the routine can perform much more efficiently.
-!
-!     The code fragment below illustrates how you might make use of this
-!     feature.
-!
-!     C
-!     C     On the first call to this routine establish those variables
-!     C     that we will want to read from the kernel pool only when
-!     C     new values have been established.
-!     C
-!           IF ( FIRST ) THEN
-!
-!              FIRST = .FALSE.
-!              HAVE  = .FALSE.
-!
-!              CALL SWPOOL ( 'MYTASK', NNAMES, NAMES )
-!
-!           END IF
-!
-!     C
-!     C     If any of the variables has been updated, fetch
-!     C     it from the kernel pool. (Note that this also
-!     C     handles getting variables for the first time.)
-!     C     We use HAVE to indicate the fetch succeeded. If it
-!     C     didn't, we need to attempt the fetch on the next
-!     C     pass into this routine.
-!     C
-!           CALL CVPOOL ( 'MYTASK', UPDATE )
-!
-!           IF (  UPDATE  .OR (.NOT. HAVE ) ) THEN
-!
-!              CALL GDPOOL ( 'MYTASK_VAR_1', 1, M, N1, VALS1, FOUND(1) )
-!              CALL GDPOOL ( 'MYTASK_VAR_2', 1, M, N2, VALS2, FOUND(2) )
-!                      .
-!                      .
-!                      .
-!              CALL GDPOOL ( 'MYTASK_VAR_N', 1, M, NN, VALSN, FOUND(N) )
-!
-!           END IF
-!
-!           IF ( FAILED() ) THEN
-!                 .
-!                 .
-!              do something about the failure
-!                 .
-!                 .
-!
-!           ELSE
-!
-!              HAVE = .TRUE.
-!
-!           END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.2, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 8.1.1, 30-JUN-2014 (NJB)
-!
-!        Description of the output variable UPDATE now
-!        mentions that the initial value of .TRUE. will
-!        be returned after an agent is associated with
-!        kernel variables.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!        The code example was updated to handle kernel pool
-!        fetch failure.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL and CVPOOL were added.
-!
-!-&
-
-! $ Index_Entries
-!
-!     Check the kernel pool for updated variables
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The basic data structure used to maintain the list of
-!        variable names and values was replaced with a hash table
-!        implementation. Data and names are accessed by means
-!        of a hash function and linked lists of pointers to existing
-!        variable names and data values.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL (set watch on a pool variable)
-!        and CVPOOL (check variable for update) so that routines
-!        that buffer data stored in the kernel pool can fetch
-!        that data only when it is updated.
-!
-!        In addition, the revision history was upgraded so that the
-!        version number increases over time. This wasn't true
-!        before. In addition some early revision data that referred to
-!        pre-SPICELIB modifications were removed. This editing of
-!        the version numbers makes it unlikely that anyone can track
-!        down which previous version of this routine they have by
-!        looking at the version number. The best way to determine
-!        the routine you had previously is to compare the dates
-!        stored in the Version line of the routine.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Indicate whether or not any watched kernel variables that have a
+!!     specified agent on their notification list have been updated.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         AGENT
+!!     LOGICAL               UPDATE
+!!
+!! ## Detailed Input
+!!
+!!     AGENT    is the name of a subroutine, entry point, or significant
+!!              portion of code that needs to access variables in the
+!!              kernel pool. Generally this agent will buffer these
+!!              variables internally and fetch them from the kernel
+!!              pool only when they are updated.
+!!
+!! ## Detailed Output
+!!
+!!     UPDATE   is a logical flag that will be set to .TRUE. if the
+!!              variables in the kernel pool that are associated with
+!!              AGENT have been updated since the last call to CVPOOL.
+!!
+!!              UPDATE will be set to .TRUE. on the first call made for
+!!              the specified agent, whether or not the associated
+!!              variables have been updated since the agent was placed
+!!              on their notification list, as long as the agent is
+!!              associated with any watched variables.
+!!
+!! ## Parameters
+!!
+!!     See the umbrella subroutine POOL.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point allows the calling program to determine
+!!     whether or not variables associated with with AGENT have
+!!     been updated. Making use of this entry point in conjunction
+!!     with the entry point SWPOOL (set watch on pool variables)
+!!     modules can buffer kernel pool variables they need and
+!!     fetch values from the kernel pool only when variables have
+!!     been updated.
+!!
+!!     Note that the call to CVPOOL has a side effect.
+!!     Two consecutive calls to CVPOOL with the same
+!!     AGENT will always result in the UPDATE being .FALSE.
+!!     on the second call. In other words, if you embed
+!!     the following two lines of code in a piece of code
+!!
+!!        CALL CVPOOL ( AGENT, UPDATE )
+!!        CALL CVPOOL ( AGENT, UPDATE )
+!!
+!!     and then test UPDATE, it will be .FALSE. The idea is
+!!     that once a call to CVPOOL has been made, the
+!!     kernel pool has performed its duty and notified the
+!!     calling routine that one of the AGENT's variables
+!!     has been updated. Consequently, on the second call
+!!     to CVPOOL above, the kernel pool will not have any
+!!     updates to report about any of AGENT's variables.
+!!
+!!     If, on the other hand, you have code such as
+!!
+!!        CALL CVPOOL ( AGENT, UPDATE )
+!!        CALL LDPOOL ( 'MYFILE.DAT'  )
+!!        CALL CVPOOL ( AGENT, UPDATE )
+!!
+!!     the value of UPDATE will be true if one of the variables
+!!     associated with AGENT was updated by the call to
+!!     LDPOOL (and that variable has been specified as one
+!!     to watch by call a call to SWPOOL).
+!!
+!!     It should also be noted that any call to CVPOOL that
+!!     occurs immediately after a call to SWPOOL will result in
+!!     UPDATE being returned as .TRUE. In other words, code
+!!     such as shown below, will always result in the value
+!!     of UPDATE as being returned .TRUE.
+!!
+!!        CALL SWPOOL ( AGENT, NNAMES, NAMES  )
+!!        CALL CVPOOL ( AGENT,         UPDATE )
+!!
+!!     See the header for SWPOOL for a full discussion of this
+!!     feature.
+!!
+!! ## Examples
+!!
+!!     Suppose that you have an application subroutine, MYTASK, that
+!!     needs to access a large data set in the kernel pool. If this
+!!     data could be kept in local storage and kernel pool queries
+!!     performed only when the data in the kernel pool has been
+!!     updated, the routine can perform much more efficiently.
+!!
+!!     The code fragment below illustrates how you might make use of this
+!!     feature.
+!!
+!!     C
+!!     C     On the first call to this routine establish those variables
+!!     C     that we will want to read from the kernel pool only when
+!!     C     new values have been established.
+!!     C
+!!           IF ( FIRST ) THEN
+!!
+!!              FIRST = .FALSE.
+!!              HAVE  = .FALSE.
+!!
+!!              CALL SWPOOL ( 'MYTASK', NNAMES, NAMES )
+!!
+!!           END IF
+!!
+!!     C
+!!     C     If any of the variables has been updated, fetch
+!!     C     it from the kernel pool. (Note that this also
+!!     C     handles getting variables for the first time.)
+!!     C     We use HAVE to indicate the fetch succeeded. If it
+!!     C     didn't, we need to attempt the fetch on the next
+!!     C     pass into this routine.
+!!     C
+!!           CALL CVPOOL ( 'MYTASK', UPDATE )
+!!
+!!           IF (  UPDATE  .OR (.NOT. HAVE ) ) THEN
+!!
+!!              CALL GDPOOL ( 'MYTASK_VAR_1', 1, M, N1, VALS1, FOUND(1) )
+!!              CALL GDPOOL ( 'MYTASK_VAR_2', 1, M, N2, VALS2, FOUND(2) )
+!!                      .
+!!                      .
+!!                      .
+!!              CALL GDPOOL ( 'MYTASK_VAR_N', 1, M, NN, VALSN, FOUND(N) )
+!!
+!!           END IF
+!!
+!!           IF ( FAILED() ) THEN
+!!                 .
+!!                 .
+!!              do something about the failure
+!!                 .
+!!                 .
+!!
+!!           ELSE
+!!
+!!              HAVE = .TRUE.
+!!
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.1.2, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 8.1.1, 30-JUN-2014 (NJB)
+!!
+!!        Description of the output variable UPDATE now
+!!        mentions that the initial value of .TRUE. will
+!!        be returned after an agent is associated with
+!!        kernel variables.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!        The code example was updated to handle kernel pool
+!!        fetch failure.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!!
+!!        The entry points SWPOOL and CVPOOL were added.
+!!
+!! ## Index Entries
+!!
+!!     Check the kernel pool for updated variables
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The basic data structure used to maintain the list of
+!!        variable names and values was replaced with a hash table
+!!        implementation. Data and names are accessed by means
+!!        of a hash function and linked lists of pointers to existing
+!!        variable names and data values.
+!!
+!!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!!
+!!        The entry points SWPOOL (set watch on a pool variable)
+!!        and CVPOOL (check variable for update) so that routines
+!!        that buffer data stored in the kernel pool can fetch
+!!        that data only when it is updated.
+!!
+!!        In addition, the revision history was upgraded so that the
+!!        version number increases over time. This wasn't true
+!!        before. In addition some early revision data that referred to
+!!        pre-SPICELIB modifications were removed. This editing of
+!!        the version numbers makes it unlikely that anyone can track
+!!        down which previous version of this routine they have by
+!!        looking at the version number. The best way to determine
+!!        the routine you had previously is to compare the dates
+!!        stored in the Version line of the routine.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -18478,237 +18270,231 @@ contains
       end procedure cvpool
 
       module procedure gcpool
-
-! $ Abstract
-!
-!     Return the character value of a kernel variable from the
-!     kernel pool.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               START
-!     INTEGER               ROOM
-!     INTEGER               N
-!     CHARACTER*(*)         CVALS    ( * )
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the variable whose values are to be
-!              returned. If the variable is not in the pool with
-!              character type, FOUND will be .FALSE.
-!
-!     START    is the index of the first component of NAME to return.
-!              If START is less than 1, it will be treated as 1. If
-!              START is greater than the total number of components
-!              available for NAME, no values will be returned (N will
-!              be set to zero). However, FOUND will still be set to
-!              .TRUE.
-!
-!     ROOM     is the maximum number of components that should be
-!              returned for this variable. (Usually it is the amount
-!              of ROOM available in the array CVALS). If ROOM is
-!              less than 1 the error SPICE(BADARRAYSIZE) will be
-!              signaled.
-!
-! $ Detailed_Output
-!
-!     N        is the number of values associated with NAME that
-!              are returned. It will always be less than or equal
-!              to ROOM.
-!
-!              If NAME is not in the pool with character type, no
-!              value is given to N.
-!
-!     CVALS    is the array of values associated with NAME.
-!              If NAME is not in the pool with character type, no
-!              values are given to the elements of CVALS.
-!
-!              If the length of CVALS is less than the length of
-!              strings stored in the kernel pool (see MAXCHR) the
-!              values returned will be truncated on the right.
-!
-!     FOUND    is .TRUE. if the variable is in the pool and has
-!              character type, .FALSE. if it is not.
-!
-! $ Parameters
-!
-!     MAXCHR   is the maximum number of characters that can be
-!              stored in a component of a string valued kernel
-!              variable. This value is currently 80.
-!
-! $ Exceptions
-!
-!     1)  If the value of ROOM is less than one, the error
-!         SPICE(BADARRAYSIZE) is signaled.
-!
-!     2)  If CVALS has declared length less than the size of a
-!         string to be returned, the value will be truncated on
-!         the right. See MAXCHR for the maximum stored size of
-!         string variables.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine provides the user interface to retrieving
-!     character data stored in the kernel pool. This interface
-!     allows you to retrieve the data associated with a variable
-!     in multiple accesses. Under some circumstances this alleviates
-!     the problem of having to know in advance the maximum amount
-!     of space needed to accommodate all kernel variables.
-!
-!     However, this method of access does come with a price. It is
-!     always more efficient to retrieve all of the data associated
-!     with a kernel pool data in one call than it is to retrieve
-!     it in sections.
-!
-!     See also the entry points GDPOOL and GIPOOL.
-!
-! $ Examples
-!
-!     The following code fragment demonstrates how the data stored
-!     in a kernel pool variable can be retrieved in pieces.
-!
-!     First we need some declarations.
-!
-!        INTEGER               ROOM
-!        PARAMETER           ( ROOM = 3 )
-!
-!        CHARACTER*(8)         VARNAM
-!        CHARACTER*(3)         INDENT
-!        INTEGER               START
-!        INTEGER               N
-!        LOGICAL               FOUND
-!        CHARACTER*(80)        CVALS(ROOM)
-!
-!     Next load the data in the file 'typical.ker' into the
-!     kernel pool.
-!
-!        CALL LDPOOL ( 'typical.ker' )
-!
-!     Next we shall print the values stored for the kernel pool
-!     variable 'MYDATA'
-!
-!        VARNAM = 'MYDATA'
-!        INDENT = ' '
-!        START  =  1
-!
-!        CALL GCPOOL ( VARNAM, START, ROOM, N, CVALS, FOUND )
-!
-!        IF ( .NOT. FOUND )
-!           WRITE (*,*) 'There is no string data available for MYDATA.'
-!        ELSE
-!
-!           WRITE (*,*) 'Values for MYDATA.'
-!           WRITE (*,*)
-!
-!           DO I = 1, N
-!              WRITE (*,*) INDENT, CVALS(I)
-!           END DO
-!
-!           DO WHILE ( N .EQ. ROOM )
-!
-!              START = START + N
-!              CALL GCPOOL ( VARNAM, START, ROOM, N, CVALS, FOUND )
-!
-!              DO I = 1, N
-!                 WRITE (*,*) INDENT, CVALS(I)
-!              END DO
-!
-!           END DO
-!
-!        END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Added MAXCHR
-!        description in $Parameters.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
-!
-!        Corrected an in-line comment relating to finding the
-!        head node of the conflict resolution list for NAME.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!-&
-
-! $ Index_Entries
-!
-!     RETURN the character value of a pooled kernel variable
-!     RETURN the string value of a pooled kernel variable
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the character value of a kernel variable from the
+!!     kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               START
+!!     INTEGER               ROOM
+!!     INTEGER               N
+!!     CHARACTER*(*)         CVALS    ( * )
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the variable whose values are to be
+!!              returned. If the variable is not in the pool with
+!!              character type, FOUND will be .FALSE.
+!!
+!!     START    is the index of the first component of NAME to return.
+!!              If START is less than 1, it will be treated as 1. If
+!!              START is greater than the total number of components
+!!              available for NAME, no values will be returned (N will
+!!              be set to zero). However, FOUND will still be set to
+!!              .TRUE.
+!!
+!!     ROOM     is the maximum number of components that should be
+!!              returned for this variable. (Usually it is the amount
+!!              of ROOM available in the array CVALS). If ROOM is
+!!              less than 1 the error SPICE(BADARRAYSIZE) will be
+!!              signaled.
+!!
+!! ## Detailed Output
+!!
+!!     N        is the number of values associated with NAME that
+!!              are returned. It will always be less than or equal
+!!              to ROOM.
+!!
+!!              If NAME is not in the pool with character type, no
+!!              value is given to N.
+!!
+!!     CVALS    is the array of values associated with NAME.
+!!              If NAME is not in the pool with character type, no
+!!              values are given to the elements of CVALS.
+!!
+!!              If the length of CVALS is less than the length of
+!!              strings stored in the kernel pool (see MAXCHR) the
+!!              values returned will be truncated on the right.
+!!
+!!     FOUND    is .TRUE. if the variable is in the pool and has
+!!              character type, .FALSE. if it is not.
+!!
+!! ## Parameters
+!!
+!!     MAXCHR   is the maximum number of characters that can be
+!!              stored in a component of a string valued kernel
+!!              variable. This value is currently 80.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the value of ROOM is less than one, the error
+!!         SPICE(BADARRAYSIZE) is signaled.
+!!
+!!     2)  If CVALS has declared length less than the size of a
+!!         string to be returned, the value will be truncated on
+!!         the right. See MAXCHR for the maximum stored size of
+!!         string variables.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine provides the user interface to retrieving
+!!     character data stored in the kernel pool. This interface
+!!     allows you to retrieve the data associated with a variable
+!!     in multiple accesses. Under some circumstances this alleviates
+!!     the problem of having to know in advance the maximum amount
+!!     of space needed to accommodate all kernel variables.
+!!
+!!     However, this method of access does come with a price. It is
+!!     always more efficient to retrieve all of the data associated
+!!     with a kernel pool data in one call than it is to retrieve
+!!     it in sections.
+!!
+!!     See also the entry points GDPOOL and GIPOOL.
+!!
+!! ## Examples
+!!
+!!     The following code fragment demonstrates how the data stored
+!!     in a kernel pool variable can be retrieved in pieces.
+!!
+!!     First we need some declarations.
+!!
+!!        INTEGER               ROOM
+!!        PARAMETER           ( ROOM = 3 )
+!!
+!!        CHARACTER*(8)         VARNAM
+!!        CHARACTER*(3)         INDENT
+!!        INTEGER               START
+!!        INTEGER               N
+!!        LOGICAL               FOUND
+!!        CHARACTER*(80)        CVALS(ROOM)
+!!
+!!     Next load the data in the file 'typical.ker' into the
+!!     kernel pool.
+!!
+!!        CALL LDPOOL ( 'typical.ker' )
+!!
+!!     Next we shall print the values stored for the kernel pool
+!!     variable 'MYDATA'
+!!
+!!        VARNAM = 'MYDATA'
+!!        INDENT = ' '
+!!        START  =  1
+!!
+!!        CALL GCPOOL ( VARNAM, START, ROOM, N, CVALS, FOUND )
+!!
+!!        IF ( .NOT. FOUND )
+!!           WRITE (*,*) 'There is no string data available for MYDATA.'
+!!        ELSE
+!!
+!!           WRITE (*,*) 'Values for MYDATA.'
+!!           WRITE (*,*)
+!!
+!!           DO I = 1, N
+!!              WRITE (*,*) INDENT, CVALS(I)
+!!           END DO
+!!
+!!           DO WHILE ( N .EQ. ROOM )
+!!
+!!              START = START + N
+!!              CALL GCPOOL ( VARNAM, START, ROOM, N, CVALS, FOUND )
+!!
+!!              DO I = 1, N
+!!                 WRITE (*,*) INDENT, CVALS(I)
+!!              END DO
+!!
+!!           END DO
+!!
+!!        END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Added MAXCHR
+!!        description in $Parameters.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
+!!
+!!        Corrected an in-line comment relating to finding the
+!!        head node of the conflict resolution list for NAME.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!!        to the routine.
+!!
+!! ## Index Entries
+!!
+!!     RETURN the character value of a pooled kernel variable
+!!     RETURN the string value of a pooled kernel variable
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: rtrim
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -18934,228 +18720,222 @@ contains
       end procedure gcpool
 
       module procedure gdpool
-
-! $ Abstract
-!
-!     Return the d.p. value of a kernel variable from the kernel pool.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               START
-!     INTEGER               ROOM
-!     INTEGER               N
-!     DOUBLE PRECISION      VALUES   ( * )
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the variable whose values are to be
-!              returned. If the variable is not in the pool with
-!              numeric type, FOUND will be .FALSE.
-!
-!     START    is the index of the first component of NAME to return.
-!              If START is less than 1, it will be treated as 1. If
-!              START is greater than the total number of components
-!              available for NAME, no values will be returned (N will
-!              be set to zero). However, FOUND will still be set to
-!              .TRUE.
-!
-!     ROOM     is the maximum number of components that should be
-!              returned for this variable. (Usually it is the amount
-!              of ROOM available in the array VALUES). If ROOM is
-!              less than 1 the error SPICE(BADARRAYSIZE) will be
-!              signaled.
-!
-! $ Detailed_Output
-!
-!     N        is the number of values associated with NAME that
-!              are returned. It will always be less than or equal
-!              to ROOM.
-!
-!              If NAME is not in the pool with numeric type, no value
-!              is given to N.
-!
-!     VALUES   is the array of values associated with NAME.
-!              If NAME is not in the pool with numeric type, no
-!              values are given to the elements of VALUES.
-!
-!     FOUND    is .TRUE. if the variable is in the pool and has numeric
-!              type, .FALSE. if it is not.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the value of ROOM is less than one, the error
-!         SPICE(BADARRAYSIZE) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine provides the user interface to retrieving
-!     numeric data stored in the kernel pool. This interface
-!     allows you to retrieve the data associated with a variable
-!     in multiple accesses. Under some circumstances this alleviates
-!     the problem of having to know in advance the maximum amount
-!     of space needed to accommodate all kernel variables.
-!
-!     However, this method of access does come with a price. It is
-!     always more efficient to retrieve all of the data associated
-!     with a kernel pool data in one call than it is to retrieve
-!     it in sections.
-!
-!     This routine should be used in place of RTPOOL when possible
-!     as it avoids errors associated with writing data past the
-!     end of an array.
-!
-!     See also the entry points GIPOOL and GCPOOL.
-!
-! $ Examples
-!
-!     The following code fragment demonstrates how the data stored
-!     in a kernel pool variable can be retrieved in pieces.
-!
-!     First we need some declarations.
-!
-!        INTEGER               ROOM
-!        PARAMETER           ( ROOM = 3 )
-!
-!        CHARACTER*(8)         VARNAM
-!        CHARACTER*(3)         INDENT
-!        INTEGER               START
-!        INTEGER               N
-!        LOGICAL               FOUND
-!        DOUBLE PRECISION      VALUES(ROOM)
-!
-!     Next load the data in the file 'typical.ker' into the
-!     kernel pool.
-!
-!        CALL LDPOOL ( 'typical.ker' )
-!
-!     Next we shall print the values stored for the kernel pool
-!     variable 'MYDATA'
-!
-!        VARNAM = 'MYDATA'
-!        INDENT = ' '
-!        START  =  1
-!
-!        CALL GDPOOL ( VARNAM, START, ROOM, N, VALUES, FOUND )
-!
-!        IF ( .NOT. FOUND )
-!           WRITE (*,*) 'There is no numeric data available for MYDATA.'
-!        ELSE
-!
-!           WRITE (*,*) 'Values for MYDATA.'
-!           WRITE (*,*)
-!
-!           DO I = 1, N
-!              WRITE (*,*) INDENT, VALUES(I)
-!           END DO
-!
-!           DO WHILE ( N .EQ. ROOM )
-!
-!              START = START + N
-!              CALL GDPOOL ( VARNAM, START, ROOM, N, VALUES, FOUND )
-!
-!              DO I = 1, N
-!                 WRITE (*,*) INDENT, VALUES(I)
-!              END DO
-!
-!           END DO
-!
-!        END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
-!
-!        Corrected an in-line comment relating to finding the
-!        head node of the conflict resolution list for NAME.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!-&
-
-! $ Index_Entries
-!
-!     RETURN the d.p. value of a pooled kernel variable
-!     RETURN the numeric value of a pooled kernel variable
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the d.p. value of a kernel variable from the kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               START
+!!     INTEGER               ROOM
+!!     INTEGER               N
+!!     DOUBLE PRECISION      VALUES   ( * )
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the variable whose values are to be
+!!              returned. If the variable is not in the pool with
+!!              numeric type, FOUND will be .FALSE.
+!!
+!!     START    is the index of the first component of NAME to return.
+!!              If START is less than 1, it will be treated as 1. If
+!!              START is greater than the total number of components
+!!              available for NAME, no values will be returned (N will
+!!              be set to zero). However, FOUND will still be set to
+!!              .TRUE.
+!!
+!!     ROOM     is the maximum number of components that should be
+!!              returned for this variable. (Usually it is the amount
+!!              of ROOM available in the array VALUES). If ROOM is
+!!              less than 1 the error SPICE(BADARRAYSIZE) will be
+!!              signaled.
+!!
+!! ## Detailed Output
+!!
+!!     N        is the number of values associated with NAME that
+!!              are returned. It will always be less than or equal
+!!              to ROOM.
+!!
+!!              If NAME is not in the pool with numeric type, no value
+!!              is given to N.
+!!
+!!     VALUES   is the array of values associated with NAME.
+!!              If NAME is not in the pool with numeric type, no
+!!              values are given to the elements of VALUES.
+!!
+!!     FOUND    is .TRUE. if the variable is in the pool and has numeric
+!!              type, .FALSE. if it is not.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the value of ROOM is less than one, the error
+!!         SPICE(BADARRAYSIZE) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine provides the user interface to retrieving
+!!     numeric data stored in the kernel pool. This interface
+!!     allows you to retrieve the data associated with a variable
+!!     in multiple accesses. Under some circumstances this alleviates
+!!     the problem of having to know in advance the maximum amount
+!!     of space needed to accommodate all kernel variables.
+!!
+!!     However, this method of access does come with a price. It is
+!!     always more efficient to retrieve all of the data associated
+!!     with a kernel pool data in one call than it is to retrieve
+!!     it in sections.
+!!
+!!     This routine should be used in place of RTPOOL when possible
+!!     as it avoids errors associated with writing data past the
+!!     end of an array.
+!!
+!!     See also the entry points GIPOOL and GCPOOL.
+!!
+!! ## Examples
+!!
+!!     The following code fragment demonstrates how the data stored
+!!     in a kernel pool variable can be retrieved in pieces.
+!!
+!!     First we need some declarations.
+!!
+!!        INTEGER               ROOM
+!!        PARAMETER           ( ROOM = 3 )
+!!
+!!        CHARACTER*(8)         VARNAM
+!!        CHARACTER*(3)         INDENT
+!!        INTEGER               START
+!!        INTEGER               N
+!!        LOGICAL               FOUND
+!!        DOUBLE PRECISION      VALUES(ROOM)
+!!
+!!     Next load the data in the file 'typical.ker' into the
+!!     kernel pool.
+!!
+!!        CALL LDPOOL ( 'typical.ker' )
+!!
+!!     Next we shall print the values stored for the kernel pool
+!!     variable 'MYDATA'
+!!
+!!        VARNAM = 'MYDATA'
+!!        INDENT = ' '
+!!        START  =  1
+!!
+!!        CALL GDPOOL ( VARNAM, START, ROOM, N, VALUES, FOUND )
+!!
+!!        IF ( .NOT. FOUND )
+!!           WRITE (*,*) 'There is no numeric data available for MYDATA.'
+!!        ELSE
+!!
+!!           WRITE (*,*) 'Values for MYDATA.'
+!!           WRITE (*,*)
+!!
+!!           DO I = 1, N
+!!              WRITE (*,*) INDENT, VALUES(I)
+!!           END DO
+!!
+!!           DO WHILE ( N .EQ. ROOM )
+!!
+!!              START = START + N
+!!              CALL GDPOOL ( VARNAM, START, ROOM, N, VALUES, FOUND )
+!!
+!!              DO I = 1, N
+!!                 WRITE (*,*) INDENT, VALUES(I)
+!!              END DO
+!!
+!!           END DO
+!!
+!!        END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
+!!
+!!        Corrected an in-line comment relating to finding the
+!!        head node of the conflict resolution list for NAME.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!!        to the routine.
+!!
+!! ## Index Entries
+!!
+!!     RETURN the d.p. value of a pooled kernel variable
+!!     RETURN the numeric value of a pooled kernel variable
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: rtrim
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -19381,235 +19161,229 @@ contains
       end procedure gdpool
 
       module procedure gipool
-
-! $ Abstract
-!
-!     Return the integer value of a kernel variable from the
-!     kernel pool.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               START
-!     INTEGER               ROOM
-!     INTEGER               N
-!     INTEGER               IVALS    ( * )
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the variable whose values are to be
-!              returned. If the variable is not in the pool with
-!              numeric type, FOUND will be .FALSE.
-!
-!     START    is the index of the first component of NAME to return.
-!              If START is less than 1, it will be treated as 1. If
-!              START is greater than the total number of components
-!              available for NAME, no values will be returned (N will
-!              be set to zero). However, FOUND will still be set to
-!              .TRUE.
-!
-!     ROOM     is the maximum number of components that should be
-!              returned for this variable. (Usually it is the amount
-!              of ROOM available in the array IVALS). If ROOM is
-!              less than 1 the error SPICE(BADARRAYSIZE) will be
-!              signaled.
-!
-! $ Detailed_Output
-!
-!     N        is the number of values associated with NAME that
-!              are returned. It will always be less than or equal
-!              to ROOM.
-!
-!              If NAME is not in the pool with numeric type, no value
-!              is given to N.
-!
-!     IVALS    is the array of values associated with NAME. Any
-!              numeric value having non-zero fractional part is
-!              rounded to the closest integer. If NAME is not in the
-!              pool or does not have numeric type, no values are
-!              assigned to the elements of IVALS.
-!
-!     FOUND    is .TRUE. if the variable is in the pool and has numeric
-!              type, .FALSE. if it is not.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the value of ROOM is less than one, the error
-!         SPICE(BADARRAYSIZE) is signaled.
-!
-!     2)  If a value requested is outside the valid range
-!         of integers, the error SPICE(INTOUTOFRANGE) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine provides the user interface for retrieving
-!     integer data stored in the kernel pool. This interface
-!     allows you to retrieve the data associated with a variable
-!     in multiple accesses. Under some circumstances this alleviates
-!     the problem of having to know in advance the maximum amount
-!     of space needed to accommodate all kernel variables.
-!
-!     However, this method of access does come with a price. It is
-!     always more efficient to retrieve all of the data associated
-!     with a kernel pool data in one call than it is to retrieve
-!     it in sections.
-!
-!     See also the entry points GDPOOL and GCPOOL.
-!
-! $ Examples
-!
-!     The following code fragment demonstrates how the data stored
-!     in a kernel pool variable can be retrieved in pieces.
-!
-!     First we need some declarations.
-!
-!        INTEGER               ROOM
-!        PARAMETER           ( ROOM = 3 )
-!
-!        CHARACTER*(8)         VARNAM
-!        CHARACTER*(3)         INDENT
-!        INTEGER               START
-!        INTEGER               N
-!        LOGICAL               FOUND
-!        INTEGER               IVALS(ROOM)
-!
-!     Next load the data in the file 'typical.ker' into the
-!     kernel pool.
-!
-!        CALL LDPOOL ( 'typical.ker' )
-!
-!     Next we shall print the values stored for the kernel pool
-!     variable 'MYDATA'
-!
-!        VARNAM = 'MYDATA'
-!        INDENT = ' '
-!        START  =  1
-!
-!        CALL GIPOOL ( VARNAM, START, ROOM, N, IVALS, FOUND )
-!
-!        IF ( .NOT. FOUND )
-!           WRITE (*,*) 'There is no numeric data available for MYDATA.'
-!        ELSE
-!
-!           WRITE (*,*) 'Values for MYDATA.'
-!           WRITE (*,*)
-!
-!           DO I = 1, N
-!              WRITE (*,*) INDENT, IVALS(I)
-!           END DO
-!
-!           DO WHILE ( N .EQ. ROOM )
-!
-!              START = START + N
-!              CALL GIPOOL ( VARNAM, START, ROOM, N, IVALS, FOUND )
-!
-!              DO I = 1, N
-!                 WRITE (*,*) INDENT, IVALS(I)
-!              END DO
-!
-!           END DO
-!
-!        END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.2, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 8.1.1, 14-JUL-2014 (NJB)
-!
-!        Updated description of IVALS in $Detailed_Output
-!        header section.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
-!
-!        Corrected an in-line comment relating to finding the
-!        head node of the conflict resolution list for NAME.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!-&
-
-! $ Index_Entries
-!
-!     RETURN the integer value of a pooled kernel variable
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the integer value of a kernel variable from the
+!!     kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               START
+!!     INTEGER               ROOM
+!!     INTEGER               N
+!!     INTEGER               IVALS    ( * )
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the variable whose values are to be
+!!              returned. If the variable is not in the pool with
+!!              numeric type, FOUND will be .FALSE.
+!!
+!!     START    is the index of the first component of NAME to return.
+!!              If START is less than 1, it will be treated as 1. If
+!!              START is greater than the total number of components
+!!              available for NAME, no values will be returned (N will
+!!              be set to zero). However, FOUND will still be set to
+!!              .TRUE.
+!!
+!!     ROOM     is the maximum number of components that should be
+!!              returned for this variable. (Usually it is the amount
+!!              of ROOM available in the array IVALS). If ROOM is
+!!              less than 1 the error SPICE(BADARRAYSIZE) will be
+!!              signaled.
+!!
+!! ## Detailed Output
+!!
+!!     N        is the number of values associated with NAME that
+!!              are returned. It will always be less than or equal
+!!              to ROOM.
+!!
+!!              If NAME is not in the pool with numeric type, no value
+!!              is given to N.
+!!
+!!     IVALS    is the array of values associated with NAME. Any
+!!              numeric value having non-zero fractional part is
+!!              rounded to the closest integer. If NAME is not in the
+!!              pool or does not have numeric type, no values are
+!!              assigned to the elements of IVALS.
+!!
+!!     FOUND    is .TRUE. if the variable is in the pool and has numeric
+!!              type, .FALSE. if it is not.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the value of ROOM is less than one, the error
+!!         SPICE(BADARRAYSIZE) is signaled.
+!!
+!!     2)  If a value requested is outside the valid range
+!!         of integers, the error SPICE(INTOUTOFRANGE) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine provides the user interface for retrieving
+!!     integer data stored in the kernel pool. This interface
+!!     allows you to retrieve the data associated with a variable
+!!     in multiple accesses. Under some circumstances this alleviates
+!!     the problem of having to know in advance the maximum amount
+!!     of space needed to accommodate all kernel variables.
+!!
+!!     However, this method of access does come with a price. It is
+!!     always more efficient to retrieve all of the data associated
+!!     with a kernel pool data in one call than it is to retrieve
+!!     it in sections.
+!!
+!!     See also the entry points GDPOOL and GCPOOL.
+!!
+!! ## Examples
+!!
+!!     The following code fragment demonstrates how the data stored
+!!     in a kernel pool variable can be retrieved in pieces.
+!!
+!!     First we need some declarations.
+!!
+!!        INTEGER               ROOM
+!!        PARAMETER           ( ROOM = 3 )
+!!
+!!        CHARACTER*(8)         VARNAM
+!!        CHARACTER*(3)         INDENT
+!!        INTEGER               START
+!!        INTEGER               N
+!!        LOGICAL               FOUND
+!!        INTEGER               IVALS(ROOM)
+!!
+!!     Next load the data in the file 'typical.ker' into the
+!!     kernel pool.
+!!
+!!        CALL LDPOOL ( 'typical.ker' )
+!!
+!!     Next we shall print the values stored for the kernel pool
+!!     variable 'MYDATA'
+!!
+!!        VARNAM = 'MYDATA'
+!!        INDENT = ' '
+!!        START  =  1
+!!
+!!        CALL GIPOOL ( VARNAM, START, ROOM, N, IVALS, FOUND )
+!!
+!!        IF ( .NOT. FOUND )
+!!           WRITE (*,*) 'There is no numeric data available for MYDATA.'
+!!        ELSE
+!!
+!!           WRITE (*,*) 'Values for MYDATA.'
+!!           WRITE (*,*)
+!!
+!!           DO I = 1, N
+!!              WRITE (*,*) INDENT, IVALS(I)
+!!           END DO
+!!
+!!           DO WHILE ( N .EQ. ROOM )
+!!
+!!              START = START + N
+!!              CALL GIPOOL ( VARNAM, START, ROOM, N, IVALS, FOUND )
+!!
+!!              DO I = 1, N
+!!                 WRITE (*,*) INDENT, IVALS(I)
+!!              END DO
+!!
+!!           END DO
+!!
+!!        END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.1.2, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 8.1.1, 14-JUL-2014 (NJB)
+!!
+!!        Updated description of IVALS in $Detailed_Output
+!!        header section.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
+!!
+!!        Corrected an in-line comment relating to finding the
+!!        head node of the conflict resolution list for NAME.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!!        to the routine.
+!!
+!! ## Index Entries
+!!
+!!     RETURN the integer value of a pooled kernel variable
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax, intmin
       use pepper_strings, only: rtrim
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -19857,239 +19631,233 @@ contains
       end procedure gipool
 
       module procedure dtpool
-
-! $ Abstract
-!
-!     Return the data about a kernel pool variable.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     LOGICAL               FOUND
-!     INTEGER               N
-!     CHARACTER*(*)         TYPE
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the variable whose values are to be
-!              returned.
-!
-! $ Detailed_Output
-!
-!     FOUND    is .TRUE. if the variable is in the pool .FALSE. if it
-!              is not.
-!
-!     N        is the number of values associated with NAME.
-!              If NAME is not present in the pool N will be returned
-!              with the value 0.
-!
-!     TYPE     is the type of the variable associated with NAME.
-!
-!                  'C' if the data is character data
-!                  'N' if the data is numeric.
-!                  'X' if there is no variable NAME in the pool.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If the name requested is not in the kernel pool, FOUND
-!         will be set to .FALSE., N to zero and TYPE to 'X'.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine allows you to determine whether or not a kernel
-!     pool variable is present and to determine its size and type
-!     if it is.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) The following program demonstrates how to determine the
-!        properties of a stored kernel variable. The program prompts
-!        for text kernel name and for the name of a kernel variable.
-!        If the variable is present in the kernel pool, the dimension
-!        and type of the variable are displayed.
-!
-!        Example code begins here.
-!
-!              PROGRAM DTPOOL_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               RTRIM
-!
-!        C
-!        C     Local constants
-!        C
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 256 )
-!
-!              INTEGER               KVNMLN
-!              PARAMETER           ( KVNMLN = 33 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    FNAME
-!              CHARACTER*(KVNMLN)    VARNAM
-!              CHARACTER*(1)         VTYPE
-!
-!              INTEGER               N
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for the name of a text-kernel file.
-!        C
-!              CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
-!
-!        C
-!        C     Load the kernel.
-!        C
-!              CALL FURNSH ( FNAME )
-!
-!              CALL PROMPT ( 'Enter name of kernel variable > ',
-!             .               VARNAM )
-!
-!              CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
-!
-!              IF ( FOUND ) THEN
-!                 WRITE(*,*) ' '
-!                 WRITE(*,*) 'Properties of variable ',
-!             .               VARNAM(:RTRIM(VARNAM)), ':'
-!                 WRITE(*,*) ' '
-!                 WRITE(*,*) '   Size:   ', N
-!
-!                 IF ( VTYPE .EQ. 'C' ) THEN
-!
-!                    WRITE(*,*) '   Type:   Character'
-!
-!                 ELSE
-!
-!                    WRITE(*,*) '   Type:   Numeric'
-!                 END IF
-!
-!              ELSE
-!
-!                 WRITE(*,*) VARNAM,
-!             .              ' is not present in the kernel pool.'
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the FK file named cas_v40.tf to ask for the
-!        variable 'FRAME_-82104_NAME', the output was:
-!
-!        Enter text-kernel name        > cas_v40.tf
-!        Enter name of kernel variable > FRAME_-82104_NAME
-!
-!         Properties of variable FRAME_-82104_NAME:
-!
-!            Size:              1
-!            Type:   Character
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete code example.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
-!
-!        Corrected an in-line comment relating to finding the
-!        head node of the conflict resolution list for NAME.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!-&
-
-! $ Index_Entries
-!
-!     RETURN summary information about a kernel pool variable
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the data about a kernel pool variable.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     LOGICAL               FOUND
+!!     INTEGER               N
+!!     CHARACTER*(*)         TYPE
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the variable whose values are to be
+!!              returned.
+!!
+!! ## Detailed Output
+!!
+!!     FOUND    is .TRUE. if the variable is in the pool .FALSE. if it
+!!              is not.
+!!
+!!     N        is the number of values associated with NAME.
+!!              If NAME is not present in the pool N will be returned
+!!              with the value 0.
+!!
+!!     TYPE     is the type of the variable associated with NAME.
+!!
+!!                  'C' if the data is character data
+!!                  'N' if the data is numeric.
+!!                  'X' if there is no variable NAME in the pool.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1)  If the name requested is not in the kernel pool, FOUND
+!!         will be set to .FALSE., N to zero and TYPE to 'X'.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine allows you to determine whether or not a kernel
+!!     pool variable is present and to determine its size and type
+!!     if it is.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) The following program demonstrates how to determine the
+!!        properties of a stored kernel variable. The program prompts
+!!        for text kernel name and for the name of a kernel variable.
+!!        If the variable is present in the kernel pool, the dimension
+!!        and type of the variable are displayed.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM DTPOOL_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              INTEGER               RTRIM
+!!
+!!        C
+!!        C     Local constants
+!!        C
+!!              INTEGER               FILSIZ
+!!              PARAMETER           ( FILSIZ = 256 )
+!!
+!!              INTEGER               KVNMLN
+!!              PARAMETER           ( KVNMLN = 33 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(FILSIZ)    FNAME
+!!              CHARACTER*(KVNMLN)    VARNAM
+!!              CHARACTER*(1)         VTYPE
+!!
+!!              INTEGER               N
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Prompt for the name of a text-kernel file.
+!!        C
+!!              CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
+!!
+!!        C
+!!        C     Load the kernel.
+!!        C
+!!              CALL FURNSH ( FNAME )
+!!
+!!              CALL PROMPT ( 'Enter name of kernel variable > ',
+!!             .               VARNAM )
+!!
+!!              CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
+!!
+!!              IF ( FOUND ) THEN
+!!                 WRITE(*,*) ' '
+!!                 WRITE(*,*) 'Properties of variable ',
+!!             .               VARNAM(:RTRIM(VARNAM)), ':'
+!!                 WRITE(*,*) ' '
+!!                 WRITE(*,*) '   Size:   ', N
+!!
+!!                 IF ( VTYPE .EQ. 'C' ) THEN
+!!
+!!                    WRITE(*,*) '   Type:   Character'
+!!
+!!                 ELSE
+!!
+!!                    WRITE(*,*) '   Type:   Numeric'
+!!                 END IF
+!!
+!!              ELSE
+!!
+!!                 WRITE(*,*) VARNAM,
+!!             .              ' is not present in the kernel pool.'
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, using the FK file named cas_v40.tf to ask for the
+!!        variable 'FRAME_-82104_NAME', the output was:
+!!
+!!        Enter text-kernel name        > cas_v40.tf
+!!        Enter name of kernel variable > FRAME_-82104_NAME
+!!
+!!         Properties of variable FRAME_-82104_NAME:
+!!
+!!            Size:              1
+!!            Type:   Character
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!        Added complete code example.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.1, 22-DEC-2004 (NJB)
+!!
+!!        Corrected an in-line comment relating to finding the
+!!        head node of the conflict resolution list for NAME.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!!
+!!        The implementation of the kernel pool was completely redone
+!!        to improve performance in loading and fetching data. In
+!!        addition the pool was upgraded so that variables may be
+!!        either string or numeric valued.
+!!
+!!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!!        to the routine.
+!!
+!! ## Index Entries
+!!
+!!     RETURN summary information about a kernel pool variable
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: rtrim
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -20292,245 +20060,239 @@ contains
       end procedure dtpool
 
       module procedure pcpool
-
-! $ Abstract
-!
-!     Provide toolkit programmers a method for programmatically
-!     inserting character data into the kernel pool.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     POOL
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               N
-!     CHARACTER*(*)         CVALS ( * )
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the kernel pool variable to associate
-!              with the values supplied in the array CVALS
-!
-!     N        is the number of values to insert into the kernel pool.
-!
-!     CVALS    is an array of strings to insert into the kernel
-!              pool.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If NAME is already present in the kernel pool and there
-!         is sufficient room to hold all values supplied in CVALS,
-!         the old values associated with NAME will be overwritten.
-!
-!     2)  If there is not sufficient room to insert a new variable into
-!         the kernel pool and NAME is not already present in the kernel
-!         pool, an error is signaled by a routine in the call tree of
-!         this routine.
-!
-!     3)  If there is not sufficient room to insert the values
-!         associated with NAME, the error SPICE(NOMOREROOM) is signaled.
-!
-!     4)  If the kernel pool variable name length exceeds its maximum
-!         allowed length (see Kernel Required Reading, kernel.req), the
-!         error SPICE(BADVARNAME) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point provides a programmatic interface for inserting
-!     character data into the SPICE kernel pool without reading an
-!     external file.
-!
-! $ Examples
-!
-!     Suppose that you wish to supply default values for a program
-!     so that it may function even in the absence of the appropriate
-!     text kernels. You can use the entry points PCPOOL, PDPOOL
-!     and PIPOOL to initialize the kernel pool with suitable
-!     values at program initialization. The example below shows
-!     how you might set up various kernel pool variables that might
-!     be required by a program.
-!
-!        Set up the relationship between the EARTH_BODYFIXED frame
-!        and the IAU_EARTH frame.
-!
-!        CALL IDENT  ( MATRIX )
-!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_SPEC',     1, 'MATRIX'    )
-!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_RELATIVE', 1, 'IAU_EARTH' )
-!        CALL PDPOOL ( 'TKFRAME_EARTH_FIXED_MATRIX',   9,  MATRIX )
-!
-!        Load the IAU model for the earth's rotation and shape.
-!
-!        RA ( 1 ) =  0.0D0
-!        RA ( 2 ) = -0.641D0
-!        RA ( 3 ) =  0.0D0
-!
-!        DEC( 1 ) = 90.0D0
-!        DEC( 2 ) = -0.557D0
-!        DEC( 3 ) =  0.0D0
-!
-!        PM ( 1 ) = 190.16D0
-!        PM ( 2 ) = 360.9856235D0
-!        PM ( 3 ) =   0.0D0
-!
-!        R  ( 1 ) =  6378.140D0
-!        R  ( 2 ) =  6378.140D0
-!        R  ( 3 ) =  6356.75D0
-!
-!        CALL PDPOOL ( 'BODY399_POLE_RA',   3, RA  )
-!        CALL PDPOOL ( 'BODY399_POLE_DEC',  3, DEC )
-!        CALL PDPOOL ( 'BODY399_PM',        3, PM  )
-!        CALL PDPOOL ( 'BODY399_RADII',     3, R   )
-!
-!        Set up a preliminary set of leapsecond values.
-!
-!        CALL PDPOOL ( 'DELTET/DELTA_T_A/',1, 32.184D0  )
-!        CALL PDPOOL ( 'DELTET/K',         1,  1.657D-3 )
-!        CALL PDPOOL ( 'DELTET/EB',        1,  1.671D-2 )
-!
-!        VALUES(1) = 6.23999600D0
-!        VALUES(2) = 1.99096871D-7
-!
-!        CALL PDPOOL ( 'DELTET/M', 2, VALUES )
-!
-!        VALUES(  1 ) = 10
-!        VALUES(  3 ) = 11
-!        VALUES(  5 ) = 12
-!        VALUES(  7 ) = 13
-!        VALUES(  9 ) = 14
-!        VALUES( 11 ) = 15
-!        VALUES( 13 ) = 16
-!        VALUES( 15 ) = 17
-!        VALUES( 17 ) = 18
-!        VALUES( 19 ) = 19
-!        VALUES( 21 ) = 20
-!        VALUES( 23 ) = 21
-!        VALUES( 25 ) = 22
-!        VALUES( 27 ) = 23
-!        VALUES( 29 ) = 24
-!        VALUES( 31 ) = 25
-!        VALUES( 33 ) = 26
-!        VALUES( 35 ) = 27
-!        VALUES( 37 ) = 28
-!        VALUES( 39 ) = 29
-!        VALUES( 41 ) = 30
-!        VALUES( 43 ) = 31
-!
-!        CALL TPARSE ( '1972-JAN-1', VALUES(2),  ERROR )
-!        CALL TPARSE ( '1972-JUL-1', VALUES(4),  ERROR )
-!        CALL TPARSE ( '1973-JAN-1', VALUES(6),  ERROR )
-!        CALL TPARSE ( '1974-JAN-1', VALUES(8),  ERROR )
-!        CALL TPARSE ( '1975-JAN-1', VALUES(10), ERROR )
-!        CALL TPARSE ( '1976-JAN-1', VALUES(12), ERROR )
-!        CALL TPARSE ( '1977-JAN-1', VALUES(14), ERROR )
-!        CALL TPARSE ( '1978-JAN-1', VALUES(16), ERROR )
-!        CALL TPARSE ( '1979-JAN-1', VALUES(18), ERROR )
-!        CALL TPARSE ( '1980-JAN-1', VALUES(20), ERROR )
-!        CALL TPARSE ( '1981-JUL-1', VALUES(22), ERROR )
-!        CALL TPARSE ( '1982-JUL-1', VALUES(24), ERROR )
-!        CALL TPARSE ( '1983-JUL-1', VALUES(26), ERROR )
-!        CALL TPARSE ( '1985-JUL-1', VALUES(28), ERROR )
-!        CALL TPARSE ( '1988-JAN-1', VALUES(30), ERROR )
-!        CALL TPARSE ( '1990-JAN-1', VALUES(32), ERROR )
-!        CALL TPARSE ( '1991-JAN-1', VALUES(34), ERROR )
-!        CALL TPARSE ( '1992-JUL-1', VALUES(36), ERROR )
-!        CALL TPARSE ( '1993-JUL-1', VALUES(38), ERROR )
-!        CALL TPARSE ( '1994-JUL-1', VALUES(40), ERROR )
-!        CALL TPARSE ( '1996-JAN-1', VALUES(42), ERROR )
-!        CALL TPARSE ( '1997-JUL-1', VALUES(44), ERROR )
-!
-!        CALL PDPOOL ( 'DELTET/DELTA_AT',  44, VALUES )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 9.1.1, 27-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 9.1.0, 17-JAN-2014 (BVS) (NJB)
-!
-!        Updated to increment POOL state counter.
-!        Updated $Index_Entries section.
-!
-!-    SPICELIB Version 9.0.0, 24-MAY-2010 (EDW)
-!
-!        Added an error check on the length of the kernel pool variable
-!        name argument to enforce the variable name length does not
-!        exceed MAXLEN.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        Watcher update code was re-written for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory instead
-!        of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-&
-
-! $ Index_Entries
-!
-!     Set the value of a character_variable in the kernel_pool
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Provide toolkit programmers a method for programmatically
+!!     inserting character data into the kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     POOL
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               N
+!!     CHARACTER*(*)         CVALS ( * )
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the kernel pool variable to associate
+!!              with the values supplied in the array CVALS
+!!
+!!     N        is the number of values to insert into the kernel pool.
+!!
+!!     CVALS    is an array of strings to insert into the kernel
+!!              pool.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If NAME is already present in the kernel pool and there
+!!         is sufficient room to hold all values supplied in CVALS,
+!!         the old values associated with NAME will be overwritten.
+!!
+!!     2)  If there is not sufficient room to insert a new variable into
+!!         the kernel pool and NAME is not already present in the kernel
+!!         pool, an error is signaled by a routine in the call tree of
+!!         this routine.
+!!
+!!     3)  If there is not sufficient room to insert the values
+!!         associated with NAME, the error SPICE(NOMOREROOM) is signaled.
+!!
+!!     4)  If the kernel pool variable name length exceeds its maximum
+!!         allowed length (see Kernel Required Reading, kernel.req), the
+!!         error SPICE(BADVARNAME) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point provides a programmatic interface for inserting
+!!     character data into the SPICE kernel pool without reading an
+!!     external file.
+!!
+!! ## Examples
+!!
+!!     Suppose that you wish to supply default values for a program
+!!     so that it may function even in the absence of the appropriate
+!!     text kernels. You can use the entry points PCPOOL, PDPOOL
+!!     and PIPOOL to initialize the kernel pool with suitable
+!!     values at program initialization. The example below shows
+!!     how you might set up various kernel pool variables that might
+!!     be required by a program.
+!!
+!!        Set up the relationship between the EARTH_BODYFIXED frame
+!!        and the IAU_EARTH frame.
+!!
+!!        CALL IDENT  ( MATRIX )
+!!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_SPEC',     1, 'MATRIX'    )
+!!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_RELATIVE', 1, 'IAU_EARTH' )
+!!        CALL PDPOOL ( 'TKFRAME_EARTH_FIXED_MATRIX',   9,  MATRIX )
+!!
+!!        Load the IAU model for the earth's rotation and shape.
+!!
+!!        RA ( 1 ) =  0.0D0
+!!        RA ( 2 ) = -0.641D0
+!!        RA ( 3 ) =  0.0D0
+!!
+!!        DEC( 1 ) = 90.0D0
+!!        DEC( 2 ) = -0.557D0
+!!        DEC( 3 ) =  0.0D0
+!!
+!!        PM ( 1 ) = 190.16D0
+!!        PM ( 2 ) = 360.9856235D0
+!!        PM ( 3 ) =   0.0D0
+!!
+!!        R  ( 1 ) =  6378.140D0
+!!        R  ( 2 ) =  6378.140D0
+!!        R  ( 3 ) =  6356.75D0
+!!
+!!        CALL PDPOOL ( 'BODY399_POLE_RA',   3, RA  )
+!!        CALL PDPOOL ( 'BODY399_POLE_DEC',  3, DEC )
+!!        CALL PDPOOL ( 'BODY399_PM',        3, PM  )
+!!        CALL PDPOOL ( 'BODY399_RADII',     3, R   )
+!!
+!!        Set up a preliminary set of leapsecond values.
+!!
+!!        CALL PDPOOL ( 'DELTET/DELTA_T_A/',1, 32.184D0  )
+!!        CALL PDPOOL ( 'DELTET/K',         1,  1.657D-3 )
+!!        CALL PDPOOL ( 'DELTET/EB',        1,  1.671D-2 )
+!!
+!!        VALUES(1) = 6.23999600D0
+!!        VALUES(2) = 1.99096871D-7
+!!
+!!        CALL PDPOOL ( 'DELTET/M', 2, VALUES )
+!!
+!!        VALUES(  1 ) = 10
+!!        VALUES(  3 ) = 11
+!!        VALUES(  5 ) = 12
+!!        VALUES(  7 ) = 13
+!!        VALUES(  9 ) = 14
+!!        VALUES( 11 ) = 15
+!!        VALUES( 13 ) = 16
+!!        VALUES( 15 ) = 17
+!!        VALUES( 17 ) = 18
+!!        VALUES( 19 ) = 19
+!!        VALUES( 21 ) = 20
+!!        VALUES( 23 ) = 21
+!!        VALUES( 25 ) = 22
+!!        VALUES( 27 ) = 23
+!!        VALUES( 29 ) = 24
+!!        VALUES( 31 ) = 25
+!!        VALUES( 33 ) = 26
+!!        VALUES( 35 ) = 27
+!!        VALUES( 37 ) = 28
+!!        VALUES( 39 ) = 29
+!!        VALUES( 41 ) = 30
+!!        VALUES( 43 ) = 31
+!!
+!!        CALL TPARSE ( '1972-JAN-1', VALUES(2),  ERROR )
+!!        CALL TPARSE ( '1972-JUL-1', VALUES(4),  ERROR )
+!!        CALL TPARSE ( '1973-JAN-1', VALUES(6),  ERROR )
+!!        CALL TPARSE ( '1974-JAN-1', VALUES(8),  ERROR )
+!!        CALL TPARSE ( '1975-JAN-1', VALUES(10), ERROR )
+!!        CALL TPARSE ( '1976-JAN-1', VALUES(12), ERROR )
+!!        CALL TPARSE ( '1977-JAN-1', VALUES(14), ERROR )
+!!        CALL TPARSE ( '1978-JAN-1', VALUES(16), ERROR )
+!!        CALL TPARSE ( '1979-JAN-1', VALUES(18), ERROR )
+!!        CALL TPARSE ( '1980-JAN-1', VALUES(20), ERROR )
+!!        CALL TPARSE ( '1981-JUL-1', VALUES(22), ERROR )
+!!        CALL TPARSE ( '1982-JUL-1', VALUES(24), ERROR )
+!!        CALL TPARSE ( '1983-JUL-1', VALUES(26), ERROR )
+!!        CALL TPARSE ( '1985-JUL-1', VALUES(28), ERROR )
+!!        CALL TPARSE ( '1988-JAN-1', VALUES(30), ERROR )
+!!        CALL TPARSE ( '1990-JAN-1', VALUES(32), ERROR )
+!!        CALL TPARSE ( '1991-JAN-1', VALUES(34), ERROR )
+!!        CALL TPARSE ( '1992-JUL-1', VALUES(36), ERROR )
+!!        CALL TPARSE ( '1993-JUL-1', VALUES(38), ERROR )
+!!        CALL TPARSE ( '1994-JUL-1', VALUES(40), ERROR )
+!!        CALL TPARSE ( '1996-JAN-1', VALUES(42), ERROR )
+!!        CALL TPARSE ( '1997-JUL-1', VALUES(44), ERROR )
+!!
+!!        CALL PDPOOL ( 'DELTET/DELTA_AT',  44, VALUES )
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 9.1.1, 27-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 9.1.0, 17-JAN-2014 (BVS) (NJB)
+!!
+!!        Updated to increment POOL state counter.
+!!        Updated $Index_Entries section.
+!!
+!!-    SPICELIB Version 9.0.0, 24-MAY-2010 (EDW)
+!!
+!!        Added an error check on the length of the kernel pool variable
+!!        name argument to enforce the variable name length does not
+!!        exceed MAXLEN.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        Watcher update code was re-written for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory instead
+!!        of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!! ## Index Entries
+!!
+!!     Set the value of a character_variable in the kernel_pool
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: lastnb
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -20885,244 +20647,238 @@ contains
       end procedure pcpool
 
       module procedure pdpool
-
-! $ Abstract
-!
-!     Provide toolkit programmers a method for programmatically
-!     inserting double precision data into the kernel pool.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     POOL
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               N
-!     DOUBLE PRECISION      VALUES ( * )
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the kernel pool variable to associate
-!              with the values supplied in the array VALUES
-!
-!     N        is the number of values to insert into the kernel pool.
-!
-!     VALUES   is an array of d.p. values to insert into the kernel
-!              pool.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If NAME is already present in the kernel pool and there
-!         is sufficient room to hold all values supplied in VALUES,
-!         the old values associated with NAME will be overwritten.
-!
-!     2)  If there is not sufficient room to insert a new variable into
-!         the kernel pool and NAME is not already present in the kernel
-!         pool, an error is signaled by a routine in the call tree of
-!         this routine.
-!
-!     3)  If there is not sufficient room to insert the values
-!         associated with NAME, the error SPICE(NOMOREROOM) is signaled.
-!
-!     4)  If the kernel pool variable name length exceeds its maximum
-!         allowed length (see Kernel Required Reading, kernel.req), the
-!         error SPICE(BADVARNAME) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point provides a programmatic interface for inserting
-!     data into the SPICE kernel pool without reading an external file.
-!
-! $ Examples
-!
-!     Suppose that you wish to supply default values for a program
-!     so that it may function even in the absence of the appropriate
-!     text kernels. You can use the entry points PCPOOL, PDPOOL
-!     and PIPOOL to initialize the kernel pool with suitable
-!     values at program initialization. The example below shows
-!     how you might set up various kernel pool variables that might
-!     be required by a program.
-!
-!        Set up the relationship between the EARTH_BODYFIXED frame
-!        and the IAU_EARTH frame.
-!
-!        CALL IDENT  ( MATRIX )
-!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_SPEC',     1, 'MATRIX'    )
-!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_RELATIVE', 1, 'IAU_EARTH' )
-!        CALL PDPOOL ( 'TKFRAME_EARTH_FIXED_MATRIX',   9,  MATRIX )
-!
-!        Load the IAU model for the earth's rotation and shape.
-!
-!        RA ( 1 ) =  0.0D0
-!        RA ( 2 ) = -0.641D0
-!        RA ( 3 ) =  0.0D0
-!
-!        DEC( 1 ) = 90.0D0
-!        DEC( 2 ) = -0.557D0
-!        DEC( 3 ) =  0.0D0
-!
-!        PM ( 1 ) = 190.16D0
-!        PM ( 2 ) = 360.9856235D0
-!        PM ( 3 ) =   0.0D0
-!
-!        R  ( 1 ) =  6378.140D0
-!        R  ( 2 ) =  6378.140D0
-!        R  ( 3 ) =  6356.75D0
-!
-!        CALL PDPOOL ( 'BODY399_POLE_RA',   3, RA  )
-!        CALL PDPOOL ( 'BODY399_POLE_DEC',  3, DEC )
-!        CALL PDPOOL ( 'BODY399_PM',        3, PM  )
-!        CALL PDPOOL ( 'BODY399_RADII',     3, R   )
-!
-!        Set up a preliminary set of leapsecond values.
-!
-!        CALL PDPOOL ( 'DELTET/DELTA_T_A', 1, 32.184D0  )
-!        CALL PDPOOL ( 'DELTET/K',         1,  1.657D-3 )
-!        CALL PDPOOL ( 'DELTET/EB',        1,  1.671D-2 )
-!
-!        VALUES(1) = 6.23999600D0
-!        VALUES(2) = 1.99096871D-7
-!
-!        CALL PDPOOL ( 'DELTET/M', 2, VALUES )
-!
-!        VALUES(  1 ) = 10
-!        VALUES(  3 ) = 11
-!        VALUES(  5 ) = 12
-!        VALUES(  7 ) = 13
-!        VALUES(  9 ) = 14
-!        VALUES( 11 ) = 15
-!        VALUES( 13 ) = 16
-!        VALUES( 15 ) = 17
-!        VALUES( 17 ) = 18
-!        VALUES( 19 ) = 19
-!        VALUES( 21 ) = 20
-!        VALUES( 23 ) = 21
-!        VALUES( 25 ) = 22
-!        VALUES( 27 ) = 23
-!        VALUES( 29 ) = 24
-!        VALUES( 31 ) = 25
-!        VALUES( 33 ) = 26
-!        VALUES( 35 ) = 27
-!        VALUES( 37 ) = 28
-!        VALUES( 39 ) = 29
-!        VALUES( 41 ) = 30
-!        VALUES( 43 ) = 31
-!
-!        CALL TPARSE ( '1972-JAN-1', VALUES(2),  ERROR )
-!        CALL TPARSE ( '1972-JUL-1', VALUES(4),  ERROR )
-!        CALL TPARSE ( '1973-JAN-1', VALUES(6),  ERROR )
-!        CALL TPARSE ( '1974-JAN-1', VALUES(8),  ERROR )
-!        CALL TPARSE ( '1975-JAN-1', VALUES(10), ERROR )
-!        CALL TPARSE ( '1976-JAN-1', VALUES(12), ERROR )
-!        CALL TPARSE ( '1977-JAN-1', VALUES(14), ERROR )
-!        CALL TPARSE ( '1978-JAN-1', VALUES(16), ERROR )
-!        CALL TPARSE ( '1979-JAN-1', VALUES(18), ERROR )
-!        CALL TPARSE ( '1980-JAN-1', VALUES(20), ERROR )
-!        CALL TPARSE ( '1981-JUL-1', VALUES(22), ERROR )
-!        CALL TPARSE ( '1982-JUL-1', VALUES(24), ERROR )
-!        CALL TPARSE ( '1983-JUL-1', VALUES(26), ERROR )
-!        CALL TPARSE ( '1985-JUL-1', VALUES(28), ERROR )
-!        CALL TPARSE ( '1988-JAN-1', VALUES(30), ERROR )
-!        CALL TPARSE ( '1990-JAN-1', VALUES(32), ERROR )
-!        CALL TPARSE ( '1991-JAN-1', VALUES(34), ERROR )
-!        CALL TPARSE ( '1992-JUL-1', VALUES(36), ERROR )
-!        CALL TPARSE ( '1993-JUL-1', VALUES(38), ERROR )
-!        CALL TPARSE ( '1994-JUL-1', VALUES(40), ERROR )
-!        CALL TPARSE ( '1996-JAN-1', VALUES(42), ERROR )
-!        CALL TPARSE ( '1997-JUL-1', VALUES(44), ERROR )
-!
-!        CALL PDPOOL ( 'DELTET/DELTA_AT',  44, VALUES )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 9.1.1, 27-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 9.1.0, 17-JAN-2014 (BVS) (NJB)
-!
-!        Updated to increment POOL state counter.
-!        Updated $Index_Entries section.
-!
-!-    SPICELIB Version 9.0.0, 24-MAY-2010 (EDW)
-!
-!        Added an error check on the length of the kernel pool variable
-!        name argument to enforce the variable name length does not
-!        exceed MAXLEN.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        Watcher update code was re-written for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory instead
-!        of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-&
-
-! $ Index_Entries
-!
-!     Set the value of a d.p._variable in the kernel_pool
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Provide toolkit programmers a method for programmatically
+!!     inserting double precision data into the kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     POOL
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               N
+!!     DOUBLE PRECISION      VALUES ( * )
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the kernel pool variable to associate
+!!              with the values supplied in the array VALUES
+!!
+!!     N        is the number of values to insert into the kernel pool.
+!!
+!!     VALUES   is an array of d.p. values to insert into the kernel
+!!              pool.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If NAME is already present in the kernel pool and there
+!!         is sufficient room to hold all values supplied in VALUES,
+!!         the old values associated with NAME will be overwritten.
+!!
+!!     2)  If there is not sufficient room to insert a new variable into
+!!         the kernel pool and NAME is not already present in the kernel
+!!         pool, an error is signaled by a routine in the call tree of
+!!         this routine.
+!!
+!!     3)  If there is not sufficient room to insert the values
+!!         associated with NAME, the error SPICE(NOMOREROOM) is signaled.
+!!
+!!     4)  If the kernel pool variable name length exceeds its maximum
+!!         allowed length (see Kernel Required Reading, kernel.req), the
+!!         error SPICE(BADVARNAME) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point provides a programmatic interface for inserting
+!!     data into the SPICE kernel pool without reading an external file.
+!!
+!! ## Examples
+!!
+!!     Suppose that you wish to supply default values for a program
+!!     so that it may function even in the absence of the appropriate
+!!     text kernels. You can use the entry points PCPOOL, PDPOOL
+!!     and PIPOOL to initialize the kernel pool with suitable
+!!     values at program initialization. The example below shows
+!!     how you might set up various kernel pool variables that might
+!!     be required by a program.
+!!
+!!        Set up the relationship between the EARTH_BODYFIXED frame
+!!        and the IAU_EARTH frame.
+!!
+!!        CALL IDENT  ( MATRIX )
+!!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_SPEC',     1, 'MATRIX'    )
+!!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_RELATIVE', 1, 'IAU_EARTH' )
+!!        CALL PDPOOL ( 'TKFRAME_EARTH_FIXED_MATRIX',   9,  MATRIX )
+!!
+!!        Load the IAU model for the earth's rotation and shape.
+!!
+!!        RA ( 1 ) =  0.0D0
+!!        RA ( 2 ) = -0.641D0
+!!        RA ( 3 ) =  0.0D0
+!!
+!!        DEC( 1 ) = 90.0D0
+!!        DEC( 2 ) = -0.557D0
+!!        DEC( 3 ) =  0.0D0
+!!
+!!        PM ( 1 ) = 190.16D0
+!!        PM ( 2 ) = 360.9856235D0
+!!        PM ( 3 ) =   0.0D0
+!!
+!!        R  ( 1 ) =  6378.140D0
+!!        R  ( 2 ) =  6378.140D0
+!!        R  ( 3 ) =  6356.75D0
+!!
+!!        CALL PDPOOL ( 'BODY399_POLE_RA',   3, RA  )
+!!        CALL PDPOOL ( 'BODY399_POLE_DEC',  3, DEC )
+!!        CALL PDPOOL ( 'BODY399_PM',        3, PM  )
+!!        CALL PDPOOL ( 'BODY399_RADII',     3, R   )
+!!
+!!        Set up a preliminary set of leapsecond values.
+!!
+!!        CALL PDPOOL ( 'DELTET/DELTA_T_A', 1, 32.184D0  )
+!!        CALL PDPOOL ( 'DELTET/K',         1,  1.657D-3 )
+!!        CALL PDPOOL ( 'DELTET/EB',        1,  1.671D-2 )
+!!
+!!        VALUES(1) = 6.23999600D0
+!!        VALUES(2) = 1.99096871D-7
+!!
+!!        CALL PDPOOL ( 'DELTET/M', 2, VALUES )
+!!
+!!        VALUES(  1 ) = 10
+!!        VALUES(  3 ) = 11
+!!        VALUES(  5 ) = 12
+!!        VALUES(  7 ) = 13
+!!        VALUES(  9 ) = 14
+!!        VALUES( 11 ) = 15
+!!        VALUES( 13 ) = 16
+!!        VALUES( 15 ) = 17
+!!        VALUES( 17 ) = 18
+!!        VALUES( 19 ) = 19
+!!        VALUES( 21 ) = 20
+!!        VALUES( 23 ) = 21
+!!        VALUES( 25 ) = 22
+!!        VALUES( 27 ) = 23
+!!        VALUES( 29 ) = 24
+!!        VALUES( 31 ) = 25
+!!        VALUES( 33 ) = 26
+!!        VALUES( 35 ) = 27
+!!        VALUES( 37 ) = 28
+!!        VALUES( 39 ) = 29
+!!        VALUES( 41 ) = 30
+!!        VALUES( 43 ) = 31
+!!
+!!        CALL TPARSE ( '1972-JAN-1', VALUES(2),  ERROR )
+!!        CALL TPARSE ( '1972-JUL-1', VALUES(4),  ERROR )
+!!        CALL TPARSE ( '1973-JAN-1', VALUES(6),  ERROR )
+!!        CALL TPARSE ( '1974-JAN-1', VALUES(8),  ERROR )
+!!        CALL TPARSE ( '1975-JAN-1', VALUES(10), ERROR )
+!!        CALL TPARSE ( '1976-JAN-1', VALUES(12), ERROR )
+!!        CALL TPARSE ( '1977-JAN-1', VALUES(14), ERROR )
+!!        CALL TPARSE ( '1978-JAN-1', VALUES(16), ERROR )
+!!        CALL TPARSE ( '1979-JAN-1', VALUES(18), ERROR )
+!!        CALL TPARSE ( '1980-JAN-1', VALUES(20), ERROR )
+!!        CALL TPARSE ( '1981-JUL-1', VALUES(22), ERROR )
+!!        CALL TPARSE ( '1982-JUL-1', VALUES(24), ERROR )
+!!        CALL TPARSE ( '1983-JUL-1', VALUES(26), ERROR )
+!!        CALL TPARSE ( '1985-JUL-1', VALUES(28), ERROR )
+!!        CALL TPARSE ( '1988-JAN-1', VALUES(30), ERROR )
+!!        CALL TPARSE ( '1990-JAN-1', VALUES(32), ERROR )
+!!        CALL TPARSE ( '1991-JAN-1', VALUES(34), ERROR )
+!!        CALL TPARSE ( '1992-JUL-1', VALUES(36), ERROR )
+!!        CALL TPARSE ( '1993-JUL-1', VALUES(38), ERROR )
+!!        CALL TPARSE ( '1994-JUL-1', VALUES(40), ERROR )
+!!        CALL TPARSE ( '1996-JAN-1', VALUES(42), ERROR )
+!!        CALL TPARSE ( '1997-JUL-1', VALUES(44), ERROR )
+!!
+!!        CALL PDPOOL ( 'DELTET/DELTA_AT',  44, VALUES )
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 9.1.1, 27-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 9.1.0, 17-JAN-2014 (BVS) (NJB)
+!!
+!!        Updated to increment POOL state counter.
+!!        Updated $Index_Entries section.
+!!
+!!-    SPICELIB Version 9.0.0, 24-MAY-2010 (EDW)
+!!
+!!        Added an error check on the length of the kernel pool variable
+!!        name argument to enforce the variable name length does not
+!!        exceed MAXLEN.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        Watcher update code was re-written for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory instead
+!!        of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!! ## Index Entries
+!!
+!!     Set the value of a d.p._variable in the kernel_pool
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: lastnb
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -21475,244 +21231,238 @@ contains
       end procedure pdpool
 
       module procedure pipool
-
-! $ Abstract
-!
-!     Provide toolkit programmers a method for programmatically
-!     inserting integer data into the kernel pool.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     POOL
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               N
-!     INTEGER               IVALS ( * )
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the kernel pool variable to associate
-!              with the values supplied in the array IVALS
-!
-!     N        is the number of values to insert into the kernel pool.
-!
-!     IVALS    is an array of integers to insert into the kernel
-!              pool.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If NAME is already present in the kernel pool and there
-!         is sufficient room to hold all values supplied in IVALS,
-!         the old values associated with NAME will be overwritten.
-!
-!     2)  If there is not sufficient room to insert a new variable into
-!         the kernel pool and NAME is not already present in the kernel
-!         pool, an error is signaled by a routine in the call tree of
-!         this routine.
-!
-!     3)  If there is not sufficient room to insert the values
-!         associated with NAME, the error SPICE(NOMOREROOM) is signaled.
-!
-!     4)  If the kernel pool variable name length exceeds its maximum
-!         allowed length (see Kernel Required Reading, kernel.req), the
-!         error SPICE(BADVARNAME) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point provides a programmatic interface for inserting
-!     data into the SPICE kernel pool without reading an external file.
-!
-! $ Examples
-!
-!     Suppose that you wish to supply default values for a program
-!     so that it may function even in the absence of the appropriate
-!     text kernels. You can use the entry points PCPOOL, PDPOOL
-!     and PIPOOL to initialize the kernel pool with suitable
-!     values at program initialization. The example below shows
-!     how you might set up various kernel pool variables that might
-!     be required by a program.
-!
-!        Set up the relationship between the EARTH_BODYFIXED frame
-!        and the IAU_EARTH frame.
-!
-!        CALL IDENT ( MATRIX )
-!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_SPEC',     1, 'MATRIX' )
-!        CALL PIPOOL ( 'TKFRAME_EARTH_FIXED_RELATIVE', 1,  10081   )
-!        CALL PDPOOL ( 'TKFRAME_EARTH_FIXED_MATRIX',   9,  MATRIX  )
-!
-!        Load the IAU model for the earth's rotation and shape.
-!
-!        RA ( 1 ) =  0.0D0
-!        RA ( 2 ) = -0.641D0
-!        RA ( 3 ) =  0.0D0
-!
-!        DEC( 1 ) = 90.0D0
-!        DEC( 2 ) = -0.557D0
-!        DEC( 3 ) =  0.0D0
-!
-!        PM ( 1 ) = 190.16D0
-!        PM ( 2 ) = 360.9856235D0
-!        PM ( 3 ) =   0.0D0
-!
-!        R  ( 1 ) =  6378.140D0
-!        R  ( 2 ) =  6378.140D0
-!        R  ( 3 ) =  6356.75D0
-!
-!        CALL PDPOOL ( 'BODY399_POLE_RA',   3, RA  )
-!        CALL PDPOOL ( 'BODY399_POLE_DEC',  3, DEC )
-!        CALL PDPOOL ( 'BODY399_PM',        3, PM  )
-!        CALL PDPOOL ( 'BODY399_RADII',     3, R   )
-!
-!        Set up a preliminary set of leapsecond values.
-!
-!        CALL PDPOOL ( 'DELTET/DELTA_T_A/',1, 32.184D0  )
-!        CALL PDPOOL ( 'DELTET/K',         1,  1.657D-3 )
-!        CALL PDPOOL ( 'DELTET/EB',        1,  1.671D-2 )
-!
-!        VALUES(1) = 6.23999600D0
-!        VALUES(2) = 1.99096871D-7
-!
-!        CALL PDPOOL ( 'DELTET/M', 2, VALUES )
-!
-!        VALUES(  1 ) = 10
-!        VALUES(  3 ) = 11
-!        VALUES(  5 ) = 12
-!        VALUES(  7 ) = 13
-!        VALUES(  9 ) = 14
-!        VALUES( 11 ) = 15
-!        VALUES( 13 ) = 16
-!        VALUES( 15 ) = 17
-!        VALUES( 17 ) = 18
-!        VALUES( 19 ) = 19
-!        VALUES( 21 ) = 20
-!        VALUES( 23 ) = 21
-!        VALUES( 25 ) = 22
-!        VALUES( 27 ) = 23
-!        VALUES( 29 ) = 24
-!        VALUES( 31 ) = 25
-!        VALUES( 33 ) = 26
-!        VALUES( 35 ) = 27
-!        VALUES( 37 ) = 28
-!        VALUES( 39 ) = 29
-!        VALUES( 41 ) = 30
-!        VALUES( 43 ) = 31
-!
-!        CALL TPARSE ( '1972-JAN-1', VALUES(2),  ERROR )
-!        CALL TPARSE ( '1972-JUL-1', VALUES(4),  ERROR )
-!        CALL TPARSE ( '1973-JAN-1', VALUES(6),  ERROR )
-!        CALL TPARSE ( '1974-JAN-1', VALUES(8),  ERROR )
-!        CALL TPARSE ( '1975-JAN-1', VALUES(10), ERROR )
-!        CALL TPARSE ( '1976-JAN-1', VALUES(12), ERROR )
-!        CALL TPARSE ( '1977-JAN-1', VALUES(14), ERROR )
-!        CALL TPARSE ( '1978-JAN-1', VALUES(16), ERROR )
-!        CALL TPARSE ( '1979-JAN-1', VALUES(18), ERROR )
-!        CALL TPARSE ( '1980-JAN-1', VALUES(20), ERROR )
-!        CALL TPARSE ( '1981-JUL-1', VALUES(22), ERROR )
-!        CALL TPARSE ( '1982-JUL-1', VALUES(24), ERROR )
-!        CALL TPARSE ( '1983-JUL-1', VALUES(26), ERROR )
-!        CALL TPARSE ( '1985-JUL-1', VALUES(28), ERROR )
-!        CALL TPARSE ( '1988-JAN-1', VALUES(30), ERROR )
-!        CALL TPARSE ( '1990-JAN-1', VALUES(32), ERROR )
-!        CALL TPARSE ( '1991-JAN-1', VALUES(34), ERROR )
-!        CALL TPARSE ( '1992-JUL-1', VALUES(36), ERROR )
-!        CALL TPARSE ( '1993-JUL-1', VALUES(38), ERROR )
-!        CALL TPARSE ( '1994-JUL-1', VALUES(40), ERROR )
-!        CALL TPARSE ( '1996-JAN-1', VALUES(42), ERROR )
-!        CALL TPARSE ( '1997-JUL-1', VALUES(44), ERROR )
-!
-!        CALL PDPOOL ( 'DELTET/DELTA_AT',  44, VALUES )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 9.1.1, 27-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 9.1.0, 17-JAN-2014 (BVS) (NJB)
-!
-!        Updated to increment POOL state counter.
-!        Updated $Index_Entries section.
-!
-!-    SPICELIB Version 9.0.0, 24-MAY-2010 (EDW)
-!
-!        Added an error check on the length of the kernel pool variable
-!        name argument to enforce the variable name length does not
-!        exceed MAXLEN.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        Watcher update code was re-written for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory instead
-!        of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-&
-
-! $ Index_Entries
-!
-!     Set the value of an integer_variable in the kernel_pool
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Provide toolkit programmers a method for programmatically
+!!     inserting integer data into the kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     POOL
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               N
+!!     INTEGER               IVALS ( * )
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the kernel pool variable to associate
+!!              with the values supplied in the array IVALS
+!!
+!!     N        is the number of values to insert into the kernel pool.
+!!
+!!     IVALS    is an array of integers to insert into the kernel
+!!              pool.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If NAME is already present in the kernel pool and there
+!!         is sufficient room to hold all values supplied in IVALS,
+!!         the old values associated with NAME will be overwritten.
+!!
+!!     2)  If there is not sufficient room to insert a new variable into
+!!         the kernel pool and NAME is not already present in the kernel
+!!         pool, an error is signaled by a routine in the call tree of
+!!         this routine.
+!!
+!!     3)  If there is not sufficient room to insert the values
+!!         associated with NAME, the error SPICE(NOMOREROOM) is signaled.
+!!
+!!     4)  If the kernel pool variable name length exceeds its maximum
+!!         allowed length (see Kernel Required Reading, kernel.req), the
+!!         error SPICE(BADVARNAME) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point provides a programmatic interface for inserting
+!!     data into the SPICE kernel pool without reading an external file.
+!!
+!! ## Examples
+!!
+!!     Suppose that you wish to supply default values for a program
+!!     so that it may function even in the absence of the appropriate
+!!     text kernels. You can use the entry points PCPOOL, PDPOOL
+!!     and PIPOOL to initialize the kernel pool with suitable
+!!     values at program initialization. The example below shows
+!!     how you might set up various kernel pool variables that might
+!!     be required by a program.
+!!
+!!        Set up the relationship between the EARTH_BODYFIXED frame
+!!        and the IAU_EARTH frame.
+!!
+!!        CALL IDENT ( MATRIX )
+!!        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_SPEC',     1, 'MATRIX' )
+!!        CALL PIPOOL ( 'TKFRAME_EARTH_FIXED_RELATIVE', 1,  10081   )
+!!        CALL PDPOOL ( 'TKFRAME_EARTH_FIXED_MATRIX',   9,  MATRIX  )
+!!
+!!        Load the IAU model for the earth's rotation and shape.
+!!
+!!        RA ( 1 ) =  0.0D0
+!!        RA ( 2 ) = -0.641D0
+!!        RA ( 3 ) =  0.0D0
+!!
+!!        DEC( 1 ) = 90.0D0
+!!        DEC( 2 ) = -0.557D0
+!!        DEC( 3 ) =  0.0D0
+!!
+!!        PM ( 1 ) = 190.16D0
+!!        PM ( 2 ) = 360.9856235D0
+!!        PM ( 3 ) =   0.0D0
+!!
+!!        R  ( 1 ) =  6378.140D0
+!!        R  ( 2 ) =  6378.140D0
+!!        R  ( 3 ) =  6356.75D0
+!!
+!!        CALL PDPOOL ( 'BODY399_POLE_RA',   3, RA  )
+!!        CALL PDPOOL ( 'BODY399_POLE_DEC',  3, DEC )
+!!        CALL PDPOOL ( 'BODY399_PM',        3, PM  )
+!!        CALL PDPOOL ( 'BODY399_RADII',     3, R   )
+!!
+!!        Set up a preliminary set of leapsecond values.
+!!
+!!        CALL PDPOOL ( 'DELTET/DELTA_T_A/',1, 32.184D0  )
+!!        CALL PDPOOL ( 'DELTET/K',         1,  1.657D-3 )
+!!        CALL PDPOOL ( 'DELTET/EB',        1,  1.671D-2 )
+!!
+!!        VALUES(1) = 6.23999600D0
+!!        VALUES(2) = 1.99096871D-7
+!!
+!!        CALL PDPOOL ( 'DELTET/M', 2, VALUES )
+!!
+!!        VALUES(  1 ) = 10
+!!        VALUES(  3 ) = 11
+!!        VALUES(  5 ) = 12
+!!        VALUES(  7 ) = 13
+!!        VALUES(  9 ) = 14
+!!        VALUES( 11 ) = 15
+!!        VALUES( 13 ) = 16
+!!        VALUES( 15 ) = 17
+!!        VALUES( 17 ) = 18
+!!        VALUES( 19 ) = 19
+!!        VALUES( 21 ) = 20
+!!        VALUES( 23 ) = 21
+!!        VALUES( 25 ) = 22
+!!        VALUES( 27 ) = 23
+!!        VALUES( 29 ) = 24
+!!        VALUES( 31 ) = 25
+!!        VALUES( 33 ) = 26
+!!        VALUES( 35 ) = 27
+!!        VALUES( 37 ) = 28
+!!        VALUES( 39 ) = 29
+!!        VALUES( 41 ) = 30
+!!        VALUES( 43 ) = 31
+!!
+!!        CALL TPARSE ( '1972-JAN-1', VALUES(2),  ERROR )
+!!        CALL TPARSE ( '1972-JUL-1', VALUES(4),  ERROR )
+!!        CALL TPARSE ( '1973-JAN-1', VALUES(6),  ERROR )
+!!        CALL TPARSE ( '1974-JAN-1', VALUES(8),  ERROR )
+!!        CALL TPARSE ( '1975-JAN-1', VALUES(10), ERROR )
+!!        CALL TPARSE ( '1976-JAN-1', VALUES(12), ERROR )
+!!        CALL TPARSE ( '1977-JAN-1', VALUES(14), ERROR )
+!!        CALL TPARSE ( '1978-JAN-1', VALUES(16), ERROR )
+!!        CALL TPARSE ( '1979-JAN-1', VALUES(18), ERROR )
+!!        CALL TPARSE ( '1980-JAN-1', VALUES(20), ERROR )
+!!        CALL TPARSE ( '1981-JUL-1', VALUES(22), ERROR )
+!!        CALL TPARSE ( '1982-JUL-1', VALUES(24), ERROR )
+!!        CALL TPARSE ( '1983-JUL-1', VALUES(26), ERROR )
+!!        CALL TPARSE ( '1985-JUL-1', VALUES(28), ERROR )
+!!        CALL TPARSE ( '1988-JAN-1', VALUES(30), ERROR )
+!!        CALL TPARSE ( '1990-JAN-1', VALUES(32), ERROR )
+!!        CALL TPARSE ( '1991-JAN-1', VALUES(34), ERROR )
+!!        CALL TPARSE ( '1992-JUL-1', VALUES(36), ERROR )
+!!        CALL TPARSE ( '1993-JUL-1', VALUES(38), ERROR )
+!!        CALL TPARSE ( '1994-JUL-1', VALUES(40), ERROR )
+!!        CALL TPARSE ( '1996-JAN-1', VALUES(42), ERROR )
+!!        CALL TPARSE ( '1997-JUL-1', VALUES(44), ERROR )
+!!
+!!        CALL PDPOOL ( 'DELTET/DELTA_AT',  44, VALUES )
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 9.1.1, 27-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 9.1.0, 17-JAN-2014 (BVS) (NJB)
+!!
+!!        Updated to increment POOL state counter.
+!!        Updated $Index_Entries section.
+!!
+!!-    SPICELIB Version 9.0.0, 24-MAY-2010 (EDW)
+!!
+!!        Added an error check on the length of the kernel pool variable
+!!        name argument to enforce the variable name length does not
+!!        exceed MAXLEN.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        Watcher update code was re-written for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory instead
+!!        of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!! ## Index Entries
+!!
+!!     Set the value of an integer_variable in the kernel_pool
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: lastnb
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -22066,183 +21816,177 @@ contains
       end procedure pipool
 
       module procedure lmpool
-
-! $ Abstract
-!
-!     Load the variables contained in an internal buffer into the
-!     kernel pool.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         CVALS ( * )
-!     INTEGER               N
-!
-! $ Detailed_Input
-!
-!     CVALS    is an array that contains lines of text that
-!              could serve as a SPICE text kernel.
-!
-!     N        is the number of entries in CVALS.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If any of the kernel pool variables names or their values, as
-!         provided in the input CVALS array, cannot be parsed, an error
-!         is signaled by a routine in the call tree of this routine.
-!
-!     2)  If there is no room left in the kernel pool to store all
-!         variables present in the input CVALS array, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-!     3)  If the length of any kernel pool variable name present in the
-!         input CVALS array exceeds its maximum allowed length (see
-!         Kernel Required Reading, kernel.req), an error is signaled by
-!         a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine allows you to store a text kernel in an internal
-!     array of your program and load this array into the kernel pool
-!     without first storing its contents as a text kernel.
-!
-! $ Examples
-!
-!     Suppose that your application is not particularly sensitive
-!     to the current number of leapseconds but that you would
-!     still like to use a relatively recent leapseconds kernel
-!     without requiring users to load a leapseconds kernel into
-!     the program. The example below shows how you might set up
-!     the initialization portion of your program.
-!
-!        INTEGER               LNSIZE
-!        PARAMETER           ( LNSIZE = 80 )
-!
-!        CHARACTER*(LNSIZE)    TEXT ( 27 )
-!
-!        TEXT(  1 ) = 'DELTET/DELTA_T_A =   32.184'
-!        TEXT(  2 ) = 'DELTET/K         =    1.657D-3'
-!        TEXT(  3 ) = 'DELTET/EB        =    1.671D-2'
-!        TEXT(  4 ) = 'DELTET/M = (  6.239996D0   1.99096871D-7 )'
-!        TEXT(  5 ) = 'DELTET/DELTA_AT  = ( 10,   @1972-JAN-1'
-!        TEXT(  6 ) = '                     11,   @1972-JUL-1'
-!        TEXT(  7 ) = '                     12,   @1973-JAN-1'
-!        TEXT(  8 ) = '                     13,   @1974-JAN-1'
-!        TEXT(  9 ) = '                     14,   @1975-JAN-1'
-!        TEXT( 10 ) = '                     15,   @1976-JAN-1'
-!        TEXT( 11 ) = '                     16,   @1977-JAN-1'
-!        TEXT( 12 ) = '                     17,   @1978-JAN-1'
-!        TEXT( 13 ) = '                     18,   @1979-JAN-1'
-!        TEXT( 14 ) = '                     19,   @1980-JAN-1'
-!        TEXT( 15 ) = '                     20,   @1981-JUL-1'
-!        TEXT( 16 ) = '                     21,   @1982-JUL-1'
-!        TEXT( 17 ) = '                     22,   @1983-JUL-1'
-!        TEXT( 18 ) = '                     23,   @1985-JUL-1'
-!        TEXT( 19 ) = '                     24,   @1988-JAN-1'
-!        TEXT( 20 ) = '                     25,   @1990-JAN-1'
-!        TEXT( 21 ) = '                     26,   @1991-JAN-1'
-!        TEXT( 22 ) = '                     27,   @1992-JUL-1'
-!        TEXT( 23 ) = '                     28,   @1993-JUL-1'
-!        TEXT( 24 ) = '                     29,   @1994-JUL-1'
-!        TEXT( 25 ) = '                     30,   @1996-JAN-1'
-!        TEXT( 26 ) = '                     31,   @1997-JUL-1'
-!        TEXT( 27 ) = '                     32,   @1999-JAN-1 )'
-!
-!        CALL LMPOOL ( TEXT, 27 )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.3.1, 17-AUG-2021 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Updated $Exceptions section to better describe the error
-!        handling of this routine.
-!
-!-    SPICELIB Version 8.3.0, 30-JUL-2013 (BVS)
-!
-!        Updated to increment POOL state counter.
-!
-!-    SPICELIB Version 8.2.0, 10-FEB-2010 (EDW)
-!
-!        Added mention of the restriction on kernel pool variable
-!        names to MAXLEN characters or less.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        Watcher update code was re-written for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-&
-
-! $ Index_Entries
-!
-!     Load the kernel pool from an internal text buffer
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Load the variables contained in an internal buffer into the
+!!     kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         CVALS ( * )
+!!     INTEGER               N
+!!
+!! ## Detailed Input
+!!
+!!     CVALS    is an array that contains lines of text that
+!!              could serve as a SPICE text kernel.
+!!
+!!     N        is the number of entries in CVALS.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If any of the kernel pool variables names or their values, as
+!!         provided in the input CVALS array, cannot be parsed, an error
+!!         is signaled by a routine in the call tree of this routine.
+!!
+!!     2)  If there is no room left in the kernel pool to store all
+!!         variables present in the input CVALS array, an error is
+!!         signaled by a routine in the call tree of this routine.
+!!
+!!     3)  If the length of any kernel pool variable name present in the
+!!         input CVALS array exceeds its maximum allowed length (see
+!!         Kernel Required Reading, kernel.req), an error is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine allows you to store a text kernel in an internal
+!!     array of your program and load this array into the kernel pool
+!!     without first storing its contents as a text kernel.
+!!
+!! ## Examples
+!!
+!!     Suppose that your application is not particularly sensitive
+!!     to the current number of leapseconds but that you would
+!!     still like to use a relatively recent leapseconds kernel
+!!     without requiring users to load a leapseconds kernel into
+!!     the program. The example below shows how you might set up
+!!     the initialization portion of your program.
+!!
+!!        INTEGER               LNSIZE
+!!        PARAMETER           ( LNSIZE = 80 )
+!!
+!!        CHARACTER*(LNSIZE)    TEXT ( 27 )
+!!
+!!        TEXT(  1 ) = 'DELTET/DELTA_T_A =   32.184'
+!!        TEXT(  2 ) = 'DELTET/K         =    1.657D-3'
+!!        TEXT(  3 ) = 'DELTET/EB        =    1.671D-2'
+!!        TEXT(  4 ) = 'DELTET/M = (  6.239996D0   1.99096871D-7 )'
+!!        TEXT(  5 ) = 'DELTET/DELTA_AT  = ( 10,   @1972-JAN-1'
+!!        TEXT(  6 ) = '                     11,   @1972-JUL-1'
+!!        TEXT(  7 ) = '                     12,   @1973-JAN-1'
+!!        TEXT(  8 ) = '                     13,   @1974-JAN-1'
+!!        TEXT(  9 ) = '                     14,   @1975-JAN-1'
+!!        TEXT( 10 ) = '                     15,   @1976-JAN-1'
+!!        TEXT( 11 ) = '                     16,   @1977-JAN-1'
+!!        TEXT( 12 ) = '                     17,   @1978-JAN-1'
+!!        TEXT( 13 ) = '                     18,   @1979-JAN-1'
+!!        TEXT( 14 ) = '                     19,   @1980-JAN-1'
+!!        TEXT( 15 ) = '                     20,   @1981-JUL-1'
+!!        TEXT( 16 ) = '                     21,   @1982-JUL-1'
+!!        TEXT( 17 ) = '                     22,   @1983-JUL-1'
+!!        TEXT( 18 ) = '                     23,   @1985-JUL-1'
+!!        TEXT( 19 ) = '                     24,   @1988-JAN-1'
+!!        TEXT( 20 ) = '                     25,   @1990-JAN-1'
+!!        TEXT( 21 ) = '                     26,   @1991-JAN-1'
+!!        TEXT( 22 ) = '                     27,   @1992-JUL-1'
+!!        TEXT( 23 ) = '                     28,   @1993-JUL-1'
+!!        TEXT( 24 ) = '                     29,   @1994-JUL-1'
+!!        TEXT( 25 ) = '                     30,   @1996-JAN-1'
+!!        TEXT( 26 ) = '                     31,   @1997-JUL-1'
+!!        TEXT( 27 ) = '                     32,   @1999-JAN-1 )'
+!!
+!!        CALL LMPOOL ( TEXT, 27 )
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.3.1, 17-AUG-2021 (JDR) (BVS)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Updated $Exceptions section to better describe the error
+!!        handling of this routine.
+!!
+!!-    SPICELIB Version 8.3.0, 30-JUL-2013 (BVS)
+!!
+!!        Updated to increment POOL state counter.
+!!
+!!-    SPICELIB Version 8.2.0, 10-FEB-2010 (EDW)
+!!
+!!        Added mention of the restriction on kernel pool variable
+!!        names to MAXLEN characters or less.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        Watcher update code was re-written for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!! ## Index Entries
+!!
+!!     Load the kernel pool from an internal text buffer
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -22419,157 +22163,151 @@ contains
       end procedure lmpool
 
       module procedure szpool
-
-! $ Abstract
-!
-!     Return the kernel pool size limitations.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               N
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of a kernel pool size parameter.
-!              The following parameters may be specified.
-!
-!                 'MAXVAR'    is the maximum number of variables that
-!                             the kernel pool may contain at any one
-!                             time. MAXVAR should be a prime number.
-!
-!                 'MAXLEN'    is the maximum length of the variable
-!                             names that can be stored in the kernel
-!                             pool.
-!
-!                 'MAXVAL'    is the maximum number of distinct values
-!                             that may belong to the variables in the
-!                             kernel pool. Each variable must have at
-!                             least one value, and may have any number,
-!                             so long as the total number does not
-!                             exceed MAXVAL. MAXVAL must be at least as
-!                             large as MAXVAR.
-!
-!                 'MXNOTE'    is the maximum number of distinct
-!                             variable-agents pairs that can be
-!                             maintained by the kernel pool. (A variable
-!                             is "paired" with an agent, if that agent
-!                             is to be notified whenever the variable is
-!                             updated.)
-!
-!                 'MAXAGT'    is the maximum number of agents that can
-!                             be kept on the distribution list for
-!                             notification of updates to kernel
-!                             variables.
-!
-!                 'MAXCHR'    is the maximum number of characters that
-!                             can be stored in a component of a string
-!                             valued kernel variable.
-!
-!                 'MAXLIN'    is the maximum number of character strings
-!                             that can be stored as data for kernel pool
-!                             variables.
-!
-!              Note that the case of NAME is insignificant.
-!
-! $ Detailed_Output
-!
-!     N        is the value of the parameter specified by NAME. If
-!              NAME is not one of the items specified above, N will
-!              be returned with the value 0.
-!
-!     FOUND    is .TRUE. if the parameter is recognized .FALSE. if it
-!              is not.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the specified parameter is not recognized, the value of N
-!         returned will be zero and FOUND will be set to .FALSE.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine provides the a programmatic interface to the
-!     parameters used to define the kernel pool. It is not
-!     anticipated that most kernel pool users will need to use this
-!     routine.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Updated NAME
-!        description to not refer to the main routine.
-!
-!-    SPICELIB Version 1.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-&
-
-! $ Index_Entries
-!
-!     return a kernel pool definition parameter
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the kernel pool size limitations.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               N
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of a kernel pool size parameter.
+!!              The following parameters may be specified.
+!!
+!!                 'MAXVAR'    is the maximum number of variables that
+!!                             the kernel pool may contain at any one
+!!                             time. MAXVAR should be a prime number.
+!!
+!!                 'MAXLEN'    is the maximum length of the variable
+!!                             names that can be stored in the kernel
+!!                             pool.
+!!
+!!                 'MAXVAL'    is the maximum number of distinct values
+!!                             that may belong to the variables in the
+!!                             kernel pool. Each variable must have at
+!!                             least one value, and may have any number,
+!!                             so long as the total number does not
+!!                             exceed MAXVAL. MAXVAL must be at least as
+!!                             large as MAXVAR.
+!!
+!!                 'MXNOTE'    is the maximum number of distinct
+!!                             variable-agents pairs that can be
+!!                             maintained by the kernel pool. (A variable
+!!                             is "paired" with an agent, if that agent
+!!                             is to be notified whenever the variable is
+!!                             updated.)
+!!
+!!                 'MAXAGT'    is the maximum number of agents that can
+!!                             be kept on the distribution list for
+!!                             notification of updates to kernel
+!!                             variables.
+!!
+!!                 'MAXCHR'    is the maximum number of characters that
+!!                             can be stored in a component of a string
+!!                             valued kernel variable.
+!!
+!!                 'MAXLIN'    is the maximum number of character strings
+!!                             that can be stored as data for kernel pool
+!!                             variables.
+!!
+!!              Note that the case of NAME is insignificant.
+!!
+!! ## Detailed Output
+!!
+!!     N        is the value of the parameter specified by NAME. If
+!!              NAME is not one of the items specified above, N will
+!!              be returned with the value 0.
+!!
+!!     FOUND    is .TRUE. if the parameter is recognized .FALSE. if it
+!!              is not.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the specified parameter is not recognized, the value of N
+!!         returned will be zero and FOUND will be set to .FALSE.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine provides the a programmatic interface to the
+!!     parameters used to define the kernel pool. It is not
+!!     anticipated that most kernel pool users will need to use this
+!!     routine.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Updated NAME
+!!        description to not refer to the main routine.
+!!
+!!-    SPICELIB Version 1.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!! ## Index Entries
+!!
+!!     return a kernel pool definition parameter
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: eqstr
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -22674,166 +22412,158 @@ contains
       end procedure szpool
 
       module procedure dvpool
-
-! $ Abstract
-!
-!     Delete a variable from the kernel pool.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!
-! $ Detailed_Input
-!
-!     NAME     is the name of the kernel pool variable to delete.
-!              The name and associated values are removed from the
-!              kernel pool, freeing the occupied space.
-!
-!              If a watches are set on the variable designated by
-!              NAME, the corresponding agents are placed on the list
-!              of agents to be notified of a kernel variable update.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the specified variable is not present in the kernel pool,
-!         this routine simply returns. No error is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine enables users to selectively remove variables from
-!     the kernel pool, as opposed to having to clear the pool and
-!     reload it.
-!
-!     Note that it is not necessary to remove kernel variables in order
-!     to simply update them; this routine should be used only when
-!     variables are to be removed.
-!
-! $ Examples
-!
-!     1)  Remove triaxial radii of Jupiter from the kernel pool.
-!
-!            CALL DVPOOL ( 'BODY599_RADII' )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.3.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Moved example from $Restrictions to $Examples section.
-!
-!-    SPICELIB Version 8.3.0, 30-JUL-2013 (BVS)
-!
-!        Updated to increment POOL state counter.
-!
-!-    SPICELIB Version 8.2.0, 19-MAR-2009 (NJB)
-!
-!        Watcher update code was re-written for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.1.0, 22-DEC-2004 (NJB)
-!
-!        Bug fix: corrected logic for determining when a
-!        conflict resolution list is non-empty.
-!
-!        Corrected an in-line comment relating to finding the
-!        head node of the conflict resolution list for NAME.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (NJB) (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-&
-
-! $ Index_Entries
-!
-!     delete a kernel pool variable
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 8.3.0, 30-JUL-2013 (BVS)
-!
-!        Updated to increment POOL state counter.
-!
-!-    SPICELIB Version 8.2.0, 19-MAR-2009 (NJB)
-!
-!        Watcher update code was re-written for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.1.0, 22-DEC-2004 (NJB)
-!
-!        Bug fix: corrected logic for determining when a
-!        conflict resolution list is non-empty. The test
-!
-!           IF ( NAMEAT .LT. 0 ) THEN
-!
-!        formerly tested the variable NODE instead of NAMEAT.
-!
-!        Corrected an in-line comment relating to finding the
-!        head node of the conflict resolution list for NAME.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Delete a variable from the kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is the name of the kernel pool variable to delete.
+!!              The name and associated values are removed from the
+!!              kernel pool, freeing the occupied space.
+!!
+!!              If a watches are set on the variable designated by
+!!              NAME, the corresponding agents are placed on the list
+!!              of agents to be notified of a kernel variable update.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the specified variable is not present in the kernel pool,
+!!         this routine simply returns. No error is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine enables users to selectively remove variables from
+!!     the kernel pool, as opposed to having to clear the pool and
+!!     reload it.
+!!
+!!     Note that it is not necessary to remove kernel variables in order
+!!     to simply update them; this routine should be used only when
+!!     variables are to be removed.
+!!
+!! ## Examples
+!!
+!!     1)  Remove triaxial radii of Jupiter from the kernel pool.
+!!
+!!            CALL DVPOOL ( 'BODY599_RADII' )
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.3.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Moved example from $Restrictions to $Examples section.
+!!
+!!-    SPICELIB Version 8.3.0, 30-JUL-2013 (BVS)
+!!
+!!        Updated to increment POOL state counter.
+!!
+!!-    SPICELIB Version 8.2.0, 19-MAR-2009 (NJB)
+!!
+!!        Watcher update code was re-written for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.1.0, 22-DEC-2004 (NJB)
+!!
+!!        Bug fix: corrected logic for determining when a
+!!        conflict resolution list is non-empty.
+!!
+!!        Corrected an in-line comment relating to finding the
+!!        head node of the conflict resolution list for NAME.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (NJB) (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!! ## Index Entries
+!!
+!!     delete a kernel pool variable
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 8.3.0, 30-JUL-2013 (BVS)
+!!
+!!        Updated to increment POOL state counter.
+!!
+!!-    SPICELIB Version 8.2.0, 19-MAR-2009 (NJB)
+!!
+!!        Watcher update code was re-written for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.1.0, 22-DEC-2004 (NJB)
+!!
+!!        Bug fix: corrected logic for determining when a
+!!        conflict resolution list is non-empty. The test
+!!
+!!           IF ( NAMEAT .LT. 0 ) THEN
+!!
+!!        formerly tested the variable NODE instead of NAMEAT.
+!!
+!!        Corrected an in-line comment relating to finding the
+!!        head node of the conflict resolution list for NAME.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -23027,235 +22757,229 @@ contains
       end procedure dvpool
 
       module procedure gnpool
-
-! $ Abstract
-!
-!     Return names of kernel variables matching a specified template.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               START
-!     INTEGER               ROOM
-!     INTEGER               N
-!     CHARACTER*(*)         CVALS    ( * )
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     NAME     is a MATCHI template which will be used when searching
-!              for variable names in the kernel pool. The characters
-!              '*' and '%' are used for the wild string and wild
-!              characters respectively. For details of string
-!              pattern matching see the header of the routine MATCHI.
-!
-!     START    is the index of the first variable name to return that
-!              matches the NAME template. The matching names are
-!              assigned indices ranging from 1 to NVAR, where NVAR is
-!              the number of matching names. The index of a name does
-!              not indicate how it compares alphabetically to another
-!              name.
-!
-!              If START is less than 1, it will be treated as 1. If
-!              START is greater than the total number of matching
-!              variable names, no values will be returned and N will
-!              be set to zero. However, FOUND will still be set to
-!              .TRUE.
-!
-!     ROOM     is the maximum number of variable names that should
-!              be returned for this template. If ROOM is less than 1
-!              the error SPICE(BADARRAYSIZE) will be signaled.
-!
-! $ Detailed_Output
-!
-!     N        is the number of variable names matching NAME that are
-!              returned. It will always be less than or equal to
-!              ROOM.
-!
-!              If no variable names match NAME, N is set to zero.
-!
-!     CVALS    is an array of kernel pool variables whose names match
-!              the template NAME and which have indices ranging from
-!              START to START+N-1.
-!
-!              Note that in general the names returned in CVALS are
-!              not sorted.
-!
-!              If no variables match NAME, no values are assigned to
-!              the elements of CVALS.
-!
-!              If the length of CVALS is less than the length of the
-!              variable names, the values returned will be truncated
-!              on the right. To ensure that names are not truncated,
-!              CVALS should be declared to be at least
-!              CHARACTER*(32).
-!
-!     FOUND    is .TRUE. if the some variable name in the kernel pool
-!              matches NAME, .FALSE. if it is not.
-!
-! $ Parameters
-!
-!     MAXLEN   is the maximum length of the variable names that
-!              can be stored in the kernel pool. This value is
-!              currently 32.
-!
-! $ Exceptions
-!
-!     1)  If the value of ROOM is less than one, the error
-!         SPICE(BADARRAYSIZE) is signaled.
-!
-!     2)  If CVALS has declared length less than the size of a variable
-!         name to be returned, the name will be truncated on the right.
-!         See MAXLEN for the maximum size of variable names.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine provides the user interface for retrieving the names
-!     of kernel pool variables. This interface allows you to retrieve
-!     the names matching a template via multiple accesses. Under some
-!     circumstances this alleviates the problem of having to know in
-!     advance the maximum amount of space needed to accommodate all
-!     matching names.
-!
-!     However, this method of access does come with a price. It is
-!     always more efficient to retrieve all of the data associated with
-!     a kernel pool variable in one call than it is to retrieve it in
-!     sections. The parameter MAXVAR defines the upper bound on the
-!     number of possible matching names.
-!
-! $ Examples
-!
-!     The following code fragment demonstrates how the names of kernel
-!     pool variables matching a template can be retrieved in pieces.
-!
-!     First we need some declarations.
-!
-!        INTEGER               ROOM
-!        PARAMETER           ( ROOM = 3 )
-!
-!        CHARACTER*(3)         INDENT
-!        CHARACTER*(80)        CVALS  (ROOM)
-!        CHARACTER*(8)         VARNAM
-!
-!        INTEGER               START
-!        INTEGER               N
-!
-!        LOGICAL               FOUND
-!
-!     Next load the data in the file 'typical.ker' into the
-!     kernel pool.
-!
-!        CALL LDPOOL ( 'typical.ker' )
-!
-!     Next we shall print the names of kernel variables that match the
-!     template 'BODY599*'.
-!
-!        VARNAM = 'BODY599*'
-!        INDENT = ' '
-!        START  =  1
-!
-!        CALL GNPOOL ( VARNAM, START, ROOM, N, CVALS, FOUND )
-!
-!        IF ( .NOT. FOUND ) THEN
-!
-!           WRITE (*,*) 'There are no matching variables ' //
-!       .               'in the kernel pool.'
-!        ELSE
-!
-!           WRITE (*,*) 'Kernel pool variables:'
-!           WRITE (*,*)
-!
-!           DO I = 1, N
-!              WRITE (*,*) INDENT, CVALS(I)
-!           END DO
-!
-!           DO WHILE ( N .EQ. ROOM )
-!
-!              START = START + N
-!              CALL GNPOOL ( VARNAM, START, ROOM, N, CVALS, FOUND )
-!
-!              DO I = 1, N
-!                 WRITE (*,*) INDENT, CVALS(I)
-!              END DO
-!
-!           END DO
-!
-!        END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Added MAXLEN
-!        description in $Parameters.
-!
-!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
-!
-!        ZZPINI call was updated for compatibility
-!        with new watcher system implementation.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-&
-
-! $ Index_Entries
-!
-!     return names of kernel pool variables matching a template
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return names of kernel variables matching a specified template.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               START
+!!     INTEGER               ROOM
+!!     INTEGER               N
+!!     CHARACTER*(*)         CVALS    ( * )
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     NAME     is a MATCHI template which will be used when searching
+!!              for variable names in the kernel pool. The characters
+!!              '*' and '%' are used for the wild string and wild
+!!              characters respectively. For details of string
+!!              pattern matching see the header of the routine MATCHI.
+!!
+!!     START    is the index of the first variable name to return that
+!!              matches the NAME template. The matching names are
+!!              assigned indices ranging from 1 to NVAR, where NVAR is
+!!              the number of matching names. The index of a name does
+!!              not indicate how it compares alphabetically to another
+!!              name.
+!!
+!!              If START is less than 1, it will be treated as 1. If
+!!              START is greater than the total number of matching
+!!              variable names, no values will be returned and N will
+!!              be set to zero. However, FOUND will still be set to
+!!              .TRUE.
+!!
+!!     ROOM     is the maximum number of variable names that should
+!!              be returned for this template. If ROOM is less than 1
+!!              the error SPICE(BADARRAYSIZE) will be signaled.
+!!
+!! ## Detailed Output
+!!
+!!     N        is the number of variable names matching NAME that are
+!!              returned. It will always be less than or equal to
+!!              ROOM.
+!!
+!!              If no variable names match NAME, N is set to zero.
+!!
+!!     CVALS    is an array of kernel pool variables whose names match
+!!              the template NAME and which have indices ranging from
+!!              START to START+N-1.
+!!
+!!              Note that in general the names returned in CVALS are
+!!              not sorted.
+!!
+!!              If no variables match NAME, no values are assigned to
+!!              the elements of CVALS.
+!!
+!!              If the length of CVALS is less than the length of the
+!!              variable names, the values returned will be truncated
+!!              on the right. To ensure that names are not truncated,
+!!              CVALS should be declared to be at least
+!!              CHARACTER*(32).
+!!
+!!     FOUND    is .TRUE. if the some variable name in the kernel pool
+!!              matches NAME, .FALSE. if it is not.
+!!
+!! ## Parameters
+!!
+!!     MAXLEN   is the maximum length of the variable names that
+!!              can be stored in the kernel pool. This value is
+!!              currently 32.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the value of ROOM is less than one, the error
+!!         SPICE(BADARRAYSIZE) is signaled.
+!!
+!!     2)  If CVALS has declared length less than the size of a variable
+!!         name to be returned, the name will be truncated on the right.
+!!         See MAXLEN for the maximum size of variable names.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine provides the user interface for retrieving the names
+!!     of kernel pool variables. This interface allows you to retrieve
+!!     the names matching a template via multiple accesses. Under some
+!!     circumstances this alleviates the problem of having to know in
+!!     advance the maximum amount of space needed to accommodate all
+!!     matching names.
+!!
+!!     However, this method of access does come with a price. It is
+!!     always more efficient to retrieve all of the data associated with
+!!     a kernel pool variable in one call than it is to retrieve it in
+!!     sections. The parameter MAXVAR defines the upper bound on the
+!!     number of possible matching names.
+!!
+!! ## Examples
+!!
+!!     The following code fragment demonstrates how the names of kernel
+!!     pool variables matching a template can be retrieved in pieces.
+!!
+!!     First we need some declarations.
+!!
+!!        INTEGER               ROOM
+!!        PARAMETER           ( ROOM = 3 )
+!!
+!!        CHARACTER*(3)         INDENT
+!!        CHARACTER*(80)        CVALS  (ROOM)
+!!        CHARACTER*(8)         VARNAM
+!!
+!!        INTEGER               START
+!!        INTEGER               N
+!!
+!!        LOGICAL               FOUND
+!!
+!!     Next load the data in the file 'typical.ker' into the
+!!     kernel pool.
+!!
+!!        CALL LDPOOL ( 'typical.ker' )
+!!
+!!     Next we shall print the names of kernel variables that match the
+!!     template 'BODY599*'.
+!!
+!!        VARNAM = 'BODY599*'
+!!        INDENT = ' '
+!!        START  =  1
+!!
+!!        CALL GNPOOL ( VARNAM, START, ROOM, N, CVALS, FOUND )
+!!
+!!        IF ( .NOT. FOUND ) THEN
+!!
+!!           WRITE (*,*) 'There are no matching variables ' //
+!!       .               'in the kernel pool.'
+!!        ELSE
+!!
+!!           WRITE (*,*) 'Kernel pool variables:'
+!!           WRITE (*,*)
+!!
+!!           DO I = 1, N
+!!              WRITE (*,*) INDENT, CVALS(I)
+!!           END DO
+!!
+!!           DO WHILE ( N .EQ. ROOM )
+!!
+!!              START = START + N
+!!              CALL GNPOOL ( VARNAM, START, ROOM, N, CVALS, FOUND )
+!!
+!!              DO I = 1, N
+!!                 WRITE (*,*) INDENT, CVALS(I)
+!!              END DO
+!!
+!!           END DO
+!!
+!!        END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 8.1.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Added MAXLEN
+!!        description in $Parameters.
+!!
+!!-    SPICELIB Version 8.1.0, 19-MAR-2009 (NJB)
+!!
+!!        ZZPINI call was updated for compatibility
+!!        with new watcher system implementation.
+!!
+!!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!!
+!!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!!        direct insertion of data into the kernel pool without having
+!!        to read an external file.
+!!
+!!        Added the interface LMPOOL that allows SPICE
+!!        programs to load text kernels directly from memory
+!!        instead of requiring a text file.
+!!
+!!        Added the entry point SZPOOL to return kernel pool definition
+!!        parameters.
+!!
+!!        Added the entry point DVPOOL to allow the removal of a variable
+!!        from the kernel pool.
+!!
+!!        Added the entry point GNPOOL to allow users to determine
+!!        variables that are present in the kernel pool
+!!
+!! ## Index Entries
+!!
+!!     return names of kernel pool variables matching a template
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: matchi
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -23452,124 +23176,118 @@ contains
       end procedure gnpool
 
       module procedure dwpool
-
-! $ Abstract
-!
-!     Delete a name from the list of agents to notify whenever a member
-!     of a list of kernel variables is updated.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     FILES
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         AGENT
-!
-! $ Detailed_Input
-!
-!     AGENT    is any agent name that has previously been associated
-!              with a kernel pool watch via a call to SWPOOL. The
-!              agent name will be deleted from the notification list
-!              of every watched kernel variable.
-!
-!              Watched variables whose notification lists become
-!              empty will be deleted.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  It's not an error to delete a non-existent agent---one
-!         that is not present in the watcher system. A call to
-!         delete a non-existent agent has no effect on the state
-!         of the watcher system.
-!
-!     2)  If an attempt is made to delete an agent that
-!         has an unchecked update, the error SPICE(UPDATEPENDING)
-!         is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Kernel pool watches are a limited resource; the ability
-!     to delete watches when they're no longer needed is essential
-!     to allow programs that make heavy use of kernel pool watches
-!     to run for extended periods.
-!
-! $ Examples
-!
-!     Suppose that you have an application subroutine, MYTASK, that
-!     needs to access a large data set in the kernel pool. If this
-!     data could be kept in local storage and kernel pool queries
-!     performed only when the data in the kernel pool has been
-!     updated, the routine can perform much more efficiently.
-!
-!     If at some point the local stored data no longer need to be
-!     watched---for example, if they're removed from the local
-!     buffer to make room for other data---the watch set by the
-!     agent 'MYTASK' on those data can be deleted via the call
-!
-!        CALL DWPOOL ( 'MYTASK' )
-!
-! $ Restrictions
-!
-!     1)  It is recommended that watches be deleted only by
-!         routines that established them.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.1.0, 11-SEP-2013 (BVS)
-!
-!        Updated to increment POOL state counter. Updated description
-!        of the exception 1).
-!
-!-    SPICELIB Version 1.0.0, 19-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     delete kernel pool watch
-!     delete agent from kernel pool watch lists
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Delete a name from the list of agents to notify whenever a member
+!!     of a list of kernel variables is updated.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         AGENT
+!!
+!! ## Detailed Input
+!!
+!!     AGENT    is any agent name that has previously been associated
+!!              with a kernel pool watch via a call to SWPOOL. The
+!!              agent name will be deleted from the notification list
+!!              of every watched kernel variable.
+!!
+!!              Watched variables whose notification lists become
+!!              empty will be deleted.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  It's not an error to delete a non-existent agent---one
+!!         that is not present in the watcher system. A call to
+!!         delete a non-existent agent has no effect on the state
+!!         of the watcher system.
+!!
+!!     2)  If an attempt is made to delete an agent that
+!!         has an unchecked update, the error SPICE(UPDATEPENDING)
+!!         is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     Kernel pool watches are a limited resource; the ability
+!!     to delete watches when they're no longer needed is essential
+!!     to allow programs that make heavy use of kernel pool watches
+!!     to run for extended periods.
+!!
+!! ## Examples
+!!
+!!     Suppose that you have an application subroutine, MYTASK, that
+!!     needs to access a large data set in the kernel pool. If this
+!!     data could be kept in local storage and kernel pool queries
+!!     performed only when the data in the kernel pool has been
+!!     updated, the routine can perform much more efficiently.
+!!
+!!     If at some point the local stored data no longer need to be
+!!     watched---for example, if they're removed from the local
+!!     buffer to make room for other data---the watch set by the
+!!     agent 'MYTASK' on those data can be deleted via the call
+!!
+!!        CALL DWPOOL ( 'MYTASK' )
+!!
+!! ## Restrictions
+!!
+!!     1)  It is recommended that watches be deleted only by
+!!         routines that established them.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.1.0, 11-SEP-2013 (BVS)
+!!
+!!        Updated to increment POOL state counter. Updated description
+!!        of the exception 1).
+!!
+!!-    SPICELIB Version 1.0.0, 19-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     delete kernel pool watch
+!!     delete agent from kernel pool watch lists
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -23876,135 +23594,129 @@ contains
       end procedure dwpool
 
       module procedure zzvupool
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Return copies of certain POOL variables that are used in the
-!     implementation of the watcher mechanism. These variables
-!     comprise a data structure that maps kernel variable names to sets
-!     of agents watching those kernel variables.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     KERNEL
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         UWVARS    ( LBCELL : * )
-!     INTEGER               UWPTRS    ( * )
-!     INTEGER               UWPOOL    ( 2, LBCELL : * )
-!     CHARACTER*(*)         UWAGNT    ( * )
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     UWVARS   is a set into which the local watcher system
-!              set WTVARS has been copied.
-!
-!     UWPTRS   is an array into which the local watcher system
-!              array WTPTRS has been copied.
-!
-!     UWPOOL   is a doubly linked list pool into which the local
-!              watcher system doubly linked list pool WTPOOL has
-!              been copied.
-!
-!     UWAGNT   is an array into which the local watcher system
-!              array WTAGNT has been copied.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the output array UWVARS is too small to hold the
-!         set WTVARS, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     2)  If any output array other than UWVARS is to small
-!         to hold the corresponding watch system component,
-!         memory corruption will occur.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is not part of the SPICELIB API. This routine
-!     may be removed in a later version of the SPICE Toolkit, or
-!     its interface may change.
-!
-!     SPICE-based application code should not call this routine.
-!
-!     This is an "inspection hatch" routine used for SPICELIB
-!     testing.
-!
-! $ Examples
-!
-!     See the TSPICE test family F_DWPOOL.
-!
-! $ Restrictions
-!
-!     1)  This is a private routine. See $Particulars above.
-!
-!     2)  The caller must provide output arrays of adequate
-!         size. See the declarations of the watch system
-!         components in the umbrella routine POOL for size
-!         requirements.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.2, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.1, 27-MAR-2014 (BVS)
-!
-!        Set $Index_Entries to "None." to make this entry no appear in
-!        permuted index.
-!
-!-    SPICELIB Version 1.0.0, 19-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     None.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Return copies of certain POOL variables that are used in the
+!!     implementation of the watcher mechanism. These variables
+!!     comprise a data structure that maps kernel variable names to sets
+!!     of agents watching those kernel variables.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     KERNEL
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         UWVARS    ( LBCELL : * )
+!!     INTEGER               UWPTRS    ( * )
+!!     INTEGER               UWPOOL    ( 2, LBCELL : * )
+!!     CHARACTER*(*)         UWAGNT    ( * )
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     UWVARS   is a set into which the local watcher system
+!!              set WTVARS has been copied.
+!!
+!!     UWPTRS   is an array into which the local watcher system
+!!              array WTPTRS has been copied.
+!!
+!!     UWPOOL   is a doubly linked list pool into which the local
+!!              watcher system doubly linked list pool WTPOOL has
+!!              been copied.
+!!
+!!     UWAGNT   is an array into which the local watcher system
+!!              array WTAGNT has been copied.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the output array UWVARS is too small to hold the
+!!         set WTVARS, an error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!!     2)  If any output array other than UWVARS is to small
+!!         to hold the corresponding watch system component,
+!!         memory corruption will occur.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine is not part of the SPICELIB API. This routine
+!!     may be removed in a later version of the SPICE Toolkit, or
+!!     its interface may change.
+!!
+!!     SPICE-based application code should not call this routine.
+!!
+!!     This is an "inspection hatch" routine used for SPICELIB
+!!     testing.
+!!
+!! ## Examples
+!!
+!!     See the TSPICE test family F_DWPOOL.
+!!
+!! ## Restrictions
+!!
+!!     1)  This is a private routine. See $Particulars above.
+!!
+!!     2)  The caller must provide output arrays of adequate
+!!         size. See the declarations of the watch system
+!!         components in the umbrella routine POOL for size
+!!         requirements.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.2, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.1, 27-MAR-2014 (BVS)
+!!
+!!        Set $Index_Entries to "None." to make this entry no appear in
+!!        permuted index.
+!!
+!!-    SPICELIB Version 1.0.0, 19-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     None.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_arrays, only: movec, movei
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval
@@ -24112,171 +23824,165 @@ contains
       end procedure zzvupool
 
       module procedure zzpctrck
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Check and update the POOL state counter tracked by a caller
-!     (user) routine.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!
-! $ Keywords
-!
-!     KERNEL
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               USRCTR    ( CTRSIZ )
-!     LOGICAL               UPDATE
-!
-! $ Detailed_Input
-!
-!     USRCTR   is the value of the POOL state counter tracked by
-!              (saved in) the caller (user) routine.
-!
-! $ Detailed_Output
-!
-!     USRCTR   is the current POOL state counter.
-!
-!     UPDATE   is the logical flag indicating whether the input POOL
-!              state counter was different from the current POOL
-!              state counter and, therefore, had to be updated
-!              (UPDATE = .TRUE.) or if it was the same (UPDATE =
-!              .FALSE.).
-!
-! $ Parameters
-!
-!     CTRSIZ   is the dimension of the counter array used by
-!              various SPICE subsystems to uniquely identify
-!              changes in their states. This parameter is
-!              defined in the private include file 'zzctr.inc'.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is not part of the SPICELIB API. This routine
-!     may be removed in a later version of the SPICE Toolkit, or
-!     its interface may change.
-!
-!     SPICE-based application code should not call this routine.
-!
-!     This routine allows other routines to be aware of POOL state
-!     change due to addition or deletion variables or watchers. Such
-!     awareness is needed to be able to locally save some POOL-based
-!     data (e.g. body name/ID mappings or frame definitions) and only
-!     update these locally saved values if the POOL has changed.
-!
-!     To make use of the POOL state counter to achieve this goal the
-!     caller routines save the POOL state counter returned by the first
-!     call to this routine and then check that saved value against the
-!     current POOL state counter and update it by subsequent calls this
-!     routine.
-!
-! $ Examples
-!
-!     The routines that need to be aware of and act on the POOL state
-!     change initialize a local POOL counter array using ZZCTRUIN, save
-!     it, and check it against the current POOL state counter and
-!     update it, if needed, using this entry point, as follows:
-!
-!        C
-!        C     Include zzctr.inc to access CTRSIZ.
-!        C
-!              INCLUDE              'zzctr.inc'
-!              ...
-!
-!        C
-!        C     In local variable declarations declare and save
-!        C     the local POOL state counter. Also declare the
-!        C     update flag.
-!        C
-!              INTEGER               USRCTR ( CTRSIZ )
-!              LOGICAL               UPDATE
-!              ...
-!              SAVE                  USRCTR
-!              ...
-!
-!        C
-!        C     In all places where initialization is done
-!        C     initialize the local POOL state counter using
-!        C     ZZCTRUIN to ensure an update on the first check.
-!        C
-!              IF ( FIRST ) THEN
-!                 ...
-!                 CALL ZZCTRUIN( USRCTR )
-!                 FIRST = .FALSE.
-!              END IF
-!              ...
-!
-!        C
-!        C     In all places where there is a need to check for
-!        C     the POOL state change call this entry to
-!        C     check and update the local POOL state counter.
-!        C
-!              CALL ZZPCTRCK ( USRCTR, UPDATE )
-!
-!              IF ( UPDATE ) THEN
-!
-!        C
-!        C        It the POOL state changed, do what needs to
-!        C        be done to deal with saved values based
-!        C        on POOL data.
-!        C
-!                 ...
-!
-!              END IF
-!
-! $ Restrictions
-!
-!     1)  This is a private routine. See $Particulars above.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 17-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 27-MAR-2014 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     None.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Check and update the POOL state counter tracked by a caller
+!!     (user) routine.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     KERNEL
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               USRCTR    ( CTRSIZ )
+!!     LOGICAL               UPDATE
+!!
+!! ## Detailed Input
+!!
+!!     USRCTR   is the value of the POOL state counter tracked by
+!!              (saved in) the caller (user) routine.
+!!
+!! ## Detailed Output
+!!
+!!     USRCTR   is the current POOL state counter.
+!!
+!!     UPDATE   is the logical flag indicating whether the input POOL
+!!              state counter was different from the current POOL
+!!              state counter and, therefore, had to be updated
+!!              (UPDATE = .TRUE.) or if it was the same (UPDATE =
+!!              .FALSE.).
+!!
+!! ## Parameters
+!!
+!!     CTRSIZ   is the dimension of the counter array used by
+!!              various SPICE subsystems to uniquely identify
+!!              changes in their states. This parameter is
+!!              defined in the private include file 'zzctr.inc'.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine is not part of the SPICELIB API. This routine
+!!     may be removed in a later version of the SPICE Toolkit, or
+!!     its interface may change.
+!!
+!!     SPICE-based application code should not call this routine.
+!!
+!!     This routine allows other routines to be aware of POOL state
+!!     change due to addition or deletion variables or watchers. Such
+!!     awareness is needed to be able to locally save some POOL-based
+!!     data (e.g. body name/ID mappings or frame definitions) and only
+!!     update these locally saved values if the POOL has changed.
+!!
+!!     To make use of the POOL state counter to achieve this goal the
+!!     caller routines save the POOL state counter returned by the first
+!!     call to this routine and then check that saved value against the
+!!     current POOL state counter and update it by subsequent calls this
+!!     routine.
+!!
+!! ## Examples
+!!
+!!     The routines that need to be aware of and act on the POOL state
+!!     change initialize a local POOL counter array using ZZCTRUIN, save
+!!     it, and check it against the current POOL state counter and
+!!     update it, if needed, using this entry point, as follows:
+!!
+!!        C
+!!        C     Include zzctr.inc to access CTRSIZ.
+!!        C
+!!              INCLUDE              'zzctr.inc'
+!!              ...
+!!
+!!        C
+!!        C     In local variable declarations declare and save
+!!        C     the local POOL state counter. Also declare the
+!!        C     update flag.
+!!        C
+!!              INTEGER               USRCTR ( CTRSIZ )
+!!              LOGICAL               UPDATE
+!!              ...
+!!              SAVE                  USRCTR
+!!              ...
+!!
+!!        C
+!!        C     In all places where initialization is done
+!!        C     initialize the local POOL state counter using
+!!        C     ZZCTRUIN to ensure an update on the first check.
+!!        C
+!!              IF ( FIRST ) THEN
+!!                 ...
+!!                 CALL ZZCTRUIN( USRCTR )
+!!                 FIRST = .FALSE.
+!!              END IF
+!!              ...
+!!
+!!        C
+!!        C     In all places where there is a need to check for
+!!        C     the POOL state change call this entry to
+!!        C     check and update the local POOL state counter.
+!!        C
+!!              CALL ZZPCTRCK ( USRCTR, UPDATE )
+!!
+!!              IF ( UPDATE ) THEN
+!!
+!!        C
+!!        C        It the POOL state changed, do what needs to
+!!        C        be done to deal with saved values based
+!!        C        on POOL data.
+!!        C
+!!                 ...
+!!
+!!              END IF
+!!
+!! ## Restrictions
+!!
+!!     1)  This is a private routine. See $Particulars above.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 17-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 27-MAR-2014 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     None.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
       integer(ip)           maxval

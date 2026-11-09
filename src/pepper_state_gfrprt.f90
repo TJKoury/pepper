@@ -7,12 +7,12 @@
 module pepper_state_gfrprt
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
 
    implicit none
 
    private
 
-   include               'zzgf.inc'
 
    public :: init_gfrprt_state
 

@@ -14,29 +14,28 @@ contains
 !$Procedure PCKCOV ( PCK, coverage )
 
       module procedure pckcov
+!! ## Abstract
+!!
+!!     Find the coverage window for a specified reference frame in a
+!!     specified binary PCK file.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!     DAF
+!!     PCK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     ORIENTATION
+!!     TIME
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the coverage window for a specified reference frame in a
-!     specified binary PCK file.
-!
-! $ Required_Reading
-!
-!     CELLS
-!     DAF
-!     PCK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     ORIENTATION
-!     TIME
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -656,31 +655,30 @@ contains
 !$Procedure PCKEUL ( PCK, get Euler angles at time from PCK file )
 
       module procedure pckeul
+!! ## Abstract
+!!
+!!     This routine is obsolete. It supports only the type 02 binary
+!!     PCK format. It is maintained only for backward compatibility
+!!
+!!     Return Euler angles and their derivatives and their reference
+!!     frame, given an input time and body and reference frame from
+!!     a PCK binary file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     ROTATION
+!!     TIME
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     ROTATION
+!!     TRANSFORMATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     This routine is obsolete. It supports only the type 02 binary
-!     PCK format. It is maintained only for backward compatibility
-!
-!     Return Euler angles and their derivatives and their reference
-!     frame, given an input time and body and reference frame from
-!     a PCK binary file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     ROTATION
-!     TIME
-!     PCK
-!
-! $ Keywords
-!
-!     ROTATION
-!     TRANSFORMATION
-!
-! $ Declarations
-
       implicit none
 
 
@@ -884,27 +882,26 @@ contains
 !$Procedure PCKFRM ( PCK, get reference frame class ID set )
 
       module procedure pckfrm
+!! ## Abstract
+!!
+!!     Find the set of reference frame class ID codes of all frames
+!!     in a specified binary PCK file.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!     DAF
+!!     SETS
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     ORIENTATION
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the set of reference frame class ID codes of all frames
-!     in a specified binary PCK file.
-!
-! $ Required_Reading
-!
-!     CELLS
-!     DAF
-!     SETS
-!     PCK
-!
-! $ Keywords
-!
-!     ORIENTATION
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -1311,417 +1308,388 @@ contains
       end procedure pckfrm
 
       module procedure bodeul
-
-! $ Abstract
-!
-!     Return the Euler angles needed to compute the transformation from
-!     inertial to body-fixed coordinates for any body in the kernel
-!     pool.
-!
-! $ Required_Reading
-!
-!     PCK
-!     NAIF_IDS
-!     TIME
-!
-! $ Keywords
-!
-!     CONSTANTS
-!     ROTATION
-!     TRANSFORMATION
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     BODY     is the integer ID code of the body for which the
-!              transformation is requested. Bodies are numbered
-!              according to the standard NAIF numbering scheme.
-!
-!     ET       is the epoch at which the transformation is
-!              requested.
-!
-! $ Detailed_Output
-!
-!     RA,
-!     DEC      are the right ascension and declination of the
-!              (IAU) north pole of the body at the epoch of
-!              transformation. RA and DEC are given in radians.
-!
-!     W        is the angle between the ascending node of the
-!              body-fixed equatorial plane on the inertial
-!              equatorial plane and the prime meridian of the body.
-!              The node is the cross product of the inertial
-!              frame's Z-axis with the Z-axis of the body-fixed
-!              frame. The angle is measured in the positive
-!              (counterclockwise) sense about the body-fixed
-!              Z-axis, from the node to the prime meridian. W is
-!              given in radians.
-!
-!     LAMBDA   is the angle between the prime meridian and the
-!              longest axis of the tri-axial ellipsoid which
-!              models the body. LAMBDA is given in radians.
-!              See the $Particulars section below for further
-!              discussion.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If any of the PCK keywords required to compute the angles are
-!         not available in the kernel pool, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If the number of phase terms is insufficient, the error
-!         SPICE(INSUFFICIENTANGLES) is signaled.
-!
-!     3)  If, for a given body, both forms of the kernel variable names
-!
-!            BODY<body ID>_CONSTANTS_JED_EPOCH
-!            BODY<body ID>_CONSTS_JED_EPOCH
-!
-!         are found in the kernel pool, the error
-!         SPICE(COMPETINGEPOCHSPEC) is signaled. This is done
-!         regardless of whether the values assigned to the kernel
-!         variable names match.
-!
-!     4)  If, for a given body, both forms of the kernel variable names
-!
-!            BODY<body ID>_CONSTANTS_REF_FRAME
-!            BODY<body ID>_CONSTS_REF_FRAME
-!
-!         are found in the kernel pool, the error
-!         SPICE(COMPETINGFRAMESPEC) is signaled. This is done
-!         regardless of whether the values assigned to the kernel
-!         variable names match.
-!
-!     5)  If the central body associated with the input BODY, whether
-!         a system barycenter or BODY itself, has associated phase
-!         angles (aka nutation precession angles), and the kernel
-!         variable BODY<body ID>_MAX_PHASE_DEGREE for the central
-!         body is present but has a value outside the range 1:3,
-!         the error SPICE(DEGREEOUTOFRANGE) is signaled.
-!
-! $ Files
-!
-!     A text or binary PCK containing orientation data for the
-!     body designated by BODY must be loaded at the time this
-!     routine is called.
-!
-!     Normally PCK files are loaded during program initialization;
-!     they need not be re-loaded prior to each call to this routine.
-!
-! $ Particulars
-!
-!     Applications that need to compute the transformation between
-!     body-fixed and inertial frames usually can call the higher-level
-!     routine PXFORM instead of this routine.
-!
-!     If there exists high-precision binary PCK kernel information for
-!     the body at the requested time, the angles, W, DELTA and PHI are
-!     computed directly from that file. These angles are then used to
-!     compute RA, DEC and W. The most recently loaded binary PCK file
-!     has first priority followed by previously loaded binary PCK files
-!     in backward time order. If no binary PCK file has been loaded,
-!     the text P_constants kernel file (PCK) is used.
-!
-!     If there is only text PCK kernel information, it is expressed in
-!     terms of RA, DEC and W (same W as above), where
-!
-!        RA    = PHI - HALFPI()
-!        DEC   = HALFPI() - DELTA
-!
-!     RA, DEC, and W are defined as follows in the text PCK file:
-!
-!        RA  = RA0  + RA1*T  + RA2*T*T   + a  sin theta
-!                                           i          i
-!
-!        DEC = DEC0 + DEC1*T + DEC2*T*T  + d  cos theta
-!                                           i          i
-!
-!        W   = W0   + W1*d   + W2*d*d    + w  sin theta
-!                                           i          i
-!
-!     where:
-!
-!        d = days past J2000.
-!
-!        T = Julian centuries past J2000.
-!
-!        a , d , and w  arrays apply to satellites only.
-!         i   i       i
-!
-!        theta  = THETA0 * THETA1*T are specific to each planet.
-!             i
-!
-!       These angles -- typically nodal rates -- vary in number and
-!       definition from one planetary system to the next.
-!
-!     The prime meridian offset LAMBDA
-!     ================================
-!
-!     The offset LAMBDA is the value specified by the kernel variable
-!
-!        BODYnnn_LONG_AXIS
-!
-!     if such a variable is defined.
-!
-!     The offset LAMBDA is a constant for a given body. LAMBDA serves
-!     to distinguish between the planetocentric prime meridian, which
-!     is provided in the PCK file, and the meridian that passes through
-!     the +X axis of a reference frame aligned with the axes of the
-!     body's reference ellipsoid.
-!
-!     However, SPICE Toolkit makes no use of LAMBDA. In order to
-!     perform geometry computations using a reference ellipsoid not
-!     aligned with a body's planetocentric reference frame, a
-!     fixed-offset (aka "TK") reference frame aligned with the
-!     ellipsoid's axes should be specified in a frames kernel. Note
-!     that a fixed-offset frame may be rotated from the planetocentric
-!     frame about an arbitrary axis, not just the polar axis.
-!
-!     See the Frames Required Reading frames.req for details on
-!     constructing a fixed-offset frame specification.
-!
-! $ Examples
-!
-!     In the following code fragment, BODEUL is used to get the unit
-!     vector (POLE) parallel to the north pole of a target body (BODY)
-!     at a specific epoch (ET).
-!
-!        CALL BODEUL ( BODY, ET, RA, DEC, W, LAMBDA )
-!        CALL RADREC ( 1.D0, RA,  DEC, POLE )
-!
-!     Note that the items necessary to compute the Euler angles
-!     must have been loaded into the kernel pool (by one or more
-!     previous calls to LDPOOL).
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     K.S. Zukor         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 14-APR-2021 (NJB) (JDR)
-!
-!        The routine was updated to support user-defined maximum phase
-!        angle degrees. The additional text kernel kernel variable name
-!        BODYnnn_MAX_PHASE_DEGREE must be used when the phase angle
-!        polynomials have degree higher than 1. The maximum allowed
-!        degree is 3.
-!
-!        The kernel variable names
-!
-!           BODY#_CONSTS_REF_FRAME
-!           BODY#_CONSTS_JED_EPOCH
-!
-!        are now recognized.
-!
-!        Error handling was upgraded to check FAILED() between kernel
-!        data lookups and computations.
-!
-!        Now SAVEs all local variables.
-!
-!        Edited the header to comply with NAIF standard. Moved NAIF_IDS
-!        required reading from $Literature_References to
-!        $Required_Reading section.
-!
-!-    SPICELIB Version 4.2.0, 02-MAR-2016 (BVS)
-!
-!        BUG FIX: changed available room in the BODVCD call
-!        fetching 'NUT_PREC_ANGLES' from MAXANG to MAXANG*2.
-!
-!        Fixed indention in some header sections.
-!
-!        Removed BODEUL: prefix from the text of the long
-!        error for insufficient angles.
-!
-!     Last update was 24-APR-2014 (NJB)
-!
-!        Corrected the brief and detailed descriptions of W.
-!
-!-    SPICELIB Version 4.1.0, 24-OCT-2005 (NJB)
-!
-!        Calls to ZZBODVCD have been replaced with calls to
-!        BODVCD.
-!
-!-    SPICELIB Version 4.0.0, 13-FEB-2004 (NJB)
-!
-!        Code has been updated to support satellite ID codes in the
-!        range 10000 to 99999 and to allow nutation precession angles
-!        to be associated with any object.
-!
-!        Implementation changes were made to improve robustness
-!        of the code.
-!
-!-    SPICELIB Version 3.1.0, 21-MAR-1995 (KSZ)
-!
-!        REF frame is now passed correctly as a character string.
-!
-!-    SPICELIB Version 3.0.0, 10-MAR-1994 (KSZ)
-!
-!        Ability to get Euler angles from binary PCK file added.
-!        This uses the new routine PCKEUL.
-!
-!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB)
-!
-!        Updated to handle P_constants referenced to different epochs
-!        and inertial reference frames.
-!
-!-    SPICELIB Version 1.1.0, 02-NOV-1990 (NJB)
-!
-!        Allowed number of nutation precession angles increased to
-!        100.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     euler angles for orientation of a body
-!     fetch euler angles for a body
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 4.1.0, 24-OCT-2005 (NJB)
-!
-!        Calls to ZZBODVCD have been replaced with calls to
-!        BODVCD.
-!
-!-    SPICELIB Version 4.0.0, 13-FEB-2004 (NJB)
-!
-!        Code has been updated to support satellite ID codes in the
-!        range 10000 to 99999 and to allow nutation precession angles
-!        to be associated with any object.
-!
-!        Calls to deprecated kernel pool access routine RTPOOL
-!        were replaced by calls to GDPOOL.
-!
-!        Calls to BODVAR have been replaced with calls to
-!        ZZBODVCD.
-!
-!-    SPICELIB Version 3.1.0, 21-MAR-1995 (KSZ)
-!
-!        REF frame is now passed correctly as a character string.
-!
-!-    SPICELIB Version 3.0.0, 10-MAR-1994 (KSZ)
-!
-!        BODEUL now uses new software to check for the
-!        existence of binary PCK files, search the for
-!        data corresponding to the requested body and time,
-!        and return the appropriate Euler angles, using the
-!        new routine PCKEUL. Otherwise the code calculates
-!        the Euler angles from the P_constants kernel file.
-!
-!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB)
-!
-!        Updated to handle P_constants referenced to different epochs
-!        and inertial reference frames.
-!
-!        Updated to handle P_constants referenced to different epochs
-!        and inertial reference frames.
-!
-!        BODEUL now checks the kernel pool for presence of the
-!        variables
-!
-!           BODY#_CONSTANTS_REF_FRAME
-!
-!        and
-!
-!           BODY#_CONSTANTS_JED_EPOCH
-!
-!        where # is the NAIF integer code of the barycenter of a
-!        planetary system or of a body other than a planet or
-!        satellite. If either or both of these variables are
-!        present, the P_constants for BODY are presumed to be
-!        referenced to the specified inertial frame or epoch.
-!        If the epoch of the constants is not J2000, the input
-!        time ET is converted to seconds past the reference epoch.
-!        If the frame of the constants is not J2000, the Euler angles
-!        defining the rotation from the P_constants' frame to
-!        body-fixed coordinates are transformed so that they define
-!        the rotation from J2000 coordinates to body-fixed
-!        coordinates.
-!
-!-    SPICELIB Version 1.1.0, 02-NOV-1990  (NJB)
-!
-!        Allowed number of nutation precession angles increased to
-!        100.
-!
-!-    Beta Version 2.0.0, 23-JUN-1989 (HAN)
-!
-!        Mod angles by two pi. Check to see that right ascension and
-!        prime meridian angles are within the range 0 to two pi.
-!
-!        LAMBDA used to be returned in degrees. It has been corrected
-!        to return LAMBDA in radians.
-!
-!-    Beta Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
-!
-!        $Examples section completed. Declarations of unused variables
-!        HALFPI and N removed.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-!
-!     Maximum number of coefficients per phase angle polynomial.
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the Euler angles needed to compute the transformation from
+!!     inertial to body-fixed coordinates for any body in the kernel
+!!     pool.
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!     NAIF_IDS
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!     ROTATION
+!!     TRANSFORMATION
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     BODY     is the integer ID code of the body for which the
+!!              transformation is requested. Bodies are numbered
+!!              according to the standard NAIF numbering scheme.
+!!
+!!     ET       is the epoch at which the transformation is
+!!              requested.
+!!
+!! ## Detailed Output
+!!
+!!     RA,
+!!     DEC      are the right ascension and declination of the
+!!              (IAU) north pole of the body at the epoch of
+!!              transformation. RA and DEC are given in radians.
+!!
+!!     W        is the angle between the ascending node of the
+!!              body-fixed equatorial plane on the inertial
+!!              equatorial plane and the prime meridian of the body.
+!!              The node is the cross product of the inertial
+!!              frame's Z-axis with the Z-axis of the body-fixed
+!!              frame. The angle is measured in the positive
+!!              (counterclockwise) sense about the body-fixed
+!!              Z-axis, from the node to the prime meridian. W is
+!!              given in radians.
+!!
+!!     LAMBDA   is the angle between the prime meridian and the
+!!              longest axis of the tri-axial ellipsoid which
+!!              models the body. LAMBDA is given in radians.
+!!              See the $Particulars section below for further
+!!              discussion.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If any of the PCK keywords required to compute the angles are
+!!         not available in the kernel pool, an error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     2)  If the number of phase terms is insufficient, the error
+!!         SPICE(INSUFFICIENTANGLES) is signaled.
+!!
+!!     3)  If, for a given body, both forms of the kernel variable names
+!!
+!!            BODY<body ID>_CONSTANTS_JED_EPOCH
+!!            BODY<body ID>_CONSTS_JED_EPOCH
+!!
+!!         are found in the kernel pool, the error
+!!         SPICE(COMPETINGEPOCHSPEC) is signaled. This is done
+!!         regardless of whether the values assigned to the kernel
+!!         variable names match.
+!!
+!!     4)  If, for a given body, both forms of the kernel variable names
+!!
+!!            BODY<body ID>_CONSTANTS_REF_FRAME
+!!            BODY<body ID>_CONSTS_REF_FRAME
+!!
+!!         are found in the kernel pool, the error
+!!         SPICE(COMPETINGFRAMESPEC) is signaled. This is done
+!!         regardless of whether the values assigned to the kernel
+!!         variable names match.
+!!
+!!     5)  If the central body associated with the input BODY, whether
+!!         a system barycenter or BODY itself, has associated phase
+!!         angles (aka nutation precession angles), and the kernel
+!!         variable BODY<body ID>_MAX_PHASE_DEGREE for the central
+!!         body is present but has a value outside the range 1:3,
+!!         the error SPICE(DEGREEOUTOFRANGE) is signaled.
+!!
+!! ## Files
+!!
+!!     A text or binary PCK containing orientation data for the
+!!     body designated by BODY must be loaded at the time this
+!!     routine is called.
+!!
+!!     Normally PCK files are loaded during program initialization;
+!!     they need not be re-loaded prior to each call to this routine.
+!!
+!! ## Particulars
+!!
+!!     Applications that need to compute the transformation between
+!!     body-fixed and inertial frames usually can call the higher-level
+!!     routine PXFORM instead of this routine.
+!!
+!!     If there exists high-precision binary PCK kernel information for
+!!     the body at the requested time, the angles, W, DELTA and PHI are
+!!     computed directly from that file. These angles are then used to
+!!     compute RA, DEC and W. The most recently loaded binary PCK file
+!!     has first priority followed by previously loaded binary PCK files
+!!     in backward time order. If no binary PCK file has been loaded,
+!!     the text P_constants kernel file (PCK) is used.
+!!
+!!     If there is only text PCK kernel information, it is expressed in
+!!     terms of RA, DEC and W (same W as above), where
+!!
+!!        RA    = PHI - HALFPI()
+!!        DEC   = HALFPI() - DELTA
+!!
+!!     RA, DEC, and W are defined as follows in the text PCK file:
+!!
+!!        RA  = RA0  + RA1*T  + RA2*T*T   + a  sin theta
+!!                                           i          i
+!!
+!!        DEC = DEC0 + DEC1*T + DEC2*T*T  + d  cos theta
+!!                                           i          i
+!!
+!!        W   = W0   + W1*d   + W2*d*d    + w  sin theta
+!!                                           i          i
+!!
+!!     where:
+!!
+!!        d = days past J2000.
+!!
+!!        T = Julian centuries past J2000.
+!!
+!!        a , d , and w  arrays apply to satellites only.
+!!         i   i       i
+!!
+!!        theta  = THETA0 * THETA1*T are specific to each planet.
+!!             i
+!!
+!!       These angles -- typically nodal rates -- vary in number and
+!!       definition from one planetary system to the next.
+!!
+!!     The prime meridian offset LAMBDA
+!!     ================================
+!!
+!!     The offset LAMBDA is the value specified by the kernel variable
+!!
+!!        BODYnnn_LONG_AXIS
+!!
+!!     if such a variable is defined.
+!!
+!!     The offset LAMBDA is a constant for a given body. LAMBDA serves
+!!     to distinguish between the planetocentric prime meridian, which
+!!     is provided in the PCK file, and the meridian that passes through
+!!     the +X axis of a reference frame aligned with the axes of the
+!!     body's reference ellipsoid.
+!!
+!!     However, SPICE Toolkit makes no use of LAMBDA. In order to
+!!     perform geometry computations using a reference ellipsoid not
+!!     aligned with a body's planetocentric reference frame, a
+!!     fixed-offset (aka "TK") reference frame aligned with the
+!!     ellipsoid's axes should be specified in a frames kernel. Note
+!!     that a fixed-offset frame may be rotated from the planetocentric
+!!     frame about an arbitrary axis, not just the polar axis.
+!!
+!!     See the Frames Required Reading frames.req for details on
+!!     constructing a fixed-offset frame specification.
+!!
+!! ## Examples
+!!
+!!     In the following code fragment, BODEUL is used to get the unit
+!!     vector (POLE) parallel to the north pole of a target body (BODY)
+!!     at a specific epoch (ET).
+!!
+!!        CALL BODEUL ( BODY, ET, RA, DEC, W, LAMBDA )
+!!        CALL RADREC ( 1.D0, RA,  DEC, POLE )
+!!
+!!     Note that the items necessary to compute the Euler angles
+!!     must have been loaded into the kernel pool (by one or more
+!!     previous calls to LDPOOL).
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!     K.S. Zukor         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 14-APR-2021 (NJB) (JDR)
+!!
+!!        The routine was updated to support user-defined maximum phase
+!!        angle degrees. The additional text kernel kernel variable name
+!!        BODYnnn_MAX_PHASE_DEGREE must be used when the phase angle
+!!        polynomials have degree higher than 1. The maximum allowed
+!!        degree is 3.
+!!
+!!        The kernel variable names
+!!
+!!           BODY#_CONSTS_REF_FRAME
+!!           BODY#_CONSTS_JED_EPOCH
+!!
+!!        are now recognized.
+!!
+!!        Error handling was upgraded to check FAILED() between kernel
+!!        data lookups and computations.
+!!
+!!        Now SAVEs all local variables.
+!!
+!!        Edited the header to comply with NAIF standard. Moved NAIF_IDS
+!!        required reading from $Literature_References to
+!!        $Required_Reading section.
+!!
+!!-    SPICELIB Version 4.2.0, 02-MAR-2016 (BVS)
+!!
+!!        BUG FIX: changed available room in the BODVCD call
+!!        fetching 'NUT_PREC_ANGLES' from MAXANG to MAXANG*2.
+!!
+!!        Fixed indention in some header sections.
+!!
+!!        Removed BODEUL: prefix from the text of the long
+!!        error for insufficient angles.
+!!
+!!     Last update was 24-APR-2014 (NJB)
+!!
+!!        Corrected the brief and detailed descriptions of W.
+!!
+!!-    SPICELIB Version 4.1.0, 24-OCT-2005 (NJB)
+!!
+!!        Calls to ZZBODVCD have been replaced with calls to
+!!        BODVCD.
+!!
+!!-    SPICELIB Version 4.0.0, 13-FEB-2004 (NJB)
+!!
+!!        Code has been updated to support satellite ID codes in the
+!!        range 10000 to 99999 and to allow nutation precession angles
+!!        to be associated with any object.
+!!
+!!        Implementation changes were made to improve robustness
+!!        of the code.
+!!
+!!-    SPICELIB Version 3.1.0, 21-MAR-1995 (KSZ)
+!!
+!!        REF frame is now passed correctly as a character string.
+!!
+!!-    SPICELIB Version 3.0.0, 10-MAR-1994 (KSZ)
+!!
+!!        Ability to get Euler angles from binary PCK file added.
+!!        This uses the new routine PCKEUL.
+!!
+!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB)
+!!
+!!        Updated to handle P_constants referenced to different epochs
+!!        and inertial reference frames.
+!!
+!!-    SPICELIB Version 1.1.0, 02-NOV-1990 (NJB)
+!!
+!!        Allowed number of nutation precession angles increased to
+!!        100.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     euler angles for orientation of a body
+!!     fetch euler angles for a body
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 4.1.0, 24-OCT-2005 (NJB)
+!!
+!!        Calls to ZZBODVCD have been replaced with calls to
+!!        BODVCD.
+!!
+!!-    SPICELIB Version 4.0.0, 13-FEB-2004 (NJB)
+!!
+!!        Code has been updated to support satellite ID codes in the
+!!        range 10000 to 99999 and to allow nutation precession angles
+!!        to be associated with any object.
+!!
+!!        Calls to deprecated kernel pool access routine RTPOOL
+!!        were replaced by calls to GDPOOL.
+!!
+!!        Calls to BODVAR have been replaced with calls to
+!!        ZZBODVCD.
+!!
+!!-    SPICELIB Version 3.1.0, 21-MAR-1995 (KSZ)
+!!
+!!        REF frame is now passed correctly as a character string.
+!!
+!!-    SPICELIB Version 3.0.0, 10-MAR-1994 (KSZ)
+!!
+!!        BODEUL now uses new software to check for the
+!!        existence of binary PCK files, search the for
+!!        data corresponding to the requested body and time,
+!!        and return the appropriate Euler angles, using the
+!!        new routine PCKEUL. Otherwise the code calculates
+!!        the Euler angles from the P_constants kernel file.
+!!
+!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB)
+!!
+!!        Updated to handle P_constants referenced to different epochs
+!!        and inertial reference frames.
+!!
+!!        Updated to handle P_constants referenced to different epochs
+!!        and inertial reference frames.
+!!
+!!        BODEUL now checks the kernel pool for presence of the
+!!        variables
+!!
+!!           BODY#_CONSTANTS_REF_FRAME
+!!
+!!        and
+!!
+!!           BODY#_CONSTANTS_JED_EPOCH
+!!
+!!        where # is the NAIF integer code of the barycenter of a
+!!        planetary system or of a body other than a planet or
+!!        satellite. If either or both of these variables are
+!!        present, the P_constants for BODY are presumed to be
+!!        referenced to the specified inertial frame or epoch.
+!!        If the epoch of the constants is not J2000, the input
+!!        time ET is converted to seconds past the reference epoch.
+!!        If the frame of the constants is not J2000, the Euler angles
+!!        defining the rotation from the P_constants' frame to
+!!        body-fixed coordinates are transformed so that they define
+!!        the rotation from J2000 coordinates to body-fixed
+!!        coordinates.
+!!
+!!-    SPICELIB Version 1.1.0, 02-NOV-1990  (NJB)
+!!
+!!        Allowed number of nutation precession angles increased to
+!!        100.
+!!
+!!-    Beta Version 2.0.0, 23-JUN-1989 (HAN)
+!!
+!!        Mod angles by two pi. Check to see that right ascension and
+!!        prime meridian angles are within the range 0 to two pi.
+!!
+!!        LAMBDA used to be returned in degrees. It has been corrected
+!!        to return LAMBDA in radians.
+!!
+!!-    Beta Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
+!!
+!!        $Examples section completed. Declarations of unused variables
+!!        HALFPI and N removed.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Maximum number of coefficients per phase angle polynomial.
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
       use pepper_arrays, only: cleard

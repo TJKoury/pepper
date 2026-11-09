@@ -6,17 +6,17 @@
 module pepper_state_zzeknrml
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekkeyw
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektokn
+      use pepper_inc_ektype
 
    implicit none
 
    private
 
-   include 'ekkeyw.inc'
-   include 'ekopcd.inc'
-   include 'ekqlimit.inc'
-   include 'ekquery.inc'
-   include 'ektokn.inc'
-   include 'ektype.inc'
    integer(ip), parameter :: lbcell = -5
    integer(ip), parameter :: maxrel = 10*maxtok
    integer(ip), parameter :: lbpool = -5

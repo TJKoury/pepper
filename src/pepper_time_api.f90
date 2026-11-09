@@ -12,226 +12,203 @@ submodule (pepper_instance) pepper_time_api
 contains
 
       module procedure deltet
-
-! $ Abstract
-!
-!     Return the value of Delta ET (ET-UTC) for an input epoch.
-!
-! $ Required_Reading
-!
-!     TIME
-!     KERNEL
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     EPOCH    is the epoch at which "delta ET" is to be computed.
-!              EPOCH may be either UTC or ephemeris seconds past
-!              J2000, as specified by EPTYPE.
-!
-!     EPTYPE   is the type of input epoch. It may be either
-!              of the following:
-!
-!                 'UTC'    UTC seconds past J2000 UTC.
-!
-!                 'ET'     Ephemeris seconds past J2000 TDB,
-!                          also known as barycentric dynamical
-!                          time (TDB).
-!
-! $ Detailed_Output
-!
-!     DELTA    is the value of
-!
-!                 "delta ET" = ET - UTC
-!
-!              at the input epoch. This is added to UTC to give
-!              ET, or subtracted from ET to give UTC. The routine
-!              is reversible: that is, given the following calls,
-!
-!                 CALL DELTET ( UTC,      'UTC', DEL1 )
-!                 CALL DELTET ( UTC+DEL1, 'ET',  DEL2 )
-!
-!              the expression
-!
-!                 ( DEL1 .EQ. DEL2 )
-!
-!              is always .TRUE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input epoch is not recognized, the error
-!         SPICE(INVALIDEPOCH) is signaled.
-!
-!     2)  If the variables necessary for the computation of DELTA
-!         have not been loaded into the kernel pool, the error
-!         SPICE(KERNELVARNOTFOUND) is signaled.
-!
-!     3)  If the number of leapseconds in the pool is greater than
-!         the local leapseconds buffer size, the error
-!         SPICE(BUFFEROVERFLOW) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The constants necessary for computing the offset are taken
-!     from the kernel pool, where they are assumed to have been
-!     loaded from a kernel file.
-!
-!     The tables are consulted to determine the number of leap seconds
-!     preceding the input epoch. Also, an approximation to the periodic
-!     yearly variation (which has an amplitude of just under two
-!     milliseconds) in the difference between ET and TAI (Atomic Time)
-!     is computed. The final value of Delta ET is given by
-!
-!        Delta ET = ( ET - TAI ) + leap seconds
-!
-! $ Examples
-!
-!     The following example shows how DELTET may be used to convert
-!     from UTC seconds past J2000 to ephemeris seconds past J2000.
-!
-!        CALL DELTET ( UTCSEC, 'UTC', DELTA )
-!        ET = UTCSEC + DELTA
-!
-!     The following example shows how DELTET may be used to convert
-!     from ephemeris seconds past J2000 to UTC seconds past J2000.
-!
-!        CALL DELTET ( ET, 'ET', DELTA )
-!        UTCSEC = ET - DELTA
-!
-!     See the Time required reading time.req for further examples.
-!
-! $ Restrictions
-!
-!     1)  The routines STR2ET and ET2UTC are preferred for conversions
-!         between UTC and ET. This routine is provided mainly as a
-!         utility for STR2ET and ET2UTC.
-!
-!     2)  A leapseconds kernel containing leapseconds and relativistic
-!         terms MUST be loaded prior to calling this subroutine.
-!         Examples demonstrating how to load a kernel pool are included
-!         in the Required Reading file time.req and in the $Examples
-!         section of this header. For more general information about
-!         kernel pools, please consult the Required Reading file
-!         kernel.req.
-!
-! $ Literature_References
-!
-!     [1]  "The Astronomical Almanac for the Year 1990," United States
-!          Naval Observatory, U.S. Government Printing Office,
-!          Washington, D.C., 1989.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.M. Owen          (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 24-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Removed
-!        unnecessary entries in $Revisions section.
-!
-!        Replaced reference to UTC2ET with STR2ET in $Restrictions
-!        section.
-!
-!-    SPICELIB Version 1.2.2, 18-APR-2014 (BVS)
-!
-!        Minor header edits.
-!
-!-    SPICELIB Version 1.2.1, 18-MAY-2010 (BVS)
-!
-!        Removed "C$" marker from text in the header.
-!
-!-    SPICELIB Version 1.2.0, 24-AUG-1998 (WLT)
-!
-!        The previous upgrade introduced an error in the fetch
-!        of the variable DELTET/M from the kernel pool. This
-!        error was corrected.
-!
-!-    SPICELIB Version 1.1.0, 20-APR-1998 (NJB)
-!
-!        Calls to RTPOOL were replaced with calls to GDPOOL, which
-!        does more robust error checking. Check for buffer overflow
-!        was added. Local declarations were re-organized.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     difference between ephemeris time and utc
-!
-!-&
-
-! $ Revisions
-!
-!-    Beta Version 1.1.0, 06-OCT-1988 (IMU)
-!
-!        Tim Colvin of Rand noticed that times returned by UTC2ET
-!        and TPARSE differed by one second. Upon closer
-!        inspection, crack NAIF staff members deduced that in fact
-!        Mr. Colvin had not loaded the kernel pool, and were
-!        surprised to learn that no error had occurred.
-!
-!        Multiple FOUND flags and a bevy of new error messages
-!        were implemented to cope with this unfortunate oversight.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the value of Delta ET (ET-UTC) for an input epoch.
+!!
+!! ## Required Reading
+!!
+!!     TIME
+!!     KERNEL
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     EPOCH    is the epoch at which "delta ET" is to be computed.
+!!              EPOCH may be either UTC or ephemeris seconds past
+!!              J2000, as specified by EPTYPE.
+!!
+!!     EPTYPE   is the type of input epoch. It may be either
+!!              of the following:
+!!
+!!                 'UTC'    UTC seconds past J2000 UTC.
+!!
+!!                 'ET'     Ephemeris seconds past J2000 TDB,
+!!                          also known as barycentric dynamical
+!!                          time (TDB).
+!!
+!! ## Detailed Output
+!!
+!!     DELTA    is the value of
+!!
+!!                 "delta ET" = ET - UTC
+!!
+!!              at the input epoch. This is added to UTC to give
+!!              ET, or subtracted from ET to give UTC. The routine
+!!              is reversible: that is, given the following calls,
+!!
+!!                 CALL DELTET ( UTC,      'UTC', DEL1 )
+!!                 CALL DELTET ( UTC+DEL1, 'ET',  DEL2 )
+!!
+!!              the expression
+!!
+!!                 ( DEL1 .EQ. DEL2 )
+!!
+!!              is always .TRUE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input epoch is not recognized, the error
+!!         SPICE(INVALIDEPOCH) is signaled.
+!!
+!!     2)  If the variables necessary for the computation of DELTA
+!!         have not been loaded into the kernel pool, the error
+!!         SPICE(KERNELVARNOTFOUND) is signaled.
+!!
+!!     3)  If the number of leapseconds in the pool is greater than
+!!         the local leapseconds buffer size, the error
+!!         SPICE(BUFFEROVERFLOW) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The constants necessary for computing the offset are taken
+!!     from the kernel pool, where they are assumed to have been
+!!     loaded from a kernel file.
+!!
+!!     The tables are consulted to determine the number of leap seconds
+!!     preceding the input epoch. Also, an approximation to the periodic
+!!     yearly variation (which has an amplitude of just under two
+!!     milliseconds) in the difference between ET and TAI (Atomic Time)
+!!     is computed. The final value of Delta ET is given by
+!!
+!!        Delta ET = ( ET - TAI ) + leap seconds
+!!
+!! ## Examples
+!!
+!!     The following example shows how DELTET may be used to convert
+!!     from UTC seconds past J2000 to ephemeris seconds past J2000.
+!!
+!!        CALL DELTET ( UTCSEC, 'UTC', DELTA )
+!!        ET = UTCSEC + DELTA
+!!
+!!     The following example shows how DELTET may be used to convert
+!!     from ephemeris seconds past J2000 to UTC seconds past J2000.
+!!
+!!        CALL DELTET ( ET, 'ET', DELTA )
+!!        UTCSEC = ET - DELTA
+!!
+!!     See the Time required reading time.req for further examples.
+!!
+!! ## Restrictions
+!!
+!!     1)  The routines STR2ET and ET2UTC are preferred for conversions
+!!         between UTC and ET. This routine is provided mainly as a
+!!         utility for STR2ET and ET2UTC.
+!!
+!!     2)  A leapseconds kernel containing leapseconds and relativistic
+!!         terms MUST be loaded prior to calling this subroutine.
+!!         Examples demonstrating how to load a kernel pool are included
+!!         in the Required Reading file time.req and in the $Examples
+!!         section of this header. For more general information about
+!!         kernel pools, please consult the Required Reading file
+!!         kernel.req.
+!!
+!! ## Literature References
+!!
+!!     [1]  "The Astronomical Almanac for the Year 1990," United States
+!!          Naval Observatory, U.S. Government Printing Office,
+!!          Washington, D.C., 1989.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.M. Owen          (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.3.0, 24-AUG-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard. Removed
+!!        unnecessary entries in $Revisions section.
+!!
+!!        Replaced reference to UTC2ET with STR2ET in $Restrictions
+!!        section.
+!!
+!!-    SPICELIB Version 1.2.2, 18-APR-2014 (BVS)
+!!
+!!        Minor header edits.
+!!
+!!-    SPICELIB Version 1.2.1, 18-MAY-2010 (BVS)
+!!
+!!        Removed "C$" marker from text in the header.
+!!
+!!-    SPICELIB Version 1.2.0, 24-AUG-1998 (WLT)
+!!
+!!        The previous upgrade introduced an error in the fetch
+!!        of the variable DELTET/M from the kernel pool. This
+!!        error was corrected.
+!!
+!!-    SPICELIB Version 1.1.0, 20-APR-1998 (NJB)
+!!
+!!        Calls to RTPOOL were replaced with calls to GDPOOL, which
+!!        does more robust error checking. Check for buffer overflow
+!!        was added. Local declarations were re-organized.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     difference between ephemeris time and utc
+!!
+!! ## Revisions
+!!
+!!-    Beta Version 1.1.0, 06-OCT-1988 (IMU)
+!!
+!!        Tim Colvin of Rand noticed that times returned by UTC2ET
+!!        and TPARSE differed by one second. Upon closer
+!!        inspection, crack NAIF staff members deduced that in fact
+!!        Mr. Colvin had not loaded the kernel pool, and were
+!!        surprised to learn that no error had occurred.
+!!
+!!        Multiple FOUND flags and a bevy of new error messages
+!!        were implemented to cope with this unfortunate oversight.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase
       implicit none
@@ -417,414 +394,385 @@ contains
       end procedure deltet
 
       module procedure et2utc
-
-! $ Abstract
-!
-!     Convert an input time from ephemeris seconds past J2000
-!     to Calendar, Day-of-Year, or Julian Date format, UTC.
-!
-! $ Required_Reading
-!
-!     TIME
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     ET       is the input epoch, ephemeris seconds past J2000.
-!
-!     FORMAT   is the format of the output time string. It may be
-!              any of the following:
-!
-!                 'C'      Calendar format, UTC.
-!
-!                 'D'      Day-of-Year format, UTC.
-!
-!                 'J'      Julian Date format, UTC.
-!
-!                 'ISOC'   ISO Calendar format, UTC.
-!
-!                 'ISOD'   ISO Day-of-Year format, UTC.
-!
-!     PREC     is the number of digits of precision to which
-!              fractional seconds (for Calendar and Day-of-Year
-!              formats) or days (for Julian Date format) are to
-!              be computed. If PREC is zero or smaller, no decimal
-!              point is appended to the output string. If PREC is
-!              greater than 14, it is treated as 14.
-!
-! $ Detailed_Output
-!
-!     UTCSTR   is the output time string equivalent to the input
-!              epoch, in the specified format. Some examples are
-!              shown below.
-!
-!                 'C'      '1986 APR 12 16:31:09.814'
-!                 'D'      '1986-102 // 16:31:12.814'
-!                 'J'      'JD 2446533.18834276'
-!                 'ISOC'   '1987-04-12T16:31:12.814'
-!                 'ISOD'   '1987-102T16:31:12.814'
-!
-!              If an error occurs, UTCSTR is not changed.
-!
-!              Fractional seconds, or for Julian dates, fractional
-!              days, are rounded to the precision level specified
-!              by the input argument PREC.
-!
-!              UTCSTR should be declared to be at least
-!              20 + PREC characters in length to ensure
-!              sufficient room to hold calendar strings
-!              for modern epochs. For epochs prior to
-!              1000 A.D. at least 24 + PREC characters in
-!              length are required to hold the output
-!              calendar string.
-!
-!              For epochs prior to 1000 A.D. Jan 1 calendar
-!              and day of year formats are returned with the
-!              era (A.D. or B.C.) attached to the year. For
-!              example
-!
-!                 '877 A.D. MAR 17 13:29:11.829'
-!                 '471 B.C. Jan 01 12:00:00.000'
-!                 '471 B.C. 001 // 12:00:00.000'
-!
-!              ISO formats do not support the inclusion of an era.
-!              For years prior to 1 A.D. an error will be signaled
-!              if ISO format has been requested.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the format for the output string is not recognized, the
-!         error SPICE(INVALIDTIMEFORMAT) is signaled.
-!
-!     2)  If PREC is less than or equal to zero, it is treated as
-!         zero. If PREC is greater than 14, it is treated as 14.
-!
-!     3)  If one of the ISO formats is specified (ISOC or ISOD) but the
-!         year corresponding to ET is prior to 1 A.D. on the Gregorian
-!         Calendar, the error SPICE(YEAROUTOFRANGE) is signaled.
-!
-!     4)  Epochs prior to 15 Oct, 1582 on the Gregorian calendar (the
-!         calendar commonly used in western societies) are returned in
-!         the "extended" Gregorian Calendar. To convert epochs to the
-!         Julian calendar see the SPICELIB routine GR2JUL.
-!
-!     5)  This routine does not attempt to account for variations
-!         in the length of the second that were in effect prior
-!         to Jan 1, 1972. For days prior to that date, we assume
-!         there are exactly 86400 ephemeris seconds. Consequently
-!         the UTC Gregorian calendar strings produced for epochs
-!         prior to Jan 1, 1972 differ from the corresponding
-!         TDB calendar strings by approximately 41.18 seconds.
-!         (TDB Gregorian calendar strings are produced by the
-!         routine ETCAL).
-!
-!     6)  If a leapseconds kernel has not been loaded prior to calling
-!         this routine, an error is signaled by a routine in the
-!         call tree of this routine.
-!
-! $ Files
-!
-!     A leapseconds kernel must be loaded via FURNSH prior to calling
-!     this routine. The kernel need be loaded only once during a program
-!     run.
-!
-! $ Particulars
-!
-!     This routine handles the task of converting a double precision
-!     representation of an epoch to a character string suitable for
-!     human consumption. The more general routine TIMOUT may also be
-!     used to convert ET to time strings.
-!
-! $ Examples
-!
-!     Let the value of ET be -527644192.5403653 ephemeris seconds
-!     past J2000. Assuming that the nominal values in the kernel pool
-!     have not been altered, the following calls
-!
-!        CALL ET2UTC ( ET, 'C', 0, UTCSTR )
-!        CALL ET2UTC ( ET, 'C', 3, UTCSTR )
-!        CALL ET2UTC ( ET, 'D', 5, UTCSTR )
-!        CALL ET2UTC ( ET, 'J', 7, UTCSTR )
-!
-!     produce the following output strings
-!
-!        '1983 APR 13 12:09:14'
-!        '1983 APR 13 12:09:14.274'
-!        '1983-103 // 12:09:14.27400'
-!        'JD 2445438.0064152'
-!
-!     respectively.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1]  J. Jespersen and J. Fitz-Randolph, "From Sundials to Atomic
-!          Clocks, Understanding Time and Frequency," Dover
-!          Publications, Inc. New York, 1982.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton         (JPL)
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     J.M. Lynch         (JPL)
-!     W.M. Owen          (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.0.5, 24-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Extended $Files
-!        section.
-!
-!-    SPICELIB Version 3.0.4, 06-APR-2009 (NJB)
-!
-!        Header was updated to state that fractional
-!        seconds or days are rounded in the output
-!        string.
-!
-!-    SPICELIB Version 3.0.3, 28-JAN-2008 (BVS)
-!
-!        Fixed typo in the ISOC example string in $Detailed_Output.
-!
-!-    SPICELIB Version 3.0.2, 29-JUL-2003 (NJB) (CHA)
-!
-!        Various header changes were made to improve clarity and
-!        more fully explain the routine's functionality.
-!
-!-    SPICELIB Version 3.0.1, 14-SEP-2000 (EDW)
-!
-!        Added FAILED check after TTRANS call during the calendar "C"
-!        format processing to catch failure signal from TTRANS.
-!        Lack of this check caused CSPICE based programs to core dump
-!        if ET2UTC was called without a leapseconds kernel while
-!        error action was set to RETURN.
-!
-!-    SPICELIB Version 3.0.0, 13-MAR-1996 (WLT)
-!
-!        The construction of the numerical components of the
-!        output string are now handled by the SPICELIB routine
-!        TTRANS.
-!
-!        In addition the routine now supports the ISO formats and
-!        the era associated with an epoch (B.C. or A.D.) in non
-!        ISO formats.
-!
-!-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
-!
-!        Removed some potential compile warnings that could be caused
-!        by truncation of double precision values to integers through
-!        a direct assignment. The direct assignment has been replaced
-!        with a call to the intrinsic function IDINT.
-!
-!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 2.0.0, 21-MAR-1991 (NJB) (JML)
-!
-!        Two bugs involving rounding errors were corrected. One of
-!        the bugs caused conversion errors of magnitude as large as
-!        1 second. See $Revisions for details.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     ephemeris time to utc
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 3.0.0, 13-MAR-1996 (WLT)
-!
-!        The construction of the numerical components of the
-!        output string are now handled by the SPICELIB routine
-!        TTRANS.
-!
-!        In addition the routine now supports the era associated
-!        with an epoch (B.C. or A.D.)
-!
-!-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
-!
-!        Removed some potential compile warnings that could be
-!        caused by truncation of double precision values to
-!        integers through a direct assignment. The direct
-!        assignment has been replaced with a call to the
-!        intrinsic function IDINT.
-!
-!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was
-!        added following the header.
-!
-!-    SPICELIB Version 2.0.0, 21-MAR-1991 (NJB) (JML)
-!
-!        1) In the previous version of this routine, the algorithm
-!        that was used permitted inconsistent conversion of the
-!        integer and fractional parts of the UTC value
-!        corresponding to the input ET value.
-!
-!           In the case where rounding the double precision UTC
-!           time corresponding to the input ET value to PREC
-!           decimal places resulted in a carry (to the integer
-!           portion of the UTC value), the integer portion of the
-!           UTC value was treated correctly, but the fraction was
-!           not always rounded correctly. The specific case where
-!           the problem occurred was when the input ET value
-!           mapped to a UTC time having a fractional part that
-!           rounded up to 1.0 when rounded PREC decimal places,
-!           but that did not round up to 1.0 when rounded to the
-!           nearest PREC+1 decimal places. The set of such
-!           fractions can be represented as
-!
-!             { 1 - EPSILON :      EPSILON  <  5 * ( 10 **
-!             -(PREC+1) ) - and
-!
-!                                  EPSILON  >  5 * ( 10 **
-!                                  -(PREC+2) )
-!
-!                                                                     }
-!
-!           For example, if the input ET mapped to the UTC time
-!
-!              2 JAN 1991 00:34:12.99994,
-!
-!           then a call to this routine with PREC set to 3 would
-!           result in the output
-!
-!              2 JAN 1991 00:34:13.999
-!
-!           instead of the correct value
-!
-!              2 JAN 1991 00:34:13.000
-!
-!           On the other hand, if the input ET mapped to the UTC
-!           time
-!
-!              2 JAN 1991 00:34:12.99996,
-!
-!           then a call to this routine with PREC set to 3 would
-!           result in the correct output.
-!
-!           This error was apparently difficult to generate: it
-!           has never been reported by any SPICELIB users, and was
-!           eventually discovered by NAIF staff.
-!
-!        2) The second bug is somewhat less severe, as far as the
-!        magnitude of the error is concerned. However, it's
-!        easier to generate this error. Namely, in some cases,
-!        the fractional part of the input ET value is rounded to
-!        PREC SIGNIFICANT DIGITS, rather than to PREC decimal
-!        places. The effect of this is that the fraction is
-!        occasionally truncated rather than rounded. For example,
-!        the ET value equivalent to the UTC string
-!
-!              1991 JAN 2 00:34:12.0009
-!
-!           would be converted to
-!
-!              1991 JAN 2 00:34:12.000
-!
-!           instead of the correct value
-!
-!              1991 JAN 2 00:34:12.001
-!
-!           when the input argument PREC was set equal to 3.
-!
-!        The modifications made to solve these problems are as
-!        follows:
-!
-!           1)  The input ET value, after conversion to `UTC
-!               seconds past 2000', is broken up into the sum of a
-!               whole number of seconds and a non-negative,
-!               fractional number of seconds. The fact that the
-!               fractional part is non-negative simplifies the
-!               conversion of the fraction.
-!
-!           2)  The fraction is rounded to PREC decimal places---
-!               that is, to the nearest integer multiple of
-!               10**(-PREC). If the rounding results in a carry,
-!               the whole number portion of the time value is
-!               incremented by 1 second. After this step, the
-!               whole number of seconds correctly accounts for
-!               any necessary rounding of the fraction.
-!
-!           3)  The whole number portion of the time value is
-!           passed through the inverse Muller-Wimberly algorithm
-!           to obtain years, months, days, hours, minutes, and
-!           whole seconds. A small fraction is added to the whole
-!           number to prevent round-off error from occurring when
-!           divisions are performed.
-!
-!           4)  The fraction is converted to a string using the
-!               SPICELIB routine DPSTRF. To ensure that DPSTRF
-!               produces an output string containing PREC decimal
-!               places, an integer is added to the fraction value
-!               before supplying it to DPSTRF. This integer
-!               `anchors' the first significant digit of the input
-!               value in the units place.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local Functions (Statement Functions)
-!
-
-!
-!     Local variables
-!
-
-
-
-
-
-
-
-
-!
-!     Save everything between calls
-!
-
-!
-!     Initial values
-!
-
-!
-!     The function NDIGIT gives the number of digits required to
-!     display a non-negative integer that is less than 10000
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Convert an input time from ephemeris seconds past J2000
+!!     to Calendar, Day-of-Year, or Julian Date format, UTC.
+!!
+!! ## Required Reading
+!!
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the input epoch, ephemeris seconds past J2000.
+!!
+!!     FORMAT   is the format of the output time string. It may be
+!!              any of the following:
+!!
+!!                 'C'      Calendar format, UTC.
+!!
+!!                 'D'      Day-of-Year format, UTC.
+!!
+!!                 'J'      Julian Date format, UTC.
+!!
+!!                 'ISOC'   ISO Calendar format, UTC.
+!!
+!!                 'ISOD'   ISO Day-of-Year format, UTC.
+!!
+!!     PREC     is the number of digits of precision to which
+!!              fractional seconds (for Calendar and Day-of-Year
+!!              formats) or days (for Julian Date format) are to
+!!              be computed. If PREC is zero or smaller, no decimal
+!!              point is appended to the output string. If PREC is
+!!              greater than 14, it is treated as 14.
+!!
+!! ## Detailed Output
+!!
+!!     UTCSTR   is the output time string equivalent to the input
+!!              epoch, in the specified format. Some examples are
+!!              shown below.
+!!
+!!                 'C'      '1986 APR 12 16:31:09.814'
+!!                 'D'      '1986-102 // 16:31:12.814'
+!!                 'J'      'JD 2446533.18834276'
+!!                 'ISOC'   '1987-04-12T16:31:12.814'
+!!                 'ISOD'   '1987-102T16:31:12.814'
+!!
+!!              If an error occurs, UTCSTR is not changed.
+!!
+!!              Fractional seconds, or for Julian dates, fractional
+!!              days, are rounded to the precision level specified
+!!              by the input argument PREC.
+!!
+!!              UTCSTR should be declared to be at least
+!!              20 + PREC characters in length to ensure
+!!              sufficient room to hold calendar strings
+!!              for modern epochs. For epochs prior to
+!!              1000 A.D. at least 24 + PREC characters in
+!!              length are required to hold the output
+!!              calendar string.
+!!
+!!              For epochs prior to 1000 A.D. Jan 1 calendar
+!!              and day of year formats are returned with the
+!!              era (A.D. or B.C.) attached to the year. For
+!!              example
+!!
+!!                 '877 A.D. MAR 17 13:29:11.829'
+!!                 '471 B.C. Jan 01 12:00:00.000'
+!!                 '471 B.C. 001 // 12:00:00.000'
+!!
+!!              ISO formats do not support the inclusion of an era.
+!!              For years prior to 1 A.D. an error will be signaled
+!!              if ISO format has been requested.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the format for the output string is not recognized, the
+!!         error SPICE(INVALIDTIMEFORMAT) is signaled.
+!!
+!!     2)  If PREC is less than or equal to zero, it is treated as
+!!         zero. If PREC is greater than 14, it is treated as 14.
+!!
+!!     3)  If one of the ISO formats is specified (ISOC or ISOD) but the
+!!         year corresponding to ET is prior to 1 A.D. on the Gregorian
+!!         Calendar, the error SPICE(YEAROUTOFRANGE) is signaled.
+!!
+!!     4)  Epochs prior to 15 Oct, 1582 on the Gregorian calendar (the
+!!         calendar commonly used in western societies) are returned in
+!!         the "extended" Gregorian Calendar. To convert epochs to the
+!!         Julian calendar see the SPICELIB routine GR2JUL.
+!!
+!!     5)  This routine does not attempt to account for variations
+!!         in the length of the second that were in effect prior
+!!         to Jan 1, 1972. For days prior to that date, we assume
+!!         there are exactly 86400 ephemeris seconds. Consequently
+!!         the UTC Gregorian calendar strings produced for epochs
+!!         prior to Jan 1, 1972 differ from the corresponding
+!!         TDB calendar strings by approximately 41.18 seconds.
+!!         (TDB Gregorian calendar strings are produced by the
+!!         routine ETCAL).
+!!
+!!     6)  If a leapseconds kernel has not been loaded prior to calling
+!!         this routine, an error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!! ## Files
+!!
+!!     A leapseconds kernel must be loaded via FURNSH prior to calling
+!!     this routine. The kernel need be loaded only once during a program
+!!     run.
+!!
+!! ## Particulars
+!!
+!!     This routine handles the task of converting a double precision
+!!     representation of an epoch to a character string suitable for
+!!     human consumption. The more general routine TIMOUT may also be
+!!     used to convert ET to time strings.
+!!
+!! ## Examples
+!!
+!!     Let the value of ET be -527644192.5403653 ephemeris seconds
+!!     past J2000. Assuming that the nominal values in the kernel pool
+!!     have not been altered, the following calls
+!!
+!!        CALL ET2UTC ( ET, 'C', 0, UTCSTR )
+!!        CALL ET2UTC ( ET, 'C', 3, UTCSTR )
+!!        CALL ET2UTC ( ET, 'D', 5, UTCSTR )
+!!        CALL ET2UTC ( ET, 'J', 7, UTCSTR )
+!!
+!!     produce the following output strings
+!!
+!!        '1983 APR 13 12:09:14'
+!!        '1983 APR 13 12:09:14.274'
+!!        '1983-103 // 12:09:14.27400'
+!!        'JD 2445438.0064152'
+!!
+!!     respectively.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     [1]  J. Jespersen and J. Fitz-Randolph, "From Sundials to Atomic
+!!          Clocks, Understanding Time and Frequency," Dover
+!!          Publications, Inc. New York, 1982.
+!!
+!! ## Author and Institution
+!!
+!!     C.H. Acton         (JPL)
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     K.R. Gehringer     (JPL)
+!!     J.M. Lynch         (JPL)
+!!     W.M. Owen          (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.0.5, 24-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Extended $Files
+!!        section.
+!!
+!!-    SPICELIB Version 3.0.4, 06-APR-2009 (NJB)
+!!
+!!        Header was updated to state that fractional
+!!        seconds or days are rounded in the output
+!!        string.
+!!
+!!-    SPICELIB Version 3.0.3, 28-JAN-2008 (BVS)
+!!
+!!        Fixed typo in the ISOC example string in $Detailed_Output.
+!!
+!!-    SPICELIB Version 3.0.2, 29-JUL-2003 (NJB) (CHA)
+!!
+!!        Various header changes were made to improve clarity and
+!!        more fully explain the routine's functionality.
+!!
+!!-    SPICELIB Version 3.0.1, 14-SEP-2000 (EDW)
+!!
+!!        Added FAILED check after TTRANS call during the calendar "C"
+!!        format processing to catch failure signal from TTRANS.
+!!        Lack of this check caused CSPICE based programs to core dump
+!!        if ET2UTC was called without a leapseconds kernel while
+!!        error action was set to RETURN.
+!!
+!!-    SPICELIB Version 3.0.0, 13-MAR-1996 (WLT)
+!!
+!!        The construction of the numerical components of the
+!!        output string are now handled by the SPICELIB routine
+!!        TTRANS.
+!!
+!!        In addition the routine now supports the ISO formats and
+!!        the era associated with an epoch (B.C. or A.D.) in non
+!!        ISO formats.
+!!
+!!-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
+!!
+!!        Removed some potential compile warnings that could be caused
+!!        by truncation of double precision values to integers through
+!!        a direct assignment. The direct assignment has been replaced
+!!        with a call to the intrinsic function IDINT.
+!!
+!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 2.0.0, 21-MAR-1991 (NJB) (JML)
+!!
+!!        Two bugs involving rounding errors were corrected. One of
+!!        the bugs caused conversion errors of magnitude as large as
+!!        1 second. See $Revisions for details.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     ephemeris time to utc
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 3.0.0, 13-MAR-1996 (WLT)
+!!
+!!        The construction of the numerical components of the
+!!        output string are now handled by the SPICELIB routine
+!!        TTRANS.
+!!
+!!        In addition the routine now supports the era associated
+!!        with an epoch (B.C. or A.D.)
+!!
+!!-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
+!!
+!!        Removed some potential compile warnings that could be
+!!        caused by truncation of double precision values to
+!!        integers through a direct assignment. The direct
+!!        assignment has been replaced with a call to the
+!!        intrinsic function IDINT.
+!!
+!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was
+!!        added following the header.
+!!
+!!-    SPICELIB Version 2.0.0, 21-MAR-1991 (NJB) (JML)
+!!
+!!        1) In the previous version of this routine, the algorithm
+!!        that was used permitted inconsistent conversion of the
+!!        integer and fractional parts of the UTC value
+!!        corresponding to the input ET value.
+!!
+!!           In the case where rounding the double precision UTC
+!!           time corresponding to the input ET value to PREC
+!!           decimal places resulted in a carry (to the integer
+!!           portion of the UTC value), the integer portion of the
+!!           UTC value was treated correctly, but the fraction was
+!!           not always rounded correctly. The specific case where
+!!           the problem occurred was when the input ET value
+!!           mapped to a UTC time having a fractional part that
+!!           rounded up to 1.0 when rounded PREC decimal places,
+!!           but that did not round up to 1.0 when rounded to the
+!!           nearest PREC+1 decimal places. The set of such
+!!           fractions can be represented as
+!!
+!!             { 1 - EPSILON :      EPSILON  <  5 * ( 10 **
+!!             -(PREC+1) ) - and
+!!
+!!                                  EPSILON  >  5 * ( 10 **
+!!                                  -(PREC+2) )
+!!
+!!                                                                     }
+!!
+!!           For example, if the input ET mapped to the UTC time
+!!
+!!              2 JAN 1991 00:34:12.99994,
+!!
+!!           then a call to this routine with PREC set to 3 would
+!!           result in the output
+!!
+!!              2 JAN 1991 00:34:13.999
+!!
+!!           instead of the correct value
+!!
+!!              2 JAN 1991 00:34:13.000
+!!
+!!           On the other hand, if the input ET mapped to the UTC
+!!           time
+!!
+!!              2 JAN 1991 00:34:12.99996,
+!!
+!!           then a call to this routine with PREC set to 3 would
+!!           result in the correct output.
+!!
+!!           This error was apparently difficult to generate: it
+!!           has never been reported by any SPICELIB users, and was
+!!           eventually discovered by NAIF staff.
+!!
+!!        2) The second bug is somewhat less severe, as far as the
+!!        magnitude of the error is concerned. However, it's
+!!        easier to generate this error. Namely, in some cases,
+!!        the fractional part of the input ET value is rounded to
+!!        PREC SIGNIFICANT DIGITS, rather than to PREC decimal
+!!        places. The effect of this is that the fraction is
+!!        occasionally truncated rather than rounded. For example,
+!!        the ET value equivalent to the UTC string
+!!
+!!              1991 JAN 2 00:34:12.0009
+!!
+!!           would be converted to
+!!
+!!              1991 JAN 2 00:34:12.000
+!!
+!!           instead of the correct value
+!!
+!!              1991 JAN 2 00:34:12.001
+!!
+!!           when the input argument PREC was set equal to 3.
+!!
+!!        The modifications made to solve these problems are as
+!!        follows:
+!!
+!!           1)  The input ET value, after conversion to `UTC
+!!               seconds past 2000', is broken up into the sum of a
+!!               whole number of seconds and a non-negative,
+!!               fractional number of seconds. The fact that the
+!!               fractional part is non-negative simplifies the
+!!               conversion of the fraction.
+!!
+!!           2)  The fraction is rounded to PREC decimal places---
+!!               that is, to the nearest integer multiple of
+!!               10**(-PREC). If the rounding results in a carry,
+!!               the whole number portion of the time value is
+!!               incremented by 1 second. After this step, the
+!!               whole number of seconds correctly accounts for
+!!               any necessary rounding of the fraction.
+!!
+!!           3)  The whole number portion of the time value is
+!!           passed through the inverse Muller-Wimberly algorithm
+!!           to obtain years, months, days, hours, minutes, and
+!!           whole seconds. A small fraction is added to the whole
+!!           number to prevent round-off error from occurring when
+!!           divisions are performed.
+!!
+!!           4)  The fraction is converted to a string using the
+!!               SPICELIB routine DPSTRF. To ensure that DPSTRF
+!!               produces an output string containing PREC decimal
+!!               places, an integer is added to the fraction value
+!!               before supplying it to DPSTRF. This integer
+!!               `anchors' the first significant digit of the input
+!!               value in the units place.
+!!
+!!     SPICELIB functions
+!!
+!!     Local Functions (Statement Functions)
+!!
+!!     Local variables
+!!
+!!     Save everything between calls
+!!
+!!     Initial values
+!!
+!!     The function NDIGIT gives the number of digits required to
+!!     display a non-negative integer that is less than 10000
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, prefix, suffix, ucase
       implicit none
@@ -1540,368 +1488,362 @@ contains
 !     Local variables
 
       module procedure scanpr
-
-! $ Abstract
-!
-!     Prepare recognized markers and auxiliary arrays for the
-!     routine SCAN.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PARSING
-!     UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               NMARKS
-!     CHARACTER*(*)         MARKS   ( * )
-!     INTEGER               MRKLEN  ( * )
-!     INTEGER               PNTERS  ( * )
-!
-! $ Detailed_Input
-!
-!     NMARKS   is the number of recognized marks that will be
-!              recognized substrings of STRING.
-!
-!     MARKS    is an array of marks that will be recognized
-!              by the scanning routine. Leading and trailing
-!              blanks are not significant. (Except for the
-!              blank character ' ', itself.  After all, some
-!              part of it must be significant.)  Case of the
-!              entries in MARKS is significant. The MARKS
-!              'XX' and 'xx' are regarded as different MARKS.
-!
-! $ Detailed_Output
-!
-!     NMARKS   is the number of marks in the array MARKS after it
-!              has been prepared for SCAN.
-!
-!     MARKS    is an array of recognizable substrings.
-!              It has been prepared for use by SCAN
-!              so as to be compatible with the other arrays.
-!              It will be sorted in ascending order, left
-!              justified and contain no duplicate entries.
-!
-!     MRKLEN   is an auxiliary array populated by SCANPR
-!              for use by SCAN that describes MARKS.
-!
-!     PNTERS   is an auxiliary array populated by SCANPR for
-!              use by SCAN. It should be declared in the
-!              calling program as
-!
-!                 INTEGER   PNTERS ( RCHARS )
-!
-!              RCHARS is given by the expression
-!
-!                MAX - MIN + 5
-!
-!              where
-!
-!              MAX is the maximum value of ICHAR(MARKS(I)(1:1))
-!                  over the range I = 1, NMARKS
-!
-!              MIN is the minimum value of ICHAR(MARKS(I)(1:1))
-!                  over the range I = 1, NMARKS
-!
-!              Here are some typical values that may help you avoid
-!              going through the computations above. (This assumes
-!              that ICHAR returns the ASCII code for a character.)
-!
-!              Scanning Situation           RCHAR
-!              ------------------          -------------------
-!              If NMARKS = 1
-!              or all MARKS                   5
-!              begin with the same
-!              character.
-!
-!              All MARKS begin with
-!              one of the characters          20
-!              in the string
-!              ' !"#$%&''()*+,-./'
-!
-!              All MARKS begin with
-!              one of the characters          11
-!              in the string
-!              ':;<=>?@'
-!
-!              All MARKS begin with
-!              one of the characters          37
-!              in the string
-!              ' !"#$%&''()*+,-./:;<=>?@'
-!
-!              All MARKS begin with
-!              an upper case English letter   30
-!
-!              All MARKS begin with a
-!              decimal digit                  14
-!
-!              All Marks begin with a
-!              lower case English letter      30
-!
-!              All Marks begin with
-!              a digit or upper case          47
-!              character.
-!
-!              All Marks begin with a
-!              printing character or          100
-!              a blank.
-!
-!              Anything might be a mark       132
-!
-!              Finally, so you won't have to look it up elsewhere
-!              here are the ASCII codes for the printing
-!              characters and blanks.
-!
-!              (Common Punctuations) Character     ASCII Code
-!                                    -----------   ----------
-!                                    ' ' (space)     32
-!                                    '!'             33
-!                                    '"'             34
-!                                    '#'             35
-!                                    '$'             36
-!                                    '%'             37
-!                                    '&'             38
-!                                    ''''            39
-!                                    '('             40
-!                                    ')'             41
-!                                    '*'             42
-!                                    '+'             43
-!                                    ','             44
-!                                    '-'             45
-!                                    '.'             46
-!                                    '/'             47
-!
-!              (Decimal Digits)      Character     ASCII Code
-!                                    -----------   ----------
-!                                    '0'             48
-!                                    '1'             49
-!                                    '2'             50
-!                                    '3'             51
-!                                    '4'             52
-!                                    '5'             53
-!                                    '6'             54
-!                                    '7'             55
-!                                    '8'             56
-!                                    '9'             57
-!
-!              (More punctuation)    Character     ASCII Code
-!                                    -----------   ----------
-!                                    ':'             58
-!                                    ';'             59
-!                                    '<'             60
-!                                    '='             61
-!                                    '>'             62
-!                                    '?'             63
-!                                    '@'             64
-!
-!              (Uppercase characters)  Character     ASCII Code
-!                                    -----------   ----------
-!                                    'A'             65
-!                                    'B'             66
-!                                    'C'             67
-!                                    'D'             68
-!                                    'E'             69
-!                                    'F'             70
-!                                    'G'             71
-!                                    'H'             72
-!                                    'I'             73
-!                                    'J'             74
-!                                    'K'             75
-!                                    'L'             76
-!                                    'M'             77
-!                                    'N'             78
-!                                    'O'             79
-!                                    'P'             80
-!                                    'Q'             81
-!                                    'R'             82
-!                                    'S'             83
-!                                    'T'             84
-!                                    'U'             85
-!                                    'V'             86
-!                                    'W'             87
-!                                    'X'             88
-!                                    'Y'             89
-!                                    'Z'             90
-!
-!              (More punctuation)    Character     ASCII Code
-!                                    -----------   ----------
-!                                    '['             91
-!                                    '\'             92
-!                                    ']'             93
-!                                    '^'             94
-!                                    '_'             95
-!                                    '`'             96
-!
-!              (Lowercase characters)  Character     ASCII Code
-!                                    -----------   ----------
-!                                    'a'             97
-!                                    'b'             98
-!                                    'c'             99
-!                                    'd'            100
-!                                    'e'            101
-!                                    'f'            102
-!                                    'g'            103
-!                                    'h'            104
-!                                    'i'            105
-!                                    'j'            106
-!                                    'k'            107
-!                                    'l'            108
-!                                    'm'            109
-!                                    'n'            110
-!                                    'o'            111
-!                                    'p'            112
-!                                    'q'            113
-!                                    'r'            114
-!                                    's'            115
-!                                    't'            116
-!                                    'u'            117
-!                                    'v'            118
-!                                    'w'            119
-!                                    'x'            120
-!                                    'y'            121
-!                                    'z'            122
-!
-!              (More punctuation)      Character     ASCII Code
-!                                    -----------   ----------
-!                                    '{'            123
-!                                    '|'            124
-!                                    '}'            125
-!                                    '~'            126
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  A space is regarded as a special mark. If MARKS(I) = ' ',
-!         then MARKS(I) will match any consecutive sequence of blanks.
-!
-!     2)  If NMARKS is less than or equal to zero, SCAN will always
-!         find a single token, namely the entire string to be scanned.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine prepares the arrays MARKS, MRKLEN and PNTERS
-!     so that they are suitable for input to the routine SCAN.
-!
-!     It is expected that users will need to scan many strings
-!     and that from the programming point of view it is
-!     easiest to simply supply a list of MARKS to a "formatting"
-!     routine such as this so that the strings can then
-!     be efficiently scanned by the routine SCAN. This formatting
-!     is the function of this routine.
-!
-! $ Examples
-!
-!     Suppose you need to identify all of the words within a string
-!     and wish to ignore punctuation marks such as ' ', ',', ':', ';'
-!     '---'.  Then the first step is to load the array of marks as
-!     shown here:
-!
-!        The minimum ASCII code for the first character of a marker is
-!        32 (for ' ').
-!
-!        INTEGER               FCHAR
-!        PARAMETER           ( FCHAR = 32 )
-!
-!        The maximum ASCII code for the first character of a marker is
-!        59 (for ';').
-!
-!        INTEGER               LCHAR
-!        PARAMETER           ( LCHAR = 59 )
-!
-!        The proper size to declare PNTERS is given by the parameter
-!        RCHAR defined in terms of LCHAR and FCHAR.
-!
-!        INTEGER               RCHAR
-!        PARAMETER           ( RCHAR = LCHAR - FCHAR + 5 )
-!
-!        LOGICAL               FIRST
-!        CHARACTER*(4)         MARKS
-!        INTEGER               NMARKS ( 5     )
-!        INTEGER               MRKLEN ( 5     )
-!        INTEGER               PNTERS ( RCHAR )
-!
-!        SAVE                  FIRST
-!        SAVE                  MARKS
-!        SAVE                  MRKLEN
-!        SAVE                  PNTERS
-!
-!        IF ( FIRST ) THEN
-!
-!           FIRST    = .FALSE.
-!
-!           MARKS(1) = ' '
-!           MARKS(2) = '---'
-!           MARKS(3) = ':'
-!           MARKS(4) = ','
-!           MARKS(5) = ';'
-!
-!           NMARKS   = 5
-!
-!           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
-!
-!        END IF
-!
-!     Notice that the call to SCANPR is nested inside an
-!     IF ( FIRST ) THEN ... END IF block. In this and many applications
-!     the marks that will used in the scan are fixed. Since the marks
-!     are not changing, you need to process MARKS and set up
-!     the auxiliary arrays MRKLEN and PNTERS only once (assuming that
-!     you SAVE the appropriate variables as has been done above).
-!     In this way if the code is executed many times, there is only
-!     a small overhead required for preparing the data so that it
-!     can be used efficiently in scanning.
-!
-! $ Restrictions
-!
-!     1)  MRKLEN and PNTERS must be declared to be at least as large
-!         as indicated above. If not, this routine will write
-!         past the ends of these arrays. Much unpleasantness may
-!         ensue in the attempt to debug such problems.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Prepare for scanning strings
-!     Prepare for parsing strings
-!
-!-&
-
-!
-!     We handle the case where NMARKS is non-positive separately.
-!
+!! ## Abstract
+!!
+!!     Prepare recognized markers and auxiliary arrays for the
+!!     routine SCAN.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PARSING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               NMARKS
+!!     CHARACTER*(*)         MARKS   ( * )
+!!     INTEGER               MRKLEN  ( * )
+!!     INTEGER               PNTERS  ( * )
+!!
+!! ## Detailed Input
+!!
+!!     NMARKS   is the number of recognized marks that will be
+!!              recognized substrings of STRING.
+!!
+!!     MARKS    is an array of marks that will be recognized
+!!              by the scanning routine. Leading and trailing
+!!              blanks are not significant. (Except for the
+!!              blank character ' ', itself.  After all, some
+!!              part of it must be significant.)  Case of the
+!!              entries in MARKS is significant. The MARKS
+!!              'XX' and 'xx' are regarded as different MARKS.
+!!
+!! ## Detailed Output
+!!
+!!     NMARKS   is the number of marks in the array MARKS after it
+!!              has been prepared for SCAN.
+!!
+!!     MARKS    is an array of recognizable substrings.
+!!              It has been prepared for use by SCAN
+!!              so as to be compatible with the other arrays.
+!!              It will be sorted in ascending order, left
+!!              justified and contain no duplicate entries.
+!!
+!!     MRKLEN   is an auxiliary array populated by SCANPR
+!!              for use by SCAN that describes MARKS.
+!!
+!!     PNTERS   is an auxiliary array populated by SCANPR for
+!!              use by SCAN. It should be declared in the
+!!              calling program as
+!!
+!!                 INTEGER   PNTERS ( RCHARS )
+!!
+!!              RCHARS is given by the expression
+!!
+!!                MAX - MIN + 5
+!!
+!!              where
+!!
+!!              MAX is the maximum value of ICHAR(MARKS(I)(1:1))
+!!                  over the range I = 1, NMARKS
+!!
+!!              MIN is the minimum value of ICHAR(MARKS(I)(1:1))
+!!                  over the range I = 1, NMARKS
+!!
+!!              Here are some typical values that may help you avoid
+!!              going through the computations above. (This assumes
+!!              that ICHAR returns the ASCII code for a character.)
+!!
+!!              Scanning Situation           RCHAR
+!!              ------------------          -------------------
+!!              If NMARKS = 1
+!!              or all MARKS                   5
+!!              begin with the same
+!!              character.
+!!
+!!              All MARKS begin with
+!!              one of the characters          20
+!!              in the string
+!!              ' !"#$%&''()*+,-./'
+!!
+!!              All MARKS begin with
+!!              one of the characters          11
+!!              in the string
+!!              ':;<=>?@'
+!!
+!!              All MARKS begin with
+!!              one of the characters          37
+!!              in the string
+!!              ' !"#$%&''()*+,-./:;<=>?@'
+!!
+!!              All MARKS begin with
+!!              an upper case English letter   30
+!!
+!!              All MARKS begin with a
+!!              decimal digit                  14
+!!
+!!              All Marks begin with a
+!!              lower case English letter      30
+!!
+!!              All Marks begin with
+!!              a digit or upper case          47
+!!              character.
+!!
+!!              All Marks begin with a
+!!              printing character or          100
+!!              a blank.
+!!
+!!              Anything might be a mark       132
+!!
+!!              Finally, so you won't have to look it up elsewhere
+!!              here are the ASCII codes for the printing
+!!              characters and blanks.
+!!
+!!              (Common Punctuations) Character     ASCII Code
+!!                                    -----------   ----------
+!!                                    ' ' (space)     32
+!!                                    '!'             33
+!!                                    '"'             34
+!!                                    '#'             35
+!!                                    '$'             36
+!!                                    '%'             37
+!!                                    '&'             38
+!!                                    ''''            39
+!!                                    '('             40
+!!                                    ')'             41
+!!                                    '*'             42
+!!                                    '+'             43
+!!                                    ','             44
+!!                                    '-'             45
+!!                                    '.'             46
+!!                                    '/'             47
+!!
+!!              (Decimal Digits)      Character     ASCII Code
+!!                                    -----------   ----------
+!!                                    '0'             48
+!!                                    '1'             49
+!!                                    '2'             50
+!!                                    '3'             51
+!!                                    '4'             52
+!!                                    '5'             53
+!!                                    '6'             54
+!!                                    '7'             55
+!!                                    '8'             56
+!!                                    '9'             57
+!!
+!!              (More punctuation)    Character     ASCII Code
+!!                                    -----------   ----------
+!!                                    ':'             58
+!!                                    ';'             59
+!!                                    '<'             60
+!!                                    '='             61
+!!                                    '>'             62
+!!                                    '?'             63
+!!                                    '@'             64
+!!
+!!              (Uppercase characters)  Character     ASCII Code
+!!                                    -----------   ----------
+!!                                    'A'             65
+!!                                    'B'             66
+!!                                    'C'             67
+!!                                    'D'             68
+!!                                    'E'             69
+!!                                    'F'             70
+!!                                    'G'             71
+!!                                    'H'             72
+!!                                    'I'             73
+!!                                    'J'             74
+!!                                    'K'             75
+!!                                    'L'             76
+!!                                    'M'             77
+!!                                    'N'             78
+!!                                    'O'             79
+!!                                    'P'             80
+!!                                    'Q'             81
+!!                                    'R'             82
+!!                                    'S'             83
+!!                                    'T'             84
+!!                                    'U'             85
+!!                                    'V'             86
+!!                                    'W'             87
+!!                                    'X'             88
+!!                                    'Y'             89
+!!                                    'Z'             90
+!!
+!!              (More punctuation)    Character     ASCII Code
+!!                                    -----------   ----------
+!!                                    '['             91
+!!                                    '\'             92
+!!                                    ']'             93
+!!                                    '^'             94
+!!                                    '_'             95
+!!                                    '`'             96
+!!
+!!              (Lowercase characters)  Character     ASCII Code
+!!                                    -----------   ----------
+!!                                    'a'             97
+!!                                    'b'             98
+!!                                    'c'             99
+!!                                    'd'            100
+!!                                    'e'            101
+!!                                    'f'            102
+!!                                    'g'            103
+!!                                    'h'            104
+!!                                    'i'            105
+!!                                    'j'            106
+!!                                    'k'            107
+!!                                    'l'            108
+!!                                    'm'            109
+!!                                    'n'            110
+!!                                    'o'            111
+!!                                    'p'            112
+!!                                    'q'            113
+!!                                    'r'            114
+!!                                    's'            115
+!!                                    't'            116
+!!                                    'u'            117
+!!                                    'v'            118
+!!                                    'w'            119
+!!                                    'x'            120
+!!                                    'y'            121
+!!                                    'z'            122
+!!
+!!              (More punctuation)      Character     ASCII Code
+!!                                    -----------   ----------
+!!                                    '{'            123
+!!                                    '|'            124
+!!                                    '}'            125
+!!                                    '~'            126
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1)  A space is regarded as a special mark. If MARKS(I) = ' ',
+!!         then MARKS(I) will match any consecutive sequence of blanks.
+!!
+!!     2)  If NMARKS is less than or equal to zero, SCAN will always
+!!         find a single token, namely the entire string to be scanned.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine prepares the arrays MARKS, MRKLEN and PNTERS
+!!     so that they are suitable for input to the routine SCAN.
+!!
+!!     It is expected that users will need to scan many strings
+!!     and that from the programming point of view it is
+!!     easiest to simply supply a list of MARKS to a "formatting"
+!!     routine such as this so that the strings can then
+!!     be efficiently scanned by the routine SCAN. This formatting
+!!     is the function of this routine.
+!!
+!! ## Examples
+!!
+!!     Suppose you need to identify all of the words within a string
+!!     and wish to ignore punctuation marks such as ' ', ',', ':', ';'
+!!     '---'.  Then the first step is to load the array of marks as
+!!     shown here:
+!!
+!!        The minimum ASCII code for the first character of a marker is
+!!        32 (for ' ').
+!!
+!!        INTEGER               FCHAR
+!!        PARAMETER           ( FCHAR = 32 )
+!!
+!!        The maximum ASCII code for the first character of a marker is
+!!        59 (for ';').
+!!
+!!        INTEGER               LCHAR
+!!        PARAMETER           ( LCHAR = 59 )
+!!
+!!        The proper size to declare PNTERS is given by the parameter
+!!        RCHAR defined in terms of LCHAR and FCHAR.
+!!
+!!        INTEGER               RCHAR
+!!        PARAMETER           ( RCHAR = LCHAR - FCHAR + 5 )
+!!
+!!        LOGICAL               FIRST
+!!        CHARACTER*(4)         MARKS
+!!        INTEGER               NMARKS ( 5     )
+!!        INTEGER               MRKLEN ( 5     )
+!!        INTEGER               PNTERS ( RCHAR )
+!!
+!!        SAVE                  FIRST
+!!        SAVE                  MARKS
+!!        SAVE                  MRKLEN
+!!        SAVE                  PNTERS
+!!
+!!        IF ( FIRST ) THEN
+!!
+!!           FIRST    = .FALSE.
+!!
+!!           MARKS(1) = ' '
+!!           MARKS(2) = '---'
+!!           MARKS(3) = ':'
+!!           MARKS(4) = ','
+!!           MARKS(5) = ';'
+!!
+!!           NMARKS   = 5
+!!
+!!           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
+!!
+!!        END IF
+!!
+!!     Notice that the call to SCANPR is nested inside an
+!!     IF ( FIRST ) THEN ... END IF block. In this and many applications
+!!     the marks that will used in the scan are fixed. Since the marks
+!!     are not changing, you need to process MARKS and set up
+!!     the auxiliary arrays MRKLEN and PNTERS only once (assuming that
+!!     you SAVE the appropriate variables as has been done above).
+!!     In this way if the code is executed many times, there is only
+!!     a small overhead required for preparing the data so that it
+!!     can be used efficiently in scanning.
+!!
+!! ## Restrictions
+!!
+!!     1)  MRKLEN and PNTERS must be declared to be at least as large
+!!         as indicated above. If not, this routine will write
+!!         past the ends of these arrays. Much unpleasantness may
+!!         ensue in the attempt to debug such problems.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Prepare for scanning strings
+!!     Prepare for parsing strings
+!!
+!!     We handle the case where NMARKS is non-positive separately.
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupc
       use pepper_strings, only: ljust, rtrim
@@ -2066,429 +2008,423 @@ contains
       end procedure scanpr
 
       module procedure scan
-
-! $ Abstract
-!
-!     Scan a string and return the beginnings and ends of recognized
-!     and unrecognized substrings. The full collection of these
-!     substrings partitions the string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PARSING
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         STRING
-!     CHARACTER*(*)         MARKS   ( * )
-!     INTEGER               MRKLEN  ( * )
-!     INTEGER               PNTERS  ( * )
-!     INTEGER               ROOM
-!     INTEGER               START
-!     INTEGER               NTOKNS
-!     INTEGER               BEG     ( * )
-!     INTEGER               END     ( * )
-!     INTEGER               IDENT   ( * )
-!
-! $ Detailed_Input
-!
-!     STRING   is any character string that is to be scanned
-!              to locate recognized and unrecognized substrings.
-!
-!     MARKS    is an array of marks that will be recognized
-!              by the scanning routine. This array must be prepared
-!              by calling the routine SCANPR.
-!
-!              Note that the blank string is interpreted
-!              in a special way by SCAN. If the blank character,
-!              ' ', is one of the MARKS, it will match any unbroken
-!              sequence of blanks in string.  Thus if ' ' is the only
-!              marks supplied and STRING is
-!
-!                 'A   lot of      space '
-!                  ......................
-!
-!              Then scan will locate the following substrings
-!
-!              'A'          STRING(1:1)    (unrecognized)
-!              '   '        STRING(2:4)    (recognized --- all blanks)
-!              'lot'        STRING(5:7)    (unrecognized)
-!              ' '          STRING(8:8)    (recognized --- a blank)
-!              'of'         STRING(9:10)   (unrecognized)
-!              '      '     STRING(11:16)  (recognized --- all blanks)
-!              'space'      STRING(17:21)  (unrecognized)
-!              ' '          STRING(22:22)  (recognized --- a blank)
-!
-!     MRKLEN   is an auxiliary array populated by SCANPR
-!              for use by SCAN. It should be declared with
-!              length equal to the length of MARKS. It must
-!              be prepared for use by the routine SCANPR.
-!
-!     PNTERS   is a specially structured array of integers that
-!              describes the array MARKS. It is must be filled
-!              in by the routine SCANPR. It should be declared
-!              by the calling program as shown here:
-!
-!                 INTEGER  PNTERS ( RCHARS )
-!
-!              RCHARS is given by the expression
-!
-!                MAX - MIN + 5
-!
-!              where
-!
-!              MAX is the maximum value of ICHAR(MARKS(I)(1:1))
-!                  over the range I = 1, NMARKS
-!
-!              MIN is the minimum value of ICHAR(MARKS(I)(1:1))
-!                  over the range I = 1, NMARKS
-!
-!              See SCANPR for a more detailed description of the
-!              declaration of PNTERS.
-!
-!     ROOM     is the amount of space available for storing the
-!              results of scanning the string.
-!
-!     START    is the position from which scanning should commence.
-!              Values of START less than 1 are treated as 1.
-!
-! $ Detailed_Output
-!
-!     START    is the position from which scanning should continue
-!              in order to fully scan STRING (if sufficient memory was
-!              not provided in BEG, END, and IDENT on the current
-!              call to SCAN).
-!
-!     NTOKNS   is the number of substrings identified in the current
-!              scan of STRING.
-!
-!     BEG      beginnings of scanned substrings. This should be
-!              declared so that it is at least as large as ROOM.
-!
-!     END      endings of scanned substrings. This should be declared
-!              so that it is at least as large as ROOM.
-!
-!     IDENT    positions of scanned substring within array MARKS.
-!              If the substring STRING(BEG(I):END(I)) is in the array
-!              MARKS, then MARKS(IDENT(I)) will equal
-!              STRING(BEG(I):END(I)).
-!
-!              If the substring STRING(BEG(I):END(I)) is not in the
-!              list of MARKS then IDENT(I) will have the value 0.
-!
-!              IDENT should be declared so that it can contain at least
-!              ROOM integers.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  A space is regarded as a special mark. If MARKS(I) = ' ',
-!         then MARKS(I) will match any consecutive sequence of blanks.
-!
-!     2)  If START is less than 1 on input, it will be treated as
-!         if it were 1.
-!
-!     3)  If START is greater than the length of the string, no
-!         tokens will be found and the value of START will return
-!         unchanged.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine allows you to scan a string and partition it into
-!     recognized and unrecognized substrings.
-!
-!     For some applications the recognized substrings serve only as
-!     delimiters between the portions of the string
-!     that are of interest to your application. For other
-!     applications the recognized substrings are equally important as
-!     they may indicate operations that are to be performed on the
-!     unrecognized portions of the string. However, the techniques
-!     required to scan the string are the same in both instances. The
-!     examples below illustrate some common situations.
-!
-! $ Examples
-!
-!     Example 1.
-!     ----------
-!
-!     Suppose you wished to write a routine that would return the words
-!     of a string. The following routine shows how SCANPR and SCAN can
-!     be used to accomplish this task.
-!
-!        SUBROUTINE GETWDS ( STRING, WDROOM, NWORDS, WORDS )
-!
-!        CHARACTER*(*)      STRING
-!        INTEGER            WDROOM
-!        INTEGER            NWORDS
-!        CHARACTER*(*)      WORDS  ( * )
-!
-!        CHARACTER*(1)      MARKS  ( 1 )
-!        INTEGER            MRKLEN ( 1 )
-!        INTEGER            PNTERS ( 5 )
-!
-!        INTEGER            ROOM
-!        PARAMETER        ( ROOM = 50 )
-!
-!        INTEGER            BEG   ( ROOM )
-!        INTEGER            END   ( ROOM )
-!        INTEGER            I
-!        INTEGER            IDENT ( ROOM )
-!        INTEGER            NMARKS
-!        INTEGER            NTOKNS
-!        INTEGER            START
-!
-!        LOGICAL            FIRST
-!        SAVE               FIRST
-!        DATA               FIRST  / .TRUE. /
-!
-!        On the first time through the routine, set up the MARKS
-!        MRKLEN, and PNTERS arrays.
-!
-!        IF( FIRST ) THEN
-!
-!           FIRST    = .FALSE.
-!           MARKS(1) = ' '
-!           NMARKS   = 1
-!
-!           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
-!
-!        END IF
-!
-!        Now simply scan the input string for words until we have
-!        them all or until we run out of room.
-!
-!        START  = 1
-!        NWORDS = 0
-!
-!        CALL SCAN ( STRING,
-!                    MARKS,  MRKLEN, PNTERS, ROOM, START,
-!                    NTOKNS, IDENT,  BEG,    END          )
-!
-!        If we found something in our scan, copy the substrings into the
-!        words array.
-!
-!        DO WHILE (       ( NWORDS .LT. WDROOM )
-!       .           .AND. ( NTOKNS .GT. 0      ) )
-!
-!           Step through the scanned substrings, looking for those
-!           that are not blank ...
-!
-!           I = 1
-!
-!           DO WHILE (       ( NWORDS .LT. WDROOM )
-!          .           .AND. ( I      .LE. NTOKNS ) )
-!
-!              Copy the non-blank substrings (those unidentified by
-!              SCAN) into WORDS.
-!
-!              IF ( IDENT(I) .EQ. 0 ) THEN
-!                 NWORDS        = NWORDS + 1
-!                 WORDS(NWORDS) = STRING(BEG(I):END(I))
-!              END IF
-!
-!              I      = I      + 1
-!
-!           END DO
-!
-!           Scan the STRING again for any substrings that might
-!           remain. Note that START is already pointing at the
-!           point in the string from which to resume scanning.
-!
-!           CALL SCAN ( STRING,
-!                       MARKS,  MRKLEN, PNTERS, ROOM, START,
-!                       NTOKNS, IDENT,  BEG,    END          )
-!        END DO
-!
-!        That's all, we've got all the substrings there were (or
-!        that we had room for).
-!
-!        RETURN
-!
-!     Example 2.
-!     ----------
-!
-!     To parse an algebraic expression such as
-!
-!        ( X + Y ) * ( 2*Z + SIN(W) ) ** 2
-!
-!     You would select '**', '*', '+', '-', '(', ')' and ' '
-!     to be the markers. Note that all of these begin with one
-!     of the characters in the string ' !"#$%&''()*+,-./'
-!     so that we can declare PNTERS to have length 20.
-!
-!     Prepare the MARKS, MRKLEN, and PNTERS.
-!
-!        CHARACTER*(4)         MARKS
-!        INTEGER               NMARKS ( 8  )
-!        INTEGER               MRKLEN ( 8  )
-!        INTEGER               PNTERS ( 20 )
-!
-!        INTEGER               ROOM
-!        PARAMETER           ( ROOM = 20 )
-!
-!        INTEGER               NTOKNS
-!        INTEGER               BEG    ( ROOM )
-!        INTEGER               END    ( ROOM )
-!        INTEGER               IDENT  ( ROOM )
-!
-!        LOGICAL               FIRST
-!        SAVE                  FIRST
-!        SAVE                  MARKS
-!        SAVE                  MRKLEN
-!        SAVE                  PNTERS
-!
-!        DATA                  FIRST  / .TRUE. /
-!
-!        IF ( FIRST ) THEN
-!
-!           MARKS(1) = '('
-!           MARKS(2) = ')'
-!           MARKS(3) = '+'
-!           MARKS(4) = '-'
-!           MARKS(5) = '*'
-!           MARKS(6) = '/'
-!           MARKS(7) = '**'
-!           MARKS(8) = ' '
-!
-!           NMARKS   = 8
-!
-!           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
-!
-!           BLANK = BSRCHC ( ' ', NMARKS, MARKS )
-!
-!        END IF
-!
-!        Once all of the initializations are out of the way,
-!        we can scan an input string.
-!
-!        CALL SCAN ( STRING, MARKS,  MRKLEN, PNTERS, ROOM,
-!       .            START,  NTOKNS, IDENT,  BEG,    END  )
-!
-!        Next eliminate any white space that was returned in the
-!        list of tokens.
-!
-!        KEPT = 0
-!
-!        DO I = 1, NTOKNS
-!
-!           IF ( IDENT(I) .NE. BLANK ) THEN
-!
-!              KEPT        = KEPT + 1
-!              BEG  (KEPT) = BEG(I)
-!              END  (KEPT) = END(I)
-!              IDENT(KEPT) = IDENT(I)
-!
-!           END IF
-!
-!        END DO
-!
-!        Now all of the substrings remaining point to grouping symbols,
-!        operators, functions, or variables. Given that the individual
-!        "words" of the expression are now in hand, the meaning of the
-!        expression is much easier to determine.
-!
-!        The rest of the routine is left as a non-trivial exercise
-!        for the reader.
-!
-! $ Restrictions
-!
-!     1)  The arrays MARKS, MRKLEN, and PNTERS must be prepared by the
-!         routine SCANPR prior to supplying them for use by SCAN.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Scan a string for recognized and unrecognized tokens
-!     Parse a string
-!
-!-&
-
-!
-!     All of the MARKS have the same declared length.
-!     However, since all of your marks may not have
-!     the same intended length (for example '*' and
-!     '**') it is desirable to be able to specify
-!     how much of MARKS(I) should actually be used
-!     when examining STRING for a substring match.
-!     This is done with the array MRKLEN.
-!     MARKS(I)(1:MRKLEN(I)) will be used when
-!     scanning STRING.
-!
-!     Here is the expected structure of PNTERS.
-!
-!             PNTERS(1) = MIN ( ICHAR(MARKS(I)(1:1)  )
-!             PNTERS(2) = MAX ( ICHAR(MARKS(I)(1:1)  )
-!
-!     where I ranges from 1 to the number of MARKS stored
-!     in MARKS.  For ease of further discussion let
-!     MYCHAR(I) represent the characters from PNTERS(1)
-!     to PNTERS(2), and assume that legitimate values of
-!     I are from 1 to N.
-!
-!             PNTERS(3)   = 0
-!             PNTERS(4)   = index of the last entry of MARKS
-!                           that begins with the character
-!                           MYCHAR(1).
-!
-!             PNTERS(5)   = index of the last entry of MARKS
-!                           that begins with the character
-!                           MYCHAR(2), if there is no such element
-!                           of MARKS let PNTERS(5) = PNTERS(4)
-!                .
-!                .
-!                .
-!
-!             PNTERS(3+K) = index of the last entry of MARKS
-!                           that begins with the character
-!                           MYCHAR(K), if there is no such element
-!                           of MARKS, let PNTERS(3+K) =
-!                           PNTERS(3+K-1)
-!                .
-!                .
-!                .
-!
-!             PNTERS(3+N) = index of the last entry of MARKS
-!                           that begins with the character
-!                           MYCHAR(N).
-!
-!             PNTERS(4+N) = PNTERS(3+N)
-!
-!     Get the information concerning the range of the
-!     marks from the PNTERS array.
-!
+!! ## Abstract
+!!
+!!     Scan a string and return the beginnings and ends of recognized
+!!     and unrecognized substrings. The full collection of these
+!!     substrings partitions the string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PARSING
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         STRING
+!!     CHARACTER*(*)         MARKS   ( * )
+!!     INTEGER               MRKLEN  ( * )
+!!     INTEGER               PNTERS  ( * )
+!!     INTEGER               ROOM
+!!     INTEGER               START
+!!     INTEGER               NTOKNS
+!!     INTEGER               BEG     ( * )
+!!     INTEGER               END     ( * )
+!!     INTEGER               IDENT   ( * )
+!!
+!! ## Detailed Input
+!!
+!!     STRING   is any character string that is to be scanned
+!!              to locate recognized and unrecognized substrings.
+!!
+!!     MARKS    is an array of marks that will be recognized
+!!              by the scanning routine. This array must be prepared
+!!              by calling the routine SCANPR.
+!!
+!!              Note that the blank string is interpreted
+!!              in a special way by SCAN. If the blank character,
+!!              ' ', is one of the MARKS, it will match any unbroken
+!!              sequence of blanks in string.  Thus if ' ' is the only
+!!              marks supplied and STRING is
+!!
+!!                 'A   lot of      space '
+!!                  ......................
+!!
+!!              Then scan will locate the following substrings
+!!
+!!              'A'          STRING(1:1)    (unrecognized)
+!!              '   '        STRING(2:4)    (recognized --- all blanks)
+!!              'lot'        STRING(5:7)    (unrecognized)
+!!              ' '          STRING(8:8)    (recognized --- a blank)
+!!              'of'         STRING(9:10)   (unrecognized)
+!!              '      '     STRING(11:16)  (recognized --- all blanks)
+!!              'space'      STRING(17:21)  (unrecognized)
+!!              ' '          STRING(22:22)  (recognized --- a blank)
+!!
+!!     MRKLEN   is an auxiliary array populated by SCANPR
+!!              for use by SCAN. It should be declared with
+!!              length equal to the length of MARKS. It must
+!!              be prepared for use by the routine SCANPR.
+!!
+!!     PNTERS   is a specially structured array of integers that
+!!              describes the array MARKS. It is must be filled
+!!              in by the routine SCANPR. It should be declared
+!!              by the calling program as shown here:
+!!
+!!                 INTEGER  PNTERS ( RCHARS )
+!!
+!!              RCHARS is given by the expression
+!!
+!!                MAX - MIN + 5
+!!
+!!              where
+!!
+!!              MAX is the maximum value of ICHAR(MARKS(I)(1:1))
+!!                  over the range I = 1, NMARKS
+!!
+!!              MIN is the minimum value of ICHAR(MARKS(I)(1:1))
+!!                  over the range I = 1, NMARKS
+!!
+!!              See SCANPR for a more detailed description of the
+!!              declaration of PNTERS.
+!!
+!!     ROOM     is the amount of space available for storing the
+!!              results of scanning the string.
+!!
+!!     START    is the position from which scanning should commence.
+!!              Values of START less than 1 are treated as 1.
+!!
+!! ## Detailed Output
+!!
+!!     START    is the position from which scanning should continue
+!!              in order to fully scan STRING (if sufficient memory was
+!!              not provided in BEG, END, and IDENT on the current
+!!              call to SCAN).
+!!
+!!     NTOKNS   is the number of substrings identified in the current
+!!              scan of STRING.
+!!
+!!     BEG      beginnings of scanned substrings. This should be
+!!              declared so that it is at least as large as ROOM.
+!!
+!!     END      endings of scanned substrings. This should be declared
+!!              so that it is at least as large as ROOM.
+!!
+!!     IDENT    positions of scanned substring within array MARKS.
+!!              If the substring STRING(BEG(I):END(I)) is in the array
+!!              MARKS, then MARKS(IDENT(I)) will equal
+!!              STRING(BEG(I):END(I)).
+!!
+!!              If the substring STRING(BEG(I):END(I)) is not in the
+!!              list of MARKS then IDENT(I) will have the value 0.
+!!
+!!              IDENT should be declared so that it can contain at least
+!!              ROOM integers.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1)  A space is regarded as a special mark. If MARKS(I) = ' ',
+!!         then MARKS(I) will match any consecutive sequence of blanks.
+!!
+!!     2)  If START is less than 1 on input, it will be treated as
+!!         if it were 1.
+!!
+!!     3)  If START is greater than the length of the string, no
+!!         tokens will be found and the value of START will return
+!!         unchanged.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine allows you to scan a string and partition it into
+!!     recognized and unrecognized substrings.
+!!
+!!     For some applications the recognized substrings serve only as
+!!     delimiters between the portions of the string
+!!     that are of interest to your application. For other
+!!     applications the recognized substrings are equally important as
+!!     they may indicate operations that are to be performed on the
+!!     unrecognized portions of the string. However, the techniques
+!!     required to scan the string are the same in both instances. The
+!!     examples below illustrate some common situations.
+!!
+!! ## Examples
+!!
+!!     Example 1.
+!!     ----------
+!!
+!!     Suppose you wished to write a routine that would return the words
+!!     of a string. The following routine shows how SCANPR and SCAN can
+!!     be used to accomplish this task.
+!!
+!!        SUBROUTINE GETWDS ( STRING, WDROOM, NWORDS, WORDS )
+!!
+!!        CHARACTER*(*)      STRING
+!!        INTEGER            WDROOM
+!!        INTEGER            NWORDS
+!!        CHARACTER*(*)      WORDS  ( * )
+!!
+!!        CHARACTER*(1)      MARKS  ( 1 )
+!!        INTEGER            MRKLEN ( 1 )
+!!        INTEGER            PNTERS ( 5 )
+!!
+!!        INTEGER            ROOM
+!!        PARAMETER        ( ROOM = 50 )
+!!
+!!        INTEGER            BEG   ( ROOM )
+!!        INTEGER            END   ( ROOM )
+!!        INTEGER            I
+!!        INTEGER            IDENT ( ROOM )
+!!        INTEGER            NMARKS
+!!        INTEGER            NTOKNS
+!!        INTEGER            START
+!!
+!!        LOGICAL            FIRST
+!!        SAVE               FIRST
+!!        DATA               FIRST  / .TRUE. /
+!!
+!!        On the first time through the routine, set up the MARKS
+!!        MRKLEN, and PNTERS arrays.
+!!
+!!        IF( FIRST ) THEN
+!!
+!!           FIRST    = .FALSE.
+!!           MARKS(1) = ' '
+!!           NMARKS   = 1
+!!
+!!           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
+!!
+!!        END IF
+!!
+!!        Now simply scan the input string for words until we have
+!!        them all or until we run out of room.
+!!
+!!        START  = 1
+!!        NWORDS = 0
+!!
+!!        CALL SCAN ( STRING,
+!!                    MARKS,  MRKLEN, PNTERS, ROOM, START,
+!!                    NTOKNS, IDENT,  BEG,    END          )
+!!
+!!        If we found something in our scan, copy the substrings into the
+!!        words array.
+!!
+!!        DO WHILE (       ( NWORDS .LT. WDROOM )
+!!       .           .AND. ( NTOKNS .GT. 0      ) )
+!!
+!!           Step through the scanned substrings, looking for those
+!!           that are not blank ...
+!!
+!!           I = 1
+!!
+!!           DO WHILE (       ( NWORDS .LT. WDROOM )
+!!          .           .AND. ( I      .LE. NTOKNS ) )
+!!
+!!              Copy the non-blank substrings (those unidentified by
+!!              SCAN) into WORDS.
+!!
+!!              IF ( IDENT(I) .EQ. 0 ) THEN
+!!                 NWORDS        = NWORDS + 1
+!!                 WORDS(NWORDS) = STRING(BEG(I):END(I))
+!!              END IF
+!!
+!!              I      = I      + 1
+!!
+!!           END DO
+!!
+!!           Scan the STRING again for any substrings that might
+!!           remain. Note that START is already pointing at the
+!!           point in the string from which to resume scanning.
+!!
+!!           CALL SCAN ( STRING,
+!!                       MARKS,  MRKLEN, PNTERS, ROOM, START,
+!!                       NTOKNS, IDENT,  BEG,    END          )
+!!        END DO
+!!
+!!        That's all, we've got all the substrings there were (or
+!!        that we had room for).
+!!
+!!        RETURN
+!!
+!!     Example 2.
+!!     ----------
+!!
+!!     To parse an algebraic expression such as
+!!
+!!        ( X + Y ) * ( 2*Z + SIN(W) ) ** 2
+!!
+!!     You would select '**', '*', '+', '-', '(', ')' and ' '
+!!     to be the markers. Note that all of these begin with one
+!!     of the characters in the string ' !"#$%&''()*+,-./'
+!!     so that we can declare PNTERS to have length 20.
+!!
+!!     Prepare the MARKS, MRKLEN, and PNTERS.
+!!
+!!        CHARACTER*(4)         MARKS
+!!        INTEGER               NMARKS ( 8  )
+!!        INTEGER               MRKLEN ( 8  )
+!!        INTEGER               PNTERS ( 20 )
+!!
+!!        INTEGER               ROOM
+!!        PARAMETER           ( ROOM = 20 )
+!!
+!!        INTEGER               NTOKNS
+!!        INTEGER               BEG    ( ROOM )
+!!        INTEGER               END    ( ROOM )
+!!        INTEGER               IDENT  ( ROOM )
+!!
+!!        LOGICAL               FIRST
+!!        SAVE                  FIRST
+!!        SAVE                  MARKS
+!!        SAVE                  MRKLEN
+!!        SAVE                  PNTERS
+!!
+!!        DATA                  FIRST  / .TRUE. /
+!!
+!!        IF ( FIRST ) THEN
+!!
+!!           MARKS(1) = '('
+!!           MARKS(2) = ')'
+!!           MARKS(3) = '+'
+!!           MARKS(4) = '-'
+!!           MARKS(5) = '*'
+!!           MARKS(6) = '/'
+!!           MARKS(7) = '**'
+!!           MARKS(8) = ' '
+!!
+!!           NMARKS   = 8
+!!
+!!           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
+!!
+!!           BLANK = BSRCHC ( ' ', NMARKS, MARKS )
+!!
+!!        END IF
+!!
+!!        Once all of the initializations are out of the way,
+!!        we can scan an input string.
+!!
+!!        CALL SCAN ( STRING, MARKS,  MRKLEN, PNTERS, ROOM,
+!!       .            START,  NTOKNS, IDENT,  BEG,    END  )
+!!
+!!        Next eliminate any white space that was returned in the
+!!        list of tokens.
+!!
+!!        KEPT = 0
+!!
+!!        DO I = 1, NTOKNS
+!!
+!!           IF ( IDENT(I) .NE. BLANK ) THEN
+!!
+!!              KEPT        = KEPT + 1
+!!              BEG  (KEPT) = BEG(I)
+!!              END  (KEPT) = END(I)
+!!              IDENT(KEPT) = IDENT(I)
+!!
+!!           END IF
+!!
+!!        END DO
+!!
+!!        Now all of the substrings remaining point to grouping symbols,
+!!        operators, functions, or variables. Given that the individual
+!!        "words" of the expression are now in hand, the meaning of the
+!!        expression is much easier to determine.
+!!
+!!        The rest of the routine is left as a non-trivial exercise
+!!        for the reader.
+!!
+!! ## Restrictions
+!!
+!!     1)  The arrays MARKS, MRKLEN, and PNTERS must be prepared by the
+!!         routine SCANPR prior to supplying them for use by SCAN.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Scan a string for recognized and unrecognized tokens
+!!     Parse a string
+!!
+!!     All of the MARKS have the same declared length.
+!!     However, since all of your marks may not have
+!!     the same intended length (for example '*' and
+!!     '**') it is desirable to be able to specify
+!!     how much of MARKS(I) should actually be used
+!!     when examining STRING for a substring match.
+!!     This is done with the array MRKLEN.
+!!     MARKS(I)(1:MRKLEN(I)) will be used when
+!!     scanning STRING.
+!!
+!!     Here is the expected structure of PNTERS.
+!!
+!!             PNTERS(1) = MIN ( ICHAR(MARKS(I)(1:1)  )
+!!             PNTERS(2) = MAX ( ICHAR(MARKS(I)(1:1)  )
+!!
+!!     where I ranges from 1 to the number of MARKS stored
+!!     in MARKS.  For ease of further discussion let
+!!     MYCHAR(I) represent the characters from PNTERS(1)
+!!     to PNTERS(2), and assume that legitimate values of
+!!     I are from 1 to N.
+!!
+!!             PNTERS(3)   = 0
+!!             PNTERS(4)   = index of the last entry of MARKS
+!!                           that begins with the character
+!!                           MYCHAR(1).
+!!
+!!             PNTERS(5)   = index of the last entry of MARKS
+!!                           that begins with the character
+!!                           MYCHAR(2), if there is no such element
+!!                           of MARKS let PNTERS(5) = PNTERS(4)
+!!                .
+!!                .
+!!                .
+!!
+!!             PNTERS(3+K) = index of the last entry of MARKS
+!!                           that begins with the character
+!!                           MYCHAR(K), if there is no such element
+!!                           of MARKS, let PNTERS(3+K) =
+!!                           PNTERS(3+K-1)
+!!                .
+!!                .
+!!                .
+!!
+!!             PNTERS(3+N) = index of the last entry of MARKS
+!!                           that begins with the character
+!!                           MYCHAR(N).
+!!
+!!             PNTERS(4+N) = PNTERS(3+N)
+!!
+!!     Get the information concerning the range of the
+!!     marks from the PNTERS array.
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ncpos
       implicit none
@@ -2681,23 +2617,22 @@ contains
 !$Procedure TPICTR ( Create a Time Format Picture )
 
       module procedure tpictr
+!! ## Abstract
+!!
+!!     Create a time format picture suitable for use by the routine
+!!     TIMOUT from a given sample time string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Create a time format picture suitable for use by the routine
-!     TIMOUT from a given sample time string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 
@@ -2938,25 +2873,24 @@ contains
 !$Procedure UTC2ET ( UTC to Ephemeris Time )
 
       module procedure utc2et
+!! ## Abstract
+!!
+!!     Convert an input time from Calendar or Julian Date format, UTC,
+!!     to ephemeris seconds past J2000.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc
-
-! $ Abstract
-!
-!     Convert an input time from Calendar or Julian Date format, UTC,
-!     to ephemeris seconds past J2000.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!     TIME
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 
@@ -3422,890 +3356,771 @@ contains
       end procedure utc2et
 
       module procedure timout
-
-! $ Abstract
-!
-!     Convert an input epoch represented in TDB seconds past the TDB
-!     epoch of J2000 to a character string formatted to the
-!     specifications of a user's format picture.
-!
-! $ Required_Reading
-!
-!     TIME
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     ET       is a double precision representation of time in seconds
-!              past the ephemeris epoch J2000.
-!
-!     PICTUR   is a string that specifies how the output should be
-!              presented. The string is made up of various markers
-!              that stand for various components associated with
-!              a time.
-!
-!              There are five types of markers that may appear in a
-!              format picture. These are String Markers, Numeric
-!              Markers, Meta markers, Modifier Markers and Literal
-!              Markers.
-!
-!              The PICTUR string is examined and the various markers
-!              are identified. The output time string is constructed
-!              by replacing each of the identified markers with
-!              an appropriate time component.
-!
-!              The various markers and their meanings are discussed
-!              in the $Particulars section below.
-!
-!              Note that leading and trailing blanks in PICTUR are
-!              ignored.
-!
-! $ Detailed_Output
-!
-!     OUTPUT   is a time string equivalent to the input epoch ET,
-!              matching the format specified by PICTUR.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  A leapseconds kernel must be loaded via the routine FURNSH
-!         before calling this routine. If a leapsecond kernel has not
-!         been loaded, an error is signaled by a routine in the call
-!         tree of this routine.
-!
-!     2)  If PICTUR contains the numeric marker 'YYYY' and the
-!         magnitude of year is too large to be displayed as a four-digit
-!         integer, TIMOUT will replace it by '****'.
-!
-!     3)  If the requested precision is higher than 12 decimal places,
-!         TIMOUT will truncate the decimal part down to 12, and OUTPUT
-!         will have all the remaining digits in the decimal part set to
-!         zero.
-!
-!     4)  Double colon (::), when is not part of one of the supported
-!         markers, has no effect and will be presented as is on the
-!         output string.
-!
-! $ Files
-!
-!     A leapseconds kernel must be "loaded" via the routine FURNSH
-!     prior to calling TIMOUT.
-!
-! $ Particulars
-!
-!     A format picture is simply a string of letters that lets
-!     TIMOUT know where various components of a time representation
-!     should be placed during creation of the time string.
-!     Here's an example of such a picture:
-!
-!        MON DD,YYYY  HR:MN:SC.#### (TDB) ::TDB
-!
-!     Here is a sample of times that would be created by using this
-!     format.
-!
-!        JAN 12,1992  12:28:18.2772 (TDB)
-!        FEB 13,1994  23:18:25.2882 (TDB)
-!        AUG 21,1995  00:02:00.1881 (TDB)
-!
-!     As you can see from the samples above, the format picture
-!     specifies that every time string created should begin with a
-!     three-letter abbreviation for the month, followed by a space and
-!     the day of the month. The day of month is followed immediately by
-!     a comma and the year. The year component is followed by two
-!     spaces. The next outputs are hours represented as a two digit
-!     integer, a colon, minutes represented as a two digit integer,
-!     another colon, and seconds truncated to 4 decimal places and
-!     having a two digit integer part (rounding can be commanded; see
-!     the discussion of truncation and rounding below). This is
-!     followed by a space and the string '(TDB)'. The special marker
-!     '::TDB' in the time picture is an ``invisible'' marker. It is
-!     used to specify the time system that should be used in creating
-!     the time string (in this case Barycentric Dynamical Time).
-!
-!     TIMOUT does not recognize all of the parts of the time format
-!     picture in the example above. The list of recognized parts and
-!     unrecognized parts is shown in the table below.
-!
-!       Recognized       Unrecognized
-!       ----------       ------------
-!       'MON'            ' '
-!       'DD'             ','
-!       'YYYY'           '  '
-!       'HR'             ':'
-!       'MN'             '(TDB)'
-!       'SC'
-!       '.####'
-!       '::TDB'
-!
-!     The unrecognized parts are called literal markers. They are
-!     copied exactly as they appear in PICTUR into the output string.
-!     The recognized parts of the picture are replaced by a
-!     component of time or, as in the case of '::TDB' are used
-!     as instructions about the overall properties of the time
-!     string.
-!
-!     The full list of recognized markers, their classification
-!     and meaning are given below.
-!
-!     MARKER       CLASS     MEANING
-!     -----------  --------  -----------------------------------------
-!     '.##...'     modifier  represents a numeric component that
-!                            immediately precedes this in a decimal
-!                            format. Number of decimal places
-!                            equals the number of '#' characters
-!     '::GCAL'     meta      dates are reported in Gregorian calendar
-!     '::JCAL'     meta      dates are reported in Julian calendar
-!     '::MCAL'     meta      dates after 15 October, 1582 are reported
-!                            in Gregorian calendar; before that
-!                            dates are reported in Julian calendar
-!
-!     '::RND'      meta      round output to places specified by
-!                            least significant component
-!
-!     '::TDB'      meta      all components should be TDB
-!
-!     '::TDT'      meta      all components should be TT (TDT)
-!
-!     '::TT'       meta      all components should be TT (TDT)
-!
-!     '::TRNC'     meta      truncate all output components (default)
-!     '::UTC'      meta      all components should be UTC (default)
-!     '::UTC+h:m'  meta      all components in UTC offset by +h (hours)
-!                            and +m (minutes) so as to allow time zones.
-!     '::UTC-h:m'  meta      all components in UTC offset by -h (hours)
-!                            and -m (minutes) so as to allow time zones.
-!     'AMPM'       string    String (either 'A.M.' or 'P.M.')
-!                            indicating whether hours are before
-!                            or after noon.
-!     'ampm'       string    String (either 'a.m.' or 'p.m.')
-!                            indicating whether hours are before
-!                            or after noon.
-!     'AP'         numeric   AM/PM equivalents of the hour component
-!                            of a time.
-!     'DD'         numeric   Day of month
-!     'DOY'        numeric   Day of year
-!     'ERA'        string    String (either 'B.C.' or 'A.D.') giving
-!                            era associated with an epoch.
-!     '?ERA?'      string    String: either ' B.C. ' or ' A.D. ' if the
-!                            year is before 1000 A.D. otherwise a
-!                            blank: ' '.
-!     'era'        string    String (either 'b.c.' or 'a.d.') giving
-!                            era associated with an epoch.
-!     '?era?'      string    String: either ' b.c. ' or ' a.d. ' if the
-!                            year is before 1000 A.D. otherwise a
-!                            blank: ' '.
-!     'HR'         numeric   hour component of time
-!     'JULIAND'    numeric   Julian date component of time
-!     'MM'         numeric   numeric representation of month component
-!     'MN'         numeric   minute component of time
-!     'MON'        string    upper case three letter abbreviation for
-!                            month
-!     'Mon'        string    capitalized three letter abbreviation for
-!                            month
-!     'mon'        string    lower case three letter abbreviation for
-!                            month
-!     'MONTH'      string    upper case full name of month
-!     'Month'      string    capitalized full name of month
-!     'month'      string    lower case full name of month
-!     'SC'         numeric   seconds component of time
-!     'SP1950'     numeric   seconds past 1950 component of time
-!     'SP2000'     numeric   seconds past 2000 component of time
-!     'YR'         numeric   last two digits of year component of time
-!     'YYYY'       numeric   year component of time
-!     'WEEKDAY'    string    upper case day of week
-!     'Weekday'    string    capitalized day of week
-!     'weekday'    string    lower case day of week
-!     'WKD'        string    upper case three letter abbreviation for
-!                            day of week.
-!     'Wkd'        string    capitalized three letter abbreviation for
-!                            day of week.
-!     'wkd'        string    lower case three letter abbreviation for
-!                            day of week.
-!
-!     String Markers
-!
-!        String markers are portions of the format picture that will
-!        be replaced with a character string that represents the
-!        corresponding component of a time.
-!
-!     Numeric Markers
-!
-!        Numeric markers are portions of the format picture that will
-!        be replaced with a decimal string that represents the
-!        corresponding component of a time.
-!
-!     Meta Markers
-!
-!        Meta markers (listed under the class ``meta'' in the
-!        table above) are used to indicate "global" properties of
-!        your time string. You may specify time scale and how
-!        rounding should be performed on the components of time
-!        in your output string. Meta markers may be placed anywhere
-!        in your format picture. They do not contribute to placement
-!        of characters in output time strings. Also there are no
-!        restrictions on how many meta markers you may place in
-!        the format picture. However, if you supply conflicting
-!        `meta' markers (for example '::TDT' and '::TDB') in your
-!        picture the first marker listed (in left to right order)
-!        overrules the conflicting marker that appears later in
-!        the picture.
-!
-!     Default Meta Markers
-!
-!        If you do not specify a time system, calendar, or time
-!        zone through the use of a Meta Marker, TIMOUT uses the
-!        values returned by the SPICE routine TIMDEF. The default
-!        time system, calendar returned by TIMDEF are UTC and
-!        the Gregorian calendar. The default time zone returned
-!        by TIMDEF is a blank indicating that no time zone offset
-!        should be used.
-!
-!        See the header for the routine TIMDEF for a more complete
-!        discussion of setting and retrieving default values.
-!
-!     Modifier Markers
-!
-!        The numeric markers listed in the table above stand
-!        for integers unless they are modified through use of a
-!        modifier marker. The strings
-!
-!           .#
-!           .##
-!           .###
-!           .####
-!
-!        are used to this end. When a numeric marker is followed
-!        immediately by one of these modifiers, the corresponding time
-!        component will be written with the number of decimal places
-!        indicated by the number of successive occurrences of the
-!        character '#'. Any numeric token may be modified.
-!
-!     Rounding vs. Truncation
-!
-!        The meta markers ::TRNC and ::RND allow you to control
-!        how the output time picture is rounded. If you specify
-!        ::TRNC all components of time are simply truncated to
-!        the precision specified by the marker and any modifier.
-!        If you specify ::RND the output time is rounded to the
-!        least significant component of the format picture. The
-!        default action is truncation.
-!
-!        Whether an output time string should be rounded or
-!        truncated depends upon what you plan to do with the
-!        string. For example suppose you simply want to get the
-!        calendar date associated with a time and not the time of
-!        day. Then you probably do not want to round your output.
-!        Rounding 1992 Dec 31, 13:12:00 to the nearest day
-!        produces 1993 Jan 1. Thus in this case rounding is probably
-!        not appropriate.
-!
-!        However, if you are producing output for plotting using
-!        Julian Date, seconds past 1950 or seconds past 2000, you will
-!        probably want your output rounded so as to produce a smoother
-!        plot.
-!
-!     Time Systems
-!
-!        TIMOUT can produce output strings for epochs relative to
-!        any of the systems UTC, TT or TDT, or TDB. If you do not
-!        explicitly specify a time system, TIMOUT will produce strings
-!        relative to the time system returned by the SPICE routine
-!        TIMDEF. Unless you call TIMDEF and change it, the default time
-!        system is UTC. However, by using one of the Meta Markers
-!        ::UTC, ::TT, ::TDT, or ::TDB you may specify that TIMOUT
-!        produce time strings relative to the UTC, TT or TDT, or TDB
-!        system respectively.
-!
-!     Time Zones
-!
-!        The meta markers ::UTC+h:m  and ::UTC-h:m  allow you to
-!        offset UTC times so that you may represent times in a time
-!        zone other than GMT. For example you can output times in
-!        Pacific Standard time by placing the meta-marker ::UTC-8 in
-!        your format picture.
-!
-!        For instance, if you use the picture
-!
-!           YYYY Mon DD, HR:MN:SC ::UTC
-!
-!        you will get output strings such as:
-!
-!           1995 Jan 03, 12:00:00
-!
-!        If you use the picture
-!
-!           YYYY Mon DD, HR:MN:SC ::UTC-8
-!
-!        you will get output strings such as:
-!
-!           1995 Jan 03, 04:00:00
-!
-!        Finally, if you use the picture
-!
-!           YYYY Mon DD, HR:MN:SC ::UTC-8:15
-!
-!        you will get output string
-!
-!           1995 Jan 03, 03:45:00
-!
-!        Note that the minutes are always added or subtracted based on
-!        the sign present in the time zone specifier. In the case of
-!        ::UTC+h:m, minutes are added. In the case ::UTC-h:m, minutes
-!        are subtracted.
-!
-!        The unsigned part of the hours component can be no more than
-!        12. The unsigned part of the minutes component can be no
-!        more than 59.
-!
-!     Calendars
-!
-!        The calendar currently used by western countries is the
-!        Gregorian calendar. This calendar begins on Oct 15, 1582.
-!        Prior to Gregorian calendar the Julian calendar was used. The
-!        last Julian calendar date prior to the beginning of the
-!        Gregorian calendar is Oct 5, 1582.
-!
-!        The primary difference between the Julian and Gregorian
-!        calendars is in the determination of leap years. Nevertheless,
-!        both can be formally extended backward and forward in time
-!        indefinitely.
-!
-!        By default TIMOUT uses the default calendar returned by
-!        TIMDEF. Under most circumstances this will be the Gregorian
-!        calendar (::GCAL). However you may specify that TIMOUT use a
-!        specific calendar through use of one of the calendar Meta
-!        Markers. You may specify that TIMOUT use the Julian calendar
-!        (::JCAL), the Gregorian calendar (::GCAL)  or a mixture of
-!        both (::MCAL).
-!
-!        If you specify ::MCAL, epochs that occur after the beginning
-!        of the Gregorian calendar will be represented using the
-!        Gregorian calendar, and epochs prior to the beginning of the
-!        Gregorian calendar will be represented using the Julian
-!        calendar.
-!
-!     Getting Software to Construct Pictures for You.
-!
-!        Although it is not difficult to construct time format
-!        pictures, you do need to be aware of the various markers that
-!        may appear in a format picture.
-!
-!        There is an alternative means for getting a format picture.
-!        The routine TPICTR constructs format pictures from a sample
-!        time string. For example, suppose you would like your time
-!        strings to look like the basic pattern of the string below.
-!
-!           'Fri Jul 26 12:22:09 PDT 1996'
-!
-!        You can call TPICTR with this string, and it will create the
-!        appropriate PICTUR for use with TIMOUT.
-!
-!           CALL TPICTR ( 'Fri Jul 26 12:22:09 PDT 1996',
-!          .              PICTUR, OK, ERRMSG             )
-!
-!        The result will be:
-!
-!           'Wkd Mon DD HR:MN:SC (PDT) ::UTC-7'
-!
-!        Note: not every date that you can read is interpretable by
-!        TPICTR. For example, you might be able to understand that
-!        19960212121116 is Feb 2 1996, 12:11:16. However, TPICTR
-!        cannot recognize this string. Thus it is important to check
-!        the logical output OK to make sure that TPICTR was able to
-!        understand the time picture you provided.
-!
-!        Even thought TPICTR can not recognize every time pattern that
-!        has been used by various people, it does recognize nearly all
-!        patterns that you use when you want to communicate outside
-!        your particular circle of colleagues.
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as input,
-!     the compiler and supporting libraries, and the machine specific
-!     arithmetic implementation.
-!
-!     1) Given a sample with the format of the UNIX date string
-!        local to California, create a SPICE time picture for use
-!        in TIMOUT.
-!
-!        Using that SPICE time picture, convert a series of ephemeris
-!        times to that picture format.
-!
-!        Use the LSK kernel below to load the leap seconds and time
-!        constants required for the conversions.
-!
-!           naif0012.tls
-!
-!        Example code begins here.
-!
-!              PROGRAM TIMOUT_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN  = 400 )
-!
-!              INTEGER               TIMLEN
-!              PARAMETER           ( TIMLEN  = 64  )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(ERRLEN)    ERR
-!              CHARACTER*(TIMLEN)    PICTUR
-!              CHARACTER*(TIMLEN)    SAMPLE
-!              CHARACTER*(TIMLEN)    TIMSTR
-!              CHARACTER*(TIMLEN)    UTCSTR
-!
-!              DOUBLE PRECISION      ET
-!
-!              LOGICAL               OK
-!
-!        C
-!        C     Load LSK file.
-!        C
-!              CALL FURNSH ( 'naif0012.tls' )
-!
-!        C
-!        C     Create the required time picture.
-!        C
-!              SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
-!
-!              CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
-!
-!              IF ( .NOT. OK ) THEN
-!
-!                 WRITE(*,*) 'Invalid time picture.'
-!                 WRITE(*,*) ERR
-!
-!              ELSE
-!
-!        C
-!        C        Convert the input UTC time to ephemeris time.
-!        C
-!                 UTCSTR = '26 Nov 2018  23:23:00 UTC'
-!                 CALL STR2ET ( UTCSTR, ET )
-!
-!        C
-!        C         Now convert ET to the desired output format.
-!        C
-!                  CALL TIMOUT ( ET, PICTUR, TIMSTR )
-!                  WRITE (*,*) 'Sample format: ', SAMPLE
-!                  WRITE (*,*) 'Time picture : ', PICTUR
-!                  WRITE (*,*)
-!                  WRITE (*,*) 'Input UTC    : ', UTCSTR
-!                  WRITE (*,*) 'Output       : ', TIMSTR
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Sample format: Thu Oct 01 11:11:11 PDT 1111
-!         Time picture : Wkd Mon DD HR:MN:SC PDT YYYY ::UTC-7
-!
-!         Input UTC    : 26 Nov 2018  23:23:00 UTC
-!         Output       : Mon Nov 26 16:23:00 PDT 2018
-!
-!     2) Convert a UTC time to a string that contains both the
-!        calendar representations of the date as well as the Julian
-!        date; for example a string of the form:
-!
-!           "Thu Aug 01 09:47:16 PDT 1996 (2450297.1994 JDUTC)"
-!
-!        Use the LSK kernel below to load the leap seconds and time
-!        constants required for the conversions.
-!
-!           naif0012.tls
-!
-!        Example code begins here.
-!
-!              PROGRAM TIMOUT_EX2
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               TIMLEN
-!              PARAMETER           ( TIMLEN  = 80 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(TIMLEN)    PICTUR
-!              CHARACTER*(TIMLEN)    TIMSTR
-!              CHARACTER*(TIMLEN)    UTCSTR
-!
-!              DOUBLE PRECISION      ET
-!
-!        C
-!        C     Load LSK file.
-!        C
-!              CALL FURNSH ( 'naif0012.tls' )
-!
-!        C
-!        C     Convert the input UTC time to ephemeris time.
-!        C
-!              UTCSTR = '26 Nov 2018  16:23:00 UTC'
-!              CALL STR2ET ( UTCSTR, ET )
-!
-!        C
-!        C     Create the required time picture. This could be done
-!        C     using TPICTR.
-!        C
-!              PICTUR = 'Wkd Mon DD HR:MN ::UTC-7 YYYY '
-!             .      // '(JULIAND.#### JDUTC)'
-!
-!        C
-!        C      Now convert ET to the desired output format.
-!        C
-!               CALL TIMOUT ( ET, PICTUR, TIMSTR )
-!               WRITE (*,*) 'Input UTC: ', UTCSTR
-!               WRITE (*,*) 'Output   : ', TIMSTR
-!
-!               END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Input UTC: 26 Nov 2018  16:23:00 UTC
-!         Output   : Mon Nov 26 09:23  2018 (2458449.1826 JDUTC)
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     M.J. Spencer       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.4.0, 07-AUG-2021 (EDW) (JDR) (NJB)
-!
-!        Corrected typo preventing correct calculation of decimal
-!        values for HR.###... and MN.###... markers with ::UTC+N:M
-!        and ::UTC-N:M meta tags.
-!
-!        Added "::TT" as a time system meta marker equivalent-to/
-!        alias-for "::TDT". No change to functionality.
-!
-!        Corrected OUTPUT argument name in $Brief_I/O section (it was
-!        STRING) and improved its description in $Detailed_Output.
-!        Fixed call to TPICTR in $Particulars.
-!
-!        Edited the header to comply with NAIF standard. Removed
-!        unnecessary entries in $Revisions section. Converted the
-!        existing code fragments into complete examples and added
-!        references to required LSKs.
-!
-!        Updated $Exceptions section, rewording the existing entry
-!        and adding three additional cases.
-!
-!-    SPICELIB Version 3.3.1, 31-JAN-2017 (NJB)
-!
-!        Updated header comments to draw attention to the fact that
-!        rounding can be commanded.
-!
-!-    SPICELIB Version 3.3.0, 23-OCT-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in RMAIND call. Replaced header references to LDPOOL with
-!        references to FURNSH.
-!
-!-    SPICELIB Version 3.2.0, 09-APR-2002 (WLT)
-!
-!        Added code to bracket the fractional part of a time component
-!        so that it cannot become negative due to inability to invert
-!        arithmetic operations with double precision arithmetic.
-!
-!-    SPICELIB Version 3.1.0, 21-JUN-2001 (WLT)
-!
-!        Added the format picture components ?ERA? and ?era? which
-!        vanish for years after 999 A.D.
-!
-!-    SPICELIB Version 3.0.2, 10-APR-2000 (WLT)
-!
-!        Declared SCAN to be external.
-!
-!-    SPICELIB Version 3.0.1, 22-JUN-1998 (WLT)
-!
-!        A number of typographical and grammatical errors
-!        were corrected in the header.
-!
-!-    SPICELIB Version 3.0.0, 30-DEC-1997 (WLT)
-!
-!        The previous version of this routine did not output
-!        fractional components for epochs prior to 1 A.D.
-!
-!        In addition, the default time system, calendar and time zone
-!        are obtained from TIMDEF.
-!
-!-    SPICELIB Version 2.0.0, 01-APR-1997 (WLT)
-!
-!        In the event that the format picture requested 'YR' as
-!        the first component of a time string, the previous edition
-!        of this routine used the year value corresponding to the
-!        last call to this routine (or whatever happened to be in
-!        memory on the first call). This error has been corrected.
-!
-!-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT) (MJS) (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Convert and format d.p. seconds past J2000 as a string
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 3.0.0, 30-DEC-1997 (WLT)
-!
-!        The previous version of this routine did not output
-!        fractional components for epochs prior to 1 A.D.
-!
-!        This error was due to overuse of the original year
-!        component returned from TTRANS. The original year
-!        component is now saved for use in computing the fractional
-!        component. The modified year (used in printing B.C. epochs)
-!        is stored in a separate variable.
-!
-!-    SPICELIB Version 2.0.0, 01-APR-1997 (WLT)
-!
-!        In the event that the format picture requested 'YR' as
-!        the first component of a time string, the previous edition
-!        of this routine used the year value corresponding to the
-!        last call to this routine (or whatever happened to be in
-!        memory on the first call). This error has been corrected.
-!
-!        The error was fixed by recoding the following IF THEN statement
-!
-!              IF (       TYPE .EQ. YEAR
-!    .               .OR. TYPE .EQ. MONTH
-!    .               .OR. TYPE .EQ. MON
-!    .               .OR. TYPE .EQ. DAY
-!    .               .OR. TYPE .EQ. DOY
-!    .               .OR. TYPE .EQ. NOON
-!    .               .OR. TYPE .EQ. HOUR
-!    .               .OR. TYPE .EQ. ERA
-!    .               .OR. TYPE .EQ. AMPM
-!    .               .OR. TYPE .EQ. MINUTE
-!    .               .OR. TYPE .EQ. SEC   ) THEN
-!
-!        as
-!
-!              IF (       TYPE .EQ. YEAR
-!    .               .OR. TYPE .EQ. YR
-!    .               .OR. TYPE .EQ. MONTH
-!    .               .OR. TYPE .EQ. MON
-!    .               .OR. TYPE .EQ. DAY
-!    .               .OR. TYPE .EQ. DOY
-!    .               .OR. TYPE .EQ. NOON
-!    .               .OR. TYPE .EQ. HOUR
-!    .               .OR. TYPE .EQ. ERA
-!    .               .OR. TYPE .EQ. AMPM
-!    .               .OR. TYPE .EQ. MINUTE
-!    .               .OR. TYPE .EQ. SEC   ) THEN
-!
-!-    Beta Version 2.1.0, 17-MAR-1994 (MJS) (NJB)
-!
-!        Integer argument to BRCKTD changed from 0 to 0.0D0.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-!     The parameters below act essentially as an enumeration
-!     of the various kinds of components we will be looking at in the
-!     input time string.
-!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-!
-!     The following parameters serve as an enumeration of the various
-!     time formats that are recognized.
-!
-
-
-!
-!     The parameters below are used to declare the space needed for
-!     scanning the input format string.
-!
-
-
-!
-!     The length of the local string that we will use for copying
-!     the format string.
-!
-
-
-
-!
-!     Local variables
-!
-
-!
-!     The next set of variables holds the marks and auxiliary
-!     arrays used for scanning the format string.
-!
-
-
-!
-!     The variables below are used to hold, base formats, values of
-!     time vector components, adjustments to use when rounding,
-!     the lengths of the format pictures and whether or not various
-!     components have already been computed.
-!
-
-!
-!     The array below contains the indexes of the various values
-!     associated with the three different times of time vectors
-!     that we will be using YMD, YD, CONTIN.
-!
-
-!
-!     We will be making a local copy of the input format string
-!     and the input time.
-!
-
-
-!
-!     The integers below are used to mark substring boundaries.
-!
-
-
-!
-!     Times come in three flavors: TT or TDT, TDB, UTC.  The one used
-!     on this particular invocation of TIMOUT is stored in TIMTYP.
-!     The routine TTRANS needs to have input and output time vector
-!     types.  The one used based upon the input PICTUR is stored
-!     in BASTYP.
-!
-
-
-
-!
-!     Loop counters and delimiters
-!
-
-!
-!     Utility double precision numbers
-!
-
-!
-!     The array power is used to assist in the truncation of double
-!     precision values.
-!
-
-!
-!     calendar variables.
-!
-
-!
-!     Character string representations for months and week days.
-!
-
-
-
-!
-!     Save everything.
-!
-
-!
-!     Initial values
-!
-
-
-
-
-
-
-
+!! ## Abstract
+!!
+!!     Convert an input epoch represented in TDB seconds past the TDB
+!!     epoch of J2000 to a character string formatted to the
+!!     specifications of a user's format picture.
+!!
+!! ## Required Reading
+!!
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     ET       is a double precision representation of time in seconds
+!!              past the ephemeris epoch J2000.
+!!
+!!     PICTUR   is a string that specifies how the output should be
+!!              presented. The string is made up of various markers
+!!              that stand for various components associated with
+!!              a time.
+!!
+!!              There are five types of markers that may appear in a
+!!              format picture. These are String Markers, Numeric
+!!              Markers, Meta markers, Modifier Markers and Literal
+!!              Markers.
+!!
+!!              The PICTUR string is examined and the various markers
+!!              are identified. The output time string is constructed
+!!              by replacing each of the identified markers with
+!!              an appropriate time component.
+!!
+!!              The various markers and their meanings are discussed
+!!              in the $Particulars section below.
+!!
+!!              Note that leading and trailing blanks in PICTUR are
+!!              ignored.
+!!
+!! ## Detailed Output
+!!
+!!     OUTPUT   is a time string equivalent to the input epoch ET,
+!!              matching the format specified by PICTUR.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  A leapseconds kernel must be loaded via the routine FURNSH
+!!         before calling this routine. If a leapsecond kernel has not
+!!         been loaded, an error is signaled by a routine in the call
+!!         tree of this routine.
+!!
+!!     2)  If PICTUR contains the numeric marker 'YYYY' and the
+!!         magnitude of year is too large to be displayed as a four-digit
+!!         integer, TIMOUT will replace it by '****'.
+!!
+!!     3)  If the requested precision is higher than 12 decimal places,
+!!         TIMOUT will truncate the decimal part down to 12, and OUTPUT
+!!         will have all the remaining digits in the decimal part set to
+!!         zero.
+!!
+!!     4)  Double colon (::), when is not part of one of the supported
+!!         markers, has no effect and will be presented as is on the
+!!         output string.
+!!
+!! ## Files
+!!
+!!     A leapseconds kernel must be "loaded" via the routine FURNSH
+!!     prior to calling TIMOUT.
+!!
+!! ## Particulars
+!!
+!!     A format picture is simply a string of letters that lets
+!!     TIMOUT know where various components of a time representation
+!!     should be placed during creation of the time string.
+!!     Here's an example of such a picture:
+!!
+!!        MON DD,YYYY  HR:MN:SC.#### (TDB) ::TDB
+!!
+!!     Here is a sample of times that would be created by using this
+!!     format.
+!!
+!!        JAN 12,1992  12:28:18.2772 (TDB)
+!!        FEB 13,1994  23:18:25.2882 (TDB)
+!!        AUG 21,1995  00:02:00.1881 (TDB)
+!!
+!!     As you can see from the samples above, the format picture
+!!     specifies that every time string created should begin with a
+!!     three-letter abbreviation for the month, followed by a space and
+!!     the day of the month. The day of month is followed immediately by
+!!     a comma and the year. The year component is followed by two
+!!     spaces. The next outputs are hours represented as a two digit
+!!     integer, a colon, minutes represented as a two digit integer,
+!!     another colon, and seconds truncated to 4 decimal places and
+!!     having a two digit integer part (rounding can be commanded; see
+!!     the discussion of truncation and rounding below). This is
+!!     followed by a space and the string '(TDB)'. The special marker
+!!     '::TDB' in the time picture is an ``invisible'' marker. It is
+!!     used to specify the time system that should be used in creating
+!!     the time string (in this case Barycentric Dynamical Time).
+!!
+!!     TIMOUT does not recognize all of the parts of the time format
+!!     picture in the example above. The list of recognized parts and
+!!     unrecognized parts is shown in the table below.
+!!
+!!       Recognized       Unrecognized
+!!       ----------       ------------
+!!       'MON'            ' '
+!!       'DD'             ','
+!!       'YYYY'           '  '
+!!       'HR'             ':'
+!!       'MN'             '(TDB)'
+!!       'SC'
+!!       '.####'
+!!       '::TDB'
+!!
+!!     The unrecognized parts are called literal markers. They are
+!!     copied exactly as they appear in PICTUR into the output string.
+!!     The recognized parts of the picture are replaced by a
+!!     component of time or, as in the case of '::TDB' are used
+!!     as instructions about the overall properties of the time
+!!     string.
+!!
+!!     The full list of recognized markers, their classification
+!!     and meaning are given below.
+!!
+!!     MARKER       CLASS     MEANING
+!!     -----------  --------  -----------------------------------------
+!!     '.##...'     modifier  represents a numeric component that
+!!                            immediately precedes this in a decimal
+!!                            format. Number of decimal places
+!!                            equals the number of '#' characters
+!!     '::GCAL'     meta      dates are reported in Gregorian calendar
+!!     '::JCAL'     meta      dates are reported in Julian calendar
+!!     '::MCAL'     meta      dates after 15 October, 1582 are reported
+!!                            in Gregorian calendar; before that
+!!                            dates are reported in Julian calendar
+!!
+!!     '::RND'      meta      round output to places specified by
+!!                            least significant component
+!!
+!!     '::TDB'      meta      all components should be TDB
+!!
+!!     '::TDT'      meta      all components should be TT (TDT)
+!!
+!!     '::TT'       meta      all components should be TT (TDT)
+!!
+!!     '::TRNC'     meta      truncate all output components (default)
+!!     '::UTC'      meta      all components should be UTC (default)
+!!     '::UTC+h:m'  meta      all components in UTC offset by +h (hours)
+!!                            and +m (minutes) so as to allow time zones.
+!!     '::UTC-h:m'  meta      all components in UTC offset by -h (hours)
+!!                            and -m (minutes) so as to allow time zones.
+!!     'AMPM'       string    String (either 'A.M.' or 'P.M.')
+!!                            indicating whether hours are before
+!!                            or after noon.
+!!     'ampm'       string    String (either 'a.m.' or 'p.m.')
+!!                            indicating whether hours are before
+!!                            or after noon.
+!!     'AP'         numeric   AM/PM equivalents of the hour component
+!!                            of a time.
+!!     'DD'         numeric   Day of month
+!!     'DOY'        numeric   Day of year
+!!     'ERA'        string    String (either 'B.C.' or 'A.D.') giving
+!!                            era associated with an epoch.
+!!     '?ERA?'      string    String: either ' B.C. ' or ' A.D. ' if the
+!!                            year is before 1000 A.D. otherwise a
+!!                            blank: ' '.
+!!     'era'        string    String (either 'b.c.' or 'a.d.') giving
+!!                            era associated with an epoch.
+!!     '?era?'      string    String: either ' b.c. ' or ' a.d. ' if the
+!!                            year is before 1000 A.D. otherwise a
+!!                            blank: ' '.
+!!     'HR'         numeric   hour component of time
+!!     'JULIAND'    numeric   Julian date component of time
+!!     'MM'         numeric   numeric representation of month component
+!!     'MN'         numeric   minute component of time
+!!     'MON'        string    upper case three letter abbreviation for
+!!                            month
+!!     'Mon'        string    capitalized three letter abbreviation for
+!!                            month
+!!     'mon'        string    lower case three letter abbreviation for
+!!                            month
+!!     'MONTH'      string    upper case full name of month
+!!     'Month'      string    capitalized full name of month
+!!     'month'      string    lower case full name of month
+!!     'SC'         numeric   seconds component of time
+!!     'SP1950'     numeric   seconds past 1950 component of time
+!!     'SP2000'     numeric   seconds past 2000 component of time
+!!     'YR'         numeric   last two digits of year component of time
+!!     'YYYY'       numeric   year component of time
+!!     'WEEKDAY'    string    upper case day of week
+!!     'Weekday'    string    capitalized day of week
+!!     'weekday'    string    lower case day of week
+!!     'WKD'        string    upper case three letter abbreviation for
+!!                            day of week.
+!!     'Wkd'        string    capitalized three letter abbreviation for
+!!                            day of week.
+!!     'wkd'        string    lower case three letter abbreviation for
+!!                            day of week.
+!!
+!!     String Markers
+!!
+!!        String markers are portions of the format picture that will
+!!        be replaced with a character string that represents the
+!!        corresponding component of a time.
+!!
+!!     Numeric Markers
+!!
+!!        Numeric markers are portions of the format picture that will
+!!        be replaced with a decimal string that represents the
+!!        corresponding component of a time.
+!!
+!!     Meta Markers
+!!
+!!        Meta markers (listed under the class ``meta'' in the
+!!        table above) are used to indicate "global" properties of
+!!        your time string. You may specify time scale and how
+!!        rounding should be performed on the components of time
+!!        in your output string. Meta markers may be placed anywhere
+!!        in your format picture. They do not contribute to placement
+!!        of characters in output time strings. Also there are no
+!!        restrictions on how many meta markers you may place in
+!!        the format picture. However, if you supply conflicting
+!!        `meta' markers (for example '::TDT' and '::TDB') in your
+!!        picture the first marker listed (in left to right order)
+!!        overrules the conflicting marker that appears later in
+!!        the picture.
+!!
+!!     Default Meta Markers
+!!
+!!        If you do not specify a time system, calendar, or time
+!!        zone through the use of a Meta Marker, TIMOUT uses the
+!!        values returned by the SPICE routine TIMDEF. The default
+!!        time system, calendar returned by TIMDEF are UTC and
+!!        the Gregorian calendar. The default time zone returned
+!!        by TIMDEF is a blank indicating that no time zone offset
+!!        should be used.
+!!
+!!        See the header for the routine TIMDEF for a more complete
+!!        discussion of setting and retrieving default values.
+!!
+!!     Modifier Markers
+!!
+!!        The numeric markers listed in the table above stand
+!!        for integers unless they are modified through use of a
+!!        modifier marker. The strings
+!!
+!!           .#
+!!           .##
+!!           .###
+!!           .####
+!!
+!!        are used to this end. When a numeric marker is followed
+!!        immediately by one of these modifiers, the corresponding time
+!!        component will be written with the number of decimal places
+!!        indicated by the number of successive occurrences of the
+!!        character '#'. Any numeric token may be modified.
+!!
+!!     Rounding vs. Truncation
+!!
+!!        The meta markers ::TRNC and ::RND allow you to control
+!!        how the output time picture is rounded. If you specify
+!!        ::TRNC all components of time are simply truncated to
+!!        the precision specified by the marker and any modifier.
+!!        If you specify ::RND the output time is rounded to the
+!!        least significant component of the format picture. The
+!!        default action is truncation.
+!!
+!!        Whether an output time string should be rounded or
+!!        truncated depends upon what you plan to do with the
+!!        string. For example suppose you simply want to get the
+!!        calendar date associated with a time and not the time of
+!!        day. Then you probably do not want to round your output.
+!!        Rounding 1992 Dec 31, 13:12:00 to the nearest day
+!!        produces 1993 Jan 1. Thus in this case rounding is probably
+!!        not appropriate.
+!!
+!!        However, if you are producing output for plotting using
+!!        Julian Date, seconds past 1950 or seconds past 2000, you will
+!!        probably want your output rounded so as to produce a smoother
+!!        plot.
+!!
+!!     Time Systems
+!!
+!!        TIMOUT can produce output strings for epochs relative to
+!!        any of the systems UTC, TT or TDT, or TDB. If you do not
+!!        explicitly specify a time system, TIMOUT will produce strings
+!!        relative to the time system returned by the SPICE routine
+!!        TIMDEF. Unless you call TIMDEF and change it, the default time
+!!        system is UTC. However, by using one of the Meta Markers
+!!        ::UTC, ::TT, ::TDT, or ::TDB you may specify that TIMOUT
+!!        produce time strings relative to the UTC, TT or TDT, or TDB
+!!        system respectively.
+!!
+!!     Time Zones
+!!
+!!        The meta markers ::UTC+h:m  and ::UTC-h:m  allow you to
+!!        offset UTC times so that you may represent times in a time
+!!        zone other than GMT. For example you can output times in
+!!        Pacific Standard time by placing the meta-marker ::UTC-8 in
+!!        your format picture.
+!!
+!!        For instance, if you use the picture
+!!
+!!           YYYY Mon DD, HR:MN:SC ::UTC
+!!
+!!        you will get output strings such as:
+!!
+!!           1995 Jan 03, 12:00:00
+!!
+!!        If you use the picture
+!!
+!!           YYYY Mon DD, HR:MN:SC ::UTC-8
+!!
+!!        you will get output strings such as:
+!!
+!!           1995 Jan 03, 04:00:00
+!!
+!!        Finally, if you use the picture
+!!
+!!           YYYY Mon DD, HR:MN:SC ::UTC-8:15
+!!
+!!        you will get output string
+!!
+!!           1995 Jan 03, 03:45:00
+!!
+!!        Note that the minutes are always added or subtracted based on
+!!        the sign present in the time zone specifier. In the case of
+!!        ::UTC+h:m, minutes are added. In the case ::UTC-h:m, minutes
+!!        are subtracted.
+!!
+!!        The unsigned part of the hours component can be no more than
+!!        12. The unsigned part of the minutes component can be no
+!!        more than 59.
+!!
+!!     Calendars
+!!
+!!        The calendar currently used by western countries is the
+!!        Gregorian calendar. This calendar begins on Oct 15, 1582.
+!!        Prior to Gregorian calendar the Julian calendar was used. The
+!!        last Julian calendar date prior to the beginning of the
+!!        Gregorian calendar is Oct 5, 1582.
+!!
+!!        The primary difference between the Julian and Gregorian
+!!        calendars is in the determination of leap years. Nevertheless,
+!!        both can be formally extended backward and forward in time
+!!        indefinitely.
+!!
+!!        By default TIMOUT uses the default calendar returned by
+!!        TIMDEF. Under most circumstances this will be the Gregorian
+!!        calendar (::GCAL). However you may specify that TIMOUT use a
+!!        specific calendar through use of one of the calendar Meta
+!!        Markers. You may specify that TIMOUT use the Julian calendar
+!!        (::JCAL), the Gregorian calendar (::GCAL)  or a mixture of
+!!        both (::MCAL).
+!!
+!!        If you specify ::MCAL, epochs that occur after the beginning
+!!        of the Gregorian calendar will be represented using the
+!!        Gregorian calendar, and epochs prior to the beginning of the
+!!        Gregorian calendar will be represented using the Julian
+!!        calendar.
+!!
+!!     Getting Software to Construct Pictures for You.
+!!
+!!        Although it is not difficult to construct time format
+!!        pictures, you do need to be aware of the various markers that
+!!        may appear in a format picture.
+!!
+!!        There is an alternative means for getting a format picture.
+!!        The routine TPICTR constructs format pictures from a sample
+!!        time string. For example, suppose you would like your time
+!!        strings to look like the basic pattern of the string below.
+!!
+!!           'Fri Jul 26 12:22:09 PDT 1996'
+!!
+!!        You can call TPICTR with this string, and it will create the
+!!        appropriate PICTUR for use with TIMOUT.
+!!
+!!           CALL TPICTR ( 'Fri Jul 26 12:22:09 PDT 1996',
+!!          .              PICTUR, OK, ERRMSG             )
+!!
+!!        The result will be:
+!!
+!!           'Wkd Mon DD HR:MN:SC (PDT) ::UTC-7'
+!!
+!!        Note: not every date that you can read is interpretable by
+!!        TPICTR. For example, you might be able to understand that
+!!        19960212121116 is Feb 2 1996, 12:11:16. However, TPICTR
+!!        cannot recognize this string. Thus it is important to check
+!!        the logical output OK to make sure that TPICTR was able to
+!!        understand the time picture you provided.
+!!
+!!        Even thought TPICTR can not recognize every time pattern that
+!!        has been used by various people, it does recognize nearly all
+!!        patterns that you use when you want to communicate outside
+!!        your particular circle of colleagues.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for these examples may differ across
+!!     platforms. The results depend on the SPICE kernels used as input,
+!!     the compiler and supporting libraries, and the machine specific
+!!     arithmetic implementation.
+!!
+!!     1) Given a sample with the format of the UNIX date string
+!!        local to California, create a SPICE time picture for use
+!!        in TIMOUT.
+!!
+!!        Using that SPICE time picture, convert a series of ephemeris
+!!        times to that picture format.
+!!
+!!        Use the LSK kernel below to load the leap seconds and time
+!!        constants required for the conversions.
+!!
+!!           naif0012.tls
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM TIMOUT_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               ERRLEN
+!!              PARAMETER           ( ERRLEN  = 400 )
+!!
+!!              INTEGER               TIMLEN
+!!              PARAMETER           ( TIMLEN  = 64  )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(ERRLEN)    ERR
+!!              CHARACTER*(TIMLEN)    PICTUR
+!!              CHARACTER*(TIMLEN)    SAMPLE
+!!              CHARACTER*(TIMLEN)    TIMSTR
+!!              CHARACTER*(TIMLEN)    UTCSTR
+!!
+!!              DOUBLE PRECISION      ET
+!!
+!!              LOGICAL               OK
+!!
+!!        C
+!!        C     Load LSK file.
+!!        C
+!!              CALL FURNSH ( 'naif0012.tls' )
+!!
+!!        C
+!!        C     Create the required time picture.
+!!        C
+!!              SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
+!!
+!!              CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
+!!
+!!              IF ( .NOT. OK ) THEN
+!!
+!!                 WRITE(*,*) 'Invalid time picture.'
+!!                 WRITE(*,*) ERR
+!!
+!!              ELSE
+!!
+!!        C
+!!        C        Convert the input UTC time to ephemeris time.
+!!        C
+!!                 UTCSTR = '26 Nov 2018  23:23:00 UTC'
+!!                 CALL STR2ET ( UTCSTR, ET )
+!!
+!!        C
+!!        C         Now convert ET to the desired output format.
+!!        C
+!!                  CALL TIMOUT ( ET, PICTUR, TIMSTR )
+!!                  WRITE (*,*) 'Sample format: ', SAMPLE
+!!                  WRITE (*,*) 'Time picture : ', PICTUR
+!!                  WRITE (*,*)
+!!                  WRITE (*,*) 'Input UTC    : ', UTCSTR
+!!                  WRITE (*,*) 'Output       : ', TIMSTR
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         Sample format: Thu Oct 01 11:11:11 PDT 1111
+!!         Time picture : Wkd Mon DD HR:MN:SC PDT YYYY ::UTC-7
+!!
+!!         Input UTC    : 26 Nov 2018  23:23:00 UTC
+!!         Output       : Mon Nov 26 16:23:00 PDT 2018
+!!
+!!     2) Convert a UTC time to a string that contains both the
+!!        calendar representations of the date as well as the Julian
+!!        date; for example a string of the form:
+!!
+!!           "Thu Aug 01 09:47:16 PDT 1996 (2450297.1994 JDUTC)"
+!!
+!!        Use the LSK kernel below to load the leap seconds and time
+!!        constants required for the conversions.
+!!
+!!           naif0012.tls
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM TIMOUT_EX2
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               TIMLEN
+!!              PARAMETER           ( TIMLEN  = 80 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(TIMLEN)    PICTUR
+!!              CHARACTER*(TIMLEN)    TIMSTR
+!!              CHARACTER*(TIMLEN)    UTCSTR
+!!
+!!              DOUBLE PRECISION      ET
+!!
+!!        C
+!!        C     Load LSK file.
+!!        C
+!!              CALL FURNSH ( 'naif0012.tls' )
+!!
+!!        C
+!!        C     Convert the input UTC time to ephemeris time.
+!!        C
+!!              UTCSTR = '26 Nov 2018  16:23:00 UTC'
+!!              CALL STR2ET ( UTCSTR, ET )
+!!
+!!        C
+!!        C     Create the required time picture. This could be done
+!!        C     using TPICTR.
+!!        C
+!!              PICTUR = 'Wkd Mon DD HR:MN ::UTC-7 YYYY '
+!!             .      // '(JULIAND.#### JDUTC)'
+!!
+!!        C
+!!        C      Now convert ET to the desired output format.
+!!        C
+!!               CALL TIMOUT ( ET, PICTUR, TIMSTR )
+!!               WRITE (*,*) 'Input UTC: ', UTCSTR
+!!               WRITE (*,*) 'Output   : ', TIMSTR
+!!
+!!               END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         Input UTC: 26 Nov 2018  16:23:00 UTC
+!!         Output   : Mon Nov 26 09:23  2018 (2458449.1826 JDUTC)
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     M.J. Spencer       (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.4.0, 07-AUG-2021 (EDW) (JDR) (NJB)
+!!
+!!        Corrected typo preventing correct calculation of decimal
+!!        values for HR.###... and MN.###... markers with ::UTC+N:M
+!!        and ::UTC-N:M meta tags.
+!!
+!!        Added "::TT" as a time system meta marker equivalent-to/
+!!        alias-for "::TDT". No change to functionality.
+!!
+!!        Corrected OUTPUT argument name in $Brief_I/O section (it was
+!!        STRING) and improved its description in $Detailed_Output.
+!!        Fixed call to TPICTR in $Particulars.
+!!
+!!        Edited the header to comply with NAIF standard. Removed
+!!        unnecessary entries in $Revisions section. Converted the
+!!        existing code fragments into complete examples and added
+!!        references to required LSKs.
+!!
+!!        Updated $Exceptions section, rewording the existing entry
+!!        and adding three additional cases.
+!!
+!!-    SPICELIB Version 3.3.1, 31-JAN-2017 (NJB)
+!!
+!!        Updated header comments to draw attention to the fact that
+!!        rounding can be commanded.
+!!
+!!-    SPICELIB Version 3.3.0, 23-OCT-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in RMAIND call. Replaced header references to LDPOOL with
+!!        references to FURNSH.
+!!
+!!-    SPICELIB Version 3.2.0, 09-APR-2002 (WLT)
+!!
+!!        Added code to bracket the fractional part of a time component
+!!        so that it cannot become negative due to inability to invert
+!!        arithmetic operations with double precision arithmetic.
+!!
+!!-    SPICELIB Version 3.1.0, 21-JUN-2001 (WLT)
+!!
+!!        Added the format picture components ?ERA? and ?era? which
+!!        vanish for years after 999 A.D.
+!!
+!!-    SPICELIB Version 3.0.2, 10-APR-2000 (WLT)
+!!
+!!        Declared SCAN to be external.
+!!
+!!-    SPICELIB Version 3.0.1, 22-JUN-1998 (WLT)
+!!
+!!        A number of typographical and grammatical errors
+!!        were corrected in the header.
+!!
+!!-    SPICELIB Version 3.0.0, 30-DEC-1997 (WLT)
+!!
+!!        The previous version of this routine did not output
+!!        fractional components for epochs prior to 1 A.D.
+!!
+!!        In addition, the default time system, calendar and time zone
+!!        are obtained from TIMDEF.
+!!
+!!-    SPICELIB Version 2.0.0, 01-APR-1997 (WLT)
+!!
+!!        In the event that the format picture requested 'YR' as
+!!        the first component of a time string, the previous edition
+!!        of this routine used the year value corresponding to the
+!!        last call to this routine (or whatever happened to be in
+!!        memory on the first call). This error has been corrected.
+!!
+!!-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT) (MJS) (NJB)
+!!
+!! ## Index Entries
+!!
+!!     Convert and format d.p. seconds past J2000 as a string
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 3.0.0, 30-DEC-1997 (WLT)
+!!
+!!        The previous version of this routine did not output
+!!        fractional components for epochs prior to 1 A.D.
+!!
+!!        This error was due to overuse of the original year
+!!        component returned from TTRANS. The original year
+!!        component is now saved for use in computing the fractional
+!!        component. The modified year (used in printing B.C. epochs)
+!!        is stored in a separate variable.
+!!
+!!-    SPICELIB Version 2.0.0, 01-APR-1997 (WLT)
+!!
+!!        In the event that the format picture requested 'YR' as
+!!        the first component of a time string, the previous edition
+!!        of this routine used the year value corresponding to the
+!!        last call to this routine (or whatever happened to be in
+!!        memory on the first call). This error has been corrected.
+!!
+!!        The error was fixed by recoding the following IF THEN statement
+!!
+!!              IF (       TYPE .EQ. YEAR
+!!    .               .OR. TYPE .EQ. MONTH
+!!    .               .OR. TYPE .EQ. MON
+!!    .               .OR. TYPE .EQ. DAY
+!!    .               .OR. TYPE .EQ. DOY
+!!    .               .OR. TYPE .EQ. NOON
+!!    .               .OR. TYPE .EQ. HOUR
+!!    .               .OR. TYPE .EQ. ERA
+!!    .               .OR. TYPE .EQ. AMPM
+!!    .               .OR. TYPE .EQ. MINUTE
+!!    .               .OR. TYPE .EQ. SEC   ) THEN
+!!
+!!        as
+!!
+!!              IF (       TYPE .EQ. YEAR
+!!    .               .OR. TYPE .EQ. YR
+!!    .               .OR. TYPE .EQ. MONTH
+!!    .               .OR. TYPE .EQ. MON
+!!    .               .OR. TYPE .EQ. DAY
+!!    .               .OR. TYPE .EQ. DOY
+!!    .               .OR. TYPE .EQ. NOON
+!!    .               .OR. TYPE .EQ. HOUR
+!!    .               .OR. TYPE .EQ. ERA
+!!    .               .OR. TYPE .EQ. AMPM
+!!    .               .OR. TYPE .EQ. MINUTE
+!!    .               .OR. TYPE .EQ. SEC   ) THEN
+!!
+!!-    Beta Version 2.1.0, 17-MAR-1994 (MJS) (NJB)
+!!
+!!        Integer argument to BRCKTD changed from 0 to 0.0D0.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     The parameters below act essentially as an enumeration
+!!     of the various kinds of components we will be looking at in the
+!!     input time string.
+!!
+!!     The following parameters serve as an enumeration of the various
+!!     time formats that are recognized.
+!!
+!!     The parameters below are used to declare the space needed for
+!!     scanning the input format string.
+!!
+!!     The length of the local string that we will use for copying
+!!     the format string.
+!!
+!!     Local variables
+!!
+!!     The next set of variables holds the marks and auxiliary
+!!     arrays used for scanning the format string.
+!!
+!!     The variables below are used to hold, base formats, values of
+!!     time vector components, adjustments to use when rounding,
+!!     the lengths of the format pictures and whether or not various
+!!     components have already been computed.
+!!
+!!     The array below contains the indexes of the various values
+!!     associated with the three different times of time vectors
+!!     that we will be using YMD, YD, CONTIN.
+!!
+!!     We will be making a local copy of the input format string
+!!     and the input time.
+!!
+!!     The integers below are used to mark substring boundaries.
+!!
+!!     Times come in three flavors: TT or TDT, TDB, UTC.  The one used
+!!     on this particular invocation of TIMOUT is stored in TIMTYP.
+!!     The routine TTRANS needs to have input and output time vector
+!!     types.  The one used based upon the input PICTUR is stored
+!!     in BASTYP.
+!!
+!!     Loop counters and delimiters
+!!
+!!     Utility double precision numbers
+!!
+!!     The array power is used to assist in the truncation of double
+!!     precision values.
+!!
+!!     calendar variables.
+!!
+!!     Character string representations for months and week days.
+!!
+!!     Save everything.
+!!
+!!     Initial values
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j1950, j2000, spd
       use pepper_arrays, only: bsrchc, isrchi

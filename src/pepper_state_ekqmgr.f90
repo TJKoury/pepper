@@ -6,22 +6,22 @@
 module pepper_state_ekqmgr
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
 
    implicit none
 
    private
 
-   include  'ekattdsc.inc'
-   include  'ekbool.inc'
-   include  'ekcnamsz.inc'
-   include  'ekcoldsc.inc'
-   include  'ekjrs.inc'
-   include  'ekopcd.inc'
-   include  'ekqlimit.inc'
-   include  'ekquery.inc'
-   include  'eksegdsc.inc'
-   include  'ektnamsz.inc'
-   include  'ektype.inc'
    integer(ip), parameter :: ftsize = 20
    integer(ip), parameter :: stsize = 200
    integer(ip), parameter :: mxtbld = 100

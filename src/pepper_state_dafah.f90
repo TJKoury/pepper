@@ -7,12 +7,12 @@
 module pepper_state_dafah
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
 
    implicit none
 
    private
 
-   include              'zzddhman.inc'
    integer(ip), parameter :: lbcell = -5
 
    public :: init_dafah_state

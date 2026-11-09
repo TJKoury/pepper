@@ -8,12 +8,12 @@
 module pepper_state_zzrytlat
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
 
    implicit none
 
    private
 
-   include 'dsktol.inc'
 
    public :: init_zzrytlat_state
 

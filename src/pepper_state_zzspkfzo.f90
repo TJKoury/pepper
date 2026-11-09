@@ -8,13 +8,13 @@
 module pepper_state_zzspkfzo
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
 
    implicit none
 
    private
 
-   include              'frmtyp.inc'
-   include              'zzabcorr.inc'
 
    public :: init_zzspkfzo_state
 

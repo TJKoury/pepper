@@ -7,14 +7,14 @@
 module pepper_state_zzdskbsr
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include 'dla.inc'
-   include 'dskdsc.inc'
-   include 'zzctr.inc'
    integer(ip), parameter :: ftsize = 5000
    integer(ip), parameter :: btsize = 100
    integer(ip), parameter :: lbpool = -5

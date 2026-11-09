@@ -8,13 +8,13 @@
 module pepper_state_zzspkgp1
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'ninert.inc'
-   include               'zzctr.inc'
    integer(ip), parameter :: frnmln = 32
 
    public :: init_zzspkgp1_state

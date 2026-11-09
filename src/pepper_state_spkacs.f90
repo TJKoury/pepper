@@ -9,12 +9,12 @@
 module pepper_state_spkacs
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
 
    implicit none
 
    private
 
-   include 'zzabcorr.inc'
 
    public :: init_spkacs_state
 

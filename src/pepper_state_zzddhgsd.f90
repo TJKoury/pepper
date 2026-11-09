@@ -8,12 +8,12 @@
 module pepper_state_zzddhgsd
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
 
    implicit none
 
    private
 
-   include              'zzddhman.inc'
    integer(ip), parameter :: locsiz = 8
    integer(ip), parameter :: numcls = 3
 

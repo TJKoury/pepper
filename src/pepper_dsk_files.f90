@@ -15,35 +15,34 @@ contains
 !$Procedure      ZZSIZEOK ( Determine if the size of a segment is ok )
 
       module procedure zzsizeok
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine exists to determine whether or not the type of
+!!     a DAF segment is compatible with the sizes allowed for SPK
+!!     type 01 segments or CK type 02 segments.  However, more generally
+!!     it determines whether or not the integer equation:
+!!
+!!         SIZE = PSIZE*N + (N-OFFSET)/DSIZE
+!!
+!!     can be satisfied for some value of N.  Moreover, if such
+!!     an N exists (there can be only one) it returns that value.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     NUMERIC
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine exists to determine whether or not the type of
-!     a DAF segment is compatible with the sizes allowed for SPK
-!     type 01 segments or CK type 02 segments.  However, more generally
-!     it determines whether or not the integer equation:
-!
-!         SIZE = PSIZE*N + (N-OFFSET)/DSIZE
-!
-!     can be satisfied for some value of N.  Moreover, if such
-!     an N exists (there can be only one) it returns that value.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE
-!     NUMERIC
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -204,27 +203,26 @@ contains
 !$Procedure      ZZCKSPK ( SPK or CK )
 
       module procedure zzckspk
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine determines whether or not a DAF file attached to
+!!     the supplied handle is an SPK, CK or unknown file.
+!!
+!! ## Required Reading
+!!
+!!      None.
+!!
+!! ## Keywords
+!!
+!!      PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine determines whether or not a DAF file attached to
-!     the supplied handle is an SPK, CK or unknown file.
-!
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      PRIVATE
-!
-! $ Declarations
-
       implicit none
       real(wp) :: chcktm_1(1)  !! one-element copy of chcktm (array argument)
       real(wp) :: frsttm_1(1)  !! one-element copy of frsttm (array argument)
@@ -566,27 +564,26 @@ contains
 !$Procedure GETFAT ( Get file architecture and type )
 
       module procedure getfat
+!! ## Abstract
+!!
+!!     Determine the architecture and type of SPICE kernels.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     KERNEL
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ljust, nextwd, ucase
-
-! $ Abstract
-!
-!     Determine the architecture and type of SPICE kernels.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     KERNEL
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_zzddhman
       implicit none
 
-      include              'zzddhman.inc'
 
 ! $ Detailed_Input
 !
@@ -1577,25 +1574,24 @@ contains
 !$Procedure SURFNM ( Surface normal vector on an ellipsoid )
 
       module procedure surfnm
+!! ## Abstract
+!!
+!!     Compute the outward-pointing, unit normal vector at a point on
+!!     the surface of an ellipsoid.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ELLIPSOID
+!!     GEOMETRY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vhatip
-
-! $ Abstract
-!
-!     Compute the outward-pointing, unit normal vector at a point on
-!     the surface of an ellipsoid.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ELLIPSOID
-!     GEOMETRY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1812,29 +1808,28 @@ contains
 !$Procedure NEARPT ( Nearest point on an ellipsoid )
 
       module procedure nearpt
+!! ## Abstract
+!!
+!!     Locate the point on the surface of an ellipsoid that is nearest
+!!     to a specified position. Also return the altitude of the position
+!!     above the ellipsoid.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALTITUDE
+!!     ELLIPSOID
+!!     GEOMETRY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: orderd, reordd, touchd
       use pepper_math, only: approx, brcktd, vadd, vdist, vequ, vnorm, vperp, vsclip, vzero
-
-! $ Abstract
-!
-!     Locate the point on the surface of an ellipsoid that is nearest
-!     to a specified position. Also return the altitude of the position
-!     above the ellipsoid.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALTITUDE
-!     ELLIPSOID
-!     GEOMETRY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -3834,24 +3829,23 @@ contains
 !$Procedure RECGEO ( Rectangular to geodetic )
 
       module procedure recgeo
+!! ## Abstract
+!!
+!!     Convert from rectangular coordinates to geodetic coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: reclat
-
-! $ Abstract
-!
-!     Convert from rectangular coordinates to geodetic coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -4279,199 +4273,189 @@ contains
 !$Procedure  ZZVRTPLT  ( create vertex-plate mapping )
 
       module procedure zzvrtplt
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Generate a data structure that represents the mapping from
+!!     vertices to the plates containing them.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DSK
+!!     PLATE
+!!     VERTEX
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     NV         Number of vertices.
+!!
+!!     NP         Number of plates.
+!!
+!!     PLATES     Plate array: this is an array of 3-tuples of
+!!                vertex indices. The elements
+!!
+!!                   PLATES(1:3,I)
+!!
+!!                are the indices of the vertices of the Ith plate.
+!!
+!!     CELLSZ     Size of cell array: explicit workspace dimension used
+!!                for error checking. This value should be
+!!
+!!                   3*NP
+!!
+!!     MAXLST     Maximum size of output plate list. This size should be
+!!
+!!                   3*NP  +  NV
+!!
+!!     CELLS      workspace array used to construct the vertex-plate
+!!                mapping.
+!!
+!! ## Detailed Output
+!!
+!!     CELLS      Workspace array used to construct the vertex-plate
+!!                mapping.
+!!
+!!     VRTPTR     Array of pointers associating plate lists with
+!!                vertices. The Ith element of VRTPTR contains
+!!                the start index in PLTLST of the list associated with
+!!                the Ith vertex.
+!!
+!!                The size of this array must be at least NV.
+!!
+!!     NLIST      Length of the output plate data list PLTLST.
+!!
+!!     PLTLST     Plate data list: for each vertex, there is a count
+!!                of associated plates, followed by the IDs of those
+!!                plates. The count for vertex I is located at
+!!
+!!                   PLTLST( VRTPTR(I) )
+!!
+!!                The size of this array must be at least MAXLST.
+!!
+!! ## Parameters
+!!
+!!     See parameter declarations in
+!!
+!!        dsk02.inc
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input plate count NP is non-positive, the
+!!         error SPICE(BADPLATECOUNT) is signaled.
+!!
+!!     2)  If the input vertex count NV is non-positive, the
+!!         error SPICE(BADVERTEXCOUNT) is signaled.
+!!
+!!     3)  If the cell array size CELLSZ is less than
+!!
+!!            3 * NP
+!!
+!!         the error SPICE(CELLARRAYTOOSMALL) is signaled.
+!!
+!!     4)  If the plate list size MAXPLT is less than
+!!
+!!            ( 3 * NP ) + NV
+!!
+!!         the error SPICE(PLATELISTTOOSMALL) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine supports the DSK type 2 spatial index
+!!     routines
+!!
+!!        DSKMI2
+!!        DSKSI2
+!!
+!! ## Examples
+!!
+!!     See usage in DSKMI2.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     J.A. Bytof      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 20-NOV-2020 (NJB)
+!!
+!!        Bug fix: in call to ZZADDLNK, size of pointer array was
+!!        changed from NP to NV.
+!!
+!!-    SPICELIB Version 1.0.0, 20-MAY-2016 (NJB)
+!!
+!!        Updated error handling. Now ZZVRTPLT performs precise checks
+!!        on cell and plate array size inputs.
+!!
+!!        22-DEC-2015 (NJB)
+!!
+!!           Renamed routine from VRTCOM to ZZVRTPLT.
+!!
+!!           CAUTION: argument list change! Removed input workspace
+!!           array for pointer construction. Array was named PNTRS.
+!!
+!!           Added error checks for input counts and sizes.
+!!
+!!           Now calls updated 3.0.0 version of ZZUNTNGL.
+!!
+!!        03-MAY-2014 (NJB)
+!!
+!!           Now calls ZZ* versions of supporting routines.
+!!
+!!           Changed argument list to include sizes of arrays.
+!!           Changed error handling to make use of array sizes.
+!!           Changed call to UNTNGL to accommodate argument
+!!           list change in that routine. Updated header I/O
+!!           descriptions.
+!!
+!!        12-JUL-2011 (NJB)
+!!
+!!           Argument list change: the input arrays V1, V2, V3 were
+!!           replaced with the input array PLATES.
+!!
+!!        04-MAY-2010 (NJB)
+!!
+!!           Now accepts input workspace arrays PNTRS and CELLS.
+!!           Changed INCLUDE file to dsk02.inc.
+!!
+!!        08-OCT-2009 (NJB)
+!!
+!!           Re-ordered header sections.
+!!
+!!        04-FEB-1999 (JAB)
+!!
+!! ## Index Entries
+!!
+!!     create vertex to plate map
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables.
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_dsk02
       implicit none
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Generate a data structure that represents the mapping from
-!     vertices to the plates containing them.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     DSK
-!     PLATE
-!     VERTEX
-!
-! $ Declarations
-
-      include              'dsk02.inc'
-
-! $ Detailed_Input
-!
-!     NV         Number of vertices.
-!
-!     NP         Number of plates.
-!
-!     PLATES     Plate array: this is an array of 3-tuples of
-!                vertex indices. The elements
-!
-!                   PLATES(1:3,I)
-!
-!                are the indices of the vertices of the Ith plate.
-!
-!     CELLSZ     Size of cell array: explicit workspace dimension used
-!                for error checking. This value should be
-!
-!                   3*NP
-!
-!     MAXLST     Maximum size of output plate list. This size should be
-!
-!                   3*NP  +  NV
-!
-!     CELLS      workspace array used to construct the vertex-plate
-!                mapping.
-!
-! $ Detailed_Output
-!
-!     CELLS      Workspace array used to construct the vertex-plate
-!                mapping.
-!
-!     VRTPTR     Array of pointers associating plate lists with
-!                vertices. The Ith element of VRTPTR contains
-!                the start index in PLTLST of the list associated with
-!                the Ith vertex.
-!
-!                The size of this array must be at least NV.
-!
-!     NLIST      Length of the output plate data list PLTLST.
-!
-!     PLTLST     Plate data list: for each vertex, there is a count
-!                of associated plates, followed by the IDs of those
-!                plates. The count for vertex I is located at
-!
-!                   PLTLST( VRTPTR(I) )
-!
-!                The size of this array must be at least MAXLST.
-!
-! $ Parameters
-!
-!     See parameter declarations in
-!
-!        dsk02.inc
-!
-! $ Exceptions
-!
-!     1)  If the input plate count NP is non-positive, the
-!         error SPICE(BADPLATECOUNT) is signaled.
-!
-!     2)  If the input vertex count NV is non-positive, the
-!         error SPICE(BADVERTEXCOUNT) is signaled.
-!
-!     3)  If the cell array size CELLSZ is less than
-!
-!            3 * NP
-!
-!         the error SPICE(CELLARRAYTOOSMALL) is signaled.
-!
-!     4)  If the plate list size MAXPLT is less than
-!
-!            ( 3 * NP ) + NV
-!
-!         the error SPICE(PLATELISTTOOSMALL) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine supports the DSK type 2 spatial index
-!     routines
-!
-!        DSKMI2
-!        DSKSI2
-!
-! $ Examples
-!
-!     See usage in DSKMI2.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     J.A. Bytof      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 20-NOV-2020 (NJB)
-!
-!        Bug fix: in call to ZZADDLNK, size of pointer array was
-!        changed from NP to NV.
-!
-!-    SPICELIB Version 1.0.0, 20-MAY-2016 (NJB)
-!
-!        Updated error handling. Now ZZVRTPLT performs precise checks
-!        on cell and plate array size inputs.
-!
-!        22-DEC-2015 (NJB)
-!
-!           Renamed routine from VRTCOM to ZZVRTPLT.
-!
-!           CAUTION: argument list change! Removed input workspace
-!           array for pointer construction. Array was named PNTRS.
-!
-!           Added error checks for input counts and sizes.
-!
-!           Now calls updated 3.0.0 version of ZZUNTNGL.
-!
-!        03-MAY-2014 (NJB)
-!
-!           Now calls ZZ* versions of supporting routines.
-!
-!           Changed argument list to include sizes of arrays.
-!           Changed error handling to make use of array sizes.
-!           Changed call to UNTNGL to accommodate argument
-!           list change in that routine. Updated header I/O
-!           descriptions.
-!
-!        12-JUL-2011 (NJB)
-!
-!           Argument list change: the input arrays V1, V2, V3 were
-!           replaced with the input array PLATES.
-!
-!        04-MAY-2010 (NJB)
-!
-!           Now accepts input workspace arrays PNTRS and CELLS.
-!           Changed INCLUDE file to dsk02.inc.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Re-ordered header sections.
-!
-!        04-FEB-1999 (JAB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     create vertex to plate map
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables.
-!
-
       integer(ip)           i
       integer(ip)           j
       integer(ip)           ncell
@@ -4585,29 +4569,28 @@ contains
 !$Procedure  ZZVOXCVO ( Voxel to coarse voxel offset )
 
       module procedure zzvoxcvo
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Map voxel coordinates to coarse voxel coordinates and offset
+!!     relative to coarse voxel. Offset coordinates are 1-based.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DSK
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Map voxel coordinates to coarse voxel coordinates and offset
-!     relative to coarse voxel. Offset coordinates are 1-based.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     DSK
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -4779,30 +4762,29 @@ contains
 !$Procedure ZZVOX2ID ( Return voxel index from coords )
 
       module procedure zzvox2id
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Given a voxel's grid coordinates and the voxel grid
+!!     dimensions, return the voxel's 1-dimensional index.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATE
+!!     DSK
+!!     INDEX
+!!     VOXEL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Given a voxel's grid coordinates and the voxel grid
-!     dimensions, return the voxel's 1-dimensional index.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATE
-!     DSK
-!     INDEX
-!     VOXEL
-!
-! $ Declarations
-
       implicit              none
 
 ! $ Detailed_Input
@@ -4908,198 +4890,193 @@ contains
 !$Procedure ZZTRVLNK ( Traverse AB cell linked-list )
 
       module procedure zztrvlnk
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Traverse an AB pool linked list, searching for all cells that are
+!!     associated with a specified A-value. Store the B-values of these
+!!     cells in an array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     linked list
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     AVAL       is an index associated with a pool entry. AVAL
+!!                is the index of the Ith value of a finite set "A."
+!!                AVAL is an index into the PNTRS array.
+!!
+!!     MAXA       Size of PNTRS array.
+!!
+!!     PNTRS      is an array of integers acting as pointers into the
+!!                cell array. The element at index I of PNTRS points to
+!!                the head of a linked list in CELLS that associates
+!!                B-values with the index I. Here I is the "A value."
+!!
+!!                If there are no values associated with the Ith A value,
+!!                PNTRS(I) is null (-1).
+!!
+!!     CELLSZ     is the number of cells in the cell array. The array
+!!                has dimensions
+!!
+!!                   (2, CELLSZ)
+!!
+!!     CELLS      is the input cell array. The element
+!!
+!!                   CELLS ( 1, PNTRS(AVAL) )
+!!
+!!                contains a B-value associated with AVAL. The element
+!!
+!!                   CELLS ( 2, PNTRS(AVAL) )
+!!
+!!                is a pointer to the next node of the list associated
+!!                with AVAL, or is null (-1) if the list contains only
+!!                one element. The pointer element of the last list node
+!!                for AVAL is null.
+!!
+!!     MAXB       is the size of the output B-value list.
+!!
+!! ## Detailed Output
+!!
+!!     NB         is the number of nodes in the list associated with
+!!                AVAL.
+!!
+!!     BLIST      is an array containing the B-values of the nodes
+!!                associated with AVAL. There is one entry in BLIST for
+!!                each node in the list associated with AVAL; the list
+!!                may contain duplicates.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the array index AVAL is less than 1 or exceeds the
+!!         declared size of the PNTR array, the error
+!!         SPICE(INDEXOUTOFRANGE) is signaled. Occurrence of this error
+!!         may result from the fine voxel scale being too small for the
+!!         data.
+!!
+!!     2)  If the size of the output BLIST array is non-positive, the
+!!         error SPICE(INVALIDSIZE) is signaled.
+!!
+!!     3)  If an element of the PNTRS array is larger than the length
+!!         CELLSZ of the cell array, the error SPICE(POINTEROUTOFRANGE)
+!!         is signaled.
+!!
+!!     4)  If the number of output list entries exceeds the size MAXB of
+!!         the output list array, the error SPICE(BARRAYTOOSMALL) is
+!!         signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The AB list routines support manipulation of a data structure that
+!!     represents a one-to-many mapping from a set A to a set B. Each
+!!     element of set A is mapped to a set of values from B, where the
+!!     range values are represented by a linked list of entries in the
+!!     cell array.
+!!
+!!     The elements of set B associated with the Ith element of A are
+!!     stored in a linked list of cells starting with the cell
+!!     consisting of elements
+!!
+!!        CELLS(*,PNTRS(I))
+!!
+!!     The set A is really an abstraction: it's just some finite set
+!!     with size in the range 1:MAXA. The input AVAL is not a member of
+!!     A but rather just an index into A. For consistency with existing
+!!     code, the name AVAL has been retained.
+!!
+!!     The fact that B values are stored in linked lists enables a
+!!     program to store entries for A-B associations in random order.
+!!     For example, in the process of constructing DSK type 2 segments,
+!!     the of non-empty fine voxels intersected by a given plate can be
+!!     computed; then an entry representing a voxel-plate association
+!!     can be made for each fine voxel in the set. In this case, the
+!!     set "A" is the set of fine voxels belonging to non-empty coarse
+!!     voxels.
+!!
+!!     This routine supports creation of DSK type 2 segments. It is used
+!!     for creation of both voxel-plate association data structures and
+!!     of vertex-plate association data structures.
+!!
+!! ## Examples
+!!
+!!     See usage in the routine ZZUNTNGL.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     J.A. Bytof      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
+!!
+!!      07-JAN-2016 (NJB)
+!!
+!!        Strengthened check on invalid pointer. Renamed argument MAXCEL
+!!        to CELLSZ. Updated header comments.
+!!
+!!      26-MAR-2015 (NJB)
+!!
+!!        Updated long error messages to improve accuracy.
+!!
+!!        Header update: added description of MAXB input
+!!        argument. Updated description of MAXA input
+!!        argument. Filled out Exceptions section.
+!!
+!!      30-APR-2014 (NJB)
+!!
+!!        Changed argument list: each array argument now
+!!        has an associated argument giving its size.
+!!        Updated error checking to check array indices
+!!        against array sizes.
+!!
+!!      08-OCT-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!      11-JUN-2004 (EDW)
+!!
+!!        Added check on AVAL to ensure it's smaller
+!!        than the size of MAXA.
+!!
+!!      26-AUG-2002 (BVS)
+!!
+!!        Replaced WRITE with normal error reporting calls.
+!!
+!!      03-FEB-1999 (JAB)
+!!
+!! ## Index Entries
+!!
+!!     AB cells
+!!
       use pepper_kinds, only: ip
       implicit none
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Traverse an AB pool linked list, searching for all cells that are
-!     associated with a specified A-value. Store the B-values of these
-!     cells in an array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     linked list
-!
-! $ Declarations
-
-! $ Detailed_Input
-!
-!     AVAL       is an index associated with a pool entry. AVAL
-!                is the index of the Ith value of a finite set "A."
-!                AVAL is an index into the PNTRS array.
-!
-!     MAXA       Size of PNTRS array.
-!
-!     PNTRS      is an array of integers acting as pointers into the
-!                cell array. The element at index I of PNTRS points to
-!                the head of a linked list in CELLS that associates
-!                B-values with the index I. Here I is the "A value."
-!
-!                If there are no values associated with the Ith A value,
-!                PNTRS(I) is null (-1).
-!
-!     CELLSZ     is the number of cells in the cell array. The array
-!                has dimensions
-!
-!                   (2, CELLSZ)
-!
-!     CELLS      is the input cell array. The element
-!
-!                   CELLS ( 1, PNTRS(AVAL) )
-!
-!                contains a B-value associated with AVAL. The element
-!
-!                   CELLS ( 2, PNTRS(AVAL) )
-!
-!                is a pointer to the next node of the list associated
-!                with AVAL, or is null (-1) if the list contains only
-!                one element. The pointer element of the last list node
-!                for AVAL is null.
-!
-!     MAXB       is the size of the output B-value list.
-!
-! $ Detailed_Output
-!
-!     NB         is the number of nodes in the list associated with
-!                AVAL.
-!
-!     BLIST      is an array containing the B-values of the nodes
-!                associated with AVAL. There is one entry in BLIST for
-!                each node in the list associated with AVAL; the list
-!                may contain duplicates.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the array index AVAL is less than 1 or exceeds the
-!         declared size of the PNTR array, the error
-!         SPICE(INDEXOUTOFRANGE) is signaled. Occurrence of this error
-!         may result from the fine voxel scale being too small for the
-!         data.
-!
-!     2)  If the size of the output BLIST array is non-positive, the
-!         error SPICE(INVALIDSIZE) is signaled.
-!
-!     3)  If an element of the PNTRS array is larger than the length
-!         CELLSZ of the cell array, the error SPICE(POINTEROUTOFRANGE)
-!         is signaled.
-!
-!     4)  If the number of output list entries exceeds the size MAXB of
-!         the output list array, the error SPICE(BARRAYTOOSMALL) is
-!         signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The AB list routines support manipulation of a data structure that
-!     represents a one-to-many mapping from a set A to a set B. Each
-!     element of set A is mapped to a set of values from B, where the
-!     range values are represented by a linked list of entries in the
-!     cell array.
-!
-!     The elements of set B associated with the Ith element of A are
-!     stored in a linked list of cells starting with the cell
-!     consisting of elements
-!
-!        CELLS(*,PNTRS(I))
-!
-!     The set A is really an abstraction: it's just some finite set
-!     with size in the range 1:MAXA. The input AVAL is not a member of
-!     A but rather just an index into A. For consistency with existing
-!     code, the name AVAL has been retained.
-!
-!     The fact that B values are stored in linked lists enables a
-!     program to store entries for A-B associations in random order.
-!     For example, in the process of constructing DSK type 2 segments,
-!     the of non-empty fine voxels intersected by a given plate can be
-!     computed; then an entry representing a voxel-plate association
-!     can be made for each fine voxel in the set. In this case, the
-!     set "A" is the set of fine voxels belonging to non-empty coarse
-!     voxels.
-!
-!     This routine supports creation of DSK type 2 segments. It is used
-!     for creation of both voxel-plate association data structures and
-!     of vertex-plate association data structures.
-!
-! $ Examples
-!
-!     See usage in the routine ZZUNTNGL.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     J.A. Bytof      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
-!
-!      07-JAN-2016 (NJB)
-!
-!        Strengthened check on invalid pointer. Renamed argument MAXCEL
-!        to CELLSZ. Updated header comments.
-!
-!      26-MAR-2015 (NJB)
-!
-!        Updated long error messages to improve accuracy.
-!
-!        Header update: added description of MAXB input
-!        argument. Updated description of MAXA input
-!        argument. Filled out Exceptions section.
-!
-!      30-APR-2014 (NJB)
-!
-!        Changed argument list: each array argument now
-!        has an associated argument giving its size.
-!        Updated error checking to check array indices
-!        against array sizes.
-!
-!      08-OCT-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!      11-JUN-2004 (EDW)
-!
-!        Added check on AVAL to ensure it's smaller
-!        than the size of MAXA.
-!
-!      26-AUG-2002 (BVS)
-!
-!        Replaced WRITE with normal error reporting calls.
-!
-!      03-FEB-1999 (JAB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     AB cells
-!
-!-&
-
       integer(ip)           i
       integer(ip)           ptr
 
@@ -5186,182 +5163,174 @@ contains
 !$Procedure ZZUNTNGL ( Untangle an AB linked-cell list  )
 
       module procedure zzuntngl
+!! ## Abstract
+!!
+!!     Untangle an unsorted AB linked-cell list into an A-index and
+!!     associated B-list.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     AB linked list
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     NPTR       is the size of the input pointer array INPTR.
+!!
+!!     MAXCEL     is the number of cells in the CELLS array. That
+!!                array has dimensions
+!!
+!!                   (2, MAXCEL)
+!!
+!!     CELLS      is an array containing linked lists of "B" values.
+!!                The elements at indices
+!!
+!!                   (1,K)
+!!                   (2,K)
+!!
+!!                are, respectively, a "B" value and a pointer to
+!!                another element of the array. Null pointers are
+!!                indicated by the value -1.
+!!
+!!                Each linked list in CELLS contains a set of "B"
+!!                values associated with a particular "A" value.
+!!                The input pointer list maps "A" values to the head
+!!                of the associated list in CELLS.
+!!
+!!     MAXB       is the maximum number of elements in the output
+!!                array OUTLST.
+!!
+!!     PNTRS      is an array of pointers from A values to
+!!                linked lists of "B" entries in the CELLS array.
+!!
+!! ## Detailed Output
+!!
+!!     PNTRS      is an array of pointers that map "A" values to
+!!                their associated "B" values in the array OUTLST.
+!!                Null pointers are indicated by the value -1.
+!!
+!!                PNTRS must be declared with size at least NPTR.
+!!
+!!     NOUT       is the number of elements in the output list OUTLST.
+!!
+!!     OUTLST     is an array containing lists of "B" values. The Kth
+!!                element of PNTRS is the index of the start of a list
+!!                in OUTLST of "B" values associated with the "A" value
+!!                having index K. The list of values associated with an
+!!                "A" value starts with a count and is followed by
+!!                the values themselves.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  The routine signals the error SPICE(BARRAYTOOSMALL) if the
+!!         entire set of B-value lists from the input cell array,
+!!         including the counts for each list, array cannot be stored in
+!!         the OUTLST array.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The AB list routines support manipulation of a data structure that
+!!     represents a one-to-many mapping from a set A to a set B. Each
+!!     element of set A is mapped to a set of values from B, where the
+!!     range values are represented by a linked list of entries in the
+!!     cell array.
+!!
+!!     The elements of set B associated with the Ith element of A are
+!!     stored in a linked list of cells starting with the cell
+!!     consisting of elements
+!!
+!!        CELLS(*,PNTRS(I))
+!!
+!!     The set A is really an abstraction: it's just some finite set
+!!     with size in the range 1:MAXA. The input AVAL is not a member of
+!!     A but rather just an index into A. For consistency with existing
+!!     code, the name AVAL has been retained.
+!!
+!!     The fact that B values are stored in linked lists enables a
+!!     program to store entries for A-B associations in random order.
+!!     For example, in the process of constructing DSK type 2 segments,
+!!     the of non-empty fine voxels intersected by a given plate can be
+!!     computed; then an entry representing a voxel-plate association
+!!     can be made for each fine voxel in the set. In this case, the
+!!     set "A" is the set of fine voxels belonging to non-empty coarse
+!!     voxels.
+!!
+!!     This routine supports creation of DSK type 2 segments. It is used
+!!     for creation of both voxel-plate association data structures and
+!!     of vertex-plate association data structures.
+!!
+!! ## Examples
+!!
+!!     See usage in ZZMKSPIN.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     J.A. Bytof      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
+!!
+!!      07-JAN-2016 (NJB)
+!!
+!!        Argument list change: removed INPTR; renamed
+!!        OUTPTR to PNTRS. PNTRS is an in-out argument.
+!!        Updated header.
+!!
+!!      30-APR-2014 (NJB)
+!!
+!!        Changed argument list to accommodate
+!!        better error checking. Added error checks
+!!        for array overflows. Changed calls to
+!!        ADDLNK and TRVLNK. Updated header I/O
+!!        descriptions.
+!!
+!!      08-OCT-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!      16-JUL-2004 (EDW)
+!!
+!!        Added check on NPTR to ensure it's smaller
+!!        than the size of the pointer arrays.
+!!
+!!        Removed use of BVAL array, TRVLNK now directly
+!!        writes to OUTLST array.
+!!
+!!      03-FEB-1999 (JAB)
+!!
+!! ## Index Entries
+!!
+!!     AB linked list
+!!
+!!     SPICELIB functions
+!!
+!!     Local Variables
+!!
       use pepper_kinds, only: ip
       implicit none
-
-! $ Abstract
-!
-!     Untangle an unsorted AB linked-cell list into an A-index and
-!     associated B-list.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     AB linked list
-!
-! $ Declarations
-
-! $ Detailed_Input
-!
-!     NPTR       is the size of the input pointer array INPTR.
-!
-!     MAXCEL     is the number of cells in the CELLS array. That
-!                array has dimensions
-!
-!                   (2, MAXCEL)
-!
-!     CELLS      is an array containing linked lists of "B" values.
-!                The elements at indices
-!
-!                   (1,K)
-!                   (2,K)
-!
-!                are, respectively, a "B" value and a pointer to
-!                another element of the array. Null pointers are
-!                indicated by the value -1.
-!
-!                Each linked list in CELLS contains a set of "B"
-!                values associated with a particular "A" value.
-!                The input pointer list maps "A" values to the head
-!                of the associated list in CELLS.
-!
-!     MAXB       is the maximum number of elements in the output
-!                array OUTLST.
-!
-!     PNTRS      is an array of pointers from A values to
-!                linked lists of "B" entries in the CELLS array.
-!
-! $ Detailed_Output
-!
-!     PNTRS      is an array of pointers that map "A" values to
-!                their associated "B" values in the array OUTLST.
-!                Null pointers are indicated by the value -1.
-!
-!                PNTRS must be declared with size at least NPTR.
-!
-!     NOUT       is the number of elements in the output list OUTLST.
-!
-!     OUTLST     is an array containing lists of "B" values. The Kth
-!                element of PNTRS is the index of the start of a list
-!                in OUTLST of "B" values associated with the "A" value
-!                having index K. The list of values associated with an
-!                "A" value starts with a count and is followed by
-!                the values themselves.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  The routine signals the error SPICE(BARRAYTOOSMALL) if the
-!         entire set of B-value lists from the input cell array,
-!         including the counts for each list, array cannot be stored in
-!         the OUTLST array.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The AB list routines support manipulation of a data structure that
-!     represents a one-to-many mapping from a set A to a set B. Each
-!     element of set A is mapped to a set of values from B, where the
-!     range values are represented by a linked list of entries in the
-!     cell array.
-!
-!     The elements of set B associated with the Ith element of A are
-!     stored in a linked list of cells starting with the cell
-!     consisting of elements
-!
-!        CELLS(*,PNTRS(I))
-!
-!     The set A is really an abstraction: it's just some finite set
-!     with size in the range 1:MAXA. The input AVAL is not a member of
-!     A but rather just an index into A. For consistency with existing
-!     code, the name AVAL has been retained.
-!
-!     The fact that B values are stored in linked lists enables a
-!     program to store entries for A-B associations in random order.
-!     For example, in the process of constructing DSK type 2 segments,
-!     the of non-empty fine voxels intersected by a given plate can be
-!     computed; then an entry representing a voxel-plate association
-!     can be made for each fine voxel in the set. In this case, the
-!     set "A" is the set of fine voxels belonging to non-empty coarse
-!     voxels.
-!
-!     This routine supports creation of DSK type 2 segments. It is used
-!     for creation of both voxel-plate association data structures and
-!     of vertex-plate association data structures.
-!
-! $ Examples
-!
-!     See usage in ZZMKSPIN.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     J.A. Bytof      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
-!
-!      07-JAN-2016 (NJB)
-!
-!        Argument list change: removed INPTR; renamed
-!        OUTPTR to PNTRS. PNTRS is an in-out argument.
-!        Updated header.
-!
-!      30-APR-2014 (NJB)
-!
-!        Changed argument list to accommodate
-!        better error checking. Added error checks
-!        for array overflows. Changed calls to
-!        ADDLNK and TRVLNK. Updated header I/O
-!        descriptions.
-!
-!      08-OCT-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!      16-JUL-2004 (EDW)
-!
-!        Added check on NPTR to ensure it's smaller
-!        than the size of the pointer arrays.
-!
-!        Removed use of BVAL array, TRVLNK now directly
-!        writes to OUTLST array.
-!
-!      03-FEB-1999 (JAB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     AB linked list
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local Variables
-!
       integer(ip)           aval
       integer(ip)           ptrdex
       integer(ip)           nfound
@@ -5490,27 +5459,26 @@ contains
 !$Procedure      ZZINILNK ( Initialize an AB cell linked-list )
 
       module procedure zzinilnk
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Initialize an AB cell linked-list structure.
+!!
+!! ## Required Reading
+!!
+!!     None
+!!
+!! ## Keywords
+!!
+!!     DSK
+!!     Utility
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Initialize an AB cell linked-list structure.
-!
-! $ Required_Reading
-!
-!     None
-!
-! $ Keywords
-!
-!     DSK
-!     Utility
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -5665,27 +5633,26 @@ contains
 !$Procedure ZZGETVOX ( Coordinates of voxel containing a point )
 
       module procedure zzgetvox
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This subroutine returns the 1-based voxel coordinates of the
+!!     voxel that contains a given point.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PLATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This subroutine returns the 1-based voxel coordinates of the
-!     voxel that contains a given point.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PLATE
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -5904,192 +5871,184 @@ contains
 !$Procedure      ZZADDLNK ( Add a new AB cell to an AB structure )
 
       module procedure zzaddlnk
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Add a new AB cell to an AB cell pool and update the A-value
+!!     pointer array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     AB linked list
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     AVAL       is an index associated with a new pool entry. AVAL
+!!                is the index of the Ith value of a finite set "A."
+!!                AVAL is an index into the PNTRS array.
+!!
+!!     BVAL       is a B-value associated with AVAL. A new cell is to be
+!!                allocated to associate AVAL and BVAL.
+!!
+!!     MAXA       Size of pointer array. AVAL must not exceed
+!!                this value.
+!!
+!!     CELLSZ     Number of cells in the cell array CELLS. The array
+!!                has dimension (2, CELLSZ).
+!!
+!!     PNTRS      is an array of integers acting as pointers into the
+!!                cell array. The element at index I of PNTRS points to
+!!                the head of a linked list in CELLS that associates
+!!                B-values with the index I. Here I is the "A value."
+!!
+!!     NCELL      Number of cells in use on input. NCELL is incremented
+!!                by one on output.
+!!
+!!     CELLS      Cell array, updated on output.
+!!
+!! ## Detailed Output
+!!
+!!     PNTRS      is the input pointer array, modified to reflect the
+!!                addition of a new cell entry. The element
+!!
+!!                   PNTRS(AVAL)
+!!
+!!                contains the second subscript in CELLS of the new
+!!                entry.
+!!
+!!     NCELL      Number of cells in use on output. NCELL is incremented
+!!                by one relative to its input value.
+!!
+!!     CELLS      is the input cell array, with a new entry. The element
+!!
+!!                   CELLS ( 1, PNTRS(AVAL) )
+!!
+!!                contains BVAL. The element
+!!
+!!                   CELLS ( 2, PNTRS(AVAL) )
+!!
+!!                is a pointer to the previous head of the list
+!!                associated with AVAL, or is null (-1) if the list was
+!!                previously empty.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the array index AVAL exceeds the size MAXA of the
+!!         A-value pointer array, the error SPICE(AVALOUTOFRANGE) is
+!!         signaled.
+!!
+!!         Occurrence of this error in the context of DSK type 2 spatial
+!!         index creation can result from the fine voxel scale having
+!!         been set to a value too small for the plate set.
+!!
+!!     2)  If the required cell count exceeds the size CELLSZ of the
+!!         cell array, the error SPICE(CELLARRAYTOOSMALL) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The AB list routines support manipulation of a data structure that
+!!     represents a one-to-many mapping from a set A to a set B. Each
+!!     element of set A is mapped to a set of values from B, where the
+!!     range values are represented by a linked list of entries in the
+!!     cell array.
+!!
+!!     The elements of set B associated with the Ith element of A are
+!!     stored in a linked list of cells starting with the cell
+!!     consisting of elements
+!!
+!!        CELLS(*,PNTRS(I))
+!!
+!!     The set A is really an abstraction: it's just some finite set
+!!     with size in the range 1:MAXA. The input AVAL is not a member of
+!!     A but rather just an index into A. For consistency with existing
+!!     code, the name AVAL has been retained.
+!!
+!!     The fact that B values are stored in linked lists enables a
+!!     program to store entries for A-B associations in random order.
+!!     For example, in the process of constructing DSK type 2 segments,
+!!     the of non-empty fine voxels intersected by a given plate can be
+!!     computed; then an entry representing a voxel-plate association
+!!     can be made for each fine voxel in the set. In this case, the
+!!     set "A" is the set of fine voxels belonging to non-empty coarse
+!!     voxels.
+!!
+!!     This routine supports creation of DSK type 2 segments. It is used
+!!     for creation of both voxel-plate association data structures and
+!!     of vertex-plate association data structures.
+!!
+!! ## Examples
+!!
+!!     See usage in ZZMKSPIN.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     J.A. Bytof      (JPL)
+!!     E.D. Wright     (JPL)
+!!
+!! ## Version
+!!
+!!-    MKDSK Version 2.1.0, 15-JAN-2016 (NJB)
+!!
+!!        Updated error check on AVAL.
+!!
+!!        Filled in or update various header entries.
+!!
+!!-    MKDSK Version 2.0.0, 30-APR-2014 (NJB)
+!!
+!!        Argument list change: now accepts separate inputs for pointer
+!!        list size and cell size.
+!!
+!!-    MKDSK Version 1.2.0, 04-MAY-2010 (NJB)
+!!
+!!        Changed INCLUDE file to dsk02.inc.
+!!
+!!-    MKDSK Version 1.1.1, 08-OCT-2009 (NJB)
+!!
+!!        Re-ordered header sections.
+!!
+!!-    MKDSK Version 1.1.0, 11-JUN-2004 (EDW)
+!!
+!!        Added check on AVAL to ensure it's smaller
+!!        than the size of CELLSZ.
+!!
+!!-    MKDSK Version 1.0.0, 03-FEB-1999 (JAB)
+!!
+!! ## Index Entries
+!!
+!!     add entry to AB cell pool
+!!
+!!     SPICE functions
+!!
+!!     Standard RETURN test.
+!!
       use pepper_kinds, only: ip
       implicit none
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Add a new AB cell to an AB cell pool and update the A-value
-!     pointer array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     AB linked list
-!
-! $ Declarations
-
-! $ Detailed_Input
-!
-!     AVAL       is an index associated with a new pool entry. AVAL
-!                is the index of the Ith value of a finite set "A."
-!                AVAL is an index into the PNTRS array.
-!
-!     BVAL       is a B-value associated with AVAL. A new cell is to be
-!                allocated to associate AVAL and BVAL.
-!
-!     MAXA       Size of pointer array. AVAL must not exceed
-!                this value.
-!
-!     CELLSZ     Number of cells in the cell array CELLS. The array
-!                has dimension (2, CELLSZ).
-!
-!     PNTRS      is an array of integers acting as pointers into the
-!                cell array. The element at index I of PNTRS points to
-!                the head of a linked list in CELLS that associates
-!                B-values with the index I. Here I is the "A value."
-!
-!     NCELL      Number of cells in use on input. NCELL is incremented
-!                by one on output.
-!
-!     CELLS      Cell array, updated on output.
-!
-! $ Detailed_Output
-!
-!     PNTRS      is the input pointer array, modified to reflect the
-!                addition of a new cell entry. The element
-!
-!                   PNTRS(AVAL)
-!
-!                contains the second subscript in CELLS of the new
-!                entry.
-!
-!     NCELL      Number of cells in use on output. NCELL is incremented
-!                by one relative to its input value.
-!
-!     CELLS      is the input cell array, with a new entry. The element
-!
-!                   CELLS ( 1, PNTRS(AVAL) )
-!
-!                contains BVAL. The element
-!
-!                   CELLS ( 2, PNTRS(AVAL) )
-!
-!                is a pointer to the previous head of the list
-!                associated with AVAL, or is null (-1) if the list was
-!                previously empty.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the array index AVAL exceeds the size MAXA of the
-!         A-value pointer array, the error SPICE(AVALOUTOFRANGE) is
-!         signaled.
-!
-!         Occurrence of this error in the context of DSK type 2 spatial
-!         index creation can result from the fine voxel scale having
-!         been set to a value too small for the plate set.
-!
-!     2)  If the required cell count exceeds the size CELLSZ of the
-!         cell array, the error SPICE(CELLARRAYTOOSMALL) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The AB list routines support manipulation of a data structure that
-!     represents a one-to-many mapping from a set A to a set B. Each
-!     element of set A is mapped to a set of values from B, where the
-!     range values are represented by a linked list of entries in the
-!     cell array.
-!
-!     The elements of set B associated with the Ith element of A are
-!     stored in a linked list of cells starting with the cell
-!     consisting of elements
-!
-!        CELLS(*,PNTRS(I))
-!
-!     The set A is really an abstraction: it's just some finite set
-!     with size in the range 1:MAXA. The input AVAL is not a member of
-!     A but rather just an index into A. For consistency with existing
-!     code, the name AVAL has been retained.
-!
-!     The fact that B values are stored in linked lists enables a
-!     program to store entries for A-B associations in random order.
-!     For example, in the process of constructing DSK type 2 segments,
-!     the of non-empty fine voxels intersected by a given plate can be
-!     computed; then an entry representing a voxel-plate association
-!     can be made for each fine voxel in the set. In this case, the
-!     set "A" is the set of fine voxels belonging to non-empty coarse
-!     voxels.
-!
-!     This routine supports creation of DSK type 2 segments. It is used
-!     for creation of both voxel-plate association data structures and
-!     of vertex-plate association data structures.
-!
-! $ Examples
-!
-!     See usage in ZZMKSPIN.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     J.A. Bytof      (JPL)
-!     E.D. Wright     (JPL)
-!
-! $ Version
-!
-!-    MKDSK Version 2.1.0, 15-JAN-2016 (NJB)
-!
-!        Updated error check on AVAL.
-!
-!        Filled in or update various header entries.
-!
-!-    MKDSK Version 2.0.0, 30-APR-2014 (NJB)
-!
-!        Argument list change: now accepts separate inputs for pointer
-!        list size and cell size.
-!
-!-    MKDSK Version 1.2.0, 04-MAY-2010 (NJB)
-!
-!        Changed INCLUDE file to dsk02.inc.
-!
-!-    MKDSK Version 1.1.1, 08-OCT-2009 (NJB)
-!
-!        Re-ordered header sections.
-!
-!-    MKDSK Version 1.1.0, 11-JUN-2004 (EDW)
-!
-!        Added check on AVAL to ensure it's smaller
-!        than the size of CELLSZ.
-!
-!-    MKDSK Version 1.0.0, 03-FEB-1999 (JAB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     add entry to AB cell pool
-!
-!-&
-
-!
-!     SPICE functions
-!
-
-!
-!     Standard RETURN test.
-!
       if ( ctx%failed() ) return
 
 !
@@ -6137,271 +6096,256 @@ contains
 !$Procedure ZZMKSPIN ( Make spatial index of plates )
 
       module procedure zzmkspin
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Create voxel grid data structure and voxel-plate mapping.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     plate voxel index
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     NP         Total number of plates in model.
+!!
+!!     PLATES     Array containing indices in the array VRTCES of
+!!                the vertices corresponding to each plate. The
+!!                elements (1:3,I) of PLATES are the vertex indices
+!!                of the Ith plate.
+!!
+!!     VRTCES     Array containing cartesian coordinates for all
+!!                vertices in the model reference frame. Elements
+!!                (1:3,I) of VRTCES are the coordinates of the Ith
+!!                vertex.
+!!
+!!     VOXSCL     The voxel size is determined by the average extent of
+!!                each plate in XYZ. VOXSCL is a scaling factor that
+!!                may be used to adjust final voxel size.
+!!
+!!     CGSCAL     The coarse voxel grid has voxel edge length
+!!                larger by factor CGSCAL than the fine voxel
+!!                edge length.
+!!
+!!     MAXPTR     is the maximum number of elements in the output
+!!                list of voxel pointers.
+!!
+!!     MXCELL     is the number of cells in the input cell array.
+!!                This is the second dimension of the array.
+!!
+!!     MAXVXL     is the maximum number of elements in the output
+!!                voxel-plate list.
+!!
+!!     CELLS      workspace array used to construct the voxel-plate
+!!                mapping.
+!!
+!! ## Detailed Output
+!!
+!!     CELLS      workspace array used to construct the voxel-plate
+!!                mapping.
+!!
+!!     NVOX       Dimensions of the voxel grid in voxel units.
+!!
+!!     VOXSIZ     Size of each voxel in model units (km).
+!!
+!!     VOXORI     Origin of voxel grid in model units (km).
+!!
+!!     NVXTOT     Total number of voxels in grid.
+!!
+!!     NVXPTR     Number of pointers in VXPTR array.
+!!
+!!     VXPTR      Array of pointers that map voxels to their associated
+!!                plated IDs in the voxel to plates list. The Nth
+!!                element of this array contains a pointer to the Mth
+!!                element of VXLIST, or -1. If VXPTR(N) is -1, the Nth
+!!                voxel is empty.
+!!
+!!     NVXLST     The total number of elements in the plate list.
+!!
+!!     VXLIST     The plates list. For the Nth voxel, VXPTR(N) points to
+!!                VXLIST(M). VXLIST(M) contains the number plates that
+!!                intersect voxel N. The IDs of those plates are stored
+!!                in the following elements.
+!!
+!!     EXTENT     is an array of extents of vertex coordinates. Elements
+!!                indexed (2*I)-1 and 2*I are the minimum and maximum
+!!                values of the Ith coordinate, taken over all vertices.
+!!                Units are km.
+!!
+!!     CGRPTR     is an of array coarse voxel grid pointers. Null
+!!                pointers have the value -1. Non-null pointers indicate
+!!                locations in the voxel pointer array: each non-empty
+!!                coarse voxel points to a list of pointers for each of
+!!                the fine voxels it contains.
+!!
+!! ## Parameters
+!!
+!!     See the include file dsk02.inc.
+!!
+!! ## Exceptions
+!!
+!!     1)  If NP is less than 1 or greater than MAXPLT, the error
+!!         SPICE(VALUEOUTOFRANGE) is signaled.
+!!
+!!     2)  If the number of coarse voxels exceeds the grid size MAXCGR,
+!!         the error SPICE(COARSEGRIDOVERFLOW) is signaled.
+!!
+!!     3)  If the voxel count is greater than MAXVOX, the error
+!!         SPICE(VALUEOUTOFRANGE) is signaled.
+!!
+!!     4)  If the coarse voxel count is less than 1 or greater than
+!!         MAXCGR, the error SPICE(VALUEOUTOFRANGE) is signaled.
+!!
+!!     5)  If the coarse voxel scale is less than 1 or more than
+!!         the cube root of the fine voxel count, the error
+!!         SPICE(VALUEOUTOFRANGE) will be signaled.
+!!
+!!     6)  If the cube of the coarse voxel scale does not divide the
+!!         fine voxel count evenly, the error SPICE(INCOMPATIBLESCALE)
+!!         will be signaled.
+!!
+!!     7)  If the workspace overflows while this routine accumulates
+!!         voxel-plate associations, the error will be signaled by
+!!         a routine in the call tree of this routine.
+!!
+!!     8)  If the voxel-plate association list array overflows while
+!!         this routine accumulates voxel-plate associations, the error
+!!         will be signaled by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine supports creation of spatial indexes for DSK type 2
+!!     segments. This routine determines the fine and coarse voxel
+!!     grid dimensions and parameters. It also builds the voxel-plate
+!!     association data structures.
+!!
+!! ## Examples
+!!
+!!     See usage in DSKMI2.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman  (JPL)
+!!     J.A. Bytof    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 17-FEB-2017 (NJB)
+!!
+!!        Added new error checks.
+!!
+!!        29-JAN-2016 (NJB)
+!!
+!!           Removed reference to ZZVOXPAD. Renamed argument MAXCEL to
+!!           MXCELL to accommodate declaration of MAXCEL in dsk02.inc.
+!!
+!!           Updated long error messages and header comments.
+!!
+!!        26-MAR-2015 (NJB)
+!!
+!!           Functional change: now fills in the coarse voxel grid
+!!           pointer array with valid pointers; this is done in one
+!!           pass. The old version of the routine only marked the
+!!           elements of this array as null or non-null.
+!!
+!!           The algorithm for computing the set of voxels containing
+!!           the bounding box of each plate was re-written to improve
+!!           efficiency.
+!!
+!!        30-JUN-2014 (NJB)
+!!
+!!           Argument list change: removed work space array PNTRS. The
+!!           pointer array for the voxel-to-plate list mapping is now
+!!           constructed in place.
+!!
+!!           Changed argument list to include sizes of arrays. Changed
+!!           error handling to make use of array sizes. Changed call to
+!!           UNTNGL to accommodate argument list change in that routine.
+!!           Updated header I/O descriptions.
+!!
+!!        13-MAY-2010 (NJB)
+!!
+!!           Now accepts input workspace arrays PNTRS and CELLS.
+!!           Replaced argument VERT with arguments VRTCES and PLATES;
+!!           this was done to greatly reduce the memory needed by this
+!!           program.
+!!
+!!           Changed INCLUDE file to dsk02.inc.
+!!
+!!           Bug fix: determination of empty voxels is now based on
+!!           voxel pointers, not their target values.
+!!
+!!        08-OCT-2009 (NJB)
+!!
+!!           Re-ordered header sections.
+!!
+!!        12-SEP-2004 (EDW)
+!!
+!!           Improve/expand comments and descriptions.
+!!
+!!        03-FEB-1999 (JAB)
+!!
+!!           Original version.
+!!
+!! ## Index Entries
+!!
+!!     spatial index plates voxels
+!!
+!! ## Revisions
+!!
+!!        20-MAR-2015 (NJB)
+!!
+!!        Functional change: now fills in the coarse voxel grid pointer
+!!        array with valid pointers; this is done in one pass. The old
+!!        version of the routine only marked the elements of this array
+!!        as null or non-null.
+!!
+!!        The maximum size of the voxel-plate pointer array has been
+!!        reduced to MAXVOX/2.
+!!
+!!        The array mapping voxels to the voxel-plate pointer array is
+!!        no longer used. Previously, voxel IDs were used as the
+!!        "A list" elements with which plate lists were associated.
+!!        Now, indices in the voxel-plate pointer array are used as
+!!        "A" values.
+!!
+!!     SPICELIB functions
+!!
+!!     Other functions
+!!
+!!     Local parameters
+!!
+!!     Fraction of voxel edge length used a tolerance for plate
+!!     inclusion in voxels:
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_arrays, only: cleari
       use pepper_math, only: brcktd, vpack
+      use pepper_inc_dsk02
       implicit none
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Create voxel grid data structure and voxel-plate mapping.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     plate voxel index
-!
-! $ Declarations
-
-      include               'dsk02.inc'
-
-! $ Detailed_Input
-!
-!     NP         Total number of plates in model.
-!
-!     PLATES     Array containing indices in the array VRTCES of
-!                the vertices corresponding to each plate. The
-!                elements (1:3,I) of PLATES are the vertex indices
-!                of the Ith plate.
-!
-!     VRTCES     Array containing cartesian coordinates for all
-!                vertices in the model reference frame. Elements
-!                (1:3,I) of VRTCES are the coordinates of the Ith
-!                vertex.
-!
-!     VOXSCL     The voxel size is determined by the average extent of
-!                each plate in XYZ. VOXSCL is a scaling factor that
-!                may be used to adjust final voxel size.
-!
-!     CGSCAL     The coarse voxel grid has voxel edge length
-!                larger by factor CGSCAL than the fine voxel
-!                edge length.
-!
-!     MAXPTR     is the maximum number of elements in the output
-!                list of voxel pointers.
-!
-!     MXCELL     is the number of cells in the input cell array.
-!                This is the second dimension of the array.
-!
-!     MAXVXL     is the maximum number of elements in the output
-!                voxel-plate list.
-!
-!     CELLS      workspace array used to construct the voxel-plate
-!                mapping.
-!
-! $ Detailed_Output
-!
-!     CELLS      workspace array used to construct the voxel-plate
-!                mapping.
-!
-!     NVOX       Dimensions of the voxel grid in voxel units.
-!
-!     VOXSIZ     Size of each voxel in model units (km).
-!
-!     VOXORI     Origin of voxel grid in model units (km).
-!
-!     NVXTOT     Total number of voxels in grid.
-!
-!     NVXPTR     Number of pointers in VXPTR array.
-!
-!     VXPTR      Array of pointers that map voxels to their associated
-!                plated IDs in the voxel to plates list. The Nth
-!                element of this array contains a pointer to the Mth
-!                element of VXLIST, or -1. If VXPTR(N) is -1, the Nth
-!                voxel is empty.
-!
-!     NVXLST     The total number of elements in the plate list.
-!
-!     VXLIST     The plates list. For the Nth voxel, VXPTR(N) points to
-!                VXLIST(M). VXLIST(M) contains the number plates that
-!                intersect voxel N. The IDs of those plates are stored
-!                in the following elements.
-!
-!     EXTENT     is an array of extents of vertex coordinates. Elements
-!                indexed (2*I)-1 and 2*I are the minimum and maximum
-!                values of the Ith coordinate, taken over all vertices.
-!                Units are km.
-!
-!     CGRPTR     is an of array coarse voxel grid pointers. Null
-!                pointers have the value -1. Non-null pointers indicate
-!                locations in the voxel pointer array: each non-empty
-!                coarse voxel points to a list of pointers for each of
-!                the fine voxels it contains.
-!
-! $ Parameters
-!
-!     See the include file dsk02.inc.
-!
-! $ Exceptions
-!
-!     1)  If NP is less than 1 or greater than MAXPLT, the error
-!         SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     2)  If the number of coarse voxels exceeds the grid size MAXCGR,
-!         the error SPICE(COARSEGRIDOVERFLOW) is signaled.
-!
-!     3)  If the voxel count is greater than MAXVOX, the error
-!         SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     4)  If the coarse voxel count is less than 1 or greater than
-!         MAXCGR, the error SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     5)  If the coarse voxel scale is less than 1 or more than
-!         the cube root of the fine voxel count, the error
-!         SPICE(VALUEOUTOFRANGE) will be signaled.
-!
-!     6)  If the cube of the coarse voxel scale does not divide the
-!         fine voxel count evenly, the error SPICE(INCOMPATIBLESCALE)
-!         will be signaled.
-!
-!     7)  If the workspace overflows while this routine accumulates
-!         voxel-plate associations, the error will be signaled by
-!         a routine in the call tree of this routine.
-!
-!     8)  If the voxel-plate association list array overflows while
-!         this routine accumulates voxel-plate associations, the error
-!         will be signaled by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine supports creation of spatial indexes for DSK type 2
-!     segments. This routine determines the fine and coarse voxel
-!     grid dimensions and parameters. It also builds the voxel-plate
-!     association data structures.
-!
-! $ Examples
-!
-!     See usage in DSKMI2.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman  (JPL)
-!     J.A. Bytof    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 17-FEB-2017 (NJB)
-!
-!        Added new error checks.
-!
-!        29-JAN-2016 (NJB)
-!
-!           Removed reference to ZZVOXPAD. Renamed argument MAXCEL to
-!           MXCELL to accommodate declaration of MAXCEL in dsk02.inc.
-!
-!           Updated long error messages and header comments.
-!
-!        26-MAR-2015 (NJB)
-!
-!           Functional change: now fills in the coarse voxel grid
-!           pointer array with valid pointers; this is done in one
-!           pass. The old version of the routine only marked the
-!           elements of this array as null or non-null.
-!
-!           The algorithm for computing the set of voxels containing
-!           the bounding box of each plate was re-written to improve
-!           efficiency.
-!
-!        30-JUN-2014 (NJB)
-!
-!           Argument list change: removed work space array PNTRS. The
-!           pointer array for the voxel-to-plate list mapping is now
-!           constructed in place.
-!
-!           Changed argument list to include sizes of arrays. Changed
-!           error handling to make use of array sizes. Changed call to
-!           UNTNGL to accommodate argument list change in that routine.
-!           Updated header I/O descriptions.
-!
-!        13-MAY-2010 (NJB)
-!
-!           Now accepts input workspace arrays PNTRS and CELLS.
-!           Replaced argument VERT with arguments VRTCES and PLATES;
-!           this was done to greatly reduce the memory needed by this
-!           program.
-!
-!           Changed INCLUDE file to dsk02.inc.
-!
-!           Bug fix: determination of empty voxels is now based on
-!           voxel pointers, not their target values.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Re-ordered header sections.
-!
-!        12-SEP-2004 (EDW)
-!
-!           Improve/expand comments and descriptions.
-!
-!        03-FEB-1999 (JAB)
-!
-!           Original version.
-!
-!-&
-
-! $ Index_Entries
-!
-!     spatial index plates voxels
-!
-!-&
-
-! $ Revisions
-!
-!        20-MAR-2015 (NJB)
-!
-!        Functional change: now fills in the coarse voxel grid pointer
-!        array with valid pointers; this is done in one pass. The old
-!        version of the routine only marked the elements of this array
-!        as null or non-null.
-!
-!        The maximum size of the voxel-plate pointer array has been
-!        reduced to MAXVOX/2.
-!
-!        The array mapping voxels to the voxel-plate pointer array is
-!        no longer used. Previously, voxel IDs were used as the
-!        "A list" elements with which plate lists were associated.
-!        Now, indices in the voxel-plate pointer array are used as
-!        "A" values.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Other functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Fraction of voxel edge length used a tolerance for plate
-!     inclusion in voxels:
-!
       real(wp), parameter :: tol = 1.0e-3_wp
 
 !
@@ -6942,28 +6886,27 @@ contains
 !$Procedure DLAOPN ( DLA, open new file )
 
       module procedure dlaopn
+!! ## Abstract
+!!
+!!     Open a new DLA file and set the file type.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DLA
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DLA
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Open a new DLA file and set the file type.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DLA
-!
-! $ Keywords
-!
-!     DAS
-!     DLA
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -7408,29 +7351,28 @@ contains
 !$Procedure DLABNS ( DLA, begin new segment )
 
       module procedure dlabns
+!! ## Abstract
+!!
+!!     Begin a new segment in a DLA file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DLA
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DLA
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: filli
-
-! $ Abstract
-!
-!     Begin a new segment in a DLA file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DLA
-!
-! $ Keywords
-!
-!     DAS
-!     DLA
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -7899,29 +7841,28 @@ contains
 !$Procedure DLAENS ( DLA, end new segment )
 
       module procedure dlaens
+!! ## Abstract
+!!
+!!     End a new segment in a DLA file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DLA
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DLA
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     End a new segment in a DLA file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DLA
-!
-! $ Keywords
-!
-!     DAS
-!     DLA
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -8326,29 +8267,28 @@ contains
 !$Procedure DLABFS ( DLA, begin forward search )
 
       module procedure dlabfs
+!! ## Abstract
+!!
+!!     Begin a forward segment search in a DLA file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DLA
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DLA
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Begin a forward segment search in a DLA file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DLA
-!
-! $ Keywords
-!
-!     DAS
-!     DLA
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -8636,29 +8576,28 @@ contains
 !$Procedure DLABBS ( DLA, begin backward search )
 
       module procedure dlabbs
+!! ## Abstract
+!!
+!!     Begin a backward segment search in a DLA file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DLA
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DLA
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Begin a backward segment search in a DLA file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DLA
-!
-! $ Keywords
-!
-!     DAS
-!     DLA
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -8951,29 +8890,28 @@ contains
 !$Procedure DLAFNS ( DLA, find next segment )
 
       module procedure dlafns
+!! ## Abstract
+!!
+!!     Find the segment following a specified segment in a DLA file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DLA
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DLA
+!!     FILES
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the segment following a specified segment in a DLA file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DLA
-!
-! $ Keywords
-!
-!     DAS
-!     DLA
-!     FILES
-!     SEARCH
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -9259,29 +9197,28 @@ contains
 !$Procedure DLAFPS ( DLA, find previous segment )
 
       module procedure dlafps
+!! ## Abstract
+!!
+!!     Find the segment preceding a specified segment in a DLA file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DLA
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DLA
+!!     FILES
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the segment preceding a specified segment in a DLA file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DLA
-!
-! $ Keywords
-!
-!     DAS
-!     DLA
-!     FILES
-!     SEARCH
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -9574,30 +9511,29 @@ contains
 !$Procedure DLASSG ( DLA, same segment? )
 
       module procedure dlassg
+!! ## Abstract
+!!
+!!     Return a logical value indicating whether a two DLA
+!!     segments, each identified by DAS handle and DLA descriptor,
+!!     are in fact the same segment.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DLA
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DLA
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return a logical value indicating whether a two DLA
-!     segments, each identified by DAS handle and DLA descriptor,
-!     are in fact the same segment.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DLA
-!
-! $ Keywords
-!
-!     DAS
-!     DLA
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -9770,28 +9706,27 @@ contains
 !$Procedure DSKOPN ( DSK, open new file )
 
       module procedure dskopn
+!! ## Abstract
+!!
+!!     Open a new DSK file for subsequent write operations.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Open a new DSK file for subsequent write operations.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -9942,28 +9877,27 @@ contains
 !$Procedure DSKCLS ( DSK, close file )
 
       module procedure dskcls
+!! ## Abstract
+!!
+!!     Close a DSK file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Close a DSK file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
       implicit none
 
-      include 'dla.inc'
 
 ! $ Detailed_Input
 !
@@ -10268,149 +10202,143 @@ contains
 !     in dsktol.inc.
 
       module procedure dskgtl
-
-! $ Abstract
-!
-!     Retrieve the value of a specified DSK tolerance or margin
-!     parameter.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     DSK
-!     MARGIN
-!     NUMERIC
-!     TOLERANCE
-!
-! $ Declarations
-!
-!     INTEGER               KEYWRD
-!     DOUBLE PRECISION      DPVAL
-!
-! $ Detailed_Input
-!
-!     KEYWRD   is an integer code specifying the parameter to
-!              retrieve. See the include file dsktol.inc for
-!              a description of the possible keywords.
-!
-! $ Detailed_Output
-!
-!     DPVAL    is the value of the parameter specified by KEYWRD.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dsktol.inc
-!
-!     for descriptions and values of the tolerance or margin parameters
-!     accessed by this routine, and of the keyword parameters used to
-!     refer to them.
-!
-! $ Exceptions
-!
-!     1)  If the input keyword is not recognized, the error
-!         SPICE(INDEXOUTOFRANGE) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The routines in this package serve to centralize numeric
-!     tolerance and margin values used by the DSK subsystem.
-!     The subsystem retrieves values from this package to use
-!     at run time.
-!
-!     The entry points of this routine are
-!
-!        DSKGTL {DSK, get tolerance value}
-!        DSKSTL {DSK, set tolerance value}
-!
-!     To minimize run time overhead, the "keywords" used by
-!     these routines to identify parameters are actually
-!     integer codes.
-!
-!     SPICE users may override certain values maintained by
-!     this package; others values are fixed. It is recommended
-!     that any change to the tolerance values made at run
-!     time be performed only by expert SPICE users.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Obtain and display the DSK type 2 plate expansion fraction.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKGTL_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include files
-!        C
-!              INCLUDE 'dsktol.inc'
-!
-!        C
-!        C     Local variables
-!        C
-!              DOUBLE PRECISION      DPVAL
-!
-!              CALL DSKGTL ( KEYXFR, DPVAL )
-!
-!              WRITE(*,*) 'Plate expansion fraction = ', DPVAL
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Plate expansion fraction =    1.0000000000000000E-010
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
-!
-!        Updated the header to comply with NAIF standard. Added
-!        complete example code.
-!
-!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     retrieve DSK tolerance or margin parameters
-!
-!-&
-
-!
-!     Use discovery check-in.
-!
+!! ## Abstract
+!!
+!!     Retrieve the value of a specified DSK tolerance or margin
+!!     parameter.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DSK
+!!     MARGIN
+!!     NUMERIC
+!!     TOLERANCE
+!!
+!! ## Declarations
+!!
+!!     INTEGER               KEYWRD
+!!     DOUBLE PRECISION      DPVAL
+!!
+!! ## Detailed Input
+!!
+!!     KEYWRD   is an integer code specifying the parameter to
+!!              retrieve. See the include file dsktol.inc for
+!!              a description of the possible keywords.
+!!
+!! ## Detailed Output
+!!
+!!     DPVAL    is the value of the parameter specified by KEYWRD.
+!!
+!! ## Parameters
+!!
+!!     See the include file
+!!
+!!        dsktol.inc
+!!
+!!     for descriptions and values of the tolerance or margin parameters
+!!     accessed by this routine, and of the keyword parameters used to
+!!     refer to them.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input keyword is not recognized, the error
+!!         SPICE(INDEXOUTOFRANGE) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The routines in this package serve to centralize numeric
+!!     tolerance and margin values used by the DSK subsystem.
+!!     The subsystem retrieves values from this package to use
+!!     at run time.
+!!
+!!     The entry points of this routine are
+!!
+!!        DSKGTL {DSK, get tolerance value}
+!!        DSKSTL {DSK, set tolerance value}
+!!
+!!     To minimize run time overhead, the "keywords" used by
+!!     these routines to identify parameters are actually
+!!     integer codes.
+!!
+!!     SPICE users may override certain values maintained by
+!!     this package; others values are fixed. It is recommended
+!!     that any change to the tolerance values made at run
+!!     time be performed only by expert SPICE users.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Obtain and display the DSK type 2 plate expansion fraction.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM DSKGTL_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include files
+!!        C
+!!              INCLUDE 'dsktol.inc'
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              DOUBLE PRECISION      DPVAL
+!!
+!!              CALL DSKGTL ( KEYXFR, DPVAL )
+!!
+!!              WRITE(*,*) 'Plate expansion fraction = ', DPVAL
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         Plate expansion fraction =    1.0000000000000000E-010
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
+!!
+!!        Updated the header to comply with NAIF standard. Added
+!!        complete example code.
+!!
+!!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     retrieve DSK tolerance or margin parameters
+!!
+!!     Use discovery check-in.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       logical               return
       integer(ip), parameter :: ndspar = 6
       integer(ip), parameter :: namlen = 6
@@ -10440,175 +10368,170 @@ contains
       end procedure dskgtl
 
       module procedure dskstl
-
-! $ Abstract
-!
-!     Set the value of a specified DSK tolerance or margin parameter.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     DSK
-!     MARGIN
-!     NUMERIC
-!     TOLERANCE
-!
-! $ Declarations
-!
-!     INTEGER               KEYWRD
-!     DOUBLE PRECISION      DPVAL
-!
-! $ Detailed_Input
-!
-!     KEYWRD   is an integer code specifying the parameter to
-!              set. See the include file dsktol.inc for
-!              a description of the possible keywords.
-!
-!     DPVAL    is the new value of the parameter specified by KEYWRD.
-!              This value will be retrieved by future calls to
-!              to DSKGTL made to retrieve the specified parameter.
-!
-!              <<< Use extreme caution. This routine performs no
-!              checks on DPVAL. >>>
-!
-! $ Detailed_Output
-!
-!     None.
-!
-!     This routine operates by side effects.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dsktol.inc
-!
-!     for descriptions and values of the tolerance or margin parameters
-!     accessed by this routine, and of the keyword parameters used to
-!     refer to them.
-!
-! $ Exceptions
-!
-!     1)  If the input keyword is not recognized, the error
-!         SPICE(INDEXOUTOFRANGE) is signaled.
-!
-!     2)  If an attempt is made to modify a fixed parameter,
-!         the error SPICE(IMMUTABLEVALUE) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The routines in this package serve to centralize numeric
-!     tolerance and margin values used by the DSK subsystem.
-!     The subsystem retrieves values from this package to use
-!     at run time.
-!
-!     The entry points of this routine are
-!
-!        DSKGTL {DSK, get tolerance value}
-!        DSKSTL {DSK, set tolerance value}
-!
-!     To minimize run time overhead, the "keywords" used by
-!     these routines to identify parameters are actually
-!     integer codes.
-!
-!     SPICE users may override certain values maintained by
-!     this package; others values are fixed. It is recommended
-!     that any change to the tolerance values made at run
-!     time be performed only by expert SPICE users.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Obtain, display, and update the DSK type 2 plate expansion
-!        fraction.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKSTL_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include files
-!        C
-!              INCLUDE 'dsktol.inc'
-!
-!        C
-!        C     Local variables
-!        C
-!              DOUBLE PRECISION      DPVAL
-!
-!              CALL DSKGTL ( KEYXFR, DPVAL )
-!
-!              WRITE(*,*) 'Default plate expansion fraction = ', DPVAL
-!
-!        C
-!        C     Update the parameter.
-!        C
-!              CALL DSKSTL ( KEYXFR, 1.D-8 )
-!
-!        C
-!        C     Verify the update.
-!        C
-!              CALL DSKGTL ( KEYXFR, DPVAL )
-!
-!              WRITE(*,*) 'New plate expansion fraction     = ', DPVAL
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Default plate expansion fraction =    1.0000000000000000E-010
-!         New plate expansion fraction     =    1.0000000000000000E-008
-!
-! $ Restrictions
-!
-!     1)  The default settings used by the DSK subsystem should
-!         be overridden only by expert SPICE users.
-!
-!     2)  This routine does not check the  validity of new parameter
-!         values supplied by the calling application.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
-!
-!        Updated the header to comply with NAIF standard. Added
-!        complete example code.
-!
-!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     set DSK tolerance or margin parameters
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Set the value of a specified DSK tolerance or margin parameter.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DSK
+!!     MARGIN
+!!     NUMERIC
+!!     TOLERANCE
+!!
+!! ## Declarations
+!!
+!!     INTEGER               KEYWRD
+!!     DOUBLE PRECISION      DPVAL
+!!
+!! ## Detailed Input
+!!
+!!     KEYWRD   is an integer code specifying the parameter to
+!!              set. See the include file dsktol.inc for
+!!              a description of the possible keywords.
+!!
+!!     DPVAL    is the new value of the parameter specified by KEYWRD.
+!!              This value will be retrieved by future calls to
+!!              to DSKGTL made to retrieve the specified parameter.
+!!
+!!              <<< Use extreme caution. This routine performs no
+!!              checks on DPVAL. >>>
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!!     This routine operates by side effects.
+!!
+!! ## Parameters
+!!
+!!     See the include file
+!!
+!!        dsktol.inc
+!!
+!!     for descriptions and values of the tolerance or margin parameters
+!!     accessed by this routine, and of the keyword parameters used to
+!!     refer to them.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input keyword is not recognized, the error
+!!         SPICE(INDEXOUTOFRANGE) is signaled.
+!!
+!!     2)  If an attempt is made to modify a fixed parameter,
+!!         the error SPICE(IMMUTABLEVALUE) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The routines in this package serve to centralize numeric
+!!     tolerance and margin values used by the DSK subsystem.
+!!     The subsystem retrieves values from this package to use
+!!     at run time.
+!!
+!!     The entry points of this routine are
+!!
+!!        DSKGTL {DSK, get tolerance value}
+!!        DSKSTL {DSK, set tolerance value}
+!!
+!!     To minimize run time overhead, the "keywords" used by
+!!     these routines to identify parameters are actually
+!!     integer codes.
+!!
+!!     SPICE users may override certain values maintained by
+!!     this package; others values are fixed. It is recommended
+!!     that any change to the tolerance values made at run
+!!     time be performed only by expert SPICE users.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Obtain, display, and update the DSK type 2 plate expansion
+!!        fraction.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM DSKSTL_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include files
+!!        C
+!!              INCLUDE 'dsktol.inc'
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              DOUBLE PRECISION      DPVAL
+!!
+!!              CALL DSKGTL ( KEYXFR, DPVAL )
+!!
+!!              WRITE(*,*) 'Default plate expansion fraction = ', DPVAL
+!!
+!!        C
+!!        C     Update the parameter.
+!!        C
+!!              CALL DSKSTL ( KEYXFR, 1.D-8 )
+!!
+!!        C
+!!        C     Verify the update.
+!!        C
+!!              CALL DSKGTL ( KEYXFR, DPVAL )
+!!
+!!              WRITE(*,*) 'New plate expansion fraction     = ', DPVAL
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         Default plate expansion fraction =    1.0000000000000000E-010
+!!         New plate expansion fraction     =    1.0000000000000000E-008
+!!
+!! ## Restrictions
+!!
+!!     1)  The default settings used by the DSK subsystem should
+!!         be overridden only by expert SPICE users.
+!!
+!!     2)  This routine does not check the  validity of new parameter
+!!         values supplied by the calling application.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
+!!
+!!        Updated the header to comply with NAIF standard. Added
+!!        complete example code.
+!!
+!!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     set DSK tolerance or margin parameters
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       integer(ip), parameter :: ndspar = 6
       integer(ip), parameter :: namlen = 6
       character(namlen), parameter :: names  ( ndspar ) = &
@@ -10655,32 +10578,31 @@ contains
 !$Procedure DSKGD ( DSK, return DSK segment descriptor  )
 
       module procedure dskgd
+!! ## Abstract
+!!
+!!     Return the DSK descriptor from a DSK segment identified
+!!     by a DAS handle and DLA descriptor.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the DSK descriptor from a DSK segment identified
-!     by a DAS handle and DLA descriptor.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!     TOPOGRAPHY
-!
-! $ Declarations
-
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
       implicit none
 
-      include 'dla.inc'
-      include 'dskdsc.inc'
 
 ! $ Detailed_Input
 !
@@ -11251,32 +11173,31 @@ contains
 !$Procedure DSKB02 ( DSK, fetch type 2 bookkeeping data )
 
       module procedure dskb02
+!! ## Abstract
+!!
+!!     Return bookkeeping data from a DSK type 2 segment.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved, movei
       use pepper_math, only: vequ
-
-! $ Abstract
-!
-!     Return bookkeeping data from a DSK type 2 segment.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
 
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
 
 ! $ Detailed_Input
 !
@@ -11607,439 +11528,423 @@ contains
       end procedure dskb02
 
       module procedure dskd02
-
-! $ Abstract
-!
-!     Fetch double precision data from a type 2 DSK segment.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!
-! $ Declarations
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DSK file containing a type 2
-!              segment from which data are to be fetched.
-!
-!     DLADSC   is the DLA descriptor associated with the segment
-!              from which data are to be fetched.
-!
-!     ITEM     is an integer "keyword" parameter designating the
-!              item to fetch. In the descriptions below, note
-!              that "model" refers to the model represented by
-!              the designated segment. This model may be a
-!              subset of a larger model.
-!
-!              Names and meanings of parameters supported by this
-!              routine are:
-!
-!                 KWDSC      DSK descriptor of segment. See the
-!                            INCLUDE file dskdsc.inc for a
-!                            discussion of the contents of DSK
-!                            descriptors. Note that DSK
-!                            descriptors are not to be confused
-!                            with DLA descriptors, which contain
-!                            segment component base address and
-!                            size information.
-!
-!                 KWVTBD     Vertex bounds. This is an array of
-!                            six values giving the minimum and
-!                            maximum values of each component of
-!                            the vertex set.
-!
-!                 KWVXOR     Voxel grid origin. This is the
-!                            location of the voxel grid origin in
-!                            the body-fixed frame associated with
-!                            the target body.
-!
-!                 KWVXSZ     Voxel size. DSK voxels are cubes;
-!                            the edge length of each cube is
-!                            given by the voxel size. This
-!                            size applies to the fine voxel grid.
-!                            Units are km.
-!
-!     START    is the start index within specified data item from
-!              which data are to be fetched. The index of the
-!              first element of each data item is 1.
-!
-!     ROOM     is the amount of room in the output array. It
-!              is permissible to provide an output array
-!              that has too little room to fetch an item in
-!              one call.
-!
-! $ Detailed_Output
-!
-!     N        is the number of elements fetched to the output
-!              array VALUES. N is normally in the range
-!              1:ROOM; if an error occurs on the call, N is
-!              undefined.
-!
-!     VALUES   is a contiguous set of elements of the item
-!              designated by ITEM. The correspondence of
-!              VALUES with the elements of the data item is:
-!
-!                 VALUES(1)      ITEM(START)
-!                   ...             ...
-!                 VALUES(N)      ITEM(START+N-1)
-!
-!              If an error occurs on the call, VALUES is
-!              undefined.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dla.inc
-!
-!     for declarations of DLA descriptor sizes and documentation of the
-!     contents of DLA descriptors.
-!
-!     See the include file
-!
-!        dskdsc.inc
-!
-!     for declarations of DSK descriptor sizes and documentation of the
-!     contents of DSK descriptors.
-!
-!     See the include file
-!
-!        dsk02.inc
-!
-!     for declarations of DSK data type 2 (plate model) parameters.
-!
-! $ Exceptions
-!
-!     1)  If the input handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If a file read error occurs, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     3)  If the input DLA descriptor is invalid, the effect of this
-!         routine is undefined. The error *may* be diagnosed by
-!         routines in the call tree of this routine, but there are no
-!         guarantees.
-!
-!     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
-!         is signaled.
-!
-!     5)  If the coarse voxel scale read from the designated segment
-!         is less than 1, the error SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     6)  If the input keyword parameter is not recognized, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     7)  If START is less than 1 or greater than the size of the
-!         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
-!         signaled.
-!
-! $ Files
-!
-!     See input argument HANDLE.
-!
-! $ Particulars
-!
-!     Most SPICE applications will not need to call this routine. The
-!     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
-!     interface for fetching DSK type 2 vertex and plate data.
-!
-!     DSK files are built using the DLA low-level format and
-!     the DAS architecture; DLA files are a specialized type of DAS
-!     file in which data are organized as a doubly linked list of
-!     segments. Each segment's data belong to contiguous components of
-!     character, double precision, and integer type.
-!
-!     Note that the DSK descriptor for the segment is not needed by
-!     this routine; the DLA descriptor contains the base address and
-!     size information for the integer, double precision, and character
-!     components of the segment, and these suffice for the purpose of
-!     fetching data.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Look up all the vertices associated with each plate
-!        of the model contained in a specified type 2 segment.
-!        For this example, we'll show the context of this look-up:
-!        opening the DSK file for read access, traversing a trivial,
-!        one-segment list to obtain the segment of interest.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKD02_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dskdsc.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         FMT
-!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    DSK
-!
-!              DOUBLE PRECISION      VRTCES ( 3, 3 )
-!
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               K
-!              INTEGER               N
-!              INTEGER               NP
-!              INTEGER               START
-!              INTEGER               VRTIDS ( 3 )
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for the name of the DSK to read.
-!        C
-!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!        C
-!        C     Open the DSK file for read access.
-!        C     We use the DAS-level interface for
-!        C     this function.
-!        C
-!              CALL DASOPR ( DSK, HANDLE )
-!
-!        C
-!        C     Begin a forward search through the
-!        C     kernel, treating the file as a DLA.
-!        C     In this example, it's a very short
-!        C     search.
-!        C
-!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!
-!              IF ( .NOT. FOUND ) THEN
-!        C
-!        C        We arrive here only if the kernel
-!        C        contains no segments.  This is
-!        C        unexpected, but we're prepared for it.
-!        C
-!                 CALL SETMSG ( 'No segments found '
-!             .   //            'in DSK file #.'    )
-!                 CALL ERRCH  ( '#',  DSK           )
-!                 CALL SIGERR ( 'SPICE(NODATA)'     )
-!
-!              END IF
-!
-!        C
-!        C     If we made it this far, DLADSC is the
-!        C     DLA descriptor of the first segment.
-!        C
-!        C     Find the number of plates in the model.
-!        C
-!              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
-!              WRITE (*,*) 'Number of plates: ', NP
-!
-!        C
-!        C     For the first 5 plates, look up the desired data.
-!        C
-!              K = MIN(5, NP)
-!              DO I = 1, K
-!        C
-!        C        For the Ith plate, find the associated
-!        C        vertex IDs.  We must take into account
-!        C        the fact that each plate has three
-!        C        vertices when we compute the start
-!        C        index.
-!        C
-!                 START = 3*(I-1)+1
-!
-!                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
-!             .                 3,      N,      VRTIDS        )
-!
-!                 DO J = 1, 3
-!        C
-!        C            Fetch the vertex associated with
-!        C            the Jth vertex ID.  Again, each
-!        C            vertex is a 3-vector.  Note that
-!        C            the vertices are double-precision
-!        C            data, so we fetch them using
-!        C            DSKD02.
-!        C
-!                     START = 3*( VRTIDS(J) - 1 ) + 1
-!
-!                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
-!             .                     3,      N,      VRTCES(1,J)    )
-!                 END DO
-!
-!        C
-!        C        Display the vertices of the Ith plate:
-!        C
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Plate number: ', I
-!                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
-!                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
-!                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
-!
-!              END DO
-!
-!        C
-!        C     Close the kernel.  This isn't necessary in a stand-
-!        C     alone program, but it's good practice in subroutines
-!        C     because it frees program and system resources.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter DSK name > phobos512.bds
-!         Number of plates:      3145728
-!
-!         Plate number:            1
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
-!
-!         Plate number:            2
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!
-!         Plate number:            3
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!
-!         Plate number:            4
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!
-!         Plate number:            5
-!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!
-!        Note that only the vertex information for first 5 plates is
-!        provided.
-!
-! $ Restrictions
-!
-!     1)  This routine uses discovery check-in to boost
-!         execution speed. However, this routine is in
-!         violation of NAIF standards for use of discovery
-!         check-in:  routines called from this routine may
-!         signal errors. If errors are signaled in called
-!         routines, this routine's name will be missing
-!         from the traceback message.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 13-AUG-2021 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard. Modified code
-!        example to reduce the output.
-!
-!-    SPICELIB Version 1.0.0, 04-FEB-2017 (NJB)
-!
-!        Fixed typo in version description.
-!
-!        23-AUG-2016
-!
-!           Now saves NV and updates it only when the current
-!           segment changes.
-!
-!        15-JAN-2016 (NJB)
-!
-!           Removed code involving parameter NP.
-!           Updated header $Examples section.
-!
-!        DSKLIB Version 3.0.0, 13-MAY-2010 (NJB)
-!
-!           Updated for compatibility with new DSK type 2
-!           segment design.
-!
-!        DSKLIB Version 2.1.0, 20-APR-2010 (NJB)
-!
-!           Bug fix: changed declaration of output argument
-!           VALUES to double precision.
-!
-!        DSKLIB Version 2.0.0, 27-DEC-2006 (NJB)
-!
-!           Updated to remove support for min, max radius
-!           lookup. These values are now stored in DSK
-!           descriptors.
-!
-!        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     fetch d.p. data from a type 2 DSK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!  This is done for efficiency; note
-!     however that this routine does not meet SPICE standards for
-!     discovery check-in eligibility.
-!
+!! ## Abstract
+!!
+!!     Fetch double precision data from a type 2 DSK segment.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE   is the handle of a DSK file containing a type 2
+!!              segment from which data are to be fetched.
+!!
+!!     DLADSC   is the DLA descriptor associated with the segment
+!!              from which data are to be fetched.
+!!
+!!     ITEM     is an integer "keyword" parameter designating the
+!!              item to fetch. In the descriptions below, note
+!!              that "model" refers to the model represented by
+!!              the designated segment. This model may be a
+!!              subset of a larger model.
+!!
+!!              Names and meanings of parameters supported by this
+!!              routine are:
+!!
+!!                 KWDSC      DSK descriptor of segment. See the
+!!                            INCLUDE file dskdsc.inc for a
+!!                            discussion of the contents of DSK
+!!                            descriptors. Note that DSK
+!!                            descriptors are not to be confused
+!!                            with DLA descriptors, which contain
+!!                            segment component base address and
+!!                            size information.
+!!
+!!                 KWVTBD     Vertex bounds. This is an array of
+!!                            six values giving the minimum and
+!!                            maximum values of each component of
+!!                            the vertex set.
+!!
+!!                 KWVXOR     Voxel grid origin. This is the
+!!                            location of the voxel grid origin in
+!!                            the body-fixed frame associated with
+!!                            the target body.
+!!
+!!                 KWVXSZ     Voxel size. DSK voxels are cubes;
+!!                            the edge length of each cube is
+!!                            given by the voxel size. This
+!!                            size applies to the fine voxel grid.
+!!                            Units are km.
+!!
+!!     START    is the start index within specified data item from
+!!              which data are to be fetched. The index of the
+!!              first element of each data item is 1.
+!!
+!!     ROOM     is the amount of room in the output array. It
+!!              is permissible to provide an output array
+!!              that has too little room to fetch an item in
+!!              one call.
+!!
+!! ## Detailed Output
+!!
+!!     N        is the number of elements fetched to the output
+!!              array VALUES. N is normally in the range
+!!              1:ROOM; if an error occurs on the call, N is
+!!              undefined.
+!!
+!!     VALUES   is a contiguous set of elements of the item
+!!              designated by ITEM. The correspondence of
+!!              VALUES with the elements of the data item is:
+!!
+!!                 VALUES(1)      ITEM(START)
+!!                   ...             ...
+!!                 VALUES(N)      ITEM(START+N-1)
+!!
+!!              If an error occurs on the call, VALUES is
+!!              undefined.
+!!
+!! ## Parameters
+!!
+!!     See the include file
+!!
+!!        dla.inc
+!!
+!!     for declarations of DLA descriptor sizes and documentation of the
+!!     contents of DLA descriptors.
+!!
+!!     See the include file
+!!
+!!        dskdsc.inc
+!!
+!!     for declarations of DSK descriptor sizes and documentation of the
+!!     contents of DSK descriptors.
+!!
+!!     See the include file
+!!
+!!        dsk02.inc
+!!
+!!     for declarations of DSK data type 2 (plate model) parameters.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input handle is invalid, an error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     2)  If a file read error occurs, the error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     3)  If the input DLA descriptor is invalid, the effect of this
+!!         routine is undefined. The error *may* be diagnosed by
+!!         routines in the call tree of this routine, but there are no
+!!         guarantees.
+!!
+!!     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
+!!         is signaled.
+!!
+!!     5)  If the coarse voxel scale read from the designated segment
+!!         is less than 1, the error SPICE(VALUEOUTOFRANGE) is signaled.
+!!
+!!     6)  If the input keyword parameter is not recognized, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     7)  If START is less than 1 or greater than the size of the
+!!         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
+!!         signaled.
+!!
+!! ## Files
+!!
+!!     See input argument HANDLE.
+!!
+!! ## Particulars
+!!
+!!     Most SPICE applications will not need to call this routine. The
+!!     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
+!!     interface for fetching DSK type 2 vertex and plate data.
+!!
+!!     DSK files are built using the DLA low-level format and
+!!     the DAS architecture; DLA files are a specialized type of DAS
+!!     file in which data are organized as a doubly linked list of
+!!     segments. Each segment's data belong to contiguous components of
+!!     character, double precision, and integer type.
+!!
+!!     Note that the DSK descriptor for the segment is not needed by
+!!     this routine; the DLA descriptor contains the base address and
+!!     size information for the integer, double precision, and character
+!!     components of the segment, and these suffice for the purpose of
+!!     fetching data.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Look up all the vertices associated with each plate
+!!        of the model contained in a specified type 2 segment.
+!!        For this example, we'll show the context of this look-up:
+!!        opening the DSK file for read access, traversing a trivial,
+!!        one-segment list to obtain the segment of interest.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM DSKD02_EX1
+!!              IMPLICIT NONE
+!!
+!!              INCLUDE 'dla.inc'
+!!              INCLUDE 'dskdsc.inc'
+!!              INCLUDE 'dsk02.inc'
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         FMT
+!!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+!!
+!!              INTEGER               FILSIZ
+!!              PARAMETER           ( FILSIZ = 255 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(FILSIZ)    DSK
+!!
+!!              DOUBLE PRECISION      VRTCES ( 3, 3 )
+!!
+!!              INTEGER               DLADSC ( DLADSZ )
+!!              INTEGER               HANDLE
+!!              INTEGER               I
+!!              INTEGER               J
+!!              INTEGER               K
+!!              INTEGER               N
+!!              INTEGER               NP
+!!              INTEGER               START
+!!              INTEGER               VRTIDS ( 3 )
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Prompt for the name of the DSK to read.
+!!        C
+!!              CALL PROMPT ( 'Enter DSK name > ', DSK )
+!!        C
+!!        C     Open the DSK file for read access.
+!!        C     We use the DAS-level interface for
+!!        C     this function.
+!!        C
+!!              CALL DASOPR ( DSK, HANDLE )
+!!
+!!        C
+!!        C     Begin a forward search through the
+!!        C     kernel, treating the file as a DLA.
+!!        C     In this example, it's a very short
+!!        C     search.
+!!        C
+!!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+!!
+!!              IF ( .NOT. FOUND ) THEN
+!!        C
+!!        C        We arrive here only if the kernel
+!!        C        contains no segments.  This is
+!!        C        unexpected, but we're prepared for it.
+!!        C
+!!                 CALL SETMSG ( 'No segments found '
+!!             .   //            'in DSK file #.'    )
+!!                 CALL ERRCH  ( '#',  DSK           )
+!!                 CALL SIGERR ( 'SPICE(NODATA)'     )
+!!
+!!              END IF
+!!
+!!        C
+!!        C     If we made it this far, DLADSC is the
+!!        C     DLA descriptor of the first segment.
+!!        C
+!!        C     Find the number of plates in the model.
+!!        C
+!!              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
+!!              WRITE (*,*) 'Number of plates: ', NP
+!!
+!!        C
+!!        C     For the first 5 plates, look up the desired data.
+!!        C
+!!              K = MIN(5, NP)
+!!              DO I = 1, K
+!!        C
+!!        C        For the Ith plate, find the associated
+!!        C        vertex IDs.  We must take into account
+!!        C        the fact that each plate has three
+!!        C        vertices when we compute the start
+!!        C        index.
+!!        C
+!!                 START = 3*(I-1)+1
+!!
+!!                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
+!!             .                 3,      N,      VRTIDS        )
+!!
+!!                 DO J = 1, 3
+!!        C
+!!        C            Fetch the vertex associated with
+!!        C            the Jth vertex ID.  Again, each
+!!        C            vertex is a 3-vector.  Note that
+!!        C            the vertices are double-precision
+!!        C            data, so we fetch them using
+!!        C            DSKD02.
+!!        C
+!!                     START = 3*( VRTIDS(J) - 1 ) + 1
+!!
+!!                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
+!!             .                     3,      N,      VRTCES(1,J)    )
+!!                 END DO
+!!
+!!        C
+!!        C        Display the vertices of the Ith plate:
+!!        C
+!!                 WRITE (*,*) ' '
+!!                 WRITE (*,*) 'Plate number: ', I
+!!                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
+!!                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
+!!                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
+!!
+!!              END DO
+!!
+!!        C
+!!        C     Close the kernel.  This isn't necessary in a stand-
+!!        C     alone program, but it's good practice in subroutines
+!!        C     because it frees program and system resources.
+!!        C
+!!              CALL DASCLS ( HANDLE )
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, using the DSK file named phobos512.bds, the output
+!!        was:
+!!
+!!        Enter DSK name > phobos512.bds
+!!         Number of plates:      3145728
+!!
+!!         Plate number:            1
+!!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+!!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+!!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
+!!
+!!         Plate number:            2
+!!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+!!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+!!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+!!
+!!         Plate number:            3
+!!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+!!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+!!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+!!
+!!         Plate number:            4
+!!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+!!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+!!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+!!
+!!         Plate number:            5
+!!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+!!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
+!!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+!!
+!!        Note that only the vertex information for first 5 plates is
+!!        provided.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine uses discovery check-in to boost
+!!         execution speed. However, this routine is in
+!!         violation of NAIF standards for use of discovery
+!!         check-in:  routines called from this routine may
+!!         signal errors. If errors are signaled in called
+!!         routines, this routine's name will be missing
+!!         from the traceback message.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 13-AUG-2021 (JDR) (BVS)
+!!
+!!        Edited the header to comply with NAIF standard. Modified code
+!!        example to reduce the output.
+!!
+!!-    SPICELIB Version 1.0.0, 04-FEB-2017 (NJB)
+!!
+!!        Fixed typo in version description.
+!!
+!!        23-AUG-2016
+!!
+!!           Now saves NV and updates it only when the current
+!!           segment changes.
+!!
+!!        15-JAN-2016 (NJB)
+!!
+!!           Removed code involving parameter NP.
+!!           Updated header $Examples section.
+!!
+!!        DSKLIB Version 3.0.0, 13-MAY-2010 (NJB)
+!!
+!!           Updated for compatibility with new DSK type 2
+!!           segment design.
+!!
+!!        DSKLIB Version 2.1.0, 20-APR-2010 (NJB)
+!!
+!!           Bug fix: changed declaration of output argument
+!!           VALUES to double precision.
+!!
+!!        DSKLIB Version 2.0.0, 27-DEC-2006 (NJB)
+!!
+!!           Updated to remove support for min, max radius
+!!           lookup. These values are now stored in DSK
+!!           descriptors.
+!!
+!!        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     fetch d.p. data from a type 2 DSK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!  This is done for efficiency; note
+!!     however that this routine does not meet SPICE standards for
+!!     discovery check-in eligibility.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
       integer(ip) :: nv_1(1)  !! one-element copy of nv (array argument)
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip)           b
       integer(ip)           dbase
       integer(ip)           e
@@ -12200,491 +12105,475 @@ contains
       end procedure dskd02
 
       module procedure dski02
-
-! $ Abstract
-!
-!     Fetch integer data from a type 2 DSK segment.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!     TOPOGRAPHY
-!
-! $ Declarations
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DSK file containing a type 2
-!              segment from which data are to be fetched.
-!
-!     DLADSC   is the DLA descriptor associated with the segment
-!              from which data are to be fetched.
-!
-!     ITEM     is an integer "keyword" parameter designating the
-!              item to fetch. In the descriptions below, note
-!              that "model" refers to the model represented by
-!              the designated segment. This model may be a
-!              subset of a larger model.
-!
-!              Names and meanings of parameters supported by this
-!              routine are:
-!
-!                 KWNV       Number of vertices in model.
-!
-!                 KWNP       Number of plates in model.
-!
-!                 KWNVXT     Total number of voxels in fine grid.
-!
-!                 KWVGRX     Voxel grid extent. This extent is
-!                            an array of three integers
-!                            indicating the number of voxels in
-!                            the X, Y, and Z directions in the
-!                            fine voxel grid.
-!
-!                 KWCGSC     Coarse voxel grid scale. The extent
-!                            of the fine voxel grid is related to
-!                            the extent of the coarse voxel grid
-!                            by this scale factor.
-!
-!                 KWVXPS     Size of the voxel-to-plate pointer
-!                            list.
-!
-!                 KWVXLS     Voxel-plate correspondence list size.
-!
-!                 KWVTLS     Vertex-plate correspondence list
-!                            size.
-!
-!                 KWPLAT     Plate array. For each plate, this
-!                            array contains the indices of the
-!                            plate's three vertices. The ordering
-!                            of the array members is:
-!
-!                               Plate 1 vertex index 1
-!                               Plate 1 vertex index 2
-!                               Plate 1 vertex index 3
-!                               Plate 2 vertex index 1
-!                                       ...
-!
-!                 KWVXPT     Voxel-plate pointer list. This list
-!                            contains pointers that map fine
-!                            voxels to lists of plates that
-!                            intersect those voxels. Note that
-!                            only fine voxels belonging to
-!                            non-empty coarse voxels are in the
-!                            domain of this mapping.
-!
-!                 KWVXPL     Voxel-plate correspondence list.
-!                            This list contains lists of plates
-!                            that intersect fine voxels. (This
-!                            list is the data structure into
-!                            which the voxel-to-plate pointers
-!                            point.) This list can contain
-!                            empty lists.
-!
-!                 KWVTPT     Vertex-plate pointer list. This list
-!                            contains pointers that map vertices
-!                            to lists of plates to which those
-!                            vertices belong.
-!
-!                            Note that the size of this list is
-!                            always NV, the number of vertices.
-!                            Hence there's no need for a separate
-!                            keyword for the size of this list.
-!
-!                 KWVTPL     Vertex-plate correspondence list.
-!                            This list contains, for each vertex,
-!                            the indices of the plates to which
-!                            that vertex belongs.
-!
-!                 KWCGPT     Coarse voxel grid pointers. This is
-!                            an array of pointers mapping coarse
-!                            voxels to lists of pointers in the
-!                            voxel-plate pointer list. Each
-!                            non-empty coarse voxel maps to a
-!                            list of pointers; every fine voxel
-!                            contained in a non-empty coarse voxel
-!                            has its own pointers. Grid elements
-!                            corresponding to empty coarse voxels
-!                            have null (non-positive) pointers.
-!
-!              See the INCLUDE file dsk.inc for values
-!              associated with the keyword parameters.
-!
-!     START    is the start index within the specified data item
-!              from which data are to be fetched. The index of
-!              the first element of each data item is 1. START
-!              has units of integers; for example, the start
-!              index of the second plate is 4, since each plate
-!              occupies three integers.
-!
-!     ROOM     is the amount of room in the output array. It is
-!              permissible to provide an output array that has
-!              too little room to fetch an item in one call. ROOM
-!              has units of integers: for example, the room
-!              required to fetch one plate is 3.
-!
-! $ Detailed_Output
-!
-!     N        is the number of elements fetched to the output
-!              array VALUES. N is normally in the range
-!              1:ROOM; if an error occurs on the call, N is
-!              undefined.
-!
-!     VALUES   is a contiguous set of elements of the item
-!              designated by ITEM. The correspondence of
-!              VALUES with the elements of the data item is:
-!
-!                 VALUES(1)      ITEM(START)
-!                   ...             ...
-!                 VALUES(N)      ITEM(START+N-1)
-!
-!              If an error occurs on the call, VALUES is
-!              undefined.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dla.inc
-!
-!     for declarations of DLA descriptor sizes and documentation of the
-!     contents of DLA descriptors.
-!
-!     See the include file
-!
-!        dskdsc.inc
-!
-!     for declarations of DSK descriptor sizes and documentation of the
-!     contents of DSK descriptors.
-!
-!     See the include file
-!
-!        dsk02.inc
-!
-!     for declarations of DSK data type 2 (plate model) parameters.
-!
-! $ Exceptions
-!
-!     1)  If the input handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If a file read error occurs, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     3)  If the input DLA descriptor is invalid, the effect of this
-!         routine is undefined. The error *may* be diagnosed by
-!         routines in the call tree of this routine, but there are no
-!         guarantees.
-!
-!     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
-!         is signaled.
-!
-!     5)  If the coarse voxel scale read from the designated segment
-!         is less than 1, the error SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     6)  If the input keyword parameter is not recognized, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     7)  If START is less than 1 or greater than the size of the
-!         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
-!         signaled.
-!
-! $ Files
-!
-!     See input argument HANDLE.
-!
-! $ Particulars
-!
-!     Most SPICE applications will not need to call this routine. The
-!     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
-!     interface for fetching DSK type 2 vertex and plate data.
-!
-!     DSK files are built using the DLA low-level format and
-!     the DAS architecture; DLA files are a specialized type of DAS
-!     file in which data are organized as a doubly linked list of
-!     segments. Each segment's data belong to contiguous components of
-!     character, double precision, and integer type.
-!
-!     Note that the DSK descriptor for the segment is not needed by
-!     this routine; the DLA descriptor contains the base address and
-!     size information for the integer, double precision, and character
-!     components of the segment, and these suffice for the purpose of
-!     fetching data.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Look up all the vertices associated with each plate
-!        of the model contained in a specified type 2 segment.
-!        For this example, we'll show the context of this look-up:
-!        opening the DSK file for read access, traversing a trivial,
-!        one-segment list to obtain the segment of interest.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKI02_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dskdsc.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         FMT
-!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    DSK
-!
-!              DOUBLE PRECISION      VRTCES ( 3, 3 )
-!
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               K
-!              INTEGER               N
-!              INTEGER               NP
-!              INTEGER               START
-!              INTEGER               VRTIDS ( 3 )
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for the name of the DSK to read.
-!        C
-!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!        C
-!        C     Open the DSK file for read access.
-!        C     We use the DAS-level interface for
-!        C     this function.
-!        C
-!              CALL DASOPR ( DSK, HANDLE )
-!
-!        C
-!        C     Begin a forward search through the
-!        C     kernel, treating the file as a DLA.
-!        C     In this example, it's a very short
-!        C     search.
-!        C
-!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!
-!              IF ( .NOT. FOUND ) THEN
-!        C
-!        C        We arrive here only if the kernel
-!        C        contains no segments.  This is
-!        C        unexpected, but we're prepared for it.
-!        C
-!                 CALL SETMSG ( 'No segments found '
-!             .   //            'in DSK file #.'    )
-!                 CALL ERRCH  ( '#',  DSK           )
-!                 CALL SIGERR ( 'SPICE(NODATA)'     )
-!
-!              END IF
-!
-!        C
-!        C     If we made it this far, DLADSC is the
-!        C     DLA descriptor of the first segment.
-!        C
-!        C     Find the number of plates in the model.
-!        C
-!              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
-!              WRITE (*,*) 'Number of plates: ', NP
-!
-!        C
-!        C     For the first 5 plates, look up the desired data.
-!        C
-!              K = MIN(5, NP)
-!              DO I = 1, K
-!        C
-!        C        For the Ith plate, find the associated
-!        C        vertex IDs.  We must take into account
-!        C        the fact that each plate has three
-!        C        vertices when we compute the start
-!        C        index.
-!        C
-!                 START = 3*(I-1)+1
-!
-!                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
-!             .                 3,      N,      VRTIDS        )
-!
-!                 DO J = 1, 3
-!        C
-!        C            Fetch the vertex associated with
-!        C            the Jth vertex ID.  Again, each
-!        C            vertex is a 3-vector.  Note that
-!        C            the vertices are double-precision
-!        C            data, so we fetch them using
-!        C            DSKD02.
-!        C
-!                     START = 3*( VRTIDS(J) - 1 ) + 1
-!
-!                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
-!             .                     3,      N,      VRTCES(1,J)    )
-!                 END DO
-!
-!        C
-!        C        Display the vertices of the Ith plate:
-!        C
-!                 WRITE (*,*)   ' '
-!                 WRITE (*,*)   'Plate number: ', I
-!                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
-!                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
-!                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
-!
-!              END DO
-!
-!        C
-!        C     Close the kernel.  This isn't necessary in a stand-
-!        C     alone program, but it's good practice in subroutines
-!        C     because it frees program and system resources.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter DSK name > phobos512.bds
-!         Number of plates:      3145728
-!
-!         Plate number:            1
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
-!
-!         Plate number:            2
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!
-!         Plate number:            3
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!
-!         Plate number:            4
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!
-!         Plate number:            5
-!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!
-!        Note that only the vertex information for first 5 plates is
-!        provided.
-!
-! $ Restrictions
-!
-!     1)  This routine uses discovery check-in to boost
-!         execution speed. However, this routine is in
-!         violation of NAIF standards for use of discovery
-!         check-in:  routines called from this routine may
-!         signal errors. If errors are signaled in called
-!         routines, this routine's name will be missing
-!         from the traceback message.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard. Extended the
-!        $Keywords section. Modified code example to reduce the output.
-!
-!-    SPICELIB Version 1.0.0, 22-NOV-2016 (NJB)
-!
-!        Added FAILED check after segment attribute fetch calls.
-!        Re-ordered code so that values are saved only after
-!        all error checks have passed. Simplified base address
-!        comparisons.
-!
-!        15-JAN-2016 (NJB)
-!
-!           Updated header $Examples and $Particulars sections.
-!
-!        DSKLIB Version 1.0.2, 11-JUL-2014 (NJB)
-!
-!           Fixed a trivial header comment typo.
-!
-!        DSKLIB Version 1.0.1, 13-MAY-2010 (NJB)
-!
-!           Updated header.
-!
-!        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     fetch integer data from a type 2 DSK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-!     IBFSIZ is the size of an integer buffer used to
-!     read parameters from the segment.
-!
-
-!
-!     Local variables
-!
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!  This is done for efficiency; note
-!     however that this routine does not meet SPICE standards for
-!     discovery check-in eligibility.
-!
+!! ## Abstract
+!!
+!!     Fetch integer data from a type 2 DSK segment.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE   is the handle of a DSK file containing a type 2
+!!              segment from which data are to be fetched.
+!!
+!!     DLADSC   is the DLA descriptor associated with the segment
+!!              from which data are to be fetched.
+!!
+!!     ITEM     is an integer "keyword" parameter designating the
+!!              item to fetch. In the descriptions below, note
+!!              that "model" refers to the model represented by
+!!              the designated segment. This model may be a
+!!              subset of a larger model.
+!!
+!!              Names and meanings of parameters supported by this
+!!              routine are:
+!!
+!!                 KWNV       Number of vertices in model.
+!!
+!!                 KWNP       Number of plates in model.
+!!
+!!                 KWNVXT     Total number of voxels in fine grid.
+!!
+!!                 KWVGRX     Voxel grid extent. This extent is
+!!                            an array of three integers
+!!                            indicating the number of voxels in
+!!                            the X, Y, and Z directions in the
+!!                            fine voxel grid.
+!!
+!!                 KWCGSC     Coarse voxel grid scale. The extent
+!!                            of the fine voxel grid is related to
+!!                            the extent of the coarse voxel grid
+!!                            by this scale factor.
+!!
+!!                 KWVXPS     Size of the voxel-to-plate pointer
+!!                            list.
+!!
+!!                 KWVXLS     Voxel-plate correspondence list size.
+!!
+!!                 KWVTLS     Vertex-plate correspondence list
+!!                            size.
+!!
+!!                 KWPLAT     Plate array. For each plate, this
+!!                            array contains the indices of the
+!!                            plate's three vertices. The ordering
+!!                            of the array members is:
+!!
+!!                               Plate 1 vertex index 1
+!!                               Plate 1 vertex index 2
+!!                               Plate 1 vertex index 3
+!!                               Plate 2 vertex index 1
+!!                                       ...
+!!
+!!                 KWVXPT     Voxel-plate pointer list. This list
+!!                            contains pointers that map fine
+!!                            voxels to lists of plates that
+!!                            intersect those voxels. Note that
+!!                            only fine voxels belonging to
+!!                            non-empty coarse voxels are in the
+!!                            domain of this mapping.
+!!
+!!                 KWVXPL     Voxel-plate correspondence list.
+!!                            This list contains lists of plates
+!!                            that intersect fine voxels. (This
+!!                            list is the data structure into
+!!                            which the voxel-to-plate pointers
+!!                            point.) This list can contain
+!!                            empty lists.
+!!
+!!                 KWVTPT     Vertex-plate pointer list. This list
+!!                            contains pointers that map vertices
+!!                            to lists of plates to which those
+!!                            vertices belong.
+!!
+!!                            Note that the size of this list is
+!!                            always NV, the number of vertices.
+!!                            Hence there's no need for a separate
+!!                            keyword for the size of this list.
+!!
+!!                 KWVTPL     Vertex-plate correspondence list.
+!!                            This list contains, for each vertex,
+!!                            the indices of the plates to which
+!!                            that vertex belongs.
+!!
+!!                 KWCGPT     Coarse voxel grid pointers. This is
+!!                            an array of pointers mapping coarse
+!!                            voxels to lists of pointers in the
+!!                            voxel-plate pointer list. Each
+!!                            non-empty coarse voxel maps to a
+!!                            list of pointers; every fine voxel
+!!                            contained in a non-empty coarse voxel
+!!                            has its own pointers. Grid elements
+!!                            corresponding to empty coarse voxels
+!!                            have null (non-positive) pointers.
+!!
+!!              See the INCLUDE file dsk.inc for values
+!!              associated with the keyword parameters.
+!!
+!!     START    is the start index within the specified data item
+!!              from which data are to be fetched. The index of
+!!              the first element of each data item is 1. START
+!!              has units of integers; for example, the start
+!!              index of the second plate is 4, since each plate
+!!              occupies three integers.
+!!
+!!     ROOM     is the amount of room in the output array. It is
+!!              permissible to provide an output array that has
+!!              too little room to fetch an item in one call. ROOM
+!!              has units of integers: for example, the room
+!!              required to fetch one plate is 3.
+!!
+!! ## Detailed Output
+!!
+!!     N        is the number of elements fetched to the output
+!!              array VALUES. N is normally in the range
+!!              1:ROOM; if an error occurs on the call, N is
+!!              undefined.
+!!
+!!     VALUES   is a contiguous set of elements of the item
+!!              designated by ITEM. The correspondence of
+!!              VALUES with the elements of the data item is:
+!!
+!!                 VALUES(1)      ITEM(START)
+!!                   ...             ...
+!!                 VALUES(N)      ITEM(START+N-1)
+!!
+!!              If an error occurs on the call, VALUES is
+!!              undefined.
+!!
+!! ## Parameters
+!!
+!!     See the include file
+!!
+!!        dla.inc
+!!
+!!     for declarations of DLA descriptor sizes and documentation of the
+!!     contents of DLA descriptors.
+!!
+!!     See the include file
+!!
+!!        dskdsc.inc
+!!
+!!     for declarations of DSK descriptor sizes and documentation of the
+!!     contents of DSK descriptors.
+!!
+!!     See the include file
+!!
+!!        dsk02.inc
+!!
+!!     for declarations of DSK data type 2 (plate model) parameters.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input handle is invalid, an error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     2)  If a file read error occurs, the error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     3)  If the input DLA descriptor is invalid, the effect of this
+!!         routine is undefined. The error *may* be diagnosed by
+!!         routines in the call tree of this routine, but there are no
+!!         guarantees.
+!!
+!!     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
+!!         is signaled.
+!!
+!!     5)  If the coarse voxel scale read from the designated segment
+!!         is less than 1, the error SPICE(VALUEOUTOFRANGE) is signaled.
+!!
+!!     6)  If the input keyword parameter is not recognized, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     7)  If START is less than 1 or greater than the size of the
+!!         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
+!!         signaled.
+!!
+!! ## Files
+!!
+!!     See input argument HANDLE.
+!!
+!! ## Particulars
+!!
+!!     Most SPICE applications will not need to call this routine. The
+!!     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
+!!     interface for fetching DSK type 2 vertex and plate data.
+!!
+!!     DSK files are built using the DLA low-level format and
+!!     the DAS architecture; DLA files are a specialized type of DAS
+!!     file in which data are organized as a doubly linked list of
+!!     segments. Each segment's data belong to contiguous components of
+!!     character, double precision, and integer type.
+!!
+!!     Note that the DSK descriptor for the segment is not needed by
+!!     this routine; the DLA descriptor contains the base address and
+!!     size information for the integer, double precision, and character
+!!     components of the segment, and these suffice for the purpose of
+!!     fetching data.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Look up all the vertices associated with each plate
+!!        of the model contained in a specified type 2 segment.
+!!        For this example, we'll show the context of this look-up:
+!!        opening the DSK file for read access, traversing a trivial,
+!!        one-segment list to obtain the segment of interest.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM DSKI02_EX1
+!!              IMPLICIT NONE
+!!
+!!              INCLUDE 'dla.inc'
+!!              INCLUDE 'dskdsc.inc'
+!!              INCLUDE 'dsk02.inc'
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         FMT
+!!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+!!
+!!              INTEGER               FILSIZ
+!!              PARAMETER           ( FILSIZ = 255 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(FILSIZ)    DSK
+!!
+!!              DOUBLE PRECISION      VRTCES ( 3, 3 )
+!!
+!!              INTEGER               DLADSC ( DLADSZ )
+!!              INTEGER               HANDLE
+!!              INTEGER               I
+!!              INTEGER               J
+!!              INTEGER               K
+!!              INTEGER               N
+!!              INTEGER               NP
+!!              INTEGER               START
+!!              INTEGER               VRTIDS ( 3 )
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Prompt for the name of the DSK to read.
+!!        C
+!!              CALL PROMPT ( 'Enter DSK name > ', DSK )
+!!        C
+!!        C     Open the DSK file for read access.
+!!        C     We use the DAS-level interface for
+!!        C     this function.
+!!        C
+!!              CALL DASOPR ( DSK, HANDLE )
+!!
+!!        C
+!!        C     Begin a forward search through the
+!!        C     kernel, treating the file as a DLA.
+!!        C     In this example, it's a very short
+!!        C     search.
+!!        C
+!!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+!!
+!!              IF ( .NOT. FOUND ) THEN
+!!        C
+!!        C        We arrive here only if the kernel
+!!        C        contains no segments.  This is
+!!        C        unexpected, but we're prepared for it.
+!!        C
+!!                 CALL SETMSG ( 'No segments found '
+!!             .   //            'in DSK file #.'    )
+!!                 CALL ERRCH  ( '#',  DSK           )
+!!                 CALL SIGERR ( 'SPICE(NODATA)'     )
+!!
+!!              END IF
+!!
+!!        C
+!!        C     If we made it this far, DLADSC is the
+!!        C     DLA descriptor of the first segment.
+!!        C
+!!        C     Find the number of plates in the model.
+!!        C
+!!              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
+!!              WRITE (*,*) 'Number of plates: ', NP
+!!
+!!        C
+!!        C     For the first 5 plates, look up the desired data.
+!!        C
+!!              K = MIN(5, NP)
+!!              DO I = 1, K
+!!        C
+!!        C        For the Ith plate, find the associated
+!!        C        vertex IDs.  We must take into account
+!!        C        the fact that each plate has three
+!!        C        vertices when we compute the start
+!!        C        index.
+!!        C
+!!                 START = 3*(I-1)+1
+!!
+!!                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
+!!             .                 3,      N,      VRTIDS        )
+!!
+!!                 DO J = 1, 3
+!!        C
+!!        C            Fetch the vertex associated with
+!!        C            the Jth vertex ID.  Again, each
+!!        C            vertex is a 3-vector.  Note that
+!!        C            the vertices are double-precision
+!!        C            data, so we fetch them using
+!!        C            DSKD02.
+!!        C
+!!                     START = 3*( VRTIDS(J) - 1 ) + 1
+!!
+!!                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
+!!             .                     3,      N,      VRTCES(1,J)    )
+!!                 END DO
+!!
+!!        C
+!!        C        Display the vertices of the Ith plate:
+!!        C
+!!                 WRITE (*,*)   ' '
+!!                 WRITE (*,*)   'Plate number: ', I
+!!                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
+!!                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
+!!                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
+!!
+!!              END DO
+!!
+!!        C
+!!        C     Close the kernel.  This isn't necessary in a stand-
+!!        C     alone program, but it's good practice in subroutines
+!!        C     because it frees program and system resources.
+!!        C
+!!              CALL DASCLS ( HANDLE )
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, using the DSK file named phobos512.bds, the output
+!!        was:
+!!
+!!        Enter DSK name > phobos512.bds
+!!         Number of plates:      3145728
+!!
+!!         Plate number:            1
+!!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+!!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+!!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
+!!
+!!         Plate number:            2
+!!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+!!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+!!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+!!
+!!         Plate number:            3
+!!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+!!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+!!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+!!
+!!         Plate number:            4
+!!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+!!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+!!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+!!
+!!         Plate number:            5
+!!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+!!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
+!!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+!!
+!!        Note that only the vertex information for first 5 plates is
+!!        provided.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine uses discovery check-in to boost
+!!         execution speed. However, this routine is in
+!!         violation of NAIF standards for use of discovery
+!!         check-in:  routines called from this routine may
+!!         signal errors. If errors are signaled in called
+!!         routines, this routine's name will be missing
+!!         from the traceback message.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR) (BVS)
+!!
+!!        Edited the header to comply with NAIF standard. Extended the
+!!        $Keywords section. Modified code example to reduce the output.
+!!
+!!-    SPICELIB Version 1.0.0, 22-NOV-2016 (NJB)
+!!
+!!        Added FAILED check after segment attribute fetch calls.
+!!        Re-ordered code so that values are saved only after
+!!        all error checks have passed. Simplified base address
+!!        comparisons.
+!!
+!!        15-JAN-2016 (NJB)
+!!
+!!           Updated header $Examples and $Particulars sections.
+!!
+!!        DSKLIB Version 1.0.2, 11-JUL-2014 (NJB)
+!!
+!!           Fixed a trivial header comment typo.
+!!
+!!        DSKLIB Version 1.0.1, 13-MAY-2010 (NJB)
+!!
+!!           Updated header.
+!!
+!!        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     fetch integer data from a type 2 DSK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     IBFSIZ is the size of an integer buffer used to
+!!     read parameters from the segment.
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!  This is done for efficiency; note
+!!     however that this routine does not meet SPICE standards for
+!!     discovery check-in eligibility.
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip), parameter :: ibfsiz = 10
       integer(ip)           b
       integer(ip)           e
@@ -12981,32 +12870,31 @@ contains
 !$Procedure DSKN02 ( DSK, type 2, compute normal vector for plate )
 
       module procedure dskn02
+!! ## Abstract
+!!
+!!     Compute the unit normal vector for a specified plate from a type
+!!     2 DSK segment.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ucrss, vsub
-
-! $ Abstract
-!
-!     Compute the unit normal vector for a specified plate from a type
-!     2 DSK segment.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
 
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
 
 ! $ Detailed_Input
 !
@@ -13404,30 +13292,29 @@ contains
 !$Procedure DSKP02 ( DSK, fetch type 2 plate data )
 
       module procedure dskp02
+!! ## Abstract
+!!
+!!     Fetch triangular plates from a type 2 DSK segment.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Fetch triangular plates from a type 2 DSK segment.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
 
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
 
 ! $ Detailed_Input
 !
@@ -13830,30 +13717,29 @@ contains
 !$Procedure DSKV02 ( DSK, fetch type 2 vertex data )
 
       module procedure dskv02
+!! ## Abstract
+!!
+!!     Fetch vertices from a type 2 DSK segment.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Fetch vertices from a type 2 DSK segment.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
 
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
 
 ! $ Detailed_Input
 !
@@ -14267,33 +14153,32 @@ contains
 !$Procedure DSKZ02 ( DSK, fetch type 2 model size parameters )
 
       module procedure dskz02
+!! ## Abstract
+!!
+!!     Return plate model size parameters---plate count and
+!!     vertex count---for a type 2 DSK segment.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return plate model size parameters---plate count and
-!     vertex count---for a type 2 DSK segment.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
       integer(ip) :: np_1(1)  !! one-element copy of np (array argument)
       integer(ip) :: nv_1(1)  !! one-element copy of nv (array argument)
 
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
 
 ! $ Detailed_Input
 !
@@ -14589,34 +14474,33 @@ contains
 !$Procedure DSKMI2 ( DSK, make spatial index for type 2 segment )
 
       module procedure dskmi2
+!! ## Abstract
+!!
+!!     Make spatial index for a DSK type 2 segment. The index is
+!!     returned as a pair of arrays, one of type INTEGER and one of type
+!!     DOUBLE PRECISION. These arrays are suitable for use with the DSK
+!!     type 2 writer DSKW02.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!     PLATE
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Make spatial index for a DSK type 2 segment. The index is
-!     returned as a pair of arrays, one of type INTEGER and one of type
-!     DOUBLE PRECISION. These arrays are suitable for use with the DSK
-!     type 2 writer DSKW02.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!     PLATE
-!     TOPOGRAPHY
-!
-! $ Declarations
-
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
 
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
 
 ! $ Detailed_Input
 !
@@ -15535,32 +15419,31 @@ contains
 !$Procedure DSKRB2 ( DSK, determine range bounds for plate set )
 
       module procedure dskrb2
+!! ## Abstract
+!!
+!!     Determine range bounds for a set of triangular plates to
+!!     be stored in a type 2 DSK segment.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!     PLATE
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_math, only: vdist, vlcom3, vnorm
-
-! $ Abstract
-!
-!     Determine range bounds for a set of triangular plates to
-!     be stored in a type 2 DSK segment.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!     PLATE
-!     TOPOGRAPHY
-!
-! $ Declarations
-
+      use pepper_inc_dskdsc
       implicit none
 
-      include 'dskdsc.inc'
 
 ! $ Detailed_Input
 !
@@ -16157,33 +16040,32 @@ contains
 !$Procedure DSKOBJ ( DSK, get object IDs )
 
       module procedure dskobj
+!! ## Abstract
+!!
+!!     Find the set of body ID codes of all objects for which
+!!     topographic data are provided in a specified DSK file.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!     DAS
+!!     DSK
+!!     SETS
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     COVERAGE
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: movei
-
-! $ Abstract
-!
-!     Find the set of body ID codes of all objects for which
-!     topographic data are provided in a specified DSK file.
-!
-! $ Required_Reading
-!
-!     CELLS
-!     DAS
-!     DSK
-!     SETS
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     COVERAGE
-!     TOPOGRAPHY
-!
-! $ Declarations
-
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
       implicit none
 
-      include 'dla.inc'
-      include 'dskdsc.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -16522,34 +16404,33 @@ contains
 !$Procedure DSKSRF ( DSK, get surface IDs for body )
 
       module procedure dsksrf
+!! ## Abstract
+!!
+!!     Find the set of surface ID codes for all surfaces associated with
+!!     a given body in a specified DSK file.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!     DAS
+!!     DSK
+!!     NAIF_IDS
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     COVERAGE
+!!     SURFACE
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: movei
-
-! $ Abstract
-!
-!     Find the set of surface ID codes for all surfaces associated with
-!     a given body in a specified DSK file.
-!
-! $ Required_Reading
-!
-!     CELLS
-!     DAS
-!     DSK
-!     NAIF_IDS
-!     SETS
-!
-! $ Keywords
-!
-!     COVERAGE
-!     SURFACE
-!     TOPOGRAPHY
-!
-! $ Declarations
-
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
       implicit none
 
-      include 'dla.inc'
-      include 'dskdsc.inc'
 
       integer(ip), parameter :: lbcell = -5
 

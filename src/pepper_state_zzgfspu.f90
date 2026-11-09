@@ -8,12 +8,12 @@
 module pepper_state_zzgfspu
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
 
    implicit none
 
    private
 
-   include 'zzabcorr.inc'
 
    public :: init_zzgfspu_state
 

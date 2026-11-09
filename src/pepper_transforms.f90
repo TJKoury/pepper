@@ -12,166 +12,147 @@ submodule (pepper_instance) pepper_transforms
 contains
 
       module procedure frmget
-
-! $ Abstract
-!
-!     Find the transformation from a user specified frame to
-!     another frame at a user specified epoch.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     INFRM    is the SPICE ID-code for some reference frame.
-!
-!     ET       is an epoch in ephemeris seconds past J2000 at
-!              which the user wishes to retrieve a state
-!              transformation matrix.
-!
-! $ Detailed_Output
-!
-!     XFORM    is a 6x6 matrix that transforms states relative to
-!              INFRM to states relative to OUTFRM. (Assuming such a
-!              transformation can be found.)
-!
-!     OUTFRM   is the SPICE ID-code of a reference frame. The 6x6
-!              matrix XFORM transforms states relative to INFRM to
-!              states relative to OUTFRM. The state transformation
-!              is achieved by multiplying XFORM on the right by a
-!              state relative to INFRM. This is easily accomplished
-!              via the subroutine call shown below.
-!
-!                 CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
-!
-!     FOUND    is a logical flag indicating whether or not a
-!              transformation matrix could be found from INFRM to
-!              some other frame. If a transformation matrix cannot
-!              be found OUTFRM will be set to zero, FOUND will be
-!              set to .FALSE. and XFORM will be returned as the zero
-!              matrix.
-!
-! $ Parameters
-!
-!     See include file.
-!
-! $ Exceptions
-!
-!     1)  If a transformation matrix cannot be located, then FOUND will
-!         be set to .FALSE., OUTFRM will be set to zero and XFORM will
-!         be set to the zero 6x6 matrix.
-!
-!     2)  If the class of the requested frame is not recognized the
-!         exception, the error SPICE(UNKNOWNFRAMETYPE) is signaled.
-!
-! $ Files
-!
-!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
-!     to provide the needed frame definition and transformation data.
-!
-! $ Particulars
-!
-!     This is a low level routine used for determining a chain of state
-!     transformation matrices from one frame to another.
-!
-! $ Examples
-!
-!     See FRMCHG.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 15-MAR-2021 (NJB) (JDR)
-!
-!        **Updated shadow routines ZZFRMGT0 and ZZFRMGT1, as must be
-!          done each time this routine is updated.**
-!
-!        Support for switch frames was added. VERSN is now
-!        initialized via a DATA statement. Corrected long error
-!        message to use the term "class" rather than "class id-code."
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 4.0.0, 05-JAN-2014 (BVS)
-!
-!        To prevent operations with un-initialized DP numbers, wrapped
-!        IF ( .NOT. FAILED() ) ... END IF around output matrix
-!        transposition/re-assignment operations in all branches where
-!        the routine returning the matrix might fail.
-!
-!        Added zero-ing out the output matrix in cases of a failed or
-!        .NOT. FOUND transformation look ups.
-!
-!-    SPICELIB Version 3.0.0, 18-DEC-2004 (NJB)
-!
-!        Added the new frame type 'DYN' to the list of frame
-!        types recognized by FRMGET.
-!
-!-    SPICELIB Version 2.0.0, 03-APR-1997 (WLT)
-!
-!        Added the new frame type 'TK' to the list of frame
-!        types recognized by FRMGET. In addition the routine
-!        now checks FAILED after "getting" the frame transformation.
-!
-!-    SPICELIB Version 1.0.0, 20-OCT-1994 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Find a frame transformation matrix from a specified frame
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Set output flag.
-!
+!! ## Abstract
+!!
+!!     Find the transformation from a user specified frame to
+!!     another frame at a user specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRM    is the SPICE ID-code for some reference frame.
+!!
+!!     ET       is an epoch in ephemeris seconds past J2000 at
+!!              which the user wishes to retrieve a state
+!!              transformation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     XFORM    is a 6x6 matrix that transforms states relative to
+!!              INFRM to states relative to OUTFRM. (Assuming such a
+!!              transformation can be found.)
+!!
+!!     OUTFRM   is the SPICE ID-code of a reference frame. The 6x6
+!!              matrix XFORM transforms states relative to INFRM to
+!!              states relative to OUTFRM. The state transformation
+!!              is achieved by multiplying XFORM on the right by a
+!!              state relative to INFRM. This is easily accomplished
+!!              via the subroutine call shown below.
+!!
+!!                 CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
+!!
+!!     FOUND    is a logical flag indicating whether or not a
+!!              transformation matrix could be found from INFRM to
+!!              some other frame. If a transformation matrix cannot
+!!              be found OUTFRM will be set to zero, FOUND will be
+!!              set to .FALSE. and XFORM will be returned as the zero
+!!              matrix.
+!!
+!! ## Parameters
+!!
+!!     See include file.
+!!
+!! ## Exceptions
+!!
+!!     1)  If a transformation matrix cannot be located, then FOUND will
+!!         be set to .FALSE., OUTFRM will be set to zero and XFORM will
+!!         be set to the zero 6x6 matrix.
+!!
+!!     2)  If the class of the requested frame is not recognized the
+!!         exception, the error SPICE(UNKNOWNFRAMETYPE) is signaled.
+!!
+!! ## Files
+!!
+!!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
+!!     to provide the needed frame definition and transformation data.
+!!
+!! ## Particulars
+!!
+!!     This is a low level routine used for determining a chain of state
+!!     transformation matrices from one frame to another.
+!!
+!! ## Examples
+!!
+!!     See FRMCHG.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 15-MAR-2021 (NJB) (JDR)
+!!
+!!        **Updated shadow routines ZZFRMGT0 and ZZFRMGT1, as must be
+!!          done each time this routine is updated.**
+!!
+!!        Support for switch frames was added. VERSN is now
+!!        initialized via a DATA statement. Corrected long error
+!!        message to use the term "class" rather than "class id-code."
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 4.0.0, 05-JAN-2014 (BVS)
+!!
+!!        To prevent operations with un-initialized DP numbers, wrapped
+!!        IF ( .NOT. FAILED() ) ... END IF around output matrix
+!!        transposition/re-assignment operations in all branches where
+!!        the routine returning the matrix might fail.
+!!
+!!        Added zero-ing out the output matrix in cases of a failed or
+!!        .NOT. FOUND transformation look ups.
+!!
+!!-    SPICELIB Version 3.0.0, 18-DEC-2004 (NJB)
+!!
+!!        Added the new frame type 'DYN' to the list of frame
+!!        types recognized by FRMGET.
+!!
+!!-    SPICELIB Version 2.0.0, 03-APR-1997 (WLT)
+!!
+!!        Added the new frame type 'TK' to the list of frame
+!!        types recognized by FRMGET. In addition the routine
+!!        now checks FAILED after "getting" the frame transformation.
+!!
+!!-    SPICELIB Version 1.0.0, 20-OCT-1994 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Find a frame transformation matrix from a specified frame
+!!
+!!     SPICELIB Functions
+!!
+!!     Local Variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Set output flag.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip)           center
       integer(ip)           i
       integer(ip)           j
@@ -334,167 +315,148 @@ contains
       end procedure frmget
 
       module procedure rotget
-
-! $ Abstract
-!
-!     Find the rotation from a user specified frame to another frame at
-!     a user specified epoch.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     INFRM    is the SPICE ID-code for some reference frame.
-!
-!     ET       is an epoch in ephemeris seconds past J2000 at which
-!              the user wishes to retrieve a rotation matrix.
-!
-! $ Detailed_Output
-!
-!     ROTATE   is a 3x3 matrix that rotates positions relative to
-!              INFRM to positions relative to OUTFRM. (Assuming such
-!              a rotation can be found.)
-!
-!     OUTFRM   is the SPICE ID-code of a reference frame. The 3x3
-!              matrix ROTATE rotates positions relative to INFRM to
-!              positions relative to OUTFRM. The positions
-!              transformation is achieved by multiplying ROTATE on
-!              the right by a position relative to INFRM. This is
-!              easily accomplished via the subroutine call shown
-!              below.
-!
-!                 CALL MXV  ( ROTATE, INPOS,  OUTPOS )
-!
-!     FOUND    is a logical flag indicating whether or not a
-!              rotation matrix could be found from INFRM to some
-!              other frame. If a rotation matrix cannot be found
-!              OUTFRM will be set to zero, FOUND will be set to
-!              .FALSE. and ROTATE will be returned as the zero matrix.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If a rotation matrix cannot be located, then FOUND will be set
-!         to .FALSE., OUTFRM will be set to zero and ROTATE will be set
-!         to the zero 3x3 matrix.
-!
-!     2)  If the class of the requested frame is not recognized the
-!         exception, the error SPICE(UNKNOWNFRAMETYPE) is signaled.
-!
-! $ Files
-!
-!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
-!     to provide the needed frame definition and transformation data.
-!
-! $ Particulars
-!
-!     This is a low level routine used for determining a chain of
-!     position transformation matrices from one frame to another.
-!
-! $ Examples
-!
-!     See REFCHG.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 15-MAR-2021 (NJB) (JDR)
-!
-!        **Updated shadow routines ZZROTGT0 and ZZROTGT1, as must be
-!          done each time this routine is updated.**
-!
-!        Support for switch frames was added. VERSN is now
-!        initialized via a DATA statement. Corrected long error
-!        message to use the term "class" rather than "class id-code."
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 4.0.0, 21-MAR-2014 (BVS)
-!
-!        To prevent operations with un-initialized DP numbers, wrapped
-!        IF ( .NOT. FAILED() ) ... END IF around output matrix
-!        transposition operation in the PCK frame branch where the
-!        routine returning the matrix might fail.
-!
-!        Incremented major version token by 2 to sync up versions with
-!        FRMGET.
-!
-!-    SPICELIB Version 2.1.0, 02-MAR-2010 (NJB)
-!
-!        Bug fix: frame ID rather than frame class ID
-!        is now passed to dynamic frame evaluation
-!        routine ZZDYNROT. Order of header sections was
-!        corrected.
-!
-!-    SPICELIB Version 2.0.0, 18-DEC-2004 (NJB)
-!
-!        Added the new frame type 'DYN' to the list of frame
-!        types recognized by ROTGET.
-!
-!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Find a rotation matrix from a specified frame
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Set output flag.
-!
+!! ## Abstract
+!!
+!!     Find the rotation from a user specified frame to another frame at
+!!     a user specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRM    is the SPICE ID-code for some reference frame.
+!!
+!!     ET       is an epoch in ephemeris seconds past J2000 at which
+!!              the user wishes to retrieve a rotation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     ROTATE   is a 3x3 matrix that rotates positions relative to
+!!              INFRM to positions relative to OUTFRM. (Assuming such
+!!              a rotation can be found.)
+!!
+!!     OUTFRM   is the SPICE ID-code of a reference frame. The 3x3
+!!              matrix ROTATE rotates positions relative to INFRM to
+!!              positions relative to OUTFRM. The positions
+!!              transformation is achieved by multiplying ROTATE on
+!!              the right by a position relative to INFRM. This is
+!!              easily accomplished via the subroutine call shown
+!!              below.
+!!
+!!                 CALL MXV  ( ROTATE, INPOS,  OUTPOS )
+!!
+!!     FOUND    is a logical flag indicating whether or not a
+!!              rotation matrix could be found from INFRM to some
+!!              other frame. If a rotation matrix cannot be found
+!!              OUTFRM will be set to zero, FOUND will be set to
+!!              .FALSE. and ROTATE will be returned as the zero matrix.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If a rotation matrix cannot be located, then FOUND will be set
+!!         to .FALSE., OUTFRM will be set to zero and ROTATE will be set
+!!         to the zero 3x3 matrix.
+!!
+!!     2)  If the class of the requested frame is not recognized the
+!!         exception, the error SPICE(UNKNOWNFRAMETYPE) is signaled.
+!!
+!! ## Files
+!!
+!!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
+!!     to provide the needed frame definition and transformation data.
+!!
+!! ## Particulars
+!!
+!!     This is a low level routine used for determining a chain of
+!!     position transformation matrices from one frame to another.
+!!
+!! ## Examples
+!!
+!!     See REFCHG.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 15-MAR-2021 (NJB) (JDR)
+!!
+!!        **Updated shadow routines ZZROTGT0 and ZZROTGT1, as must be
+!!          done each time this routine is updated.**
+!!
+!!        Support for switch frames was added. VERSN is now
+!!        initialized via a DATA statement. Corrected long error
+!!        message to use the term "class" rather than "class id-code."
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 4.0.0, 21-MAR-2014 (BVS)
+!!
+!!        To prevent operations with un-initialized DP numbers, wrapped
+!!        IF ( .NOT. FAILED() ) ... END IF around output matrix
+!!        transposition operation in the PCK frame branch where the
+!!        routine returning the matrix might fail.
+!!
+!!        Incremented major version token by 2 to sync up versions with
+!!        FRMGET.
+!!
+!!-    SPICELIB Version 2.1.0, 02-MAR-2010 (NJB)
+!!
+!!        Bug fix: frame ID rather than frame class ID
+!!        is now passed to dynamic frame evaluation
+!!        routine ZZDYNROT. Order of header sections was
+!!        corrected.
+!!
+!!-    SPICELIB Version 2.0.0, 18-DEC-2004 (NJB)
+!!
+!!        Added the new frame type 'DYN' to the list of frame
+!!        types recognized by ROTGET.
+!!
+!!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Find a rotation matrix from a specified frame
+!!
+!!     SPICELIB Functions
+!!
+!!     Local Variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Set output flag.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
       use pepper_math, only: xpose
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip)           center
       integer(ip)           type
       integer(ip)           typeid
@@ -619,29 +581,28 @@ contains
 !$Procedure FRMCHG (Frame Change)
 
       module procedure frmchg
+!! ## Abstract
+!!
+!!     Return the state transformation matrix from one
+!!     frame to another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi
       use pepper_math, only: zzmsxf
-
-! $ Abstract
-!
-!     Return the state transformation matrix from one
-!     frame to another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
 
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
 
 
 ! $ Detailed_Input
@@ -1314,29 +1275,28 @@ contains
 !$Procedure REFCHG (Reference frame Change)
 
       module procedure refchg
+!! ## Abstract
+!!
+!!     Return the transformation matrix from one
+!!     frame to another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi
       use pepper_math, only: ident, xpose, zzrxr
-
-! $ Abstract
-!
-!     Return the transformation matrix from one
-!     frame to another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
 
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
 
 
 ! $ Detailed_Input
@@ -1842,202 +1802,175 @@ contains
       end procedure refchg
 
       module procedure pxform
-
-! $ Abstract
-!
-!     Return the matrix that transforms position vectors from one
-!     specified frame to another at a specified epoch.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     FROM     is the name of a reference frame in which a position
-!              vector is known.
-!
-!     TO       is the name of a reference frame in which it is desired
-!              to represent a position vector.
-!
-!     ET       is the epoch in ephemeris seconds past the epoch of J2000
-!              (TDB) at which the position transformation matrix ROTATE
-!              should be evaluated.
-!
-! $ Detailed_Output
-!
-!     ROTATE   is the matrix that transforms position vectors from
-!              the reference frame FROM to the frame TO at epoch ET.
-!              If (x, y, z) is a position relative to the frame FROM
-!              then the vector ( x', y', z') is the same position
-!              relative to the frame TO at epoch ET. Here the
-!              vector ( x', y', z' ) is defined by the equation:
-!
-!                 .-   -.     .-        -.   .-  -.
-!                 | x'  |     |          |   | x  |
-!                 | y'  |  =  |  ROTATE  |   | y  |
-!                 | z'  |     |          |   | z  |
-!                 `-   -'     `-        -'   `-  -'
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If sufficient information has not been supplied via loaded
-!         SPICE kernels to compute the transformation between the
-!         two frames, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     2)  If either frame FROM or TO is not recognized, the error
-!         SPICE(UNKNOWNFRAME) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine provides the user level interface to computing
-!     position transformations from one reference frame to another.
-!
-!     Note that the reference frames may be inertial or non-inertial.
-!     However, the user must take care that sufficient SPICE kernel
-!     information is loaded to provide a complete position
-!     transformation path from the FROM frame to the TO frame.
-!
-!     A common type of reference frame transformation is one from one
-!     time-dependent frame to another, where the orientations of the
-!     frames are computed at different epochs. For example, a remote
-!     sensing application may compute the transformation from a target
-!     body-fixed frame, with its orientation evaluated at the epoch of
-!     photon emission, to a spacecraft instrument frame, with its
-!     orientation evaluated at the epoch of photon reception. The
-!     SPICELIB routine PXFRM2 computes this type of frame
-!     transformation.
-!
-! $ Examples
-!
-!     Suppose that you have geodetic coordinates of a station on the
-!     surface of the earth and that you need the inertial (J2000)
-!     position of this station. The following code fragment
-!     illustrates how to transform the position of the station to a
-!     J2000 position.
-!
-!        CALL BODVRD ( 'EARTH', RADII, 3, N, ABC  )
-!
-!        EQUATR   =  ABC(1)
-!        POLAR    =  ABC(3)
-!        F        = (EQUATR - POLAR) / EQUATR
-!
-!        CALL GEOREC ( LONG, LAT, 0.0D0,  EQUATR, F, EPOS )
-!
-!        CALL PXFORM ( 'IAU_EARTH', 'J2000', ET,  ROTATE  )
-!        CALL MXV    (  ROTATE,      EPOS,   JPOS         )
-!
-!     The position JPOS is the desired J2000 position of the station.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton         (JPL)
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 09-AUG-2021 (NJB) (JDR)
-!
-!        Edited the header to comply with NAIF standard. Updated the
-!        $Particulars header section to mention PXFRM2.
-!
-!-    SPICELIB Version 1.1.0, 23-SEP-2013 (BVS)
-!
-!        Updated to save the input frame names and POOL state counters
-!        and to do frame name-ID conversions only if the counters have
-!        changed.
-!
-!-    SPICELIB Version 1.0.3, 27-FEB-2008 (BVS)
-!
-!        Added FRAMES to the $Required_Reading section.
-!
-!-    SPICELIB Version 1.0.2, 23-OCT-2005 (NJB)
-!
-!        Header example had invalid flattening factor computation;
-!        this was corrected. Reference to BODVAR in header was
-!        replaced with reference to BODVRD.
-!
-!-    SPICELIB Version 1.0.1, 29-JUL-2003 (NJB) (CHA)
-!
-!        Various header corrections were made.
-!
-!-    SPICELIB Version 1.0.0, 05-APR-1999 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Find a position transformation matrix
-!
-!-&
-
-!
-!     Spicelib Functions
-!
-
-!
-!     Local parameters.
-!
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local Variables.
-!
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-
-
-!
-!     Saved frame name/ID items.
-!
-
-
-
-!
-!     Initial values.
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the matrix that transforms position vectors from one
+!!     specified frame to another at a specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     FROM     is the name of a reference frame in which a position
+!!              vector is known.
+!!
+!!     TO       is the name of a reference frame in which it is desired
+!!              to represent a position vector.
+!!
+!!     ET       is the epoch in ephemeris seconds past the epoch of J2000
+!!              (TDB) at which the position transformation matrix ROTATE
+!!              should be evaluated.
+!!
+!! ## Detailed Output
+!!
+!!     ROTATE   is the matrix that transforms position vectors from
+!!              the reference frame FROM to the frame TO at epoch ET.
+!!              If (x, y, z) is a position relative to the frame FROM
+!!              then the vector ( x', y', z') is the same position
+!!              relative to the frame TO at epoch ET. Here the
+!!              vector ( x', y', z' ) is defined by the equation:
+!!
+!!                 .-   -.     .-        -.   .-  -.
+!!                 | x'  |     |          |   | x  |
+!!                 | y'  |  =  |  ROTATE  |   | y  |
+!!                 | z'  |     |          |   | z  |
+!!                 `-   -'     `-        -'   `-  -'
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If sufficient information has not been supplied via loaded
+!!         SPICE kernels to compute the transformation between the
+!!         two frames, an error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!!     2)  If either frame FROM or TO is not recognized, the error
+!!         SPICE(UNKNOWNFRAME) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine provides the user level interface to computing
+!!     position transformations from one reference frame to another.
+!!
+!!     Note that the reference frames may be inertial or non-inertial.
+!!     However, the user must take care that sufficient SPICE kernel
+!!     information is loaded to provide a complete position
+!!     transformation path from the FROM frame to the TO frame.
+!!
+!!     A common type of reference frame transformation is one from one
+!!     time-dependent frame to another, where the orientations of the
+!!     frames are computed at different epochs. For example, a remote
+!!     sensing application may compute the transformation from a target
+!!     body-fixed frame, with its orientation evaluated at the epoch of
+!!     photon emission, to a spacecraft instrument frame, with its
+!!     orientation evaluated at the epoch of photon reception. The
+!!     SPICELIB routine PXFRM2 computes this type of frame
+!!     transformation.
+!!
+!! ## Examples
+!!
+!!     Suppose that you have geodetic coordinates of a station on the
+!!     surface of the earth and that you need the inertial (J2000)
+!!     position of this station. The following code fragment
+!!     illustrates how to transform the position of the station to a
+!!     J2000 position.
+!!
+!!        CALL BODVRD ( 'EARTH', RADII, 3, N, ABC  )
+!!
+!!        EQUATR   =  ABC(1)
+!!        POLAR    =  ABC(3)
+!!        F        = (EQUATR - POLAR) / EQUATR
+!!
+!!        CALL GEOREC ( LONG, LAT, 0.0D0,  EQUATR, F, EPOS )
+!!
+!!        CALL PXFORM ( 'IAU_EARTH', 'J2000', ET,  ROTATE  )
+!!        CALL MXV    (  ROTATE,      EPOS,   JPOS         )
+!!
+!!     The position JPOS is the desired J2000 position of the station.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     C.H. Acton         (JPL)
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 09-AUG-2021 (NJB) (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Updated the
+!!        $Particulars header section to mention PXFRM2.
+!!
+!!-    SPICELIB Version 1.1.0, 23-SEP-2013 (BVS)
+!!
+!!        Updated to save the input frame names and POOL state counters
+!!        and to do frame name-ID conversions only if the counters have
+!!        changed.
+!!
+!!-    SPICELIB Version 1.0.3, 27-FEB-2008 (BVS)
+!!
+!!        Added FRAMES to the $Required_Reading section.
+!!
+!!-    SPICELIB Version 1.0.2, 23-OCT-2005 (NJB)
+!!
+!!        Header example had invalid flattening factor computation;
+!!        this was corrected. Reference to BODVAR in header was
+!!        replaced with reference to BODVRD.
+!!
+!!-    SPICELIB Version 1.0.1, 29-JUL-2003 (NJB) (CHA)
+!!
+!!        Various header corrections were made.
+!!
+!!-    SPICELIB Version 1.0.0, 05-APR-1999 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Find a position transformation matrix
+!!
+!!     Spicelib Functions
+!!
+!!     Local parameters.
+!!
+!!     Saved frame name length.
+!!
+!!     Local Variables.
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved frame name/ID items.
+!!
+!!     Initial values.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       integer(ip), parameter :: frnmln = 32
       integer(ip)           fcode
       integer(ip)           tcode
@@ -2109,199 +2042,172 @@ contains
       end procedure pxform
 
       module procedure sxform
-
-! $ Abstract
-!
-!     Return the state transformation matrix from one frame to
-!     another at a specified epoch.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     FROM     is the name of a reference frame in which a state is
-!              known.
-!
-!     TO       is the name of a reference frame in which it is
-!              desired to represent the state.
-!
-!     ET       is the epoch in ephemeris seconds past the epoch of
-!              J2000 (TDB) at which the state transformation matrix
-!              should be evaluated.
-!
-! $ Detailed_Output
-!
-!     XFORM    is the state transformation matrix that transforms
-!              states from the reference frame FROM to the frame TO
-!              at epoch ET. If (x, y, z, dx, dy, dz) is a state
-!              relative to the frame FROM then the vector ( x', y',
-!              z', dx', dy', dz' ) is the same state relative to the
-!              frame TO at epoch ET. Here the vector ( x', y', z',
-!              dx', dy', dz' ) is defined by the equation:
-!
-!                 .-   -.     .-          -.   .-  -.
-!                 | x'  |     |            |   | x  |
-!                 | y'  |     |            |   | y  |
-!                 | z'  |  =  |   XFORM    |   | z  |
-!                 | dx' |     |            |   | dx |
-!                 | dy' |     |            |   | dy |
-!                 | dz' |     |            |   | dz |
-!                 `-   -'     `-          -'   `-  -'
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If sufficient information has not been supplied via loaded
-!         SPICE kernels to compute the transformation between the two
-!         frames, an error is signaled by a routine in the call tree of
-!         this routine.
-!
-!     2)  If either frame FROM or TO is not recognized, the error
-!         SPICE(UNKNOWNFRAME) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine provides the user level interface to computing state
-!     transformations from one reference frame to another.
-!
-!     Note that the reference frames may be inertial or non-inertial.
-!     However, the user must take care that sufficient SPICE kernel
-!     information is loaded to provide a complete state transformation
-!     path from the FROM frame to the TO frame.
-!
-! $ Examples
-!
-!     Suppose that you have geodetic coordinates of a station on
-!     the surface of the earth and that you need the inertial
-!     (J2000) state of this station. The following code fragment
-!     illustrates how to transform the position of the station to
-!     a J2000 state.
-!
-!        CALL BODVRD ( 'EARTH', RADII, 3, N, ABC  )
-!
-!        EQUATR   =  ABC(1)
-!        POLAR    =  ABC(3)
-!        F        = (EQUATR - POLAR) / EQUATR
-!
-!        CALL GEOREC ( LONG, LAT, 0.0D0,  EQUATR, F,  ESTATE )
-!
-!        ESTATE(4) = 0.0D0
-!        ESTATE(5) = 0.0D0
-!        ESTATE(6) = 0.0D0
-!
-!        CALL SXFORM ( 'IAU_EARTH', 'J2000',   ET, XFORM  )
-!        CALL MXVG   (  XFORM,       ESTATE, 6, 6, JSTATE )
-!
-!     The state JSTATE is the desired J2000 state of the station.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton         (JPL)
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 05-JUL-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.1.0, 23-SEP-2013 (BVS)
-!
-!        Updated to save the input frame names and POOL state counters
-!        and to do frame name-ID conversions only if the counters have
-!        changed.
-!
-!-    SPICELIB Version 1.0.3, 27-FEB-2008 (BVS)
-!
-!        Added FRAMES to the $Required_Reading section.
-!
-!-    SPICELIB Version 1.0.2, 23-OCT-2005 (NJB)
-!
-!        Header example had invalid flattening factor computation;
-!        this was corrected. Reference to BODVAR in header was
-!        replaced with reference to BODVRD.
-!
-!-    SPICELIB Version 1.0.1, 29-JUL-2003 (NJB) (CHA)
-!
-!        Minor header changes were made to improve clarity.
-!
-!-    SPICELIB Version 1.0.0, 19-SEP-1995 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Find a state transformation matrix
-!
-!-&
-
-!
-!     Spicelib Functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local Variables.
-!
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-
-
-!
-!     Saved frame name/ID items.
-!
-
-
-
-!
-!     Initial values.
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the state transformation matrix from one frame to
+!!     another at a specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     FROM     is the name of a reference frame in which a state is
+!!              known.
+!!
+!!     TO       is the name of a reference frame in which it is
+!!              desired to represent the state.
+!!
+!!     ET       is the epoch in ephemeris seconds past the epoch of
+!!              J2000 (TDB) at which the state transformation matrix
+!!              should be evaluated.
+!!
+!! ## Detailed Output
+!!
+!!     XFORM    is the state transformation matrix that transforms
+!!              states from the reference frame FROM to the frame TO
+!!              at epoch ET. If (x, y, z, dx, dy, dz) is a state
+!!              relative to the frame FROM then the vector ( x', y',
+!!              z', dx', dy', dz' ) is the same state relative to the
+!!              frame TO at epoch ET. Here the vector ( x', y', z',
+!!              dx', dy', dz' ) is defined by the equation:
+!!
+!!                 .-   -.     .-          -.   .-  -.
+!!                 | x'  |     |            |   | x  |
+!!                 | y'  |     |            |   | y  |
+!!                 | z'  |  =  |   XFORM    |   | z  |
+!!                 | dx' |     |            |   | dx |
+!!                 | dy' |     |            |   | dy |
+!!                 | dz' |     |            |   | dz |
+!!                 `-   -'     `-          -'   `-  -'
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If sufficient information has not been supplied via loaded
+!!         SPICE kernels to compute the transformation between the two
+!!         frames, an error is signaled by a routine in the call tree of
+!!         this routine.
+!!
+!!     2)  If either frame FROM or TO is not recognized, the error
+!!         SPICE(UNKNOWNFRAME) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine provides the user level interface to computing state
+!!     transformations from one reference frame to another.
+!!
+!!     Note that the reference frames may be inertial or non-inertial.
+!!     However, the user must take care that sufficient SPICE kernel
+!!     information is loaded to provide a complete state transformation
+!!     path from the FROM frame to the TO frame.
+!!
+!! ## Examples
+!!
+!!     Suppose that you have geodetic coordinates of a station on
+!!     the surface of the earth and that you need the inertial
+!!     (J2000) state of this station. The following code fragment
+!!     illustrates how to transform the position of the station to
+!!     a J2000 state.
+!!
+!!        CALL BODVRD ( 'EARTH', RADII, 3, N, ABC  )
+!!
+!!        EQUATR   =  ABC(1)
+!!        POLAR    =  ABC(3)
+!!        F        = (EQUATR - POLAR) / EQUATR
+!!
+!!        CALL GEOREC ( LONG, LAT, 0.0D0,  EQUATR, F,  ESTATE )
+!!
+!!        ESTATE(4) = 0.0D0
+!!        ESTATE(5) = 0.0D0
+!!        ESTATE(6) = 0.0D0
+!!
+!!        CALL SXFORM ( 'IAU_EARTH', 'J2000',   ET, XFORM  )
+!!        CALL MXVG   (  XFORM,       ESTATE, 6, 6, JSTATE )
+!!
+!!     The state JSTATE is the desired J2000 state of the station.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     C.H. Acton         (JPL)
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 05-JUL-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.1.0, 23-SEP-2013 (BVS)
+!!
+!!        Updated to save the input frame names and POOL state counters
+!!        and to do frame name-ID conversions only if the counters have
+!!        changed.
+!!
+!!-    SPICELIB Version 1.0.3, 27-FEB-2008 (BVS)
+!!
+!!        Added FRAMES to the $Required_Reading section.
+!!
+!!-    SPICELIB Version 1.0.2, 23-OCT-2005 (NJB)
+!!
+!!        Header example had invalid flattening factor computation;
+!!        this was corrected. Reference to BODVAR in header was
+!!        replaced with reference to BODVRD.
+!!
+!!-    SPICELIB Version 1.0.1, 29-JUL-2003 (NJB) (CHA)
+!!
+!!        Minor header changes were made to improve clarity.
+!!
+!!-    SPICELIB Version 1.0.0, 19-SEP-1995 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Find a state transformation matrix
+!!
+!!     Spicelib Functions
+!!
+!!     Local parameters
+!!
+!!     Saved frame name length.
+!!
+!!     Local Variables.
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved frame name/ID items.
+!!
+!!     Initial values.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       integer(ip), parameter :: frnmln = 32
       integer(ip)           fcode
       integer(ip)           tcode

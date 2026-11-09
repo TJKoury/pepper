@@ -18,10 +18,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dskdsc
+      use pepper_inc_dsktol
+      use pepper_inc_dsk02
       implicit none
-      include  'dskdsc.inc'
-      include  'dsktol.inc'
-      include  'dsk02.inc'
       integer(ip) :: handle  !! Handle assigned to the opened DSK file.
       integer(ip) :: center  !! Central body ID code.
       integer(ip) :: surfid  !! Surface ID code.

@@ -8,12 +8,12 @@
 module pepper_state_ckmeta
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzctr.inc'
    integer(ip), parameter :: wdsize = 32
    integer(ip), parameter :: nck = 30
 

@@ -15,24 +15,23 @@ contains
 !$Procedure CYCLEC ( Cycle a character string )
 
       module procedure cyclec
+!! ## Abstract
+!!
+!!     Cycle the contents of a character string to the left or right.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
-
-! $ Abstract
-!
-!     Cycle the contents of a character string to the left or right.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -327,25 +326,24 @@ contains
 !$Procedure REPMD  ( Replace marker with double precision number )
 
       module procedure repmd
+!! ## Abstract
+!!
+!!     Replace a marker with a double precision number.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     CONVERSION
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr, frstnb, lastnb, zzrepsub
-
-! $ Abstract
-!
-!     Replace a marker with a double precision number.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     CONVERSION
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: maxldp = 23
@@ -659,25 +657,24 @@ contains
 !$Procedure REPMI  ( Replace marker with integer )
 
       module procedure repmi
+!! ## Abstract
+!!
+!!     Replace a marker with an integer.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     CONVERSION
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: frstnb, intstr, lastnb, zzrepsub
-
-! $ Abstract
-!
-!     Replace a marker with an integer.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     CONVERSION
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: maxli = 11
@@ -942,25 +939,24 @@ contains
 !$Procedure REPSUB ( Replace one substring with another )
 
       module procedure repsub
+!! ## Abstract
+!!
+!!     Replace the substring (LEFT:RIGHT) with a string of any length.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: sumai
-
-! $ Abstract
-!
-!     Replace the substring (LEFT:RIGHT) with a string of any length.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1237,25 +1233,24 @@ contains
 !$Procedure REMSUB ( Remove a substring )
 
       module procedure remsub
+!! ## Abstract
+!!
+!!     Remove the substring (LEFT:RIGHT) from a character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Remove the substring (LEFT:RIGHT) from a character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1459,25 +1454,24 @@ contains
 !$Procedure INSSUB ( Insert a substring )
 
       module procedure inssub
+!! ## Abstract
+!!
+!!     Insert a substring into a character string at a specified
+!!     location.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Insert a substring into a character string at a specified
-!     location.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1802,26 +1796,25 @@ contains
 !$Procedure SHIFTC ( Shift a character string )
 
       module procedure shiftc
+!! ## Abstract
+!!
+!!     Shift the contents of a character string to the left or right.
+!!     Characters moved past the beginning or end of the string are
+!!     lost. Vacant spaces are filled with a specified character.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: shiftl, shiftr
-
-! $ Abstract
-!
-!     Shift the contents of a character string to the left or right.
-!     Characters moved past the beginning or end of the string are
-!     lost. Vacant spaces are filled with a specified character.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1977,25 +1970,24 @@ contains
 !$Procedure CHCKID ( Check ID string )
 
       module procedure chckid
+!! ## Abstract
+!!
+!!     Validate an ID string: check for non-printing characters
+!!     or excessive non-blank length.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     STRING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: frstnp, lastnb
-
-! $ Abstract
-!
-!     Validate an ID string: check for non-printing characters
-!     or excessive non-blank length.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     STRING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -2232,24 +2224,23 @@ contains
 !$Procedure COUNTC ( Count characters in a text file )
 
       module procedure countc
+!! ## Abstract
+!!
+!!     Count the characters in a group of lines in a text file.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTERS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: astrip, lastnb
-
-! $ Abstract
-!
-!     Count the characters in a group of lines in a text file.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTERS
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -2504,283 +2495,275 @@ contains
 !$Procedure HX2INT  ( Signed hexadecimal string to integer )
 
       module procedure hx2int
+!! ## Abstract
+!!
+!!     Convert a signed hexadecimal string representation of an integer
+!!     to its equivalent integer.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALPHANUMERIC
+!!     CONVERSION
+!!
+!! ## Detailed Input
+!!
+!!     STRING   is the hexadecimal string to be converted to an integer.
+!!
+!!              The following table describes the character set used
+!!              to represent the hexadecimal digits and their
+!!              corresponding values.
+!!
+!!              Character    Value           Character    Value
+!!              ---------    -----           ---------    -----
+!!                '0'          0                '8'          8
+!!                '1'          1                '9'          9
+!!                '2'          2              'A','a'       10
+!!                '3'          3              'B','b'       11
+!!                '4'          4              'C','c'       12
+!!                '5'          5              'D','d'       13
+!!                '6'          6              'E','e'       14
+!!                '7'          7              'F','f'       15
+!!
+!!             The plus sign, '+', and the minus sign, '-', are used as
+!!             well, and they have their usual meanings.
+!!
+!!             A hexadecimal character string parsed by this routine
+!!             should consist of a sign, '+' or '-' (the plus sign is
+!!             optional for nonnegative numbers), followed immediately
+!!             by a contiguous sequence of hexadecimal digits, e.g.:
+!!
+!!                (1)   +h h ... h
+!!                        1 2     n
+!!
+!!                (2)   -h h ... h
+!!                        1 2     n
+!!
+!!                (3)   h h ... h
+!!                       1 2     n
+!!
+!!             where h  represents an hexadecimal digit.
+!!                    i
+!!
+!!             STRING may have leading and trailing blanks, but blanks
+!!             embedded within the significant portion of the character
+!!             string are not allowed. This includes any blanks which
+!!             appear between the sign character and the first
+!!             hexadecimal digit.
+!!
+!! ## Detailed Output
+!!
+!!     NUMBER   is the integer value to be returned. The value of this
+!!              variable is not changed if an error occurs while parsing
+!!              the hexadecimal character string.
+!!
+!!     ERROR    is a logical flag which indicates whether an error
+!!              occurred while attempting to parse NUMBER from the
+!!              hexadecimal character string STRING. ERROR will have the
+!!              value .TRUE. if an error occurs. It will have the value
+!!              .FALSE. otherwise.
+!!
+!!     ERRMSG   contains a descriptive error message if an error
+!!              occurs while attempting to parse NUMBER from the
+!!              hexadecimal character string STRING, blank otherwise.
+!!              The error message will be left justified.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1)  If an unexpected character is encountered while parsing the
+!!         hexadecimal character string, an appropriate error message
+!!         will be set, and the routine will exit. The value of NUMBER
+!!         will be unchanged.
+!!
+!!     2)  If the string represents a number that is larger than
+!!         the maximum representable integer an appropriate error
+!!         message will be set, and the routine will exit. The value
+!!         of NUMBER will be unchanged.
+!!
+!!     3)  If the string represents a number that is smaller than
+!!         the minimum representable integer, an appropriate error
+!!         message will be set, and the routine will exit. The value
+!!         of NUMBER will be unchanged.
+!!
+!!     4)  If the input string is blank, an appropriate error message
+!!         will be set, and the routine will exit. The value of NUMBER
+!!         will be unchanged.
+!!
+!!     5)  If the error message string is not long enough to contain
+!!         the entire error message, the error message will be
+!!         truncated on the right.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine will convert a signed hexadecimal character string
+!!     representation of an integer into its equivalent integer. This
+!!     provides a machine independent mechanism for storing or porting
+!!     integer values. This routine is used by the routine HX2DP which
+!!     converts a character string representation of a double precision
+!!     into its equivalent double precision value.
+!!
+!!     This routine is one of a pair of routines which are used to
+!!     perform conversions between integers and equivalent signed
+!!     hexadecimal character strings:
+!!
+!!           INT2HX -- Convert an integer into a signed hexadecimal
+!!                     character string.
+!!
+!!           HX2INT -- Convert a signed hexadecimal character string
+!!                     into an integer.
+!!
+!! ## Examples
+!!
+!!     All of the values shown are for a two's complement 32 bit
+!!     representation for signed integers.
+!!
+!!     The following argument values illustrate the action of HX2INT for
+!!     various input values.
+!!
+!!         STRING                 NUMBER        ERROR   ERRMSG
+!!         ---------------------  ------------  ------  ------
+!!          '1'                    1            .FALSE.   ' '
+!!          '-1'                  -1            .FALSE.   ' '
+!!          'DF'                   223          .FALSE.   ' '
+!!          'Df'                   223          .FALSE.   ' '
+!!          '+3ABC'                15036        .FALSE.   ' '
+!!          'ff'                   255          .FALSE.   ' '
+!!          '-20'                 -32           .FALSE.   ' '
+!!          '0'                    0            .FALSE.   ' '
+!!
+!!          '7FFFFFFF'             2147483647   .FALSE.   ' '
+!!          (Maximum 32 bit integer)
+!!
+!!          '-7FFFFFFF'           -2147483647   .FALSE.   ' '
+!!          (Minimum 32 bit integer + 1)
+!!
+!!          '-80000000'           -2147483648   .FALSE.   ' '
+!!          (Minimum 32 bit integer)
+!!
+!!          STRING = ' '
+!!          NUMBER = ( Not defined )
+!!          ERROR  = .TRUE.
+!!          ERRMSG = 'ERROR: A blank input string is not allowed.'
+!!
+!!          STRING = '-AB238Q'
+!!          NUMBER = ( Not defined )
+!!          ERROR  = .TRUE.
+!!          ERRMSG = 'ERROR: Illegal character ''Q'' encountered.'
+!!
+!!          STRING = '- AAA'
+!!          NUMBER = ( Not defined )
+!!          ERROR  = .TRUE.
+!!          ERRMSG = 'ERROR: Illegal character '' '' encountered.'
+!!
+!!          STRING = '80000000'
+!!          NUMBER = ( Not defined )
+!!          ERROR  = .TRUE.
+!!          ERRMSG = 'ERROR: Integer too large to be represented.'
+!!
+!!          STRING = '-800F0000'
+!!          NUMBER = ( Not defined )
+!!          ERROR  = .TRUE.
+!!          ERRMSG = 'ERROR: Integer too small to be represented.'
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     K.R. Gehringer     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 20-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.1.0, 10-MAR-1994 (KRG)
+!!
+!!        Changed an IF test operand from .LE. to .LT. so that
+!!        the ELSE IF clause could be reached. This change has
+!!        NO effect on the execution of the routine because it
+!!        makes use of a base that is a power of 2 (16), so the
+!!        ELSE IF clause never needs to be reached. The algorithm
+!!        was meant to be as general as possible, however, so that
+!!        only the base and digits would need to be changed in order to
+!!        implement a different number base.
+!!
+!!-    SPICELIB Version 1.0.0, 22-OCT-1992 (KRG)
+!!
+!! ## Index Entries
+!!
+!!     convert signed hexadecimal string to integer
+!!
+!! ## Revisions
+!!
+!!-     SPICELIB Version 1.1.0, 10-MAR-1994 (KRG)
+!!
+!!         Changed an IF test operand from .LE. to .LT. so that
+!!         the ELSE IF clause could be reached. This change has
+!!         NO effect on the execution of the routine because it
+!!         makes use of a base that is a power of 2 (16), so the
+!!         ELSE IF clause never needs to be reached. The algorithm
+!!         was meant to be as general as possible, however, so that
+!!         only the base and digits would need to be changed in order to
+!!         implement a different number base.
+!!
+!!         Old code was:
+!!
+!!            IF ( TMPNUM .LE. MAXI ) THEN
+!!
+!!               TMPNUM = TMPNUM * BASE + IDIGIT
+!!               POS    = POS + 1
+!!
+!!            ELSE IF ( ( TMPNUM .EQ. MAXI   ) .AND.
+!!     .                ( IDIGIT .LE. MAXMOD ) ) THEN
+!!
+!!               TMPNUM = TMPNUM * BASE + IDIGIT
+!!               POS    = POS + 1
+!!
+!!            ELSE ...
+!!
+!!         New code:
+!!
+!!            IF ( TMPNUM .LT. MAXI ) THEN
+!!
+!!               TMPNUM = TMPNUM * BASE + IDIGIT
+!!               POS    = POS + 1
+!!
+!!            ELSE IF ( ( TMPNUM .EQ. MAXI   ) .AND.
+!!     .                ( IDIGIT .LE. MAXMOD ) ) THEN
+!!
+!!               TMPNUM = TMPNUM * BASE + IDIGIT
+!!               POS    = POS + 1
+!!
+!!            ELSE ...
+!!
+!!     SPICELIB functions
+!!
+!!     Local Parameters
+!!
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
       use pepper_strings, only: repmc
-
-! $ Abstract
-!
-!     Convert a signed hexadecimal string representation of an integer
-!     to its equivalent integer.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALPHANUMERIC
-!     CONVERSION
-!
-! $ Detailed_Input
-!
-!     STRING   is the hexadecimal string to be converted to an integer.
-!
-!              The following table describes the character set used
-!              to represent the hexadecimal digits and their
-!              corresponding values.
-!
-!              Character    Value           Character    Value
-!              ---------    -----           ---------    -----
-!                '0'          0                '8'          8
-!                '1'          1                '9'          9
-!                '2'          2              'A','a'       10
-!                '3'          3              'B','b'       11
-!                '4'          4              'C','c'       12
-!                '5'          5              'D','d'       13
-!                '6'          6              'E','e'       14
-!                '7'          7              'F','f'       15
-!
-!             The plus sign, '+', and the minus sign, '-', are used as
-!             well, and they have their usual meanings.
-!
-!             A hexadecimal character string parsed by this routine
-!             should consist of a sign, '+' or '-' (the plus sign is
-!             optional for nonnegative numbers), followed immediately
-!             by a contiguous sequence of hexadecimal digits, e.g.:
-!
-!                (1)   +h h ... h
-!                        1 2     n
-!
-!                (2)   -h h ... h
-!                        1 2     n
-!
-!                (3)   h h ... h
-!                       1 2     n
-!
-!             where h  represents an hexadecimal digit.
-!                    i
-!
-!             STRING may have leading and trailing blanks, but blanks
-!             embedded within the significant portion of the character
-!             string are not allowed. This includes any blanks which
-!             appear between the sign character and the first
-!             hexadecimal digit.
-!
-! $ Detailed_Output
-!
-!     NUMBER   is the integer value to be returned. The value of this
-!              variable is not changed if an error occurs while parsing
-!              the hexadecimal character string.
-!
-!     ERROR    is a logical flag which indicates whether an error
-!              occurred while attempting to parse NUMBER from the
-!              hexadecimal character string STRING. ERROR will have the
-!              value .TRUE. if an error occurs. It will have the value
-!              .FALSE. otherwise.
-!
-!     ERRMSG   contains a descriptive error message if an error
-!              occurs while attempting to parse NUMBER from the
-!              hexadecimal character string STRING, blank otherwise.
-!              The error message will be left justified.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If an unexpected character is encountered while parsing the
-!         hexadecimal character string, an appropriate error message
-!         will be set, and the routine will exit. The value of NUMBER
-!         will be unchanged.
-!
-!     2)  If the string represents a number that is larger than
-!         the maximum representable integer an appropriate error
-!         message will be set, and the routine will exit. The value
-!         of NUMBER will be unchanged.
-!
-!     3)  If the string represents a number that is smaller than
-!         the minimum representable integer, an appropriate error
-!         message will be set, and the routine will exit. The value
-!         of NUMBER will be unchanged.
-!
-!     4)  If the input string is blank, an appropriate error message
-!         will be set, and the routine will exit. The value of NUMBER
-!         will be unchanged.
-!
-!     5)  If the error message string is not long enough to contain
-!         the entire error message, the error message will be
-!         truncated on the right.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine will convert a signed hexadecimal character string
-!     representation of an integer into its equivalent integer. This
-!     provides a machine independent mechanism for storing or porting
-!     integer values. This routine is used by the routine HX2DP which
-!     converts a character string representation of a double precision
-!     into its equivalent double precision value.
-!
-!     This routine is one of a pair of routines which are used to
-!     perform conversions between integers and equivalent signed
-!     hexadecimal character strings:
-!
-!           INT2HX -- Convert an integer into a signed hexadecimal
-!                     character string.
-!
-!           HX2INT -- Convert a signed hexadecimal character string
-!                     into an integer.
-!
-! $ Examples
-!
-!     All of the values shown are for a two's complement 32 bit
-!     representation for signed integers.
-!
-!     The following argument values illustrate the action of HX2INT for
-!     various input values.
-!
-!         STRING                 NUMBER        ERROR   ERRMSG
-!         ---------------------  ------------  ------  ------
-!          '1'                    1            .FALSE.   ' '
-!          '-1'                  -1            .FALSE.   ' '
-!          'DF'                   223          .FALSE.   ' '
-!          'Df'                   223          .FALSE.   ' '
-!          '+3ABC'                15036        .FALSE.   ' '
-!          'ff'                   255          .FALSE.   ' '
-!          '-20'                 -32           .FALSE.   ' '
-!          '0'                    0            .FALSE.   ' '
-!
-!          '7FFFFFFF'             2147483647   .FALSE.   ' '
-!          (Maximum 32 bit integer)
-!
-!          '-7FFFFFFF'           -2147483647   .FALSE.   ' '
-!          (Minimum 32 bit integer + 1)
-!
-!          '-80000000'           -2147483648   .FALSE.   ' '
-!          (Minimum 32 bit integer)
-!
-!          STRING = ' '
-!          NUMBER = ( Not defined )
-!          ERROR  = .TRUE.
-!          ERRMSG = 'ERROR: A blank input string is not allowed.'
-!
-!          STRING = '-AB238Q'
-!          NUMBER = ( Not defined )
-!          ERROR  = .TRUE.
-!          ERRMSG = 'ERROR: Illegal character ''Q'' encountered.'
-!
-!          STRING = '- AAA'
-!          NUMBER = ( Not defined )
-!          ERROR  = .TRUE.
-!          ERRMSG = 'ERROR: Illegal character '' '' encountered.'
-!
-!          STRING = '80000000'
-!          NUMBER = ( Not defined )
-!          ERROR  = .TRUE.
-!          ERRMSG = 'ERROR: Integer too large to be represented.'
-!
-!          STRING = '-800F0000'
-!          NUMBER = ( Not defined )
-!          ERROR  = .TRUE.
-!          ERRMSG = 'ERROR: Integer too small to be represented.'
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 20-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.1.0, 10-MAR-1994 (KRG)
-!
-!        Changed an IF test operand from .LE. to .LT. so that
-!        the ELSE IF clause could be reached. This change has
-!        NO effect on the execution of the routine because it
-!        makes use of a base that is a power of 2 (16), so the
-!        ELSE IF clause never needs to be reached. The algorithm
-!        was meant to be as general as possible, however, so that
-!        only the base and digits would need to be changed in order to
-!        implement a different number base.
-!
-!-    SPICELIB Version 1.0.0, 22-OCT-1992 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     convert signed hexadecimal string to integer
-!
-!-&
-
-! $ Revisions
-!
-!-     SPICELIB Version 1.1.0, 10-MAR-1994 (KRG)
-!
-!         Changed an IF test operand from .LE. to .LT. so that
-!         the ELSE IF clause could be reached. This change has
-!         NO effect on the execution of the routine because it
-!         makes use of a base that is a power of 2 (16), so the
-!         ELSE IF clause never needs to be reached. The algorithm
-!         was meant to be as general as possible, however, so that
-!         only the base and digits would need to be changed in order to
-!         implement a different number base.
-!
-!         Old code was:
-!
-!            IF ( TMPNUM .LE. MAXI ) THEN
-!
-!               TMPNUM = TMPNUM * BASE + IDIGIT
-!               POS    = POS + 1
-!
-!            ELSE IF ( ( TMPNUM .EQ. MAXI   ) .AND.
-!     .                ( IDIGIT .LE. MAXMOD ) ) THEN
-!
-!               TMPNUM = TMPNUM * BASE + IDIGIT
-!               POS    = POS + 1
-!
-!            ELSE ...
-!
-!         New code:
-!
-!            IF ( TMPNUM .LT. MAXI ) THEN
-!
-!               TMPNUM = TMPNUM * BASE + IDIGIT
-!               POS    = POS + 1
-!
-!            ELSE IF ( ( TMPNUM .EQ. MAXI   ) .AND.
-!     .                ( IDIGIT .LE. MAXMOD ) ) THEN
-!
-!               TMPNUM = TMPNUM * BASE + IDIGIT
-!               POS    = POS + 1
-!
-!            ELSE ...
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-!     Local Parameters
-!
       integer(ip), parameter :: base = 16
 !
 !     Character codes and limits (SPICELIB computed them on the first
@@ -3057,25 +3040,24 @@ contains
 !$Procedure LOCATI ( Locate an identifier in a list )
 
       module procedure locati
+!! ## Abstract
+!!
+!!     Find a given identifier, which consists of an integer array,
+!!     within a list of such identifiers, or insert the identifier
+!!     into the list. Return the location of the identifier and a flag
+!!     indicating whether or not the identifier was already present.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find a given identifier, which consists of an integer array,
-!     within a list of such identifiers, or insert the identifier
-!     into the list. Return the location of the identifier and a flag
-!     indicating whether or not the identifier was already present.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbpool = -5
@@ -3549,24 +3531,23 @@ contains
 !$Procedure LOCLN ( Locate lines in a text file )
 
       module procedure locln
+!! ## Abstract
+!!
+!!     Locate a group of lines in a text file delimited by markers.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!     TEXT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ljust, ltrim
-
-! $ Abstract
-!
-!     Locate a group of lines in a text file delimited by markers.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FILES
-!     TEXT
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input

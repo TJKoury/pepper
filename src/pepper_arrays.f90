@@ -28,22 +28,21 @@ contains
       !> The function returns .TRUE. if all of the values in the array
       !> LOGCLS are true.
       pure logical function alltru ( logcls, n )
+!! ## Abstract
+!!
+!!     Determine if all the entries in an array of logicals are .TRUE.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine if all the entries in an array of logicals are .TRUE.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       logical, intent(in) :: logcls ( * )  !! An array of logicals.
@@ -164,25 +163,24 @@ contains
       !> The function returns the index of the first matching array element
       !> or zero if the value is not found.
       pure integer(ip) function bschoc ( value, ndim, array, order )
+!! ## Abstract
+!!
+!!     Do a binary search for a given value within an array of character
+!!     strings, accompanied by an order vector. Return the index of the
+!!     matching array entry, or zero if the key value is not found.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Do a binary search for a given value within an array of character
-!     strings, accompanied by an order vector. Return the index of the
-!     matching array entry, or zero if the key value is not found.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: value  !! Key value to be found in ARRAY.
@@ -428,25 +426,24 @@ contains
       !> The function returns the index of the first matching array element
       !> or zero if the value is not found.
       pure integer(ip) function bschoi ( value, ndim, array, order )
+!! ## Abstract
+!!
+!!     Do a binary search for a given value within an integer array,
+!!     accompanied by an order vector. Return the index of the
+!!     matching array entry, or zero if the key value is not found.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Do a binary search for a given value within an integer array,
-!     accompanied by an order vector. Return the index of the
-!     matching array entry, or zero if the key value is not found.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: value  !! Value to find in ARRAY.
@@ -613,25 +610,24 @@ contains
       !> The function returns the index of the first matching array element
       !> or zero if the value is not found.
       pure integer(ip) function bsrchc ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Do a binary search for a given value within a character array,
+!!     assumed to be in nondecreasing order. Return the index of the
+!!     matching array entry, or zero if the key value is not found.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Do a binary search for a given value within a character array,
-!     assumed to be in nondecreasing order. Return the index of the
-!     matching array entry, or zero if the key value is not found.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: value  !! Key value to be found in ARRAY.
@@ -801,25 +797,24 @@ contains
       !> The function returns the index of VALUE in ARRAY, or zero if not
       !> found.
       pure integer(ip) function bsrchd ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Do a binary search for a given value within a double precision
+!!     array, assumed to be in nondecreasing order. Return the index of
+!!     the matching array entry, or zero if the key value is not found.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Do a binary search for a given value within a double precision
-!     array, assumed to be in nondecreasing order. Return the index of
-!     the matching array entry, or zero if the key value is not found.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: value  !! Value to find in ARRAY.
@@ -980,25 +975,24 @@ contains
       !> The function returns the index of VALUE in ARRAY, or zero if not
       !> found.
       pure integer(ip) function bsrchi ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Do a binary search for a given value within an integer array,
+!!     assumed to be in nondecreasing order. Return the index of the
+!!     matching array entry, or zero if the key value is not found.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Do a binary search for a given value within an integer array,
-!     assumed to be in nondecreasing order. Return the index of the
-!     matching array entry, or zero if the key value is not found.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: value  !! Value to find in ARRAY.
@@ -1152,23 +1146,22 @@ contains
 
       !> Fill an array of strings with blank strings.
       pure subroutine clearc ( ndim, array )
+!! ## Abstract
+!!
+!!     Fill an array of strings with blank strings.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Fill an array of strings with blank strings.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Number of elements of ARRAY to be set to blank.
@@ -1335,23 +1328,22 @@ contains
 
       !> Fill a double precision array with zeros.
       pure subroutine cleard ( ndim, array )
+!! ## Abstract
+!!
+!!     Fill a double precision array with zeros.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Fill a double precision array with zeros.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! The number of elements of ARRAY which are to be set to
@@ -1491,23 +1483,22 @@ contains
 
       !> Fill an integer array with zeros.
       pure subroutine cleari ( ndim, array )
+!! ## Abstract
+!!
+!!     Fill an integer array with zeros.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Fill an integer array with zeros.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! The number of elements of ARRAY which are to be set to
@@ -1652,23 +1643,22 @@ contains
 
       !> Fill a character string array with a specified string.
       pure subroutine fillc ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Fill a character string array with a specified string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Fill a character string array with a specified string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: value  !! Character string value to be placed in ARRAY.
@@ -1770,23 +1760,22 @@ contains
 
       !> Fill a double precision array with a specified value.
       pure subroutine filld ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Fill a double precision array with a specified value.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Fill a double precision array with a specified value.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: value  !! Double precision value to be placed in all the elements of
@@ -1931,23 +1920,22 @@ contains
 
       !> Fill an integer array with a specified value.
       pure subroutine filli ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Fill an integer array with a specified value.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Fill an integer array with a specified value.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: value  !! Integer value to be placed in all the elements of ARRAY.
@@ -2093,25 +2081,24 @@ contains
       !> The function returns .TRUE. if the array contains the integers
       !> 1 through N, otherwise it returns .FALSE.
       logical function isordv ( array, n )
+!! ## Abstract
+!!
+!!     Determine whether an array of N items contains the integers
+!!     1 through N.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     SORT
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether an array of N items contains the integers
-!     1 through N.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     SEARCH
-!     SORT
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(inout) :: array (*)  !! Array of integers.
@@ -2367,25 +2354,24 @@ contains
       !> The function returns the index of the first matching array
       !> element or zero if the value is not found.
       pure integer(ip) function  isrchc ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Search for a given value within a character string array. Return
+!!     the index of the first matching array entry, or zero if the key
+!!     value was not found.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Search for a given value within a character string array. Return
-!     the index of the first matching array entry, or zero if the key
-!     value was not found.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: value  !! Key value to be found in ARRAY.
@@ -2505,25 +2491,24 @@ contains
       !> The function returns the index of the first matching array
       !> element or zero if the value is not found.
       pure integer(ip) function  isrchd ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Search for a given value within a double precision array. Return
+!!     the index of the first matching array entry, or zero if the key
+!!     value was not found.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Search for a given value within a double precision array. Return
-!     the index of the first matching array entry, or zero if the key
-!     value was not found.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: value  !! Key value to be found in ARRAY.
@@ -2642,25 +2627,24 @@ contains
       !> The function returns the index of the first matching array
       !> element or zero if the value is not found.
       pure integer(ip) function  isrchi ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Search for a given value within a integer array. Return
+!!     the index of the first matching array entry, or zero if
+!!     the key value was not found.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Search for a given value within a integer array. Return
-!     the index of the first matching array entry, or zero if
-!     the key value was not found.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: value  !! Key value to be found in ARRAY.
@@ -2773,24 +2757,23 @@ contains
       !> The function returns the index of the element of ARRAY
       !> whose value is closest to X.
       pure integer(ip) function  lstcld ( x, n, array )
+!! ## Abstract
+!!
+!!     Find the index of the array element closest to a given number X
+!!     in an array of non-decreasing numbers.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the index of the array element closest to a given number X
-!     in an array of non-decreasing numbers.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: x  !! Search value.
@@ -3021,24 +3004,23 @@ contains
       !> The function returns the index of the element of ARRAY
       !> whose value is closest to X.
       pure integer(ip) function  lstcli ( x, n, array )
+!! ## Abstract
+!!
+!!     Find the index of the array element closest to a given integer X
+!!     in an array of non-decreasing integers.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the index of the array element closest to a given integer X
-!     in an array of non-decreasing integers.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: x  !! Search value.
@@ -3254,24 +3236,23 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is lexically less than or equal to STRING.
       pure integer(ip) function  lstlec ( string, n, array )
+!! ## Abstract
+!!
+!!     Find the index of the largest array element less than or equal to
+!!     a given character string in an ordered array of character strings.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the index of the largest array element less than or equal to
-!     a given character string in an ordered array of character strings.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Upper bound value to search against.
@@ -3509,24 +3490,23 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is less than or equal to X.
       pure integer(ip) function  lstled ( x, n, array )
+!! ## Abstract
+!!
+!!     Find the index of the largest array element less than or equal
+!!     to a given number X in an array of non-decreasing numbers.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the index of the largest array element less than or equal
-!     to a given number X in an array of non-decreasing numbers.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: x  !! Upper bound value to search against.
@@ -3738,24 +3718,23 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is less than or equal to X.
       pure integer(ip) function  lstlei ( x, n, array )
+!! ## Abstract
+!!
+!!     Find the index of the largest array element less than or equal
+!!     to a given integer X in an array of non-decreasing integers.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the index of the largest array element less than or equal
-!     to a given integer X in an array of non-decreasing integers.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: x  !! Upper bound value to search against.
@@ -4038,24 +4017,23 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is lexically less than STRING.
       pure integer(ip) function  lstltc ( string, n, array )
+!! ## Abstract
+!!
+!!     Find the index of the largest array element less than a given
+!!     character string in an ordered array of character strings.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the index of the largest array element less than a given
-!     character string in an ordered array of character strings.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Upper bound value to search against.
@@ -4291,24 +4269,23 @@ contains
        !> The function returns the index of the last element of ARRAY that
        !> is less than X.
        pure integer(ip) function  lstltd ( x, n, array )
+!! ## Abstract
+!!
+!!     Find the index of the largest array element less than
+!!     a given number X in an array of non-decreasing numbers.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
        use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the index of the largest array element less than
-!     a given number X in an array of non-decreasing numbers.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: x  !! Upper bound value to search against.
@@ -4523,24 +4500,23 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is less than X.
       pure integer(ip) function  lstlti ( x, n, array )
+!! ## Abstract
+!!
+!!     Find the index of the largest array element less than
+!!     a given integer X in an array of non-decreasing integers.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the index of the largest array element less than
-!     a given integer X in an array of non-decreasing integers.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: x  !! Upper bound value to search against.
@@ -4818,23 +4794,22 @@ contains
 
       !> Locate the maximum element of a character array.
       pure subroutine maxac ( array, ndim, maxval, loc )
+!! ## Abstract
+!!
+!!     Locate the maximum element of a character array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Locate the maximum element of a character array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: array ( * )  !! Array.
@@ -4966,23 +4941,22 @@ contains
 
       !> Locate the maximum element of a DP array.
       pure subroutine maxad ( array, ndim, maxval, loc )
+!! ## Abstract
+!!
+!!     Locate the maximum element of a DP array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Locate the maximum element of a DP array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: array ( * )  !! Array.
@@ -5110,23 +5084,22 @@ contains
 
       !> Locate the maximum element of an integer array.
       pure subroutine maxai ( array, ndim, maxval, loc )
+!! ## Abstract
+!!
+!!     Locate the maximum element of an integer array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Locate the maximum element of an integer array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: array ( * )  !! Array.
@@ -5254,23 +5227,22 @@ contains
 
       !> Locate the minimum element of a character array.
       pure subroutine minac ( array, ndim, minval, loc )
+!! ## Abstract
+!!
+!!     Locate the minimum element of a character array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Locate the minimum element of a character array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: array ( * )  !! Array.
@@ -5402,23 +5374,22 @@ contains
 
       !> Locate the minimum element of a DP array.
       pure subroutine minad ( array, ndim, minval, loc )
+!! ## Abstract
+!!
+!!     Locate the minimum element of a DP array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Locate the minimum element of a DP array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: array ( * )  !! Array.
@@ -5543,23 +5514,22 @@ contains
 
       !> Locate the minimum element of an integer array.
       pure subroutine minai ( array, ndim, minval, loc )
+!! ## Abstract
+!!
+!!     Locate the minimum element of an integer array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Locate the minimum element of an integer array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: array ( * )  !! Array.
@@ -5685,23 +5655,22 @@ contains
       !> Copy the elements of one character array into another
       !> array.
       pure subroutine movec ( arrfrm, ndim, arrto )
+!! ## Abstract
+!!
+!!     Copy the elements of one character array into another
+!!     array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Copy the elements of one character array into another
-!     array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: arrfrm ( * )  !! Character array to be moved.
@@ -5826,23 +5795,22 @@ contains
       !> Copy the elements of one double precision array into another
       !> array.
       pure subroutine moved ( arrfrm, ndim, arrto )
+!! ## Abstract
+!!
+!!     Copy the elements of one double precision array into another
+!!     array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Copy the elements of one double precision array into another
-!     array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: arrfrm ( * )  !! Double precision array to be moved.
@@ -6070,23 +6038,22 @@ contains
       !> Copy the elements of one integer array into another
       !> array.
       pure subroutine movei ( arrfrm, ndim, arrto )
+!! ## Abstract
+!!
+!!     Copy the elements of one integer array into another
+!!     array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Copy the elements of one integer array into another
-!     array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: arrfrm ( * )  !! Integer array to be moved.
@@ -6212,22 +6179,21 @@ contains
       !>
       !> The function returns .TRUE. if no entry has a value of .TRUE.
       pure logical function notru ( logcls, n )
+!! ## Abstract
+!!
+!!     Determine if none the entries in an array of logicals are .TRUE.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine if none the entries in an array of logicals are .TRUE.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       logical, intent(in) :: logcls ( * )  !! An array of logicals.
@@ -6342,23 +6308,22 @@ contains
 
       !> Determine the order of elements in an array of character strings.
       pure subroutine orderc ( array, ndim, iorder )
+!! ## Abstract
+!!
+!!     Determine the order of elements in an array of character strings.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine the order of elements in an array of character strings.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: array  ( * )  !! Input array.
@@ -6591,23 +6556,22 @@ contains
 
       !> Determine the order of elements in a double precision array.
       pure subroutine orderd ( array, ndim, iorder )
+!! ## Abstract
+!!
+!!     Determine the order of elements in a double precision array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine the order of elements in a double precision array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: array  ( * )  !! Input array.
@@ -6764,23 +6728,22 @@ contains
 
       !> Determine the order of elements in an integer array.
       pure subroutine orderi ( array, ndim, iorder )
+!! ## Abstract
+!!
+!!     Determine the order of elements in an integer array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine the order of elements in an integer array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: array  ( * )  !! Input array.
@@ -6939,24 +6902,23 @@ contains
       !>
       !> The function returns the product of the elements of ARRAY.
       pure real(wp) function  prodad ( array, n )
+!! ## Abstract
+!!
+!!     Return the product of the elements of a double precision array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     MATH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the product of the elements of a double precision array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     MATH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: array ( * )  !! Input array.
@@ -7083,24 +7045,23 @@ contains
       !>
       !> The function returns the product of the elements of ARRAY.
       pure integer(ip) function  prodai ( array, n )
+!! ## Abstract
+!!
+!!     Return the product of the elements of an integer array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     MATH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the product of the elements of an integer array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     MATH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: array  ( * )  !! Input array.
@@ -7227,24 +7188,23 @@ contains
       !> Reorder the elements of an array of character strings according to
       !> a given order vector.
       pure subroutine reordc ( iorder, ndim, array )
+!! ## Abstract
+!!
+!!     Reorder the elements of an array of character strings according to
+!!     a given order vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Reorder the elements of an array of character strings according to
-!     a given order vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(inout) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
@@ -7544,24 +7504,23 @@ contains
       !> Reorder the elements of a double precision array according to a
       !> given order vector.
       pure subroutine reordd ( iorder, ndim, array )
+!! ## Abstract
+!!
+!!     Reorder the elements of a double precision array according to a
+!!     given order vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Reorder the elements of a double precision array according to a
-!     given order vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(inout) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
@@ -7845,24 +7804,23 @@ contains
       !> Reorder the elements of an integer array according to a given
       !> order vector.
       pure subroutine reordi ( iorder, ndim, array )
+!! ## Abstract
+!!
+!!     Reorder the elements of an integer array according to a given
+!!     order vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Reorder the elements of an integer array according to a given
-!     order vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(inout) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
@@ -8146,24 +8104,23 @@ contains
       !> Reorder the elements of a logical array according to a given order
       !> vector.
       pure subroutine reordl ( iorder, ndim, array )
+!! ## Abstract
+!!
+!!     Reorder the elements of a logical array according to a given order
+!!     vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Reorder the elements of a logical array according to a given order
-!     vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(inout) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
@@ -8441,22 +8398,21 @@ contains
 
       !> Remove duplicate elements from a character array.
       pure subroutine rmdupc ( nelt, array )
+!! ## Abstract
+!!
+!!     Remove duplicate elements from a character array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Remove duplicate elements from a character array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(inout) :: nelt  !! Number of elements in the array.
@@ -8603,22 +8559,21 @@ contains
 
       !> Remove duplicate elements from a double precision array.
       pure subroutine rmdupd ( nelt, array )
+!! ## Abstract
+!!
+!!     Remove duplicate elements from a double precision array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Remove duplicate elements from a double precision array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(inout) :: nelt  !! Number of elements in the array.
@@ -8765,22 +8720,21 @@ contains
 
       !> Remove duplicate elements from an integer array.
       pure subroutine rmdupi ( nelt, array )
+!! ## Abstract
+!!
+!!     Remove duplicate elements from an integer array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Remove duplicate elements from an integer array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(inout) :: nelt  !! Number of elements in the array.
@@ -8929,22 +8883,21 @@ contains
       !>
       !> The function returns the value .TRUE. if and only if A1 = A2.
       pure logical function sameai ( a1, a2, ndim )
+!! ## Abstract
+!!
+!!     Indicate whether two integer arrays are equal.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Indicate whether two integer arrays are equal.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: a1 ( * )  !! First array to be compared.
@@ -9058,24 +9011,23 @@ contains
       !> Sort an array of character strings according to the ASCII
       !> collating sequence using the Shell Sort algorithm.
       pure subroutine shellc ( ndim, array )
+!! ## Abstract
+!!
+!!     Sort an array of character strings according to the ASCII
+!!     collating sequence using the Shell Sort algorithm.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Sort an array of character strings according to the ASCII
-!     collating sequence using the Shell Sort algorithm.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of the array.
@@ -9278,23 +9230,22 @@ contains
 
       !> Sort a double precision array using the Shell Sort algorithm.
       pure subroutine shelld ( ndim, array )
+!! ## Abstract
+!!
+!!     Sort a double precision array using the Shell Sort algorithm.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Sort a double precision array using the Shell Sort algorithm.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of the array.
@@ -9434,23 +9385,22 @@ contains
 
       !> Sort an integer array using the Shell Sort algorithm.
       pure subroutine shelli ( ndim, array )
+!! ## Abstract
+!!
+!!     Sort an integer array using the Shell Sort algorithm.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SORT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Sort an integer array using the Shell Sort algorithm.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SORT
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of the array.
@@ -9594,23 +9544,22 @@ contains
       !> The function returns .TRUE. if some of the values in the array
       !> LOGCLS are .FALSE.
       pure logical function somfls ( logcls, n )
+!! ## Abstract
+!!
+!!     Determine if some of the entries in an array of logicals are
+!!     .FALSE.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine if some of the entries in an array of logicals are
-!     .FALSE.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       logical, intent(in) :: logcls ( * )  !! An array of logicals.
@@ -9730,23 +9679,22 @@ contains
       !> The function returns .TRUE. if some of the values in the array
       !> LOGCLS are .TRUE.
       pure logical function somtru ( logcls, n )
+!! ## Abstract
+!!
+!!     Determine if some of the entries in an array of logicals are
+!!     .TRUE.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine if some of the entries in an array of logicals are
-!     .TRUE.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       logical, intent(in) :: logcls ( * )  !! An array of logicals.
@@ -9866,24 +9814,23 @@ contains
       !>
       !> The function returns the sum of the elements of ARRAY.
       pure real(wp) function sumad ( array, n )
+!! ## Abstract
+!!
+!!     Return the sum of the elements of a double precision array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     MATH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the sum of the elements of a double precision array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     MATH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: array  ( * )  !! Input array.
@@ -10010,24 +9957,23 @@ contains
       !>
       !> The function returns the sum of the elements of ARRAY.
       pure integer(ip) function sumai ( array, n )
+!! ## Abstract
+!!
+!!     Return the sum of the elements of an integer array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     MATH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the sum of the elements of an integer array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     MATH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: array  ( * )  !! Input array.
@@ -10152,22 +10098,21 @@ contains
 
       !> Swap the contents of two character strings.
       elemental subroutine swapc ( a, b )
+!! ## Abstract
+!!
+!!     Swap the contents of two character strings.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Swap the contents of two character strings.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(inout) :: a  !! First string.
@@ -10303,22 +10248,21 @@ contains
 
       !> Swap the contents of two double precision variables.
       elemental subroutine swapd ( a, b )
+!! ## Abstract
+!!
+!!     Swap the contents of two double precision variables.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Swap the contents of two double precision variables.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(inout) :: a  !! First variable.
@@ -10423,22 +10367,21 @@ contains
 
       !> Swap the contents of two integer variables.
       elemental subroutine swapi ( a, b )
+!! ## Abstract
+!!
+!!     Swap the contents of two integer variables.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Swap the contents of two integer variables.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(inout) :: a  !! First variable.
@@ -10545,21 +10488,20 @@ contains
       !>
       !> The function returns the first character of the string.
       elemental character function touchc ( string )
-
-! $ Abstract
-!
-!     Return the first character of a string
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
+!! ## Abstract
+!!
+!!     Return the first character of a string
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       implicit none
 
       character(*), intent(in) :: string  !! any character string
@@ -10664,22 +10606,21 @@ contains
       !>
       !> The function returns the value of DP.
       elemental real(wp) function touchd ( dp )
+!! ## Abstract
+!!
+!!     Return the value of a double precision number.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return the value of a double precision number.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: dp  !! any double precision number
@@ -10784,22 +10725,21 @@ contains
       !>
       !> The function returns the value of INT.
       elemental integer(ip) function touchi ( int )
+!! ## Abstract
+!!
+!!     Return the value of the input integer
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the value of the input integer
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: int  !! any integer
@@ -10904,21 +10844,20 @@ contains
       !>
       !> The function returns the value of LOG.
       elemental logical function touchl ( log )
-
-! $ Abstract
-!
-!     Return the value of the input logical
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
+!! ## Abstract
+!!
+!!     Return the value of the input logical
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       implicit none
 
       logical, intent(in) :: log  !! any logical

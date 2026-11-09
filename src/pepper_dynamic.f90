@@ -12,160 +12,141 @@ submodule (pepper_instance) pepper_dynamic
 contains
 
       module procedure zzfrmgt1
-
-! $ Abstract
-!
-!     Find the transformation from a user specified frame to
-!     another frame at a user specified epoch.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     INFRM       is the SPICE ID-code for some reference frame.
-!
-!     ET          is an epoch in ephemeris seconds past J2000 at
-!                 which the user wishes to retrieve a state
-!                 transformation matrix.
-!
-! $ Detailed_Output
-!
-!     XFORM       is a 6x6 matrix that transforms states relative to
-!                 INFRM to states relative to OUTFRM. (Assuming such a
-!                 transformation can be found.)
-!
-!     OUTFRM      is the SPICE ID-code of a reference frame. The 6x6
-!                 matrix XFORM transforms states relative to INFRM to
-!                 states relative to OUTFRM. The state transformation
-!                 is achieved by multiplying XFORM on the right by a
-!                 state relative to INFRM.  This is easily accomplished
-!                 via the subroutine call shown below.
-!
-!                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
-!
-!     FOUND       is a logical flag indicating whether or not a
-!                 transformation matrix could be found from INFRM to
-!                 some other frame. If a transformation matrix cannot
-!                 be found OUTFRM will be set to zero, FOUND will be
-!                 set to FALSE and XFORM will be returned as the zero
-!                 matrix.
-!
-! $ Parameters
-!
-!     See include file.
-!
-! $ Exceptions
-!
-!     1) If a transformation matrix cannot be located, then FOUND will
-!        be set to FALSE, OUTFRM will be set to zero and XFORM will be
-!        set to the zero 6x6 matrix.
-!
-!     2) If the class of the requested frame is not recognized the
-!        exception 'SPICE(UNKNOWNFRAMETYPE)' will be signaled.
-!
-! $ Files
-!
-!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
-!     to provide the needed frame definition and transformation data.
-!
-! $ Particulars
-!
-!     This is a low level routine used for determining a chain of state
-!     transformation matrices from one frame to another.
-!
-! $ Examples
-!
-!     See FRMCHG.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     B.V. Semenov    (JPL)
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 18-SEP-2020 (NJB)
-!
-!        Support for switch frames was added. VERSN is now
-!        initialized via a DATA statement. Corrected long error
-!        message to use the term "class" rather than "class id-code."
-!
-!-    SPICELIB Version 4.0.0, 05-JAN-2014 (BVS)
-!
-!        To prevent operations with un-initialized DP numbers, wrapped
-!        IF ( .NOT. FAILED() ) ... END IF around output matrix
-!        transposition/re-assignment operations in all branches where
-!        the routine returning the matrix might fail.
-!
-!        Added zero-ing out the output matrix in cases of a failed or
-!        .NOT. FOUND transformation look ups.
-!
-!-    SPICELIB Version 3.0.0, 18-DEC-2004 (NJB)
-!
-!        Added the new frame type 'DYN' to the list of frame
-!        types recognized by FRMGET.
-!
-!-    SPICELIB Version 2.0.0, 03-APR-1997 (WLT)
-!
-!        Added the new frame type 'TK' to the list of frame
-!        types recognized by FRMGET.  In addition the routine
-!        now checks FAILED after "getting" the frame transformation.
-!
-!-    SPICELIB Version 1.0.0, 20-OCT-1994 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Find a frame transformation matrix from a specified frame
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Set output flag.
-!
+!! ## Abstract
+!!
+!!     Find the transformation from a user specified frame to
+!!     another frame at a user specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRM       is the SPICE ID-code for some reference frame.
+!!
+!!     ET          is an epoch in ephemeris seconds past J2000 at
+!!                 which the user wishes to retrieve a state
+!!                 transformation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     XFORM       is a 6x6 matrix that transforms states relative to
+!!                 INFRM to states relative to OUTFRM. (Assuming such a
+!!                 transformation can be found.)
+!!
+!!     OUTFRM      is the SPICE ID-code of a reference frame. The 6x6
+!!                 matrix XFORM transforms states relative to INFRM to
+!!                 states relative to OUTFRM. The state transformation
+!!                 is achieved by multiplying XFORM on the right by a
+!!                 state relative to INFRM.  This is easily accomplished
+!!                 via the subroutine call shown below.
+!!
+!!                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
+!!
+!!     FOUND       is a logical flag indicating whether or not a
+!!                 transformation matrix could be found from INFRM to
+!!                 some other frame. If a transformation matrix cannot
+!!                 be found OUTFRM will be set to zero, FOUND will be
+!!                 set to FALSE and XFORM will be returned as the zero
+!!                 matrix.
+!!
+!! ## Parameters
+!!
+!!     See include file.
+!!
+!! ## Exceptions
+!!
+!!     1) If a transformation matrix cannot be located, then FOUND will
+!!        be set to FALSE, OUTFRM will be set to zero and XFORM will be
+!!        set to the zero 6x6 matrix.
+!!
+!!     2) If the class of the requested frame is not recognized the
+!!        exception 'SPICE(UNKNOWNFRAMETYPE)' will be signaled.
+!!
+!! ## Files
+!!
+!!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
+!!     to provide the needed frame definition and transformation data.
+!!
+!! ## Particulars
+!!
+!!     This is a low level routine used for determining a chain of state
+!!     transformation matrices from one frame to another.
+!!
+!! ## Examples
+!!
+!!     See FRMCHG.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     B.V. Semenov    (JPL)
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 18-SEP-2020 (NJB)
+!!
+!!        Support for switch frames was added. VERSN is now
+!!        initialized via a DATA statement. Corrected long error
+!!        message to use the term "class" rather than "class id-code."
+!!
+!!-    SPICELIB Version 4.0.0, 05-JAN-2014 (BVS)
+!!
+!!        To prevent operations with un-initialized DP numbers, wrapped
+!!        IF ( .NOT. FAILED() ) ... END IF around output matrix
+!!        transposition/re-assignment operations in all branches where
+!!        the routine returning the matrix might fail.
+!!
+!!        Added zero-ing out the output matrix in cases of a failed or
+!!        .NOT. FOUND transformation look ups.
+!!
+!!-    SPICELIB Version 3.0.0, 18-DEC-2004 (NJB)
+!!
+!!        Added the new frame type 'DYN' to the list of frame
+!!        types recognized by FRMGET.
+!!
+!!-    SPICELIB Version 2.0.0, 03-APR-1997 (WLT)
+!!
+!!        Added the new frame type 'TK' to the list of frame
+!!        types recognized by FRMGET.  In addition the routine
+!!        now checks FAILED after "getting" the frame transformation.
+!!
+!!-    SPICELIB Version 1.0.0, 20-OCT-1994 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Find a frame transformation matrix from a specified frame
+!!
+!!     SPICELIB Functions
+!!
+!!     Local Variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Set output flag.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip)           center
       integer(ip)           i
       integer(ip)           j
@@ -323,161 +304,142 @@ contains
       end procedure zzfrmgt1
 
       module procedure zzrotgt1
-
-! $ Abstract
-!
-!     Find the rotation from a user specified frame to another frame at
-!     a user specified epoch.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     INFRM       is the SPICE ID-code for some reference frame.
-!
-!     ET          is an epoch in ephemeris seconds past J2000 at which
-!                 the user wishes to retrieve a rotation matrix.
-!
-! $ Detailed_Output
-!
-!     ROTATE      is a 3x3 matrix that rotates positions relative to
-!                 INFRM to positions relative to OUTFRM. (Assuming such
-!                 a rotation can be found.)
-!
-!     OUTFRM      is the SPICE ID-code of a reference frame. The 3x3
-!                 matrix ROTATE rotates positions relative to INFRM to
-!                 positions relative to OUTFRM. The positions
-!                 transformation is achieved by multiplying ROTATE on
-!                 the right by a position relative to INFRM. This is
-!                 easily accomplished via the subroutine call shown
-!                 below.
-!
-!                    CALL MXV  ( ROTATE, INPOS,  OUTPOS )
-!
-!     FOUND       is a logical flag indicating whether or not a
-!                 rotation matrix could be found from INFRM to some
-!                 other frame. If a rotation matrix cannot be found
-!                 OUTFRM will be set to zero, FOUND will be set to
-!                 FALSE and ROTATE will be returned as the zero matrix.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If a rotation matrix cannot be located, then FOUND will be set
-!        to FALSE, OUTFRM will be set to zero and ROTATE will be set to
-!        the zero 3x3 matrix.
-!
-!     2) If the class of the requested frame is not recognized the
-!        exception 'SPICE(UNKNOWNFRAMETYPE)' will be signaled.
-!
-! $ Files
-!
-!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
-!     to provide the needed frame definition and transformation data.
-!
-! $ Particulars
-!
-!     This is a low level routine used for determining a chain of
-!     position transformation matrices from one frame to another.
-!
-! $ Examples
-!
-!     See REFCHG.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     B.V. Semenov    (JPL)
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 18-SEP-2020 (NJB)
-!
-!        Support for switch frames was added. VERSN is now
-!        initialized via a DATA statement. Corrected long error
-!        message to use the term "class" rather than "class id-code."
-!
-!-    SPICELIB Version 4.0.0, 21-MAR-2014 (BVS)
-!
-!        To prevent operations with un-initialized DP numbers, wrapped
-!        IF ( .NOT. FAILED() ) ... END IF around output matrix
-!        transposition operation in the PCK frame branch where the
-!        routine returning the matrix might fail.
-!
-!        Incremented major version token by 2 to sync up versions with
-!        FRMGET.
-!
-!-    SPICELIB Version 2.1.0, 02-MAR-2010 (NJB)
-!
-!        Bug fix: frame ID rather than frame class ID
-!        is now passed to dynamic frame evaluation
-!        routine ZZDYNROT. Order of header sections was
-!        corrected.
-!
-!-    SPICELIB Version 2.0.0, 18-DEC-2004 (NJB)
-!
-!        Added the new frame type 'DYN' to the list of frame
-!        types recognized by ROTGET.
-!
-!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Find a rotation matrix from a specified frame
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Set output flag.
-!
+!! ## Abstract
+!!
+!!     Find the rotation from a user specified frame to another frame at
+!!     a user specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRM       is the SPICE ID-code for some reference frame.
+!!
+!!     ET          is an epoch in ephemeris seconds past J2000 at which
+!!                 the user wishes to retrieve a rotation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     ROTATE      is a 3x3 matrix that rotates positions relative to
+!!                 INFRM to positions relative to OUTFRM. (Assuming such
+!!                 a rotation can be found.)
+!!
+!!     OUTFRM      is the SPICE ID-code of a reference frame. The 3x3
+!!                 matrix ROTATE rotates positions relative to INFRM to
+!!                 positions relative to OUTFRM. The positions
+!!                 transformation is achieved by multiplying ROTATE on
+!!                 the right by a position relative to INFRM. This is
+!!                 easily accomplished via the subroutine call shown
+!!                 below.
+!!
+!!                    CALL MXV  ( ROTATE, INPOS,  OUTPOS )
+!!
+!!     FOUND       is a logical flag indicating whether or not a
+!!                 rotation matrix could be found from INFRM to some
+!!                 other frame. If a rotation matrix cannot be found
+!!                 OUTFRM will be set to zero, FOUND will be set to
+!!                 FALSE and ROTATE will be returned as the zero matrix.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If a rotation matrix cannot be located, then FOUND will be set
+!!        to FALSE, OUTFRM will be set to zero and ROTATE will be set to
+!!        the zero 3x3 matrix.
+!!
+!!     2) If the class of the requested frame is not recognized the
+!!        exception 'SPICE(UNKNOWNFRAMETYPE)' will be signaled.
+!!
+!! ## Files
+!!
+!!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
+!!     to provide the needed frame definition and transformation data.
+!!
+!! ## Particulars
+!!
+!!     This is a low level routine used for determining a chain of
+!!     position transformation matrices from one frame to another.
+!!
+!! ## Examples
+!!
+!!     See REFCHG.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     B.V. Semenov    (JPL)
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 18-SEP-2020 (NJB)
+!!
+!!        Support for switch frames was added. VERSN is now
+!!        initialized via a DATA statement. Corrected long error
+!!        message to use the term "class" rather than "class id-code."
+!!
+!!-    SPICELIB Version 4.0.0, 21-MAR-2014 (BVS)
+!!
+!!        To prevent operations with un-initialized DP numbers, wrapped
+!!        IF ( .NOT. FAILED() ) ... END IF around output matrix
+!!        transposition operation in the PCK frame branch where the
+!!        routine returning the matrix might fail.
+!!
+!!        Incremented major version token by 2 to sync up versions with
+!!        FRMGET.
+!!
+!!-    SPICELIB Version 2.1.0, 02-MAR-2010 (NJB)
+!!
+!!        Bug fix: frame ID rather than frame class ID
+!!        is now passed to dynamic frame evaluation
+!!        routine ZZDYNROT. Order of header sections was
+!!        corrected.
+!!
+!!-    SPICELIB Version 2.0.0, 18-DEC-2004 (NJB)
+!!
+!!        Added the new frame type 'DYN' to the list of frame
+!!        types recognized by ROTGET.
+!!
+!!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Find a rotation matrix from a specified frame
+!!
+!!     SPICELIB Functions
+!!
+!!     Local Variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Set output flag.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
       use pepper_math, only: xpose
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip)           center
       integer(ip)           type
       integer(ip)           typeid
@@ -595,29 +557,28 @@ contains
 !$Procedure      ZZFRMCH1 (Frame Change)
 
       module procedure zzfrmch1
+!! ## Abstract
+!!
+!!     Return the state transformation matrix from one
+!!     frame to another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi
       use pepper_math, only: zzmsxf
-
-! $ Abstract
-!
-!     Return the state transformation matrix from one
-!     frame to another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
 
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
 
 
 ! $ Detailed_Input
@@ -1283,29 +1244,28 @@ contains
 !$Procedure      ZZREFCH1 (Reference frame Change)
 
       module procedure zzrefch1
+!! ## Abstract
+!!
+!!     Return the transformation matrix from one
+!!     frame to another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi
       use pepper_math, only: ident, xpose, zzrxr
-
-! $ Abstract
-!
-!     Return the transformation matrix from one
-!     frame to another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
 
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
 
 
 ! $ Detailed_Input
@@ -1809,465 +1769,427 @@ contains
       end procedure zzrefch1
 
       module procedure zzspkgo1
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Compute the geometric state (position and velocity) of a target
-!     body relative to an observing body.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG     is the standard NAIF ID code for a target body.
-!
-!     ET       is the epoch (ephemeris time) at which the state
-!              of the target body is to be computed.
-!
-!     REF      is the name of the reference frame to
-!              which the vectors returned by the routine should
-!              be rotated. This may be any frame supported by
-!              the SPICELIB subroutine FRMCHG.
-!
-!     OBS      is the standard NAIF ID code for an observing body.
-!
-! $ Detailed_Output
-!
-!     STATE    is a 6-dimensional vector that contains the geometric
-!              position and velocity of the target body, relative to the
-!              observing body, at epoch ET. STATE has six elements: the
-!              first three contain the target's position; the last three
-!              contain the target's velocity. These vectors are
-!              transformed into the specified reference frame. Units are
-!              always km and km/sec.
-!
-!     LT       is the one-way light time in seconds from the
-!              observing body to the geometric position of the
-!              target body at the specified epoch.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If insufficient ephemeris data has been loaded to compute
-!         the necessary states, the error SPICE(SPKINSUFFDATA) is
-!         signaled.
-!
-! $ Files
-!
-!     See $Restrictions.
-!
-! $ Particulars
-!
-!     SPKGEO computes the geometric state, T(t), of the target
-!     body and the geometric state, O(t), of the observing body
-!     relative to the first common center of motion. Subtracting
-!     O(t) from T(t) gives the geometric state of the target
-!     body relative to the observer.
-!
-!        CENTER ----- O(t)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(t) - O(t)
-!            |  /
-!           T(t)
-!
-!     The one-way light time, tau, is given by
-!
-!               | T(t) - O(t) |
-!        tau = -----------------
-!                      c
-!
-!     For example, if the observing body is -94, the Mars Observer
-!     spacecraft, and the target body is 401, Phobos, then the
-!     first common center is probably 4, the Mars Barycenter.
-!     O(t) is the state of -94 relative to 4 and T(t) is the
-!     state of 401 relative to 4.
-!
-!     The center could also be the Solar System Barycenter, body 0.
-!     For example, if the observer is 399, Earth, and the target
-!     is 299, Venus, then O(t) would be the state of 399 relative
-!     to 0 and T(t) would be the state of 299 relative to 0.
-!
-!     Ephemeris data from more than one segment may be required
-!     to determine the states of the target body and observer
-!     relative to a common center. SPKGEO reads as many segments
-!     as necessary, from as many files as necessary, using files
-!     that have been loaded by previous calls to FURNSH or SPKLEF
-!     (load ephemeris file).
-!
-!     SPKGEO is similar to SPKEZ but returns geometric states
-!     only, with no option to make planetary (light-time) nor
-!     stellar aberration corrections. The geometric states
-!     returned by SPKEZ and SPKGEO are the same.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Return the geometric state vector of Mars (499) as seen from
-!        Earth (399) in the J2000 frame and the one-way light time
-!        between them at the epoch July 4, 2003 11:00 AM PST.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File: spkgeo_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                        Contents
-!              ---------                        --------
-!              de430.bsp                        Planetary ephemeris
-!              mar097.bsp                       Mars satellite ephemeris
-!              naif0011.tls                     Leapseconds
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'de430.bsp',
-!                                  'mar097.bsp',
-!                                  'naif0011.tls' )
-!
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM SPKGEO_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      VNORM
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 32 )
-!
-!              INTEGER               TIMLEN
-!              PARAMETER           ( TIMLEN = 26 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(TIMLEN)    EPOCH
-!              CHARACTER*(NAMLEN)    REFFRM
-!
-!              DOUBLE PRECISION      ET
-!              DOUBLE PRECISION      LT
-!              DOUBLE PRECISION      STATE ( 6 )
-!
-!              INTEGER               I
-!              INTEGER               OBSRVR
-!              INTEGER               TARGET
-!
-!        C
-!        C     Load a set of kernels: an SPK file, a PCK
-!        C     file and a leapseconds file. Use a meta
-!        C     kernel for convenience.
-!        C
-!              CALL FURNSH ( 'spkgeo_ex1.tm' )
-!
-!        C
-!        C     Define parameters for a state lookup.
-!        C
-!              TARGET = 499
-!              EPOCH  = 'July 4, 2003 11:00 AM PST'
-!              REFFRM = 'J2000'
-!              OBSRVR = 399
-!
-!        C
-!        C     Convert the epoch to ephemeris time.
-!        C
-!              CALL STR2ET ( EPOCH, ET )
-!
-!        C
-!        C     Look-up the state for the defined parameters.
-!        C
-!              CALL SPKGEO ( TARGET, ET, REFFRM, OBSRVR, STATE, LT )
-!
-!        C
-!        C     Output...
-!        C
-!              WRITE(*,'(A,I3)') 'The position of    : ', TARGET
-!              WRITE(*,'(A,I3)') 'As observed from   : ', OBSRVR
-!              WRITE(*,'(2A)')   'In reference frame : ', REFFRM
-!              WRITE(*,'(2A)')   'At epoch           : ', EPOCH
-!              WRITE(*,*) ' '
-!
-!        C
-!        C     The first three entries of state contain the
-!        C     X, Y, Z position components. The final three contain
-!        C     the Vx, Vy, Vz velocity components.
-!        C
-!              WRITE(*,'(A,3F18.6)') 'R   (km):', ( STATE(I), I=1,3 )
-!              WRITE(*,'(A,3F18.6)') 'V (km/s):', ( STATE(I), I=4,6 )
-!              WRITE(*,*) ' '
-!              WRITE(*,'(A,F19.14)') 'Light time (s) between observer '
-!             .                   // 'and target: ', LT
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        The position of    : 499
-!        As observed from   : 399
-!        In reference frame : J2000
-!        At epoch           : July 4, 2003 11:00 AM PST
-!
-!        R   (km):   73826216.435288  -27128030.732406  -18741973.868287
-!        V (km/s):         -6.809504          7.513814          3.001290
-!
-!        Light time (s) between observer and target:  269.70264776317532
-!
-! $ Restrictions
-!
-!     1)  The ephemeris files to be used by SPKGEO must be loaded
-!         by FURNSH or SPKLEF before SPKGEO is called.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     J.E. McLean        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.1.0, 09-OCT-2021 (JDR) (NJB)
-!
-!        Bug fix: added calls to FAILED after calls to SPKPVN.
-!        Previously only one call to SPKPVN was followed by a FAILED
-!        call. Moved some FAILED checks so they will be hit whether
-!        or not SPKSFS finds a segment.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example to $Examples section. Removed unnecessary
-!        $Revisions section.
-!
-!        Added reference to FURNSH in $Particulars and $Restrictions
-!        sections.
-!
-!-    SPICELIB Version 3.0.0, 08-JAN-2014 (BVS)
-!
-!        Updated to save the input frame name and POOL state counter
-!        and to do frame name-ID conversion only if the counter has
-!        changed.
-!
-!        Updated to map the input frame name to its ID by first calling
-!        ZZNAMFRM, and then calling IRFNUM. The side effect of this
-!        change is that now the frame with the fixed name 'DEFAULT'
-!        that can be associated with any code via CHGIRF's entry point
-!        IRFDEF will be fully masked by a frame with identical name
-!        defined via a text kernel. Previously the CHGIRF's 'DEFAULT'
-!        frame masked the text kernel frame with the same name.
-!
-!        Fixed description of STATE in Detailed Output. Replaced
-!        SPKLEF with FURNSH and fixed errors in $Examples.
-!
-!-    SPICELIB Version 2.4.0, 01-SEP-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VADDG calls.
-!
-!-    SPICELIB Version 2.3.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.
-!
-!-    SPICELIB Version 2.2.1, 20-OCT-2003 (EDW)
-!
-!        Added mention that LT returns in seconds.
-!
-!-    SPICELIB Version 2.2.0, 11-APR-1997 (WLT)
-!
-!        The routine was modified to take advantage of the fact
-!        that most state transformation are between inertial frames.
-!        Looking up a transformation between inertial frames is
-!        substantially faster than looking up non-inertial
-!        transformations. Consequently slightly more
-!        complex code produces about a 50% increase in speed for
-!        many users.
-!
-!-    SPICELIB Version 2.1.0, 26-JUL-1996 (WLT)
-!
-!        The routine was upgraded so that potentially redundant
-!        computations are not performed.
-!
-!-    SPICELIB Version 2.0.0, 19-SEP-1995 (WLT)
-!
-!        The routine was upgraded so that it can return states
-!        relative to rotating frames.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 18-JUL-1991 (JEM)
-!
-!-&
-
-! $ Index_Entries
-!
-!     geometric state of one body relative to another
-!
-!-&
-
-!
-!     This is the idea:
-!
-!     Every body moves with respect to some center. The center
-!     is itself a body, which in turn moves about some other
-!     center.  If we begin at the target body (T), follow
-!     the chain,
-!
-!                                   T
-!                                     \
-!           SSB                        \
-!               \                     C[1]
-!                \                     /
-!                 \                   /
-!                  \                 /
-!                   \               /
-!                  C[3]-----------C[2]
-!
-!     and avoid circular definitions (A moves about B, and B moves
-!     about A), eventually we get the state relative to the solar
-!     system barycenter (which, for our purposes, doesn't move).
-!     Thus,
-!
-!        T    = T     + C[1]     + C[2]     + ... + C[n]
-!         SSB    C[1]       C[2]       [C3]             SSB
-!
-!     where
-!
-!        X
-!         Y
-!
-!     is the state of body X relative to body Y.
-!
-!     However, we don't want to follow each chain back to the SSB
-!     if it isn't necessary.  Instead we will just follow the chain
-!     of the target body and follow the chain of the observing body
-!     until we find a common node in the tree.
-!
-!     In the example below, C is the first common node.  We compute
-!     the state of TARG relative to C and the state of OBS relative
-!     to C, then subtract the two states.
-!
-!                                   TARG
-!                                     \
-!           SSB                        \
-!               \                       A
-!                \                     /            OBS
-!                 \                   /              |
-!                  \                 /               |
-!                   \               /                |
-!                    B-------------C-----------------D
-!
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-!
-!     CHLEN is the maximum length of a chain.  That is,
-!     it is the maximum number of bodies in the chain from
-!     the target or observer to the SSB.
-!
-
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local variables
-!
-
-
-
-
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-
-!
-!     Saved frame name/ID items.
-!
-
-
-!
-!     Initial values.
-!
-
-!
-!     In-line Function Definitions
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Compute the geometric state (position and velocity) of a target
+!!     body relative to an observing body.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG     is the standard NAIF ID code for a target body.
+!!
+!!     ET       is the epoch (ephemeris time) at which the state
+!!              of the target body is to be computed.
+!!
+!!     REF      is the name of the reference frame to
+!!              which the vectors returned by the routine should
+!!              be rotated. This may be any frame supported by
+!!              the SPICELIB subroutine FRMCHG.
+!!
+!!     OBS      is the standard NAIF ID code for an observing body.
+!!
+!! ## Detailed Output
+!!
+!!     STATE    is a 6-dimensional vector that contains the geometric
+!!              position and velocity of the target body, relative to the
+!!              observing body, at epoch ET. STATE has six elements: the
+!!              first three contain the target's position; the last three
+!!              contain the target's velocity. These vectors are
+!!              transformed into the specified reference frame. Units are
+!!              always km and km/sec.
+!!
+!!     LT       is the one-way light time in seconds from the
+!!              observing body to the geometric position of the
+!!              target body at the specified epoch.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If insufficient ephemeris data has been loaded to compute
+!!         the necessary states, the error SPICE(SPKINSUFFDATA) is
+!!         signaled.
+!!
+!! ## Files
+!!
+!!     See $Restrictions.
+!!
+!! ## Particulars
+!!
+!!     SPKGEO computes the geometric state, T(t), of the target
+!!     body and the geometric state, O(t), of the observing body
+!!     relative to the first common center of motion. Subtracting
+!!     O(t) from T(t) gives the geometric state of the target
+!!     body relative to the observer.
+!!
+!!        CENTER ----- O(t)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(t) - O(t)
+!!            |  /
+!!           T(t)
+!!
+!!     The one-way light time, tau, is given by
+!!
+!!               | T(t) - O(t) |
+!!        tau = -----------------
+!!                      c
+!!
+!!     For example, if the observing body is -94, the Mars Observer
+!!     spacecraft, and the target body is 401, Phobos, then the
+!!     first common center is probably 4, the Mars Barycenter.
+!!     O(t) is the state of -94 relative to 4 and T(t) is the
+!!     state of 401 relative to 4.
+!!
+!!     The center could also be the Solar System Barycenter, body 0.
+!!     For example, if the observer is 399, Earth, and the target
+!!     is 299, Venus, then O(t) would be the state of 399 relative
+!!     to 0 and T(t) would be the state of 299 relative to 0.
+!!
+!!     Ephemeris data from more than one segment may be required
+!!     to determine the states of the target body and observer
+!!     relative to a common center. SPKGEO reads as many segments
+!!     as necessary, from as many files as necessary, using files
+!!     that have been loaded by previous calls to FURNSH or SPKLEF
+!!     (load ephemeris file).
+!!
+!!     SPKGEO is similar to SPKEZ but returns geometric states
+!!     only, with no option to make planetary (light-time) nor
+!!     stellar aberration corrections. The geometric states
+!!     returned by SPKEZ and SPKGEO are the same.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Return the geometric state vector of Mars (499) as seen from
+!!        Earth (399) in the J2000 frame and the one-way light time
+!!        between them at the epoch July 4, 2003 11:00 AM PST.
+!!
+!!        Use the meta-kernel shown below to load the required SPICE
+!!        kernels.
+!!
+!!           KPL/MK
+!!
+!!           File: spkgeo_ex1.tm
+!!
+!!           This meta-kernel is intended to support operation of SPICE
+!!           example programs. The kernels shown here should not be
+!!           assumed to contain adequate or correct versions of data
+!!           required by SPICE-based user applications.
+!!
+!!           In order for an application to use this meta-kernel, the
+!!           kernels referenced here must be present in the user's
+!!           current working directory.
+!!
+!!           The names and contents of the kernels referenced
+!!           by this meta-kernel are as follows:
+!!
+!!              File name                        Contents
+!!              ---------                        --------
+!!              de430.bsp                        Planetary ephemeris
+!!              mar097.bsp                       Mars satellite ephemeris
+!!              naif0011.tls                     Leapseconds
+!!
+!!           \begindata
+!!
+!!              KERNELS_TO_LOAD = ( 'de430.bsp',
+!!                                  'mar097.bsp',
+!!                                  'naif0011.tls' )
+!!
+!!           \begintext
+!!
+!!           End of meta-kernel
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM SPKGEO_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              DOUBLE PRECISION      VNORM
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               NAMLEN
+!!              PARAMETER           ( NAMLEN = 32 )
+!!
+!!              INTEGER               TIMLEN
+!!              PARAMETER           ( TIMLEN = 26 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(TIMLEN)    EPOCH
+!!              CHARACTER*(NAMLEN)    REFFRM
+!!
+!!              DOUBLE PRECISION      ET
+!!              DOUBLE PRECISION      LT
+!!              DOUBLE PRECISION      STATE ( 6 )
+!!
+!!              INTEGER               I
+!!              INTEGER               OBSRVR
+!!              INTEGER               TARGET
+!!
+!!        C
+!!        C     Load a set of kernels: an SPK file, a PCK
+!!        C     file and a leapseconds file. Use a meta
+!!        C     kernel for convenience.
+!!        C
+!!              CALL FURNSH ( 'spkgeo_ex1.tm' )
+!!
+!!        C
+!!        C     Define parameters for a state lookup.
+!!        C
+!!              TARGET = 499
+!!              EPOCH  = 'July 4, 2003 11:00 AM PST'
+!!              REFFRM = 'J2000'
+!!              OBSRVR = 399
+!!
+!!        C
+!!        C     Convert the epoch to ephemeris time.
+!!        C
+!!              CALL STR2ET ( EPOCH, ET )
+!!
+!!        C
+!!        C     Look-up the state for the defined parameters.
+!!        C
+!!              CALL SPKGEO ( TARGET, ET, REFFRM, OBSRVR, STATE, LT )
+!!
+!!        C
+!!        C     Output...
+!!        C
+!!              WRITE(*,'(A,I3)') 'The position of    : ', TARGET
+!!              WRITE(*,'(A,I3)') 'As observed from   : ', OBSRVR
+!!              WRITE(*,'(2A)')   'In reference frame : ', REFFRM
+!!              WRITE(*,'(2A)')   'At epoch           : ', EPOCH
+!!              WRITE(*,*) ' '
+!!
+!!        C
+!!        C     The first three entries of state contain the
+!!        C     X, Y, Z position components. The final three contain
+!!        C     the Vx, Vy, Vz velocity components.
+!!        C
+!!              WRITE(*,'(A,3F18.6)') 'R   (km):', ( STATE(I), I=1,3 )
+!!              WRITE(*,'(A,3F18.6)') 'V (km/s):', ( STATE(I), I=4,6 )
+!!              WRITE(*,*) ' '
+!!              WRITE(*,'(A,F19.14)') 'Light time (s) between observer '
+!!             .                   // 'and target: ', LT
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        The position of    : 499
+!!        As observed from   : 399
+!!        In reference frame : J2000
+!!        At epoch           : July 4, 2003 11:00 AM PST
+!!
+!!        R   (km):   73826216.435288  -27128030.732406  -18741973.868287
+!!        V (km/s):         -6.809504          7.513814          3.001290
+!!
+!!        Light time (s) between observer and target:  269.70264776317532
+!!
+!! ## Restrictions
+!!
+!!     1)  The ephemeris files to be used by SPKGEO must be loaded
+!!         by FURNSH or SPKLEF before SPKGEO is called.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     J.E. McLean        (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.1.0, 09-OCT-2021 (JDR) (NJB)
+!!
+!!        Bug fix: added calls to FAILED after calls to SPKPVN.
+!!        Previously only one call to SPKPVN was followed by a FAILED
+!!        call. Moved some FAILED checks so they will be hit whether
+!!        or not SPKSFS finds a segment.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example to $Examples section. Removed unnecessary
+!!        $Revisions section.
+!!
+!!        Added reference to FURNSH in $Particulars and $Restrictions
+!!        sections.
+!!
+!!-    SPICELIB Version 3.0.0, 08-JAN-2014 (BVS)
+!!
+!!        Updated to save the input frame name and POOL state counter
+!!        and to do frame name-ID conversion only if the counter has
+!!        changed.
+!!
+!!        Updated to map the input frame name to its ID by first calling
+!!        ZZNAMFRM, and then calling IRFNUM. The side effect of this
+!!        change is that now the frame with the fixed name 'DEFAULT'
+!!        that can be associated with any code via CHGIRF's entry point
+!!        IRFDEF will be fully masked by a frame with identical name
+!!        defined via a text kernel. Previously the CHGIRF's 'DEFAULT'
+!!        frame masked the text kernel frame with the same name.
+!!
+!!        Fixed description of STATE in Detailed Output. Replaced
+!!        SPKLEF with FURNSH and fixed errors in $Examples.
+!!
+!!-    SPICELIB Version 2.4.0, 01-SEP-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in VADDG calls.
+!!
+!!-    SPICELIB Version 2.3.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.
+!!
+!!-    SPICELIB Version 2.2.1, 20-OCT-2003 (EDW)
+!!
+!!        Added mention that LT returns in seconds.
+!!
+!!-    SPICELIB Version 2.2.0, 11-APR-1997 (WLT)
+!!
+!!        The routine was modified to take advantage of the fact
+!!        that most state transformation are between inertial frames.
+!!        Looking up a transformation between inertial frames is
+!!        substantially faster than looking up non-inertial
+!!        transformations. Consequently slightly more
+!!        complex code produces about a 50% increase in speed for
+!!        many users.
+!!
+!!-    SPICELIB Version 2.1.0, 26-JUL-1996 (WLT)
+!!
+!!        The routine was upgraded so that potentially redundant
+!!        computations are not performed.
+!!
+!!-    SPICELIB Version 2.0.0, 19-SEP-1995 (WLT)
+!!
+!!        The routine was upgraded so that it can return states
+!!        relative to rotating frames.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 18-JUL-1991 (JEM)
+!!
+!! ## Index Entries
+!!
+!!     geometric state of one body relative to another
+!!
+!!     This is the idea:
+!!
+!!     Every body moves with respect to some center. The center
+!!     is itself a body, which in turn moves about some other
+!!     center.  If we begin at the target body (T), follow
+!!     the chain,
+!!
+!!                                   T
+!!                                     \
+!!           SSB                        \
+!!               \                     C[1]
+!!                \                     /
+!!                 \                   /
+!!                  \                 /
+!!                   \               /
+!!                  C[3]-----------C[2]
+!!
+!!     and avoid circular definitions (A moves about B, and B moves
+!!     about A), eventually we get the state relative to the solar
+!!     system barycenter (which, for our purposes, doesn't move).
+!!     Thus,
+!!
+!!        T    = T     + C[1]     + C[2]     + ... + C[n]
+!!         SSB    C[1]       C[2]       [C3]             SSB
+!!
+!!     where
+!!
+!!        X
+!!         Y
+!!
+!!     is the state of body X relative to body Y.
+!!
+!!     However, we don't want to follow each chain back to the SSB
+!!     if it isn't necessary.  Instead we will just follow the chain
+!!     of the target body and follow the chain of the observing body
+!!     until we find a common node in the tree.
+!!
+!!     In the example below, C is the first common node.  We compute
+!!     the state of TARG relative to C and the state of OBS relative
+!!     to C, then subtract the two states.
+!!
+!!                                   TARG
+!!                                     \
+!!           SSB                        \
+!!               \                       A
+!!                \                     /            OBS
+!!                 \                   /              |
+!!                  \                 /               |
+!!                   \               /                |
+!!                    B-------------C-----------------D
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     CHLEN is the maximum length of a chain.  That is,
+!!     it is the maximum number of bodies in the chain from
+!!     the target or observer to the SSB.
+!!
+!!     Saved frame name length.
+!!
+!!     Local variables
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved frame name/ID items.
+!!
+!!     Initial values.
+!!
+!!     In-line Function Definitions
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleard, isrchi, moved
       use pepper_math, only: mxv, mxvg, vaddg, vnorm, vsubg
       use pepper_strings, only: frstnp, intstr, prefix, suffix
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       character(*), parameter :: rname = 'ZZSPKGO1'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
@@ -2927,344 +2849,306 @@ contains
       end procedure zzspkgo1
 
       module procedure zzspkgp1
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Compute the geometric position of a target body relative to an
-!     observing body.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG     is the standard NAIF ID code for a target body.
-!
-!     ET       is the epoch (ephemeris time) at which the position
-!              of the target body is to be computed.
-!
-!     REF      is the name of the reference frame to
-!              which the vectors returned by the routine should
-!              be rotated. This may be any frame supported by
-!              the SPICELIB subroutine REFCHG.
-!
-!     OBS      is the standard NAIF ID code for an observing body.
-!
-! $ Detailed_Output
-!
-!     POS      is a 3-dimensional vector that contains the position of
-!              the target body, relative to the observing body. This
-!              vector is rotated into the specified reference frame.
-!              Units are always km.
-!
-!     LT       is the one-way light time from the observing body
-!              to the geometric position of the target body at the
-!              specified epoch.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If insufficient ephemeris data has been loaded to compute
-!         the necessary positions, the error SPICE(SPKINSUFFDATA) is
-!         signaled.
-!
-! $ Files
-!
-!     See $Restrictions.
-!
-! $ Particulars
-!
-!     SPKGPS computes the geometric position, T(t), of the target
-!     body and the geometric position, O(t), of the observing body
-!     relative to the first common center of motion. Subtracting
-!     O(t) from T(t) gives the geometric position of the target
-!     body relative to the observer.
-!
-!        CENTER ----- O(t)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(t) - O(t)
-!            |  /
-!           T(t)
-!
-!     The one-way light time, tau, is given by
-!
-!               | T(t) - O(t) |
-!        tau = -----------------
-!                      c
-!
-!     For example, if the observing body is -94, the Mars Observer
-!     spacecraft, and the target body is 401, Phobos, then the
-!     first common center is probably 4, the Mars Barycenter.
-!     O(t) is the position of -94 relative to 4 and T(t) is the
-!     position of 401 relative to 4.
-!
-!     The center could also be the Solar System Barycenter, body 0.
-!     For example, if the observer is 399, Earth, and the target
-!     is 299, Venus, then O(t) would be the position of 399 relative
-!     to 0 and T(t) would be the position of 299 relative to 0.
-!
-!     Ephemeris data from more than one segment may be required
-!     to determine the positions of the target body and observer
-!     relative to a common center. SPKGPS reads as many segments
-!     as necessary, from as many files as necessary, using files
-!     that have been loaded by previous calls to SPKLEF (load
-!     ephemeris file).
-!
-!     SPKGPS is similar to SPKGEO but returns geometric positions
-!     only.
-!
-! $ Examples
-!
-!     The following code example computes the geometric
-!     position of the moon with respect to the earth and
-!     then prints the distance of the moon from the
-!     the earth at a number of epochs.
-!
-!     Assume the SPK file SAMPLE.BSP contains ephemeris data
-!     for the moon relative to earth over the time interval
-!     from BEGIN to END.
-!
-!            INTEGER               EARTH
-!            PARAMETER           ( EARTH = 399 )
-!
-!            INTEGER               MOON
-!            PARAMETER           ( MOON  = 301 )
-!
-!            INTEGER               N
-!            PARAMETER           ( N     = 100 )
-!
-!            INTEGER               I
-!            CHARACTER*(20)        UTC
-!            DOUBLE PRECISION      BEGIN
-!            DOUBLE PRECISION      DELTA
-!            DOUBLE PRECISION      END
-!            DOUBLE PRECISION      ET
-!            DOUBLE PRECISION      POS ( 3 )
-!            DOUBLE PRECISION      LT
-!
-!            DOUBLE PRECISION      VNORM
-!
-!     C
-!     C      Load the binary SPK ephemeris file.
-!     C
-!            CALL FURNSH ( 'SAMPLE.BSP' )
-!
-!            .
-!            .
-!            .
-!
-!     C
-!     C      Divide the interval of coverage [BEGIN,END] into
-!     C      N steps. At each step, compute the position, and
-!     C      print out the epoch in UTC time and position norm.
-!     C
-!            DELTA = ( END - BEGIN ) / N
-!
-!            DO I = 0, N
-!
-!               ET = BEGIN + I*DELTA
-!
-!               CALL SPKGPS ( MOON, ET, 'J2000', EARTH, POS, LT )
-!
-!               CALL ET2UTC ( ET, 'C', 0, UTC )
-!
-!               WRITE (*,*) UTC, VNORM ( POS )
-!
-!            END DO
-!
-! $ Restrictions
-!
-!     1)  The ephemeris files to be used by SPKGPS must be loaded
-!         by SPKLEF before SPKGPS is called.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 09-OCT-2021 (JDR) (NJB)
-!
-!        Bug fix: added calls to FAILED after calls to SPKPVN.
-!        Previously only one call to SPKPVN was followed by a FAILED
-!        call. Moved some FAILED checks so they will be hit whether
-!        or not SPKSFS finds a segment.
-!
-!        Edited the header to comply with NAIF standard. Removed
-!        unnecessary $Revisions section.
-!
-!-    SPICELIB Version 2.0.0, 08-JAN-2014 (BVS)
-!
-!        Updated to save the input frame name and POOL state counter
-!        and to do frame name-ID conversion only if the counter has
-!        changed.
-!
-!        Updated to map the input frame name to its ID by first calling
-!        ZZNAMFRM, and then calling IRFNUM. The side effect of this
-!        change is that now the frame with the fixed name 'DEFAULT'
-!        that can be associated with any code via CHGIRF's entry point
-!        IRFDEF will be fully masked by a frame with identical name
-!        defined via a text kernel. Previously the CHGIRF's 'DEFAULT'
-!        frame masked the text kernel frame with the same name.
-!
-!        Replaced SPKLEF with FURNSH and fixed errors in $Examples.
-!
-!-    SPICELIB Version 1.2.0, 05-NOV-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VADD calls.
-!
-!-    SPICELIB Version 1.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.
-!
-!-    SPICELIB Version 1.0.0, 09-JUL-1998 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     geometric position of one body relative to another
-!
-!-&
-
-!
-!     This is the idea:
-!
-!     Every body moves with respect to some center. The center
-!     is itself a body, which in turn moves about some other
-!     center.  If we begin at the target body (T), follow
-!     the chain,
-!
-!                                   T
-!                                     \
-!           SSB                        \
-!               \                     C[1]
-!                \                     /
-!                 \                   /
-!                  \                 /
-!                   \               /
-!                  C[3]-----------C[2]
-!
-!     and avoid circular definitions (A moves about B, and B moves
-!     about A), eventually we get the position relative to the solar
-!     system barycenter (which, for our purposes, doesn't move).
-!     Thus,
-!
-!        T    = T     + C[1]     + C[2]     + ... + C[n]
-!         SSB    C[1]       C[2]       [C3]             SSB
-!
-!     where
-!
-!        X
-!         Y
-!
-!     is the position of body X relative to body Y.
-!
-!     However, we don't want to follow each chain back to the SSB
-!     if it isn't necessary.  Instead we will just follow the chain
-!     of the target body and follow the chain of the observing body
-!     until we find a common node in the tree.
-!
-!     In the example below, C is the first common node.  We compute
-!     the position of TARG relative to C and the position of OBS
-!     relative to C, then subtract the two positions.
-!
-!                                   TARG
-!                                     \
-!           SSB                        \
-!               \                       A
-!                \                     /            OBS
-!                 \                   /              |
-!                  \                 /               |
-!                   \               /                |
-!                    B-------------C-----------------D
-!
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-!
-!     CHLEN is the maximum length of a chain.  That is,
-!     it is the maximum number of bodies in the chain from
-!     the target or observer to the SSB.
-!
-
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local variables
-!
-
-
-
-
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-
-!
-!     Saved frame name/ID items.
-!
-
-
-!
-!     Initial values.
-!
-
-!
-!     In-line Function Definitions
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Compute the geometric position of a target body relative to an
+!!     observing body.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG     is the standard NAIF ID code for a target body.
+!!
+!!     ET       is the epoch (ephemeris time) at which the position
+!!              of the target body is to be computed.
+!!
+!!     REF      is the name of the reference frame to
+!!              which the vectors returned by the routine should
+!!              be rotated. This may be any frame supported by
+!!              the SPICELIB subroutine REFCHG.
+!!
+!!     OBS      is the standard NAIF ID code for an observing body.
+!!
+!! ## Detailed Output
+!!
+!!     POS      is a 3-dimensional vector that contains the position of
+!!              the target body, relative to the observing body. This
+!!              vector is rotated into the specified reference frame.
+!!              Units are always km.
+!!
+!!     LT       is the one-way light time from the observing body
+!!              to the geometric position of the target body at the
+!!              specified epoch.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If insufficient ephemeris data has been loaded to compute
+!!         the necessary positions, the error SPICE(SPKINSUFFDATA) is
+!!         signaled.
+!!
+!! ## Files
+!!
+!!     See $Restrictions.
+!!
+!! ## Particulars
+!!
+!!     SPKGPS computes the geometric position, T(t), of the target
+!!     body and the geometric position, O(t), of the observing body
+!!     relative to the first common center of motion. Subtracting
+!!     O(t) from T(t) gives the geometric position of the target
+!!     body relative to the observer.
+!!
+!!        CENTER ----- O(t)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(t) - O(t)
+!!            |  /
+!!           T(t)
+!!
+!!     The one-way light time, tau, is given by
+!!
+!!               | T(t) - O(t) |
+!!        tau = -----------------
+!!                      c
+!!
+!!     For example, if the observing body is -94, the Mars Observer
+!!     spacecraft, and the target body is 401, Phobos, then the
+!!     first common center is probably 4, the Mars Barycenter.
+!!     O(t) is the position of -94 relative to 4 and T(t) is the
+!!     position of 401 relative to 4.
+!!
+!!     The center could also be the Solar System Barycenter, body 0.
+!!     For example, if the observer is 399, Earth, and the target
+!!     is 299, Venus, then O(t) would be the position of 399 relative
+!!     to 0 and T(t) would be the position of 299 relative to 0.
+!!
+!!     Ephemeris data from more than one segment may be required
+!!     to determine the positions of the target body and observer
+!!     relative to a common center. SPKGPS reads as many segments
+!!     as necessary, from as many files as necessary, using files
+!!     that have been loaded by previous calls to SPKLEF (load
+!!     ephemeris file).
+!!
+!!     SPKGPS is similar to SPKGEO but returns geometric positions
+!!     only.
+!!
+!! ## Examples
+!!
+!!     The following code example computes the geometric
+!!     position of the moon with respect to the earth and
+!!     then prints the distance of the moon from the
+!!     the earth at a number of epochs.
+!!
+!!     Assume the SPK file SAMPLE.BSP contains ephemeris data
+!!     for the moon relative to earth over the time interval
+!!     from BEGIN to END.
+!!
+!!            INTEGER               EARTH
+!!            PARAMETER           ( EARTH = 399 )
+!!
+!!            INTEGER               MOON
+!!            PARAMETER           ( MOON  = 301 )
+!!
+!!            INTEGER               N
+!!            PARAMETER           ( N     = 100 )
+!!
+!!            INTEGER               I
+!!            CHARACTER*(20)        UTC
+!!            DOUBLE PRECISION      BEGIN
+!!            DOUBLE PRECISION      DELTA
+!!            DOUBLE PRECISION      END
+!!            DOUBLE PRECISION      ET
+!!            DOUBLE PRECISION      POS ( 3 )
+!!            DOUBLE PRECISION      LT
+!!
+!!            DOUBLE PRECISION      VNORM
+!!
+!!     C
+!!     C      Load the binary SPK ephemeris file.
+!!     C
+!!            CALL FURNSH ( 'SAMPLE.BSP' )
+!!
+!!            .
+!!            .
+!!            .
+!!
+!!     C
+!!     C      Divide the interval of coverage [BEGIN,END] into
+!!     C      N steps. At each step, compute the position, and
+!!     C      print out the epoch in UTC time and position norm.
+!!     C
+!!            DELTA = ( END - BEGIN ) / N
+!!
+!!            DO I = 0, N
+!!
+!!               ET = BEGIN + I*DELTA
+!!
+!!               CALL SPKGPS ( MOON, ET, 'J2000', EARTH, POS, LT )
+!!
+!!               CALL ET2UTC ( ET, 'C', 0, UTC )
+!!
+!!               WRITE (*,*) UTC, VNORM ( POS )
+!!
+!!            END DO
+!!
+!! ## Restrictions
+!!
+!!     1)  The ephemeris files to be used by SPKGPS must be loaded
+!!         by SPKLEF before SPKGPS is called.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 09-OCT-2021 (JDR) (NJB)
+!!
+!!        Bug fix: added calls to FAILED after calls to SPKPVN.
+!!        Previously only one call to SPKPVN was followed by a FAILED
+!!        call. Moved some FAILED checks so they will be hit whether
+!!        or not SPKSFS finds a segment.
+!!
+!!        Edited the header to comply with NAIF standard. Removed
+!!        unnecessary $Revisions section.
+!!
+!!-    SPICELIB Version 2.0.0, 08-JAN-2014 (BVS)
+!!
+!!        Updated to save the input frame name and POOL state counter
+!!        and to do frame name-ID conversion only if the counter has
+!!        changed.
+!!
+!!        Updated to map the input frame name to its ID by first calling
+!!        ZZNAMFRM, and then calling IRFNUM. The side effect of this
+!!        change is that now the frame with the fixed name 'DEFAULT'
+!!        that can be associated with any code via CHGIRF's entry point
+!!        IRFDEF will be fully masked by a frame with identical name
+!!        defined via a text kernel. Previously the CHGIRF's 'DEFAULT'
+!!        frame masked the text kernel frame with the same name.
+!!
+!!        Replaced SPKLEF with FURNSH and fixed errors in $Examples.
+!!
+!!-    SPICELIB Version 1.2.0, 05-NOV-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in VADD calls.
+!!
+!!-    SPICELIB Version 1.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.
+!!
+!!-    SPICELIB Version 1.0.0, 09-JUL-1998 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     geometric position of one body relative to another
+!!
+!!     This is the idea:
+!!
+!!     Every body moves with respect to some center. The center
+!!     is itself a body, which in turn moves about some other
+!!     center.  If we begin at the target body (T), follow
+!!     the chain,
+!!
+!!                                   T
+!!                                     \
+!!           SSB                        \
+!!               \                     C[1]
+!!                \                     /
+!!                 \                   /
+!!                  \                 /
+!!                   \               /
+!!                  C[3]-----------C[2]
+!!
+!!     and avoid circular definitions (A moves about B, and B moves
+!!     about A), eventually we get the position relative to the solar
+!!     system barycenter (which, for our purposes, doesn't move).
+!!     Thus,
+!!
+!!        T    = T     + C[1]     + C[2]     + ... + C[n]
+!!         SSB    C[1]       C[2]       [C3]             SSB
+!!
+!!     where
+!!
+!!        X
+!!         Y
+!!
+!!     is the position of body X relative to body Y.
+!!
+!!     However, we don't want to follow each chain back to the SSB
+!!     if it isn't necessary.  Instead we will just follow the chain
+!!     of the target body and follow the chain of the observing body
+!!     until we find a common node in the tree.
+!!
+!!     In the example below, C is the first common node.  We compute
+!!     the position of TARG relative to C and the position of OBS
+!!     relative to C, then subtract the two positions.
+!!
+!!                                   TARG
+!!                                     \
+!!           SSB                        \
+!!               \                       A
+!!                \                     /            OBS
+!!                 \                   /              |
+!!                  \                 /               |
+!!                   \               /                |
+!!                    B-------------C-----------------D
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     CHLEN is the maximum length of a chain.  That is,
+!!     it is the maximum number of bodies in the chain from
+!!     the target or observer to the SSB.
+!!
+!!     Saved frame name length.
+!!
+!!     Local variables
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved frame name/ID items.
+!!
+!!     Initial values.
+!!
+!!     In-line Function Definitions
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleard, isrchi, moved
       use pepper_math, only: mxv, vadd, vequ, vnorm, vsub
       use pepper_strings, only: frstnp, intstr, prefix, suffix
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       character(*), parameter :: rname = 'ZZSPKGP1'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
@@ -3923,509 +3807,477 @@ contains
       end procedure zzspkgp1
 
       module procedure zzspklt1
-
-! $ Abstract
-!
-!     Return the state (position and velocity) of a target body
-!     relative to an observer, optionally corrected for light time,
-!     expressed relative to an inertial reference frame.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a state vector whose position
-!                 component points from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the state of the target body
-!                 relative to the observer is to be computed. ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the inertial reference frame with respect to which
-!                 the input state STOBS and the output state STARG are
-!                 expressed. REF must be recognized by the SPICE
-!                 Toolkit. The acceptable frames are listed in the
-!                 Frames Required Reading, as well as in the SPICELIB
-!                 routine CHGIRF.
-!
-!                 Case and blanks are not significant in the string
-!                 REF.
-!
-!     ABCORR      indicates the aberration corrections to be applied to
-!                 the state of the target body to account for one-way
-!                 light time. See the discussion in the Particulars
-!                 section for recommendations on how to choose
-!                 aberration corrections.
-!
-!                 If ABCORR includes the stellar aberration correction
-!                 symbol '+S', this flag is simply ignored. Aside from
-!                 the possible presence of this symbol, ABCORR may be
-!                 any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric state of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the state of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction involves
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section of
-!                               SPKEZR for a discussion of precision of
-!                               light time corrections.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               state of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-!     STOBS       is the geometric (uncorrected) state of the observer
-!                 relative to the solar system barycenter at epoch ET.
-!                 STOBS is a 6-vector: the first three components of
-!                 STOBS represent a Cartesian position vector; the last
-!                 three components represent the corresponding velocity
-!                 vector. STOBS is expressed relative to the inertial
-!                 reference frame designated by REF.
-!
-!                 Units are always km and km/sec.
-!
-! $ Detailed_Output
-!
-!     STARG       is a Cartesian state vector representing the position
-!                 and velocity of the target body relative to the
-!                 specified observer. STARG is corrected for the
-!                 specified aberration, and is expressed with respect
-!                 to the specified inertial reference frame.  The first
-!                 three components of STARG represent the x-, y- and
-!                 z-components of the target's position; last three
-!                 components form the corresponding velocity vector.
-!
-!                 The position component of STARG points from the
-!                 observer's location at ET to the aberration-corrected
-!                 location of the target. Note that the sense of the
-!                 position vector is independent of the direction of
-!                 radiation travel implied by the aberration
-!                 correction.
-!
-!                 Units are always km and km/sec.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target state is corrected
-!                 for light time, then LT is the one-way light time
-!                 between the observer and the light time-corrected
-!                 target location.
-!
-!     DLT         is the derivative with respect to barycentric
-!                 dynamical time of the one way light time between
-!                 target and observer:
-!
-!                    DLT = d(LT)/d(ET)
-!
-!                 DLT can also be described as the rate of change of
-!                 one way light time. DLT is unitless, since LT and
-!                 ET both have units of TDB seconds.
-!
-!                 If the observer and target are at the same position,
-!                 then DLT is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) For the convenience of the caller, the input aberration
-!        correction flag can call for stellar aberration correction via
-!        inclusion of the '+S' suffix. This portion of the aberration
-!        correction flag is ignored if present.
-!
-!     2) If the value of ABCORR is not recognized, the error
-!        is diagnosed by a routine in the call tree of this
-!        routine.
-!
-!     3) If the reference frame requested is not a recognized
-!        inertial reference frame, the error SPICE(BADFRAME)
-!        is signaled.
-!
-!     4) If the state of the target relative to the solar system
-!        barycenter cannot be computed, the error will be diagnosed
-!        by routines in the call tree of this routine.
-!
-!     5) If the observer and target are at the same position,
-!        then DLT is set to zero. This situation could arise,
-!        for example, when the observer is Mars and the target
-!        is the Mars barycenter.
-!
-!     6) If a division by zero error would occur in the computation
-!        of DLT, the error SPICE(DIVIDEBYZERO) is signaled.
-!
-! $ Files
-!
-!     This routine computes states using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH.  Application programs typically load
-!     kernels once before this routine is called, for example during
-!     program initialization; kernels need not be loaded repeatedly.
-!     See the routine FURNSH and the SPK and KERNEL Required Reading
-!     for further information on loading (and unloading) kernels.
-!
-!     If any of the ephemeris data used to compute STARG are expressed
-!     relative to a non-inertial frame in the SPK files providing those
-!     data, additional kernels may be needed to enable the reference
-!     frame transformations required to compute the state. Normally
-!     these additional kernels are PCK files or frame kernels. Any
-!     such kernels must already be loaded at the time this routine is
-!     called.
-!
-! $ Particulars
-!
-!     This routine supports higher-level SPK API routines that can
-!     perform both light time and stellar aberration corrections.
-!     User applications normally will not need to call this routine
-!     directly.
-!
-!     See the header of the routine SPKEZR for a detailed discussion
-!     of aberration corrections.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!    1) Look up a sequence of states of the Moon as seen from the
-!       Earth. Use light time corrections. Compute the first state for
-!       the epoch 2000 JAN 1 12:00:00 TDB; compute subsequent states at
-!       intervals of 1 hour. For each epoch, display the states, the
-!       one way light time between target and observer, and the rate of
-!       change of the one way light time.
-!
-!       Use the following meta-kernel to specify the kernels to
-!       load:
-!
-!          KPL/MK
-!
-!          File name: spkltc.tm
-!
-!          This meta-kernel is intended to support operation of SPICE
-!          example programs. The kernels shown here should not be
-!          assumed to contain adequate or correct versions of data
-!          required by SPICE-based user applications.
-!
-!          In order for an application to use this meta-kernel, the
-!          kernels referenced here must be present in the user's
-!          current working directory.
-!
-!          \begindata
-!
-!             KERNELS_TO_LOAD = ( 'de421.bsp',
-!                                 'pck00010.tpc',
-!                                 'naif0010.tls'  )
-!
-!          \begintext
-!
-!       The code example follows:
-!
-!           PROGRAM EX1
-!           IMPLICIT NONE
-!     C
-!     C     Local constants
-!     C
-!     C     The meta-kernel name shown here refers to a file whose
-!     C     contents are those shown above. This file and the kernels
-!     C     it references must exist in your current working directory.
-!     C
-!           CHARACTER*(*)         META
-!           PARAMETER           ( META   = 'spkltc.tm' )
-!     C
-!     C     Use a time step of 1 hour; look up 5 states.
-!     C
-!           DOUBLE PRECISION      STEP
-!           PARAMETER           ( STEP   = 3600.0D0 )
-!
-!           INTEGER               MAXITR
-!           PARAMETER           ( MAXITR = 5 )
-!     C
-!     C     Local variables
-!     C
-!           DOUBLE PRECISION      DLT
-!           DOUBLE PRECISION      ET
-!           DOUBLE PRECISION      ET0
-!           DOUBLE PRECISION      LT
-!           DOUBLE PRECISION      STATE ( 6 )
-!           DOUBLE PRECISION      STOBS ( 6 )
-!           INTEGER               I
-!
-!     C
-!     C     Load the SPK and LSK kernels via the meta-kernel.
-!     C
-!           CALL FURNSH ( META )
-!     C
-!     C     Convert the start time to seconds past J2000 TDB.
-!     C
-!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
-!     C
-!     C     Step through a series of epochs, looking up a
-!     C     state vector at each one.
-!     C
-!           DO I = 1, MAXITR
-!
-!              ET = ET0 + (I-1)*STEP
-!
-!     C
-!     C        Look up a state vector at epoch ET using the
-!     C        following inputs:
-!     C
-!     C           Target:                 Moon (NAIF ID code 301)
-!     C           Reference frame:        J2000
-!     C           Aberration correction:  Light time ('LT')
-!     C           Observer:               Earth (NAIF ID code 399)
-!     C
-!     C        Before we can execute this computation, we'll need the
-!     C        geometric state of the observer relative to the solar
-!     C        system barycenter at ET, expressed relative to the
-!     C        J2000 reference frame:
-!     C
-!              CALL SPKSSB ( 399, ET,    'J2000', STOBS )
-!     C
-!     C        Now compute the desired state vector:
-!     C
-!              CALL SPKLTC ( 301,   ET,    'J2000', 'LT',
-!          .                 STOBS, STATE, LT,      DLT     )
-!
-!              WRITE (*,*) 'ET = ', ET
-!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-!              WRITE (*,*) 'One-way light time (s):  ', LT
-!              WRITE (*,*) 'Light time rate:         ', DLT
-!              WRITE (*,*) ' '
-!
-!           END DO
-!
-!           END
-!
-!     On a PC/Linux/gfortran platform, the following output was
-!     produced:
-!
-!        ET =    0.0000000000000000
-!        J2000 x-position (km):     -291569.26541282982
-!        J2000 y-position (km):     -266709.18647825718
-!        J2000 z-position (km):     -76099.155118763447
-!        J2000 x-velocity (km/s):   0.64353061322177041
-!        J2000 y-velocity (km/s):  -0.66608181700820079
-!        J2000 z-velocity (km/s):  -0.30132283179625752
-!        One-way light time (s):     1.3423106103251679
-!        Light time rate:           1.07316908698977495E-007
-!
-!        ET =    3600.0000000000000
-!        J2000 x-position (km):     -289240.78128184378
-!        J2000 y-position (km):     -269096.44087958336
-!        J2000 z-position (km):     -77180.899725757539
-!        J2000 x-velocity (km/s):   0.65006211520087476
-!        J2000 y-velocity (km/s):  -0.66016273921695667
-!        J2000 z-velocity (km/s):  -0.29964267390571342
-!        One-way light time (s):     1.3426939548635302
-!        Light time rate:           1.05652598952224259E-007
-!
-!        ET =    7200.0000000000000
-!        J2000 x-position (km):     -286888.88736709207
-!        J2000 y-position (km):     -271462.30170547962
-!        J2000 z-position (km):     -78256.555682137609
-!        J2000 x-velocity (km/s):   0.65653599154284592
-!        J2000 y-velocity (km/s):  -0.65419657680401588
-!        J2000 z-velocity (km/s):  -0.29794027307420823
-!        One-way light time (s):     1.3430713117337547
-!        Light time rate:           1.03990456898758609E-007
-!
-!        ET =    10800.000000000000
-!        J2000 x-position (km):     -284513.79173691198
-!        J2000 y-position (km):     -273806.60031034052
-!        J2000 z-position (km):     -79326.043183274567
-!        J2000 x-velocity (km/s):   0.66295190054599118
-!        J2000 y-velocity (km/s):  -0.64818380709706158
-!        J2000 z-velocity (km/s):  -0.29621577937090349
-!        One-way light time (s):     1.3434426890693671
-!        Light time rate:           1.02330665243423737E-007
-!
-!        ET =    14400.000000000000
-!        J2000 x-position (km):     -282115.70368389413
-!        J2000 y-position (km):     -276129.16976799071
-!        J2000 z-position (km):     -80389.282965712249
-!        J2000 x-velocity (km/s):   0.66930950377548726
-!        J2000 y-velocity (km/s):  -0.64212490805688027
-!        J2000 z-velocity (km/s):  -0.29446934336246899
-!        One-way light time (s):     1.3438080956559786
-!        Light time rate:           1.00673403630050830E-007
-!
-! $ Restrictions
-!
-!     1) The routine SPKGEO should be used instead of this routine
-!        to compute geometric states. SPKGEO introduces less
-!        round-off error when the observer and target have common
-!        center that is closer to both objects than is the solar
-!        system barycenter.
-!
-!     2) The kernel files to be used by SPKLTC must be loaded
-!        (normally by the SPICELIB kernel loader FURNSH) before
-!        this routine is called.
-!
-!     3) Unlike most other SPK state computation routines, this
-!        routine requires that the output state be relative to an
-!        inertial reference frame.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 04-JUL-2014 (NJB)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!     Last update was 02-MAY-2012 (NJB)
-!
-!        Updated to ensure convergence when CN or XCN light time
-!        corrections are used. The new algorithm also terminates early
-!        (after fewer than three iterations) when convergence is
-!        attained.
-!
-!        Call to ZZPRSCOR was replaced by a call to ZZVALCOR.
-!
-!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     low-level light time correction
-!     light-time corrected state from spk file
-!     get light-time corrected state
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-!
-!     TOL is the tolerance used for a division-by-zero test
-!     performed prior to computation of DLT.
-!
-
-!
-!     Convergence limit:
-!
-
-!
-!     Maximum number of light time iterations for any
-!     aberration correction:
-!
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the state (position and velocity) of a target body
+!!     relative to an observer, optionally corrected for light time,
+!!     expressed relative to an inertial reference frame.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a state vector whose position
+!!                 component points from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the state of the target body
+!!                 relative to the observer is to be computed. ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the inertial reference frame with respect to which
+!!                 the input state STOBS and the output state STARG are
+!!                 expressed. REF must be recognized by the SPICE
+!!                 Toolkit. The acceptable frames are listed in the
+!!                 Frames Required Reading, as well as in the SPICELIB
+!!                 routine CHGIRF.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 REF.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied to
+!!                 the state of the target body to account for one-way
+!!                 light time. See the discussion in the Particulars
+!!                 section for recommendations on how to choose
+!!                 aberration corrections.
+!!
+!!                 If ABCORR includes the stellar aberration correction
+!!                 symbol '+S', this flag is simply ignored. Aside from
+!!                 the possible presence of this symbol, ABCORR may be
+!!                 any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric state of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the state of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction involves
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section of
+!!                               SPKEZR for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               state of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!!     STOBS       is the geometric (uncorrected) state of the observer
+!!                 relative to the solar system barycenter at epoch ET.
+!!                 STOBS is a 6-vector: the first three components of
+!!                 STOBS represent a Cartesian position vector; the last
+!!                 three components represent the corresponding velocity
+!!                 vector. STOBS is expressed relative to the inertial
+!!                 reference frame designated by REF.
+!!
+!!                 Units are always km and km/sec.
+!!
+!! ## Detailed Output
+!!
+!!     STARG       is a Cartesian state vector representing the position
+!!                 and velocity of the target body relative to the
+!!                 specified observer. STARG is corrected for the
+!!                 specified aberration, and is expressed with respect
+!!                 to the specified inertial reference frame.  The first
+!!                 three components of STARG represent the x-, y- and
+!!                 z-components of the target's position; last three
+!!                 components form the corresponding velocity vector.
+!!
+!!                 The position component of STARG points from the
+!!                 observer's location at ET to the aberration-corrected
+!!                 location of the target. Note that the sense of the
+!!                 position vector is independent of the direction of
+!!                 radiation travel implied by the aberration
+!!                 correction.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target state is corrected
+!!                 for light time, then LT is the one-way light time
+!!                 between the observer and the light time-corrected
+!!                 target location.
+!!
+!!     DLT         is the derivative with respect to barycentric
+!!                 dynamical time of the one way light time between
+!!                 target and observer:
+!!
+!!                    DLT = d(LT)/d(ET)
+!!
+!!                 DLT can also be described as the rate of change of
+!!                 one way light time. DLT is unitless, since LT and
+!!                 ET both have units of TDB seconds.
+!!
+!!                 If the observer and target are at the same position,
+!!                 then DLT is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) For the convenience of the caller, the input aberration
+!!        correction flag can call for stellar aberration correction via
+!!        inclusion of the '+S' suffix. This portion of the aberration
+!!        correction flag is ignored if present.
+!!
+!!     2) If the value of ABCORR is not recognized, the error
+!!        is diagnosed by a routine in the call tree of this
+!!        routine.
+!!
+!!     3) If the reference frame requested is not a recognized
+!!        inertial reference frame, the error SPICE(BADFRAME)
+!!        is signaled.
+!!
+!!     4) If the state of the target relative to the solar system
+!!        barycenter cannot be computed, the error will be diagnosed
+!!        by routines in the call tree of this routine.
+!!
+!!     5) If the observer and target are at the same position,
+!!        then DLT is set to zero. This situation could arise,
+!!        for example, when the observer is Mars and the target
+!!        is the Mars barycenter.
+!!
+!!     6) If a division by zero error would occur in the computation
+!!        of DLT, the error SPICE(DIVIDEBYZERO) is signaled.
+!!
+!! ## Files
+!!
+!!     This routine computes states using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH.  Application programs typically load
+!!     kernels once before this routine is called, for example during
+!!     program initialization; kernels need not be loaded repeatedly.
+!!     See the routine FURNSH and the SPK and KERNEL Required Reading
+!!     for further information on loading (and unloading) kernels.
+!!
+!!     If any of the ephemeris data used to compute STARG are expressed
+!!     relative to a non-inertial frame in the SPK files providing those
+!!     data, additional kernels may be needed to enable the reference
+!!     frame transformations required to compute the state. Normally
+!!     these additional kernels are PCK files or frame kernels. Any
+!!     such kernels must already be loaded at the time this routine is
+!!     called.
+!!
+!! ## Particulars
+!!
+!!     This routine supports higher-level SPK API routines that can
+!!     perform both light time and stellar aberration corrections.
+!!     User applications normally will not need to call this routine
+!!     directly.
+!!
+!!     See the header of the routine SPKEZR for a detailed discussion
+!!     of aberration corrections.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!    1) Look up a sequence of states of the Moon as seen from the
+!!       Earth. Use light time corrections. Compute the first state for
+!!       the epoch 2000 JAN 1 12:00:00 TDB; compute subsequent states at
+!!       intervals of 1 hour. For each epoch, display the states, the
+!!       one way light time between target and observer, and the rate of
+!!       change of the one way light time.
+!!
+!!       Use the following meta-kernel to specify the kernels to
+!!       load:
+!!
+!!          KPL/MK
+!!
+!!          File name: spkltc.tm
+!!
+!!          This meta-kernel is intended to support operation of SPICE
+!!          example programs. The kernels shown here should not be
+!!          assumed to contain adequate or correct versions of data
+!!          required by SPICE-based user applications.
+!!
+!!          In order for an application to use this meta-kernel, the
+!!          kernels referenced here must be present in the user's
+!!          current working directory.
+!!
+!!          \begindata
+!!
+!!             KERNELS_TO_LOAD = ( 'de421.bsp',
+!!                                 'pck00010.tpc',
+!!                                 'naif0010.tls'  )
+!!
+!!          \begintext
+!!
+!!       The code example follows:
+!!
+!!           PROGRAM EX1
+!!           IMPLICIT NONE
+!!     C
+!!     C     Local constants
+!!     C
+!!     C     The meta-kernel name shown here refers to a file whose
+!!     C     contents are those shown above. This file and the kernels
+!!     C     it references must exist in your current working directory.
+!!     C
+!!           CHARACTER*(*)         META
+!!           PARAMETER           ( META   = 'spkltc.tm' )
+!!     C
+!!     C     Use a time step of 1 hour; look up 5 states.
+!!     C
+!!           DOUBLE PRECISION      STEP
+!!           PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!           INTEGER               MAXITR
+!!           PARAMETER           ( MAXITR = 5 )
+!!     C
+!!     C     Local variables
+!!     C
+!!           DOUBLE PRECISION      DLT
+!!           DOUBLE PRECISION      ET
+!!           DOUBLE PRECISION      ET0
+!!           DOUBLE PRECISION      LT
+!!           DOUBLE PRECISION      STATE ( 6 )
+!!           DOUBLE PRECISION      STOBS ( 6 )
+!!           INTEGER               I
+!!
+!!     C
+!!     C     Load the SPK and LSK kernels via the meta-kernel.
+!!     C
+!!           CALL FURNSH ( META )
+!!     C
+!!     C     Convert the start time to seconds past J2000 TDB.
+!!     C
+!!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
+!!     C
+!!     C     Step through a series of epochs, looking up a
+!!     C     state vector at each one.
+!!     C
+!!           DO I = 1, MAXITR
+!!
+!!              ET = ET0 + (I-1)*STEP
+!!
+!!     C
+!!     C        Look up a state vector at epoch ET using the
+!!     C        following inputs:
+!!     C
+!!     C           Target:                 Moon (NAIF ID code 301)
+!!     C           Reference frame:        J2000
+!!     C           Aberration correction:  Light time ('LT')
+!!     C           Observer:               Earth (NAIF ID code 399)
+!!     C
+!!     C        Before we can execute this computation, we'll need the
+!!     C        geometric state of the observer relative to the solar
+!!     C        system barycenter at ET, expressed relative to the
+!!     C        J2000 reference frame:
+!!     C
+!!              CALL SPKSSB ( 399, ET,    'J2000', STOBS )
+!!     C
+!!     C        Now compute the desired state vector:
+!!     C
+!!              CALL SPKLTC ( 301,   ET,    'J2000', 'LT',
+!!          .                 STOBS, STATE, LT,      DLT     )
+!!
+!!              WRITE (*,*) 'ET = ', ET
+!!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+!!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+!!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+!!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+!!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+!!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+!!              WRITE (*,*) 'One-way light time (s):  ', LT
+!!              WRITE (*,*) 'Light time rate:         ', DLT
+!!              WRITE (*,*) ' '
+!!
+!!           END DO
+!!
+!!           END
+!!
+!!     On a PC/Linux/gfortran platform, the following output was
+!!     produced:
+!!
+!!        ET =    0.0000000000000000
+!!        J2000 x-position (km):     -291569.26541282982
+!!        J2000 y-position (km):     -266709.18647825718
+!!        J2000 z-position (km):     -76099.155118763447
+!!        J2000 x-velocity (km/s):   0.64353061322177041
+!!        J2000 y-velocity (km/s):  -0.66608181700820079
+!!        J2000 z-velocity (km/s):  -0.30132283179625752
+!!        One-way light time (s):     1.3423106103251679
+!!        Light time rate:           1.07316908698977495E-007
+!!
+!!        ET =    3600.0000000000000
+!!        J2000 x-position (km):     -289240.78128184378
+!!        J2000 y-position (km):     -269096.44087958336
+!!        J2000 z-position (km):     -77180.899725757539
+!!        J2000 x-velocity (km/s):   0.65006211520087476
+!!        J2000 y-velocity (km/s):  -0.66016273921695667
+!!        J2000 z-velocity (km/s):  -0.29964267390571342
+!!        One-way light time (s):     1.3426939548635302
+!!        Light time rate:           1.05652598952224259E-007
+!!
+!!        ET =    7200.0000000000000
+!!        J2000 x-position (km):     -286888.88736709207
+!!        J2000 y-position (km):     -271462.30170547962
+!!        J2000 z-position (km):     -78256.555682137609
+!!        J2000 x-velocity (km/s):   0.65653599154284592
+!!        J2000 y-velocity (km/s):  -0.65419657680401588
+!!        J2000 z-velocity (km/s):  -0.29794027307420823
+!!        One-way light time (s):     1.3430713117337547
+!!        Light time rate:           1.03990456898758609E-007
+!!
+!!        ET =    10800.000000000000
+!!        J2000 x-position (km):     -284513.79173691198
+!!        J2000 y-position (km):     -273806.60031034052
+!!        J2000 z-position (km):     -79326.043183274567
+!!        J2000 x-velocity (km/s):   0.66295190054599118
+!!        J2000 y-velocity (km/s):  -0.64818380709706158
+!!        J2000 z-velocity (km/s):  -0.29621577937090349
+!!        One-way light time (s):     1.3434426890693671
+!!        Light time rate:           1.02330665243423737E-007
+!!
+!!        ET =    14400.000000000000
+!!        J2000 x-position (km):     -282115.70368389413
+!!        J2000 y-position (km):     -276129.16976799071
+!!        J2000 z-position (km):     -80389.282965712249
+!!        J2000 x-velocity (km/s):   0.66930950377548726
+!!        J2000 y-velocity (km/s):  -0.64212490805688027
+!!        J2000 z-velocity (km/s):  -0.29446934336246899
+!!        One-way light time (s):     1.3438080956559786
+!!        Light time rate:           1.00673403630050830E-007
+!!
+!! ## Restrictions
+!!
+!!     1) The routine SPKGEO should be used instead of this routine
+!!        to compute geometric states. SPKGEO introduces less
+!!        round-off error when the observer and target have common
+!!        center that is closer to both objects than is the solar
+!!        system barycenter.
+!!
+!!     2) The kernel files to be used by SPKLTC must be loaded
+!!        (normally by the SPICELIB kernel loader FURNSH) before
+!!        this routine is called.
+!!
+!!     3) Unlike most other SPK state computation routines, this
+!!        routine requires that the output state be relative to an
+!!        inertial reference frame.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0, 04-JUL-2014 (NJB)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!     Last update was 02-MAY-2012 (NJB)
+!!
+!!        Updated to ensure convergence when CN or XCN light time
+!!        corrections are used. The new algorithm also terminates early
+!!        (after fewer than three iterations) when convergence is
+!!        attained.
+!!
+!!        Call to ZZPRSCOR was replaced by a call to ZZVALCOR.
+!!
+!!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     low-level light time correction
+!!     light-time corrected state from spk file
+!!     get light-time corrected state
+!!
+!! ## Revisions
+!!
+!!     None.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     TOL is the tolerance used for a division-by-zero test
+!!     performed prior to computation of DLT.
+!!
+!!     Convergence limit:
+!!
+!!     Maximum number of light time iterations for any
+!!     aberration correction:
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: touchd
       use pepper_math, only: vdot, vlcom, vnorm, vsubg
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*), parameter :: rname = 'ZZSPKLT1'
       real(wp), parameter :: tol = 1.0e-10_wp
       real(wp), parameter :: cnvlim = 1.0e-17_wp
@@ -4724,635 +4576,596 @@ contains
       end procedure zzspklt1
 
       module procedure zzspkpa1
-
-! $ Abstract
-!
-!     Return the position of a target body relative to an observer,
-!     optionally corrected for light time and stellar aberration.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a position vector which points
-!                 from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the position of the target body
-!                 relative to the observer is to be computed.  ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the inertial reference frame with respect to which
-!                 the observer's state SOBS is expressed. REF must be
-!                 recognized by the SPICE Toolkit.  The acceptable
-!                 frames are listed in the Frames Required Reading, as
-!                 well as in the SPICELIB routine CHGIRF.
-!
-!                 Case and blanks are not significant in the string REF.
-!
-!     SOBS        is the geometric (uncorrected) state of the observer
-!                 relative to the solar system barycenter at epoch ET.
-!                 SOBS is a 6-vector:  the first three components of
-!                 SOBS represent a Cartesian position vector; the last
-!                 three components represent the corresponding velocity
-!                 vector.  SOBS is expressed relative to the inertial
-!                 reference frame designated by REF.
-!
-!                 Units are always km and km/sec.
-!
-!     ABCORR      indicates the aberration corrections to be applied to
-!                 the position of the target body to account for
-!                 one-way light time and stellar aberration.  See the
-!                 discussion in the Particulars section for
-!                 recommendations on how to choose aberration
-!                 corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric position of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the position of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction involves
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               position obtained with the 'LT' option
-!                               to account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               position of the target---the position
-!                               of the target as seen by the observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section
-!                               of SPKEZR for a discussion of precision
-!                               of light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               position of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation  This option modifies the
-!                               position obtained with the 'XLT' option
-!                               to account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The target position
-!                               indicates the direction that photons
-!                               emitted from the observer's location
-!                               must be "aimed" to hit the target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-! $ Detailed_Output
-!
-!     PTARG       is a Cartesian 3-vector representing the position of
-!                 the target body relative to the specified observer.
-!                 PTARG is corrected for the specified aberrations, and
-!                 is expressed with respect to the specified inertial
-!                 reference frame.  The components of PTARG represent
-!                 the x-, y- and z-components of the target's position.
-!
-!                 The vector PTARG points from the observer's position
-!                 at ET to the aberration-corrected location of the
-!                 target. Note that the sense of the position vector is
-!                 independent of the direction of radiation travel
-!                 implied by the aberration correction.
-!
-!                 Units are always km.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target position is
-!                 corrected for aberrations, then LT is the one-way
-!                 light time between the observer and the light time
-!                 corrected target location.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the value of ABCORR is not recognized, the error
-!        'SPICE(SPKINVALIDOPTION)' is signaled.
-!
-!     2) If the reference frame requested is not a recognized
-!        inertial reference frame the error 'SPICE(BADFRAME)' is
-!        signaled.
-!
-!     3) If the position of the target relative to the solar system
-!        barycenter cannot be computed, the error will be diagnosed
-!        by routines in the call tree of this routine.
-!
-! $ Files
-!
-!     This routine computes positions using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH.  Application programs typically load
-!     kernels once before this routine is called, for example during
-!     program initialization; kernels need not be loaded repeatedly.
-!     See the routine FURNSH and the SPK and KERNEL Required Reading
-!     for further information on loading (and unloading) kernels.
-!
-!     If any of the ephemeris data used to compute PTARG are expressed
-!     relative to a non-inertial frame in the SPK files providing those
-!     data, additional kernels may be needed to enable the reference
-!     frame transformations required to compute PTARG.  Normally
-!     these additional kernels are PCK files or frame kernels.  Any
-!     such kernels must already be loaded at the time this routine is
-!     called.
-!
-! $ Particulars
-!
-!     In space science or engineering applications one frequently
-!     wishes to know where to point a remote sensing instrument, such
-!     as an optical camera or radio antenna, in order to observe or
-!     otherwise receive radiation from a target.  This pointing problem
-!     is complicated by the finite speed of light:  one needs to point
-!     to where the target appears to be as opposed to where it actually
-!     is at the epoch of observation.  We use the adjectives
-!     "geometric," "uncorrected," or "true" to refer to an actual
-!     position or state of a target at a specified epoch.  When a
-!     geometric position or state vector is modified to reflect how it
-!     appears to an observer, we describe that vector by any of the
-!     terms "apparent," "corrected," "aberration corrected," or "light
-!     time and stellar aberration corrected."
-!
-!     The SPICE Toolkit can correct for two phenomena affecting the
-!     apparent location of an object:  one-way light time (also called
-!     "planetary aberration") and stellar aberration.  Correcting for
-!     one-way light time is done by computing, given an observer and
-!     observation epoch, where a target was when the observed photons
-!     departed the target's location.  The vector from the observer to
-!     this computed target location is called a "light time corrected"
-!     vector.  The light time correction depends on the motion of the
-!     target, but it is independent of the velocity of the observer
-!     relative to the solar system barycenter. Relativistic effects
-!     such as light bending and gravitational delay are not accounted
-!     for in the light time correction performed by this routine.
-!
-!     The velocity of the observer also affects the apparent location
-!     of a target:  photons arriving at the observer are subject to a
-!     "raindrop effect" whereby their velocity relative to the observer
-!     is, using a Newtonian approximation, the photons' velocity
-!     relative to the solar system barycenter minus the velocity of the
-!     observer relative to the solar system barycenter.  This effect is
-!     called "stellar aberration."  Stellar aberration is independent
-!     of the motion of the target.  The stellar aberration formula used
-!     by this routine is non- relativistic.
-!
-!     Stellar aberration corrections are applied after light time
-!     corrections:  the light time corrected target position vector is
-!     used as an input to the stellar aberration correction.
-!
-!     When light time and stellar aberration corrections are both
-!     applied to a geometric position vector, the resulting position
-!     vector indicates where the target "appears to be" from the
-!     observer's location.
-!
-!     As opposed to computing the apparent position of a target, one
-!     may wish to compute the pointing direction required for
-!     transmission of photons to the target.  This requires correction
-!     of the geometric target position for the effects of light time and
-!     stellar aberration, but in this case the corrections are computed
-!     for radiation traveling from the observer to the target.
-!
-!     The "transmission" light time correction yields the target's
-!     location as it will be when photons emitted from the observer's
-!     location at ET arrive at the target.  The transmission stellar
-!     aberration correction is the inverse of the traditional stellar
-!     aberration correction:  it indicates the direction in which
-!     radiation should be emitted so that, using a Newtonian
-!     approximation, the sum of the velocity of the radiation relative
-!     to the observer and of the observer's velocity, relative to the
-!     solar system barycenter, yields a velocity vector that points in
-!     the direction of the light time corrected position of the target.
-!
-!     The traditional aberration corrections applicable to observation
-!     and those applicable to transmission are related in a simple way:
-!     one may picture the geometry of the "transmission" case by
-!     imagining the "observation" case running in reverse time order,
-!     and vice versa.
-!
-!     One may reasonably object to using the term "observer" in the
-!     transmission case, in which radiation is emitted from the
-!     observer's location.  The terminology was retained for
-!     consistency with earlier documentation.
-!
-!     Below, we indicate the aberration corrections to use for some
-!     common applications:
-!
-!        1) Find the apparent direction of a target for a remote-sensing
-!           observation.
-!
-!              Use 'LT+S' or 'CN+S: apply both light time and stellar
-!              aberration corrections.
-!
-!           Note that using light time corrections alone ('LT' or 'CN')
-!           is generally not a good way to obtain an approximation to
-!           an apparent target vector: since light time and stellar
-!           aberration corrections often partially cancel each other,
-!           it may be more accurate to use no correction at all than to
-!           use light time alone.
-!
-!        2) Find the corrected pointing direction to radiate a signal
-!           to a target. This computation is often applicable for
-!           implementing communications sessions.
-!
-!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
-!              aberration corrections for transmission.
-!
-!        3) Compute the apparent position of a target body relative
-!           to a star or other distant object.
-!
-!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
-!              correction applied to the position of the distant
-!              object. For example, if a star position is obtained from
-!              a catalog, the position vector may not be corrected for
-!              stellar aberration. In this case, to find the angular
-!              separation of the star and the limb of a planet, the
-!              vector from the observer to the planet should be
-!              corrected for light time but not stellar aberration.
-!
-!        4) Obtain an uncorrected state vector derived directly from
-!           data in an SPK file.
-!
-!              Use 'NONE'.
-!
-!        5) Use a geometric position vector as a low-accuracy estimate
-!           of the apparent position for an application where execution
-!           speed is critical:
-!
-!              Use 'NONE'.
-!
-!        6) While this routine cannot perform the relativistic
-!           aberration corrections required to compute positions
-!           with the highest possible accuracy, it can supply the
-!           geometric positions required as inputs to these
-!           computations:
-!
-!              Use 'NONE', then apply high-accuracy aberration
-!              corrections (not available in the SPICE Toolkit).
-!
-!     Below, we discuss in more detail how the aberration corrections
-!     applied by this routine are computed.
-!
-!     Geometric case
-!     ==============
-!
-!        SPKAPO begins by computing the geometric position T(ET) of the
-!        target body relative to the solar system barycenter (SSB).
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the geometric position of the target body relative to the
-!        observer. The one-way light time, LT, is given by
-!
-!                  | T(ET) - O(ET) |
-!           LT = -------------------
-!                          c
-!
-!        The geometric relationship between the observer, target, and
-!        solar system barycenter is as shown:
-!
-!           SSB ---> O(ET)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(ET) - O(ET)
-!            V  V
-!           T(ET)
-!
-!        The returned position vector is
-!
-!           T(ET) - O(ET)
-!
-!     Reception case
-!     ==============
-!
-!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' are
-!        selected, SPKAPO computes the position of the target body at
-!        epoch ET-LT, where LT is the one-way light time.  Let T(t)
-!        and O(t) represent the positions of the target and observer
-!        relative to the solar system barycenter at time t; then LT
-!        is the solution of the
-!        light-time equation
-!
-!                  | T(ET-LT) - O(ET) |
-!           LT = ------------------------                            (1)
-!                           c
-!
-!        The ratio
-!
-!            | T(ET) - O(ET) |
-!          ---------------------                                     (2)
-!                    c
-!
-!        is used as a first approximation to LT; inserting (2) into the
-!        RHS of the light-time equation (1) yields the "one-iteration"
-!        estimate of the one-way light time. Repeating the process
-!        until the estimates of LT converge yields the "converged
-!        Newtonian" light time estimate.
-!
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the position of the target body relative to the observer:
-!        T(ET-LT) - O(ET).
-!
-!           SSB ---> O(ET)
-!            | \     |
-!            |  \    |
-!            |   \   | T(ET-LT) - O(ET)
-!            |    \  |
-!            V     V V
-!           T(ET)  T(ET-LT)
-!
-!        The light-time corrected position is the vector
-!
-!           T(ET-LT) - O(ET)
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated toward the solar system barycenter-relative
-!        velocity vector of the observer. The magnitude of the rotation
-!        depends on the magnitude of the observer's velocity relative
-!        to the solar system barycenter and the angle between
-!        this velocity and the observer-target vector.  The rotation
-!        is computed as follows:
-!
-!           Let r be the light time corrected vector from the observer
-!           to the object, and v be the velocity of the observer with
-!           respect to the solar system barycenter. Let w be the angle
-!           between them. The aberration angle phi is given by
-!
-!              sin(phi) = v sin(w) / c
-!
-!           Let h be the vector given by the cross product
-!
-!              h = r X v
-!
-!           Rotate r by phi radians about h to obtain the apparent
-!           position of the object.
-!
-!     Transmission case
-!     ==================
-!
-!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' are
-!        selected, SPKAPO computes the position of the target body T at
-!        epoch ET+LT, where LT is the one-way light time.  LT is the
-!        solution of the light-time equation
-!
-!                  | T(ET+LT) - O(ET) |
-!           LT = ------------------------                            (3)
-!                            c
-!
-!        Subtracting the geometric position of the observer, O(ET),
-!        gives the position of the target body relative to the
-!        observer: T(ET-LT) - O(ET).
-!
-!                   SSB --> O(ET)
-!                  / |    *
-!                 /  |  *  T(ET+LT) - O(ET)
-!                /   |*
-!               /   *|
-!              V  V  V
-!          T(ET+LT)  T(ET)
-!
-!        The light-time corrected position is
-!
-!           T(ET+LT) - O(ET)
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated away from the solar system barycenter-
-!        relative velocity vector of the observer.  The magnitude of the
-!        rotation depends on the magnitude of the velocity and the
-!        angle between the velocity and the observer-target vector.
-!        The rotation is computed as in the reception case, but the
-!        sign of the rotation angle is negated.
-!
-!     Neither special nor general relativistic effects are accounted
-!     for in the aberration corrections performed by this routine.
-!
-! $ Examples
-!
-!     In the following code fragment, SPKSSB and SPKAPO are used
-!     to display the position of Io (body 501) as seen from the
-!     Voyager 2 spacecraft (Body -32) at a series of epochs.
-!
-!     Normally, one would call the high-level reader SPKPOS to obtain
-!     position vectors.  The example below illustrates the interface
-!     of this routine, but is not intended as a recommendation on
-!     how to use the SPICE SPK subsystem.
-!
-!     The use of integer ID codes is necessitated by the low-level
-!     interface of this routine.
-!
-!        IO    = 501
-!        VGR2  = -32
-!
-!        DO WHILE ( EPOCH .LE. END )
-!
-!           CALL SPKSSB (  VGR2,  EPOCH, 'J2000', STVGR2  )
-!           CALL SPKAPO (  IO,    EPOCH, 'J2000', STVGR2,
-!       .                 'LT+S', STIO,   LT              )
-!
-!           CALL RECRAD (  STIO,  RANGE,  RA,     DEC     )
-!           WRITE (*,*)  RA * DPR(),  DEC * DPR()
-!
-!           EPOCH = EPOCH + DELTA
-!
-!        END DO
-!
-! $ Restrictions
-!
-!     1) The ephemeris files to be used by SPKAPO must be loaded
-!        (normally by the SPICELIB kernel loader FURNSH) before
-!        this routine is called.
-!
-!     2) Unlike most other SPK position computation routines, this
-!        routine requires that the input state be relative to an
-!        inertial reference frame.  Non-inertial frames are not
-!        supported by this routine.
-!
-!     3) In a future version of this routine, the implementation
-!        of the aberration corrections may be enhanced to improve
-!        accuracy.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     H.A. Neilan     (JPL)
-!     B.V. Semenov    (JPL)
-!     W.L. Taber      (JPL)
-!     I.M. Underwood  (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.3.0, 03-JUL-2014 (NJB) (BVS)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!     Last update was 21-SEP-2013 (BVS)
-!
-!        Updated to call LJUCRS instead of CMPRSS/UCASE.
-!
-!-    SPICELIB Version 2.2.0, 17-MAY-2010 (NJB)
-!
-!        Bug fix: routine now returns immediately after
-!        state lookup failure.
-!
-!-    SPICELIB Version 2.1.0, 31-AUG-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VSUB call.
-!
-!-    SPICELIB Version 2.0.1, 20-OCT-2003 (EDW)
-!
-!        Added mention that LT returns in seconds.
-!        Corrected spelling errors.
-!
-!-    SPICELIB Version 2.0.0, 18-DEC-2001 (NJB)
-!
-!        Updated to handle aberration corrections for transmission
-!        of radiation.  Formerly, only the reception case was
-!        supported.  The header was revised and expanded to explain
-!        the functionality of this routine in more detail.
-!
-!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     apparent position from spk file
-!     get apparent position
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 31-AUG-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VSUB call.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-!
-!     Indices of flags in the FLAGS array:
-!
-
-
-
-
-
-
-
-
-
-!
-!     NAIF ID code for the solar system barycenter:
-!
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the position of a target body relative to an observer,
+!!     optionally corrected for light time and stellar aberration.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a position vector which points
+!!                 from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the position of the target body
+!!                 relative to the observer is to be computed.  ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the inertial reference frame with respect to which
+!!                 the observer's state SOBS is expressed. REF must be
+!!                 recognized by the SPICE Toolkit.  The acceptable
+!!                 frames are listed in the Frames Required Reading, as
+!!                 well as in the SPICELIB routine CHGIRF.
+!!
+!!                 Case and blanks are not significant in the string REF.
+!!
+!!     SOBS        is the geometric (uncorrected) state of the observer
+!!                 relative to the solar system barycenter at epoch ET.
+!!                 SOBS is a 6-vector:  the first three components of
+!!                 SOBS represent a Cartesian position vector; the last
+!!                 three components represent the corresponding velocity
+!!                 vector.  SOBS is expressed relative to the inertial
+!!                 reference frame designated by REF.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied to
+!!                 the position of the target body to account for
+!!                 one-way light time and stellar aberration.  See the
+!!                 discussion in the Particulars section for
+!!                 recommendations on how to choose aberration
+!!                 corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric position of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the position of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction involves
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               position obtained with the 'LT' option
+!!                               to account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               position of the target---the position
+!!                               of the target as seen by the observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section
+!!                               of SPKEZR for a discussion of precision
+!!                               of light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               position of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation  This option modifies the
+!!                               position obtained with the 'XLT' option
+!!                               to account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The target position
+!!                               indicates the direction that photons
+!!                               emitted from the observer's location
+!!                               must be "aimed" to hit the target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!! ## Detailed Output
+!!
+!!     PTARG       is a Cartesian 3-vector representing the position of
+!!                 the target body relative to the specified observer.
+!!                 PTARG is corrected for the specified aberrations, and
+!!                 is expressed with respect to the specified inertial
+!!                 reference frame.  The components of PTARG represent
+!!                 the x-, y- and z-components of the target's position.
+!!
+!!                 The vector PTARG points from the observer's position
+!!                 at ET to the aberration-corrected location of the
+!!                 target. Note that the sense of the position vector is
+!!                 independent of the direction of radiation travel
+!!                 implied by the aberration correction.
+!!
+!!                 Units are always km.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target position is
+!!                 corrected for aberrations, then LT is the one-way
+!!                 light time between the observer and the light time
+!!                 corrected target location.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the value of ABCORR is not recognized, the error
+!!        'SPICE(SPKINVALIDOPTION)' is signaled.
+!!
+!!     2) If the reference frame requested is not a recognized
+!!        inertial reference frame the error 'SPICE(BADFRAME)' is
+!!        signaled.
+!!
+!!     3) If the position of the target relative to the solar system
+!!        barycenter cannot be computed, the error will be diagnosed
+!!        by routines in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     This routine computes positions using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH.  Application programs typically load
+!!     kernels once before this routine is called, for example during
+!!     program initialization; kernels need not be loaded repeatedly.
+!!     See the routine FURNSH and the SPK and KERNEL Required Reading
+!!     for further information on loading (and unloading) kernels.
+!!
+!!     If any of the ephemeris data used to compute PTARG are expressed
+!!     relative to a non-inertial frame in the SPK files providing those
+!!     data, additional kernels may be needed to enable the reference
+!!     frame transformations required to compute PTARG.  Normally
+!!     these additional kernels are PCK files or frame kernels.  Any
+!!     such kernels must already be loaded at the time this routine is
+!!     called.
+!!
+!! ## Particulars
+!!
+!!     In space science or engineering applications one frequently
+!!     wishes to know where to point a remote sensing instrument, such
+!!     as an optical camera or radio antenna, in order to observe or
+!!     otherwise receive radiation from a target.  This pointing problem
+!!     is complicated by the finite speed of light:  one needs to point
+!!     to where the target appears to be as opposed to where it actually
+!!     is at the epoch of observation.  We use the adjectives
+!!     "geometric," "uncorrected," or "true" to refer to an actual
+!!     position or state of a target at a specified epoch.  When a
+!!     geometric position or state vector is modified to reflect how it
+!!     appears to an observer, we describe that vector by any of the
+!!     terms "apparent," "corrected," "aberration corrected," or "light
+!!     time and stellar aberration corrected."
+!!
+!!     The SPICE Toolkit can correct for two phenomena affecting the
+!!     apparent location of an object:  one-way light time (also called
+!!     "planetary aberration") and stellar aberration.  Correcting for
+!!     one-way light time is done by computing, given an observer and
+!!     observation epoch, where a target was when the observed photons
+!!     departed the target's location.  The vector from the observer to
+!!     this computed target location is called a "light time corrected"
+!!     vector.  The light time correction depends on the motion of the
+!!     target, but it is independent of the velocity of the observer
+!!     relative to the solar system barycenter. Relativistic effects
+!!     such as light bending and gravitational delay are not accounted
+!!     for in the light time correction performed by this routine.
+!!
+!!     The velocity of the observer also affects the apparent location
+!!     of a target:  photons arriving at the observer are subject to a
+!!     "raindrop effect" whereby their velocity relative to the observer
+!!     is, using a Newtonian approximation, the photons' velocity
+!!     relative to the solar system barycenter minus the velocity of the
+!!     observer relative to the solar system barycenter.  This effect is
+!!     called "stellar aberration."  Stellar aberration is independent
+!!     of the motion of the target.  The stellar aberration formula used
+!!     by this routine is non- relativistic.
+!!
+!!     Stellar aberration corrections are applied after light time
+!!     corrections:  the light time corrected target position vector is
+!!     used as an input to the stellar aberration correction.
+!!
+!!     When light time and stellar aberration corrections are both
+!!     applied to a geometric position vector, the resulting position
+!!     vector indicates where the target "appears to be" from the
+!!     observer's location.
+!!
+!!     As opposed to computing the apparent position of a target, one
+!!     may wish to compute the pointing direction required for
+!!     transmission of photons to the target.  This requires correction
+!!     of the geometric target position for the effects of light time and
+!!     stellar aberration, but in this case the corrections are computed
+!!     for radiation traveling from the observer to the target.
+!!
+!!     The "transmission" light time correction yields the target's
+!!     location as it will be when photons emitted from the observer's
+!!     location at ET arrive at the target.  The transmission stellar
+!!     aberration correction is the inverse of the traditional stellar
+!!     aberration correction:  it indicates the direction in which
+!!     radiation should be emitted so that, using a Newtonian
+!!     approximation, the sum of the velocity of the radiation relative
+!!     to the observer and of the observer's velocity, relative to the
+!!     solar system barycenter, yields a velocity vector that points in
+!!     the direction of the light time corrected position of the target.
+!!
+!!     The traditional aberration corrections applicable to observation
+!!     and those applicable to transmission are related in a simple way:
+!!     one may picture the geometry of the "transmission" case by
+!!     imagining the "observation" case running in reverse time order,
+!!     and vice versa.
+!!
+!!     One may reasonably object to using the term "observer" in the
+!!     transmission case, in which radiation is emitted from the
+!!     observer's location.  The terminology was retained for
+!!     consistency with earlier documentation.
+!!
+!!     Below, we indicate the aberration corrections to use for some
+!!     common applications:
+!!
+!!        1) Find the apparent direction of a target for a remote-sensing
+!!           observation.
+!!
+!!              Use 'LT+S' or 'CN+S: apply both light time and stellar
+!!              aberration corrections.
+!!
+!!           Note that using light time corrections alone ('LT' or 'CN')
+!!           is generally not a good way to obtain an approximation to
+!!           an apparent target vector: since light time and stellar
+!!           aberration corrections often partially cancel each other,
+!!           it may be more accurate to use no correction at all than to
+!!           use light time alone.
+!!
+!!        2) Find the corrected pointing direction to radiate a signal
+!!           to a target. This computation is often applicable for
+!!           implementing communications sessions.
+!!
+!!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
+!!              aberration corrections for transmission.
+!!
+!!        3) Compute the apparent position of a target body relative
+!!           to a star or other distant object.
+!!
+!!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
+!!              correction applied to the position of the distant
+!!              object. For example, if a star position is obtained from
+!!              a catalog, the position vector may not be corrected for
+!!              stellar aberration. In this case, to find the angular
+!!              separation of the star and the limb of a planet, the
+!!              vector from the observer to the planet should be
+!!              corrected for light time but not stellar aberration.
+!!
+!!        4) Obtain an uncorrected state vector derived directly from
+!!           data in an SPK file.
+!!
+!!              Use 'NONE'.
+!!
+!!        5) Use a geometric position vector as a low-accuracy estimate
+!!           of the apparent position for an application where execution
+!!           speed is critical:
+!!
+!!              Use 'NONE'.
+!!
+!!        6) While this routine cannot perform the relativistic
+!!           aberration corrections required to compute positions
+!!           with the highest possible accuracy, it can supply the
+!!           geometric positions required as inputs to these
+!!           computations:
+!!
+!!              Use 'NONE', then apply high-accuracy aberration
+!!              corrections (not available in the SPICE Toolkit).
+!!
+!!     Below, we discuss in more detail how the aberration corrections
+!!     applied by this routine are computed.
+!!
+!!     Geometric case
+!!     ==============
+!!
+!!        SPKAPO begins by computing the geometric position T(ET) of the
+!!        target body relative to the solar system barycenter (SSB).
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the geometric position of the target body relative to the
+!!        observer. The one-way light time, LT, is given by
+!!
+!!                  | T(ET) - O(ET) |
+!!           LT = -------------------
+!!                          c
+!!
+!!        The geometric relationship between the observer, target, and
+!!        solar system barycenter is as shown:
+!!
+!!           SSB ---> O(ET)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(ET) - O(ET)
+!!            V  V
+!!           T(ET)
+!!
+!!        The returned position vector is
+!!
+!!           T(ET) - O(ET)
+!!
+!!     Reception case
+!!     ==============
+!!
+!!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' are
+!!        selected, SPKAPO computes the position of the target body at
+!!        epoch ET-LT, where LT is the one-way light time.  Let T(t)
+!!        and O(t) represent the positions of the target and observer
+!!        relative to the solar system barycenter at time t; then LT
+!!        is the solution of the
+!!        light-time equation
+!!
+!!                  | T(ET-LT) - O(ET) |
+!!           LT = ------------------------                            (1)
+!!                           c
+!!
+!!        The ratio
+!!
+!!            | T(ET) - O(ET) |
+!!          ---------------------                                     (2)
+!!                    c
+!!
+!!        is used as a first approximation to LT; inserting (2) into the
+!!        RHS of the light-time equation (1) yields the "one-iteration"
+!!        estimate of the one-way light time. Repeating the process
+!!        until the estimates of LT converge yields the "converged
+!!        Newtonian" light time estimate.
+!!
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the position of the target body relative to the observer:
+!!        T(ET-LT) - O(ET).
+!!
+!!           SSB ---> O(ET)
+!!            | \     |
+!!            |  \    |
+!!            |   \   | T(ET-LT) - O(ET)
+!!            |    \  |
+!!            V     V V
+!!           T(ET)  T(ET-LT)
+!!
+!!        The light-time corrected position is the vector
+!!
+!!           T(ET-LT) - O(ET)
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated toward the solar system barycenter-relative
+!!        velocity vector of the observer. The magnitude of the rotation
+!!        depends on the magnitude of the observer's velocity relative
+!!        to the solar system barycenter and the angle between
+!!        this velocity and the observer-target vector.  The rotation
+!!        is computed as follows:
+!!
+!!           Let r be the light time corrected vector from the observer
+!!           to the object, and v be the velocity of the observer with
+!!           respect to the solar system barycenter. Let w be the angle
+!!           between them. The aberration angle phi is given by
+!!
+!!              sin(phi) = v sin(w) / c
+!!
+!!           Let h be the vector given by the cross product
+!!
+!!              h = r X v
+!!
+!!           Rotate r by phi radians about h to obtain the apparent
+!!           position of the object.
+!!
+!!     Transmission case
+!!     ==================
+!!
+!!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' are
+!!        selected, SPKAPO computes the position of the target body T at
+!!        epoch ET+LT, where LT is the one-way light time.  LT is the
+!!        solution of the light-time equation
+!!
+!!                  | T(ET+LT) - O(ET) |
+!!           LT = ------------------------                            (3)
+!!                            c
+!!
+!!        Subtracting the geometric position of the observer, O(ET),
+!!        gives the position of the target body relative to the
+!!        observer: T(ET-LT) - O(ET).
+!!
+!!                   SSB --> O(ET)
+!!                  / |    *
+!!                 /  |  *  T(ET+LT) - O(ET)
+!!                /   |*
+!!               /   *|
+!!              V  V  V
+!!          T(ET+LT)  T(ET)
+!!
+!!        The light-time corrected position is
+!!
+!!           T(ET+LT) - O(ET)
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated away from the solar system barycenter-
+!!        relative velocity vector of the observer.  The magnitude of the
+!!        rotation depends on the magnitude of the velocity and the
+!!        angle between the velocity and the observer-target vector.
+!!        The rotation is computed as in the reception case, but the
+!!        sign of the rotation angle is negated.
+!!
+!!     Neither special nor general relativistic effects are accounted
+!!     for in the aberration corrections performed by this routine.
+!!
+!! ## Examples
+!!
+!!     In the following code fragment, SPKSSB and SPKAPO are used
+!!     to display the position of Io (body 501) as seen from the
+!!     Voyager 2 spacecraft (Body -32) at a series of epochs.
+!!
+!!     Normally, one would call the high-level reader SPKPOS to obtain
+!!     position vectors.  The example below illustrates the interface
+!!     of this routine, but is not intended as a recommendation on
+!!     how to use the SPICE SPK subsystem.
+!!
+!!     The use of integer ID codes is necessitated by the low-level
+!!     interface of this routine.
+!!
+!!        IO    = 501
+!!        VGR2  = -32
+!!
+!!        DO WHILE ( EPOCH .LE. END )
+!!
+!!           CALL SPKSSB (  VGR2,  EPOCH, 'J2000', STVGR2  )
+!!           CALL SPKAPO (  IO,    EPOCH, 'J2000', STVGR2,
+!!       .                 'LT+S', STIO,   LT              )
+!!
+!!           CALL RECRAD (  STIO,  RANGE,  RA,     DEC     )
+!!           WRITE (*,*)  RA * DPR(),  DEC * DPR()
+!!
+!!           EPOCH = EPOCH + DELTA
+!!
+!!        END DO
+!!
+!! ## Restrictions
+!!
+!!     1) The ephemeris files to be used by SPKAPO must be loaded
+!!        (normally by the SPICELIB kernel loader FURNSH) before
+!!        this routine is called.
+!!
+!!     2) Unlike most other SPK position computation routines, this
+!!        routine requires that the input state be relative to an
+!!        inertial reference frame.  Non-inertial frames are not
+!!        supported by this routine.
+!!
+!!     3) In a future version of this routine, the implementation
+!!        of the aberration corrections may be enhanced to improve
+!!        accuracy.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     H.A. Neilan     (JPL)
+!!     B.V. Semenov    (JPL)
+!!     W.L. Taber      (JPL)
+!!     I.M. Underwood  (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.3.0, 03-JUL-2014 (NJB) (BVS)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!     Last update was 21-SEP-2013 (BVS)
+!!
+!!        Updated to call LJUCRS instead of CMPRSS/UCASE.
+!!
+!!-    SPICELIB Version 2.2.0, 17-MAY-2010 (NJB)
+!!
+!!        Bug fix: routine now returns immediately after
+!!        state lookup failure.
+!!
+!!-    SPICELIB Version 2.1.0, 31-AUG-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in VSUB call.
+!!
+!!-    SPICELIB Version 2.0.1, 20-OCT-2003 (EDW)
+!!
+!!        Added mention that LT returns in seconds.
+!!        Corrected spelling errors.
+!!
+!!-    SPICELIB Version 2.0.0, 18-DEC-2001 (NJB)
+!!
+!!        Updated to handle aberration corrections for transmission
+!!        of radiation.  Formerly, only the reception case was
+!!        supported.  The header was revised and expanded to explain
+!!        the functionality of this routine in more detail.
+!!
+!!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     apparent position from spk file
+!!     get apparent position
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 31-AUG-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in VSUB call.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Indices of flags in the FLAGS array:
+!!
+!!     NAIF ID code for the solar system barycenter:
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: isrchc
@@ -5541,27 +5354,26 @@ contains
 !$Procedure ZZSPKSB1 ( S/P Kernel, solar system barycenter )
 
       module procedure zzspksb1
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Return the state (position and velocity) of a target body
+!!     relative to the solar system barycenter.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Return the state (position and velocity) of a target body
-!     relative to the solar system barycenter.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -5699,568 +5511,544 @@ contains
       end procedure zzspksb1
 
       module procedure zzspkas1
-
-! $ Abstract
-!
-!     Given the state and acceleration of an observer relative to the
-!     solar system barycenter, return the state (position and velocity)
-!     of a target body relative to the observer, optionally corrected
-!     for light time and stellar aberration. All input and output
-!     vectors are expressed relative to an inertial reference frame.
-!
-!     This routine supersedes SPKAPP.
-!
-!     SPICE users normally should call the high-level API routines
-!     SPKEZR or SPKEZ rather than this routine.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a state vector whose position
-!                 component points from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the state of the target body
-!                 relative to the observer is to be computed.  ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the inertial reference frame with respect to which
-!                 the input state STOBS, the input acceleration ACCOBS,
-!                 and the output state STARG are expressed. REF must be
-!                 recognized by the SPICE Toolkit.  The acceptable
-!                 frames are listed in the Frames Required Reading, as
-!                 well as in the SPICELIB routine CHGIRF.
-!
-!                 Case and blanks are not significant in the string
-!                 REF.
-!
-!     ABCORR      indicates the aberration corrections to be applied
-!                 to the state of the target body to account for one-way
-!                 light time and stellar aberration. See the discussion
-!                 in the header of SPKEZR for recommendations on
-!                 how to choose aberration corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric state of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the state of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction uses an
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               state obtained with the 'LT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               state of the target---the position and
-!                               velocity of the target as seen by the
-!                               observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section of
-!                               SPKEZR for a discussion of precision of
-!                               light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               state of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation  This option modifies the
-!                               state obtained with the 'XLT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The position component of
-!                               the computed target state indicates the
-!                               direction that photons emitted from the
-!                               observer's location must be "aimed" to
-!                               hit the target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-!     STOBS       is the geometric state of the observer relative to
-!                 the solar system barycenter at ET. STOBS is expressed
-!                 relative to the reference frame designated by REF.
-!                 The target and observer define a state vector whose
-!                 position component points from the observer to the
-!                 target.
-!
-!     ACCOBS      is the geometric acceleration of the observer
-!                 relative to the solar system barycenter at ET. This
-!                 is the derivative with respect to time of the
-!                 velocity portion of STOBS. ACCOBS is expressed
-!                 relative to the reference frame designated by REF.
-!
-!                 ACCOBS is used for computing stellar aberration
-!                 corrected velocity. If stellar aberration corrections
-!                 are not specified by ABCORR, ACCOBS is ignored; the
-!                 caller need not provide a valid input value in this
-!                 case.
-!
-! $ Detailed_Output
-!
-!     STARG       is a Cartesian state vector representing the position
-!                 and velocity of the target body relative to the
-!                 specified observer. STARG is corrected for the
-!                 specified aberrations, and is expressed with respect
-!                 to the inertial reference frame designated by REF.
-!                 The first three components of STARG represent the x-,
-!                 y- and z-components of the target's position; last
-!                 three components form the corresponding velocity
-!                 vector.
-!
-!                 The position component of STARG points from the
-!                 observer's location at ET to the aberration-corrected
-!                 location of the target. Note that the sense of the
-!                 position vector is independent of the direction of
-!                 radiation travel implied by the aberration
-!                 correction.
-!
-!                 Units are always km and km/sec.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target state is corrected
-!                 for light time, then LT is the one-way light time
-!                 between the observer and the light time-corrected
-!                 target location.
-!
-!     DLT         is the derivative with respect to barycentric
-!                 dynamical time of the one way light time between
-!                 target and observer:
-!
-!                    DLT = d(LT)/d(ET)
-!
-!                 DLT can also be described as the rate of change of
-!                 one way light time. DLT is unitless, since LT and
-!                 ET both have units of TDB seconds.
-!
-!                 If the observer and target are at the same position,
-!                 then DLT is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the value of ABCORR is not recognized, the error
-!        is diagnosed by a routine in the call tree of this
-!        routine.
-!
-!     2) If ABCORR calls for stellar aberration but not light
-!        time corrections, the error SPICE(NOTSUPPORTED) is
-!        signaled.
-!
-!     3) If ABCORR calls for relativistic light time corrections, the
-!        error SPICE(NOTSUPPORTED) is signaled.
-!
-!     4) If the reference frame requested is not a recognized
-!        inertial reference frame, the error SPICE(BADFRAME)
-!        is signaled.
-!
-!     5) If the state of the target relative to the solar system
-!        barycenter cannot be computed, the error will be diagnosed
-!        by routines in the call tree of this routine.
-!
-!     6) If the observer and target are at the same position,
-!        then DLT is set to zero. This situation could arise,
-!        for example, when the observer is Mars and the target
-!        is the Mars barycenter.
-!
-! $ Files
-!
-!     This routine computes states using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH.  Application programs typically load
-!     kernels once before this routine is called, for example during
-!     program initialization; kernels need not be loaded repeatedly.
-!     See the routine FURNSH and the SPK and KERNEL Required Reading
-!     for further information on loading (and unloading) kernels.
-!
-!     If any of the ephemeris data used to compute STARG are expressed
-!     relative to a non-inertial frame in the SPK files providing those
-!     data, additional kernels may be needed to enable the reference
-!     frame transformations required to compute the state. Normally
-!     these additional kernels are PCK files or frame kernels. Any such
-!     kernels must already be loaded at the time this routine is
-!     called.
-!
-! $ Particulars
-!
-!     This routine supports higher-level SPK API routines that can
-!     perform both light time and stellar aberration corrections.
-!
-!     User applications normally will not need to call this routine
-!     directly. However, this routine can improve run-time efficiency
-!     in situations where many targets are observed from the same
-!     location at the same time. In such cases, the state and
-!     acceleration of the observer relative to the solar system
-!     barycenter need be computed only once per look-up epoch.
-!
-!     When apparent positions, rather than apparent states, are
-!     required, consider using the high-level position-only API
-!     routines
-!
-!        SPKPOS
-!        SPKEZP
-!
-!     or the low-level, position-only analog of this routine
-!
-!        SPKAPO
-!
-!     In general, the position-only routines are more efficient.
-!
-!     See the header of the routine SPKEZR for a detailed discussion
-!     of aberration corrections.
-!
-! $ Examples
-!
-!    1) Look up a sequence of states of the Moon as seen from the
-!       Earth. Use light time and stellar aberration corrections.
-!       Compute the first state for the epoch 2000 JAN 1 12:00:00 TDB;
-!       compute subsequent states at intervals of 1 hour. For each
-!       epoch, display the states, the one way light time between
-!       target and observer, and the rate of change of the one way
-!       light time.
-!
-!       Use the following meta-kernel to specify the kernels to
-!       load:
-!
-!          KPL/MK
-!
-!          This meta-kernel is intended to support operation of SPICE
-!          example programs. The kernels shown here should not be
-!          assumed to contain adequate or correct versions of data
-!          required by SPICE-based user applications.
-!
-!          In order for an application to use this meta-kernel, the
-!          kernels referenced here must be present in the user's
-!          current working directory.
-!
-!          \begindata
-!
-!             KERNELS_TO_LOAD = ( 'de418.bsp',
-!                                 'pck00008.tpc',
-!                                 'naif0008.tls'  )
-!
-!          \begintext
-!
-!       The code example follows:
-!
-!           PROGRAM EX1
-!           IMPLICIT NONE
-!     C
-!     C     Local constants
-!     C
-!     C     The meta-kernel name shown here refers to a file whose
-!     C     contents are those shown above. This file and the kernels
-!     C     it references must exist in your current working directory.
-!     C
-!           CHARACTER*(*)         META
-!           PARAMETER           ( META   = 'example.mk' )
-!     C
-!     C     Use a time step of 1 hour; look up 5 states.
-!     C
-!           DOUBLE PRECISION      STEP
-!           PARAMETER           ( STEP   = 3600.0D0 )
-!
-!           INTEGER               MAXITR
-!           PARAMETER           ( MAXITR = 5 )
-!     C
-!     C     Local variables
-!     C
-!           DOUBLE PRECISION      ACC    ( 3 )
-!           DOUBLE PRECISION      DLT
-!           DOUBLE PRECISION      ET
-!           DOUBLE PRECISION      ET0
-!           DOUBLE PRECISION      LT
-!           DOUBLE PRECISION      STATE  ( 6 )
-!           DOUBLE PRECISION      STATE0 ( 6 )
-!           DOUBLE PRECISION      STATE2 ( 6 )
-!           DOUBLE PRECISION      STOBS  ( 6 )
-!           DOUBLE PRECISION      TDELTA
-!           INTEGER               I
-!
-!     C
-!     C     Load the SPK and LSK kernels via the meta-kernel.
-!     C
-!           CALL FURNSH ( META )
-!     C
-!     C     Convert the start time to seconds past J2000 TDB.
-!     C
-!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
-!     C
-!     C     Step through a series of epochs, looking up a
-!     C     state vector at each one.
-!     C
-!           DO I = 1, MAXITR
-!
-!              ET = ET0 + (I-1)*STEP
-!
-!     C
-!     C        Look up a state vector at epoch ET using the
-!     C        following inputs:
-!     C
-!     C           Target:                 Moon (NAIF ID code 301)
-!     C           Reference frame:        J2000
-!     C           Aberration correction:  Light time and stellar
-!     C                                   aberration ('LT+S')
-!     C           Observer:               Earth (NAIF ID code 399)
-!     C
-!     C        Before we can execute this computation, we'll need the
-!     C        geometric state and acceleration of the observer
-!     C        relative to the solar system barycenter at ET, expressed
-!     C        relative to the J2000 reference frame. First find
-!     C        the state:
-!     C
-!              CALL SPKSSB ( 399, ET, 'J2000', STOBS )
-!     C
-!     C        Next compute the acceleration. We numerically
-!     C        differentiate the velocity using a quadratic
-!     C        approximation:
-!     C
-!              TDELTA = 1.D0
-!
-!              CALL SPKSSB ( 399, ET-TDELTA, 'J2000', STATE0 )
-!              CALL SPKSSB ( 399, ET+TDELTA, 'J2000', STATE2 )
-!
-!              CALL QDERIV ( 3, STATE0(4), STATE2(4), TDELTA, ACC )
-!     C
-!     C        Now compute the desired state vector:
-!     C
-!              CALL SPKAPS ( 301,   ET,  'J2000', 'LT+S',
-!          .                 STOBS, ACC, STATE,    LT,   DLT )
-!
-!              WRITE (*,*) 'ET = ', ET
-!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-!              WRITE (*,*) 'One-way light time (s):  ', LT
-!              WRITE (*,*) 'Light time rate:         ', DLT
-!              WRITE (*,*) ' '
-!
-!           END DO
-!
-!           END
-!
-!     The output produced by this program will vary somewhat as
-!     a function of the platform on which the program is built and
-!     executed. On a PC/Linux/g77 platform, the following output
-!     was produced:
-!
-!        ET =   0.
-!        J2000 x-position (km):    -291584.614
-!        J2000 y-position (km):    -266693.406
-!        J2000 z-position (km):    -76095.6532
-!        J2000 x-velocity (km/s):   0.643439157
-!        J2000 y-velocity (km/s):  -0.666065874
-!        J2000 z-velocity (km/s):  -0.301310063
-!        One-way light time (s):    1.34231061
-!        Light time rate:           1.07316909E-07
-!
-!        ET =   3600.
-!        J2000 x-position (km):    -289256.459
-!        J2000 y-position (km):    -269080.605
-!        J2000 z-position (km):    -77177.3528
-!        J2000 x-velocity (km/s):   0.64997032
-!        J2000 y-velocity (km/s):  -0.660148253
-!        J2000 z-velocity (km/s):  -0.299630418
-!        One-way light time (s):    1.34269395
-!        Light time rate:           1.05652599E-07
-!
-!        ET =   7200.
-!        J2000 x-position (km):    -286904.897
-!        J2000 y-position (km):    -271446.417
-!        J2000 z-position (km):    -78252.9655
-!        J2000 x-velocity (km/s):   0.656443883
-!        J2000 y-velocity (km/s):  -0.654183552
-!        J2000 z-velocity (km/s):  -0.297928533
-!        One-way light time (s):    1.34307131
-!        Light time rate:           1.03990457E-07
-!
-!        ET =   10800.
-!        J2000 x-position (km):    -284530.133
-!        J2000 y-position (km):    -273790.671
-!        J2000 z-position (km):    -79322.4117
-!        J2000 x-velocity (km/s):   0.662859505
-!        J2000 y-velocity (km/s):  -0.648172247
-!        J2000 z-velocity (km/s):  -0.296204558
-!        One-way light time (s):    1.34344269
-!        Light time rate:           1.02330665E-07
-!
-!        ET =   14400.
-!        J2000 x-position (km):    -282132.378
-!        J2000 y-position (km):    -276113.202
-!        J2000 z-position (km):    -80385.612
-!        J2000 x-velocity (km/s):   0.669216846
-!        J2000 y-velocity (km/s):  -0.642114815
-!        J2000 z-velocity (km/s):  -0.294458645
-!        One-way light time (s):    1.3438081
-!        Light time rate:           1.00673404E-07
-!
-! $ Restrictions
-!
-!     1) This routine should not be used to compute geometric states.
-!        Instead, use SPKEZR, SPKEZ, or SPKGEO. SPKGEO, which is called
-!        by SPKEZR and SPKEZ, introduces less round-off error when the
-!        observer and target have a common center that is closer to
-!        both objects than is the solar system barycenter.
-!
-!     2) The kernel files to be used by SPKAPS must be loaded
-!        (normally by the SPICELIB kernel loader FURNSH) before
-!        this routine is called.
-!
-!     3) Unlike most other SPK state computation routines, this
-!        routine requires that the output state be relative to an
-!        inertial reference frame.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 12-SEP-2021 (NJB)
-!
-!        Bug fix: aberration correction strings are now parsed using
-!        ZZVALCOR. This improves error checking. Corrected header
-!        comment typo.
-!
-!-    SPICELIB Version 1.1.0, 04-JUL-2014 (NJB)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!     Last update was 15-APR-2014 (NJB)
-!
-!        Added a FAILED() call to prevent numeric problems
-!        resulting from uninitialized values.
-!
-!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     low-level aberration-corrected state computation
-!     low-level light time and stellar aberration correction
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Given the state and acceleration of an observer relative to the
+!!     solar system barycenter, return the state (position and velocity)
+!!     of a target body relative to the observer, optionally corrected
+!!     for light time and stellar aberration. All input and output
+!!     vectors are expressed relative to an inertial reference frame.
+!!
+!!     This routine supersedes SPKAPP.
+!!
+!!     SPICE users normally should call the high-level API routines
+!!     SPKEZR or SPKEZ rather than this routine.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a state vector whose position
+!!                 component points from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the state of the target body
+!!                 relative to the observer is to be computed.  ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the inertial reference frame with respect to which
+!!                 the input state STOBS, the input acceleration ACCOBS,
+!!                 and the output state STARG are expressed. REF must be
+!!                 recognized by the SPICE Toolkit.  The acceptable
+!!                 frames are listed in the Frames Required Reading, as
+!!                 well as in the SPICELIB routine CHGIRF.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 REF.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied
+!!                 to the state of the target body to account for one-way
+!!                 light time and stellar aberration. See the discussion
+!!                 in the header of SPKEZR for recommendations on
+!!                 how to choose aberration corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric state of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the state of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction uses an
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               state obtained with the 'LT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               state of the target---the position and
+!!                               velocity of the target as seen by the
+!!                               observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section of
+!!                               SPKEZR for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               state of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation  This option modifies the
+!!                               state obtained with the 'XLT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The position component of
+!!                               the computed target state indicates the
+!!                               direction that photons emitted from the
+!!                               observer's location must be "aimed" to
+!!                               hit the target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!!     STOBS       is the geometric state of the observer relative to
+!!                 the solar system barycenter at ET. STOBS is expressed
+!!                 relative to the reference frame designated by REF.
+!!                 The target and observer define a state vector whose
+!!                 position component points from the observer to the
+!!                 target.
+!!
+!!     ACCOBS      is the geometric acceleration of the observer
+!!                 relative to the solar system barycenter at ET. This
+!!                 is the derivative with respect to time of the
+!!                 velocity portion of STOBS. ACCOBS is expressed
+!!                 relative to the reference frame designated by REF.
+!!
+!!                 ACCOBS is used for computing stellar aberration
+!!                 corrected velocity. If stellar aberration corrections
+!!                 are not specified by ABCORR, ACCOBS is ignored; the
+!!                 caller need not provide a valid input value in this
+!!                 case.
+!!
+!! ## Detailed Output
+!!
+!!     STARG       is a Cartesian state vector representing the position
+!!                 and velocity of the target body relative to the
+!!                 specified observer. STARG is corrected for the
+!!                 specified aberrations, and is expressed with respect
+!!                 to the inertial reference frame designated by REF.
+!!                 The first three components of STARG represent the x-,
+!!                 y- and z-components of the target's position; last
+!!                 three components form the corresponding velocity
+!!                 vector.
+!!
+!!                 The position component of STARG points from the
+!!                 observer's location at ET to the aberration-corrected
+!!                 location of the target. Note that the sense of the
+!!                 position vector is independent of the direction of
+!!                 radiation travel implied by the aberration
+!!                 correction.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target state is corrected
+!!                 for light time, then LT is the one-way light time
+!!                 between the observer and the light time-corrected
+!!                 target location.
+!!
+!!     DLT         is the derivative with respect to barycentric
+!!                 dynamical time of the one way light time between
+!!                 target and observer:
+!!
+!!                    DLT = d(LT)/d(ET)
+!!
+!!                 DLT can also be described as the rate of change of
+!!                 one way light time. DLT is unitless, since LT and
+!!                 ET both have units of TDB seconds.
+!!
+!!                 If the observer and target are at the same position,
+!!                 then DLT is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the value of ABCORR is not recognized, the error
+!!        is diagnosed by a routine in the call tree of this
+!!        routine.
+!!
+!!     2) If ABCORR calls for stellar aberration but not light
+!!        time corrections, the error SPICE(NOTSUPPORTED) is
+!!        signaled.
+!!
+!!     3) If ABCORR calls for relativistic light time corrections, the
+!!        error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     4) If the reference frame requested is not a recognized
+!!        inertial reference frame, the error SPICE(BADFRAME)
+!!        is signaled.
+!!
+!!     5) If the state of the target relative to the solar system
+!!        barycenter cannot be computed, the error will be diagnosed
+!!        by routines in the call tree of this routine.
+!!
+!!     6) If the observer and target are at the same position,
+!!        then DLT is set to zero. This situation could arise,
+!!        for example, when the observer is Mars and the target
+!!        is the Mars barycenter.
+!!
+!! ## Files
+!!
+!!     This routine computes states using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH.  Application programs typically load
+!!     kernels once before this routine is called, for example during
+!!     program initialization; kernels need not be loaded repeatedly.
+!!     See the routine FURNSH and the SPK and KERNEL Required Reading
+!!     for further information on loading (and unloading) kernels.
+!!
+!!     If any of the ephemeris data used to compute STARG are expressed
+!!     relative to a non-inertial frame in the SPK files providing those
+!!     data, additional kernels may be needed to enable the reference
+!!     frame transformations required to compute the state. Normally
+!!     these additional kernels are PCK files or frame kernels. Any such
+!!     kernels must already be loaded at the time this routine is
+!!     called.
+!!
+!! ## Particulars
+!!
+!!     This routine supports higher-level SPK API routines that can
+!!     perform both light time and stellar aberration corrections.
+!!
+!!     User applications normally will not need to call this routine
+!!     directly. However, this routine can improve run-time efficiency
+!!     in situations where many targets are observed from the same
+!!     location at the same time. In such cases, the state and
+!!     acceleration of the observer relative to the solar system
+!!     barycenter need be computed only once per look-up epoch.
+!!
+!!     When apparent positions, rather than apparent states, are
+!!     required, consider using the high-level position-only API
+!!     routines
+!!
+!!        SPKPOS
+!!        SPKEZP
+!!
+!!     or the low-level, position-only analog of this routine
+!!
+!!        SPKAPO
+!!
+!!     In general, the position-only routines are more efficient.
+!!
+!!     See the header of the routine SPKEZR for a detailed discussion
+!!     of aberration corrections.
+!!
+!! ## Examples
+!!
+!!    1) Look up a sequence of states of the Moon as seen from the
+!!       Earth. Use light time and stellar aberration corrections.
+!!       Compute the first state for the epoch 2000 JAN 1 12:00:00 TDB;
+!!       compute subsequent states at intervals of 1 hour. For each
+!!       epoch, display the states, the one way light time between
+!!       target and observer, and the rate of change of the one way
+!!       light time.
+!!
+!!       Use the following meta-kernel to specify the kernels to
+!!       load:
+!!
+!!          KPL/MK
+!!
+!!          This meta-kernel is intended to support operation of SPICE
+!!          example programs. The kernels shown here should not be
+!!          assumed to contain adequate or correct versions of data
+!!          required by SPICE-based user applications.
+!!
+!!          In order for an application to use this meta-kernel, the
+!!          kernels referenced here must be present in the user's
+!!          current working directory.
+!!
+!!          \begindata
+!!
+!!             KERNELS_TO_LOAD = ( 'de418.bsp',
+!!                                 'pck00008.tpc',
+!!                                 'naif0008.tls'  )
+!!
+!!          \begintext
+!!
+!!       The code example follows:
+!!
+!!           PROGRAM EX1
+!!           IMPLICIT NONE
+!!     C
+!!     C     Local constants
+!!     C
+!!     C     The meta-kernel name shown here refers to a file whose
+!!     C     contents are those shown above. This file and the kernels
+!!     C     it references must exist in your current working directory.
+!!     C
+!!           CHARACTER*(*)         META
+!!           PARAMETER           ( META   = 'example.mk' )
+!!     C
+!!     C     Use a time step of 1 hour; look up 5 states.
+!!     C
+!!           DOUBLE PRECISION      STEP
+!!           PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!           INTEGER               MAXITR
+!!           PARAMETER           ( MAXITR = 5 )
+!!     C
+!!     C     Local variables
+!!     C
+!!           DOUBLE PRECISION      ACC    ( 3 )
+!!           DOUBLE PRECISION      DLT
+!!           DOUBLE PRECISION      ET
+!!           DOUBLE PRECISION      ET0
+!!           DOUBLE PRECISION      LT
+!!           DOUBLE PRECISION      STATE  ( 6 )
+!!           DOUBLE PRECISION      STATE0 ( 6 )
+!!           DOUBLE PRECISION      STATE2 ( 6 )
+!!           DOUBLE PRECISION      STOBS  ( 6 )
+!!           DOUBLE PRECISION      TDELTA
+!!           INTEGER               I
+!!
+!!     C
+!!     C     Load the SPK and LSK kernels via the meta-kernel.
+!!     C
+!!           CALL FURNSH ( META )
+!!     C
+!!     C     Convert the start time to seconds past J2000 TDB.
+!!     C
+!!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
+!!     C
+!!     C     Step through a series of epochs, looking up a
+!!     C     state vector at each one.
+!!     C
+!!           DO I = 1, MAXITR
+!!
+!!              ET = ET0 + (I-1)*STEP
+!!
+!!     C
+!!     C        Look up a state vector at epoch ET using the
+!!     C        following inputs:
+!!     C
+!!     C           Target:                 Moon (NAIF ID code 301)
+!!     C           Reference frame:        J2000
+!!     C           Aberration correction:  Light time and stellar
+!!     C                                   aberration ('LT+S')
+!!     C           Observer:               Earth (NAIF ID code 399)
+!!     C
+!!     C        Before we can execute this computation, we'll need the
+!!     C        geometric state and acceleration of the observer
+!!     C        relative to the solar system barycenter at ET, expressed
+!!     C        relative to the J2000 reference frame. First find
+!!     C        the state:
+!!     C
+!!              CALL SPKSSB ( 399, ET, 'J2000', STOBS )
+!!     C
+!!     C        Next compute the acceleration. We numerically
+!!     C        differentiate the velocity using a quadratic
+!!     C        approximation:
+!!     C
+!!              TDELTA = 1.D0
+!!
+!!              CALL SPKSSB ( 399, ET-TDELTA, 'J2000', STATE0 )
+!!              CALL SPKSSB ( 399, ET+TDELTA, 'J2000', STATE2 )
+!!
+!!              CALL QDERIV ( 3, STATE0(4), STATE2(4), TDELTA, ACC )
+!!     C
+!!     C        Now compute the desired state vector:
+!!     C
+!!              CALL SPKAPS ( 301,   ET,  'J2000', 'LT+S',
+!!          .                 STOBS, ACC, STATE,    LT,   DLT )
+!!
+!!              WRITE (*,*) 'ET = ', ET
+!!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+!!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+!!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+!!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+!!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+!!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+!!              WRITE (*,*) 'One-way light time (s):  ', LT
+!!              WRITE (*,*) 'Light time rate:         ', DLT
+!!              WRITE (*,*) ' '
+!!
+!!           END DO
+!!
+!!           END
+!!
+!!     The output produced by this program will vary somewhat as
+!!     a function of the platform on which the program is built and
+!!     executed. On a PC/Linux/g77 platform, the following output
+!!     was produced:
+!!
+!!        ET =   0.
+!!        J2000 x-position (km):    -291584.614
+!!        J2000 y-position (km):    -266693.406
+!!        J2000 z-position (km):    -76095.6532
+!!        J2000 x-velocity (km/s):   0.643439157
+!!        J2000 y-velocity (km/s):  -0.666065874
+!!        J2000 z-velocity (km/s):  -0.301310063
+!!        One-way light time (s):    1.34231061
+!!        Light time rate:           1.07316909E-07
+!!
+!!        ET =   3600.
+!!        J2000 x-position (km):    -289256.459
+!!        J2000 y-position (km):    -269080.605
+!!        J2000 z-position (km):    -77177.3528
+!!        J2000 x-velocity (km/s):   0.64997032
+!!        J2000 y-velocity (km/s):  -0.660148253
+!!        J2000 z-velocity (km/s):  -0.299630418
+!!        One-way light time (s):    1.34269395
+!!        Light time rate:           1.05652599E-07
+!!
+!!        ET =   7200.
+!!        J2000 x-position (km):    -286904.897
+!!        J2000 y-position (km):    -271446.417
+!!        J2000 z-position (km):    -78252.9655
+!!        J2000 x-velocity (km/s):   0.656443883
+!!        J2000 y-velocity (km/s):  -0.654183552
+!!        J2000 z-velocity (km/s):  -0.297928533
+!!        One-way light time (s):    1.34307131
+!!        Light time rate:           1.03990457E-07
+!!
+!!        ET =   10800.
+!!        J2000 x-position (km):    -284530.133
+!!        J2000 y-position (km):    -273790.671
+!!        J2000 z-position (km):    -79322.4117
+!!        J2000 x-velocity (km/s):   0.662859505
+!!        J2000 y-velocity (km/s):  -0.648172247
+!!        J2000 z-velocity (km/s):  -0.296204558
+!!        One-way light time (s):    1.34344269
+!!        Light time rate:           1.02330665E-07
+!!
+!!        ET =   14400.
+!!        J2000 x-position (km):    -282132.378
+!!        J2000 y-position (km):    -276113.202
+!!        J2000 z-position (km):    -80385.612
+!!        J2000 x-velocity (km/s):   0.669216846
+!!        J2000 y-velocity (km/s):  -0.642114815
+!!        J2000 z-velocity (km/s):  -0.294458645
+!!        One-way light time (s):    1.3438081
+!!        Light time rate:           1.00673404E-07
+!!
+!! ## Restrictions
+!!
+!!     1) This routine should not be used to compute geometric states.
+!!        Instead, use SPKEZR, SPKEZ, or SPKGEO. SPKGEO, which is called
+!!        by SPKEZR and SPKEZ, introduces less round-off error when the
+!!        observer and target have a common center that is closer to
+!!        both objects than is the solar system barycenter.
+!!
+!!     2) The kernel files to be used by SPKAPS must be loaded
+!!        (normally by the SPICELIB kernel loader FURNSH) before
+!!        this routine is called.
+!!
+!!     3) Unlike most other SPK state computation routines, this
+!!        routine requires that the output state be relative to an
+!!        inertial reference frame.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 12-SEP-2021 (NJB)
+!!
+!!        Bug fix: aberration correction strings are now parsed using
+!!        ZZVALCOR. This improves error checking. Corrected header
+!!        comment typo.
+!!
+!!-    SPICELIB Version 1.1.0, 04-JUL-2014 (NJB)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!     Last update was 15-APR-2014 (NJB)
+!!
+!!        Added a FAILED() call to prevent numeric problems
+!!        resulting from uninitialized values.
+!!
+!!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     low-level aberration-corrected state computation
+!!     low-level light time and stellar aberration correction
+!!
+!! ## Revisions
+!!
+!!     None.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vadd, vequ
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*), parameter :: rname = 'ZZSPKAS1'
       real(wp)              corpos ( 3 )
       real(wp)              corvel ( 3 )
@@ -6390,800 +6178,773 @@ contains
       end procedure zzspkas1
 
       module procedure zzspkzp1
-
-! $ Abstract
-!
-!     Return the position of a target body relative to an observing
-!     body, optionally corrected for light time (planetary aberration)
-!     and stellar aberration.
-!
-! $ Required_Reading
-!
-!     SPK
-!     NAIF_IDS
-!     FRAMES
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a position vector which points
-!                 from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the position of the target body
-!                 relative to the observer is to be computed.  ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the name of the reference frame relative to which
-!                 the output position vector should be expressed. This
-!                 may be any frame supported by the SPICE system,
-!                 including built-in frames (documented in the Frames
-!                 Required Reading) and frames defined by a loaded
-!                 frame kernel (FK).
-!
-!                 When REF designates a non-inertial frame, the
-!                 orientation of the frame is evaluated at an epoch
-!                 dependent on the selected aberration correction. See
-!                 the description of the output position vector PTARG
-!                 for details.
-!
-!     ABCORR      indicates the aberration corrections to be applied to
-!                 the position of the target body to account for
-!                 one-way light time and stellar aberration.  See the
-!                 discussion in the Particulars section for
-!                 recommendations on how to choose aberration
-!                 corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric position of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the position of the target at
-!                               the moment it emitted photons arriving
-!                               at the observer at ET.
-!
-!                               The light time correction uses an
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               position obtained with the 'LT' option
-!                               to account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               position of the target---the position
-!                               as seen by the observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section
-!                               below for a discussion of precision of
-!                               light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               position of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               position obtained with the 'XLT' option
-!                               to account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The computed target
-!                               position indicates the direction that
-!                               photons emitted from the observer's
-!                               location must be "aimed" to hit the
-!                               target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-!     OBS         is the NAIF ID code for the observing body.
-!
-! $ Detailed_Output
-!
-!     PTARG       is a Cartesian 3-vector representing the position of
-!                 the target body relative to the specified observer.
-!                 PTARG is corrected for the specified aberrations, and
-!                 is expressed with respect to the reference frame
-!                 specified by REF.  The three components of PTARG
-!                 represent the x-, y- and z-components of the target's
-!                 position.
-!
-!                 PTARG points from the observer's location at ET to
-!                 the aberration-corrected location of the target.
-!                 Note that the sense of this position vector is
-!                 independent of the direction of radiation travel
-!                 implied by the aberration correction.
-!
-!                 Units are always km.
-!
-!                 Non-inertial frames are treated as follows: letting
-!                 LTCENT be the one-way light time between the observer
-!                 and the central body associated with the frame, the
-!                 orientation of the frame is evaluated at ET-LTCENT,
-!                 ET+LTCENT, or ET depending on whether the requested
-!                 aberration correction is, respectively, for received
-!                 radiation, transmitted radiation, or is omitted.
-!                 LTCENT is computed using the method indicated by
-!                 ABCORR.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target position is
-!                 corrected for aberrations, then LT is the one-way
-!                 light time between the observer and the light time
-!                 corrected target location.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If name of target or observer cannot be translated to its
-!        NAIF ID code, the error SPICE(IDCODENOTFOUND) is signaled.
-!
-!     2) If the reference frame REF is not a recognized reference
-!        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
-!
-!     3) If the loaded kernels provide insufficient data to
-!        compute the requested position vector, the deficiency will
-!        be diagnosed by a routine in the call tree of this routine.
-!
-!     4) If an error occurs while reading an SPK or other kernel file,
-!        the error  will be diagnosed by a routine in the call tree
-!        of this routine.
-!
-!     5) If any of the required attributes of the reference frame REF
-!        cannot be determined, 'SPICE(UNKNOWNFRAME2)' is signaled.
-!
-! $ Files
-!
-!     This routine computes positions using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH. See the routine FURNSH and the SPK
-!     and KERNEL Required Reading for further information on loading
-!     (and unloading) kernels.
-!
-!     If the output position PTARG is to be expressed relative to a
-!     non-inertial frame, or if any of the ephemeris data used to
-!     compute PTARG are expressed relative to a non-inertial frame in
-!     the SPK files providing those data, additional kernels may be
-!     needed to enable the reference frame transformations required to
-!     compute the position.  Normally these additional kernels are PCK
-!     files or frame kernels.  Any such kernels must already be loaded
-!     at the time this routine is called.
-!
-! $ Particulars
-!
-!     This routine is part of the user interface to the SPICE ephemeris
-!     system.  It allows you to retrieve position information for any
-!     ephemeris object relative to any other in a reference frame that
-!     is convenient for further computations.
-!
-!     Aberration corrections
-!     ======================
-!
-!     In space science or engineering applications one frequently
-!     wishes to know where to point a remote sensing instrument, such
-!     as an optical camera or radio antenna, in order to observe or
-!     otherwise receive radiation from a target.  This pointing problem
-!     is complicated by the finite speed of light:  one needs to point
-!     to where the target appears to be as opposed to where it actually
-!     is at the epoch of observation.  We use the adjectives
-!     "geometric," "uncorrected," or "true" to refer to an actual
-!     position or state of a target at a specified epoch.  When a
-!     geometric position or state vector is modified to reflect how it
-!     appears to an observer, we describe that vector by any of the
-!     terms "apparent," "corrected," "aberration corrected," or "light
-!     time and stellar aberration corrected." The SPICE Toolkit can
-!     correct for two phenomena affecting the apparent location of an
-!     object:  one-way light time (also called "planetary aberration")
-!     and stellar aberration.
-!
-!     One-way light time
-!     ------------------
-!
-!     Correcting for one-way light time is done by computing, given an
-!     observer and observation epoch, where a target was when the
-!     observed photons departed the target's location.  The vector from
-!     the observer to this computed target location is called a "light
-!     time corrected" vector.  The light time correction depends on the
-!     motion of the target relative to the solar system barycenter, but
-!     it is independent of the velocity of the observer relative to the
-!     solar system barycenter. Relativistic effects such as light
-!     bending and gravitational delay are not accounted for in the
-!     light time correction performed by this routine.
-!
-!     Stellar aberration
-!     ------------------
-!
-!     The velocity of the observer also affects the apparent location
-!     of a target:  photons arriving at the observer are subject to a
-!     "raindrop effect" whereby their velocity relative to the observer
-!     is, using a Newtonian approximation, the photons' velocity
-!     relative to the solar system barycenter minus the velocity of the
-!     observer relative to the solar system barycenter.  This effect is
-!     called "stellar aberration."  Stellar aberration is independent
-!     of the velocity of the target.  The stellar aberration formula
-!     used by this routine does not include (the much smaller)
-!     relativistic effects.
-!
-!     Stellar aberration corrections are applied after light time
-!     corrections:  the light time corrected target position vector is
-!     used as an input to the stellar aberration correction.
-!
-!     When light time and stellar aberration corrections are both
-!     applied to a geometric position vector, the resulting position
-!     vector indicates where the target "appears to be" from the
-!     observer's location.
-!
-!     As opposed to computing the apparent position of a target, one
-!     may wish to compute the pointing direction required for
-!     transmission of photons to the target.  This also requires
-!     correction of the geometric target position for the effects of
-!     light time and stellar aberration, but in this case the
-!     corrections are computed for radiation traveling *from* the
-!     observer to the target.
-!
-!     The "transmission" light time correction yields the target's
-!     location as it will be when photons emitted from the observer's
-!     location at ET arrive at the target.  The transmission stellar
-!     aberration correction is the inverse of the traditional stellar
-!     aberration correction:  it indicates the direction in which
-!     radiation should be emitted so that, using a Newtonian
-!     approximation, the sum of the velocity of the radiation relative
-!     to the observer and of the observer's velocity, relative to the
-!     solar system barycenter, yields a velocity vector that points in
-!     the direction of the light time corrected position of the target.
-!
-!     One may object to using the term "observer" in the transmission
-!     case, in which radiation is emitted from the observer's location.
-!     The terminology was retained for consistency with earlier
-!     documentation.
-!
-!     Below, we indicate the aberration corrections to use for some
-!     common applications:
-!
-!        1) Find the apparent direction of a target for a remote-sensing
-!           observation.
-!
-!              Use 'LT+S' or 'CN+S: apply both light time and stellar
-!              aberration corrections.
-!
-!           Note that using light time corrections alone ('LT' or 'CN')
-!           is generally not a good way to obtain an approximation to
-!           an apparent target vector: since light time and stellar
-!           aberration corrections often partially cancel each other,
-!           it may be more accurate to use no correction at all than to
-!           use light time alone.
-!
-!        2) Find the corrected pointing direction to radiate a signal
-!           to a target. This computation is often applicable for
-!           implementing communications sessions.
-!
-!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
-!              aberration corrections for transmission.
-!
-!        3) Compute the apparent position of a target body relative
-!           to a star or other distant object.
-!
-!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
-!              correction applied to the position of the distant
-!              object. For example, if a star position is obtained from
-!              a catalog, the position vector may not be corrected for
-!              stellar aberration. In this case, to find the angular
-!              separation of the star and the limb of a planet, the
-!              vector from the observer to the planet should be
-!              corrected for light time but not stellar aberration.
-!
-!        4) Obtain an uncorrected position vector derived directly from
-!           data in an SPK file.
-!
-!              Use 'NONE'.
-!
-!        5) Use a geometric position vector as a low-accuracy estimate
-!           of the apparent position for an application where execution
-!           speed is critical.
-!
-!              Use 'NONE'.
-!
-!        6) While this routine cannot perform the relativistic
-!           aberration corrections required to compute positions
-!           with the highest possible accuracy, it can supply the
-!           geometric positions required as inputs to these
-!           computations.
-!
-!              Use 'NONE', then apply high-accuracy aberration
-!              corrections (not available in the SPICE Toolkit).
-!
-!     Below, we discuss in more detail how the aberration corrections
-!     applied by this routine are computed.
-!
-!        Geometric case
-!        ==============
-!
-!        SPKEZP begins by computing the geometric position T(ET) of the
-!        target body relative to the solar system barycenter (SSB).
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the geometric position of the target body relative to the
-!        observer. The one-way light time, LT, is given by
-!
-!                  | T(ET) - O(ET) |
-!           LT = -------------------
-!                          c
-!
-!        The geometric relationship between the observer, target, and
-!        solar system barycenter is as shown:
-!
-!           SSB ---> O(ET)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(ET) - O(ET)
-!            V  V
-!           T(ET)
-!
-!        The returned position vector is
-!
-!           T(ET) - O(ET)
-!
-!        Reception case
-!        ==============
-!
-!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' is selected
-!        for ABCORR, SPKEZP computes the position of the target body at
-!        epoch ET-LT, where LT is the one-way light time.  Let T(t) and
-!        O(t) represent the positions of the target and observer
-!        relative to the solar system barycenter at time t; then LT is
-!        the solution of the light-time equation
-!
-!                  | T(ET-LT) - O(ET) |
-!           LT = ------------------------                            (1)
-!                           c
-!
-!        The ratio
-!
-!            | T(ET) - O(ET) |
-!          ---------------------                                     (2)
-!                    c
-!
-!        is used as a first approximation to LT; inserting (2) into the
-!        right hand side of the light-time equation (1) yields the
-!        "one-iteration" estimate of the one-way light time ("LT").
-!        Repeating the process until the estimates of LT converge
-!        yields the "converged Newtonian" light time estimate ("CN").
-!
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the position of the target body relative to the observer:
-!        T(ET-LT) - O(ET).
-!
-!           SSB ---> O(ET)
-!            | \     |
-!            |  \    |
-!            |   \   | T(ET-LT) - O(ET)
-!            |    \  |
-!            V     V V
-!           T(ET)  T(ET-LT)
-!
-!        The light time corrected position vector is
-!
-!           T(ET-LT) - O(ET)
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated toward the solar system barycenter-
-!        relative velocity vector of the observer.  The rotation is
-!        computed as follows:
-!
-!           Let r be the light time corrected vector from the observer
-!           to the object, and v be the velocity of the observer with
-!           respect to the solar system barycenter. Let w be the angle
-!           between them. The aberration angle phi is given by
-!
-!              sin(phi) = v sin(w) / c
-!
-!           Let h be the vector given by the cross product
-!
-!              h = r X v
-!
-!           Rotate r by phi radians about h to obtain the apparent
-!           position of the object.
-!
-!        Transmission case
-!        ==================
-!
-!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' is
-!        selected, SPKEZP computes the position of the target body T at
-!        epoch ET+LT, where LT is the one-way light time.  LT is the
-!        solution of the light-time equation
-!
-!                  | T(ET+LT) - O(ET) |
-!           LT = ------------------------                            (3)
-!                            c
-!
-!        Subtracting the geometric position of the observer, O(ET),
-!        gives the position of the target body relative to the
-!        observer: T(ET-LT) - O(ET).
-!
-!                   SSB --> O(ET)
-!                  / |    *
-!                 /  |  *  T(ET+LT) - O(ET)
-!                /   |*
-!               /   *|
-!              V  V  V
-!          T(ET+LT)  T(ET)
-!
-!        The light-time corrected position vector is
-!
-!           T(ET+LT) - O(ET)
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated away from the solar system barycenter-
-!        relative velocity vector of the observer. The rotation is
-!        computed as in the reception case, but the sign of the
-!        rotation angle is negated.
-!
-!     Precision of light time corrections
-!     ===================================
-!
-!        Corrections using one iteration of the light time solution
-!        ----------------------------------------------------------
-!
-!        When the requested aberration correction is 'LT', 'LT+S',
-!        'XLT', or 'XLT+S', only one iteration is performed in the
-!        algorithm used to compute LT.
-!
-!        The relative error in this computation
-!
-!           | LT_ACTUAL - LT_COMPUTED |  /  LT_ACTUAL
-!
-!        is at most
-!
-!            (V/C)**2
-!           ----------
-!            1 - (V/C)
-!
-!        which is well approximated by (V/C)**2, where V is the
-!        velocity of the target relative to an inertial frame and C is
-!        the speed of light.
-!
-!        For nearly all objects in the solar system V is less than 60
-!        km/sec. The value of C is ~300000 km/sec. Thus the
-!        one-iteration solution for LT has a potential relative error
-!        of not more than 4e-8. This is a potential light time error of
-!        approximately 2e-5 seconds per astronomical unit of distance
-!        separating the observer and target. Given the bound on V cited
-!        above:
-!
-!           As long as the observer and target are separated by less
-!           than 50 astronomical units, the error in the light time
-!           returned using the one-iteration light time corrections is
-!           less than 1 millisecond.
-!
-!           The magnitude of the corresponding position error, given
-!           the above assumptions, may be as large as (V/C)**2 * the
-!           distance between the observer and the uncorrected target
-!           position: 300 km or equivalently 6 km/AU.
-!
-!        In practice, the difference between positions obtained using
-!        one-iteration and converged light time is usually much smaller
-!        than the value computed above and can be insignificant. For
-!        example, for the spacecraft Mars Reconnaissance Orbiter and
-!        Mars Express, the position error for the one-iteration light
-!        time correction, applied to the spacecraft-to-Mars center
-!        vector, is at the 1 cm level.
-!
-!        Comparison of results obtained using the one-iteration and
-!        converged light time solutions is recommended when adequacy of
-!        the one-iteration solution is in doubt.
-!
-!        Converged corrections
-!        ---------------------
-!
-!        When the requested aberration correction is 'CN', 'CN+S',
-!        'XCN', or 'XCN+S', as many iterations as are required for
-!        convergence are performed in the computation of LT. Usually
-!        the solution is found after three iterations. The relative
-!        error present in this case is at most
-!
-!            (V/C)**4
-!           ----------
-!            1 - (V/C)
-!
-!        which is well approximated by (V/C)**4.
-!
-!           The precision of this computation (ignoring round-off
-!           error) is better than 4e-11 seconds for any pair of objects
-!           less than 50 AU apart, and having speed relative to the
-!           solar system barycenter less than 60 km/s.
-!
-!           The magnitude of the corresponding position error, given
-!           the above assumptions, may be as large as (V/C)**4 * the
-!           distance between the observer and the uncorrected target
-!           position: 1.2 cm at 50 AU or equivalently 0.24 mm/AU.
-!
-!        However, to very accurately model the light time between
-!        target and observer one must take into account effects due to
-!        general relativity. These may be as high as a few hundredths
-!        of a millisecond for some objects.
-!
-!     Relativistic Corrections
-!     =========================
-!
-!     This routine does not attempt to perform either general or
-!     special relativistic corrections in computing the various
-!     aberration corrections.  For many applications relativistic
-!     corrections are not worth the expense of added computation
-!     cycles.  If however, your application requires these additional
-!     corrections we suggest you consult the astronomical almanac (page
-!     B36) for a discussion of how to carry out these corrections.
-!
-! $ Examples
-!
-!     1)  Load a planetary ephemeris SPK, then look up a series of
-!         geometric positions of the moon relative to the earth,
-!         referenced to the J2000 frame.
-!
-!               IMPLICIT NONE
-!         C
-!         C     Local constants
-!         C
-!               CHARACTER*(*)         FRAME
-!               PARAMETER           ( FRAME  = 'J2000' )
-!
-!               CHARACTER*(*)         ABCORR
-!               PARAMETER           ( ABCORR = 'NONE' )
-!
-!         C
-!         C     The name of the SPK file shown here is fictitious;
-!         C     you must supply the name of an SPK file available
-!         C     on your own computer system.
-!         C
-!               CHARACTER*(*)         SPK
-!               PARAMETER           ( SPK    = 'planet.bsp' )
-!
-!         C
-!         C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
-!         C
-!               DOUBLE PRECISION      ET0
-!               PARAMETER           ( ET0    = 0.0D0 )
-!
-!         C
-!         C     Use a time step of 1 hour; look up 100 positions.
-!         C
-!               DOUBLE PRECISION      STEP
-!               PARAMETER           ( STEP   = 3600.0D0 )
-!
-!               INTEGER               MAXITR
-!               PARAMETER           ( MAXITR = 100 )
-!
-!         C
-!         C     The NAIF IDs of the earth and moon are 399 and 301
-!         C     respectively.
-!         C
-!               INTEGER               OBSRVR
-!               PARAMETER           ( OBSRVR = 399 )
-!
-!               INTEGER               TARGET
-!               PARAMETER           ( TARGET = 301 )
-!
-!         C
-!         C     Local variables
-!         C
-!               DOUBLE PRECISION      ET
-!               DOUBLE PRECISION      LT
-!               DOUBLE PRECISION      POS ( 3 )
-!
-!               INTEGER               I
-!
-!         C
-!         C     Load the SPK file.
-!         C
-!               CALL FURNSH ( SPK )
-!
-!         C
-!         C     Step through a series of epochs, looking up a
-!         C     position vector at each one.
-!         C
-!               DO I = 1, MAXITR
-!
-!                  ET = ET0 + (I-1)*STEP
-!
-!                  CALL SPKEZP ( TARGET, ET, FRAME, ABCORR, OBSRVR,
-!              .                 POS,    LT                        )
-!
-!                  WRITE (*,*) 'ET = ', ET
-!                  WRITE (*,*) 'J2000 x-position (km):   ', POS(1)
-!                  WRITE (*,*) 'J2000 y-position (km):   ', POS(2)
-!                  WRITE (*,*) 'J2000 z-position (km):   ', POS(3)
-!                  WRITE (*,*) ' '
-!
-!               END DO
-!
-!               END
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton      (JPL)
-!     B.V. Semenov    (JPL)
-!     N.J. Bachman    (JPL)
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.2.0, 03-JUL-2014 (NJB) (BVS)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!     Last update was 23-SEP-2013 (BVS)
-!
-!        Bug fix: added a check and an exception for the FOUND flag
-!        returned by FRINFO.
-!
-!        Updated to save the input frame name and POOL state counter
-!        and to do frame name-ID conversion only if the counter has
-!        changed.
-!
-!-    SPICELIB Version 3.1.1, 04-APR-2008 (NJB)
-!
-!        Corrected minor error in description of XLT+S aberration
-!        correction.
-!
-!-    SPICELIB Version 3.1.0, 06-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.
-!
-!-    SPICELIB Version 3.0.3, 12-DEC-2004 (NJB)
-!
-!        Minor header error was corrected.
-!
-!-    SPICELIB Version 3.0.2, 20-OCT-2003 (EDW)
-!
-!        Added mention that LT returns in seconds.
-!
-!-    SPICELIB Version 3.0.1, 29-JUL-2003 (NJB) (CHA)
-!
-!        Various minor header changes were made to improve clarity.
-!
-!-    SPICELIB Version 3.0.0, 31-DEC-2001 (NJB)
-!
-!        Updated to handle aberration corrections for transmission
-!        of radiation.  Formerly, only the reception case was
-!        supported.  The header was revised and expanded to explain
-!        the functionality of this routine in more detail.
-!
-!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     using body names get position relative to an observer
-!     get position relative observer corrected for aberrations
-!     read ephemeris data
-!     read trajectory data
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.  The new checks
-!        are intended to prevent arithmetic operations from
-!        being performed with uninitialized or invalid data.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the position of a target body relative to an observing
+!!     body, optionally corrected for light time (planetary aberration)
+!!     and stellar aberration.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     NAIF_IDS
+!!     FRAMES
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a position vector which points
+!!                 from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the position of the target body
+!!                 relative to the observer is to be computed.  ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the name of the reference frame relative to which
+!!                 the output position vector should be expressed. This
+!!                 may be any frame supported by the SPICE system,
+!!                 including built-in frames (documented in the Frames
+!!                 Required Reading) and frames defined by a loaded
+!!                 frame kernel (FK).
+!!
+!!                 When REF designates a non-inertial frame, the
+!!                 orientation of the frame is evaluated at an epoch
+!!                 dependent on the selected aberration correction. See
+!!                 the description of the output position vector PTARG
+!!                 for details.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied to
+!!                 the position of the target body to account for
+!!                 one-way light time and stellar aberration.  See the
+!!                 discussion in the Particulars section for
+!!                 recommendations on how to choose aberration
+!!                 corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric position of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the position of the target at
+!!                               the moment it emitted photons arriving
+!!                               at the observer at ET.
+!!
+!!                               The light time correction uses an
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               position obtained with the 'LT' option
+!!                               to account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               position of the target---the position
+!!                               as seen by the observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section
+!!                               below for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               position of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               position obtained with the 'XLT' option
+!!                               to account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The computed target
+!!                               position indicates the direction that
+!!                               photons emitted from the observer's
+!!                               location must be "aimed" to hit the
+!!                               target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!!     OBS         is the NAIF ID code for the observing body.
+!!
+!! ## Detailed Output
+!!
+!!     PTARG       is a Cartesian 3-vector representing the position of
+!!                 the target body relative to the specified observer.
+!!                 PTARG is corrected for the specified aberrations, and
+!!                 is expressed with respect to the reference frame
+!!                 specified by REF.  The three components of PTARG
+!!                 represent the x-, y- and z-components of the target's
+!!                 position.
+!!
+!!                 PTARG points from the observer's location at ET to
+!!                 the aberration-corrected location of the target.
+!!                 Note that the sense of this position vector is
+!!                 independent of the direction of radiation travel
+!!                 implied by the aberration correction.
+!!
+!!                 Units are always km.
+!!
+!!                 Non-inertial frames are treated as follows: letting
+!!                 LTCENT be the one-way light time between the observer
+!!                 and the central body associated with the frame, the
+!!                 orientation of the frame is evaluated at ET-LTCENT,
+!!                 ET+LTCENT, or ET depending on whether the requested
+!!                 aberration correction is, respectively, for received
+!!                 radiation, transmitted radiation, or is omitted.
+!!                 LTCENT is computed using the method indicated by
+!!                 ABCORR.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target position is
+!!                 corrected for aberrations, then LT is the one-way
+!!                 light time between the observer and the light time
+!!                 corrected target location.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If name of target or observer cannot be translated to its
+!!        NAIF ID code, the error SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     2) If the reference frame REF is not a recognized reference
+!!        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
+!!
+!!     3) If the loaded kernels provide insufficient data to
+!!        compute the requested position vector, the deficiency will
+!!        be diagnosed by a routine in the call tree of this routine.
+!!
+!!     4) If an error occurs while reading an SPK or other kernel file,
+!!        the error  will be diagnosed by a routine in the call tree
+!!        of this routine.
+!!
+!!     5) If any of the required attributes of the reference frame REF
+!!        cannot be determined, 'SPICE(UNKNOWNFRAME2)' is signaled.
+!!
+!! ## Files
+!!
+!!     This routine computes positions using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH. See the routine FURNSH and the SPK
+!!     and KERNEL Required Reading for further information on loading
+!!     (and unloading) kernels.
+!!
+!!     If the output position PTARG is to be expressed relative to a
+!!     non-inertial frame, or if any of the ephemeris data used to
+!!     compute PTARG are expressed relative to a non-inertial frame in
+!!     the SPK files providing those data, additional kernels may be
+!!     needed to enable the reference frame transformations required to
+!!     compute the position.  Normally these additional kernels are PCK
+!!     files or frame kernels.  Any such kernels must already be loaded
+!!     at the time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     This routine is part of the user interface to the SPICE ephemeris
+!!     system.  It allows you to retrieve position information for any
+!!     ephemeris object relative to any other in a reference frame that
+!!     is convenient for further computations.
+!!
+!!     Aberration corrections
+!!     ======================
+!!
+!!     In space science or engineering applications one frequently
+!!     wishes to know where to point a remote sensing instrument, such
+!!     as an optical camera or radio antenna, in order to observe or
+!!     otherwise receive radiation from a target.  This pointing problem
+!!     is complicated by the finite speed of light:  one needs to point
+!!     to where the target appears to be as opposed to where it actually
+!!     is at the epoch of observation.  We use the adjectives
+!!     "geometric," "uncorrected," or "true" to refer to an actual
+!!     position or state of a target at a specified epoch.  When a
+!!     geometric position or state vector is modified to reflect how it
+!!     appears to an observer, we describe that vector by any of the
+!!     terms "apparent," "corrected," "aberration corrected," or "light
+!!     time and stellar aberration corrected." The SPICE Toolkit can
+!!     correct for two phenomena affecting the apparent location of an
+!!     object:  one-way light time (also called "planetary aberration")
+!!     and stellar aberration.
+!!
+!!     One-way light time
+!!     ------------------
+!!
+!!     Correcting for one-way light time is done by computing, given an
+!!     observer and observation epoch, where a target was when the
+!!     observed photons departed the target's location.  The vector from
+!!     the observer to this computed target location is called a "light
+!!     time corrected" vector.  The light time correction depends on the
+!!     motion of the target relative to the solar system barycenter, but
+!!     it is independent of the velocity of the observer relative to the
+!!     solar system barycenter. Relativistic effects such as light
+!!     bending and gravitational delay are not accounted for in the
+!!     light time correction performed by this routine.
+!!
+!!     Stellar aberration
+!!     ------------------
+!!
+!!     The velocity of the observer also affects the apparent location
+!!     of a target:  photons arriving at the observer are subject to a
+!!     "raindrop effect" whereby their velocity relative to the observer
+!!     is, using a Newtonian approximation, the photons' velocity
+!!     relative to the solar system barycenter minus the velocity of the
+!!     observer relative to the solar system barycenter.  This effect is
+!!     called "stellar aberration."  Stellar aberration is independent
+!!     of the velocity of the target.  The stellar aberration formula
+!!     used by this routine does not include (the much smaller)
+!!     relativistic effects.
+!!
+!!     Stellar aberration corrections are applied after light time
+!!     corrections:  the light time corrected target position vector is
+!!     used as an input to the stellar aberration correction.
+!!
+!!     When light time and stellar aberration corrections are both
+!!     applied to a geometric position vector, the resulting position
+!!     vector indicates where the target "appears to be" from the
+!!     observer's location.
+!!
+!!     As opposed to computing the apparent position of a target, one
+!!     may wish to compute the pointing direction required for
+!!     transmission of photons to the target.  This also requires
+!!     correction of the geometric target position for the effects of
+!!     light time and stellar aberration, but in this case the
+!!     corrections are computed for radiation traveling *from* the
+!!     observer to the target.
+!!
+!!     The "transmission" light time correction yields the target's
+!!     location as it will be when photons emitted from the observer's
+!!     location at ET arrive at the target.  The transmission stellar
+!!     aberration correction is the inverse of the traditional stellar
+!!     aberration correction:  it indicates the direction in which
+!!     radiation should be emitted so that, using a Newtonian
+!!     approximation, the sum of the velocity of the radiation relative
+!!     to the observer and of the observer's velocity, relative to the
+!!     solar system barycenter, yields a velocity vector that points in
+!!     the direction of the light time corrected position of the target.
+!!
+!!     One may object to using the term "observer" in the transmission
+!!     case, in which radiation is emitted from the observer's location.
+!!     The terminology was retained for consistency with earlier
+!!     documentation.
+!!
+!!     Below, we indicate the aberration corrections to use for some
+!!     common applications:
+!!
+!!        1) Find the apparent direction of a target for a remote-sensing
+!!           observation.
+!!
+!!              Use 'LT+S' or 'CN+S: apply both light time and stellar
+!!              aberration corrections.
+!!
+!!           Note that using light time corrections alone ('LT' or 'CN')
+!!           is generally not a good way to obtain an approximation to
+!!           an apparent target vector: since light time and stellar
+!!           aberration corrections often partially cancel each other,
+!!           it may be more accurate to use no correction at all than to
+!!           use light time alone.
+!!
+!!        2) Find the corrected pointing direction to radiate a signal
+!!           to a target. This computation is often applicable for
+!!           implementing communications sessions.
+!!
+!!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
+!!              aberration corrections for transmission.
+!!
+!!        3) Compute the apparent position of a target body relative
+!!           to a star or other distant object.
+!!
+!!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
+!!              correction applied to the position of the distant
+!!              object. For example, if a star position is obtained from
+!!              a catalog, the position vector may not be corrected for
+!!              stellar aberration. In this case, to find the angular
+!!              separation of the star and the limb of a planet, the
+!!              vector from the observer to the planet should be
+!!              corrected for light time but not stellar aberration.
+!!
+!!        4) Obtain an uncorrected position vector derived directly from
+!!           data in an SPK file.
+!!
+!!              Use 'NONE'.
+!!
+!!        5) Use a geometric position vector as a low-accuracy estimate
+!!           of the apparent position for an application where execution
+!!           speed is critical.
+!!
+!!              Use 'NONE'.
+!!
+!!        6) While this routine cannot perform the relativistic
+!!           aberration corrections required to compute positions
+!!           with the highest possible accuracy, it can supply the
+!!           geometric positions required as inputs to these
+!!           computations.
+!!
+!!              Use 'NONE', then apply high-accuracy aberration
+!!              corrections (not available in the SPICE Toolkit).
+!!
+!!     Below, we discuss in more detail how the aberration corrections
+!!     applied by this routine are computed.
+!!
+!!        Geometric case
+!!        ==============
+!!
+!!        SPKEZP begins by computing the geometric position T(ET) of the
+!!        target body relative to the solar system barycenter (SSB).
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the geometric position of the target body relative to the
+!!        observer. The one-way light time, LT, is given by
+!!
+!!                  | T(ET) - O(ET) |
+!!           LT = -------------------
+!!                          c
+!!
+!!        The geometric relationship between the observer, target, and
+!!        solar system barycenter is as shown:
+!!
+!!           SSB ---> O(ET)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(ET) - O(ET)
+!!            V  V
+!!           T(ET)
+!!
+!!        The returned position vector is
+!!
+!!           T(ET) - O(ET)
+!!
+!!        Reception case
+!!        ==============
+!!
+!!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' is selected
+!!        for ABCORR, SPKEZP computes the position of the target body at
+!!        epoch ET-LT, where LT is the one-way light time.  Let T(t) and
+!!        O(t) represent the positions of the target and observer
+!!        relative to the solar system barycenter at time t; then LT is
+!!        the solution of the light-time equation
+!!
+!!                  | T(ET-LT) - O(ET) |
+!!           LT = ------------------------                            (1)
+!!                           c
+!!
+!!        The ratio
+!!
+!!            | T(ET) - O(ET) |
+!!          ---------------------                                     (2)
+!!                    c
+!!
+!!        is used as a first approximation to LT; inserting (2) into the
+!!        right hand side of the light-time equation (1) yields the
+!!        "one-iteration" estimate of the one-way light time ("LT").
+!!        Repeating the process until the estimates of LT converge
+!!        yields the "converged Newtonian" light time estimate ("CN").
+!!
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the position of the target body relative to the observer:
+!!        T(ET-LT) - O(ET).
+!!
+!!           SSB ---> O(ET)
+!!            | \     |
+!!            |  \    |
+!!            |   \   | T(ET-LT) - O(ET)
+!!            |    \  |
+!!            V     V V
+!!           T(ET)  T(ET-LT)
+!!
+!!        The light time corrected position vector is
+!!
+!!           T(ET-LT) - O(ET)
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated toward the solar system barycenter-
+!!        relative velocity vector of the observer.  The rotation is
+!!        computed as follows:
+!!
+!!           Let r be the light time corrected vector from the observer
+!!           to the object, and v be the velocity of the observer with
+!!           respect to the solar system barycenter. Let w be the angle
+!!           between them. The aberration angle phi is given by
+!!
+!!              sin(phi) = v sin(w) / c
+!!
+!!           Let h be the vector given by the cross product
+!!
+!!              h = r X v
+!!
+!!           Rotate r by phi radians about h to obtain the apparent
+!!           position of the object.
+!!
+!!        Transmission case
+!!        ==================
+!!
+!!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' is
+!!        selected, SPKEZP computes the position of the target body T at
+!!        epoch ET+LT, where LT is the one-way light time.  LT is the
+!!        solution of the light-time equation
+!!
+!!                  | T(ET+LT) - O(ET) |
+!!           LT = ------------------------                            (3)
+!!                            c
+!!
+!!        Subtracting the geometric position of the observer, O(ET),
+!!        gives the position of the target body relative to the
+!!        observer: T(ET-LT) - O(ET).
+!!
+!!                   SSB --> O(ET)
+!!                  / |    *
+!!                 /  |  *  T(ET+LT) - O(ET)
+!!                /   |*
+!!               /   *|
+!!              V  V  V
+!!          T(ET+LT)  T(ET)
+!!
+!!        The light-time corrected position vector is
+!!
+!!           T(ET+LT) - O(ET)
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated away from the solar system barycenter-
+!!        relative velocity vector of the observer. The rotation is
+!!        computed as in the reception case, but the sign of the
+!!        rotation angle is negated.
+!!
+!!     Precision of light time corrections
+!!     ===================================
+!!
+!!        Corrections using one iteration of the light time solution
+!!        ----------------------------------------------------------
+!!
+!!        When the requested aberration correction is 'LT', 'LT+S',
+!!        'XLT', or 'XLT+S', only one iteration is performed in the
+!!        algorithm used to compute LT.
+!!
+!!        The relative error in this computation
+!!
+!!           | LT_ACTUAL - LT_COMPUTED |  /  LT_ACTUAL
+!!
+!!        is at most
+!!
+!!            (V/C)**2
+!!           ----------
+!!            1 - (V/C)
+!!
+!!        which is well approximated by (V/C)**2, where V is the
+!!        velocity of the target relative to an inertial frame and C is
+!!        the speed of light.
+!!
+!!        For nearly all objects in the solar system V is less than 60
+!!        km/sec. The value of C is ~300000 km/sec. Thus the
+!!        one-iteration solution for LT has a potential relative error
+!!        of not more than 4e-8. This is a potential light time error of
+!!        approximately 2e-5 seconds per astronomical unit of distance
+!!        separating the observer and target. Given the bound on V cited
+!!        above:
+!!
+!!           As long as the observer and target are separated by less
+!!           than 50 astronomical units, the error in the light time
+!!           returned using the one-iteration light time corrections is
+!!           less than 1 millisecond.
+!!
+!!           The magnitude of the corresponding position error, given
+!!           the above assumptions, may be as large as (V/C)**2 * the
+!!           distance between the observer and the uncorrected target
+!!           position: 300 km or equivalently 6 km/AU.
+!!
+!!        In practice, the difference between positions obtained using
+!!        one-iteration and converged light time is usually much smaller
+!!        than the value computed above and can be insignificant. For
+!!        example, for the spacecraft Mars Reconnaissance Orbiter and
+!!        Mars Express, the position error for the one-iteration light
+!!        time correction, applied to the spacecraft-to-Mars center
+!!        vector, is at the 1 cm level.
+!!
+!!        Comparison of results obtained using the one-iteration and
+!!        converged light time solutions is recommended when adequacy of
+!!        the one-iteration solution is in doubt.
+!!
+!!        Converged corrections
+!!        ---------------------
+!!
+!!        When the requested aberration correction is 'CN', 'CN+S',
+!!        'XCN', or 'XCN+S', as many iterations as are required for
+!!        convergence are performed in the computation of LT. Usually
+!!        the solution is found after three iterations. The relative
+!!        error present in this case is at most
+!!
+!!            (V/C)**4
+!!           ----------
+!!            1 - (V/C)
+!!
+!!        which is well approximated by (V/C)**4.
+!!
+!!           The precision of this computation (ignoring round-off
+!!           error) is better than 4e-11 seconds for any pair of objects
+!!           less than 50 AU apart, and having speed relative to the
+!!           solar system barycenter less than 60 km/s.
+!!
+!!           The magnitude of the corresponding position error, given
+!!           the above assumptions, may be as large as (V/C)**4 * the
+!!           distance between the observer and the uncorrected target
+!!           position: 1.2 cm at 50 AU or equivalently 0.24 mm/AU.
+!!
+!!        However, to very accurately model the light time between
+!!        target and observer one must take into account effects due to
+!!        general relativity. These may be as high as a few hundredths
+!!        of a millisecond for some objects.
+!!
+!!     Relativistic Corrections
+!!     =========================
+!!
+!!     This routine does not attempt to perform either general or
+!!     special relativistic corrections in computing the various
+!!     aberration corrections.  For many applications relativistic
+!!     corrections are not worth the expense of added computation
+!!     cycles.  If however, your application requires these additional
+!!     corrections we suggest you consult the astronomical almanac (page
+!!     B36) for a discussion of how to carry out these corrections.
+!!
+!! ## Examples
+!!
+!!     1)  Load a planetary ephemeris SPK, then look up a series of
+!!         geometric positions of the moon relative to the earth,
+!!         referenced to the J2000 frame.
+!!
+!!               IMPLICIT NONE
+!!         C
+!!         C     Local constants
+!!         C
+!!               CHARACTER*(*)         FRAME
+!!               PARAMETER           ( FRAME  = 'J2000' )
+!!
+!!               CHARACTER*(*)         ABCORR
+!!               PARAMETER           ( ABCORR = 'NONE' )
+!!
+!!         C
+!!         C     The name of the SPK file shown here is fictitious;
+!!         C     you must supply the name of an SPK file available
+!!         C     on your own computer system.
+!!         C
+!!               CHARACTER*(*)         SPK
+!!               PARAMETER           ( SPK    = 'planet.bsp' )
+!!
+!!         C
+!!         C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
+!!         C
+!!               DOUBLE PRECISION      ET0
+!!               PARAMETER           ( ET0    = 0.0D0 )
+!!
+!!         C
+!!         C     Use a time step of 1 hour; look up 100 positions.
+!!         C
+!!               DOUBLE PRECISION      STEP
+!!               PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!               INTEGER               MAXITR
+!!               PARAMETER           ( MAXITR = 100 )
+!!
+!!         C
+!!         C     The NAIF IDs of the earth and moon are 399 and 301
+!!         C     respectively.
+!!         C
+!!               INTEGER               OBSRVR
+!!               PARAMETER           ( OBSRVR = 399 )
+!!
+!!               INTEGER               TARGET
+!!               PARAMETER           ( TARGET = 301 )
+!!
+!!         C
+!!         C     Local variables
+!!         C
+!!               DOUBLE PRECISION      ET
+!!               DOUBLE PRECISION      LT
+!!               DOUBLE PRECISION      POS ( 3 )
+!!
+!!               INTEGER               I
+!!
+!!         C
+!!         C     Load the SPK file.
+!!         C
+!!               CALL FURNSH ( SPK )
+!!
+!!         C
+!!         C     Step through a series of epochs, looking up a
+!!         C     position vector at each one.
+!!         C
+!!               DO I = 1, MAXITR
+!!
+!!                  ET = ET0 + (I-1)*STEP
+!!
+!!                  CALL SPKEZP ( TARGET, ET, FRAME, ABCORR, OBSRVR,
+!!              .                 POS,    LT                        )
+!!
+!!                  WRITE (*,*) 'ET = ', ET
+!!                  WRITE (*,*) 'J2000 x-position (km):   ', POS(1)
+!!                  WRITE (*,*) 'J2000 y-position (km):   ', POS(2)
+!!                  WRITE (*,*) 'J2000 z-position (km):   ', POS(3)
+!!                  WRITE (*,*) ' '
+!!
+!!               END DO
+!!
+!!               END
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     C.H. Acton      (JPL)
+!!     B.V. Semenov    (JPL)
+!!     N.J. Bachman    (JPL)
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.2.0, 03-JUL-2014 (NJB) (BVS)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!     Last update was 23-SEP-2013 (BVS)
+!!
+!!        Bug fix: added a check and an exception for the FOUND flag
+!!        returned by FRINFO.
+!!
+!!        Updated to save the input frame name and POOL state counter
+!!        and to do frame name-ID conversion only if the counter has
+!!        changed.
+!!
+!!-    SPICELIB Version 3.1.1, 04-APR-2008 (NJB)
+!!
+!!        Corrected minor error in description of XLT+S aberration
+!!        correction.
+!!
+!!-    SPICELIB Version 3.1.0, 06-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.
+!!
+!!-    SPICELIB Version 3.0.3, 12-DEC-2004 (NJB)
+!!
+!!        Minor header error was corrected.
+!!
+!!-    SPICELIB Version 3.0.2, 20-OCT-2003 (EDW)
+!!
+!!        Added mention that LT returns in seconds.
+!!
+!!-    SPICELIB Version 3.0.1, 29-JUL-2003 (NJB) (CHA)
+!!
+!!        Various minor header changes were made to improve clarity.
+!!
+!!-    SPICELIB Version 3.0.0, 31-DEC-2001 (NJB)
+!!
+!!        Updated to handle aberration corrections for transmission
+!!        of radiation.  Formerly, only the reception case was
+!!        supported.  The header was revised and expanded to explain
+!!        the functionality of this routine in more detail.
+!!
+!!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     using body names get position relative to an observer
+!!     get position relative observer corrected for aberrations
+!!     read ephemeris data
+!!     read trajectory data
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.  The new checks
+!!        are intended to prevent arithmetic operations from
+!!        being performed with uninitialized or invalid data.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Saved frame name length.
+!!
+!!     Local variables
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv
       use pepper_strings, only: eqchr, eqstr, ltrim
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzctr.inc'
       character(*), parameter :: rname = 'ZZSPKZP1'
       integer(ip), parameter :: frnmln = 32
       real(wp) :: ltcent
@@ -7352,481 +7113,454 @@ contains
       end procedure zzspkzp1
 
       module procedure zzspkac1
-
-! $ Abstract
-!
-!     Return the state (position and velocity) of a target body
-!     relative to an observer, optionally corrected for light time
-!     and stellar aberration, expressed relative to an inertial
-!     reference frame.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a state vector whose position
-!                 component points from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the state of the target body
-!                 relative to the observer is to be computed.  ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the inertial reference frame with respect to which
-!                 the output state STARG is expressed. REF must be
-!                 recognized by the SPICE Toolkit.  The acceptable
-!                 frames are listed in the Frames Required Reading, as
-!                 well as in the SPICELIB routine CHGIRF.
-!
-!                 Case and blanks are not significant in the string
-!                 REF.
-!
-!     ABCORR      indicates the aberration corrections to be applied
-!                 to the state of the target body to account for one-way
-!                 light time and stellar aberration.  See the discussion
-!                 in the Particulars section for recommendations on
-!                 how to choose aberration corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric state of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the state of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction uses an
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               state obtained with the 'LT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               state of the target---the position and
-!                               velocity of the target as seen by the
-!                               observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section of
-!                               SPKEZR for a discussion of precision of
-!                               light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               state of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation  This option modifies the
-!                               state obtained with the 'XLT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The position component of
-!                               the computed target state indicates the
-!                               direction that photons emitted from the
-!                               observer's location must be "aimed" to
-!                               hit the target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!     OBS         is the NAIF ID code for the observer body.  The
-!                 target and observer define a state vector whose
-!                 position component points from the observer to the
-!                 target.
-!
-! $ Detailed_Output
-!
-!     STARG       is a Cartesian state vector representing the position
-!                 and velocity of the target body relative to the
-!                 specified observer. STARG is corrected for the
-!                 specified aberrations, and is expressed with respect
-!                 to the specified inertial reference frame.  The first
-!                 three components of STARG represent the x-, y- and
-!                 z-components of the target's position; last three
-!                 components form the corresponding velocity vector.
-!
-!                 The position component of STARG points from the
-!                 observer's location at ET to the aberration-corrected
-!                 location of the target. Note that the sense of the
-!                 position vector is independent of the direction of
-!                 radiation travel implied by the aberration
-!                 correction.
-!
-!                 Units are always km and km/sec.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target state is corrected
-!                 for aberrations, then LT is the one-way light time
-!                 between the observer and the light time corrected
-!                 target location.
-!
-!     DLT         is the derivative with respect to barycentric
-!                 dynamical time of the one way light time between
-!                 target and observer:
-!
-!                    DLT = d(LT)/d(ET)
-!
-!                 DLT can also be described as the rate of change of
-!                 one way light time. DLT is unitless, since LT and
-!                 ET both have units of TDB seconds.
-!
-!                 If the observer and target are at the same position,
-!                 then DLT is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the value of ABCORR is not recognized, the error
-!        is diagnosed by a routine in the call tree of this
-!        routine.
-!
-!     2) If the reference frame requested is not a recognized
-!        inertial reference frame, the error SPICE(BADFRAME)
-!        is signaled.
-!
-!     3) If the state of the target relative to the solar system
-!        barycenter cannot be computed, the error will be diagnosed
-!        by routines in the call tree of this routine.
-!
-!     4) If the observer and target are at the same position,
-!        then DLT is set to zero. This situation could arise,
-!        for example, when the observer is Mars and the target
-!        is the Mars barycenter.
-!
-! $ Files
-!
-!     This routine computes states using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH.  Application programs typically load
-!     kernels once before this routine is called, for example during
-!     program initialization; kernels need not be loaded repeatedly.
-!     See the routine FURNSH and the SPK and KERNEL Required Reading
-!     for further information on loading (and unloading) kernels.
-!
-!     If any of the ephemeris data used to compute STARG are expressed
-!     relative to a non-inertial frame in the SPK files providing those
-!     data, additional kernels may be needed to enable the reference
-!     frame transformations required to compute the state. Normally
-!     these additional kernels are PCK files or frame kernels. Any
-!     such kernels must already be loaded at the time this routine is
-!     called.
-!
-! $ Particulars
-!
-!     This routine supports higher-level SPK API routines that can
-!     perform both light time and stellar aberration corrections.
-!     User applications normally will not need to call this routine
-!     directly.
-!
-!     See the header of the routine SPKEZR for a detailed discussion
-!     of aberration corrections.
-!
-! $ Examples
-!
-!    1) Look up a sequence of states of the Moon as seen from the
-!       Earth. Use light time and stellar aberration corrections.
-!       Compute the first state for the epoch 2000 JAN 1 12:00:00 TDB;
-!       compute subsequent states at intervals of 1 hour. For each
-!       epoch, display the states, the one way light time between
-!       target and observer, and the rate of change of the one way
-!       light time.
-!
-!       Use the following meta-kernel to specify the kernels to
-!       load:
-!
-!          KPL/MK
-!
-!          This meta-kernel is intended to support operation of SPICE
-!          example programs. The kernels shown here should not be
-!          assumed to contain adequate or correct versions of data
-!          required by SPICE-based user applications.
-!
-!          In order for an application to use this meta-kernel, the
-!          kernels referenced here must be present in the user's
-!          current working directory.
-!
-!          \begindata
-!
-!             KERNELS_TO_LOAD = ( 'de418.bsp',
-!                                 'pck00008.tpc',
-!                                 'naif0008.tls'  )
-!
-!          \begintext
-!
-!       The code example follows:
-!
-!           PROGRAM EX1
-!           IMPLICIT NONE
-!     C
-!     C     Local constants
-!     C
-!     C     The meta-kernel name shown here refers to a file whose
-!     C     contents are those shown above. This file and the kernels
-!     C     it references must exist in your current working directory.
-!     C
-!     C
-!           CHARACTER*(*)         META
-!           PARAMETER           ( META   = 'example.mk' )
-!     C
-!     C     Use a time step of 1 hour; look up 5 states.
-!     C
-!           DOUBLE PRECISION      STEP
-!           PARAMETER           ( STEP   = 3600.0D0 )
-!
-!           INTEGER               MAXITR
-!           PARAMETER           ( MAXITR = 5 )
-!     C
-!     C     Local variables
-!     C
-!           DOUBLE PRECISION      DLT
-!           DOUBLE PRECISION      ET
-!           DOUBLE PRECISION      ET0
-!           DOUBLE PRECISION      LT
-!           DOUBLE PRECISION      STATE ( 6 )
-!           INTEGER               I
-!
-!     C
-!     C     Load the SPK and LSK kernels via the meta-kernel.
-!     C
-!           CALL FURNSH ( META )
-!     C
-!     C     Convert the start time to seconds past J2000 TDB.
-!     C
-!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
-!     C
-!     C     Step through a series of epochs, looking up a
-!     C     state vector at each one.
-!     C
-!           DO I = 1, MAXITR
-!
-!              ET = ET0 + (I-1)*STEP
-!     C
-!     C        Look up a state vector at epoch ET using the
-!     C        following inputs:
-!     C
-!     C           Target:                 Moon (NAIF ID code 301)
-!     C           Reference frame:        J2000
-!     C           Aberration correction:  Light time and stellar
-!     C                                   aberration ('LT+S')
-!     C           Observer:               Earth (NAIF ID code 399)
-!     C
-!
-!              CALL SPKACS ( 301, ET,    'J2000', 'LT+S',
-!          .                 399, STATE, LT,      DLT     )
-!
-!              WRITE (*,*) 'ET = ', ET
-!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-!              WRITE (*,*) 'One-way light time (s):  ', LT
-!              WRITE (*,*) 'Light time rate:         ', DLT
-!              WRITE (*,*) ' '
-!
-!           END DO
-!
-!           END
-!
-!     The output produced by this program will vary somewhat as
-!     a function of the platform on which the program is built and
-!     executed. On a PC/Linux/g77 platform, the following output
-!     was produced:
-!
-!        ET =   0.
-!        J2000 x-position (km):    -291584.614
-!        J2000 y-position (km):    -266693.406
-!        J2000 z-position (km):    -76095.6532
-!        J2000 x-velocity (km/s):   0.643439157
-!        J2000 y-velocity (km/s):  -0.666065874
-!        J2000 z-velocity (km/s):  -0.301310063
-!        One-way light time (s):    1.34231061
-!        Light time rate:           1.07316909E-07
-!
-!        ET =   3600.
-!        J2000 x-position (km):    -289256.459
-!        J2000 y-position (km):    -269080.605
-!        J2000 z-position (km):    -77177.3528
-!        J2000 x-velocity (km/s):   0.64997032
-!        J2000 y-velocity (km/s):  -0.660148253
-!        J2000 z-velocity (km/s):  -0.299630418
-!        One-way light time (s):    1.34269395
-!        Light time rate:           1.05652599E-07
-!
-!        ET =   7200.
-!        J2000 x-position (km):    -286904.897
-!        J2000 y-position (km):    -271446.417
-!        J2000 z-position (km):    -78252.9655
-!        J2000 x-velocity (km/s):   0.656443883
-!        J2000 y-velocity (km/s):  -0.654183552
-!        J2000 z-velocity (km/s):  -0.297928533
-!        One-way light time (s):    1.34307131
-!        Light time rate:           1.03990457E-07
-!
-!        ET =   10800.
-!        J2000 x-position (km):    -284530.133
-!        J2000 y-position (km):    -273790.671
-!        J2000 z-position (km):    -79322.4117
-!        J2000 x-velocity (km/s):   0.662859505
-!        J2000 y-velocity (km/s):  -0.648172247
-!        J2000 z-velocity (km/s):  -0.296204558
-!        One-way light time (s):    1.34344269
-!        Light time rate:           1.02330665E-07
-!
-!        ET =   14400.
-!        J2000 x-position (km):    -282132.378
-!        J2000 y-position (km):    -276113.202
-!        J2000 z-position (km):    -80385.612
-!        J2000 x-velocity (km/s):   0.669216846
-!        J2000 y-velocity (km/s):  -0.642114815
-!        J2000 z-velocity (km/s):  -0.294458645
-!        One-way light time (s):    1.3438081
-!        Light time rate:           1.00673404E-07
-!
-! $ Restrictions
-!
-!     1) The kernel files to be used by SPKACS must be loaded
-!        (normally by the SPICELIB kernel loader FURNSH) before
-!        this routine is called.
-!
-!     2) Unlike most other SPK state computation routines, this
-!        routine requires that the output state be relative to an
-!        inertial reference frame.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 23-AUG-2021 (NJB)
-!
-!        Bug fix: aberration correction strings are now parsed using
-!        ZZVALCOR. This improves error checking.
-!
-!-    SPICELIB Version 1.0.1, 04-JUL-2014 (NJB)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     low-level aberration correction
-!     aberration-corrected state from spk file
-!     get light time and stellar aberration-corrected state
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the state (position and velocity) of a target body
+!!     relative to an observer, optionally corrected for light time
+!!     and stellar aberration, expressed relative to an inertial
+!!     reference frame.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a state vector whose position
+!!                 component points from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the state of the target body
+!!                 relative to the observer is to be computed.  ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the inertial reference frame with respect to which
+!!                 the output state STARG is expressed. REF must be
+!!                 recognized by the SPICE Toolkit.  The acceptable
+!!                 frames are listed in the Frames Required Reading, as
+!!                 well as in the SPICELIB routine CHGIRF.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 REF.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied
+!!                 to the state of the target body to account for one-way
+!!                 light time and stellar aberration.  See the discussion
+!!                 in the Particulars section for recommendations on
+!!                 how to choose aberration corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric state of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the state of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction uses an
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               state obtained with the 'LT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               state of the target---the position and
+!!                               velocity of the target as seen by the
+!!                               observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section of
+!!                               SPKEZR for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               state of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation  This option modifies the
+!!                               state obtained with the 'XLT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The position component of
+!!                               the computed target state indicates the
+!!                               direction that photons emitted from the
+!!                               observer's location must be "aimed" to
+!!                               hit the target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!     OBS         is the NAIF ID code for the observer body.  The
+!!                 target and observer define a state vector whose
+!!                 position component points from the observer to the
+!!                 target.
+!!
+!! ## Detailed Output
+!!
+!!     STARG       is a Cartesian state vector representing the position
+!!                 and velocity of the target body relative to the
+!!                 specified observer. STARG is corrected for the
+!!                 specified aberrations, and is expressed with respect
+!!                 to the specified inertial reference frame.  The first
+!!                 three components of STARG represent the x-, y- and
+!!                 z-components of the target's position; last three
+!!                 components form the corresponding velocity vector.
+!!
+!!                 The position component of STARG points from the
+!!                 observer's location at ET to the aberration-corrected
+!!                 location of the target. Note that the sense of the
+!!                 position vector is independent of the direction of
+!!                 radiation travel implied by the aberration
+!!                 correction.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target state is corrected
+!!                 for aberrations, then LT is the one-way light time
+!!                 between the observer and the light time corrected
+!!                 target location.
+!!
+!!     DLT         is the derivative with respect to barycentric
+!!                 dynamical time of the one way light time between
+!!                 target and observer:
+!!
+!!                    DLT = d(LT)/d(ET)
+!!
+!!                 DLT can also be described as the rate of change of
+!!                 one way light time. DLT is unitless, since LT and
+!!                 ET both have units of TDB seconds.
+!!
+!!                 If the observer and target are at the same position,
+!!                 then DLT is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the value of ABCORR is not recognized, the error
+!!        is diagnosed by a routine in the call tree of this
+!!        routine.
+!!
+!!     2) If the reference frame requested is not a recognized
+!!        inertial reference frame, the error SPICE(BADFRAME)
+!!        is signaled.
+!!
+!!     3) If the state of the target relative to the solar system
+!!        barycenter cannot be computed, the error will be diagnosed
+!!        by routines in the call tree of this routine.
+!!
+!!     4) If the observer and target are at the same position,
+!!        then DLT is set to zero. This situation could arise,
+!!        for example, when the observer is Mars and the target
+!!        is the Mars barycenter.
+!!
+!! ## Files
+!!
+!!     This routine computes states using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH.  Application programs typically load
+!!     kernels once before this routine is called, for example during
+!!     program initialization; kernels need not be loaded repeatedly.
+!!     See the routine FURNSH and the SPK and KERNEL Required Reading
+!!     for further information on loading (and unloading) kernels.
+!!
+!!     If any of the ephemeris data used to compute STARG are expressed
+!!     relative to a non-inertial frame in the SPK files providing those
+!!     data, additional kernels may be needed to enable the reference
+!!     frame transformations required to compute the state. Normally
+!!     these additional kernels are PCK files or frame kernels. Any
+!!     such kernels must already be loaded at the time this routine is
+!!     called.
+!!
+!! ## Particulars
+!!
+!!     This routine supports higher-level SPK API routines that can
+!!     perform both light time and stellar aberration corrections.
+!!     User applications normally will not need to call this routine
+!!     directly.
+!!
+!!     See the header of the routine SPKEZR for a detailed discussion
+!!     of aberration corrections.
+!!
+!! ## Examples
+!!
+!!    1) Look up a sequence of states of the Moon as seen from the
+!!       Earth. Use light time and stellar aberration corrections.
+!!       Compute the first state for the epoch 2000 JAN 1 12:00:00 TDB;
+!!       compute subsequent states at intervals of 1 hour. For each
+!!       epoch, display the states, the one way light time between
+!!       target and observer, and the rate of change of the one way
+!!       light time.
+!!
+!!       Use the following meta-kernel to specify the kernels to
+!!       load:
+!!
+!!          KPL/MK
+!!
+!!          This meta-kernel is intended to support operation of SPICE
+!!          example programs. The kernels shown here should not be
+!!          assumed to contain adequate or correct versions of data
+!!          required by SPICE-based user applications.
+!!
+!!          In order for an application to use this meta-kernel, the
+!!          kernels referenced here must be present in the user's
+!!          current working directory.
+!!
+!!          \begindata
+!!
+!!             KERNELS_TO_LOAD = ( 'de418.bsp',
+!!                                 'pck00008.tpc',
+!!                                 'naif0008.tls'  )
+!!
+!!          \begintext
+!!
+!!       The code example follows:
+!!
+!!           PROGRAM EX1
+!!           IMPLICIT NONE
+!!     C
+!!     C     Local constants
+!!     C
+!!     C     The meta-kernel name shown here refers to a file whose
+!!     C     contents are those shown above. This file and the kernels
+!!     C     it references must exist in your current working directory.
+!!     C
+!!     C
+!!           CHARACTER*(*)         META
+!!           PARAMETER           ( META   = 'example.mk' )
+!!     C
+!!     C     Use a time step of 1 hour; look up 5 states.
+!!     C
+!!           DOUBLE PRECISION      STEP
+!!           PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!           INTEGER               MAXITR
+!!           PARAMETER           ( MAXITR = 5 )
+!!     C
+!!     C     Local variables
+!!     C
+!!           DOUBLE PRECISION      DLT
+!!           DOUBLE PRECISION      ET
+!!           DOUBLE PRECISION      ET0
+!!           DOUBLE PRECISION      LT
+!!           DOUBLE PRECISION      STATE ( 6 )
+!!           INTEGER               I
+!!
+!!     C
+!!     C     Load the SPK and LSK kernels via the meta-kernel.
+!!     C
+!!           CALL FURNSH ( META )
+!!     C
+!!     C     Convert the start time to seconds past J2000 TDB.
+!!     C
+!!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
+!!     C
+!!     C     Step through a series of epochs, looking up a
+!!     C     state vector at each one.
+!!     C
+!!           DO I = 1, MAXITR
+!!
+!!              ET = ET0 + (I-1)*STEP
+!!     C
+!!     C        Look up a state vector at epoch ET using the
+!!     C        following inputs:
+!!     C
+!!     C           Target:                 Moon (NAIF ID code 301)
+!!     C           Reference frame:        J2000
+!!     C           Aberration correction:  Light time and stellar
+!!     C                                   aberration ('LT+S')
+!!     C           Observer:               Earth (NAIF ID code 399)
+!!     C
+!!
+!!              CALL SPKACS ( 301, ET,    'J2000', 'LT+S',
+!!          .                 399, STATE, LT,      DLT     )
+!!
+!!              WRITE (*,*) 'ET = ', ET
+!!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+!!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+!!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+!!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+!!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+!!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+!!              WRITE (*,*) 'One-way light time (s):  ', LT
+!!              WRITE (*,*) 'Light time rate:         ', DLT
+!!              WRITE (*,*) ' '
+!!
+!!           END DO
+!!
+!!           END
+!!
+!!     The output produced by this program will vary somewhat as
+!!     a function of the platform on which the program is built and
+!!     executed. On a PC/Linux/g77 platform, the following output
+!!     was produced:
+!!
+!!        ET =   0.
+!!        J2000 x-position (km):    -291584.614
+!!        J2000 y-position (km):    -266693.406
+!!        J2000 z-position (km):    -76095.6532
+!!        J2000 x-velocity (km/s):   0.643439157
+!!        J2000 y-velocity (km/s):  -0.666065874
+!!        J2000 z-velocity (km/s):  -0.301310063
+!!        One-way light time (s):    1.34231061
+!!        Light time rate:           1.07316909E-07
+!!
+!!        ET =   3600.
+!!        J2000 x-position (km):    -289256.459
+!!        J2000 y-position (km):    -269080.605
+!!        J2000 z-position (km):    -77177.3528
+!!        J2000 x-velocity (km/s):   0.64997032
+!!        J2000 y-velocity (km/s):  -0.660148253
+!!        J2000 z-velocity (km/s):  -0.299630418
+!!        One-way light time (s):    1.34269395
+!!        Light time rate:           1.05652599E-07
+!!
+!!        ET =   7200.
+!!        J2000 x-position (km):    -286904.897
+!!        J2000 y-position (km):    -271446.417
+!!        J2000 z-position (km):    -78252.9655
+!!        J2000 x-velocity (km/s):   0.656443883
+!!        J2000 y-velocity (km/s):  -0.654183552
+!!        J2000 z-velocity (km/s):  -0.297928533
+!!        One-way light time (s):    1.34307131
+!!        Light time rate:           1.03990457E-07
+!!
+!!        ET =   10800.
+!!        J2000 x-position (km):    -284530.133
+!!        J2000 y-position (km):    -273790.671
+!!        J2000 z-position (km):    -79322.4117
+!!        J2000 x-velocity (km/s):   0.662859505
+!!        J2000 y-velocity (km/s):  -0.648172247
+!!        J2000 z-velocity (km/s):  -0.296204558
+!!        One-way light time (s):    1.34344269
+!!        Light time rate:           1.02330665E-07
+!!
+!!        ET =   14400.
+!!        J2000 x-position (km):    -282132.378
+!!        J2000 y-position (km):    -276113.202
+!!        J2000 z-position (km):    -80385.612
+!!        J2000 x-velocity (km/s):   0.669216846
+!!        J2000 y-velocity (km/s):  -0.642114815
+!!        J2000 z-velocity (km/s):  -0.294458645
+!!        One-way light time (s):    1.3438081
+!!        Light time rate:           1.00673404E-07
+!!
+!! ## Restrictions
+!!
+!!     1) The kernel files to be used by SPKACS must be loaded
+!!        (normally by the SPICELIB kernel loader FURNSH) before
+!!        this routine is called.
+!!
+!!     2) Unlike most other SPK state computation routines, this
+!!        routine requires that the output state be relative to an
+!!        inertial reference frame.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 23-AUG-2021 (NJB)
+!!
+!!        Bug fix: aberration correction strings are now parsed using
+!!        ZZVALCOR. This improves error checking.
+!!
+!!-    SPICELIB Version 1.0.1, 04-JUL-2014 (NJB)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     low-level aberration correction
+!!     aberration-corrected state from spk file
+!!     get light time and stellar aberration-corrected state
+!!
+!! ## Revisions
+!!
+!!     None.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*), parameter :: rname = 'ZZSPKAC1'
       real(wp), parameter :: delta = 1.0_wp
       integer(ip), parameter :: ssb = 0
@@ -7941,1003 +7675,975 @@ contains
       end procedure zzspkac1
 
       module procedure zzspkez1
-
-! $ Abstract
-!
-!     Return the state (position and velocity) of a target body
-!     relative to an observing body, optionally corrected for light
-!     time (planetary aberration) and stellar aberration.
-!
-! $ Required_Reading
-!
-!     SPK
-!     NAIF_IDS
-!     FRAMES
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body. The target
-!                 and observer define a state vector whose position
-!                 component points from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past J2000
-!                 TDB, at which the state of the target body relative to
-!                 the observer is to be computed. ET refers to time at
-!                 the observer's location.
-!
-!     REF         is the name of the reference frame relative to which
-!                 the output state vector should be expressed. This may
-!                 be any frame supported by the SPICE system, including
-!                 built-in frames (documented in the Frames Required
-!                 Reading) and frames defined by a loaded frame kernel
-!                 (FK).
-!
-!                 When REF designates a non-inertial frame, the
-!                 orientation of the frame is evaluated at an epoch
-!                 dependent on the selected aberration correction.
-!                 See the description of the output state vector STARG
-!                 for details.
-!
-!     ABCORR      indicates the aberration corrections to be applied
-!                 to the state of the target body to account for one-way
-!                 light time and stellar aberration. See the discussion
-!                 in the Particulars section for recommendations on
-!                 how to choose aberration corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric state of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the state of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction uses an
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               state obtained with the 'LT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               state of the target---the position and
-!                               velocity of the target as seen by the
-!                               observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section
-!                               below for a discussion of precision of
-!                               light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               state of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation  This option modifies the
-!                               state obtained with the 'XLT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The position component of
-!                               the computed target state indicates the
-!                               direction that photons emitted from the
-!                               observer's location must be "aimed" to
-!                               hit the target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-!     OBS         is the NAIF ID code for an observing body.
-!
-! $ Detailed_Output
-!
-!     STARG       is a Cartesian state vector representing the position
-!                 and velocity of the target body relative to the
-!                 specified observer. STARG is corrected for the
-!                 specified aberrations, and is expressed with respect
-!                 to the reference frame specified by REF. The first
-!                 three components of STARG represent the x-, y- and
-!                 z-components of the target's position; the last three
-!                 components form the corresponding velocity vector.
-!
-!                 The position component of STARG points from the
-!                 observer's location at ET to the aberration-corrected
-!                 location of the target. Note that the sense of the
-!                 position vector is independent of the direction of
-!                 radiation travel implied by the aberration
-!                 correction.
-!
-!                 The velocity component of STARG is the derivative
-!                 with respect to time of the position component of
-!                 STARG.
-!
-!                 Units are always km and km/sec.
-!
-!                 Non-inertial frames are treated as follows: letting
-!                 LTCENT be the one-way light time between the observer
-!                 and the central body associated with the frame, the
-!                 orientation of the frame is evaluated at ET-LTCENT,
-!                 ET+LTCENT, or ET depending on whether the requested
-!                 aberration correction is, respectively, for received
-!                 radiation, transmitted radiation, or is omitted.
-!                 LTCENT is computed using the method indicated by
-!                 ABCORR.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds. If the target state is corrected
-!                 for aberrations, then LT is the one-way light time
-!                 between the observer and the light time corrected
-!                 target location.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the reference frame REF is not a recognized reference
-!        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
-!
-!     2) If the loaded kernels provide insufficient data to
-!        compute the requested state vector, the deficiency will
-!        be diagnosed by a routine in the call tree of this routine.
-!
-!     3) If an error occurs while reading an SPK or other kernel file,
-!        the error  will be diagnosed by a routine in the call tree
-!        of this routine.
-!
-!     4) If any of the required attributes of the reference frame REF
-!        cannot be determined, 'SPICE(UNKNOWNFRAME2)' is signaled.
-!
-! $ Files
-!
-!     This routine computes states using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH. See the routine FURNSH and the SPK
-!     and KERNEL Required Reading for further information on loading
-!     (and unloading) kernels.
-!
-!     If the output state STARG is to be expressed relative to a
-!     non-inertial frame, or if any of the ephemeris data used to
-!     compute STARG are expressed relative to a non-inertial frame in
-!     the SPK files providing those data, additional kernels may be
-!     needed to enable the reference frame transformations required to
-!     compute the state. Normally these additional kernels are PCK
-!     files or frame kernels. Any such kernels must already be loaded
-!     at the time this routine is called.
-!
-! $ Particulars
-!
-!     This routine is part of the user interface to the SPICE ephemeris
-!     system. It allows you to retrieve state information for any
-!     ephemeris object relative to any other in a reference frame that
-!     is convenient for further computations.
-!
-!     Aberration corrections
-!     ======================
-!
-!     In space science or engineering applications one frequently
-!     wishes to know where to point a remote sensing instrument, such
-!     as an optical camera or radio antenna, in order to observe or
-!     otherwise receive radiation from a target. This pointing problem
-!     is complicated by the finite speed of light:  one needs to point
-!     to where the target appears to be as opposed to where it actually
-!     is at the epoch of observation. We use the adjectives
-!     "geometric," "uncorrected," or "true" to refer to an actual
-!     position or state of a target at a specified epoch. When a
-!     geometric position or state vector is modified to reflect how it
-!     appears to an observer, we describe that vector by any of the
-!     terms "apparent," "corrected," "aberration corrected," or "light
-!     time and stellar aberration corrected." The SPICE Toolkit can
-!     correct for two phenomena affecting the apparent location of an
-!     object:  one-way light time (also called "planetary aberration")
-!     and stellar aberration.
-!
-!     One-way light time
-!     ------------------
-!
-!     Correcting for one-way light time is done by computing, given an
-!     observer and observation epoch, where a target was when the
-!     observed photons departed the target's location. The vector from
-!     the observer to this computed target location is called a "light
-!     time corrected" vector. The light time correction depends on the
-!     motion of the target relative to the solar system barycenter, but
-!     it is independent of the velocity of the observer relative to the
-!     solar system barycenter. Relativistic effects such as light
-!     bending and gravitational delay are not accounted for in the
-!     light time correction performed by this routine.
-!
-!     Stellar aberration
-!     ------------------
-!
-!     The velocity of the observer also affects the apparent location
-!     of a target:  photons arriving at the observer are subject to a
-!     "raindrop effect" whereby their velocity relative to the observer
-!     is, using a Newtonian approximation, the photons' velocity
-!     relative to the solar system barycenter minus the velocity of the
-!     observer relative to the solar system barycenter. This effect is
-!     called "stellar aberration."  Stellar aberration is independent
-!     of the velocity of the target. The stellar aberration formula
-!     used by this routine does not include (the much smaller)
-!     relativistic effects.
-!
-!     Stellar aberration corrections are applied after light time
-!     corrections:  the light time corrected target position vector is
-!     used as an input to the stellar aberration correction.
-!
-!     When light time and stellar aberration corrections are both
-!     applied to a geometric position vector, the resulting position
-!     vector indicates where the target "appears to be" from the
-!     observer's location.
-!
-!     As opposed to computing the apparent position of a target, one
-!     may wish to compute the pointing direction required for
-!     transmission of photons to the target. This also requires
-!     correction of the geometric target position for the effects of
-!     light time and stellar aberration, but in this case the
-!     corrections are computed for radiation traveling *from* the
-!     observer to the target.
-!
-!     The "transmission" light time correction yields the target's
-!     location as it will be when photons emitted from the observer's
-!     location at ET arrive at the target. The transmission stellar
-!     aberration correction is the inverse of the traditional stellar
-!     aberration correction:  it indicates the direction in which
-!     radiation should be emitted so that, using a Newtonian
-!     approximation, the sum of the velocity of the radiation relative
-!     to the observer and of the observer's velocity, relative to the
-!     solar system barycenter, yields a velocity vector that points in
-!     the direction of the light time corrected position of the target.
-!
-!     One may object to using the term "observer" in the transmission
-!     case, in which radiation is emitted from the observer's location.
-!     The terminology was retained for consistency with earlier
-!     documentation.
-!
-!     Below, we indicate the aberration corrections to use for some
-!     common applications:
-!
-!        1) Find the apparent direction of a target for a remote-sensing
-!           observation.
-!
-!              Use 'LT+S' or 'CN+S: apply both light time and stellar
-!              aberration corrections.
-!
-!           Note that using light time corrections alone ('LT' or 'CN')
-!           is generally not a good way to obtain an approximation to
-!           an apparent target vector: since light time and stellar
-!           aberration corrections often partially cancel each other,
-!           it may be more accurate to use no correction at all than to
-!           use light time alone.
-!
-!        2) Find the corrected pointing direction to radiate a signal
-!           to a target. This computation is often applicable for
-!           implementing communications sessions.
-!
-!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
-!              aberration corrections for transmission.
-!
-!        3) Compute the apparent position of a target body relative
-!           to a star or other distant object.
-!
-!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
-!              correction applied to the position of the distant
-!              object. For example, if a star position is obtained from
-!              a catalog, the position vector may not be corrected for
-!              stellar aberration. In this case, to find the angular
-!              separation of the star and the limb of a planet, the
-!              vector from the observer to the planet should be
-!              corrected for light time but not stellar aberration.
-!
-!        4) Obtain an uncorrected state vector derived directly from
-!           data in an SPK file.
-!
-!              Use 'NONE'.
-!
-!        5) Use a geometric state vector as a low-accuracy estimate
-!           of the apparent state for an application where execution
-!           speed is critical.
-!
-!              Use 'NONE'.
-!
-!        6) While this routine cannot perform the relativistic
-!           aberration corrections required to compute states
-!           with the highest possible accuracy, it can supply the
-!           geometric states required as inputs to these computations.
-!
-!              Use 'NONE', then apply relativistic aberration
-!              corrections (not available in the SPICE Toolkit).
-!
-!     Below, we discuss in more detail how the aberration corrections
-!     applied by this routine are computed.
-!
-!        Geometric case
-!        ==============
-!
-!        SPKEZ begins by computing the geometric position T(ET) of the
-!        target body relative to the solar system barycenter (SSB).
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the geometric position of the target body relative to the
-!        observer. The one-way light time, LT, is given by
-!
-!                  | T(ET) - O(ET) |
-!           LT = -------------------
-!                          c
-!
-!        The geometric relationship between the observer, target, and
-!        solar system barycenter is as shown:
-!
-!           SSB ---> O(ET)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(ET) - O(ET)
-!            V  V
-!           T(ET)
-!
-!        The returned state consists of the position vector
-!
-!           T(ET) - O(ET)
-!
-!        and a velocity obtained by taking the difference of the
-!        corresponding velocities. In the geometric case, the
-!        returned velocity is actually the time derivative of the
-!        position.
-!
-!        Reception case
-!        ==============
-!
-!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' is selected
-!        for ABCORR, SPKEZ computes the position of the target body at
-!        epoch ET-LT, where LT is the one-way light time. Let T(t) and
-!        O(t) represent the positions of the target and observer
-!        relative to the solar system barycenter at time t; then LT is
-!        the solution of the light-time equation
-!
-!                  | T(ET-LT) - O(ET) |
-!           LT = ------------------------                            (1)
-!                           c
-!
-!        The ratio
-!
-!            | T(ET) - O(ET) |
-!          ---------------------                                     (2)
-!                    c
-!
-!        is used as a first approximation to LT; inserting (2) into the
-!        right hand side of the light-time equation (1) yields the
-!        "one-iteration" estimate of the one-way light time ("LT").
-!        Repeating the process until the estimates of LT converge
-!        yields the "converged Newtonian" light time estimate ("CN").
-!
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the position of the target body relative to the observer:
-!        T(ET-LT) - O(ET).
-!
-!           SSB ---> O(ET)
-!            | \     |
-!            |  \    |
-!            |   \   | T(ET-LT) - O(ET)
-!            |    \  |
-!            V     V V
-!           T(ET)  T(ET-LT)
-!
-!        The position component of the light time corrected state
-!        is the vector
-!
-!           T(ET-LT) - O(ET)
-!
-!        The velocity component of the light time corrected state
-!        is the difference
-!
-!           T_vel(ET-LT)*(1-dLT/dET) - O_vel(ET)
-!
-!        where T_vel and O_vel are, respectively, the velocities of the
-!        target and observer relative to the solar system barycenter at
-!        the epochs ET-LT and ET.
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated toward the solar system barycenter-
-!        relative velocity vector of the observer. The rotation is
-!        computed as follows:
-!
-!           Let r be the light time corrected vector from the observer
-!           to the object, and v be the velocity of the observer with
-!           respect to the solar system barycenter. Let w be the angle
-!           between them. The aberration angle phi is given by
-!
-!              sin(phi) = v sin(w) / c
-!
-!           Let h be the vector given by the cross product
-!
-!              h = r X v
-!
-!           Rotate r by phi radians about h to obtain the apparent
-!           position of the object.
-!
-!        When stellar aberration corrections are used, the rate of
-!        change of the stellar aberration correction is accounted for
-!        in the computation of the output velocity.
-!
-!        Transmission case
-!        ==================
-!
-!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' is
-!        selected, SPKEZ computes the position of the target body T at
-!        epoch ET+LT, where LT is the one-way light time. LT is the
-!        solution of the light-time equation
-!
-!                  | T(ET+LT) - O(ET) |
-!           LT = ------------------------                            (3)
-!                            c
-!
-!        Subtracting the geometric position of the observer, O(ET),
-!        gives the position of the target body relative to the
-!        observer: T(ET-LT) - O(ET).
-!
-!                   SSB --> O(ET)
-!                  / |    *
-!                 /  |  *  T(ET+LT) - O(ET)
-!                /   |*
-!               /   *|
-!              V  V  V
-!          T(ET+LT)  T(ET)
-!
-!        The position component of the light-time corrected state
-!        is the vector
-!
-!           T(ET+LT) - O(ET)
-!
-!        The velocity component of the light-time corrected state
-!        consists of the difference
-!
-!           T_vel(ET+LT)*(1+dLT/dET) - O_vel(ET)
-!
-!        where T_vel and O_vel are, respectively, the velocities of the
-!        target and observer relative to the solar system barycenter at
-!        the epochs ET+LT and ET.
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated away from the solar system barycenter-
-!        relative velocity vector of the observer. The rotation is
-!        computed as in the reception case, but the sign of the
-!        rotation angle is negated. Velocities are adjusted to account
-!        for the rate of change of the stellar aberration correction.
-!
-!     Precision of light time corrections
-!     ===================================
-!
-!        Corrections using one iteration of the light time solution
-!        ----------------------------------------------------------
-!
-!        When the requested aberration correction is 'LT', 'LT+S',
-!        'XLT', or 'XLT+S', only one iteration is performed in the
-!        algorithm used to compute LT.
-!
-!        The relative error in this computation
-!
-!           | LT_ACTUAL - LT_COMPUTED |  /  LT_ACTUAL
-!
-!        is at most
-!
-!            (V/C)**2
-!           ----------
-!            1 - (V/C)
-!
-!        which is well approximated by (V/C)**2, where V is the
-!        velocity of the target relative to an inertial frame and C is
-!        the speed of light.
-!
-!        For nearly all objects in the solar system V is less than 60
-!        km/sec. The value of C is ~300000 km/sec. Thus the
-!        one-iteration solution for LT has a potential relative error
-!        of not more than 4e-8. This is a potential light time error of
-!        approximately 2e-5 seconds per astronomical unit of distance
-!        separating the observer and target. Given the bound on V cited
-!        above:
-!
-!           As long as the observer and target are separated by less
-!           than 50 astronomical units, the error in the light time
-!           returned using the one-iteration light time corrections is
-!           less than 1 millisecond.
-!
-!           The magnitude of the corresponding position error, given
-!           the above assumptions, may be as large as (V/C)**2 * the
-!           distance between the observer and the uncorrected target
-!           position: 300 km or equivalently 6 km/AU.
-!
-!        In practice, the difference between positions obtained using
-!        one-iteration and converged light time is usually much smaller
-!        than the value computed above and can be insignificant. For
-!        example, for the spacecraft Mars Reconnaissance Orbiter and
-!        Mars Express, the position error for the one-iteration light
-!        time correction, applied to the spacecraft-to-Mars center
-!        vector, is at the 1 cm level.
-!
-!        Comparison of results obtained using the one-iteration and
-!        converged light time solutions is recommended when adequacy of
-!        the one-iteration solution is in doubt.
-!
-!        Converged corrections
-!        ---------------------
-!
-!        When the requested aberration correction is 'CN', 'CN+S',
-!        'XCN', or 'XCN+S', as many iterations as are required for
-!        convergence are performed in the computation of LT. Usually
-!        the solution is found after three iterations. The relative
-!        error present in this case is at most
-!
-!            (V/C)**4
-!           ----------
-!            1 - (V/C)
-!
-!        which is well approximated by (V/C)**4.
-!
-!           The precision of this computation (ignoring round-off
-!           error) is better than 4e-11 seconds for any pair of objects
-!           less than 50 AU apart, and having speed relative to the
-!           solar system barycenter less than 60 km/s.
-!
-!           The magnitude of the corresponding position error, given
-!           the above assumptions, may be as large as (V/C)**4 * the
-!           distance between the observer and the uncorrected target
-!           position: 1.2 cm at 50 AU or equivalently 0.24 mm/AU.
-!
-!        However, to very accurately model the light time between
-!        target and observer one must take into account effects due to
-!        general relativity. These may be as high as a few hundredths
-!        of a millisecond for some objects.
-!
-!     Relativistic Corrections
-!     =========================
-!
-!     This routine does not attempt to perform either general or
-!     special relativistic corrections in computing the various
-!     aberration corrections. For many applications relativistic
-!     corrections are not worth the expense of added computation
-!     cycles. If however, your application requires these additional
-!     corrections we suggest you consult the astronomical almanac (page
-!     B36) for a discussion of how to carry out these corrections.
-!
-! $ Examples
-!
-!     1)  Load a planetary ephemeris SPK; then look up a series of
-!         geometric states of the moon relative to the earth,
-!         referenced to the J2000 frame.
-!
-!               IMPLICIT NONE
-!         C
-!         C     Local constants
-!         C
-!               CHARACTER*(*)         FRAME
-!               PARAMETER           ( FRAME  = 'J2000' )
-!
-!               CHARACTER*(*)         ABCORR
-!               PARAMETER           ( ABCORR = 'NONE' )
-!
-!         C
-!         C     The name of the SPK file shown here is fictitious;
-!         C     you must supply the name of an SPK file available
-!         C     on your own computer system.
-!         C
-!               CHARACTER*(*)         SPK
-!               PARAMETER           ( SPK    = 'planet.bsp' )
-!
-!         C
-!         C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
-!         C
-!               DOUBLE PRECISION      ET0
-!               PARAMETER           ( ET0    = 0.0D0 )
-!
-!         C
-!         C     Use a time step of 1 hour; look up 100 states.
-!         C
-!               DOUBLE PRECISION      STEP
-!               PARAMETER           ( STEP   = 3600.0D0 )
-!
-!               INTEGER               MAXITR
-!               PARAMETER           ( MAXITR = 100 )
-!
-!         C
-!         C     The NAIF IDs of the earth and moon are 399 and 301
-!         C     respectively.
-!         C
-!               INTEGER               OBSRVR
-!               PARAMETER           ( OBSRVR = 399 )
-!
-!               INTEGER               TARGET
-!               PARAMETER           ( TARGET = 301 )
-!
-!         C
-!         C     Local variables
-!         C
-!               DOUBLE PRECISION      ET
-!               DOUBLE PRECISION      LT
-!               DOUBLE PRECISION      STATE ( 6 )
-!
-!               INTEGER               I
-!
-!         C
-!         C     Load the SPK file.
-!         C
-!               CALL FURNSH ( SPK )
-!
-!         C
-!         C     Step through a series of epochs, looking up a
-!         C     state vector at each one.
-!         C
-!               DO I = 1, MAXITR
-!
-!                  ET = ET0 + (I-1)*STEP
-!
-!                  CALL SPKEZ ( TARGET, ET, FRAME, ABCORR, OBSRVR,
-!              .                STATE,  LT                        )
-!
-!                  WRITE (*,*) 'ET = ', ET
-!                  WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-!                  WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-!                  WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-!                  WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-!                  WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-!                  WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-!                  WRITE (*,*) ' '
-!
-!               END DO
-!
-!               END
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton      (JPL)
-!     W.L. Taber      (JPL)
-!     N.J. Bachman    (JPL)
-!     J.E. McLean     (JPL)
-!     H.A. Neilan     (JPL)
-!     B.V. Semenov    (JPL)
-!     M.J. Spencer    (JPL)
-!     I.M. Underwood  (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.1.0, 03-JUL-2014 (NJB) (BVS)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!-    Last update was 23-SEP-2013 (NJB) (BVS)
-!
-!        Bug fix: replaced calls to ZZPRSCOR with calls to
-!        ZZVALCOR. The latter routine rejects all aberration
-!        corrections not supported by the SPK subsystem.
-!
-!        Bug fix: added a check and an exception for the FOUND flag
-!        returned by FRINFO.
-!
-!        Updated to save the input frame name and POOL state counter
-!        and to do frame name-ID conversion only if the counter has
-!        changed.
-!
-!        Updated various in-line comments.
-!
-!-    SPICELIB Version 5.0.1, 18-MAY-2010 (BVS)
-!
-!        Removed "C$" marker from text in the header.
-!
-!-    SPICELIB Version 5.0.0, 27-DEC-2007 (NJB)
-!
-!        This routine was upgraded to more accurately compute
-!        aberration-corrected velocity, and in particular, make it
-!        more consistent with observer-target positions.
-!
-!        When light time corrections are used, the derivative of light
-!        time with respect to time is now accounted for in the
-!        computation of observer-target velocities. When the reference
-!        frame associated with the output state is time-dependent, the
-!        derivative of light time with respect to time is now accounted
-!        for in the computation of the rate of change of orientation of
-!        the reference frame.
-!
-!        When stellar aberration corrections are used, velocities
-!        now reflect the rate of range of the stellar aberration
-!        correction.
-!
-!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.
-!        Minor header error was corrected.
-!
-!-    SPICELIB Version 4.0.2, 20-OCT-2003 (EDW)
-!
-!        Added mention that LT returns in seconds.
-!
-!-    SPICELIB Version 4.0.1, 29-JUL-2003 (NJB) (CHA)
-!
-!        Various minor header changes were made to improve clarity.
-!
-!-    SPICELIB Version 4.0.0, 28-DEC-2001 (NJB)
-!
-!        Updated to handle aberration corrections for transmission
-!        of radiation. Formerly, only the reception case was
-!        supported. The header was revised and expanded to explain
-!        the functionality of this routine in more detail.
-!
-!-    SPICELIB Version 3.1.0, 09-JUL-1996 (WLT)
-!
-!        Corrected the description of LT in the Detailed Output
-!        section of the header.
-!
-!-    SPICELIB Version 3.0.0, 26-MAY-1995 (WLT)
-!
-!        The routine was upgraded to support non-inertial frames.
-!
-!-    SPICELIB Version 2.1.1, 5-AUG-1994 (HAN) (MJS)
-!
-!        Added code so that routine accepts lower case, mixed case
-!        and upper case versions of the string ABCORR.
-!
-!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 2.0.0, 18-JUL-1991 (JEM) (NJB)
-!
-!        The old SPKEZ did not compute the geometric state of one body
-!        with respect to another unless data existed for each body with
-!        respect to the solar system barycenter.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     easy reader for spk file
-!     get state relative observer corrected for aberrations
-!     read ephemeris data
-!     read trajectory data
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 5.0.0, 22-JUL-2007 (NJB)
-!
-!        Routine was upgraded to more accurately compute aberration-
-!        corrected velocity, and in particular, make it more consistent
-!        with observer-target positions. When light time corrections
-!        are used:
-!
-!           1) The derivative of light time with respect
-!              to time is now accounted for in the computation
-!              of observer-target velocities, for all types
-!              of reference frames.
-!
-!           2) The derivative of light time with respect
-!              to time is now accounted for in the computation of the
-!              rate of change of orientation of time-dependent
-!              reference frames for the output state. This rate of
-!              change affects observer-target velocities.
-!
-!        When stellar aberration corrections are used, velocities
-!        now reflect the rate of range of the stellar aberration
-!        correction.
-!
-!        This routine was modified as follows:
-!
-!           - SPKAPP is no longer called; it has been superseded
-!             by SPKACS. Aberration-corrected states relative to
-!             inertial frames are computed by SPKACS.
-!
-!           - The effect of the rate of change of light time on the
-!             rate of change of orientation of non-inertial output
-!             frames is accounted for in this routine. See the code
-!             near the end of this source file.
-!
-!        The header of this routine has been updated to reflect the
-!        upgrades described here.
-!
-!        As a separate upgrade, the method by which the aberration
-!        correction flag is parsed has been made more robust: parsing
-!        is now done by the routine ZZZPRSCOR. The new parsing
-!        technique calls for parsing the input string only when it
-!        differs from the previous value.
-!
-!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added. The new checks
-!        are intended to prevent arithmetic operations from
-!        being performed with uninitialized or invalid data.
-!
-!        Minor header error was corrected.
-!
-!-    SPICELIB Version 3.1.0, 09-JUL-1996 (WLT)
-!
-!        Corrected the description of LT in the Detailed Output
-!        section of the header.
-!
-!-    SPICELIB Version 3.0.0, 26-MAY-1995 (WLT)
-!
-!        The routine was upgraded so that it can now support
-!        non-inertial reference frames. In additions some
-!        of the error messages were slightly enhanced.
-!
-!-    SPICELIB Version 2.1.1, 5-AUG-1994 (HAN) (MJS)
-!
-!        Added code so that routine accepts lower case, mixed case
-!        and upper case versions of the string ABCORR.
-!
-!-    SPICELIB Version 2.0.0, 18-JUL-1991 (JEM) (NJB)
-!
-!        The previous version of SPKEZ could not
-!        compute the geometric state (no aberration
-!        correction) of one body with respect to
-!        another if the ephemeris data for each
-!        body relative to the Solar System Barycenter
-!        (body 0) had not been loaded. Now, if
-!        sufficient data is loaded, SPKEZ can always
-!        compute the state.
-!
-!        For example, suppose the file GLL.BSP contains
-!        segments of SPK data for the Galileo spacecraft
-!        (body -77) relative to the Jupiter Barycenter
-!        (body 5) over a period of time. If SPKEZ Version
-!        1.0.0 was called to compute the geometric state of
-!        -77 relative to 5 (or vice versa), a routine that
-!        SPKEZ calls, SPKSSB, would signal an error stating
-!        that there is insufficient data for computing the
-!        state of body 5 (relative to 0). Version 1.0.0
-!        of SPKEZ could not compute the requested state even
-!        though sufficient data had been loaded.
-!
-!        It is necessary to compute the states of each
-!        of the target and observing bodies relative to
-!        the solar system barycenter when aberration
-!        corrections are being applied. However, when
-!        computing geometric states, it is only necessary
-!        to trace back to the first common node. Positive
-!        side effects include the maintenance of precision
-!        and reduction in number of look ups.
-!
-!        The changes to the code in SPKEZ involved calling a new
-!        routine, SPKGEO, which computes the geometric state if
-!        no aberration corrections are requested.
-!
-!        The other cosmetic changes include the removal of a reference
-!        to the SPK User's Guide in Literature_References because
-!        the User's Guide is the same as SPK Required Reading.
-!
-!        Also, the item in Restrictions previously said
-!
-!           1) The ephemeris files to be used by SPKEZ must be loaded
-!              by SPKLEF before SPKSSB is called.
-!
-!        SPKSSB was replaced with SPKEZ.
-!
-!        The location of the position and velocity information in the
-!        output state vector argument STARG is now spelled out.
-!
-!        Finally, the Particulars section was updated. In Version
-!        1.0.0 it said that calling SPKEZ was equivalent to calling
-!        SPKSSB and SPKAPP.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the state (position and velocity) of a target body
+!!     relative to an observing body, optionally corrected for light
+!!     time (planetary aberration) and stellar aberration.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     NAIF_IDS
+!!     FRAMES
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body. The target
+!!                 and observer define a state vector whose position
+!!                 component points from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past J2000
+!!                 TDB, at which the state of the target body relative to
+!!                 the observer is to be computed. ET refers to time at
+!!                 the observer's location.
+!!
+!!     REF         is the name of the reference frame relative to which
+!!                 the output state vector should be expressed. This may
+!!                 be any frame supported by the SPICE system, including
+!!                 built-in frames (documented in the Frames Required
+!!                 Reading) and frames defined by a loaded frame kernel
+!!                 (FK).
+!!
+!!                 When REF designates a non-inertial frame, the
+!!                 orientation of the frame is evaluated at an epoch
+!!                 dependent on the selected aberration correction.
+!!                 See the description of the output state vector STARG
+!!                 for details.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied
+!!                 to the state of the target body to account for one-way
+!!                 light time and stellar aberration. See the discussion
+!!                 in the Particulars section for recommendations on
+!!                 how to choose aberration corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric state of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the state of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction uses an
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               state obtained with the 'LT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               state of the target---the position and
+!!                               velocity of the target as seen by the
+!!                               observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section
+!!                               below for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               state of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation  This option modifies the
+!!                               state obtained with the 'XLT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The position component of
+!!                               the computed target state indicates the
+!!                               direction that photons emitted from the
+!!                               observer's location must be "aimed" to
+!!                               hit the target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!!     OBS         is the NAIF ID code for an observing body.
+!!
+!! ## Detailed Output
+!!
+!!     STARG       is a Cartesian state vector representing the position
+!!                 and velocity of the target body relative to the
+!!                 specified observer. STARG is corrected for the
+!!                 specified aberrations, and is expressed with respect
+!!                 to the reference frame specified by REF. The first
+!!                 three components of STARG represent the x-, y- and
+!!                 z-components of the target's position; the last three
+!!                 components form the corresponding velocity vector.
+!!
+!!                 The position component of STARG points from the
+!!                 observer's location at ET to the aberration-corrected
+!!                 location of the target. Note that the sense of the
+!!                 position vector is independent of the direction of
+!!                 radiation travel implied by the aberration
+!!                 correction.
+!!
+!!                 The velocity component of STARG is the derivative
+!!                 with respect to time of the position component of
+!!                 STARG.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!                 Non-inertial frames are treated as follows: letting
+!!                 LTCENT be the one-way light time between the observer
+!!                 and the central body associated with the frame, the
+!!                 orientation of the frame is evaluated at ET-LTCENT,
+!!                 ET+LTCENT, or ET depending on whether the requested
+!!                 aberration correction is, respectively, for received
+!!                 radiation, transmitted radiation, or is omitted.
+!!                 LTCENT is computed using the method indicated by
+!!                 ABCORR.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds. If the target state is corrected
+!!                 for aberrations, then LT is the one-way light time
+!!                 between the observer and the light time corrected
+!!                 target location.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the reference frame REF is not a recognized reference
+!!        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
+!!
+!!     2) If the loaded kernels provide insufficient data to
+!!        compute the requested state vector, the deficiency will
+!!        be diagnosed by a routine in the call tree of this routine.
+!!
+!!     3) If an error occurs while reading an SPK or other kernel file,
+!!        the error  will be diagnosed by a routine in the call tree
+!!        of this routine.
+!!
+!!     4) If any of the required attributes of the reference frame REF
+!!        cannot be determined, 'SPICE(UNKNOWNFRAME2)' is signaled.
+!!
+!! ## Files
+!!
+!!     This routine computes states using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH. See the routine FURNSH and the SPK
+!!     and KERNEL Required Reading for further information on loading
+!!     (and unloading) kernels.
+!!
+!!     If the output state STARG is to be expressed relative to a
+!!     non-inertial frame, or if any of the ephemeris data used to
+!!     compute STARG are expressed relative to a non-inertial frame in
+!!     the SPK files providing those data, additional kernels may be
+!!     needed to enable the reference frame transformations required to
+!!     compute the state. Normally these additional kernels are PCK
+!!     files or frame kernels. Any such kernels must already be loaded
+!!     at the time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     This routine is part of the user interface to the SPICE ephemeris
+!!     system. It allows you to retrieve state information for any
+!!     ephemeris object relative to any other in a reference frame that
+!!     is convenient for further computations.
+!!
+!!     Aberration corrections
+!!     ======================
+!!
+!!     In space science or engineering applications one frequently
+!!     wishes to know where to point a remote sensing instrument, such
+!!     as an optical camera or radio antenna, in order to observe or
+!!     otherwise receive radiation from a target. This pointing problem
+!!     is complicated by the finite speed of light:  one needs to point
+!!     to where the target appears to be as opposed to where it actually
+!!     is at the epoch of observation. We use the adjectives
+!!     "geometric," "uncorrected," or "true" to refer to an actual
+!!     position or state of a target at a specified epoch. When a
+!!     geometric position or state vector is modified to reflect how it
+!!     appears to an observer, we describe that vector by any of the
+!!     terms "apparent," "corrected," "aberration corrected," or "light
+!!     time and stellar aberration corrected." The SPICE Toolkit can
+!!     correct for two phenomena affecting the apparent location of an
+!!     object:  one-way light time (also called "planetary aberration")
+!!     and stellar aberration.
+!!
+!!     One-way light time
+!!     ------------------
+!!
+!!     Correcting for one-way light time is done by computing, given an
+!!     observer and observation epoch, where a target was when the
+!!     observed photons departed the target's location. The vector from
+!!     the observer to this computed target location is called a "light
+!!     time corrected" vector. The light time correction depends on the
+!!     motion of the target relative to the solar system barycenter, but
+!!     it is independent of the velocity of the observer relative to the
+!!     solar system barycenter. Relativistic effects such as light
+!!     bending and gravitational delay are not accounted for in the
+!!     light time correction performed by this routine.
+!!
+!!     Stellar aberration
+!!     ------------------
+!!
+!!     The velocity of the observer also affects the apparent location
+!!     of a target:  photons arriving at the observer are subject to a
+!!     "raindrop effect" whereby their velocity relative to the observer
+!!     is, using a Newtonian approximation, the photons' velocity
+!!     relative to the solar system barycenter minus the velocity of the
+!!     observer relative to the solar system barycenter. This effect is
+!!     called "stellar aberration."  Stellar aberration is independent
+!!     of the velocity of the target. The stellar aberration formula
+!!     used by this routine does not include (the much smaller)
+!!     relativistic effects.
+!!
+!!     Stellar aberration corrections are applied after light time
+!!     corrections:  the light time corrected target position vector is
+!!     used as an input to the stellar aberration correction.
+!!
+!!     When light time and stellar aberration corrections are both
+!!     applied to a geometric position vector, the resulting position
+!!     vector indicates where the target "appears to be" from the
+!!     observer's location.
+!!
+!!     As opposed to computing the apparent position of a target, one
+!!     may wish to compute the pointing direction required for
+!!     transmission of photons to the target. This also requires
+!!     correction of the geometric target position for the effects of
+!!     light time and stellar aberration, but in this case the
+!!     corrections are computed for radiation traveling *from* the
+!!     observer to the target.
+!!
+!!     The "transmission" light time correction yields the target's
+!!     location as it will be when photons emitted from the observer's
+!!     location at ET arrive at the target. The transmission stellar
+!!     aberration correction is the inverse of the traditional stellar
+!!     aberration correction:  it indicates the direction in which
+!!     radiation should be emitted so that, using a Newtonian
+!!     approximation, the sum of the velocity of the radiation relative
+!!     to the observer and of the observer's velocity, relative to the
+!!     solar system barycenter, yields a velocity vector that points in
+!!     the direction of the light time corrected position of the target.
+!!
+!!     One may object to using the term "observer" in the transmission
+!!     case, in which radiation is emitted from the observer's location.
+!!     The terminology was retained for consistency with earlier
+!!     documentation.
+!!
+!!     Below, we indicate the aberration corrections to use for some
+!!     common applications:
+!!
+!!        1) Find the apparent direction of a target for a remote-sensing
+!!           observation.
+!!
+!!              Use 'LT+S' or 'CN+S: apply both light time and stellar
+!!              aberration corrections.
+!!
+!!           Note that using light time corrections alone ('LT' or 'CN')
+!!           is generally not a good way to obtain an approximation to
+!!           an apparent target vector: since light time and stellar
+!!           aberration corrections often partially cancel each other,
+!!           it may be more accurate to use no correction at all than to
+!!           use light time alone.
+!!
+!!        2) Find the corrected pointing direction to radiate a signal
+!!           to a target. This computation is often applicable for
+!!           implementing communications sessions.
+!!
+!!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
+!!              aberration corrections for transmission.
+!!
+!!        3) Compute the apparent position of a target body relative
+!!           to a star or other distant object.
+!!
+!!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
+!!              correction applied to the position of the distant
+!!              object. For example, if a star position is obtained from
+!!              a catalog, the position vector may not be corrected for
+!!              stellar aberration. In this case, to find the angular
+!!              separation of the star and the limb of a planet, the
+!!              vector from the observer to the planet should be
+!!              corrected for light time but not stellar aberration.
+!!
+!!        4) Obtain an uncorrected state vector derived directly from
+!!           data in an SPK file.
+!!
+!!              Use 'NONE'.
+!!
+!!        5) Use a geometric state vector as a low-accuracy estimate
+!!           of the apparent state for an application where execution
+!!           speed is critical.
+!!
+!!              Use 'NONE'.
+!!
+!!        6) While this routine cannot perform the relativistic
+!!           aberration corrections required to compute states
+!!           with the highest possible accuracy, it can supply the
+!!           geometric states required as inputs to these computations.
+!!
+!!              Use 'NONE', then apply relativistic aberration
+!!              corrections (not available in the SPICE Toolkit).
+!!
+!!     Below, we discuss in more detail how the aberration corrections
+!!     applied by this routine are computed.
+!!
+!!        Geometric case
+!!        ==============
+!!
+!!        SPKEZ begins by computing the geometric position T(ET) of the
+!!        target body relative to the solar system barycenter (SSB).
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the geometric position of the target body relative to the
+!!        observer. The one-way light time, LT, is given by
+!!
+!!                  | T(ET) - O(ET) |
+!!           LT = -------------------
+!!                          c
+!!
+!!        The geometric relationship between the observer, target, and
+!!        solar system barycenter is as shown:
+!!
+!!           SSB ---> O(ET)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(ET) - O(ET)
+!!            V  V
+!!           T(ET)
+!!
+!!        The returned state consists of the position vector
+!!
+!!           T(ET) - O(ET)
+!!
+!!        and a velocity obtained by taking the difference of the
+!!        corresponding velocities. In the geometric case, the
+!!        returned velocity is actually the time derivative of the
+!!        position.
+!!
+!!        Reception case
+!!        ==============
+!!
+!!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' is selected
+!!        for ABCORR, SPKEZ computes the position of the target body at
+!!        epoch ET-LT, where LT is the one-way light time. Let T(t) and
+!!        O(t) represent the positions of the target and observer
+!!        relative to the solar system barycenter at time t; then LT is
+!!        the solution of the light-time equation
+!!
+!!                  | T(ET-LT) - O(ET) |
+!!           LT = ------------------------                            (1)
+!!                           c
+!!
+!!        The ratio
+!!
+!!            | T(ET) - O(ET) |
+!!          ---------------------                                     (2)
+!!                    c
+!!
+!!        is used as a first approximation to LT; inserting (2) into the
+!!        right hand side of the light-time equation (1) yields the
+!!        "one-iteration" estimate of the one-way light time ("LT").
+!!        Repeating the process until the estimates of LT converge
+!!        yields the "converged Newtonian" light time estimate ("CN").
+!!
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the position of the target body relative to the observer:
+!!        T(ET-LT) - O(ET).
+!!
+!!           SSB ---> O(ET)
+!!            | \     |
+!!            |  \    |
+!!            |   \   | T(ET-LT) - O(ET)
+!!            |    \  |
+!!            V     V V
+!!           T(ET)  T(ET-LT)
+!!
+!!        The position component of the light time corrected state
+!!        is the vector
+!!
+!!           T(ET-LT) - O(ET)
+!!
+!!        The velocity component of the light time corrected state
+!!        is the difference
+!!
+!!           T_vel(ET-LT)*(1-dLT/dET) - O_vel(ET)
+!!
+!!        where T_vel and O_vel are, respectively, the velocities of the
+!!        target and observer relative to the solar system barycenter at
+!!        the epochs ET-LT and ET.
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated toward the solar system barycenter-
+!!        relative velocity vector of the observer. The rotation is
+!!        computed as follows:
+!!
+!!           Let r be the light time corrected vector from the observer
+!!           to the object, and v be the velocity of the observer with
+!!           respect to the solar system barycenter. Let w be the angle
+!!           between them. The aberration angle phi is given by
+!!
+!!              sin(phi) = v sin(w) / c
+!!
+!!           Let h be the vector given by the cross product
+!!
+!!              h = r X v
+!!
+!!           Rotate r by phi radians about h to obtain the apparent
+!!           position of the object.
+!!
+!!        When stellar aberration corrections are used, the rate of
+!!        change of the stellar aberration correction is accounted for
+!!        in the computation of the output velocity.
+!!
+!!        Transmission case
+!!        ==================
+!!
+!!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' is
+!!        selected, SPKEZ computes the position of the target body T at
+!!        epoch ET+LT, where LT is the one-way light time. LT is the
+!!        solution of the light-time equation
+!!
+!!                  | T(ET+LT) - O(ET) |
+!!           LT = ------------------------                            (3)
+!!                            c
+!!
+!!        Subtracting the geometric position of the observer, O(ET),
+!!        gives the position of the target body relative to the
+!!        observer: T(ET-LT) - O(ET).
+!!
+!!                   SSB --> O(ET)
+!!                  / |    *
+!!                 /  |  *  T(ET+LT) - O(ET)
+!!                /   |*
+!!               /   *|
+!!              V  V  V
+!!          T(ET+LT)  T(ET)
+!!
+!!        The position component of the light-time corrected state
+!!        is the vector
+!!
+!!           T(ET+LT) - O(ET)
+!!
+!!        The velocity component of the light-time corrected state
+!!        consists of the difference
+!!
+!!           T_vel(ET+LT)*(1+dLT/dET) - O_vel(ET)
+!!
+!!        where T_vel and O_vel are, respectively, the velocities of the
+!!        target and observer relative to the solar system barycenter at
+!!        the epochs ET+LT and ET.
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated away from the solar system barycenter-
+!!        relative velocity vector of the observer. The rotation is
+!!        computed as in the reception case, but the sign of the
+!!        rotation angle is negated. Velocities are adjusted to account
+!!        for the rate of change of the stellar aberration correction.
+!!
+!!     Precision of light time corrections
+!!     ===================================
+!!
+!!        Corrections using one iteration of the light time solution
+!!        ----------------------------------------------------------
+!!
+!!        When the requested aberration correction is 'LT', 'LT+S',
+!!        'XLT', or 'XLT+S', only one iteration is performed in the
+!!        algorithm used to compute LT.
+!!
+!!        The relative error in this computation
+!!
+!!           | LT_ACTUAL - LT_COMPUTED |  /  LT_ACTUAL
+!!
+!!        is at most
+!!
+!!            (V/C)**2
+!!           ----------
+!!            1 - (V/C)
+!!
+!!        which is well approximated by (V/C)**2, where V is the
+!!        velocity of the target relative to an inertial frame and C is
+!!        the speed of light.
+!!
+!!        For nearly all objects in the solar system V is less than 60
+!!        km/sec. The value of C is ~300000 km/sec. Thus the
+!!        one-iteration solution for LT has a potential relative error
+!!        of not more than 4e-8. This is a potential light time error of
+!!        approximately 2e-5 seconds per astronomical unit of distance
+!!        separating the observer and target. Given the bound on V cited
+!!        above:
+!!
+!!           As long as the observer and target are separated by less
+!!           than 50 astronomical units, the error in the light time
+!!           returned using the one-iteration light time corrections is
+!!           less than 1 millisecond.
+!!
+!!           The magnitude of the corresponding position error, given
+!!           the above assumptions, may be as large as (V/C)**2 * the
+!!           distance between the observer and the uncorrected target
+!!           position: 300 km or equivalently 6 km/AU.
+!!
+!!        In practice, the difference between positions obtained using
+!!        one-iteration and converged light time is usually much smaller
+!!        than the value computed above and can be insignificant. For
+!!        example, for the spacecraft Mars Reconnaissance Orbiter and
+!!        Mars Express, the position error for the one-iteration light
+!!        time correction, applied to the spacecraft-to-Mars center
+!!        vector, is at the 1 cm level.
+!!
+!!        Comparison of results obtained using the one-iteration and
+!!        converged light time solutions is recommended when adequacy of
+!!        the one-iteration solution is in doubt.
+!!
+!!        Converged corrections
+!!        ---------------------
+!!
+!!        When the requested aberration correction is 'CN', 'CN+S',
+!!        'XCN', or 'XCN+S', as many iterations as are required for
+!!        convergence are performed in the computation of LT. Usually
+!!        the solution is found after three iterations. The relative
+!!        error present in this case is at most
+!!
+!!            (V/C)**4
+!!           ----------
+!!            1 - (V/C)
+!!
+!!        which is well approximated by (V/C)**4.
+!!
+!!           The precision of this computation (ignoring round-off
+!!           error) is better than 4e-11 seconds for any pair of objects
+!!           less than 50 AU apart, and having speed relative to the
+!!           solar system barycenter less than 60 km/s.
+!!
+!!           The magnitude of the corresponding position error, given
+!!           the above assumptions, may be as large as (V/C)**4 * the
+!!           distance between the observer and the uncorrected target
+!!           position: 1.2 cm at 50 AU or equivalently 0.24 mm/AU.
+!!
+!!        However, to very accurately model the light time between
+!!        target and observer one must take into account effects due to
+!!        general relativity. These may be as high as a few hundredths
+!!        of a millisecond for some objects.
+!!
+!!     Relativistic Corrections
+!!     =========================
+!!
+!!     This routine does not attempt to perform either general or
+!!     special relativistic corrections in computing the various
+!!     aberration corrections. For many applications relativistic
+!!     corrections are not worth the expense of added computation
+!!     cycles. If however, your application requires these additional
+!!     corrections we suggest you consult the astronomical almanac (page
+!!     B36) for a discussion of how to carry out these corrections.
+!!
+!! ## Examples
+!!
+!!     1)  Load a planetary ephemeris SPK; then look up a series of
+!!         geometric states of the moon relative to the earth,
+!!         referenced to the J2000 frame.
+!!
+!!               IMPLICIT NONE
+!!         C
+!!         C     Local constants
+!!         C
+!!               CHARACTER*(*)         FRAME
+!!               PARAMETER           ( FRAME  = 'J2000' )
+!!
+!!               CHARACTER*(*)         ABCORR
+!!               PARAMETER           ( ABCORR = 'NONE' )
+!!
+!!         C
+!!         C     The name of the SPK file shown here is fictitious;
+!!         C     you must supply the name of an SPK file available
+!!         C     on your own computer system.
+!!         C
+!!               CHARACTER*(*)         SPK
+!!               PARAMETER           ( SPK    = 'planet.bsp' )
+!!
+!!         C
+!!         C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
+!!         C
+!!               DOUBLE PRECISION      ET0
+!!               PARAMETER           ( ET0    = 0.0D0 )
+!!
+!!         C
+!!         C     Use a time step of 1 hour; look up 100 states.
+!!         C
+!!               DOUBLE PRECISION      STEP
+!!               PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!               INTEGER               MAXITR
+!!               PARAMETER           ( MAXITR = 100 )
+!!
+!!         C
+!!         C     The NAIF IDs of the earth and moon are 399 and 301
+!!         C     respectively.
+!!         C
+!!               INTEGER               OBSRVR
+!!               PARAMETER           ( OBSRVR = 399 )
+!!
+!!               INTEGER               TARGET
+!!               PARAMETER           ( TARGET = 301 )
+!!
+!!         C
+!!         C     Local variables
+!!         C
+!!               DOUBLE PRECISION      ET
+!!               DOUBLE PRECISION      LT
+!!               DOUBLE PRECISION      STATE ( 6 )
+!!
+!!               INTEGER               I
+!!
+!!         C
+!!         C     Load the SPK file.
+!!         C
+!!               CALL FURNSH ( SPK )
+!!
+!!         C
+!!         C     Step through a series of epochs, looking up a
+!!         C     state vector at each one.
+!!         C
+!!               DO I = 1, MAXITR
+!!
+!!                  ET = ET0 + (I-1)*STEP
+!!
+!!                  CALL SPKEZ ( TARGET, ET, FRAME, ABCORR, OBSRVR,
+!!              .                STATE,  LT                        )
+!!
+!!                  WRITE (*,*) 'ET = ', ET
+!!                  WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+!!                  WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+!!                  WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+!!                  WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+!!                  WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+!!                  WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+!!                  WRITE (*,*) ' '
+!!
+!!               END DO
+!!
+!!               END
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     C.H. Acton      (JPL)
+!!     W.L. Taber      (JPL)
+!!     N.J. Bachman    (JPL)
+!!     J.E. McLean     (JPL)
+!!     H.A. Neilan     (JPL)
+!!     B.V. Semenov    (JPL)
+!!     M.J. Spencer    (JPL)
+!!     I.M. Underwood  (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.1.0, 03-JUL-2014 (NJB) (BVS)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!-    Last update was 23-SEP-2013 (NJB) (BVS)
+!!
+!!        Bug fix: replaced calls to ZZPRSCOR with calls to
+!!        ZZVALCOR. The latter routine rejects all aberration
+!!        corrections not supported by the SPK subsystem.
+!!
+!!        Bug fix: added a check and an exception for the FOUND flag
+!!        returned by FRINFO.
+!!
+!!        Updated to save the input frame name and POOL state counter
+!!        and to do frame name-ID conversion only if the counter has
+!!        changed.
+!!
+!!        Updated various in-line comments.
+!!
+!!-    SPICELIB Version 5.0.1, 18-MAY-2010 (BVS)
+!!
+!!        Removed "C$" marker from text in the header.
+!!
+!!-    SPICELIB Version 5.0.0, 27-DEC-2007 (NJB)
+!!
+!!        This routine was upgraded to more accurately compute
+!!        aberration-corrected velocity, and in particular, make it
+!!        more consistent with observer-target positions.
+!!
+!!        When light time corrections are used, the derivative of light
+!!        time with respect to time is now accounted for in the
+!!        computation of observer-target velocities. When the reference
+!!        frame associated with the output state is time-dependent, the
+!!        derivative of light time with respect to time is now accounted
+!!        for in the computation of the rate of change of orientation of
+!!        the reference frame.
+!!
+!!        When stellar aberration corrections are used, velocities
+!!        now reflect the rate of range of the stellar aberration
+!!        correction.
+!!
+!!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.
+!!        Minor header error was corrected.
+!!
+!!-    SPICELIB Version 4.0.2, 20-OCT-2003 (EDW)
+!!
+!!        Added mention that LT returns in seconds.
+!!
+!!-    SPICELIB Version 4.0.1, 29-JUL-2003 (NJB) (CHA)
+!!
+!!        Various minor header changes were made to improve clarity.
+!!
+!!-    SPICELIB Version 4.0.0, 28-DEC-2001 (NJB)
+!!
+!!        Updated to handle aberration corrections for transmission
+!!        of radiation. Formerly, only the reception case was
+!!        supported. The header was revised and expanded to explain
+!!        the functionality of this routine in more detail.
+!!
+!!-    SPICELIB Version 3.1.0, 09-JUL-1996 (WLT)
+!!
+!!        Corrected the description of LT in the Detailed Output
+!!        section of the header.
+!!
+!!-    SPICELIB Version 3.0.0, 26-MAY-1995 (WLT)
+!!
+!!        The routine was upgraded to support non-inertial frames.
+!!
+!!-    SPICELIB Version 2.1.1, 5-AUG-1994 (HAN) (MJS)
+!!
+!!        Added code so that routine accepts lower case, mixed case
+!!        and upper case versions of the string ABCORR.
+!!
+!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 2.0.0, 18-JUL-1991 (JEM) (NJB)
+!!
+!!        The old SPKEZ did not compute the geometric state of one body
+!!        with respect to another unless data existed for each body with
+!!        respect to the solar system barycenter.
+!!
+!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+!!
+!!        Literature references added to the header.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     easy reader for spk file
+!!     get state relative observer corrected for aberrations
+!!     read ephemeris data
+!!     read trajectory data
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 5.0.0, 22-JUL-2007 (NJB)
+!!
+!!        Routine was upgraded to more accurately compute aberration-
+!!        corrected velocity, and in particular, make it more consistent
+!!        with observer-target positions. When light time corrections
+!!        are used:
+!!
+!!           1) The derivative of light time with respect
+!!              to time is now accounted for in the computation
+!!              of observer-target velocities, for all types
+!!              of reference frames.
+!!
+!!           2) The derivative of light time with respect
+!!              to time is now accounted for in the computation of the
+!!              rate of change of orientation of time-dependent
+!!              reference frames for the output state. This rate of
+!!              change affects observer-target velocities.
+!!
+!!        When stellar aberration corrections are used, velocities
+!!        now reflect the rate of range of the stellar aberration
+!!        correction.
+!!
+!!        This routine was modified as follows:
+!!
+!!           - SPKAPP is no longer called; it has been superseded
+!!             by SPKACS. Aberration-corrected states relative to
+!!             inertial frames are computed by SPKACS.
+!!
+!!           - The effect of the rate of change of light time on the
+!!             rate of change of orientation of non-inertial output
+!!             frames is accounted for in this routine. See the code
+!!             near the end of this source file.
+!!
+!!        The header of this routine has been updated to reflect the
+!!        upgrades described here.
+!!
+!!        As a separate upgrade, the method by which the aberration
+!!        correction flag is parsed has been made more robust: parsing
+!!        is now done by the routine ZZZPRSCOR. The new parsing
+!!        technique calls for parsing the input string only when it
+!!        differs from the previous value.
+!!
+!!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added. The new checks
+!!        are intended to prevent arithmetic operations from
+!!        being performed with uninitialized or invalid data.
+!!
+!!        Minor header error was corrected.
+!!
+!!-    SPICELIB Version 3.1.0, 09-JUL-1996 (WLT)
+!!
+!!        Corrected the description of LT in the Detailed Output
+!!        section of the header.
+!!
+!!-    SPICELIB Version 3.0.0, 26-MAY-1995 (WLT)
+!!
+!!        The routine was upgraded so that it can now support
+!!        non-inertial reference frames. In additions some
+!!        of the error messages were slightly enhanced.
+!!
+!!-    SPICELIB Version 2.1.1, 5-AUG-1994 (HAN) (MJS)
+!!
+!!        Added code so that routine accepts lower case, mixed case
+!!        and upper case versions of the string ABCORR.
+!!
+!!-    SPICELIB Version 2.0.0, 18-JUL-1991 (JEM) (NJB)
+!!
+!!        The previous version of SPKEZ could not
+!!        compute the geometric state (no aberration
+!!        correction) of one body with respect to
+!!        another if the ephemeris data for each
+!!        body relative to the Solar System Barycenter
+!!        (body 0) had not been loaded. Now, if
+!!        sufficient data is loaded, SPKEZ can always
+!!        compute the state.
+!!
+!!        For example, suppose the file GLL.BSP contains
+!!        segments of SPK data for the Galileo spacecraft
+!!        (body -77) relative to the Jupiter Barycenter
+!!        (body 5) over a period of time. If SPKEZ Version
+!!        1.0.0 was called to compute the geometric state of
+!!        -77 relative to 5 (or vice versa), a routine that
+!!        SPKEZ calls, SPKSSB, would signal an error stating
+!!        that there is insufficient data for computing the
+!!        state of body 5 (relative to 0). Version 1.0.0
+!!        of SPKEZ could not compute the requested state even
+!!        though sufficient data had been loaded.
+!!
+!!        It is necessary to compute the states of each
+!!        of the target and observing bodies relative to
+!!        the solar system barycenter when aberration
+!!        corrections are being applied. However, when
+!!        computing geometric states, it is only necessary
+!!        to trace back to the first common node. Positive
+!!        side effects include the maintenance of precision
+!!        and reduction in number of look ups.
+!!
+!!        The changes to the code in SPKEZ involved calling a new
+!!        routine, SPKGEO, which computes the geometric state if
+!!        no aberration corrections are requested.
+!!
+!!        The other cosmetic changes include the removal of a reference
+!!        to the SPK User's Guide in Literature_References because
+!!        the User's Guide is the same as SPK Required Reading.
+!!
+!!        Also, the item in Restrictions previously said
+!!
+!!           1) The ephemeris files to be used by SPKEZ must be loaded
+!!              by SPKLEF before SPKSSB is called.
+!!
+!!        SPKSSB was replaced with SPKEZ.
+!!
+!!        The location of the position and velocity information in the
+!!        output state vector argument STARG is now spelled out.
+!!
+!!        Finally, the Particulars section was updated. In Version
+!!        1.0.0 it said that calling SPKEZ was equivalent to calling
+!!        SPKSSB and SPKAPP.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Saved frame name length.
+!!
+!!     Local variables
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg, vsclip
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       character(*), parameter :: rname = 'ZZSPKEZ1'
       integer(ip), parameter :: frnmln = 32
       real(wp) :: state    ( 6    )
@@ -9189,344 +8895,325 @@ contains
       end procedure zzspkez1
 
       module procedure zzdynfr0
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     For a specified dynamic frame, find the transformation
-!     that maps states from the dynamic frame to its base frame.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     PCK
-!     SPK
-!
-! $ Keywords
-!
-!     FRAMES
-!     PRIVATE
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     INFRAM      is the frame ID code for a dynamic reference frame.
-!                 Note that this interface differs from that of TKFRAM,
-!                 which uses a class ID to identify the frame.
-!
-!                 In this routine, we refer this frame both as the
-!                 "input frame" and the "defined frame."
-!
-!     CENTER      is NAIF ID code for the center of the frame
-!                 designated by INFRAM.  This code, although derivable
-!                 from INFRAM, is passed in for convenience.
-!
-!     ET          is an epoch in ephemeris seconds past J2000 for which
-!                 the caller requests a state transformation matrix.
-!
-! $ Detailed_Output
-!
-!     XFORM       is a 6x6 matrix that transforms states relative to
-!                 INFRAM to states relative to BASFRM.
-!
-!     BASFRM      is the frame ID code of the base frame associated
-!                 with INFRAM.  The 6x6 matrix XFORM transforms states
-!                 relative to INFRAM to states relative to BASFRM. The
-!                 state transformation is performed by left-multiplying
-!                 by XFORM a state expressed relative to INFRAM. This
-!                 is easily accomplished via the subroutine call shown
-!                 below.
-!
-!                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
-!
-! $ Parameters
-!
-!     See include file zzdyn.inc.
-!
-! $ Exceptions
-!
-!     1)  If a dynamic frame evaluation requires unavailable kernel
-!         data, the error will be diagnosed by routines in the call
-!         tree of this routine.
-!
-!     2)  If a precession model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     3)  If a nutation model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     4)  If an obliquity model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     5)  If an unrecognized precession model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     6)  If an unrecognized nutation model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     7)  If an unrecognized obliquity model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     8)  If an attempt to look up the center of a frame does
-!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
-!         signaled.
-!
-!     9)  In a two-vector frame definition, if a constant vector
-!         specification method is not recognized, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     10) In a two-vector frame definition, if a vector definition
-!         method is not recognized, the error SPICE(NOTSUPPORTED)
-!         is signaled.
-!
-!     11) If an unrecognized dynamic frame family is specified, the
-!          error SPICE(NOTSUPPORTED) is signaled.
-!
-!     12) If an unrecognized dynamic frame definition style is
-!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     13) If an unrecognized dynamic frame rotation state is
-!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     14) If both a freeze epoch and a rotation state are specified,
-!         the error SPICE(FRAMEDEFERROR) is signaled.
-!
-!     15) If neither a freeze epoch nor a rotation state are specified
-!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
-!         signaled.
-!
-!     16) In a two-vector frame definition, if an invalid axis
-!         specification is encountered, the error SPICE(INVALIDAXIS) is
-!         signaled.
-!
-!     17) In a two-vector frame definition using a target near point
-!         vector, if the body-fixed frame associated with the target
-!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
-!
-!     18) If the state of the near point on a target as seen from
-!         an observer cannot be computed, the error
-!         SPICE(DEGENERATECASE) is signaled.
-!
-!     19) If a dynamic frame evaluation requires excessive recursion
-!         depth, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-!     20) When a two-vector dynamic frame is evaluated, if the
-!         primary and secondary vectors have angular separation less
-!         than the minimum allowed value, or if the angular separation
-!         differs from Pi by less than the minimum allowed value, the
-!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
-!         separation is given by the parameter LBSEP; this value may be
-!         overridden by supplying a different value in the frame
-!         definition.
-!
-!     21) If invalid units occur in a frame definition, the error
-!         will be diagnosed by a routine in the call tree of this
-!         routine.
-!
-!     22) If an invalid Euler axis sequence occurs in a frame
-!         definition, the error will be diagnosed by a routine in the
-!         call tree of this routine.
-!
-! $ Files
-!
-!     1) SPK files containing data for each observer and target
-!        are required to support two-vector frames.  Note that
-!        observer-target pairs can be implicit, as in the case
-!        of a constant vector whose frame is evaluated at a
-!        light-time corrected epoch:  the light time the frame
-!        center to an observer must be computable in this case,
-!        which implies the state of the frame center as seen by
-!        the observer must be computable.
-!
-!     2) Any of SPK, CK, PCK, and frame kernels will also be required
-!        if any frames referenced in the definition of INFRAM (as a
-!        base frame, velocity vector frame, or constant vector frame)
-!        require them, or if any vectors used to define INFRAM require
-!        these data in order to be computable.
-!
-!     3) When CK data are required, one or more associated SCLK kernels
-!        ---normally, one kernel per spacecraft clock---are
-!        required as well.  A leapseconds kernel may be required
-!        whenever an SCLK kernel is required.
-!
-!     4) When a two-vector frame is defined using a target near point,
-!        a PCK file giving orientation and providing a triaxial shape
-!        model for the target body is required.
-!
-! $ Particulars
-!
-!     Currently only parameterized dynamic frames are supported by
-!     this routine.
-!
-!     Currently supported parameterized dynamic families are:
-!
-!        Two-vector
-!        ==========
-!
-!           Vector definitions
-!           ------------------
-!           Observer-target position
-!           Observer-target velocity
-!           Near point on target
-!           Constant vector in specified frame
-!
-!        Mean Equator and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!
-!        Mean Ecliptic and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!                   1980 IAU mean obliquity model
-!
-!        True Equator and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!                   1980 IAU nutation model
-!
-!        Euler frames
-!        ============
-!
-!           Euler angle definitions
-!           -----------------------
-!           Polynomial
-!
-!        Product frames
-!        ==============
-!
-!           Product definitions
-!           -------------------
-!           Array of "from" frames
-!           Array of "to" frames
-!
-! $ Examples
-!
-!     See FRMGET.
-!
-! $ Restrictions
-!
-!     1) This is a SPICE private routine; the routine is subject
-!        to change without notice.  User applications should not
-!        call this routine.
-!
-!     2) Many numerical problems can occur when dynamic frames
-!        are evaluated.  Users must determine whether dynamic frame
-!        definitions are suitable for their applications. See the
-!        Exceptions section for a list of possible problems.
-!
-!     3) Use of aberration corrections may lead to severe loss of
-!        accuracy in state transformation derivatives.
-!
-!     4) Two-vector frame definitions can suffer extreme loss of
-!         precision due to near-singular geometry.
-!
-!     5) Two-vector frame definitions involving velocity vectors
-!        require numerical differentiation in order to compute the
-!        derivative of the state transformation.  Such derivatives may
-!        have low accuracy.
-!
-!     6)  If a body RADII vector has other than exactly thee elements,
-!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
-!         the call tree of this routine.
-!
-!     7)  If a body RADII vector has any element less-than or
-!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
-!         a routine in the call tree of this routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
-!
-!        Support for product frames was added. Re-ordered header
-!        sections.
-!
-!        Body radii accessed from kernel pool using ZZGFTREB.
-!
-!        Bug fix: aberration correction strings for observer-target
-!        velocity vectors are now parsed using ZZVALCOR. This improves
-!        error checking. Note that aberration correction strings for
-!        constant vectors used in two-vector frame specifications are
-!        still parsed using ZZPRSCOR.
-!
-!        Bug fix: calls to FAILED after calls to ZZDYNVAC were added.
-!
-!        Added some FAILED() calls.
-!
-!-    SPICELIB Version 1.1.1, 02-MAR-2010 (NJB)
-!
-!        Typo in Brief_I/O section was corrected: "Class ID"
-!        was changed to "Frame ID." Corrected order of header
-!        sections.
-!
-!-    SPICELIB Version 1.1.0, 23-OCT-2005 (NJB)
-!
-!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
-!
-!        Call to ZZBODVCD was replaced with call to BODVCD.
-!
-!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     For a specified dynamic frame, find the transformation
+!!     that maps states from the dynamic frame to its base frame.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     PCK
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRAM      is the frame ID code for a dynamic reference frame.
+!!                 Note that this interface differs from that of TKFRAM,
+!!                 which uses a class ID to identify the frame.
+!!
+!!                 In this routine, we refer this frame both as the
+!!                 "input frame" and the "defined frame."
+!!
+!!     CENTER      is NAIF ID code for the center of the frame
+!!                 designated by INFRAM.  This code, although derivable
+!!                 from INFRAM, is passed in for convenience.
+!!
+!!     ET          is an epoch in ephemeris seconds past J2000 for which
+!!                 the caller requests a state transformation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     XFORM       is a 6x6 matrix that transforms states relative to
+!!                 INFRAM to states relative to BASFRM.
+!!
+!!     BASFRM      is the frame ID code of the base frame associated
+!!                 with INFRAM.  The 6x6 matrix XFORM transforms states
+!!                 relative to INFRAM to states relative to BASFRM. The
+!!                 state transformation is performed by left-multiplying
+!!                 by XFORM a state expressed relative to INFRAM. This
+!!                 is easily accomplished via the subroutine call shown
+!!                 below.
+!!
+!!                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
+!!
+!! ## Parameters
+!!
+!!     See include file zzdyn.inc.
+!!
+!! ## Exceptions
+!!
+!!     1)  If a dynamic frame evaluation requires unavailable kernel
+!!         data, the error will be diagnosed by routines in the call
+!!         tree of this routine.
+!!
+!!     2)  If a precession model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     3)  If a nutation model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     4)  If an obliquity model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     5)  If an unrecognized precession model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     6)  If an unrecognized nutation model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     7)  If an unrecognized obliquity model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     8)  If an attempt to look up the center of a frame does
+!!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
+!!         signaled.
+!!
+!!     9)  In a two-vector frame definition, if a constant vector
+!!         specification method is not recognized, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     10) In a two-vector frame definition, if a vector definition
+!!         method is not recognized, the error SPICE(NOTSUPPORTED)
+!!         is signaled.
+!!
+!!     11) If an unrecognized dynamic frame family is specified, the
+!!          error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     12) If an unrecognized dynamic frame definition style is
+!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     13) If an unrecognized dynamic frame rotation state is
+!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     14) If both a freeze epoch and a rotation state are specified,
+!!         the error SPICE(FRAMEDEFERROR) is signaled.
+!!
+!!     15) If neither a freeze epoch nor a rotation state are specified
+!!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
+!!         signaled.
+!!
+!!     16) In a two-vector frame definition, if an invalid axis
+!!         specification is encountered, the error SPICE(INVALIDAXIS) is
+!!         signaled.
+!!
+!!     17) In a two-vector frame definition using a target near point
+!!         vector, if the body-fixed frame associated with the target
+!!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
+!!
+!!     18) If the state of the near point on a target as seen from
+!!         an observer cannot be computed, the error
+!!         SPICE(DEGENERATECASE) is signaled.
+!!
+!!     19) If a dynamic frame evaluation requires excessive recursion
+!!         depth, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!!     20) When a two-vector dynamic frame is evaluated, if the
+!!         primary and secondary vectors have angular separation less
+!!         than the minimum allowed value, or if the angular separation
+!!         differs from Pi by less than the minimum allowed value, the
+!!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
+!!         separation is given by the parameter LBSEP; this value may be
+!!         overridden by supplying a different value in the frame
+!!         definition.
+!!
+!!     21) If invalid units occur in a frame definition, the error
+!!         will be diagnosed by a routine in the call tree of this
+!!         routine.
+!!
+!!     22) If an invalid Euler axis sequence occurs in a frame
+!!         definition, the error will be diagnosed by a routine in the
+!!         call tree of this routine.
+!!
+!! ## Files
+!!
+!!     1) SPK files containing data for each observer and target
+!!        are required to support two-vector frames.  Note that
+!!        observer-target pairs can be implicit, as in the case
+!!        of a constant vector whose frame is evaluated at a
+!!        light-time corrected epoch:  the light time the frame
+!!        center to an observer must be computable in this case,
+!!        which implies the state of the frame center as seen by
+!!        the observer must be computable.
+!!
+!!     2) Any of SPK, CK, PCK, and frame kernels will also be required
+!!        if any frames referenced in the definition of INFRAM (as a
+!!        base frame, velocity vector frame, or constant vector frame)
+!!        require them, or if any vectors used to define INFRAM require
+!!        these data in order to be computable.
+!!
+!!     3) When CK data are required, one or more associated SCLK kernels
+!!        ---normally, one kernel per spacecraft clock---are
+!!        required as well.  A leapseconds kernel may be required
+!!        whenever an SCLK kernel is required.
+!!
+!!     4) When a two-vector frame is defined using a target near point,
+!!        a PCK file giving orientation and providing a triaxial shape
+!!        model for the target body is required.
+!!
+!! ## Particulars
+!!
+!!     Currently only parameterized dynamic frames are supported by
+!!     this routine.
+!!
+!!     Currently supported parameterized dynamic families are:
+!!
+!!        Two-vector
+!!        ==========
+!!
+!!           Vector definitions
+!!           ------------------
+!!           Observer-target position
+!!           Observer-target velocity
+!!           Near point on target
+!!           Constant vector in specified frame
+!!
+!!        Mean Equator and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!
+!!        Mean Ecliptic and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!                   1980 IAU mean obliquity model
+!!
+!!        True Equator and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!                   1980 IAU nutation model
+!!
+!!        Euler frames
+!!        ============
+!!
+!!           Euler angle definitions
+!!           -----------------------
+!!           Polynomial
+!!
+!!        Product frames
+!!        ==============
+!!
+!!           Product definitions
+!!           -------------------
+!!           Array of "from" frames
+!!           Array of "to" frames
+!!
+!! ## Examples
+!!
+!!     See FRMGET.
+!!
+!! ## Restrictions
+!!
+!!     1) This is a SPICE private routine; the routine is subject
+!!        to change without notice.  User applications should not
+!!        call this routine.
+!!
+!!     2) Many numerical problems can occur when dynamic frames
+!!        are evaluated.  Users must determine whether dynamic frame
+!!        definitions are suitable for their applications. See the
+!!        Exceptions section for a list of possible problems.
+!!
+!!     3) Use of aberration corrections may lead to severe loss of
+!!        accuracy in state transformation derivatives.
+!!
+!!     4) Two-vector frame definitions can suffer extreme loss of
+!!         precision due to near-singular geometry.
+!!
+!!     5) Two-vector frame definitions involving velocity vectors
+!!        require numerical differentiation in order to compute the
+!!        derivative of the state transformation.  Such derivatives may
+!!        have low accuracy.
+!!
+!!     6)  If a body RADII vector has other than exactly thee elements,
+!!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     7)  If a body RADII vector has any element less-than or
+!!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
+!!
+!!        Support for product frames was added. Re-ordered header
+!!        sections.
+!!
+!!        Body radii accessed from kernel pool using ZZGFTREB.
+!!
+!!        Bug fix: aberration correction strings for observer-target
+!!        velocity vectors are now parsed using ZZVALCOR. This improves
+!!        error checking. Note that aberration correction strings for
+!!        constant vectors used in two-vector frame specifications are
+!!        still parsed using ZZPRSCOR.
+!!
+!!        Bug fix: calls to FAILED after calls to ZZDYNVAC were added.
+!!
+!!        Added some FAILED() calls.
+!!
+!!-    SPICELIB Version 1.1.1, 02-MAR-2010 (NJB)
+!!
+!!        Typo in Brief_I/O section was corrected: "Class ID"
+!!        was changed to "Frame ID." Corrected order of header
+!!        sections.
+!!
+!!-    SPICELIB Version 1.1.0, 23-OCT-2005 (NJB)
+!!
+!!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
+!!
+!!        Call to ZZBODVCD was replaced with call to BODVCD.
+!!
+!!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard, isrchc, moved
       use pepper_math, only: latrec, mxmg, mxvg, polyds, vequ, vhat, vminug, vpack, vsep, vsubg
       use pepper_strings, only: cmprss, eqstr, intstr, ucase
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
       implicit none
       real(wp) :: epoch_1(1)  !! one-element copy of epoch (array argument)
       real(wp) :: minsep_1(1)  !! one-element copy of minsep (array argument)
@@ -9535,9 +9222,6 @@ contains
       real(wp) :: lat_1(1)  !! one-element copy of lat (array argument)
       real(wp) :: lon_1(1)  !! one-element copy of lon (array argument)
       real(wp) :: t0_1(1)  !! one-element copy of t0 (array argument)
-      include 'frmtyp.inc'
-      include 'zzabcorr.inc'
-      include 'zzdyn.inc'
       character(*), parameter :: rname = 'ZZDYNFR0'
       integer(ip), parameter :: timlen = 50
       integer(ip), parameter :: vnamln = 4
@@ -11282,160 +10966,141 @@ contains
       end procedure zzdynfr0
 
       module procedure zzfrmgt0
-
-! $ Abstract
-!
-!     Find the transformation from a user specified frame to
-!     another frame at a user specified epoch.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     INFRM       is the SPICE ID-code for some reference frame.
-!
-!     ET          is an epoch in ephemeris seconds past J2000 at
-!                 which the user wishes to retrieve a state
-!                 transformation matrix.
-!
-! $ Detailed_Output
-!
-!     XFORM       is a 6x6 matrix that transforms states relative to
-!                 INFRM to states relative to OUTFRM. (Assuming such a
-!                 transformation can be found.)
-!
-!     OUTFRM      is the SPICE ID-code of a reference frame. The 6x6
-!                 matrix XFORM transforms states relative to INFRM to
-!                 states relative to OUTFRM. The state transformation
-!                 is achieved by multiplying XFORM on the right by a
-!                 state relative to INFRM.  This is easily accomplished
-!                 via the subroutine call shown below.
-!
-!                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
-!
-!     FOUND       is a logical flag indicating whether or not a
-!                 transformation matrix could be found from INFRM to
-!                 some other frame. If a transformation matrix cannot
-!                 be found OUTFRM will be set to zero, FOUND will be
-!                 set to FALSE and XFORM will be returned as the zero
-!                 matrix.
-!
-! $ Parameters
-!
-!     See include file.
-!
-! $ Exceptions
-!
-!     1) If a transformation matrix cannot be located, then FOUND will
-!        be set to FALSE, OUTFRM will be set to zero and XFORM will be
-!        set to the zero 6x6 matrix.
-!
-!     2) If the class of the requested frame is not recognized the
-!        exception 'SPICE(UNKNOWNFRAMETYPE)' will be signaled.
-!
-! $ Files
-!
-!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
-!     to provide the needed frame definition and transformation data.
-!
-! $ Particulars
-!
-!     This is a low level routine used for determining a chain of state
-!     transformation matrices from one frame to another.
-!
-! $ Examples
-!
-!     See FRMCHG.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     B.V. Semenov    (JPL)
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 18-SEP-2020 (NJB)
-!
-!        Support for switch frames was added. VERSN is now
-!        initialized via a DATA statement. Corrected long error
-!        message to use the term "class" rather than "class id-code."
-!
-!-    SPICELIB Version 4.0.0, 05-JAN-2014 (BVS)
-!
-!        To prevent operations with un-initialized DP numbers, wrapped
-!        IF ( .NOT. FAILED() ) ... END IF around output matrix
-!        transposition/re-assignment operations in all branches where
-!        the routine returning the matrix might fail.
-!
-!        Added zero-ing out the output matrix in cases of a failed or
-!        .NOT. FOUND transformation look ups.
-!
-!-    SPICELIB Version 3.0.0, 18-DEC-2004 (NJB)
-!
-!        Added the new frame type 'DYN' to the list of frame
-!        types recognized by FRMGET.
-!
-!-    SPICELIB Version 2.0.0, 03-APR-1997 (WLT)
-!
-!        Added the new frame type 'TK' to the list of frame
-!        types recognized by FRMGET.  In addition the routine
-!        now checks FAILED after "getting" the frame transformation.
-!
-!-    SPICELIB Version 1.0.0, 20-OCT-1994 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Find a frame transformation matrix from a specified frame
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Set output flag.
-!
+!! ## Abstract
+!!
+!!     Find the transformation from a user specified frame to
+!!     another frame at a user specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRM       is the SPICE ID-code for some reference frame.
+!!
+!!     ET          is an epoch in ephemeris seconds past J2000 at
+!!                 which the user wishes to retrieve a state
+!!                 transformation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     XFORM       is a 6x6 matrix that transforms states relative to
+!!                 INFRM to states relative to OUTFRM. (Assuming such a
+!!                 transformation can be found.)
+!!
+!!     OUTFRM      is the SPICE ID-code of a reference frame. The 6x6
+!!                 matrix XFORM transforms states relative to INFRM to
+!!                 states relative to OUTFRM. The state transformation
+!!                 is achieved by multiplying XFORM on the right by a
+!!                 state relative to INFRM.  This is easily accomplished
+!!                 via the subroutine call shown below.
+!!
+!!                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
+!!
+!!     FOUND       is a logical flag indicating whether or not a
+!!                 transformation matrix could be found from INFRM to
+!!                 some other frame. If a transformation matrix cannot
+!!                 be found OUTFRM will be set to zero, FOUND will be
+!!                 set to FALSE and XFORM will be returned as the zero
+!!                 matrix.
+!!
+!! ## Parameters
+!!
+!!     See include file.
+!!
+!! ## Exceptions
+!!
+!!     1) If a transformation matrix cannot be located, then FOUND will
+!!        be set to FALSE, OUTFRM will be set to zero and XFORM will be
+!!        set to the zero 6x6 matrix.
+!!
+!!     2) If the class of the requested frame is not recognized the
+!!        exception 'SPICE(UNKNOWNFRAMETYPE)' will be signaled.
+!!
+!! ## Files
+!!
+!!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
+!!     to provide the needed frame definition and transformation data.
+!!
+!! ## Particulars
+!!
+!!     This is a low level routine used for determining a chain of state
+!!     transformation matrices from one frame to another.
+!!
+!! ## Examples
+!!
+!!     See FRMCHG.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     B.V. Semenov    (JPL)
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 18-SEP-2020 (NJB)
+!!
+!!        Support for switch frames was added. VERSN is now
+!!        initialized via a DATA statement. Corrected long error
+!!        message to use the term "class" rather than "class id-code."
+!!
+!!-    SPICELIB Version 4.0.0, 05-JAN-2014 (BVS)
+!!
+!!        To prevent operations with un-initialized DP numbers, wrapped
+!!        IF ( .NOT. FAILED() ) ... END IF around output matrix
+!!        transposition/re-assignment operations in all branches where
+!!        the routine returning the matrix might fail.
+!!
+!!        Added zero-ing out the output matrix in cases of a failed or
+!!        .NOT. FOUND transformation look ups.
+!!
+!!-    SPICELIB Version 3.0.0, 18-DEC-2004 (NJB)
+!!
+!!        Added the new frame type 'DYN' to the list of frame
+!!        types recognized by FRMGET.
+!!
+!!-    SPICELIB Version 2.0.0, 03-APR-1997 (WLT)
+!!
+!!        Added the new frame type 'TK' to the list of frame
+!!        types recognized by FRMGET.  In addition the routine
+!!        now checks FAILED after "getting" the frame transformation.
+!!
+!!-    SPICELIB Version 1.0.0, 20-OCT-1994 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Find a frame transformation matrix from a specified frame
+!!
+!!     SPICELIB Functions
+!!
+!!     Local Variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Set output flag.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip)           center
       integer(ip)           i
       integer(ip)           j
@@ -11600,29 +11265,28 @@ contains
 !$Procedure      ZZFRMCH0 (Frame Change)
 
       module procedure zzfrmch0
+!! ## Abstract
+!!
+!!     Return the state transformation matrix from one
+!!     frame to another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi
       use pepper_math, only: zzmsxf
-
-! $ Abstract
-!
-!     Return the state transformation matrix from one
-!     frame to another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
 
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
 
 
 ! $ Detailed_Input
@@ -12288,465 +11952,427 @@ contains
       end procedure zzfrmch0
 
       module procedure zzspkgo0
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Compute the geometric state (position and velocity) of a target
-!     body relative to an observing body.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG     is the standard NAIF ID code for a target body.
-!
-!     ET       is the epoch (ephemeris time) at which the state
-!              of the target body is to be computed.
-!
-!     REF      is the name of the reference frame to
-!              which the vectors returned by the routine should
-!              be rotated. This may be any frame supported by
-!              the SPICELIB subroutine FRMCHG.
-!
-!     OBS      is the standard NAIF ID code for an observing body.
-!
-! $ Detailed_Output
-!
-!     STATE    is a 6-dimensional vector that contains the geometric
-!              position and velocity of the target body, relative to the
-!              observing body, at epoch ET. STATE has six elements: the
-!              first three contain the target's position; the last three
-!              contain the target's velocity. These vectors are
-!              transformed into the specified reference frame. Units are
-!              always km and km/sec.
-!
-!     LT       is the one-way light time in seconds from the
-!              observing body to the geometric position of the
-!              target body at the specified epoch.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If insufficient ephemeris data has been loaded to compute
-!         the necessary states, the error SPICE(SPKINSUFFDATA) is
-!         signaled.
-!
-! $ Files
-!
-!     See $Restrictions.
-!
-! $ Particulars
-!
-!     SPKGEO computes the geometric state, T(t), of the target
-!     body and the geometric state, O(t), of the observing body
-!     relative to the first common center of motion. Subtracting
-!     O(t) from T(t) gives the geometric state of the target
-!     body relative to the observer.
-!
-!        CENTER ----- O(t)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(t) - O(t)
-!            |  /
-!           T(t)
-!
-!     The one-way light time, tau, is given by
-!
-!               | T(t) - O(t) |
-!        tau = -----------------
-!                      c
-!
-!     For example, if the observing body is -94, the Mars Observer
-!     spacecraft, and the target body is 401, Phobos, then the
-!     first common center is probably 4, the Mars Barycenter.
-!     O(t) is the state of -94 relative to 4 and T(t) is the
-!     state of 401 relative to 4.
-!
-!     The center could also be the Solar System Barycenter, body 0.
-!     For example, if the observer is 399, Earth, and the target
-!     is 299, Venus, then O(t) would be the state of 399 relative
-!     to 0 and T(t) would be the state of 299 relative to 0.
-!
-!     Ephemeris data from more than one segment may be required
-!     to determine the states of the target body and observer
-!     relative to a common center. SPKGEO reads as many segments
-!     as necessary, from as many files as necessary, using files
-!     that have been loaded by previous calls to FURNSH or SPKLEF
-!     (load ephemeris file).
-!
-!     SPKGEO is similar to SPKEZ but returns geometric states
-!     only, with no option to make planetary (light-time) nor
-!     stellar aberration corrections. The geometric states
-!     returned by SPKEZ and SPKGEO are the same.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Return the geometric state vector of Mars (499) as seen from
-!        Earth (399) in the J2000 frame and the one-way light time
-!        between them at the epoch July 4, 2003 11:00 AM PST.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File: spkgeo_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                        Contents
-!              ---------                        --------
-!              de430.bsp                        Planetary ephemeris
-!              mar097.bsp                       Mars satellite ephemeris
-!              naif0011.tls                     Leapseconds
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'de430.bsp',
-!                                  'mar097.bsp',
-!                                  'naif0011.tls' )
-!
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM SPKGEO_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      VNORM
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 32 )
-!
-!              INTEGER               TIMLEN
-!              PARAMETER           ( TIMLEN = 26 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(TIMLEN)    EPOCH
-!              CHARACTER*(NAMLEN)    REFFRM
-!
-!              DOUBLE PRECISION      ET
-!              DOUBLE PRECISION      LT
-!              DOUBLE PRECISION      STATE ( 6 )
-!
-!              INTEGER               I
-!              INTEGER               OBSRVR
-!              INTEGER               TARGET
-!
-!        C
-!        C     Load a set of kernels: an SPK file, a PCK
-!        C     file and a leapseconds file. Use a meta
-!        C     kernel for convenience.
-!        C
-!              CALL FURNSH ( 'spkgeo_ex1.tm' )
-!
-!        C
-!        C     Define parameters for a state lookup.
-!        C
-!              TARGET = 499
-!              EPOCH  = 'July 4, 2003 11:00 AM PST'
-!              REFFRM = 'J2000'
-!              OBSRVR = 399
-!
-!        C
-!        C     Convert the epoch to ephemeris time.
-!        C
-!              CALL STR2ET ( EPOCH, ET )
-!
-!        C
-!        C     Look-up the state for the defined parameters.
-!        C
-!              CALL SPKGEO ( TARGET, ET, REFFRM, OBSRVR, STATE, LT )
-!
-!        C
-!        C     Output...
-!        C
-!              WRITE(*,'(A,I3)') 'The position of    : ', TARGET
-!              WRITE(*,'(A,I3)') 'As observed from   : ', OBSRVR
-!              WRITE(*,'(2A)')   'In reference frame : ', REFFRM
-!              WRITE(*,'(2A)')   'At epoch           : ', EPOCH
-!              WRITE(*,*) ' '
-!
-!        C
-!        C     The first three entries of state contain the
-!        C     X, Y, Z position components. The final three contain
-!        C     the Vx, Vy, Vz velocity components.
-!        C
-!              WRITE(*,'(A,3F18.6)') 'R   (km):', ( STATE(I), I=1,3 )
-!              WRITE(*,'(A,3F18.6)') 'V (km/s):', ( STATE(I), I=4,6 )
-!              WRITE(*,*) ' '
-!              WRITE(*,'(A,F19.14)') 'Light time (s) between observer '
-!             .                   // 'and target: ', LT
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        The position of    : 499
-!        As observed from   : 399
-!        In reference frame : J2000
-!        At epoch           : July 4, 2003 11:00 AM PST
-!
-!        R   (km):   73826216.435288  -27128030.732406  -18741973.868287
-!        V (km/s):         -6.809504          7.513814          3.001290
-!
-!        Light time (s) between observer and target:  269.70264776317532
-!
-! $ Restrictions
-!
-!     1)  The ephemeris files to be used by SPKGEO must be loaded
-!         by FURNSH or SPKLEF before SPKGEO is called.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     J.E. McLean        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.1.0, 09-OCT-2021 (JDR) (NJB)
-!
-!        Bug fix: added calls to FAILED after calls to SPKPVN.
-!        Previously only one call to SPKPVN was followed by a FAILED
-!        call. Moved some FAILED checks so they will be hit whether
-!        or not SPKSFS finds a segment.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example to $Examples section. Removed unnecessary
-!        $Revisions section.
-!
-!        Added reference to FURNSH in $Particulars and $Restrictions
-!        sections.
-!
-!-    SPICELIB Version 3.0.0, 08-JAN-2014 (BVS)
-!
-!        Updated to save the input frame name and POOL state counter
-!        and to do frame name-ID conversion only if the counter has
-!        changed.
-!
-!        Updated to map the input frame name to its ID by first calling
-!        ZZNAMFRM, and then calling IRFNUM. The side effect of this
-!        change is that now the frame with the fixed name 'DEFAULT'
-!        that can be associated with any code via CHGIRF's entry point
-!        IRFDEF will be fully masked by a frame with identical name
-!        defined via a text kernel. Previously the CHGIRF's 'DEFAULT'
-!        frame masked the text kernel frame with the same name.
-!
-!        Fixed description of STATE in Detailed Output. Replaced
-!        SPKLEF with FURNSH and fixed errors in $Examples.
-!
-!-    SPICELIB Version 2.4.0, 01-SEP-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VADDG calls.
-!
-!-    SPICELIB Version 2.3.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.
-!
-!-    SPICELIB Version 2.2.1, 20-OCT-2003 (EDW)
-!
-!        Added mention that LT returns in seconds.
-!
-!-    SPICELIB Version 2.2.0, 11-APR-1997 (WLT)
-!
-!        The routine was modified to take advantage of the fact
-!        that most state transformation are between inertial frames.
-!        Looking up a transformation between inertial frames is
-!        substantially faster than looking up non-inertial
-!        transformations. Consequently slightly more
-!        complex code produces about a 50% increase in speed for
-!        many users.
-!
-!-    SPICELIB Version 2.1.0, 26-JUL-1996 (WLT)
-!
-!        The routine was upgraded so that potentially redundant
-!        computations are not performed.
-!
-!-    SPICELIB Version 2.0.0, 19-SEP-1995 (WLT)
-!
-!        The routine was upgraded so that it can return states
-!        relative to rotating frames.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 18-JUL-1991 (JEM)
-!
-!-&
-
-! $ Index_Entries
-!
-!     geometric state of one body relative to another
-!
-!-&
-
-!
-!     This is the idea:
-!
-!     Every body moves with respect to some center. The center
-!     is itself a body, which in turn moves about some other
-!     center.  If we begin at the target body (T), follow
-!     the chain,
-!
-!                                   T
-!                                     \
-!           SSB                        \
-!               \                     C[1]
-!                \                     /
-!                 \                   /
-!                  \                 /
-!                   \               /
-!                  C[3]-----------C[2]
-!
-!     and avoid circular definitions (A moves about B, and B moves
-!     about A), eventually we get the state relative to the solar
-!     system barycenter (which, for our purposes, doesn't move).
-!     Thus,
-!
-!        T    = T     + C[1]     + C[2]     + ... + C[n]
-!         SSB    C[1]       C[2]       [C3]             SSB
-!
-!     where
-!
-!        X
-!         Y
-!
-!     is the state of body X relative to body Y.
-!
-!     However, we don't want to follow each chain back to the SSB
-!     if it isn't necessary.  Instead we will just follow the chain
-!     of the target body and follow the chain of the observing body
-!     until we find a common node in the tree.
-!
-!     In the example below, C is the first common node.  We compute
-!     the state of TARG relative to C and the state of OBS relative
-!     to C, then subtract the two states.
-!
-!                                   TARG
-!                                     \
-!           SSB                        \
-!               \                       A
-!                \                     /            OBS
-!                 \                   /              |
-!                  \                 /               |
-!                   \               /                |
-!                    B-------------C-----------------D
-!
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-!
-!     CHLEN is the maximum length of a chain.  That is,
-!     it is the maximum number of bodies in the chain from
-!     the target or observer to the SSB.
-!
-
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local variables
-!
-
-
-
-
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-
-!
-!     Saved frame name/ID items.
-!
-
-
-!
-!     Initial values.
-!
-
-!
-!     In-line Function Definitions
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Compute the geometric state (position and velocity) of a target
+!!     body relative to an observing body.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG     is the standard NAIF ID code for a target body.
+!!
+!!     ET       is the epoch (ephemeris time) at which the state
+!!              of the target body is to be computed.
+!!
+!!     REF      is the name of the reference frame to
+!!              which the vectors returned by the routine should
+!!              be rotated. This may be any frame supported by
+!!              the SPICELIB subroutine FRMCHG.
+!!
+!!     OBS      is the standard NAIF ID code for an observing body.
+!!
+!! ## Detailed Output
+!!
+!!     STATE    is a 6-dimensional vector that contains the geometric
+!!              position and velocity of the target body, relative to the
+!!              observing body, at epoch ET. STATE has six elements: the
+!!              first three contain the target's position; the last three
+!!              contain the target's velocity. These vectors are
+!!              transformed into the specified reference frame. Units are
+!!              always km and km/sec.
+!!
+!!     LT       is the one-way light time in seconds from the
+!!              observing body to the geometric position of the
+!!              target body at the specified epoch.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If insufficient ephemeris data has been loaded to compute
+!!         the necessary states, the error SPICE(SPKINSUFFDATA) is
+!!         signaled.
+!!
+!! ## Files
+!!
+!!     See $Restrictions.
+!!
+!! ## Particulars
+!!
+!!     SPKGEO computes the geometric state, T(t), of the target
+!!     body and the geometric state, O(t), of the observing body
+!!     relative to the first common center of motion. Subtracting
+!!     O(t) from T(t) gives the geometric state of the target
+!!     body relative to the observer.
+!!
+!!        CENTER ----- O(t)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(t) - O(t)
+!!            |  /
+!!           T(t)
+!!
+!!     The one-way light time, tau, is given by
+!!
+!!               | T(t) - O(t) |
+!!        tau = -----------------
+!!                      c
+!!
+!!     For example, if the observing body is -94, the Mars Observer
+!!     spacecraft, and the target body is 401, Phobos, then the
+!!     first common center is probably 4, the Mars Barycenter.
+!!     O(t) is the state of -94 relative to 4 and T(t) is the
+!!     state of 401 relative to 4.
+!!
+!!     The center could also be the Solar System Barycenter, body 0.
+!!     For example, if the observer is 399, Earth, and the target
+!!     is 299, Venus, then O(t) would be the state of 399 relative
+!!     to 0 and T(t) would be the state of 299 relative to 0.
+!!
+!!     Ephemeris data from more than one segment may be required
+!!     to determine the states of the target body and observer
+!!     relative to a common center. SPKGEO reads as many segments
+!!     as necessary, from as many files as necessary, using files
+!!     that have been loaded by previous calls to FURNSH or SPKLEF
+!!     (load ephemeris file).
+!!
+!!     SPKGEO is similar to SPKEZ but returns geometric states
+!!     only, with no option to make planetary (light-time) nor
+!!     stellar aberration corrections. The geometric states
+!!     returned by SPKEZ and SPKGEO are the same.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Return the geometric state vector of Mars (499) as seen from
+!!        Earth (399) in the J2000 frame and the one-way light time
+!!        between them at the epoch July 4, 2003 11:00 AM PST.
+!!
+!!        Use the meta-kernel shown below to load the required SPICE
+!!        kernels.
+!!
+!!           KPL/MK
+!!
+!!           File: spkgeo_ex1.tm
+!!
+!!           This meta-kernel is intended to support operation of SPICE
+!!           example programs. The kernels shown here should not be
+!!           assumed to contain adequate or correct versions of data
+!!           required by SPICE-based user applications.
+!!
+!!           In order for an application to use this meta-kernel, the
+!!           kernels referenced here must be present in the user's
+!!           current working directory.
+!!
+!!           The names and contents of the kernels referenced
+!!           by this meta-kernel are as follows:
+!!
+!!              File name                        Contents
+!!              ---------                        --------
+!!              de430.bsp                        Planetary ephemeris
+!!              mar097.bsp                       Mars satellite ephemeris
+!!              naif0011.tls                     Leapseconds
+!!
+!!           \begindata
+!!
+!!              KERNELS_TO_LOAD = ( 'de430.bsp',
+!!                                  'mar097.bsp',
+!!                                  'naif0011.tls' )
+!!
+!!           \begintext
+!!
+!!           End of meta-kernel
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM SPKGEO_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              DOUBLE PRECISION      VNORM
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               NAMLEN
+!!              PARAMETER           ( NAMLEN = 32 )
+!!
+!!              INTEGER               TIMLEN
+!!              PARAMETER           ( TIMLEN = 26 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(TIMLEN)    EPOCH
+!!              CHARACTER*(NAMLEN)    REFFRM
+!!
+!!              DOUBLE PRECISION      ET
+!!              DOUBLE PRECISION      LT
+!!              DOUBLE PRECISION      STATE ( 6 )
+!!
+!!              INTEGER               I
+!!              INTEGER               OBSRVR
+!!              INTEGER               TARGET
+!!
+!!        C
+!!        C     Load a set of kernels: an SPK file, a PCK
+!!        C     file and a leapseconds file. Use a meta
+!!        C     kernel for convenience.
+!!        C
+!!              CALL FURNSH ( 'spkgeo_ex1.tm' )
+!!
+!!        C
+!!        C     Define parameters for a state lookup.
+!!        C
+!!              TARGET = 499
+!!              EPOCH  = 'July 4, 2003 11:00 AM PST'
+!!              REFFRM = 'J2000'
+!!              OBSRVR = 399
+!!
+!!        C
+!!        C     Convert the epoch to ephemeris time.
+!!        C
+!!              CALL STR2ET ( EPOCH, ET )
+!!
+!!        C
+!!        C     Look-up the state for the defined parameters.
+!!        C
+!!              CALL SPKGEO ( TARGET, ET, REFFRM, OBSRVR, STATE, LT )
+!!
+!!        C
+!!        C     Output...
+!!        C
+!!              WRITE(*,'(A,I3)') 'The position of    : ', TARGET
+!!              WRITE(*,'(A,I3)') 'As observed from   : ', OBSRVR
+!!              WRITE(*,'(2A)')   'In reference frame : ', REFFRM
+!!              WRITE(*,'(2A)')   'At epoch           : ', EPOCH
+!!              WRITE(*,*) ' '
+!!
+!!        C
+!!        C     The first three entries of state contain the
+!!        C     X, Y, Z position components. The final three contain
+!!        C     the Vx, Vy, Vz velocity components.
+!!        C
+!!              WRITE(*,'(A,3F18.6)') 'R   (km):', ( STATE(I), I=1,3 )
+!!              WRITE(*,'(A,3F18.6)') 'V (km/s):', ( STATE(I), I=4,6 )
+!!              WRITE(*,*) ' '
+!!              WRITE(*,'(A,F19.14)') 'Light time (s) between observer '
+!!             .                   // 'and target: ', LT
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        The position of    : 499
+!!        As observed from   : 399
+!!        In reference frame : J2000
+!!        At epoch           : July 4, 2003 11:00 AM PST
+!!
+!!        R   (km):   73826216.435288  -27128030.732406  -18741973.868287
+!!        V (km/s):         -6.809504          7.513814          3.001290
+!!
+!!        Light time (s) between observer and target:  269.70264776317532
+!!
+!! ## Restrictions
+!!
+!!     1)  The ephemeris files to be used by SPKGEO must be loaded
+!!         by FURNSH or SPKLEF before SPKGEO is called.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     J.E. McLean        (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.1.0, 09-OCT-2021 (JDR) (NJB)
+!!
+!!        Bug fix: added calls to FAILED after calls to SPKPVN.
+!!        Previously only one call to SPKPVN was followed by a FAILED
+!!        call. Moved some FAILED checks so they will be hit whether
+!!        or not SPKSFS finds a segment.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example to $Examples section. Removed unnecessary
+!!        $Revisions section.
+!!
+!!        Added reference to FURNSH in $Particulars and $Restrictions
+!!        sections.
+!!
+!!-    SPICELIB Version 3.0.0, 08-JAN-2014 (BVS)
+!!
+!!        Updated to save the input frame name and POOL state counter
+!!        and to do frame name-ID conversion only if the counter has
+!!        changed.
+!!
+!!        Updated to map the input frame name to its ID by first calling
+!!        ZZNAMFRM, and then calling IRFNUM. The side effect of this
+!!        change is that now the frame with the fixed name 'DEFAULT'
+!!        that can be associated with any code via CHGIRF's entry point
+!!        IRFDEF will be fully masked by a frame with identical name
+!!        defined via a text kernel. Previously the CHGIRF's 'DEFAULT'
+!!        frame masked the text kernel frame with the same name.
+!!
+!!        Fixed description of STATE in Detailed Output. Replaced
+!!        SPKLEF with FURNSH and fixed errors in $Examples.
+!!
+!!-    SPICELIB Version 2.4.0, 01-SEP-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in VADDG calls.
+!!
+!!-    SPICELIB Version 2.3.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.
+!!
+!!-    SPICELIB Version 2.2.1, 20-OCT-2003 (EDW)
+!!
+!!        Added mention that LT returns in seconds.
+!!
+!!-    SPICELIB Version 2.2.0, 11-APR-1997 (WLT)
+!!
+!!        The routine was modified to take advantage of the fact
+!!        that most state transformation are between inertial frames.
+!!        Looking up a transformation between inertial frames is
+!!        substantially faster than looking up non-inertial
+!!        transformations. Consequently slightly more
+!!        complex code produces about a 50% increase in speed for
+!!        many users.
+!!
+!!-    SPICELIB Version 2.1.0, 26-JUL-1996 (WLT)
+!!
+!!        The routine was upgraded so that potentially redundant
+!!        computations are not performed.
+!!
+!!-    SPICELIB Version 2.0.0, 19-SEP-1995 (WLT)
+!!
+!!        The routine was upgraded so that it can return states
+!!        relative to rotating frames.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 18-JUL-1991 (JEM)
+!!
+!! ## Index Entries
+!!
+!!     geometric state of one body relative to another
+!!
+!!     This is the idea:
+!!
+!!     Every body moves with respect to some center. The center
+!!     is itself a body, which in turn moves about some other
+!!     center.  If we begin at the target body (T), follow
+!!     the chain,
+!!
+!!                                   T
+!!                                     \
+!!           SSB                        \
+!!               \                     C[1]
+!!                \                     /
+!!                 \                   /
+!!                  \                 /
+!!                   \               /
+!!                  C[3]-----------C[2]
+!!
+!!     and avoid circular definitions (A moves about B, and B moves
+!!     about A), eventually we get the state relative to the solar
+!!     system barycenter (which, for our purposes, doesn't move).
+!!     Thus,
+!!
+!!        T    = T     + C[1]     + C[2]     + ... + C[n]
+!!         SSB    C[1]       C[2]       [C3]             SSB
+!!
+!!     where
+!!
+!!        X
+!!         Y
+!!
+!!     is the state of body X relative to body Y.
+!!
+!!     However, we don't want to follow each chain back to the SSB
+!!     if it isn't necessary.  Instead we will just follow the chain
+!!     of the target body and follow the chain of the observing body
+!!     until we find a common node in the tree.
+!!
+!!     In the example below, C is the first common node.  We compute
+!!     the state of TARG relative to C and the state of OBS relative
+!!     to C, then subtract the two states.
+!!
+!!                                   TARG
+!!                                     \
+!!           SSB                        \
+!!               \                       A
+!!                \                     /            OBS
+!!                 \                   /              |
+!!                  \                 /               |
+!!                   \               /                |
+!!                    B-------------C-----------------D
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     CHLEN is the maximum length of a chain.  That is,
+!!     it is the maximum number of bodies in the chain from
+!!     the target or observer to the SSB.
+!!
+!!     Saved frame name length.
+!!
+!!     Local variables
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved frame name/ID items.
+!!
+!!     Initial values.
+!!
+!!     In-line Function Definitions
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleard, isrchi, moved
       use pepper_math, only: mxv, mxvg, vaddg, vnorm, vsubg
       use pepper_strings, only: frstnp, intstr, prefix, suffix
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       character(*), parameter :: rname = 'ZZSPKGO0'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
@@ -13406,509 +13032,477 @@ contains
       end procedure zzspkgo0
 
       module procedure zzspklt0
-
-! $ Abstract
-!
-!     Return the state (position and velocity) of a target body
-!     relative to an observer, optionally corrected for light time,
-!     expressed relative to an inertial reference frame.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a state vector whose position
-!                 component points from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the state of the target body
-!                 relative to the observer is to be computed. ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the inertial reference frame with respect to which
-!                 the input state STOBS and the output state STARG are
-!                 expressed. REF must be recognized by the SPICE
-!                 Toolkit. The acceptable frames are listed in the
-!                 Frames Required Reading, as well as in the SPICELIB
-!                 routine CHGIRF.
-!
-!                 Case and blanks are not significant in the string
-!                 REF.
-!
-!     ABCORR      indicates the aberration corrections to be applied to
-!                 the state of the target body to account for one-way
-!                 light time. See the discussion in the Particulars
-!                 section for recommendations on how to choose
-!                 aberration corrections.
-!
-!                 If ABCORR includes the stellar aberration correction
-!                 symbol '+S', this flag is simply ignored. Aside from
-!                 the possible presence of this symbol, ABCORR may be
-!                 any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric state of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the state of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction involves
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section of
-!                               SPKEZR for a discussion of precision of
-!                               light time corrections.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               state of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-!     STOBS       is the geometric (uncorrected) state of the observer
-!                 relative to the solar system barycenter at epoch ET.
-!                 STOBS is a 6-vector: the first three components of
-!                 STOBS represent a Cartesian position vector; the last
-!                 three components represent the corresponding velocity
-!                 vector. STOBS is expressed relative to the inertial
-!                 reference frame designated by REF.
-!
-!                 Units are always km and km/sec.
-!
-! $ Detailed_Output
-!
-!     STARG       is a Cartesian state vector representing the position
-!                 and velocity of the target body relative to the
-!                 specified observer. STARG is corrected for the
-!                 specified aberration, and is expressed with respect
-!                 to the specified inertial reference frame.  The first
-!                 three components of STARG represent the x-, y- and
-!                 z-components of the target's position; last three
-!                 components form the corresponding velocity vector.
-!
-!                 The position component of STARG points from the
-!                 observer's location at ET to the aberration-corrected
-!                 location of the target. Note that the sense of the
-!                 position vector is independent of the direction of
-!                 radiation travel implied by the aberration
-!                 correction.
-!
-!                 Units are always km and km/sec.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target state is corrected
-!                 for light time, then LT is the one-way light time
-!                 between the observer and the light time-corrected
-!                 target location.
-!
-!     DLT         is the derivative with respect to barycentric
-!                 dynamical time of the one way light time between
-!                 target and observer:
-!
-!                    DLT = d(LT)/d(ET)
-!
-!                 DLT can also be described as the rate of change of
-!                 one way light time. DLT is unitless, since LT and
-!                 ET both have units of TDB seconds.
-!
-!                 If the observer and target are at the same position,
-!                 then DLT is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) For the convenience of the caller, the input aberration
-!        correction flag can call for stellar aberration correction via
-!        inclusion of the '+S' suffix. This portion of the aberration
-!        correction flag is ignored if present.
-!
-!     2) If the value of ABCORR is not recognized, the error
-!        is diagnosed by a routine in the call tree of this
-!        routine.
-!
-!     3) If the reference frame requested is not a recognized
-!        inertial reference frame, the error SPICE(BADFRAME)
-!        is signaled.
-!
-!     4) If the state of the target relative to the solar system
-!        barycenter cannot be computed, the error will be diagnosed
-!        by routines in the call tree of this routine.
-!
-!     5) If the observer and target are at the same position,
-!        then DLT is set to zero. This situation could arise,
-!        for example, when the observer is Mars and the target
-!        is the Mars barycenter.
-!
-!     6) If a division by zero error would occur in the computation
-!        of DLT, the error SPICE(DIVIDEBYZERO) is signaled.
-!
-! $ Files
-!
-!     This routine computes states using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH.  Application programs typically load
-!     kernels once before this routine is called, for example during
-!     program initialization; kernels need not be loaded repeatedly.
-!     See the routine FURNSH and the SPK and KERNEL Required Reading
-!     for further information on loading (and unloading) kernels.
-!
-!     If any of the ephemeris data used to compute STARG are expressed
-!     relative to a non-inertial frame in the SPK files providing those
-!     data, additional kernels may be needed to enable the reference
-!     frame transformations required to compute the state. Normally
-!     these additional kernels are PCK files or frame kernels. Any
-!     such kernels must already be loaded at the time this routine is
-!     called.
-!
-! $ Particulars
-!
-!     This routine supports higher-level SPK API routines that can
-!     perform both light time and stellar aberration corrections.
-!     User applications normally will not need to call this routine
-!     directly.
-!
-!     See the header of the routine SPKEZR for a detailed discussion
-!     of aberration corrections.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!    1) Look up a sequence of states of the Moon as seen from the
-!       Earth. Use light time corrections. Compute the first state for
-!       the epoch 2000 JAN 1 12:00:00 TDB; compute subsequent states at
-!       intervals of 1 hour. For each epoch, display the states, the
-!       one way light time between target and observer, and the rate of
-!       change of the one way light time.
-!
-!       Use the following meta-kernel to specify the kernels to
-!       load:
-!
-!          KPL/MK
-!
-!          File name: spkltc.tm
-!
-!          This meta-kernel is intended to support operation of SPICE
-!          example programs. The kernels shown here should not be
-!          assumed to contain adequate or correct versions of data
-!          required by SPICE-based user applications.
-!
-!          In order for an application to use this meta-kernel, the
-!          kernels referenced here must be present in the user's
-!          current working directory.
-!
-!          \begindata
-!
-!             KERNELS_TO_LOAD = ( 'de421.bsp',
-!                                 'pck00010.tpc',
-!                                 'naif0010.tls'  )
-!
-!          \begintext
-!
-!       The code example follows:
-!
-!           PROGRAM EX1
-!           IMPLICIT NONE
-!     C
-!     C     Local constants
-!     C
-!     C     The meta-kernel name shown here refers to a file whose
-!     C     contents are those shown above. This file and the kernels
-!     C     it references must exist in your current working directory.
-!     C
-!           CHARACTER*(*)         META
-!           PARAMETER           ( META   = 'spkltc.tm' )
-!     C
-!     C     Use a time step of 1 hour; look up 5 states.
-!     C
-!           DOUBLE PRECISION      STEP
-!           PARAMETER           ( STEP   = 3600.0D0 )
-!
-!           INTEGER               MAXITR
-!           PARAMETER           ( MAXITR = 5 )
-!     C
-!     C     Local variables
-!     C
-!           DOUBLE PRECISION      DLT
-!           DOUBLE PRECISION      ET
-!           DOUBLE PRECISION      ET0
-!           DOUBLE PRECISION      LT
-!           DOUBLE PRECISION      STATE ( 6 )
-!           DOUBLE PRECISION      STOBS ( 6 )
-!           INTEGER               I
-!
-!     C
-!     C     Load the SPK and LSK kernels via the meta-kernel.
-!     C
-!           CALL FURNSH ( META )
-!     C
-!     C     Convert the start time to seconds past J2000 TDB.
-!     C
-!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
-!     C
-!     C     Step through a series of epochs, looking up a
-!     C     state vector at each one.
-!     C
-!           DO I = 1, MAXITR
-!
-!              ET = ET0 + (I-1)*STEP
-!
-!     C
-!     C        Look up a state vector at epoch ET using the
-!     C        following inputs:
-!     C
-!     C           Target:                 Moon (NAIF ID code 301)
-!     C           Reference frame:        J2000
-!     C           Aberration correction:  Light time ('LT')
-!     C           Observer:               Earth (NAIF ID code 399)
-!     C
-!     C        Before we can execute this computation, we'll need the
-!     C        geometric state of the observer relative to the solar
-!     C        system barycenter at ET, expressed relative to the
-!     C        J2000 reference frame:
-!     C
-!              CALL SPKSSB ( 399, ET,    'J2000', STOBS )
-!     C
-!     C        Now compute the desired state vector:
-!     C
-!              CALL SPKLTC ( 301,   ET,    'J2000', 'LT',
-!          .                 STOBS, STATE, LT,      DLT     )
-!
-!              WRITE (*,*) 'ET = ', ET
-!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-!              WRITE (*,*) 'One-way light time (s):  ', LT
-!              WRITE (*,*) 'Light time rate:         ', DLT
-!              WRITE (*,*) ' '
-!
-!           END DO
-!
-!           END
-!
-!     On a PC/Linux/gfortran platform, the following output was
-!     produced:
-!
-!        ET =    0.0000000000000000
-!        J2000 x-position (km):     -291569.26541282982
-!        J2000 y-position (km):     -266709.18647825718
-!        J2000 z-position (km):     -76099.155118763447
-!        J2000 x-velocity (km/s):   0.64353061322177041
-!        J2000 y-velocity (km/s):  -0.66608181700820079
-!        J2000 z-velocity (km/s):  -0.30132283179625752
-!        One-way light time (s):     1.3423106103251679
-!        Light time rate:           1.07316908698977495E-007
-!
-!        ET =    3600.0000000000000
-!        J2000 x-position (km):     -289240.78128184378
-!        J2000 y-position (km):     -269096.44087958336
-!        J2000 z-position (km):     -77180.899725757539
-!        J2000 x-velocity (km/s):   0.65006211520087476
-!        J2000 y-velocity (km/s):  -0.66016273921695667
-!        J2000 z-velocity (km/s):  -0.29964267390571342
-!        One-way light time (s):     1.3426939548635302
-!        Light time rate:           1.05652598952224259E-007
-!
-!        ET =    7200.0000000000000
-!        J2000 x-position (km):     -286888.88736709207
-!        J2000 y-position (km):     -271462.30170547962
-!        J2000 z-position (km):     -78256.555682137609
-!        J2000 x-velocity (km/s):   0.65653599154284592
-!        J2000 y-velocity (km/s):  -0.65419657680401588
-!        J2000 z-velocity (km/s):  -0.29794027307420823
-!        One-way light time (s):     1.3430713117337547
-!        Light time rate:           1.03990456898758609E-007
-!
-!        ET =    10800.000000000000
-!        J2000 x-position (km):     -284513.79173691198
-!        J2000 y-position (km):     -273806.60031034052
-!        J2000 z-position (km):     -79326.043183274567
-!        J2000 x-velocity (km/s):   0.66295190054599118
-!        J2000 y-velocity (km/s):  -0.64818380709706158
-!        J2000 z-velocity (km/s):  -0.29621577937090349
-!        One-way light time (s):     1.3434426890693671
-!        Light time rate:           1.02330665243423737E-007
-!
-!        ET =    14400.000000000000
-!        J2000 x-position (km):     -282115.70368389413
-!        J2000 y-position (km):     -276129.16976799071
-!        J2000 z-position (km):     -80389.282965712249
-!        J2000 x-velocity (km/s):   0.66930950377548726
-!        J2000 y-velocity (km/s):  -0.64212490805688027
-!        J2000 z-velocity (km/s):  -0.29446934336246899
-!        One-way light time (s):     1.3438080956559786
-!        Light time rate:           1.00673403630050830E-007
-!
-! $ Restrictions
-!
-!     1) The routine SPKGEO should be used instead of this routine
-!        to compute geometric states. SPKGEO introduces less
-!        round-off error when the observer and target have common
-!        center that is closer to both objects than is the solar
-!        system barycenter.
-!
-!     2) The kernel files to be used by SPKLTC must be loaded
-!        (normally by the SPICELIB kernel loader FURNSH) before
-!        this routine is called.
-!
-!     3) Unlike most other SPK state computation routines, this
-!        routine requires that the output state be relative to an
-!        inertial reference frame.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 04-JUL-2014 (NJB)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!     Last update was 02-MAY-2012 (NJB)
-!
-!        Updated to ensure convergence when CN or XCN light time
-!        corrections are used. The new algorithm also terminates early
-!        (after fewer than three iterations) when convergence is
-!        attained.
-!
-!        Call to ZZPRSCOR was replaced by a call to ZZVALCOR.
-!
-!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     low-level light time correction
-!     light-time corrected state from spk file
-!     get light-time corrected state
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-!
-!     TOL is the tolerance used for a division-by-zero test
-!     performed prior to computation of DLT.
-!
-
-!
-!     Convergence limit:
-!
-
-!
-!     Maximum number of light time iterations for any
-!     aberration correction:
-!
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the state (position and velocity) of a target body
+!!     relative to an observer, optionally corrected for light time,
+!!     expressed relative to an inertial reference frame.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a state vector whose position
+!!                 component points from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the state of the target body
+!!                 relative to the observer is to be computed. ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the inertial reference frame with respect to which
+!!                 the input state STOBS and the output state STARG are
+!!                 expressed. REF must be recognized by the SPICE
+!!                 Toolkit. The acceptable frames are listed in the
+!!                 Frames Required Reading, as well as in the SPICELIB
+!!                 routine CHGIRF.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 REF.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied to
+!!                 the state of the target body to account for one-way
+!!                 light time. See the discussion in the Particulars
+!!                 section for recommendations on how to choose
+!!                 aberration corrections.
+!!
+!!                 If ABCORR includes the stellar aberration correction
+!!                 symbol '+S', this flag is simply ignored. Aside from
+!!                 the possible presence of this symbol, ABCORR may be
+!!                 any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric state of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the state of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction involves
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section of
+!!                               SPKEZR for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               state of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!!     STOBS       is the geometric (uncorrected) state of the observer
+!!                 relative to the solar system barycenter at epoch ET.
+!!                 STOBS is a 6-vector: the first three components of
+!!                 STOBS represent a Cartesian position vector; the last
+!!                 three components represent the corresponding velocity
+!!                 vector. STOBS is expressed relative to the inertial
+!!                 reference frame designated by REF.
+!!
+!!                 Units are always km and km/sec.
+!!
+!! ## Detailed Output
+!!
+!!     STARG       is a Cartesian state vector representing the position
+!!                 and velocity of the target body relative to the
+!!                 specified observer. STARG is corrected for the
+!!                 specified aberration, and is expressed with respect
+!!                 to the specified inertial reference frame.  The first
+!!                 three components of STARG represent the x-, y- and
+!!                 z-components of the target's position; last three
+!!                 components form the corresponding velocity vector.
+!!
+!!                 The position component of STARG points from the
+!!                 observer's location at ET to the aberration-corrected
+!!                 location of the target. Note that the sense of the
+!!                 position vector is independent of the direction of
+!!                 radiation travel implied by the aberration
+!!                 correction.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target state is corrected
+!!                 for light time, then LT is the one-way light time
+!!                 between the observer and the light time-corrected
+!!                 target location.
+!!
+!!     DLT         is the derivative with respect to barycentric
+!!                 dynamical time of the one way light time between
+!!                 target and observer:
+!!
+!!                    DLT = d(LT)/d(ET)
+!!
+!!                 DLT can also be described as the rate of change of
+!!                 one way light time. DLT is unitless, since LT and
+!!                 ET both have units of TDB seconds.
+!!
+!!                 If the observer and target are at the same position,
+!!                 then DLT is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) For the convenience of the caller, the input aberration
+!!        correction flag can call for stellar aberration correction via
+!!        inclusion of the '+S' suffix. This portion of the aberration
+!!        correction flag is ignored if present.
+!!
+!!     2) If the value of ABCORR is not recognized, the error
+!!        is diagnosed by a routine in the call tree of this
+!!        routine.
+!!
+!!     3) If the reference frame requested is not a recognized
+!!        inertial reference frame, the error SPICE(BADFRAME)
+!!        is signaled.
+!!
+!!     4) If the state of the target relative to the solar system
+!!        barycenter cannot be computed, the error will be diagnosed
+!!        by routines in the call tree of this routine.
+!!
+!!     5) If the observer and target are at the same position,
+!!        then DLT is set to zero. This situation could arise,
+!!        for example, when the observer is Mars and the target
+!!        is the Mars barycenter.
+!!
+!!     6) If a division by zero error would occur in the computation
+!!        of DLT, the error SPICE(DIVIDEBYZERO) is signaled.
+!!
+!! ## Files
+!!
+!!     This routine computes states using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH.  Application programs typically load
+!!     kernels once before this routine is called, for example during
+!!     program initialization; kernels need not be loaded repeatedly.
+!!     See the routine FURNSH and the SPK and KERNEL Required Reading
+!!     for further information on loading (and unloading) kernels.
+!!
+!!     If any of the ephemeris data used to compute STARG are expressed
+!!     relative to a non-inertial frame in the SPK files providing those
+!!     data, additional kernels may be needed to enable the reference
+!!     frame transformations required to compute the state. Normally
+!!     these additional kernels are PCK files or frame kernels. Any
+!!     such kernels must already be loaded at the time this routine is
+!!     called.
+!!
+!! ## Particulars
+!!
+!!     This routine supports higher-level SPK API routines that can
+!!     perform both light time and stellar aberration corrections.
+!!     User applications normally will not need to call this routine
+!!     directly.
+!!
+!!     See the header of the routine SPKEZR for a detailed discussion
+!!     of aberration corrections.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!    1) Look up a sequence of states of the Moon as seen from the
+!!       Earth. Use light time corrections. Compute the first state for
+!!       the epoch 2000 JAN 1 12:00:00 TDB; compute subsequent states at
+!!       intervals of 1 hour. For each epoch, display the states, the
+!!       one way light time between target and observer, and the rate of
+!!       change of the one way light time.
+!!
+!!       Use the following meta-kernel to specify the kernels to
+!!       load:
+!!
+!!          KPL/MK
+!!
+!!          File name: spkltc.tm
+!!
+!!          This meta-kernel is intended to support operation of SPICE
+!!          example programs. The kernels shown here should not be
+!!          assumed to contain adequate or correct versions of data
+!!          required by SPICE-based user applications.
+!!
+!!          In order for an application to use this meta-kernel, the
+!!          kernels referenced here must be present in the user's
+!!          current working directory.
+!!
+!!          \begindata
+!!
+!!             KERNELS_TO_LOAD = ( 'de421.bsp',
+!!                                 'pck00010.tpc',
+!!                                 'naif0010.tls'  )
+!!
+!!          \begintext
+!!
+!!       The code example follows:
+!!
+!!           PROGRAM EX1
+!!           IMPLICIT NONE
+!!     C
+!!     C     Local constants
+!!     C
+!!     C     The meta-kernel name shown here refers to a file whose
+!!     C     contents are those shown above. This file and the kernels
+!!     C     it references must exist in your current working directory.
+!!     C
+!!           CHARACTER*(*)         META
+!!           PARAMETER           ( META   = 'spkltc.tm' )
+!!     C
+!!     C     Use a time step of 1 hour; look up 5 states.
+!!     C
+!!           DOUBLE PRECISION      STEP
+!!           PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!           INTEGER               MAXITR
+!!           PARAMETER           ( MAXITR = 5 )
+!!     C
+!!     C     Local variables
+!!     C
+!!           DOUBLE PRECISION      DLT
+!!           DOUBLE PRECISION      ET
+!!           DOUBLE PRECISION      ET0
+!!           DOUBLE PRECISION      LT
+!!           DOUBLE PRECISION      STATE ( 6 )
+!!           DOUBLE PRECISION      STOBS ( 6 )
+!!           INTEGER               I
+!!
+!!     C
+!!     C     Load the SPK and LSK kernels via the meta-kernel.
+!!     C
+!!           CALL FURNSH ( META )
+!!     C
+!!     C     Convert the start time to seconds past J2000 TDB.
+!!     C
+!!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
+!!     C
+!!     C     Step through a series of epochs, looking up a
+!!     C     state vector at each one.
+!!     C
+!!           DO I = 1, MAXITR
+!!
+!!              ET = ET0 + (I-1)*STEP
+!!
+!!     C
+!!     C        Look up a state vector at epoch ET using the
+!!     C        following inputs:
+!!     C
+!!     C           Target:                 Moon (NAIF ID code 301)
+!!     C           Reference frame:        J2000
+!!     C           Aberration correction:  Light time ('LT')
+!!     C           Observer:               Earth (NAIF ID code 399)
+!!     C
+!!     C        Before we can execute this computation, we'll need the
+!!     C        geometric state of the observer relative to the solar
+!!     C        system barycenter at ET, expressed relative to the
+!!     C        J2000 reference frame:
+!!     C
+!!              CALL SPKSSB ( 399, ET,    'J2000', STOBS )
+!!     C
+!!     C        Now compute the desired state vector:
+!!     C
+!!              CALL SPKLTC ( 301,   ET,    'J2000', 'LT',
+!!          .                 STOBS, STATE, LT,      DLT     )
+!!
+!!              WRITE (*,*) 'ET = ', ET
+!!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+!!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+!!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+!!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+!!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+!!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+!!              WRITE (*,*) 'One-way light time (s):  ', LT
+!!              WRITE (*,*) 'Light time rate:         ', DLT
+!!              WRITE (*,*) ' '
+!!
+!!           END DO
+!!
+!!           END
+!!
+!!     On a PC/Linux/gfortran platform, the following output was
+!!     produced:
+!!
+!!        ET =    0.0000000000000000
+!!        J2000 x-position (km):     -291569.26541282982
+!!        J2000 y-position (km):     -266709.18647825718
+!!        J2000 z-position (km):     -76099.155118763447
+!!        J2000 x-velocity (km/s):   0.64353061322177041
+!!        J2000 y-velocity (km/s):  -0.66608181700820079
+!!        J2000 z-velocity (km/s):  -0.30132283179625752
+!!        One-way light time (s):     1.3423106103251679
+!!        Light time rate:           1.07316908698977495E-007
+!!
+!!        ET =    3600.0000000000000
+!!        J2000 x-position (km):     -289240.78128184378
+!!        J2000 y-position (km):     -269096.44087958336
+!!        J2000 z-position (km):     -77180.899725757539
+!!        J2000 x-velocity (km/s):   0.65006211520087476
+!!        J2000 y-velocity (km/s):  -0.66016273921695667
+!!        J2000 z-velocity (km/s):  -0.29964267390571342
+!!        One-way light time (s):     1.3426939548635302
+!!        Light time rate:           1.05652598952224259E-007
+!!
+!!        ET =    7200.0000000000000
+!!        J2000 x-position (km):     -286888.88736709207
+!!        J2000 y-position (km):     -271462.30170547962
+!!        J2000 z-position (km):     -78256.555682137609
+!!        J2000 x-velocity (km/s):   0.65653599154284592
+!!        J2000 y-velocity (km/s):  -0.65419657680401588
+!!        J2000 z-velocity (km/s):  -0.29794027307420823
+!!        One-way light time (s):     1.3430713117337547
+!!        Light time rate:           1.03990456898758609E-007
+!!
+!!        ET =    10800.000000000000
+!!        J2000 x-position (km):     -284513.79173691198
+!!        J2000 y-position (km):     -273806.60031034052
+!!        J2000 z-position (km):     -79326.043183274567
+!!        J2000 x-velocity (km/s):   0.66295190054599118
+!!        J2000 y-velocity (km/s):  -0.64818380709706158
+!!        J2000 z-velocity (km/s):  -0.29621577937090349
+!!        One-way light time (s):     1.3434426890693671
+!!        Light time rate:           1.02330665243423737E-007
+!!
+!!        ET =    14400.000000000000
+!!        J2000 x-position (km):     -282115.70368389413
+!!        J2000 y-position (km):     -276129.16976799071
+!!        J2000 z-position (km):     -80389.282965712249
+!!        J2000 x-velocity (km/s):   0.66930950377548726
+!!        J2000 y-velocity (km/s):  -0.64212490805688027
+!!        J2000 z-velocity (km/s):  -0.29446934336246899
+!!        One-way light time (s):     1.3438080956559786
+!!        Light time rate:           1.00673403630050830E-007
+!!
+!! ## Restrictions
+!!
+!!     1) The routine SPKGEO should be used instead of this routine
+!!        to compute geometric states. SPKGEO introduces less
+!!        round-off error when the observer and target have common
+!!        center that is closer to both objects than is the solar
+!!        system barycenter.
+!!
+!!     2) The kernel files to be used by SPKLTC must be loaded
+!!        (normally by the SPICELIB kernel loader FURNSH) before
+!!        this routine is called.
+!!
+!!     3) Unlike most other SPK state computation routines, this
+!!        routine requires that the output state be relative to an
+!!        inertial reference frame.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0, 04-JUL-2014 (NJB)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!     Last update was 02-MAY-2012 (NJB)
+!!
+!!        Updated to ensure convergence when CN or XCN light time
+!!        corrections are used. The new algorithm also terminates early
+!!        (after fewer than three iterations) when convergence is
+!!        attained.
+!!
+!!        Call to ZZPRSCOR was replaced by a call to ZZVALCOR.
+!!
+!!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     low-level light time correction
+!!     light-time corrected state from spk file
+!!     get light-time corrected state
+!!
+!! ## Revisions
+!!
+!!     None.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     TOL is the tolerance used for a division-by-zero test
+!!     performed prior to computation of DLT.
+!!
+!!     Convergence limit:
+!!
+!!     Maximum number of light time iterations for any
+!!     aberration correction:
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: touchd
       use pepper_math, only: vdot, vlcom, vnorm, vsubg
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*), parameter :: rname = 'ZZSPKLT0'
       real(wp), parameter :: tol = 1.0e-10_wp
       real(wp), parameter :: cnvlim = 1.0e-17_wp
@@ -14210,27 +13804,26 @@ contains
 !$Procedure ZZSPKSB0 ( S/P Kernel, solar system barycenter )
 
       module procedure zzspksb0
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Return the state (position and velocity) of a target body
+!!     relative to the solar system barycenter.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Return the state (position and velocity) of a target body
-!     relative to the solar system barycenter.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -14368,569 +13961,545 @@ contains
       end procedure zzspksb0
 
       module procedure zzspkas0
-
-! $ Abstract
-!
-!     Given the state and acceleration of an observer relative to the
-!     solar system barycenter, return the state (position and velocity)
-!     of a target body relative to the observer, optionally corrected
-!     for light time and stellar aberration. All input and output
-!     vectors are expressed relative to an inertial reference frame.
-!
-!     This routine supersedes SPKAPP.
-!
-!     SPICE users normally should call the high-level API routines
-!     SPKEZR or SPKEZ rather than this routine.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a state vector whose position
-!                 component points from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the state of the target body
-!                 relative to the observer is to be computed.  ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the inertial reference frame with respect to which
-!                 the input state STOBS, the input acceleration ACCOBS,
-!                 and the output state STARG are expressed. REF must be
-!                 recognized by the SPICE Toolkit.  The acceptable
-!                 frames are listed in the Frames Required Reading, as
-!                 well as in the SPICELIB routine CHGIRF.
-!
-!                 Case and blanks are not significant in the string
-!                 REF.
-!
-!     ABCORR      indicates the aberration corrections to be applied
-!                 to the state of the target body to account for one-way
-!                 light time and stellar aberration. See the discussion
-!                 in the header of SPKEZR for recommendations on
-!                 how to choose aberration corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric state of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the state of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction uses an
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               state obtained with the 'LT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               state of the target---the position and
-!                               velocity of the target as seen by the
-!                               observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section of
-!                               SPKEZR for a discussion of precision of
-!                               light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               state of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation  This option modifies the
-!                               state obtained with the 'XLT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The position component of
-!                               the computed target state indicates the
-!                               direction that photons emitted from the
-!                               observer's location must be "aimed" to
-!                               hit the target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-!     STOBS       is the geometric state of the observer relative to
-!                 the solar system barycenter at ET. STOBS is expressed
-!                 relative to the reference frame designated by REF.
-!                 The target and observer define a state vector whose
-!                 position component points from the observer to the
-!                 target.
-!
-!     ACCOBS      is the geometric acceleration of the observer
-!                 relative to the solar system barycenter at ET. This
-!                 is the derivative with respect to time of the
-!                 velocity portion of STOBS. ACCOBS is expressed
-!                 relative to the reference frame designated by REF.
-!
-!                 ACCOBS is used for computing stellar aberration
-!                 corrected velocity. If stellar aberration corrections
-!                 are not specified by ABCORR, ACCOBS is ignored; the
-!                 caller need not provide a valid input value in this
-!                 case.
-!
-! $ Detailed_Output
-!
-!     STARG       is a Cartesian state vector representing the position
-!                 and velocity of the target body relative to the
-!                 specified observer. STARG is corrected for the
-!                 specified aberrations, and is expressed with respect
-!                 to the inertial reference frame designated by REF.
-!                 The first three components of STARG represent the x-,
-!                 y- and z-components of the target's position; last
-!                 three components form the corresponding velocity
-!                 vector.
-!
-!                 The position component of STARG points from the
-!                 observer's location at ET to the aberration-corrected
-!                 location of the target. Note that the sense of the
-!                 position vector is independent of the direction of
-!                 radiation travel implied by the aberration
-!                 correction.
-!
-!                 Units are always km and km/sec.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target state is corrected
-!                 for light time, then LT is the one-way light time
-!                 between the observer and the light time-corrected
-!                 target location.
-!
-!     DLT         is the derivative with respect to barycentric
-!                 dynamical time of the one way light time between
-!                 target and observer:
-!
-!                    DLT = d(LT)/d(ET)
-!
-!                 DLT can also be described as the rate of change of
-!                 one way light time. DLT is unitless, since LT and
-!                 ET both have units of TDB seconds.
-!
-!                 If the observer and target are at the same position,
-!                 then DLT is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the value of ABCORR is not recognized, the error
-!        is diagnosed by a routine in the call tree of this
-!        routine.
-!
-!     2) If ABCORR calls for stellar aberration but not light
-!        time corrections, the error SPICE(NOTSUPPORTED) is
-!        signaled.
-!
-!     3) If ABCORR calls for relativistic light time corrections, the
-!        error SPICE(NOTSUPPORTED) is signaled.
-!
-!     4) If the reference frame requested is not a recognized
-!        inertial reference frame, the error SPICE(BADFRAME)
-!        is signaled.
-!
-!     5) If the state of the target relative to the solar system
-!        barycenter cannot be computed, the error will be diagnosed
-!        by routines in the call tree of this routine.
-!
-!     6) If the observer and target are at the same position,
-!        then DLT is set to zero. This situation could arise,
-!        for example, when the observer is Mars and the target
-!        is the Mars barycenter.
-!
-! $ Files
-!
-!     This routine computes states using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH.  Application programs typically load
-!     kernels once before this routine is called, for example during
-!     program initialization; kernels need not be loaded repeatedly.
-!     See the routine FURNSH and the SPK and KERNEL Required Reading
-!     for further information on loading (and unloading) kernels.
-!
-!     If any of the ephemeris data used to compute STARG are expressed
-!     relative to a non-inertial frame in the SPK files providing those
-!     data, additional kernels may be needed to enable the reference
-!     frame transformations required to compute the state. Normally
-!     these additional kernels are PCK files or frame kernels. Any such
-!     kernels must already be loaded at the time this routine is
-!     called.
-!
-! $ Particulars
-!
-!     This routine supports higher-level SPK API routines that can
-!     perform both light time and stellar aberration corrections.
-!
-!     User applications normally will not need to call this routine
-!     directly. However, this routine can improve run-time efficiency
-!     in situations where many targets are observed from the same
-!     location at the same time. In such cases, the state and
-!     acceleration of the observer relative to the solar system
-!     barycenter need be computed only once per look-up epoch.
-!
-!     When apparent positions, rather than apparent states, are
-!     required, consider using the high-level position-only API
-!     routines
-!
-!        SPKPOS
-!        SPKEZP
-!
-!     or the low-level, position-only analog of this routine
-!
-!        SPKAPO
-!
-!     In general, the position-only routines are more efficient.
-!
-!     See the header of the routine SPKEZR for a detailed discussion
-!     of aberration corrections.
-!
-! $ Examples
-!
-!    1) Look up a sequence of states of the Moon as seen from the
-!       Earth. Use light time and stellar aberration corrections.
-!       Compute the first state for the epoch 2000 JAN 1 12:00:00 TDB;
-!       compute subsequent states at intervals of 1 hour. For each
-!       epoch, display the states, the one way light time between
-!       target and observer, and the rate of change of the one way
-!       light time.
-!
-!       Use the following meta-kernel to specify the kernels to
-!       load:
-!
-!          KPL/MK
-!
-!          This meta-kernel is intended to support operation of SPICE
-!          example programs. The kernels shown here should not be
-!          assumed to contain adequate or correct versions of data
-!          required by SPICE-based user applications.
-!
-!          In order for an application to use this meta-kernel, the
-!          kernels referenced here must be present in the user's
-!          current working directory.
-!
-!          \begindata
-!
-!             KERNELS_TO_LOAD = ( 'de418.bsp',
-!                                 'pck00008.tpc',
-!                                 'naif0008.tls'  )
-!
-!          \begintext
-!
-!       The code example follows:
-!
-!           PROGRAM EX1
-!           IMPLICIT NONE
-!     C
-!     C     Local constants
-!     C
-!     C     The meta-kernel name shown here refers to a file whose
-!     C     contents are those shown above. This file and the kernels
-!     C     it references must exist in your current working directory.
-!     C
-!           CHARACTER*(*)         META
-!           PARAMETER           ( META   = 'example.mk' )
-!     C
-!     C     Use a time step of 1 hour; look up 5 states.
-!     C
-!           DOUBLE PRECISION      STEP
-!           PARAMETER           ( STEP   = 3600.0D0 )
-!
-!           INTEGER               MAXITR
-!           PARAMETER           ( MAXITR = 5 )
-!     C
-!     C     Local variables
-!     C
-!           DOUBLE PRECISION      ACC    ( 3 )
-!           DOUBLE PRECISION      DLT
-!           DOUBLE PRECISION      ET
-!           DOUBLE PRECISION      ET0
-!           DOUBLE PRECISION      LT
-!           DOUBLE PRECISION      STATE  ( 6 )
-!           DOUBLE PRECISION      STATE0 ( 6 )
-!           DOUBLE PRECISION      STATE2 ( 6 )
-!           DOUBLE PRECISION      STOBS  ( 6 )
-!           DOUBLE PRECISION      TDELTA
-!           INTEGER               I
-!
-!     C
-!     C     Load the SPK and LSK kernels via the meta-kernel.
-!     C
-!           CALL FURNSH ( META )
-!     C
-!     C     Convert the start time to seconds past J2000 TDB.
-!     C
-!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
-!     C
-!     C     Step through a series of epochs, looking up a
-!     C     state vector at each one.
-!     C
-!           DO I = 1, MAXITR
-!
-!              ET = ET0 + (I-1)*STEP
-!
-!     C
-!     C        Look up a state vector at epoch ET using the
-!     C        following inputs:
-!     C
-!     C           Target:                 Moon (NAIF ID code 301)
-!     C           Reference frame:        J2000
-!     C           Aberration correction:  Light time and stellar
-!     C                                   aberration ('LT+S')
-!     C           Observer:               Earth (NAIF ID code 399)
-!     C
-!     C        Before we can execute this computation, we'll need the
-!     C        geometric state and acceleration of the observer
-!     C        relative to the solar system barycenter at ET, expressed
-!     C        relative to the J2000 reference frame. First find
-!     C        the state:
-!     C
-!              CALL SPKSSB ( 399, ET, 'J2000', STOBS )
-!     C
-!     C        Next compute the acceleration. We numerically
-!     C        differentiate the velocity using a quadratic
-!     C        approximation:
-!     C
-!              TDELTA = 1.D0
-!
-!              CALL SPKSSB ( 399, ET-TDELTA, 'J2000', STATE0 )
-!              CALL SPKSSB ( 399, ET+TDELTA, 'J2000', STATE2 )
-!
-!              CALL QDERIV ( 3, STATE0(4), STATE2(4), TDELTA, ACC )
-!     C
-!     C        Now compute the desired state vector:
-!     C
-!              CALL SPKAPS ( 301,   ET,  'J2000', 'LT+S',
-!          .                 STOBS, ACC, STATE,    LT,   DLT )
-!
-!              WRITE (*,*) 'ET = ', ET
-!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-!              WRITE (*,*) 'One-way light time (s):  ', LT
-!              WRITE (*,*) 'Light time rate:         ', DLT
-!              WRITE (*,*) ' '
-!
-!           END DO
-!
-!           END
-!
-!     The output produced by this program will vary somewhat as
-!     a function of the platform on which the program is built and
-!     executed. On a PC/Linux/g77 platform, the following output
-!     was produced:
-!
-!        ET =   0.
-!        J2000 x-position (km):    -291584.614
-!        J2000 y-position (km):    -266693.406
-!        J2000 z-position (km):    -76095.6532
-!        J2000 x-velocity (km/s):   0.643439157
-!        J2000 y-velocity (km/s):  -0.666065874
-!        J2000 z-velocity (km/s):  -0.301310063
-!        One-way light time (s):    1.34231061
-!        Light time rate:           1.07316909E-07
-!
-!        ET =   3600.
-!        J2000 x-position (km):    -289256.459
-!        J2000 y-position (km):    -269080.605
-!        J2000 z-position (km):    -77177.3528
-!        J2000 x-velocity (km/s):   0.64997032
-!        J2000 y-velocity (km/s):  -0.660148253
-!        J2000 z-velocity (km/s):  -0.299630418
-!        One-way light time (s):    1.34269395
-!        Light time rate:           1.05652599E-07
-!
-!        ET =   7200.
-!        J2000 x-position (km):    -286904.897
-!        J2000 y-position (km):    -271446.417
-!        J2000 z-position (km):    -78252.9655
-!        J2000 x-velocity (km/s):   0.656443883
-!        J2000 y-velocity (km/s):  -0.654183552
-!        J2000 z-velocity (km/s):  -0.297928533
-!        One-way light time (s):    1.34307131
-!        Light time rate:           1.03990457E-07
-!
-!        ET =   10800.
-!        J2000 x-position (km):    -284530.133
-!        J2000 y-position (km):    -273790.671
-!        J2000 z-position (km):    -79322.4117
-!        J2000 x-velocity (km/s):   0.662859505
-!        J2000 y-velocity (km/s):  -0.648172247
-!        J2000 z-velocity (km/s):  -0.296204558
-!        One-way light time (s):    1.34344269
-!        Light time rate:           1.02330665E-07
-!
-!        ET =   14400.
-!        J2000 x-position (km):    -282132.378
-!        J2000 y-position (km):    -276113.202
-!        J2000 z-position (km):    -80385.612
-!        J2000 x-velocity (km/s):   0.669216846
-!        J2000 y-velocity (km/s):  -0.642114815
-!        J2000 z-velocity (km/s):  -0.294458645
-!        One-way light time (s):    1.3438081
-!        Light time rate:           1.00673404E-07
-!
-! $ Restrictions
-!
-!     1) This routine should not be used to compute geometric states.
-!        Instead, use SPKEZR, SPKEZ, or SPKGEO. SPKGEO, which is called
-!        by SPKEZR and SPKEZ, introduces less round-off error when the
-!        observer and target have a common center that is closer to
-!        both objects than is the solar system barycenter.
-!
-!     2) The kernel files to be used by SPKAPS must be loaded
-!        (normally by the SPICELIB kernel loader FURNSH) before
-!        this routine is called.
-!
-!     3) Unlike most other SPK state computation routines, this
-!        routine requires that the output state be relative to an
-!        inertial reference frame.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 12-SEP-2021 (NJB)
-!
-!        Bug fix: aberration correction strings are now parsed using
-!        ZZVALCOR. This improves error checking.
-!
-!        Corrected a header comment typo.
-!
-!-    SPICELIB Version 1.1.0, 04-JUL-2014 (NJB)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!     Last update was 15-APR-2014 (NJB)
-!
-!        Added a FAILED() call to prevent numeric problems
-!        resulting from uninitialized values.
-!
-!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     low-level aberration-corrected state computation
-!     low-level light time and stellar aberration correction
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Given the state and acceleration of an observer relative to the
+!!     solar system barycenter, return the state (position and velocity)
+!!     of a target body relative to the observer, optionally corrected
+!!     for light time and stellar aberration. All input and output
+!!     vectors are expressed relative to an inertial reference frame.
+!!
+!!     This routine supersedes SPKAPP.
+!!
+!!     SPICE users normally should call the high-level API routines
+!!     SPKEZR or SPKEZ rather than this routine.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a state vector whose position
+!!                 component points from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the state of the target body
+!!                 relative to the observer is to be computed.  ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the inertial reference frame with respect to which
+!!                 the input state STOBS, the input acceleration ACCOBS,
+!!                 and the output state STARG are expressed. REF must be
+!!                 recognized by the SPICE Toolkit.  The acceptable
+!!                 frames are listed in the Frames Required Reading, as
+!!                 well as in the SPICELIB routine CHGIRF.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 REF.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied
+!!                 to the state of the target body to account for one-way
+!!                 light time and stellar aberration. See the discussion
+!!                 in the header of SPKEZR for recommendations on
+!!                 how to choose aberration corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric state of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the state of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction uses an
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               state obtained with the 'LT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               state of the target---the position and
+!!                               velocity of the target as seen by the
+!!                               observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section of
+!!                               SPKEZR for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               state of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation  This option modifies the
+!!                               state obtained with the 'XLT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The position component of
+!!                               the computed target state indicates the
+!!                               direction that photons emitted from the
+!!                               observer's location must be "aimed" to
+!!                               hit the target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!!     STOBS       is the geometric state of the observer relative to
+!!                 the solar system barycenter at ET. STOBS is expressed
+!!                 relative to the reference frame designated by REF.
+!!                 The target and observer define a state vector whose
+!!                 position component points from the observer to the
+!!                 target.
+!!
+!!     ACCOBS      is the geometric acceleration of the observer
+!!                 relative to the solar system barycenter at ET. This
+!!                 is the derivative with respect to time of the
+!!                 velocity portion of STOBS. ACCOBS is expressed
+!!                 relative to the reference frame designated by REF.
+!!
+!!                 ACCOBS is used for computing stellar aberration
+!!                 corrected velocity. If stellar aberration corrections
+!!                 are not specified by ABCORR, ACCOBS is ignored; the
+!!                 caller need not provide a valid input value in this
+!!                 case.
+!!
+!! ## Detailed Output
+!!
+!!     STARG       is a Cartesian state vector representing the position
+!!                 and velocity of the target body relative to the
+!!                 specified observer. STARG is corrected for the
+!!                 specified aberrations, and is expressed with respect
+!!                 to the inertial reference frame designated by REF.
+!!                 The first three components of STARG represent the x-,
+!!                 y- and z-components of the target's position; last
+!!                 three components form the corresponding velocity
+!!                 vector.
+!!
+!!                 The position component of STARG points from the
+!!                 observer's location at ET to the aberration-corrected
+!!                 location of the target. Note that the sense of the
+!!                 position vector is independent of the direction of
+!!                 radiation travel implied by the aberration
+!!                 correction.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target state is corrected
+!!                 for light time, then LT is the one-way light time
+!!                 between the observer and the light time-corrected
+!!                 target location.
+!!
+!!     DLT         is the derivative with respect to barycentric
+!!                 dynamical time of the one way light time between
+!!                 target and observer:
+!!
+!!                    DLT = d(LT)/d(ET)
+!!
+!!                 DLT can also be described as the rate of change of
+!!                 one way light time. DLT is unitless, since LT and
+!!                 ET both have units of TDB seconds.
+!!
+!!                 If the observer and target are at the same position,
+!!                 then DLT is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the value of ABCORR is not recognized, the error
+!!        is diagnosed by a routine in the call tree of this
+!!        routine.
+!!
+!!     2) If ABCORR calls for stellar aberration but not light
+!!        time corrections, the error SPICE(NOTSUPPORTED) is
+!!        signaled.
+!!
+!!     3) If ABCORR calls for relativistic light time corrections, the
+!!        error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     4) If the reference frame requested is not a recognized
+!!        inertial reference frame, the error SPICE(BADFRAME)
+!!        is signaled.
+!!
+!!     5) If the state of the target relative to the solar system
+!!        barycenter cannot be computed, the error will be diagnosed
+!!        by routines in the call tree of this routine.
+!!
+!!     6) If the observer and target are at the same position,
+!!        then DLT is set to zero. This situation could arise,
+!!        for example, when the observer is Mars and the target
+!!        is the Mars barycenter.
+!!
+!! ## Files
+!!
+!!     This routine computes states using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH.  Application programs typically load
+!!     kernels once before this routine is called, for example during
+!!     program initialization; kernels need not be loaded repeatedly.
+!!     See the routine FURNSH and the SPK and KERNEL Required Reading
+!!     for further information on loading (and unloading) kernels.
+!!
+!!     If any of the ephemeris data used to compute STARG are expressed
+!!     relative to a non-inertial frame in the SPK files providing those
+!!     data, additional kernels may be needed to enable the reference
+!!     frame transformations required to compute the state. Normally
+!!     these additional kernels are PCK files or frame kernels. Any such
+!!     kernels must already be loaded at the time this routine is
+!!     called.
+!!
+!! ## Particulars
+!!
+!!     This routine supports higher-level SPK API routines that can
+!!     perform both light time and stellar aberration corrections.
+!!
+!!     User applications normally will not need to call this routine
+!!     directly. However, this routine can improve run-time efficiency
+!!     in situations where many targets are observed from the same
+!!     location at the same time. In such cases, the state and
+!!     acceleration of the observer relative to the solar system
+!!     barycenter need be computed only once per look-up epoch.
+!!
+!!     When apparent positions, rather than apparent states, are
+!!     required, consider using the high-level position-only API
+!!     routines
+!!
+!!        SPKPOS
+!!        SPKEZP
+!!
+!!     or the low-level, position-only analog of this routine
+!!
+!!        SPKAPO
+!!
+!!     In general, the position-only routines are more efficient.
+!!
+!!     See the header of the routine SPKEZR for a detailed discussion
+!!     of aberration corrections.
+!!
+!! ## Examples
+!!
+!!    1) Look up a sequence of states of the Moon as seen from the
+!!       Earth. Use light time and stellar aberration corrections.
+!!       Compute the first state for the epoch 2000 JAN 1 12:00:00 TDB;
+!!       compute subsequent states at intervals of 1 hour. For each
+!!       epoch, display the states, the one way light time between
+!!       target and observer, and the rate of change of the one way
+!!       light time.
+!!
+!!       Use the following meta-kernel to specify the kernels to
+!!       load:
+!!
+!!          KPL/MK
+!!
+!!          This meta-kernel is intended to support operation of SPICE
+!!          example programs. The kernels shown here should not be
+!!          assumed to contain adequate or correct versions of data
+!!          required by SPICE-based user applications.
+!!
+!!          In order for an application to use this meta-kernel, the
+!!          kernels referenced here must be present in the user's
+!!          current working directory.
+!!
+!!          \begindata
+!!
+!!             KERNELS_TO_LOAD = ( 'de418.bsp',
+!!                                 'pck00008.tpc',
+!!                                 'naif0008.tls'  )
+!!
+!!          \begintext
+!!
+!!       The code example follows:
+!!
+!!           PROGRAM EX1
+!!           IMPLICIT NONE
+!!     C
+!!     C     Local constants
+!!     C
+!!     C     The meta-kernel name shown here refers to a file whose
+!!     C     contents are those shown above. This file and the kernels
+!!     C     it references must exist in your current working directory.
+!!     C
+!!           CHARACTER*(*)         META
+!!           PARAMETER           ( META   = 'example.mk' )
+!!     C
+!!     C     Use a time step of 1 hour; look up 5 states.
+!!     C
+!!           DOUBLE PRECISION      STEP
+!!           PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!           INTEGER               MAXITR
+!!           PARAMETER           ( MAXITR = 5 )
+!!     C
+!!     C     Local variables
+!!     C
+!!           DOUBLE PRECISION      ACC    ( 3 )
+!!           DOUBLE PRECISION      DLT
+!!           DOUBLE PRECISION      ET
+!!           DOUBLE PRECISION      ET0
+!!           DOUBLE PRECISION      LT
+!!           DOUBLE PRECISION      STATE  ( 6 )
+!!           DOUBLE PRECISION      STATE0 ( 6 )
+!!           DOUBLE PRECISION      STATE2 ( 6 )
+!!           DOUBLE PRECISION      STOBS  ( 6 )
+!!           DOUBLE PRECISION      TDELTA
+!!           INTEGER               I
+!!
+!!     C
+!!     C     Load the SPK and LSK kernels via the meta-kernel.
+!!     C
+!!           CALL FURNSH ( META )
+!!     C
+!!     C     Convert the start time to seconds past J2000 TDB.
+!!     C
+!!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
+!!     C
+!!     C     Step through a series of epochs, looking up a
+!!     C     state vector at each one.
+!!     C
+!!           DO I = 1, MAXITR
+!!
+!!              ET = ET0 + (I-1)*STEP
+!!
+!!     C
+!!     C        Look up a state vector at epoch ET using the
+!!     C        following inputs:
+!!     C
+!!     C           Target:                 Moon (NAIF ID code 301)
+!!     C           Reference frame:        J2000
+!!     C           Aberration correction:  Light time and stellar
+!!     C                                   aberration ('LT+S')
+!!     C           Observer:               Earth (NAIF ID code 399)
+!!     C
+!!     C        Before we can execute this computation, we'll need the
+!!     C        geometric state and acceleration of the observer
+!!     C        relative to the solar system barycenter at ET, expressed
+!!     C        relative to the J2000 reference frame. First find
+!!     C        the state:
+!!     C
+!!              CALL SPKSSB ( 399, ET, 'J2000', STOBS )
+!!     C
+!!     C        Next compute the acceleration. We numerically
+!!     C        differentiate the velocity using a quadratic
+!!     C        approximation:
+!!     C
+!!              TDELTA = 1.D0
+!!
+!!              CALL SPKSSB ( 399, ET-TDELTA, 'J2000', STATE0 )
+!!              CALL SPKSSB ( 399, ET+TDELTA, 'J2000', STATE2 )
+!!
+!!              CALL QDERIV ( 3, STATE0(4), STATE2(4), TDELTA, ACC )
+!!     C
+!!     C        Now compute the desired state vector:
+!!     C
+!!              CALL SPKAPS ( 301,   ET,  'J2000', 'LT+S',
+!!          .                 STOBS, ACC, STATE,    LT,   DLT )
+!!
+!!              WRITE (*,*) 'ET = ', ET
+!!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+!!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+!!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+!!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+!!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+!!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+!!              WRITE (*,*) 'One-way light time (s):  ', LT
+!!              WRITE (*,*) 'Light time rate:         ', DLT
+!!              WRITE (*,*) ' '
+!!
+!!           END DO
+!!
+!!           END
+!!
+!!     The output produced by this program will vary somewhat as
+!!     a function of the platform on which the program is built and
+!!     executed. On a PC/Linux/g77 platform, the following output
+!!     was produced:
+!!
+!!        ET =   0.
+!!        J2000 x-position (km):    -291584.614
+!!        J2000 y-position (km):    -266693.406
+!!        J2000 z-position (km):    -76095.6532
+!!        J2000 x-velocity (km/s):   0.643439157
+!!        J2000 y-velocity (km/s):  -0.666065874
+!!        J2000 z-velocity (km/s):  -0.301310063
+!!        One-way light time (s):    1.34231061
+!!        Light time rate:           1.07316909E-07
+!!
+!!        ET =   3600.
+!!        J2000 x-position (km):    -289256.459
+!!        J2000 y-position (km):    -269080.605
+!!        J2000 z-position (km):    -77177.3528
+!!        J2000 x-velocity (km/s):   0.64997032
+!!        J2000 y-velocity (km/s):  -0.660148253
+!!        J2000 z-velocity (km/s):  -0.299630418
+!!        One-way light time (s):    1.34269395
+!!        Light time rate:           1.05652599E-07
+!!
+!!        ET =   7200.
+!!        J2000 x-position (km):    -286904.897
+!!        J2000 y-position (km):    -271446.417
+!!        J2000 z-position (km):    -78252.9655
+!!        J2000 x-velocity (km/s):   0.656443883
+!!        J2000 y-velocity (km/s):  -0.654183552
+!!        J2000 z-velocity (km/s):  -0.297928533
+!!        One-way light time (s):    1.34307131
+!!        Light time rate:           1.03990457E-07
+!!
+!!        ET =   10800.
+!!        J2000 x-position (km):    -284530.133
+!!        J2000 y-position (km):    -273790.671
+!!        J2000 z-position (km):    -79322.4117
+!!        J2000 x-velocity (km/s):   0.662859505
+!!        J2000 y-velocity (km/s):  -0.648172247
+!!        J2000 z-velocity (km/s):  -0.296204558
+!!        One-way light time (s):    1.34344269
+!!        Light time rate:           1.02330665E-07
+!!
+!!        ET =   14400.
+!!        J2000 x-position (km):    -282132.378
+!!        J2000 y-position (km):    -276113.202
+!!        J2000 z-position (km):    -80385.612
+!!        J2000 x-velocity (km/s):   0.669216846
+!!        J2000 y-velocity (km/s):  -0.642114815
+!!        J2000 z-velocity (km/s):  -0.294458645
+!!        One-way light time (s):    1.3438081
+!!        Light time rate:           1.00673404E-07
+!!
+!! ## Restrictions
+!!
+!!     1) This routine should not be used to compute geometric states.
+!!        Instead, use SPKEZR, SPKEZ, or SPKGEO. SPKGEO, which is called
+!!        by SPKEZR and SPKEZ, introduces less round-off error when the
+!!        observer and target have a common center that is closer to
+!!        both objects than is the solar system barycenter.
+!!
+!!     2) The kernel files to be used by SPKAPS must be loaded
+!!        (normally by the SPICELIB kernel loader FURNSH) before
+!!        this routine is called.
+!!
+!!     3) Unlike most other SPK state computation routines, this
+!!        routine requires that the output state be relative to an
+!!        inertial reference frame.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 12-SEP-2021 (NJB)
+!!
+!!        Bug fix: aberration correction strings are now parsed using
+!!        ZZVALCOR. This improves error checking.
+!!
+!!        Corrected a header comment typo.
+!!
+!!-    SPICELIB Version 1.1.0, 04-JUL-2014 (NJB)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!     Last update was 15-APR-2014 (NJB)
+!!
+!!        Added a FAILED() call to prevent numeric problems
+!!        resulting from uninitialized values.
+!!
+!!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     low-level aberration-corrected state computation
+!!     low-level light time and stellar aberration correction
+!!
+!! ## Revisions
+!!
+!!     None.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vadd, vequ
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*), parameter :: rname = 'ZZSPKAS0'
       real(wp)              corpos ( 3 )
       real(wp)              corvel ( 3 )
@@ -15060,481 +14629,454 @@ contains
       end procedure zzspkas0
 
       module procedure zzspkac0
-
-! $ Abstract
-!
-!     Return the state (position and velocity) of a target body
-!     relative to an observer, optionally corrected for light time
-!     and stellar aberration, expressed relative to an inertial
-!     reference frame.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a state vector whose position
-!                 component points from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the state of the target body
-!                 relative to the observer is to be computed.  ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the inertial reference frame with respect to which
-!                 the output state STARG is expressed. REF must be
-!                 recognized by the SPICE Toolkit.  The acceptable
-!                 frames are listed in the Frames Required Reading, as
-!                 well as in the SPICELIB routine CHGIRF.
-!
-!                 Case and blanks are not significant in the string
-!                 REF.
-!
-!     ABCORR      indicates the aberration corrections to be applied
-!                 to the state of the target body to account for one-way
-!                 light time and stellar aberration.  See the discussion
-!                 in the Particulars section for recommendations on
-!                 how to choose aberration corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric state of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the state of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction uses an
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               state obtained with the 'LT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               state of the target---the position and
-!                               velocity of the target as seen by the
-!                               observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section of
-!                               SPKEZR for a discussion of precision of
-!                               light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               state of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation  This option modifies the
-!                               state obtained with the 'XLT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The position component of
-!                               the computed target state indicates the
-!                               direction that photons emitted from the
-!                               observer's location must be "aimed" to
-!                               hit the target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!     OBS         is the NAIF ID code for the observer body.  The
-!                 target and observer define a state vector whose
-!                 position component points from the observer to the
-!                 target.
-!
-! $ Detailed_Output
-!
-!     STARG       is a Cartesian state vector representing the position
-!                 and velocity of the target body relative to the
-!                 specified observer. STARG is corrected for the
-!                 specified aberrations, and is expressed with respect
-!                 to the specified inertial reference frame.  The first
-!                 three components of STARG represent the x-, y- and
-!                 z-components of the target's position; last three
-!                 components form the corresponding velocity vector.
-!
-!                 The position component of STARG points from the
-!                 observer's location at ET to the aberration-corrected
-!                 location of the target. Note that the sense of the
-!                 position vector is independent of the direction of
-!                 radiation travel implied by the aberration
-!                 correction.
-!
-!                 Units are always km and km/sec.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target state is corrected
-!                 for aberrations, then LT is the one-way light time
-!                 between the observer and the light time corrected
-!                 target location.
-!
-!     DLT         is the derivative with respect to barycentric
-!                 dynamical time of the one way light time between
-!                 target and observer:
-!
-!                    DLT = d(LT)/d(ET)
-!
-!                 DLT can also be described as the rate of change of
-!                 one way light time. DLT is unitless, since LT and
-!                 ET both have units of TDB seconds.
-!
-!                 If the observer and target are at the same position,
-!                 then DLT is set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the value of ABCORR is not recognized, the error
-!        is diagnosed by a routine in the call tree of this
-!        routine.
-!
-!     2) If the reference frame requested is not a recognized
-!        inertial reference frame, the error SPICE(BADFRAME)
-!        is signaled.
-!
-!     3) If the state of the target relative to the solar system
-!        barycenter cannot be computed, the error will be diagnosed
-!        by routines in the call tree of this routine.
-!
-!     4) If the observer and target are at the same position,
-!        then DLT is set to zero. This situation could arise,
-!        for example, when the observer is Mars and the target
-!        is the Mars barycenter.
-!
-! $ Files
-!
-!     This routine computes states using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH.  Application programs typically load
-!     kernels once before this routine is called, for example during
-!     program initialization; kernels need not be loaded repeatedly.
-!     See the routine FURNSH and the SPK and KERNEL Required Reading
-!     for further information on loading (and unloading) kernels.
-!
-!     If any of the ephemeris data used to compute STARG are expressed
-!     relative to a non-inertial frame in the SPK files providing those
-!     data, additional kernels may be needed to enable the reference
-!     frame transformations required to compute the state. Normally
-!     these additional kernels are PCK files or frame kernels. Any
-!     such kernels must already be loaded at the time this routine is
-!     called.
-!
-! $ Particulars
-!
-!     This routine supports higher-level SPK API routines that can
-!     perform both light time and stellar aberration corrections.
-!     User applications normally will not need to call this routine
-!     directly.
-!
-!     See the header of the routine SPKEZR for a detailed discussion
-!     of aberration corrections.
-!
-! $ Examples
-!
-!    1) Look up a sequence of states of the Moon as seen from the
-!       Earth. Use light time and stellar aberration corrections.
-!       Compute the first state for the epoch 2000 JAN 1 12:00:00 TDB;
-!       compute subsequent states at intervals of 1 hour. For each
-!       epoch, display the states, the one way light time between
-!       target and observer, and the rate of change of the one way
-!       light time.
-!
-!       Use the following meta-kernel to specify the kernels to
-!       load:
-!
-!          KPL/MK
-!
-!          This meta-kernel is intended to support operation of SPICE
-!          example programs. The kernels shown here should not be
-!          assumed to contain adequate or correct versions of data
-!          required by SPICE-based user applications.
-!
-!          In order for an application to use this meta-kernel, the
-!          kernels referenced here must be present in the user's
-!          current working directory.
-!
-!          \begindata
-!
-!             KERNELS_TO_LOAD = ( 'de418.bsp',
-!                                 'pck00008.tpc',
-!                                 'naif0008.tls'  )
-!
-!          \begintext
-!
-!       The code example follows:
-!
-!           PROGRAM EX1
-!           IMPLICIT NONE
-!     C
-!     C     Local constants
-!     C
-!     C     The meta-kernel name shown here refers to a file whose
-!     C     contents are those shown above. This file and the kernels
-!     C     it references must exist in your current working directory.
-!     C
-!     C
-!           CHARACTER*(*)         META
-!           PARAMETER           ( META   = 'example.mk' )
-!     C
-!     C     Use a time step of 1 hour; look up 5 states.
-!     C
-!           DOUBLE PRECISION      STEP
-!           PARAMETER           ( STEP   = 3600.0D0 )
-!
-!           INTEGER               MAXITR
-!           PARAMETER           ( MAXITR = 5 )
-!     C
-!     C     Local variables
-!     C
-!           DOUBLE PRECISION      DLT
-!           DOUBLE PRECISION      ET
-!           DOUBLE PRECISION      ET0
-!           DOUBLE PRECISION      LT
-!           DOUBLE PRECISION      STATE ( 6 )
-!           INTEGER               I
-!
-!     C
-!     C     Load the SPK and LSK kernels via the meta-kernel.
-!     C
-!           CALL FURNSH ( META )
-!     C
-!     C     Convert the start time to seconds past J2000 TDB.
-!     C
-!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
-!     C
-!     C     Step through a series of epochs, looking up a
-!     C     state vector at each one.
-!     C
-!           DO I = 1, MAXITR
-!
-!              ET = ET0 + (I-1)*STEP
-!     C
-!     C        Look up a state vector at epoch ET using the
-!     C        following inputs:
-!     C
-!     C           Target:                 Moon (NAIF ID code 301)
-!     C           Reference frame:        J2000
-!     C           Aberration correction:  Light time and stellar
-!     C                                   aberration ('LT+S')
-!     C           Observer:               Earth (NAIF ID code 399)
-!     C
-!
-!              CALL SPKACS ( 301, ET,    'J2000', 'LT+S',
-!          .                 399, STATE, LT,      DLT     )
-!
-!              WRITE (*,*) 'ET = ', ET
-!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-!              WRITE (*,*) 'One-way light time (s):  ', LT
-!              WRITE (*,*) 'Light time rate:         ', DLT
-!              WRITE (*,*) ' '
-!
-!           END DO
-!
-!           END
-!
-!     The output produced by this program will vary somewhat as
-!     a function of the platform on which the program is built and
-!     executed. On a PC/Linux/g77 platform, the following output
-!     was produced:
-!
-!        ET =   0.
-!        J2000 x-position (km):    -291584.614
-!        J2000 y-position (km):    -266693.406
-!        J2000 z-position (km):    -76095.6532
-!        J2000 x-velocity (km/s):   0.643439157
-!        J2000 y-velocity (km/s):  -0.666065874
-!        J2000 z-velocity (km/s):  -0.301310063
-!        One-way light time (s):    1.34231061
-!        Light time rate:           1.07316909E-07
-!
-!        ET =   3600.
-!        J2000 x-position (km):    -289256.459
-!        J2000 y-position (km):    -269080.605
-!        J2000 z-position (km):    -77177.3528
-!        J2000 x-velocity (km/s):   0.64997032
-!        J2000 y-velocity (km/s):  -0.660148253
-!        J2000 z-velocity (km/s):  -0.299630418
-!        One-way light time (s):    1.34269395
-!        Light time rate:           1.05652599E-07
-!
-!        ET =   7200.
-!        J2000 x-position (km):    -286904.897
-!        J2000 y-position (km):    -271446.417
-!        J2000 z-position (km):    -78252.9655
-!        J2000 x-velocity (km/s):   0.656443883
-!        J2000 y-velocity (km/s):  -0.654183552
-!        J2000 z-velocity (km/s):  -0.297928533
-!        One-way light time (s):    1.34307131
-!        Light time rate:           1.03990457E-07
-!
-!        ET =   10800.
-!        J2000 x-position (km):    -284530.133
-!        J2000 y-position (km):    -273790.671
-!        J2000 z-position (km):    -79322.4117
-!        J2000 x-velocity (km/s):   0.662859505
-!        J2000 y-velocity (km/s):  -0.648172247
-!        J2000 z-velocity (km/s):  -0.296204558
-!        One-way light time (s):    1.34344269
-!        Light time rate:           1.02330665E-07
-!
-!        ET =   14400.
-!        J2000 x-position (km):    -282132.378
-!        J2000 y-position (km):    -276113.202
-!        J2000 z-position (km):    -80385.612
-!        J2000 x-velocity (km/s):   0.669216846
-!        J2000 y-velocity (km/s):  -0.642114815
-!        J2000 z-velocity (km/s):  -0.294458645
-!        One-way light time (s):    1.3438081
-!        Light time rate:           1.00673404E-07
-!
-! $ Restrictions
-!
-!     1) The kernel files to be used by SPKACS must be loaded
-!        (normally by the SPICELIB kernel loader FURNSH) before
-!        this routine is called.
-!
-!     2) Unlike most other SPK state computation routines, this
-!        routine requires that the output state be relative to an
-!        inertial reference frame.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 23-AUG-2021 (NJB)
-!
-!        Bug fix: aberration correction strings are now parsed using
-!        ZZVALCOR. This improves error checking.
-!
-!-    SPICELIB Version 1.0.1, 04-JUL-2014 (NJB)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     low-level aberration correction
-!     aberration-corrected state from spk file
-!     get light time and stellar aberration-corrected state
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the state (position and velocity) of a target body
+!!     relative to an observer, optionally corrected for light time
+!!     and stellar aberration, expressed relative to an inertial
+!!     reference frame.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a state vector whose position
+!!                 component points from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the state of the target body
+!!                 relative to the observer is to be computed.  ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the inertial reference frame with respect to which
+!!                 the output state STARG is expressed. REF must be
+!!                 recognized by the SPICE Toolkit.  The acceptable
+!!                 frames are listed in the Frames Required Reading, as
+!!                 well as in the SPICELIB routine CHGIRF.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 REF.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied
+!!                 to the state of the target body to account for one-way
+!!                 light time and stellar aberration.  See the discussion
+!!                 in the Particulars section for recommendations on
+!!                 how to choose aberration corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric state of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the state of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction uses an
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               state obtained with the 'LT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               state of the target---the position and
+!!                               velocity of the target as seen by the
+!!                               observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section of
+!!                               SPKEZR for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               state of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation  This option modifies the
+!!                               state obtained with the 'XLT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The position component of
+!!                               the computed target state indicates the
+!!                               direction that photons emitted from the
+!!                               observer's location must be "aimed" to
+!!                               hit the target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!     OBS         is the NAIF ID code for the observer body.  The
+!!                 target and observer define a state vector whose
+!!                 position component points from the observer to the
+!!                 target.
+!!
+!! ## Detailed Output
+!!
+!!     STARG       is a Cartesian state vector representing the position
+!!                 and velocity of the target body relative to the
+!!                 specified observer. STARG is corrected for the
+!!                 specified aberrations, and is expressed with respect
+!!                 to the specified inertial reference frame.  The first
+!!                 three components of STARG represent the x-, y- and
+!!                 z-components of the target's position; last three
+!!                 components form the corresponding velocity vector.
+!!
+!!                 The position component of STARG points from the
+!!                 observer's location at ET to the aberration-corrected
+!!                 location of the target. Note that the sense of the
+!!                 position vector is independent of the direction of
+!!                 radiation travel implied by the aberration
+!!                 correction.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target state is corrected
+!!                 for aberrations, then LT is the one-way light time
+!!                 between the observer and the light time corrected
+!!                 target location.
+!!
+!!     DLT         is the derivative with respect to barycentric
+!!                 dynamical time of the one way light time between
+!!                 target and observer:
+!!
+!!                    DLT = d(LT)/d(ET)
+!!
+!!                 DLT can also be described as the rate of change of
+!!                 one way light time. DLT is unitless, since LT and
+!!                 ET both have units of TDB seconds.
+!!
+!!                 If the observer and target are at the same position,
+!!                 then DLT is set to zero.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the value of ABCORR is not recognized, the error
+!!        is diagnosed by a routine in the call tree of this
+!!        routine.
+!!
+!!     2) If the reference frame requested is not a recognized
+!!        inertial reference frame, the error SPICE(BADFRAME)
+!!        is signaled.
+!!
+!!     3) If the state of the target relative to the solar system
+!!        barycenter cannot be computed, the error will be diagnosed
+!!        by routines in the call tree of this routine.
+!!
+!!     4) If the observer and target are at the same position,
+!!        then DLT is set to zero. This situation could arise,
+!!        for example, when the observer is Mars and the target
+!!        is the Mars barycenter.
+!!
+!! ## Files
+!!
+!!     This routine computes states using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH.  Application programs typically load
+!!     kernels once before this routine is called, for example during
+!!     program initialization; kernels need not be loaded repeatedly.
+!!     See the routine FURNSH and the SPK and KERNEL Required Reading
+!!     for further information on loading (and unloading) kernels.
+!!
+!!     If any of the ephemeris data used to compute STARG are expressed
+!!     relative to a non-inertial frame in the SPK files providing those
+!!     data, additional kernels may be needed to enable the reference
+!!     frame transformations required to compute the state. Normally
+!!     these additional kernels are PCK files or frame kernels. Any
+!!     such kernels must already be loaded at the time this routine is
+!!     called.
+!!
+!! ## Particulars
+!!
+!!     This routine supports higher-level SPK API routines that can
+!!     perform both light time and stellar aberration corrections.
+!!     User applications normally will not need to call this routine
+!!     directly.
+!!
+!!     See the header of the routine SPKEZR for a detailed discussion
+!!     of aberration corrections.
+!!
+!! ## Examples
+!!
+!!    1) Look up a sequence of states of the Moon as seen from the
+!!       Earth. Use light time and stellar aberration corrections.
+!!       Compute the first state for the epoch 2000 JAN 1 12:00:00 TDB;
+!!       compute subsequent states at intervals of 1 hour. For each
+!!       epoch, display the states, the one way light time between
+!!       target and observer, and the rate of change of the one way
+!!       light time.
+!!
+!!       Use the following meta-kernel to specify the kernels to
+!!       load:
+!!
+!!          KPL/MK
+!!
+!!          This meta-kernel is intended to support operation of SPICE
+!!          example programs. The kernels shown here should not be
+!!          assumed to contain adequate or correct versions of data
+!!          required by SPICE-based user applications.
+!!
+!!          In order for an application to use this meta-kernel, the
+!!          kernels referenced here must be present in the user's
+!!          current working directory.
+!!
+!!          \begindata
+!!
+!!             KERNELS_TO_LOAD = ( 'de418.bsp',
+!!                                 'pck00008.tpc',
+!!                                 'naif0008.tls'  )
+!!
+!!          \begintext
+!!
+!!       The code example follows:
+!!
+!!           PROGRAM EX1
+!!           IMPLICIT NONE
+!!     C
+!!     C     Local constants
+!!     C
+!!     C     The meta-kernel name shown here refers to a file whose
+!!     C     contents are those shown above. This file and the kernels
+!!     C     it references must exist in your current working directory.
+!!     C
+!!     C
+!!           CHARACTER*(*)         META
+!!           PARAMETER           ( META   = 'example.mk' )
+!!     C
+!!     C     Use a time step of 1 hour; look up 5 states.
+!!     C
+!!           DOUBLE PRECISION      STEP
+!!           PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!           INTEGER               MAXITR
+!!           PARAMETER           ( MAXITR = 5 )
+!!     C
+!!     C     Local variables
+!!     C
+!!           DOUBLE PRECISION      DLT
+!!           DOUBLE PRECISION      ET
+!!           DOUBLE PRECISION      ET0
+!!           DOUBLE PRECISION      LT
+!!           DOUBLE PRECISION      STATE ( 6 )
+!!           INTEGER               I
+!!
+!!     C
+!!     C     Load the SPK and LSK kernels via the meta-kernel.
+!!     C
+!!           CALL FURNSH ( META )
+!!     C
+!!     C     Convert the start time to seconds past J2000 TDB.
+!!     C
+!!           CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
+!!     C
+!!     C     Step through a series of epochs, looking up a
+!!     C     state vector at each one.
+!!     C
+!!           DO I = 1, MAXITR
+!!
+!!              ET = ET0 + (I-1)*STEP
+!!     C
+!!     C        Look up a state vector at epoch ET using the
+!!     C        following inputs:
+!!     C
+!!     C           Target:                 Moon (NAIF ID code 301)
+!!     C           Reference frame:        J2000
+!!     C           Aberration correction:  Light time and stellar
+!!     C                                   aberration ('LT+S')
+!!     C           Observer:               Earth (NAIF ID code 399)
+!!     C
+!!
+!!              CALL SPKACS ( 301, ET,    'J2000', 'LT+S',
+!!          .                 399, STATE, LT,      DLT     )
+!!
+!!              WRITE (*,*) 'ET = ', ET
+!!              WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+!!              WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+!!              WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+!!              WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+!!              WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+!!              WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+!!              WRITE (*,*) 'One-way light time (s):  ', LT
+!!              WRITE (*,*) 'Light time rate:         ', DLT
+!!              WRITE (*,*) ' '
+!!
+!!           END DO
+!!
+!!           END
+!!
+!!     The output produced by this program will vary somewhat as
+!!     a function of the platform on which the program is built and
+!!     executed. On a PC/Linux/g77 platform, the following output
+!!     was produced:
+!!
+!!        ET =   0.
+!!        J2000 x-position (km):    -291584.614
+!!        J2000 y-position (km):    -266693.406
+!!        J2000 z-position (km):    -76095.6532
+!!        J2000 x-velocity (km/s):   0.643439157
+!!        J2000 y-velocity (km/s):  -0.666065874
+!!        J2000 z-velocity (km/s):  -0.301310063
+!!        One-way light time (s):    1.34231061
+!!        Light time rate:           1.07316909E-07
+!!
+!!        ET =   3600.
+!!        J2000 x-position (km):    -289256.459
+!!        J2000 y-position (km):    -269080.605
+!!        J2000 z-position (km):    -77177.3528
+!!        J2000 x-velocity (km/s):   0.64997032
+!!        J2000 y-velocity (km/s):  -0.660148253
+!!        J2000 z-velocity (km/s):  -0.299630418
+!!        One-way light time (s):    1.34269395
+!!        Light time rate:           1.05652599E-07
+!!
+!!        ET =   7200.
+!!        J2000 x-position (km):    -286904.897
+!!        J2000 y-position (km):    -271446.417
+!!        J2000 z-position (km):    -78252.9655
+!!        J2000 x-velocity (km/s):   0.656443883
+!!        J2000 y-velocity (km/s):  -0.654183552
+!!        J2000 z-velocity (km/s):  -0.297928533
+!!        One-way light time (s):    1.34307131
+!!        Light time rate:           1.03990457E-07
+!!
+!!        ET =   10800.
+!!        J2000 x-position (km):    -284530.133
+!!        J2000 y-position (km):    -273790.671
+!!        J2000 z-position (km):    -79322.4117
+!!        J2000 x-velocity (km/s):   0.662859505
+!!        J2000 y-velocity (km/s):  -0.648172247
+!!        J2000 z-velocity (km/s):  -0.296204558
+!!        One-way light time (s):    1.34344269
+!!        Light time rate:           1.02330665E-07
+!!
+!!        ET =   14400.
+!!        J2000 x-position (km):    -282132.378
+!!        J2000 y-position (km):    -276113.202
+!!        J2000 z-position (km):    -80385.612
+!!        J2000 x-velocity (km/s):   0.669216846
+!!        J2000 y-velocity (km/s):  -0.642114815
+!!        J2000 z-velocity (km/s):  -0.294458645
+!!        One-way light time (s):    1.3438081
+!!        Light time rate:           1.00673404E-07
+!!
+!! ## Restrictions
+!!
+!!     1) The kernel files to be used by SPKACS must be loaded
+!!        (normally by the SPICELIB kernel loader FURNSH) before
+!!        this routine is called.
+!!
+!!     2) Unlike most other SPK state computation routines, this
+!!        routine requires that the output state be relative to an
+!!        inertial reference frame.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 23-AUG-2021 (NJB)
+!!
+!!        Bug fix: aberration correction strings are now parsed using
+!!        ZZVALCOR. This improves error checking.
+!!
+!!-    SPICELIB Version 1.0.1, 04-JUL-2014 (NJB)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     low-level aberration correction
+!!     aberration-corrected state from spk file
+!!     get light time and stellar aberration-corrected state
+!!
+!! ## Revisions
+!!
+!!     None.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*), parameter :: rname = 'ZZSPKAC0'
       real(wp), parameter :: delta = 1.0_wp
       integer(ip), parameter :: ssb = 0
@@ -15649,1003 +15191,975 @@ contains
       end procedure zzspkac0
 
       module procedure zzspkez0
-
-! $ Abstract
-!
-!     Return the state (position and velocity) of a target body
-!     relative to an observing body, optionally corrected for light
-!     time (planetary aberration) and stellar aberration.
-!
-! $ Required_Reading
-!
-!     SPK
-!     NAIF_IDS
-!     FRAMES
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body. The target
-!                 and observer define a state vector whose position
-!                 component points from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past J2000
-!                 TDB, at which the state of the target body relative to
-!                 the observer is to be computed. ET refers to time at
-!                 the observer's location.
-!
-!     REF         is the name of the reference frame relative to which
-!                 the output state vector should be expressed. This may
-!                 be any frame supported by the SPICE system, including
-!                 built-in frames (documented in the Frames Required
-!                 Reading) and frames defined by a loaded frame kernel
-!                 (FK).
-!
-!                 When REF designates a non-inertial frame, the
-!                 orientation of the frame is evaluated at an epoch
-!                 dependent on the selected aberration correction.
-!                 See the description of the output state vector STARG
-!                 for details.
-!
-!     ABCORR      indicates the aberration corrections to be applied
-!                 to the state of the target body to account for one-way
-!                 light time and stellar aberration. See the discussion
-!                 in the Particulars section for recommendations on
-!                 how to choose aberration corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric state of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the state of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction uses an
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               state obtained with the 'LT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               state of the target---the position and
-!                               velocity of the target as seen by the
-!                               observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section
-!                               below for a discussion of precision of
-!                               light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               state of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation  This option modifies the
-!                               state obtained with the 'XLT' option to
-!                               account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The position component of
-!                               the computed target state indicates the
-!                               direction that photons emitted from the
-!                               observer's location must be "aimed" to
-!                               hit the target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-!     OBS         is the NAIF ID code for an observing body.
-!
-! $ Detailed_Output
-!
-!     STARG       is a Cartesian state vector representing the position
-!                 and velocity of the target body relative to the
-!                 specified observer. STARG is corrected for the
-!                 specified aberrations, and is expressed with respect
-!                 to the reference frame specified by REF. The first
-!                 three components of STARG represent the x-, y- and
-!                 z-components of the target's position; the last three
-!                 components form the corresponding velocity vector.
-!
-!                 The position component of STARG points from the
-!                 observer's location at ET to the aberration-corrected
-!                 location of the target. Note that the sense of the
-!                 position vector is independent of the direction of
-!                 radiation travel implied by the aberration
-!                 correction.
-!
-!                 The velocity component of STARG is the derivative
-!                 with respect to time of the position component of
-!                 STARG.
-!
-!                 Units are always km and km/sec.
-!
-!                 Non-inertial frames are treated as follows: letting
-!                 LTCENT be the one-way light time between the observer
-!                 and the central body associated with the frame, the
-!                 orientation of the frame is evaluated at ET-LTCENT,
-!                 ET+LTCENT, or ET depending on whether the requested
-!                 aberration correction is, respectively, for received
-!                 radiation, transmitted radiation, or is omitted.
-!                 LTCENT is computed using the method indicated by
-!                 ABCORR.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds. If the target state is corrected
-!                 for aberrations, then LT is the one-way light time
-!                 between the observer and the light time corrected
-!                 target location.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the reference frame REF is not a recognized reference
-!        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
-!
-!     2) If the loaded kernels provide insufficient data to
-!        compute the requested state vector, the deficiency will
-!        be diagnosed by a routine in the call tree of this routine.
-!
-!     3) If an error occurs while reading an SPK or other kernel file,
-!        the error  will be diagnosed by a routine in the call tree
-!        of this routine.
-!
-!     4) If any of the required attributes of the reference frame REF
-!        cannot be determined, 'SPICE(UNKNOWNFRAME2)' is signaled.
-!
-! $ Files
-!
-!     This routine computes states using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH. See the routine FURNSH and the SPK
-!     and KERNEL Required Reading for further information on loading
-!     (and unloading) kernels.
-!
-!     If the output state STARG is to be expressed relative to a
-!     non-inertial frame, or if any of the ephemeris data used to
-!     compute STARG are expressed relative to a non-inertial frame in
-!     the SPK files providing those data, additional kernels may be
-!     needed to enable the reference frame transformations required to
-!     compute the state. Normally these additional kernels are PCK
-!     files or frame kernels. Any such kernels must already be loaded
-!     at the time this routine is called.
-!
-! $ Particulars
-!
-!     This routine is part of the user interface to the SPICE ephemeris
-!     system. It allows you to retrieve state information for any
-!     ephemeris object relative to any other in a reference frame that
-!     is convenient for further computations.
-!
-!     Aberration corrections
-!     ======================
-!
-!     In space science or engineering applications one frequently
-!     wishes to know where to point a remote sensing instrument, such
-!     as an optical camera or radio antenna, in order to observe or
-!     otherwise receive radiation from a target. This pointing problem
-!     is complicated by the finite speed of light:  one needs to point
-!     to where the target appears to be as opposed to where it actually
-!     is at the epoch of observation. We use the adjectives
-!     "geometric," "uncorrected," or "true" to refer to an actual
-!     position or state of a target at a specified epoch. When a
-!     geometric position or state vector is modified to reflect how it
-!     appears to an observer, we describe that vector by any of the
-!     terms "apparent," "corrected," "aberration corrected," or "light
-!     time and stellar aberration corrected." The SPICE Toolkit can
-!     correct for two phenomena affecting the apparent location of an
-!     object:  one-way light time (also called "planetary aberration")
-!     and stellar aberration.
-!
-!     One-way light time
-!     ------------------
-!
-!     Correcting for one-way light time is done by computing, given an
-!     observer and observation epoch, where a target was when the
-!     observed photons departed the target's location. The vector from
-!     the observer to this computed target location is called a "light
-!     time corrected" vector. The light time correction depends on the
-!     motion of the target relative to the solar system barycenter, but
-!     it is independent of the velocity of the observer relative to the
-!     solar system barycenter. Relativistic effects such as light
-!     bending and gravitational delay are not accounted for in the
-!     light time correction performed by this routine.
-!
-!     Stellar aberration
-!     ------------------
-!
-!     The velocity of the observer also affects the apparent location
-!     of a target:  photons arriving at the observer are subject to a
-!     "raindrop effect" whereby their velocity relative to the observer
-!     is, using a Newtonian approximation, the photons' velocity
-!     relative to the solar system barycenter minus the velocity of the
-!     observer relative to the solar system barycenter. This effect is
-!     called "stellar aberration."  Stellar aberration is independent
-!     of the velocity of the target. The stellar aberration formula
-!     used by this routine does not include (the much smaller)
-!     relativistic effects.
-!
-!     Stellar aberration corrections are applied after light time
-!     corrections:  the light time corrected target position vector is
-!     used as an input to the stellar aberration correction.
-!
-!     When light time and stellar aberration corrections are both
-!     applied to a geometric position vector, the resulting position
-!     vector indicates where the target "appears to be" from the
-!     observer's location.
-!
-!     As opposed to computing the apparent position of a target, one
-!     may wish to compute the pointing direction required for
-!     transmission of photons to the target. This also requires
-!     correction of the geometric target position for the effects of
-!     light time and stellar aberration, but in this case the
-!     corrections are computed for radiation traveling *from* the
-!     observer to the target.
-!
-!     The "transmission" light time correction yields the target's
-!     location as it will be when photons emitted from the observer's
-!     location at ET arrive at the target. The transmission stellar
-!     aberration correction is the inverse of the traditional stellar
-!     aberration correction:  it indicates the direction in which
-!     radiation should be emitted so that, using a Newtonian
-!     approximation, the sum of the velocity of the radiation relative
-!     to the observer and of the observer's velocity, relative to the
-!     solar system barycenter, yields a velocity vector that points in
-!     the direction of the light time corrected position of the target.
-!
-!     One may object to using the term "observer" in the transmission
-!     case, in which radiation is emitted from the observer's location.
-!     The terminology was retained for consistency with earlier
-!     documentation.
-!
-!     Below, we indicate the aberration corrections to use for some
-!     common applications:
-!
-!        1) Find the apparent direction of a target for a remote-sensing
-!           observation.
-!
-!              Use 'LT+S' or 'CN+S: apply both light time and stellar
-!              aberration corrections.
-!
-!           Note that using light time corrections alone ('LT' or 'CN')
-!           is generally not a good way to obtain an approximation to
-!           an apparent target vector: since light time and stellar
-!           aberration corrections often partially cancel each other,
-!           it may be more accurate to use no correction at all than to
-!           use light time alone.
-!
-!        2) Find the corrected pointing direction to radiate a signal
-!           to a target. This computation is often applicable for
-!           implementing communications sessions.
-!
-!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
-!              aberration corrections for transmission.
-!
-!        3) Compute the apparent position of a target body relative
-!           to a star or other distant object.
-!
-!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
-!              correction applied to the position of the distant
-!              object. For example, if a star position is obtained from
-!              a catalog, the position vector may not be corrected for
-!              stellar aberration. In this case, to find the angular
-!              separation of the star and the limb of a planet, the
-!              vector from the observer to the planet should be
-!              corrected for light time but not stellar aberration.
-!
-!        4) Obtain an uncorrected state vector derived directly from
-!           data in an SPK file.
-!
-!              Use 'NONE'.
-!
-!        5) Use a geometric state vector as a low-accuracy estimate
-!           of the apparent state for an application where execution
-!           speed is critical.
-!
-!              Use 'NONE'.
-!
-!        6) While this routine cannot perform the relativistic
-!           aberration corrections required to compute states
-!           with the highest possible accuracy, it can supply the
-!           geometric states required as inputs to these computations.
-!
-!              Use 'NONE', then apply relativistic aberration
-!              corrections (not available in the SPICE Toolkit).
-!
-!     Below, we discuss in more detail how the aberration corrections
-!     applied by this routine are computed.
-!
-!        Geometric case
-!        ==============
-!
-!        SPKEZ begins by computing the geometric position T(ET) of the
-!        target body relative to the solar system barycenter (SSB).
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the geometric position of the target body relative to the
-!        observer. The one-way light time, LT, is given by
-!
-!                  | T(ET) - O(ET) |
-!           LT = -------------------
-!                          c
-!
-!        The geometric relationship between the observer, target, and
-!        solar system barycenter is as shown:
-!
-!           SSB ---> O(ET)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(ET) - O(ET)
-!            V  V
-!           T(ET)
-!
-!        The returned state consists of the position vector
-!
-!           T(ET) - O(ET)
-!
-!        and a velocity obtained by taking the difference of the
-!        corresponding velocities. In the geometric case, the
-!        returned velocity is actually the time derivative of the
-!        position.
-!
-!        Reception case
-!        ==============
-!
-!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' is selected
-!        for ABCORR, SPKEZ computes the position of the target body at
-!        epoch ET-LT, where LT is the one-way light time. Let T(t) and
-!        O(t) represent the positions of the target and observer
-!        relative to the solar system barycenter at time t; then LT is
-!        the solution of the light-time equation
-!
-!                  | T(ET-LT) - O(ET) |
-!           LT = ------------------------                            (1)
-!                           c
-!
-!        The ratio
-!
-!            | T(ET) - O(ET) |
-!          ---------------------                                     (2)
-!                    c
-!
-!        is used as a first approximation to LT; inserting (2) into the
-!        right hand side of the light-time equation (1) yields the
-!        "one-iteration" estimate of the one-way light time ("LT").
-!        Repeating the process until the estimates of LT converge
-!        yields the "converged Newtonian" light time estimate ("CN").
-!
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the position of the target body relative to the observer:
-!        T(ET-LT) - O(ET).
-!
-!           SSB ---> O(ET)
-!            | \     |
-!            |  \    |
-!            |   \   | T(ET-LT) - O(ET)
-!            |    \  |
-!            V     V V
-!           T(ET)  T(ET-LT)
-!
-!        The position component of the light time corrected state
-!        is the vector
-!
-!           T(ET-LT) - O(ET)
-!
-!        The velocity component of the light time corrected state
-!        is the difference
-!
-!           T_vel(ET-LT)*(1-dLT/dET) - O_vel(ET)
-!
-!        where T_vel and O_vel are, respectively, the velocities of the
-!        target and observer relative to the solar system barycenter at
-!        the epochs ET-LT and ET.
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated toward the solar system barycenter-
-!        relative velocity vector of the observer. The rotation is
-!        computed as follows:
-!
-!           Let r be the light time corrected vector from the observer
-!           to the object, and v be the velocity of the observer with
-!           respect to the solar system barycenter. Let w be the angle
-!           between them. The aberration angle phi is given by
-!
-!              sin(phi) = v sin(w) / c
-!
-!           Let h be the vector given by the cross product
-!
-!              h = r X v
-!
-!           Rotate r by phi radians about h to obtain the apparent
-!           position of the object.
-!
-!        When stellar aberration corrections are used, the rate of
-!        change of the stellar aberration correction is accounted for
-!        in the computation of the output velocity.
-!
-!        Transmission case
-!        ==================
-!
-!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' is
-!        selected, SPKEZ computes the position of the target body T at
-!        epoch ET+LT, where LT is the one-way light time. LT is the
-!        solution of the light-time equation
-!
-!                  | T(ET+LT) - O(ET) |
-!           LT = ------------------------                            (3)
-!                            c
-!
-!        Subtracting the geometric position of the observer, O(ET),
-!        gives the position of the target body relative to the
-!        observer: T(ET-LT) - O(ET).
-!
-!                   SSB --> O(ET)
-!                  / |    *
-!                 /  |  *  T(ET+LT) - O(ET)
-!                /   |*
-!               /   *|
-!              V  V  V
-!          T(ET+LT)  T(ET)
-!
-!        The position component of the light-time corrected state
-!        is the vector
-!
-!           T(ET+LT) - O(ET)
-!
-!        The velocity component of the light-time corrected state
-!        consists of the difference
-!
-!           T_vel(ET+LT)*(1+dLT/dET) - O_vel(ET)
-!
-!        where T_vel and O_vel are, respectively, the velocities of the
-!        target and observer relative to the solar system barycenter at
-!        the epochs ET+LT and ET.
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated away from the solar system barycenter-
-!        relative velocity vector of the observer. The rotation is
-!        computed as in the reception case, but the sign of the
-!        rotation angle is negated. Velocities are adjusted to account
-!        for the rate of change of the stellar aberration correction.
-!
-!     Precision of light time corrections
-!     ===================================
-!
-!        Corrections using one iteration of the light time solution
-!        ----------------------------------------------------------
-!
-!        When the requested aberration correction is 'LT', 'LT+S',
-!        'XLT', or 'XLT+S', only one iteration is performed in the
-!        algorithm used to compute LT.
-!
-!        The relative error in this computation
-!
-!           | LT_ACTUAL - LT_COMPUTED |  /  LT_ACTUAL
-!
-!        is at most
-!
-!            (V/C)**2
-!           ----------
-!            1 - (V/C)
-!
-!        which is well approximated by (V/C)**2, where V is the
-!        velocity of the target relative to an inertial frame and C is
-!        the speed of light.
-!
-!        For nearly all objects in the solar system V is less than 60
-!        km/sec. The value of C is ~300000 km/sec. Thus the
-!        one-iteration solution for LT has a potential relative error
-!        of not more than 4e-8. This is a potential light time error of
-!        approximately 2e-5 seconds per astronomical unit of distance
-!        separating the observer and target. Given the bound on V cited
-!        above:
-!
-!           As long as the observer and target are separated by less
-!           than 50 astronomical units, the error in the light time
-!           returned using the one-iteration light time corrections is
-!           less than 1 millisecond.
-!
-!           The magnitude of the corresponding position error, given
-!           the above assumptions, may be as large as (V/C)**2 * the
-!           distance between the observer and the uncorrected target
-!           position: 300 km or equivalently 6 km/AU.
-!
-!        In practice, the difference between positions obtained using
-!        one-iteration and converged light time is usually much smaller
-!        than the value computed above and can be insignificant. For
-!        example, for the spacecraft Mars Reconnaissance Orbiter and
-!        Mars Express, the position error for the one-iteration light
-!        time correction, applied to the spacecraft-to-Mars center
-!        vector, is at the 1 cm level.
-!
-!        Comparison of results obtained using the one-iteration and
-!        converged light time solutions is recommended when adequacy of
-!        the one-iteration solution is in doubt.
-!
-!        Converged corrections
-!        ---------------------
-!
-!        When the requested aberration correction is 'CN', 'CN+S',
-!        'XCN', or 'XCN+S', as many iterations as are required for
-!        convergence are performed in the computation of LT. Usually
-!        the solution is found after three iterations. The relative
-!        error present in this case is at most
-!
-!            (V/C)**4
-!           ----------
-!            1 - (V/C)
-!
-!        which is well approximated by (V/C)**4.
-!
-!           The precision of this computation (ignoring round-off
-!           error) is better than 4e-11 seconds for any pair of objects
-!           less than 50 AU apart, and having speed relative to the
-!           solar system barycenter less than 60 km/s.
-!
-!           The magnitude of the corresponding position error, given
-!           the above assumptions, may be as large as (V/C)**4 * the
-!           distance between the observer and the uncorrected target
-!           position: 1.2 cm at 50 AU or equivalently 0.24 mm/AU.
-!
-!        However, to very accurately model the light time between
-!        target and observer one must take into account effects due to
-!        general relativity. These may be as high as a few hundredths
-!        of a millisecond for some objects.
-!
-!     Relativistic Corrections
-!     =========================
-!
-!     This routine does not attempt to perform either general or
-!     special relativistic corrections in computing the various
-!     aberration corrections. For many applications relativistic
-!     corrections are not worth the expense of added computation
-!     cycles. If however, your application requires these additional
-!     corrections we suggest you consult the astronomical almanac (page
-!     B36) for a discussion of how to carry out these corrections.
-!
-! $ Examples
-!
-!     1)  Load a planetary ephemeris SPK; then look up a series of
-!         geometric states of the moon relative to the earth,
-!         referenced to the J2000 frame.
-!
-!               IMPLICIT NONE
-!         C
-!         C     Local constants
-!         C
-!               CHARACTER*(*)         FRAME
-!               PARAMETER           ( FRAME  = 'J2000' )
-!
-!               CHARACTER*(*)         ABCORR
-!               PARAMETER           ( ABCORR = 'NONE' )
-!
-!         C
-!         C     The name of the SPK file shown here is fictitious;
-!         C     you must supply the name of an SPK file available
-!         C     on your own computer system.
-!         C
-!               CHARACTER*(*)         SPK
-!               PARAMETER           ( SPK    = 'planet.bsp' )
-!
-!         C
-!         C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
-!         C
-!               DOUBLE PRECISION      ET0
-!               PARAMETER           ( ET0    = 0.0D0 )
-!
-!         C
-!         C     Use a time step of 1 hour; look up 100 states.
-!         C
-!               DOUBLE PRECISION      STEP
-!               PARAMETER           ( STEP   = 3600.0D0 )
-!
-!               INTEGER               MAXITR
-!               PARAMETER           ( MAXITR = 100 )
-!
-!         C
-!         C     The NAIF IDs of the earth and moon are 399 and 301
-!         C     respectively.
-!         C
-!               INTEGER               OBSRVR
-!               PARAMETER           ( OBSRVR = 399 )
-!
-!               INTEGER               TARGET
-!               PARAMETER           ( TARGET = 301 )
-!
-!         C
-!         C     Local variables
-!         C
-!               DOUBLE PRECISION      ET
-!               DOUBLE PRECISION      LT
-!               DOUBLE PRECISION      STATE ( 6 )
-!
-!               INTEGER               I
-!
-!         C
-!         C     Load the SPK file.
-!         C
-!               CALL FURNSH ( SPK )
-!
-!         C
-!         C     Step through a series of epochs, looking up a
-!         C     state vector at each one.
-!         C
-!               DO I = 1, MAXITR
-!
-!                  ET = ET0 + (I-1)*STEP
-!
-!                  CALL SPKEZ ( TARGET, ET, FRAME, ABCORR, OBSRVR,
-!              .                STATE,  LT                        )
-!
-!                  WRITE (*,*) 'ET = ', ET
-!                  WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-!                  WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-!                  WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-!                  WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-!                  WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-!                  WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-!                  WRITE (*,*) ' '
-!
-!               END DO
-!
-!               END
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton      (JPL)
-!     W.L. Taber      (JPL)
-!     N.J. Bachman    (JPL)
-!     J.E. McLean     (JPL)
-!     H.A. Neilan     (JPL)
-!     B.V. Semenov    (JPL)
-!     M.J. Spencer    (JPL)
-!     I.M. Underwood  (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.1.0, 03-JUL-2014 (NJB) (BVS)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!-    Last update was 23-SEP-2013 (NJB) (BVS)
-!
-!        Bug fix: replaced calls to ZZPRSCOR with calls to
-!        ZZVALCOR. The latter routine rejects all aberration
-!        corrections not supported by the SPK subsystem.
-!
-!        Bug fix: added a check and an exception for the FOUND flag
-!        returned by FRINFO.
-!
-!        Updated to save the input frame name and POOL state counter
-!        and to do frame name-ID conversion only if the counter has
-!        changed.
-!
-!        Updated various in-line comments.
-!
-!-    SPICELIB Version 5.0.1, 18-MAY-2010 (BVS)
-!
-!        Removed "C$" marker from text in the header.
-!
-!-    SPICELIB Version 5.0.0, 27-DEC-2007 (NJB)
-!
-!        This routine was upgraded to more accurately compute
-!        aberration-corrected velocity, and in particular, make it
-!        more consistent with observer-target positions.
-!
-!        When light time corrections are used, the derivative of light
-!        time with respect to time is now accounted for in the
-!        computation of observer-target velocities. When the reference
-!        frame associated with the output state is time-dependent, the
-!        derivative of light time with respect to time is now accounted
-!        for in the computation of the rate of change of orientation of
-!        the reference frame.
-!
-!        When stellar aberration corrections are used, velocities
-!        now reflect the rate of range of the stellar aberration
-!        correction.
-!
-!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.
-!        Minor header error was corrected.
-!
-!-    SPICELIB Version 4.0.2, 20-OCT-2003 (EDW)
-!
-!        Added mention that LT returns in seconds.
-!
-!-    SPICELIB Version 4.0.1, 29-JUL-2003 (NJB) (CHA)
-!
-!        Various minor header changes were made to improve clarity.
-!
-!-    SPICELIB Version 4.0.0, 28-DEC-2001 (NJB)
-!
-!        Updated to handle aberration corrections for transmission
-!        of radiation. Formerly, only the reception case was
-!        supported. The header was revised and expanded to explain
-!        the functionality of this routine in more detail.
-!
-!-    SPICELIB Version 3.1.0, 09-JUL-1996 (WLT)
-!
-!        Corrected the description of LT in the Detailed Output
-!        section of the header.
-!
-!-    SPICELIB Version 3.0.0, 26-MAY-1995 (WLT)
-!
-!        The routine was upgraded to support non-inertial frames.
-!
-!-    SPICELIB Version 2.1.1, 5-AUG-1994 (HAN) (MJS)
-!
-!        Added code so that routine accepts lower case, mixed case
-!        and upper case versions of the string ABCORR.
-!
-!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 2.0.0, 18-JUL-1991 (JEM) (NJB)
-!
-!        The old SPKEZ did not compute the geometric state of one body
-!        with respect to another unless data existed for each body with
-!        respect to the solar system barycenter.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     easy reader for spk file
-!     get state relative observer corrected for aberrations
-!     read ephemeris data
-!     read trajectory data
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 5.0.0, 22-JUL-2007 (NJB)
-!
-!        Routine was upgraded to more accurately compute aberration-
-!        corrected velocity, and in particular, make it more consistent
-!        with observer-target positions. When light time corrections
-!        are used:
-!
-!           1) The derivative of light time with respect
-!              to time is now accounted for in the computation
-!              of observer-target velocities, for all types
-!              of reference frames.
-!
-!           2) The derivative of light time with respect
-!              to time is now accounted for in the computation of the
-!              rate of change of orientation of time-dependent
-!              reference frames for the output state. This rate of
-!              change affects observer-target velocities.
-!
-!        When stellar aberration corrections are used, velocities
-!        now reflect the rate of range of the stellar aberration
-!        correction.
-!
-!        This routine was modified as follows:
-!
-!           - SPKAPP is no longer called; it has been superseded
-!             by SPKACS. Aberration-corrected states relative to
-!             inertial frames are computed by SPKACS.
-!
-!           - The effect of the rate of change of light time on the
-!             rate of change of orientation of non-inertial output
-!             frames is accounted for in this routine. See the code
-!             near the end of this source file.
-!
-!        The header of this routine has been updated to reflect the
-!        upgrades described here.
-!
-!        As a separate upgrade, the method by which the aberration
-!        correction flag is parsed has been made more robust: parsing
-!        is now done by the routine ZZZPRSCOR. The new parsing
-!        technique calls for parsing the input string only when it
-!        differs from the previous value.
-!
-!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added. The new checks
-!        are intended to prevent arithmetic operations from
-!        being performed with uninitialized or invalid data.
-!
-!        Minor header error was corrected.
-!
-!-    SPICELIB Version 3.1.0, 09-JUL-1996 (WLT)
-!
-!        Corrected the description of LT in the Detailed Output
-!        section of the header.
-!
-!-    SPICELIB Version 3.0.0, 26-MAY-1995 (WLT)
-!
-!        The routine was upgraded so that it can now support
-!        non-inertial reference frames. In additions some
-!        of the error messages were slightly enhanced.
-!
-!-    SPICELIB Version 2.1.1, 5-AUG-1994 (HAN) (MJS)
-!
-!        Added code so that routine accepts lower case, mixed case
-!        and upper case versions of the string ABCORR.
-!
-!-    SPICELIB Version 2.0.0, 18-JUL-1991 (JEM) (NJB)
-!
-!        The previous version of SPKEZ could not
-!        compute the geometric state (no aberration
-!        correction) of one body with respect to
-!        another if the ephemeris data for each
-!        body relative to the Solar System Barycenter
-!        (body 0) had not been loaded. Now, if
-!        sufficient data is loaded, SPKEZ can always
-!        compute the state.
-!
-!        For example, suppose the file GLL.BSP contains
-!        segments of SPK data for the Galileo spacecraft
-!        (body -77) relative to the Jupiter Barycenter
-!        (body 5) over a period of time. If SPKEZ Version
-!        1.0.0 was called to compute the geometric state of
-!        -77 relative to 5 (or vice versa), a routine that
-!        SPKEZ calls, SPKSSB, would signal an error stating
-!        that there is insufficient data for computing the
-!        state of body 5 (relative to 0). Version 1.0.0
-!        of SPKEZ could not compute the requested state even
-!        though sufficient data had been loaded.
-!
-!        It is necessary to compute the states of each
-!        of the target and observing bodies relative to
-!        the solar system barycenter when aberration
-!        corrections are being applied. However, when
-!        computing geometric states, it is only necessary
-!        to trace back to the first common node. Positive
-!        side effects include the maintenance of precision
-!        and reduction in number of look ups.
-!
-!        The changes to the code in SPKEZ involved calling a new
-!        routine, SPKGEO, which computes the geometric state if
-!        no aberration corrections are requested.
-!
-!        The other cosmetic changes include the removal of a reference
-!        to the SPK User's Guide in Literature_References because
-!        the User's Guide is the same as SPK Required Reading.
-!
-!        Also, the item in Restrictions previously said
-!
-!           1) The ephemeris files to be used by SPKEZ must be loaded
-!              by SPKLEF before SPKSSB is called.
-!
-!        SPKSSB was replaced with SPKEZ.
-!
-!        The location of the position and velocity information in the
-!        output state vector argument STARG is now spelled out.
-!
-!        Finally, the Particulars section was updated. In Version
-!        1.0.0 it said that calling SPKEZ was equivalent to calling
-!        SPKSSB and SPKAPP.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the state (position and velocity) of a target body
+!!     relative to an observing body, optionally corrected for light
+!!     time (planetary aberration) and stellar aberration.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     NAIF_IDS
+!!     FRAMES
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body. The target
+!!                 and observer define a state vector whose position
+!!                 component points from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past J2000
+!!                 TDB, at which the state of the target body relative to
+!!                 the observer is to be computed. ET refers to time at
+!!                 the observer's location.
+!!
+!!     REF         is the name of the reference frame relative to which
+!!                 the output state vector should be expressed. This may
+!!                 be any frame supported by the SPICE system, including
+!!                 built-in frames (documented in the Frames Required
+!!                 Reading) and frames defined by a loaded frame kernel
+!!                 (FK).
+!!
+!!                 When REF designates a non-inertial frame, the
+!!                 orientation of the frame is evaluated at an epoch
+!!                 dependent on the selected aberration correction.
+!!                 See the description of the output state vector STARG
+!!                 for details.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied
+!!                 to the state of the target body to account for one-way
+!!                 light time and stellar aberration. See the discussion
+!!                 in the Particulars section for recommendations on
+!!                 how to choose aberration corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric state of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the state of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction uses an
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               state obtained with the 'LT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               state of the target---the position and
+!!                               velocity of the target as seen by the
+!!                               observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section
+!!                               below for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               state of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation  This option modifies the
+!!                               state obtained with the 'XLT' option to
+!!                               account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The position component of
+!!                               the computed target state indicates the
+!!                               direction that photons emitted from the
+!!                               observer's location must be "aimed" to
+!!                               hit the target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!!     OBS         is the NAIF ID code for an observing body.
+!!
+!! ## Detailed Output
+!!
+!!     STARG       is a Cartesian state vector representing the position
+!!                 and velocity of the target body relative to the
+!!                 specified observer. STARG is corrected for the
+!!                 specified aberrations, and is expressed with respect
+!!                 to the reference frame specified by REF. The first
+!!                 three components of STARG represent the x-, y- and
+!!                 z-components of the target's position; the last three
+!!                 components form the corresponding velocity vector.
+!!
+!!                 The position component of STARG points from the
+!!                 observer's location at ET to the aberration-corrected
+!!                 location of the target. Note that the sense of the
+!!                 position vector is independent of the direction of
+!!                 radiation travel implied by the aberration
+!!                 correction.
+!!
+!!                 The velocity component of STARG is the derivative
+!!                 with respect to time of the position component of
+!!                 STARG.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!                 Non-inertial frames are treated as follows: letting
+!!                 LTCENT be the one-way light time between the observer
+!!                 and the central body associated with the frame, the
+!!                 orientation of the frame is evaluated at ET-LTCENT,
+!!                 ET+LTCENT, or ET depending on whether the requested
+!!                 aberration correction is, respectively, for received
+!!                 radiation, transmitted radiation, or is omitted.
+!!                 LTCENT is computed using the method indicated by
+!!                 ABCORR.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds. If the target state is corrected
+!!                 for aberrations, then LT is the one-way light time
+!!                 between the observer and the light time corrected
+!!                 target location.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the reference frame REF is not a recognized reference
+!!        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
+!!
+!!     2) If the loaded kernels provide insufficient data to
+!!        compute the requested state vector, the deficiency will
+!!        be diagnosed by a routine in the call tree of this routine.
+!!
+!!     3) If an error occurs while reading an SPK or other kernel file,
+!!        the error  will be diagnosed by a routine in the call tree
+!!        of this routine.
+!!
+!!     4) If any of the required attributes of the reference frame REF
+!!        cannot be determined, 'SPICE(UNKNOWNFRAME2)' is signaled.
+!!
+!! ## Files
+!!
+!!     This routine computes states using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH. See the routine FURNSH and the SPK
+!!     and KERNEL Required Reading for further information on loading
+!!     (and unloading) kernels.
+!!
+!!     If the output state STARG is to be expressed relative to a
+!!     non-inertial frame, or if any of the ephemeris data used to
+!!     compute STARG are expressed relative to a non-inertial frame in
+!!     the SPK files providing those data, additional kernels may be
+!!     needed to enable the reference frame transformations required to
+!!     compute the state. Normally these additional kernels are PCK
+!!     files or frame kernels. Any such kernels must already be loaded
+!!     at the time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     This routine is part of the user interface to the SPICE ephemeris
+!!     system. It allows you to retrieve state information for any
+!!     ephemeris object relative to any other in a reference frame that
+!!     is convenient for further computations.
+!!
+!!     Aberration corrections
+!!     ======================
+!!
+!!     In space science or engineering applications one frequently
+!!     wishes to know where to point a remote sensing instrument, such
+!!     as an optical camera or radio antenna, in order to observe or
+!!     otherwise receive radiation from a target. This pointing problem
+!!     is complicated by the finite speed of light:  one needs to point
+!!     to where the target appears to be as opposed to where it actually
+!!     is at the epoch of observation. We use the adjectives
+!!     "geometric," "uncorrected," or "true" to refer to an actual
+!!     position or state of a target at a specified epoch. When a
+!!     geometric position or state vector is modified to reflect how it
+!!     appears to an observer, we describe that vector by any of the
+!!     terms "apparent," "corrected," "aberration corrected," or "light
+!!     time and stellar aberration corrected." The SPICE Toolkit can
+!!     correct for two phenomena affecting the apparent location of an
+!!     object:  one-way light time (also called "planetary aberration")
+!!     and stellar aberration.
+!!
+!!     One-way light time
+!!     ------------------
+!!
+!!     Correcting for one-way light time is done by computing, given an
+!!     observer and observation epoch, where a target was when the
+!!     observed photons departed the target's location. The vector from
+!!     the observer to this computed target location is called a "light
+!!     time corrected" vector. The light time correction depends on the
+!!     motion of the target relative to the solar system barycenter, but
+!!     it is independent of the velocity of the observer relative to the
+!!     solar system barycenter. Relativistic effects such as light
+!!     bending and gravitational delay are not accounted for in the
+!!     light time correction performed by this routine.
+!!
+!!     Stellar aberration
+!!     ------------------
+!!
+!!     The velocity of the observer also affects the apparent location
+!!     of a target:  photons arriving at the observer are subject to a
+!!     "raindrop effect" whereby their velocity relative to the observer
+!!     is, using a Newtonian approximation, the photons' velocity
+!!     relative to the solar system barycenter minus the velocity of the
+!!     observer relative to the solar system barycenter. This effect is
+!!     called "stellar aberration."  Stellar aberration is independent
+!!     of the velocity of the target. The stellar aberration formula
+!!     used by this routine does not include (the much smaller)
+!!     relativistic effects.
+!!
+!!     Stellar aberration corrections are applied after light time
+!!     corrections:  the light time corrected target position vector is
+!!     used as an input to the stellar aberration correction.
+!!
+!!     When light time and stellar aberration corrections are both
+!!     applied to a geometric position vector, the resulting position
+!!     vector indicates where the target "appears to be" from the
+!!     observer's location.
+!!
+!!     As opposed to computing the apparent position of a target, one
+!!     may wish to compute the pointing direction required for
+!!     transmission of photons to the target. This also requires
+!!     correction of the geometric target position for the effects of
+!!     light time and stellar aberration, but in this case the
+!!     corrections are computed for radiation traveling *from* the
+!!     observer to the target.
+!!
+!!     The "transmission" light time correction yields the target's
+!!     location as it will be when photons emitted from the observer's
+!!     location at ET arrive at the target. The transmission stellar
+!!     aberration correction is the inverse of the traditional stellar
+!!     aberration correction:  it indicates the direction in which
+!!     radiation should be emitted so that, using a Newtonian
+!!     approximation, the sum of the velocity of the radiation relative
+!!     to the observer and of the observer's velocity, relative to the
+!!     solar system barycenter, yields a velocity vector that points in
+!!     the direction of the light time corrected position of the target.
+!!
+!!     One may object to using the term "observer" in the transmission
+!!     case, in which radiation is emitted from the observer's location.
+!!     The terminology was retained for consistency with earlier
+!!     documentation.
+!!
+!!     Below, we indicate the aberration corrections to use for some
+!!     common applications:
+!!
+!!        1) Find the apparent direction of a target for a remote-sensing
+!!           observation.
+!!
+!!              Use 'LT+S' or 'CN+S: apply both light time and stellar
+!!              aberration corrections.
+!!
+!!           Note that using light time corrections alone ('LT' or 'CN')
+!!           is generally not a good way to obtain an approximation to
+!!           an apparent target vector: since light time and stellar
+!!           aberration corrections often partially cancel each other,
+!!           it may be more accurate to use no correction at all than to
+!!           use light time alone.
+!!
+!!        2) Find the corrected pointing direction to radiate a signal
+!!           to a target. This computation is often applicable for
+!!           implementing communications sessions.
+!!
+!!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
+!!              aberration corrections for transmission.
+!!
+!!        3) Compute the apparent position of a target body relative
+!!           to a star or other distant object.
+!!
+!!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
+!!              correction applied to the position of the distant
+!!              object. For example, if a star position is obtained from
+!!              a catalog, the position vector may not be corrected for
+!!              stellar aberration. In this case, to find the angular
+!!              separation of the star and the limb of a planet, the
+!!              vector from the observer to the planet should be
+!!              corrected for light time but not stellar aberration.
+!!
+!!        4) Obtain an uncorrected state vector derived directly from
+!!           data in an SPK file.
+!!
+!!              Use 'NONE'.
+!!
+!!        5) Use a geometric state vector as a low-accuracy estimate
+!!           of the apparent state for an application where execution
+!!           speed is critical.
+!!
+!!              Use 'NONE'.
+!!
+!!        6) While this routine cannot perform the relativistic
+!!           aberration corrections required to compute states
+!!           with the highest possible accuracy, it can supply the
+!!           geometric states required as inputs to these computations.
+!!
+!!              Use 'NONE', then apply relativistic aberration
+!!              corrections (not available in the SPICE Toolkit).
+!!
+!!     Below, we discuss in more detail how the aberration corrections
+!!     applied by this routine are computed.
+!!
+!!        Geometric case
+!!        ==============
+!!
+!!        SPKEZ begins by computing the geometric position T(ET) of the
+!!        target body relative to the solar system barycenter (SSB).
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the geometric position of the target body relative to the
+!!        observer. The one-way light time, LT, is given by
+!!
+!!                  | T(ET) - O(ET) |
+!!           LT = -------------------
+!!                          c
+!!
+!!        The geometric relationship between the observer, target, and
+!!        solar system barycenter is as shown:
+!!
+!!           SSB ---> O(ET)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(ET) - O(ET)
+!!            V  V
+!!           T(ET)
+!!
+!!        The returned state consists of the position vector
+!!
+!!           T(ET) - O(ET)
+!!
+!!        and a velocity obtained by taking the difference of the
+!!        corresponding velocities. In the geometric case, the
+!!        returned velocity is actually the time derivative of the
+!!        position.
+!!
+!!        Reception case
+!!        ==============
+!!
+!!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' is selected
+!!        for ABCORR, SPKEZ computes the position of the target body at
+!!        epoch ET-LT, where LT is the one-way light time. Let T(t) and
+!!        O(t) represent the positions of the target and observer
+!!        relative to the solar system barycenter at time t; then LT is
+!!        the solution of the light-time equation
+!!
+!!                  | T(ET-LT) - O(ET) |
+!!           LT = ------------------------                            (1)
+!!                           c
+!!
+!!        The ratio
+!!
+!!            | T(ET) - O(ET) |
+!!          ---------------------                                     (2)
+!!                    c
+!!
+!!        is used as a first approximation to LT; inserting (2) into the
+!!        right hand side of the light-time equation (1) yields the
+!!        "one-iteration" estimate of the one-way light time ("LT").
+!!        Repeating the process until the estimates of LT converge
+!!        yields the "converged Newtonian" light time estimate ("CN").
+!!
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the position of the target body relative to the observer:
+!!        T(ET-LT) - O(ET).
+!!
+!!           SSB ---> O(ET)
+!!            | \     |
+!!            |  \    |
+!!            |   \   | T(ET-LT) - O(ET)
+!!            |    \  |
+!!            V     V V
+!!           T(ET)  T(ET-LT)
+!!
+!!        The position component of the light time corrected state
+!!        is the vector
+!!
+!!           T(ET-LT) - O(ET)
+!!
+!!        The velocity component of the light time corrected state
+!!        is the difference
+!!
+!!           T_vel(ET-LT)*(1-dLT/dET) - O_vel(ET)
+!!
+!!        where T_vel and O_vel are, respectively, the velocities of the
+!!        target and observer relative to the solar system barycenter at
+!!        the epochs ET-LT and ET.
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated toward the solar system barycenter-
+!!        relative velocity vector of the observer. The rotation is
+!!        computed as follows:
+!!
+!!           Let r be the light time corrected vector from the observer
+!!           to the object, and v be the velocity of the observer with
+!!           respect to the solar system barycenter. Let w be the angle
+!!           between them. The aberration angle phi is given by
+!!
+!!              sin(phi) = v sin(w) / c
+!!
+!!           Let h be the vector given by the cross product
+!!
+!!              h = r X v
+!!
+!!           Rotate r by phi radians about h to obtain the apparent
+!!           position of the object.
+!!
+!!        When stellar aberration corrections are used, the rate of
+!!        change of the stellar aberration correction is accounted for
+!!        in the computation of the output velocity.
+!!
+!!        Transmission case
+!!        ==================
+!!
+!!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' is
+!!        selected, SPKEZ computes the position of the target body T at
+!!        epoch ET+LT, where LT is the one-way light time. LT is the
+!!        solution of the light-time equation
+!!
+!!                  | T(ET+LT) - O(ET) |
+!!           LT = ------------------------                            (3)
+!!                            c
+!!
+!!        Subtracting the geometric position of the observer, O(ET),
+!!        gives the position of the target body relative to the
+!!        observer: T(ET-LT) - O(ET).
+!!
+!!                   SSB --> O(ET)
+!!                  / |    *
+!!                 /  |  *  T(ET+LT) - O(ET)
+!!                /   |*
+!!               /   *|
+!!              V  V  V
+!!          T(ET+LT)  T(ET)
+!!
+!!        The position component of the light-time corrected state
+!!        is the vector
+!!
+!!           T(ET+LT) - O(ET)
+!!
+!!        The velocity component of the light-time corrected state
+!!        consists of the difference
+!!
+!!           T_vel(ET+LT)*(1+dLT/dET) - O_vel(ET)
+!!
+!!        where T_vel and O_vel are, respectively, the velocities of the
+!!        target and observer relative to the solar system barycenter at
+!!        the epochs ET+LT and ET.
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated away from the solar system barycenter-
+!!        relative velocity vector of the observer. The rotation is
+!!        computed as in the reception case, but the sign of the
+!!        rotation angle is negated. Velocities are adjusted to account
+!!        for the rate of change of the stellar aberration correction.
+!!
+!!     Precision of light time corrections
+!!     ===================================
+!!
+!!        Corrections using one iteration of the light time solution
+!!        ----------------------------------------------------------
+!!
+!!        When the requested aberration correction is 'LT', 'LT+S',
+!!        'XLT', or 'XLT+S', only one iteration is performed in the
+!!        algorithm used to compute LT.
+!!
+!!        The relative error in this computation
+!!
+!!           | LT_ACTUAL - LT_COMPUTED |  /  LT_ACTUAL
+!!
+!!        is at most
+!!
+!!            (V/C)**2
+!!           ----------
+!!            1 - (V/C)
+!!
+!!        which is well approximated by (V/C)**2, where V is the
+!!        velocity of the target relative to an inertial frame and C is
+!!        the speed of light.
+!!
+!!        For nearly all objects in the solar system V is less than 60
+!!        km/sec. The value of C is ~300000 km/sec. Thus the
+!!        one-iteration solution for LT has a potential relative error
+!!        of not more than 4e-8. This is a potential light time error of
+!!        approximately 2e-5 seconds per astronomical unit of distance
+!!        separating the observer and target. Given the bound on V cited
+!!        above:
+!!
+!!           As long as the observer and target are separated by less
+!!           than 50 astronomical units, the error in the light time
+!!           returned using the one-iteration light time corrections is
+!!           less than 1 millisecond.
+!!
+!!           The magnitude of the corresponding position error, given
+!!           the above assumptions, may be as large as (V/C)**2 * the
+!!           distance between the observer and the uncorrected target
+!!           position: 300 km or equivalently 6 km/AU.
+!!
+!!        In practice, the difference between positions obtained using
+!!        one-iteration and converged light time is usually much smaller
+!!        than the value computed above and can be insignificant. For
+!!        example, for the spacecraft Mars Reconnaissance Orbiter and
+!!        Mars Express, the position error for the one-iteration light
+!!        time correction, applied to the spacecraft-to-Mars center
+!!        vector, is at the 1 cm level.
+!!
+!!        Comparison of results obtained using the one-iteration and
+!!        converged light time solutions is recommended when adequacy of
+!!        the one-iteration solution is in doubt.
+!!
+!!        Converged corrections
+!!        ---------------------
+!!
+!!        When the requested aberration correction is 'CN', 'CN+S',
+!!        'XCN', or 'XCN+S', as many iterations as are required for
+!!        convergence are performed in the computation of LT. Usually
+!!        the solution is found after three iterations. The relative
+!!        error present in this case is at most
+!!
+!!            (V/C)**4
+!!           ----------
+!!            1 - (V/C)
+!!
+!!        which is well approximated by (V/C)**4.
+!!
+!!           The precision of this computation (ignoring round-off
+!!           error) is better than 4e-11 seconds for any pair of objects
+!!           less than 50 AU apart, and having speed relative to the
+!!           solar system barycenter less than 60 km/s.
+!!
+!!           The magnitude of the corresponding position error, given
+!!           the above assumptions, may be as large as (V/C)**4 * the
+!!           distance between the observer and the uncorrected target
+!!           position: 1.2 cm at 50 AU or equivalently 0.24 mm/AU.
+!!
+!!        However, to very accurately model the light time between
+!!        target and observer one must take into account effects due to
+!!        general relativity. These may be as high as a few hundredths
+!!        of a millisecond for some objects.
+!!
+!!     Relativistic Corrections
+!!     =========================
+!!
+!!     This routine does not attempt to perform either general or
+!!     special relativistic corrections in computing the various
+!!     aberration corrections. For many applications relativistic
+!!     corrections are not worth the expense of added computation
+!!     cycles. If however, your application requires these additional
+!!     corrections we suggest you consult the astronomical almanac (page
+!!     B36) for a discussion of how to carry out these corrections.
+!!
+!! ## Examples
+!!
+!!     1)  Load a planetary ephemeris SPK; then look up a series of
+!!         geometric states of the moon relative to the earth,
+!!         referenced to the J2000 frame.
+!!
+!!               IMPLICIT NONE
+!!         C
+!!         C     Local constants
+!!         C
+!!               CHARACTER*(*)         FRAME
+!!               PARAMETER           ( FRAME  = 'J2000' )
+!!
+!!               CHARACTER*(*)         ABCORR
+!!               PARAMETER           ( ABCORR = 'NONE' )
+!!
+!!         C
+!!         C     The name of the SPK file shown here is fictitious;
+!!         C     you must supply the name of an SPK file available
+!!         C     on your own computer system.
+!!         C
+!!               CHARACTER*(*)         SPK
+!!               PARAMETER           ( SPK    = 'planet.bsp' )
+!!
+!!         C
+!!         C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
+!!         C
+!!               DOUBLE PRECISION      ET0
+!!               PARAMETER           ( ET0    = 0.0D0 )
+!!
+!!         C
+!!         C     Use a time step of 1 hour; look up 100 states.
+!!         C
+!!               DOUBLE PRECISION      STEP
+!!               PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!               INTEGER               MAXITR
+!!               PARAMETER           ( MAXITR = 100 )
+!!
+!!         C
+!!         C     The NAIF IDs of the earth and moon are 399 and 301
+!!         C     respectively.
+!!         C
+!!               INTEGER               OBSRVR
+!!               PARAMETER           ( OBSRVR = 399 )
+!!
+!!               INTEGER               TARGET
+!!               PARAMETER           ( TARGET = 301 )
+!!
+!!         C
+!!         C     Local variables
+!!         C
+!!               DOUBLE PRECISION      ET
+!!               DOUBLE PRECISION      LT
+!!               DOUBLE PRECISION      STATE ( 6 )
+!!
+!!               INTEGER               I
+!!
+!!         C
+!!         C     Load the SPK file.
+!!         C
+!!               CALL FURNSH ( SPK )
+!!
+!!         C
+!!         C     Step through a series of epochs, looking up a
+!!         C     state vector at each one.
+!!         C
+!!               DO I = 1, MAXITR
+!!
+!!                  ET = ET0 + (I-1)*STEP
+!!
+!!                  CALL SPKEZ ( TARGET, ET, FRAME, ABCORR, OBSRVR,
+!!              .                STATE,  LT                        )
+!!
+!!                  WRITE (*,*) 'ET = ', ET
+!!                  WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+!!                  WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+!!                  WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+!!                  WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+!!                  WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+!!                  WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+!!                  WRITE (*,*) ' '
+!!
+!!               END DO
+!!
+!!               END
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     C.H. Acton      (JPL)
+!!     W.L. Taber      (JPL)
+!!     N.J. Bachman    (JPL)
+!!     J.E. McLean     (JPL)
+!!     H.A. Neilan     (JPL)
+!!     B.V. Semenov    (JPL)
+!!     M.J. Spencer    (JPL)
+!!     I.M. Underwood  (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.1.0, 03-JUL-2014 (NJB) (BVS)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!-    Last update was 23-SEP-2013 (NJB) (BVS)
+!!
+!!        Bug fix: replaced calls to ZZPRSCOR with calls to
+!!        ZZVALCOR. The latter routine rejects all aberration
+!!        corrections not supported by the SPK subsystem.
+!!
+!!        Bug fix: added a check and an exception for the FOUND flag
+!!        returned by FRINFO.
+!!
+!!        Updated to save the input frame name and POOL state counter
+!!        and to do frame name-ID conversion only if the counter has
+!!        changed.
+!!
+!!        Updated various in-line comments.
+!!
+!!-    SPICELIB Version 5.0.1, 18-MAY-2010 (BVS)
+!!
+!!        Removed "C$" marker from text in the header.
+!!
+!!-    SPICELIB Version 5.0.0, 27-DEC-2007 (NJB)
+!!
+!!        This routine was upgraded to more accurately compute
+!!        aberration-corrected velocity, and in particular, make it
+!!        more consistent with observer-target positions.
+!!
+!!        When light time corrections are used, the derivative of light
+!!        time with respect to time is now accounted for in the
+!!        computation of observer-target velocities. When the reference
+!!        frame associated with the output state is time-dependent, the
+!!        derivative of light time with respect to time is now accounted
+!!        for in the computation of the rate of change of orientation of
+!!        the reference frame.
+!!
+!!        When stellar aberration corrections are used, velocities
+!!        now reflect the rate of range of the stellar aberration
+!!        correction.
+!!
+!!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.
+!!        Minor header error was corrected.
+!!
+!!-    SPICELIB Version 4.0.2, 20-OCT-2003 (EDW)
+!!
+!!        Added mention that LT returns in seconds.
+!!
+!!-    SPICELIB Version 4.0.1, 29-JUL-2003 (NJB) (CHA)
+!!
+!!        Various minor header changes were made to improve clarity.
+!!
+!!-    SPICELIB Version 4.0.0, 28-DEC-2001 (NJB)
+!!
+!!        Updated to handle aberration corrections for transmission
+!!        of radiation. Formerly, only the reception case was
+!!        supported. The header was revised and expanded to explain
+!!        the functionality of this routine in more detail.
+!!
+!!-    SPICELIB Version 3.1.0, 09-JUL-1996 (WLT)
+!!
+!!        Corrected the description of LT in the Detailed Output
+!!        section of the header.
+!!
+!!-    SPICELIB Version 3.0.0, 26-MAY-1995 (WLT)
+!!
+!!        The routine was upgraded to support non-inertial frames.
+!!
+!!-    SPICELIB Version 2.1.1, 5-AUG-1994 (HAN) (MJS)
+!!
+!!        Added code so that routine accepts lower case, mixed case
+!!        and upper case versions of the string ABCORR.
+!!
+!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 2.0.0, 18-JUL-1991 (JEM) (NJB)
+!!
+!!        The old SPKEZ did not compute the geometric state of one body
+!!        with respect to another unless data existed for each body with
+!!        respect to the solar system barycenter.
+!!
+!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+!!
+!!        Literature references added to the header.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!!
+!! ## Index Entries
+!!
+!!     easy reader for spk file
+!!     get state relative observer corrected for aberrations
+!!     read ephemeris data
+!!     read trajectory data
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 5.0.0, 22-JUL-2007 (NJB)
+!!
+!!        Routine was upgraded to more accurately compute aberration-
+!!        corrected velocity, and in particular, make it more consistent
+!!        with observer-target positions. When light time corrections
+!!        are used:
+!!
+!!           1) The derivative of light time with respect
+!!              to time is now accounted for in the computation
+!!              of observer-target velocities, for all types
+!!              of reference frames.
+!!
+!!           2) The derivative of light time with respect
+!!              to time is now accounted for in the computation of the
+!!              rate of change of orientation of time-dependent
+!!              reference frames for the output state. This rate of
+!!              change affects observer-target velocities.
+!!
+!!        When stellar aberration corrections are used, velocities
+!!        now reflect the rate of range of the stellar aberration
+!!        correction.
+!!
+!!        This routine was modified as follows:
+!!
+!!           - SPKAPP is no longer called; it has been superseded
+!!             by SPKACS. Aberration-corrected states relative to
+!!             inertial frames are computed by SPKACS.
+!!
+!!           - The effect of the rate of change of light time on the
+!!             rate of change of orientation of non-inertial output
+!!             frames is accounted for in this routine. See the code
+!!             near the end of this source file.
+!!
+!!        The header of this routine has been updated to reflect the
+!!        upgrades described here.
+!!
+!!        As a separate upgrade, the method by which the aberration
+!!        correction flag is parsed has been made more robust: parsing
+!!        is now done by the routine ZZZPRSCOR. The new parsing
+!!        technique calls for parsing the input string only when it
+!!        differs from the previous value.
+!!
+!!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added. The new checks
+!!        are intended to prevent arithmetic operations from
+!!        being performed with uninitialized or invalid data.
+!!
+!!        Minor header error was corrected.
+!!
+!!-    SPICELIB Version 3.1.0, 09-JUL-1996 (WLT)
+!!
+!!        Corrected the description of LT in the Detailed Output
+!!        section of the header.
+!!
+!!-    SPICELIB Version 3.0.0, 26-MAY-1995 (WLT)
+!!
+!!        The routine was upgraded so that it can now support
+!!        non-inertial reference frames. In additions some
+!!        of the error messages were slightly enhanced.
+!!
+!!-    SPICELIB Version 2.1.1, 5-AUG-1994 (HAN) (MJS)
+!!
+!!        Added code so that routine accepts lower case, mixed case
+!!        and upper case versions of the string ABCORR.
+!!
+!!-    SPICELIB Version 2.0.0, 18-JUL-1991 (JEM) (NJB)
+!!
+!!        The previous version of SPKEZ could not
+!!        compute the geometric state (no aberration
+!!        correction) of one body with respect to
+!!        another if the ephemeris data for each
+!!        body relative to the Solar System Barycenter
+!!        (body 0) had not been loaded. Now, if
+!!        sufficient data is loaded, SPKEZ can always
+!!        compute the state.
+!!
+!!        For example, suppose the file GLL.BSP contains
+!!        segments of SPK data for the Galileo spacecraft
+!!        (body -77) relative to the Jupiter Barycenter
+!!        (body 5) over a period of time. If SPKEZ Version
+!!        1.0.0 was called to compute the geometric state of
+!!        -77 relative to 5 (or vice versa), a routine that
+!!        SPKEZ calls, SPKSSB, would signal an error stating
+!!        that there is insufficient data for computing the
+!!        state of body 5 (relative to 0). Version 1.0.0
+!!        of SPKEZ could not compute the requested state even
+!!        though sufficient data had been loaded.
+!!
+!!        It is necessary to compute the states of each
+!!        of the target and observing bodies relative to
+!!        the solar system barycenter when aberration
+!!        corrections are being applied. However, when
+!!        computing geometric states, it is only necessary
+!!        to trace back to the first common node. Positive
+!!        side effects include the maintenance of precision
+!!        and reduction in number of look ups.
+!!
+!!        The changes to the code in SPKEZ involved calling a new
+!!        routine, SPKGEO, which computes the geometric state if
+!!        no aberration corrections are requested.
+!!
+!!        The other cosmetic changes include the removal of a reference
+!!        to the SPK User's Guide in Literature_References because
+!!        the User's Guide is the same as SPK Required Reading.
+!!
+!!        Also, the item in Restrictions previously said
+!!
+!!           1) The ephemeris files to be used by SPKEZ must be loaded
+!!              by SPKLEF before SPKSSB is called.
+!!
+!!        SPKSSB was replaced with SPKEZ.
+!!
+!!        The location of the position and velocity information in the
+!!        output state vector argument STARG is now spelled out.
+!!
+!!        Finally, the Particulars section was updated. In Version
+!!        1.0.0 it said that calling SPKEZ was equivalent to calling
+!!        SPKSSB and SPKAPP.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Saved frame name length.
+!!
+!!     Local variables
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg, vsclip
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       character(*), parameter :: rname = 'ZZSPKEZ0'
       integer(ip), parameter :: frnmln = 32
       real(wp) :: state    ( 6    )
@@ -16897,327 +16411,308 @@ contains
       end procedure zzspkez0
 
       module procedure zzdynrt0
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     For a specified dynamic frame, find the rotation that maps
-!     positions from the dynamic frame to its base frame.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     PCK
-!     SPK
-!
-! $ Keywords
-!
-!     FRAMES
-!     PRIVATE
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     INFRAM      is the frame ID code for a dynamic reference frame.
-!                 Note that this interface differs from that of TKFRAM,
-!                 which uses a class ID to identify the frame.
-!
-!                 In this routine, we refer this frame both as the
-!                 "input frame" and the "defined frame."
-!
-!     CENTER      is NAIF ID code for the center of the frame
-!                 designated by INFRAM.  This code, although derivable
-!                 from INFRAM, is passed in for convenience.
-!
-!     ET          is an epoch in ephemeris seconds past J2000 for which
-!                 the caller requests a rotation matrix.
-!
-! $ Detailed_Output
-!
-!     ROTATE      is a 3x3 rotation matrix that transforms positions
-!                 relative to INFRAM to positions relative to BASFRM.
-!
-!     BASFRM      is the frame ID code of the base frame associated
-!                 with INFRAM.  The 3x3 matrix ROTATE transforms
-!                 positions relative to INFRAM to positions relative to
-!                 BASFRM. The position transformation is performed by
-!                 left-multiplying by ROTATE a position expressed
-!                 relative to INFRAM. This is easily accomplished via
-!                 the subroutine call shown below.
-!
-!                    CALL MXV ( ROTATE, INPOS, OUTPOS )
-!
-! $ Parameters
-!
-!     See include file zzdyn.inc.
-!
-! $ Exceptions
-!
-!     1)  If a dynamic frame evaluation requires unavailable kernel
-!         data, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-!     2)  If a precession model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     3)  If a nutation model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     4)  If an obliquity model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     5)  If an unrecognized precession model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     6)  If an unrecognized nutation model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     7)  If an unrecognized obliquity model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     8)  If an attempt to look up the center of a frame does
-!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
-!         signaled.
-!
-!     9)  In a two-vector frame definition, if a constant vector
-!         specification method is not recognized, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     10) In a two-vector frame definition, if a vector definition
-!         method is not recognized, the error SPICE(NOTSUPPORTED)
-!         is signaled.
-!
-!     11) If an unrecognized dynamic frame family is specified, the
-!          error SPICE(NOTSUPPORTED) is signaled.
-!
-!     12) If an unrecognized dynamic frame definition style is
-!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     13) If an unrecognized dynamic frame rotation state is
-!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     14) If both a freeze epoch and a rotation state are specified,
-!         the error SPICE(FRAMEDEFERROR) is signaled.
-!
-!     15) If neither a freeze epoch nor a rotation state are specified
-!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
-!         signaled.
-!
-!     16) In a two-vector frame definition, if an invalid axis
-!         specification is encountered, the error SPICE(INVALIDAXIS) is
-!         signaled.
-!
-!     17) In a two-vector frame definition using a target near point
-!         vector, if the body-fixed frame associated with the target
-!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
-!
-!     18) If a dynamic frame evaluation requires excessive recursion
-!         depth, the error will be diagnosed by routines in the call
-!         tree of this routine.
-!
-!     19) When a two-vector dynamic frame is evaluated, if the
-!         primary and secondary vectors have angular separation less
-!         than the minimum allowed value, or if the angular separation
-!         differs from Pi by less than the minimum allowed value, the
-!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
-!         separation is given by the parameter LBSEP; this value may be
-!         overridden by supplying a different value in the frame
-!         definition.
-!
-!     20) If invalid units occur in a frame definition, the error
-!         will be diagnosed by a routine in the call tree of this
-!         routine.
-!
-!     21) If an invalid Euler axis sequence occurs in a frame
-!         definition, the error will be diagnosed by a routine in the
-!         call tree of this routine.
-!
-!     22) If a body RADII vector has other than exactly thee elements,
-!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
-!         the call tree of this routine.
-!
-!     23) If a body RADII vector has any element less-than or
-!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
-!         a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     1) SPK files containing data for each observer and target
-!        are required to support two-vector frames.  Note that
-!        observer-target pairs can be implicit, as in the case
-!        of a constant vector whose frame is evaluated at a
-!        light-time corrected epoch:  the light time the frame
-!        center to an observer must be computable in this case,
-!        which implies the state of the frame center as seen by
-!        the observer must be computable.
-!
-!     2) Any of SPK, CK, PCK, and frame kernels will also be required
-!        if any frames referenced in the definition of INFRAM (as a
-!        base frame, velocity vector frame, or constant vector frame)
-!        require them, or if any vectors used to define INFRAM require
-!        these data in order to be computable.
-!
-!     3) When CK data are required, one or more associated SCLK kernels
-!        ---normally, one kernel per spacecraft clock---are
-!        required as well.  A leapseconds kernel may be required
-!        whenever an SCLK kernel is required.
-!
-!     4) When a two-vector frame is defined using a target near point,
-!        a PCK file giving orientation and providing a triaxial shape
-!        model for the target body is required.
-!
-! $ Particulars
-!
-!     Currently only parameterized dynamic frames are supported by
-!     this routine.
-!
-!     Currently supported parameterized dynamic families are:
-!
-!        Two-vector
-!        ==========
-!
-!           Vector definitions
-!           ------------------
-!           Observer-target position
-!           Observer-target velocity
-!           Near point on target
-!           Constant vector in specified frame
-!
-!        Mean Equator and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!
-!        Mean Ecliptic and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!                   1980 IAU mean obliquity model
-!
-!        True Equator and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!                   1980 IAU nutation model
-!
-!        Euler frames
-!        ============
-!
-!           Euler angle definitions
-!           -----------------------
-!           Polynomial
-!
-!        Product frames
-!        ==============
-!
-!           Product definitions
-!           -------------------
-!           Array of "from" frames
-!           Array of "to" frames
-!
-! $ Examples
-!
-!     See ROTGET.
-!
-! $ Restrictions
-!
-!     1) This is a SPICE private routine; the routine is subject
-!        to change without notice.  User applications should not
-!        call this routine.
-!
-!     2) Many numerical problems can occur when dynamic frames
-!        are evaluated.  Users must determine whether dynamic frame
-!        definitions are suitable for their applications. See the
-!        Exceptions section for a list of possible problems.
-!
-!     3) Two-vector frame definitions can suffer extreme loss of
-!         precision due to near-singular geometry.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
-!
-!        Support for product frames was added.
-!
-!        Bug fix: aberration correction strings for observer-target
-!        velocity vectors are now parsed using ZZVALCOR. This improves
-!        error checking. Note that aberration correction strings for
-!        constant vectors used in two-vector frame specifications are
-!        still parsed using ZZPRSCOR.
-!
-!        Code clean-up: unnecessary call to ZZPRSCOR was removed.
-!
-!        Added and removed some FAILED() calls.
-!
-!        Body radii accessed from kernel pool using ZZGFTREB.
-!
-!        Re-ordered header sections.
-!
-!-    SPICELIB Version 1.1.0, 24-OCT-2005 (NJB)
-!
-!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
-!
-!        Call to ZZBODVCD was replaced with call to BODVCD.
-!
-!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     For a specified dynamic frame, find the rotation that maps
+!!     positions from the dynamic frame to its base frame.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     PCK
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRAM      is the frame ID code for a dynamic reference frame.
+!!                 Note that this interface differs from that of TKFRAM,
+!!                 which uses a class ID to identify the frame.
+!!
+!!                 In this routine, we refer this frame both as the
+!!                 "input frame" and the "defined frame."
+!!
+!!     CENTER      is NAIF ID code for the center of the frame
+!!                 designated by INFRAM.  This code, although derivable
+!!                 from INFRAM, is passed in for convenience.
+!!
+!!     ET          is an epoch in ephemeris seconds past J2000 for which
+!!                 the caller requests a rotation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     ROTATE      is a 3x3 rotation matrix that transforms positions
+!!                 relative to INFRAM to positions relative to BASFRM.
+!!
+!!     BASFRM      is the frame ID code of the base frame associated
+!!                 with INFRAM.  The 3x3 matrix ROTATE transforms
+!!                 positions relative to INFRAM to positions relative to
+!!                 BASFRM. The position transformation is performed by
+!!                 left-multiplying by ROTATE a position expressed
+!!                 relative to INFRAM. This is easily accomplished via
+!!                 the subroutine call shown below.
+!!
+!!                    CALL MXV ( ROTATE, INPOS, OUTPOS )
+!!
+!! ## Parameters
+!!
+!!     See include file zzdyn.inc.
+!!
+!! ## Exceptions
+!!
+!!     1)  If a dynamic frame evaluation requires unavailable kernel
+!!         data, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!!     2)  If a precession model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     3)  If a nutation model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     4)  If an obliquity model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     5)  If an unrecognized precession model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     6)  If an unrecognized nutation model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     7)  If an unrecognized obliquity model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     8)  If an attempt to look up the center of a frame does
+!!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
+!!         signaled.
+!!
+!!     9)  In a two-vector frame definition, if a constant vector
+!!         specification method is not recognized, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     10) In a two-vector frame definition, if a vector definition
+!!         method is not recognized, the error SPICE(NOTSUPPORTED)
+!!         is signaled.
+!!
+!!     11) If an unrecognized dynamic frame family is specified, the
+!!          error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     12) If an unrecognized dynamic frame definition style is
+!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     13) If an unrecognized dynamic frame rotation state is
+!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     14) If both a freeze epoch and a rotation state are specified,
+!!         the error SPICE(FRAMEDEFERROR) is signaled.
+!!
+!!     15) If neither a freeze epoch nor a rotation state are specified
+!!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
+!!         signaled.
+!!
+!!     16) In a two-vector frame definition, if an invalid axis
+!!         specification is encountered, the error SPICE(INVALIDAXIS) is
+!!         signaled.
+!!
+!!     17) In a two-vector frame definition using a target near point
+!!         vector, if the body-fixed frame associated with the target
+!!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
+!!
+!!     18) If a dynamic frame evaluation requires excessive recursion
+!!         depth, the error will be diagnosed by routines in the call
+!!         tree of this routine.
+!!
+!!     19) When a two-vector dynamic frame is evaluated, if the
+!!         primary and secondary vectors have angular separation less
+!!         than the minimum allowed value, or if the angular separation
+!!         differs from Pi by less than the minimum allowed value, the
+!!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
+!!         separation is given by the parameter LBSEP; this value may be
+!!         overridden by supplying a different value in the frame
+!!         definition.
+!!
+!!     20) If invalid units occur in a frame definition, the error
+!!         will be diagnosed by a routine in the call tree of this
+!!         routine.
+!!
+!!     21) If an invalid Euler axis sequence occurs in a frame
+!!         definition, the error will be diagnosed by a routine in the
+!!         call tree of this routine.
+!!
+!!     22) If a body RADII vector has other than exactly thee elements,
+!!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     23) If a body RADII vector has any element less-than or
+!!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     1) SPK files containing data for each observer and target
+!!        are required to support two-vector frames.  Note that
+!!        observer-target pairs can be implicit, as in the case
+!!        of a constant vector whose frame is evaluated at a
+!!        light-time corrected epoch:  the light time the frame
+!!        center to an observer must be computable in this case,
+!!        which implies the state of the frame center as seen by
+!!        the observer must be computable.
+!!
+!!     2) Any of SPK, CK, PCK, and frame kernels will also be required
+!!        if any frames referenced in the definition of INFRAM (as a
+!!        base frame, velocity vector frame, or constant vector frame)
+!!        require them, or if any vectors used to define INFRAM require
+!!        these data in order to be computable.
+!!
+!!     3) When CK data are required, one or more associated SCLK kernels
+!!        ---normally, one kernel per spacecraft clock---are
+!!        required as well.  A leapseconds kernel may be required
+!!        whenever an SCLK kernel is required.
+!!
+!!     4) When a two-vector frame is defined using a target near point,
+!!        a PCK file giving orientation and providing a triaxial shape
+!!        model for the target body is required.
+!!
+!! ## Particulars
+!!
+!!     Currently only parameterized dynamic frames are supported by
+!!     this routine.
+!!
+!!     Currently supported parameterized dynamic families are:
+!!
+!!        Two-vector
+!!        ==========
+!!
+!!           Vector definitions
+!!           ------------------
+!!           Observer-target position
+!!           Observer-target velocity
+!!           Near point on target
+!!           Constant vector in specified frame
+!!
+!!        Mean Equator and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!
+!!        Mean Ecliptic and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!                   1980 IAU mean obliquity model
+!!
+!!        True Equator and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!                   1980 IAU nutation model
+!!
+!!        Euler frames
+!!        ============
+!!
+!!           Euler angle definitions
+!!           -----------------------
+!!           Polynomial
+!!
+!!        Product frames
+!!        ==============
+!!
+!!           Product definitions
+!!           -------------------
+!!           Array of "from" frames
+!!           Array of "to" frames
+!!
+!! ## Examples
+!!
+!!     See ROTGET.
+!!
+!! ## Restrictions
+!!
+!!     1) This is a SPICE private routine; the routine is subject
+!!        to change without notice.  User applications should not
+!!        call this routine.
+!!
+!!     2) Many numerical problems can occur when dynamic frames
+!!        are evaluated.  Users must determine whether dynamic frame
+!!        definitions are suitable for their applications. See the
+!!        Exceptions section for a list of possible problems.
+!!
+!!     3) Two-vector frame definitions can suffer extreme loss of
+!!         precision due to near-singular geometry.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
+!!
+!!        Support for product frames was added.
+!!
+!!        Bug fix: aberration correction strings for observer-target
+!!        velocity vectors are now parsed using ZZVALCOR. This improves
+!!        error checking. Note that aberration correction strings for
+!!        constant vectors used in two-vector frame specifications are
+!!        still parsed using ZZPRSCOR.
+!!
+!!        Code clean-up: unnecessary call to ZZPRSCOR was removed.
+!!
+!!        Added and removed some FAILED() calls.
+!!
+!!        Body radii accessed from kernel pool using ZZGFTREB.
+!!
+!!        Re-ordered header sections.
+!!
+!!-    SPICELIB Version 1.1.0, 24-OCT-2005 (NJB)
+!!
+!!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
+!!
+!!        Call to ZZBODVCD was replaced with call to BODVCD.
+!!
+!!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard, isrchc, moved
       use pepper_math, only: latrec, mxm, mxv, polyds, vequ, vhat, vminus, vsep, vsub, xpose
       use pepper_strings, only: cmprss, eqstr, intstr, ucase
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
       implicit none
       real(wp) :: epoch_1(1)  !! one-element copy of epoch (array argument)
       real(wp) :: minsep_1(1)  !! one-element copy of minsep (array argument)
@@ -17226,9 +16721,6 @@ contains
       real(wp) :: lat_1(1)  !! one-element copy of lat (array argument)
       real(wp) :: lon_1(1)  !! one-element copy of lon (array argument)
       real(wp) :: t0_1(1)  !! one-element copy of t0 (array argument)
-      include 'frmtyp.inc'
-      include 'zzabcorr.inc'
-      include 'zzdyn.inc'
       character(*), parameter :: rname = 'ZZDYNRT0'
       integer(ip), parameter :: timlen = 50
       integer(ip), parameter :: vnamln = 4
@@ -18805,161 +18297,142 @@ contains
       end procedure zzdynrt0
 
       module procedure zzrotgt0
-
-! $ Abstract
-!
-!     Find the rotation from a user specified frame to another frame at
-!     a user specified epoch.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     INFRM       is the SPICE ID-code for some reference frame.
-!
-!     ET          is an epoch in ephemeris seconds past J2000 at which
-!                 the user wishes to retrieve a rotation matrix.
-!
-! $ Detailed_Output
-!
-!     ROTATE      is a 3x3 matrix that rotates positions relative to
-!                 INFRM to positions relative to OUTFRM. (Assuming such
-!                 a rotation can be found.)
-!
-!     OUTFRM      is the SPICE ID-code of a reference frame. The 3x3
-!                 matrix ROTATE rotates positions relative to INFRM to
-!                 positions relative to OUTFRM. The positions
-!                 transformation is achieved by multiplying ROTATE on
-!                 the right by a position relative to INFRM. This is
-!                 easily accomplished via the subroutine call shown
-!                 below.
-!
-!                    CALL MXV  ( ROTATE, INPOS,  OUTPOS )
-!
-!     FOUND       is a logical flag indicating whether or not a
-!                 rotation matrix could be found from INFRM to some
-!                 other frame. If a rotation matrix cannot be found
-!                 OUTFRM will be set to zero, FOUND will be set to
-!                 FALSE and ROTATE will be returned as the zero matrix.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If a rotation matrix cannot be located, then FOUND will be set
-!        to FALSE, OUTFRM will be set to zero and ROTATE will be set to
-!        the zero 3x3 matrix.
-!
-!     2) If the class of the requested frame is not recognized the
-!        exception 'SPICE(UNKNOWNFRAMETYPE)' will be signaled.
-!
-! $ Files
-!
-!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
-!     to provide the needed frame definition and transformation data.
-!
-! $ Particulars
-!
-!     This is a low level routine used for determining a chain of
-!     position transformation matrices from one frame to another.
-!
-! $ Examples
-!
-!     See REFCHG.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     B.V. Semenov    (JPL)
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 18-SEP-2020 (NJB)
-!
-!        Support for switch frames was added. VERSN is now
-!        initialized via a DATA statement. Corrected long error
-!        message to use the term "class" rather than "class id-code."
-!
-!-    SPICELIB Version 4.0.0, 21-MAR-2014 (BVS)
-!
-!        To prevent operations with un-initialized DP numbers, wrapped
-!        IF ( .NOT. FAILED() ) ... END IF around output matrix
-!        transposition operation in the PCK frame branch where the
-!        routine returning the matrix might fail.
-!
-!        Incremented major version token by 2 to sync up versions with
-!        FRMGET.
-!
-!-    SPICELIB Version 2.1.0, 02-MAR-2010 (NJB)
-!
-!        Bug fix: frame ID rather than frame class ID
-!        is now passed to dynamic frame evaluation
-!        routine ZZDYNROT. Order of header sections was
-!        corrected.
-!
-!-    SPICELIB Version 2.0.0, 18-DEC-2004 (NJB)
-!
-!        Added the new frame type 'DYN' to the list of frame
-!        types recognized by ROTGET.
-!
-!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Find a rotation matrix from a specified frame
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Set output flag.
-!
+!! ## Abstract
+!!
+!!     Find the rotation from a user specified frame to another frame at
+!!     a user specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRM       is the SPICE ID-code for some reference frame.
+!!
+!!     ET          is an epoch in ephemeris seconds past J2000 at which
+!!                 the user wishes to retrieve a rotation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     ROTATE      is a 3x3 matrix that rotates positions relative to
+!!                 INFRM to positions relative to OUTFRM. (Assuming such
+!!                 a rotation can be found.)
+!!
+!!     OUTFRM      is the SPICE ID-code of a reference frame. The 3x3
+!!                 matrix ROTATE rotates positions relative to INFRM to
+!!                 positions relative to OUTFRM. The positions
+!!                 transformation is achieved by multiplying ROTATE on
+!!                 the right by a position relative to INFRM. This is
+!!                 easily accomplished via the subroutine call shown
+!!                 below.
+!!
+!!                    CALL MXV  ( ROTATE, INPOS,  OUTPOS )
+!!
+!!     FOUND       is a logical flag indicating whether or not a
+!!                 rotation matrix could be found from INFRM to some
+!!                 other frame. If a rotation matrix cannot be found
+!!                 OUTFRM will be set to zero, FOUND will be set to
+!!                 FALSE and ROTATE will be returned as the zero matrix.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If a rotation matrix cannot be located, then FOUND will be set
+!!        to FALSE, OUTFRM will be set to zero and ROTATE will be set to
+!!        the zero 3x3 matrix.
+!!
+!!     2) If the class of the requested frame is not recognized the
+!!        exception 'SPICE(UNKNOWNFRAMETYPE)' will be signaled.
+!!
+!! ## Files
+!!
+!!     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
+!!     to provide the needed frame definition and transformation data.
+!!
+!! ## Particulars
+!!
+!!     This is a low level routine used for determining a chain of
+!!     position transformation matrices from one frame to another.
+!!
+!! ## Examples
+!!
+!!     See REFCHG.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     B.V. Semenov    (JPL)
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 18-SEP-2020 (NJB)
+!!
+!!        Support for switch frames was added. VERSN is now
+!!        initialized via a DATA statement. Corrected long error
+!!        message to use the term "class" rather than "class id-code."
+!!
+!!-    SPICELIB Version 4.0.0, 21-MAR-2014 (BVS)
+!!
+!!        To prevent operations with un-initialized DP numbers, wrapped
+!!        IF ( .NOT. FAILED() ) ... END IF around output matrix
+!!        transposition operation in the PCK frame branch where the
+!!        routine returning the matrix might fail.
+!!
+!!        Incremented major version token by 2 to sync up versions with
+!!        FRMGET.
+!!
+!!-    SPICELIB Version 2.1.0, 02-MAR-2010 (NJB)
+!!
+!!        Bug fix: frame ID rather than frame class ID
+!!        is now passed to dynamic frame evaluation
+!!        routine ZZDYNROT. Order of header sections was
+!!        corrected.
+!!
+!!-    SPICELIB Version 2.0.0, 18-DEC-2004 (NJB)
+!!
+!!        Added the new frame type 'DYN' to the list of frame
+!!        types recognized by ROTGET.
+!!
+!!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Find a rotation matrix from a specified frame
+!!
+!!     SPICELIB Functions
+!!
+!!     Local Variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Set output flag.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard
       use pepper_math, only: xpose
+      use pepper_inc_frmtyp
       implicit none
-      include              'frmtyp.inc'
       integer(ip)           center
       integer(ip)           type
       integer(ip)           typeid
@@ -19084,29 +18557,28 @@ contains
 !$Procedure      ZZREFCH0 (Reference frame Change)
 
       module procedure zzrefch0
+!! ## Abstract
+!!
+!!     Return the transformation matrix from one
+!!     frame to another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi
       use pepper_math, only: ident, xpose, zzrxr
-
-! $ Abstract
-!
-!     Return the transformation matrix from one
-!     frame to another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
       implicit none
 
-      include              'errhnd.inc'
-      include              'frmtyp.inc'
 
 
 ! $ Detailed_Input
@@ -19610,344 +19082,306 @@ contains
       end procedure zzrefch0
 
       module procedure zzspkgp0
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Compute the geometric position of a target body relative to an
-!     observing body.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     TARG     is the standard NAIF ID code for a target body.
-!
-!     ET       is the epoch (ephemeris time) at which the position
-!              of the target body is to be computed.
-!
-!     REF      is the name of the reference frame to
-!              which the vectors returned by the routine should
-!              be rotated. This may be any frame supported by
-!              the SPICELIB subroutine REFCHG.
-!
-!     OBS      is the standard NAIF ID code for an observing body.
-!
-! $ Detailed_Output
-!
-!     POS      is a 3-dimensional vector that contains the position of
-!              the target body, relative to the observing body. This
-!              vector is rotated into the specified reference frame.
-!              Units are always km.
-!
-!     LT       is the one-way light time from the observing body
-!              to the geometric position of the target body at the
-!              specified epoch.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If insufficient ephemeris data has been loaded to compute
-!         the necessary positions, the error SPICE(SPKINSUFFDATA) is
-!         signaled.
-!
-! $ Files
-!
-!     See $Restrictions.
-!
-! $ Particulars
-!
-!     SPKGPS computes the geometric position, T(t), of the target
-!     body and the geometric position, O(t), of the observing body
-!     relative to the first common center of motion. Subtracting
-!     O(t) from T(t) gives the geometric position of the target
-!     body relative to the observer.
-!
-!        CENTER ----- O(t)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(t) - O(t)
-!            |  /
-!           T(t)
-!
-!     The one-way light time, tau, is given by
-!
-!               | T(t) - O(t) |
-!        tau = -----------------
-!                      c
-!
-!     For example, if the observing body is -94, the Mars Observer
-!     spacecraft, and the target body is 401, Phobos, then the
-!     first common center is probably 4, the Mars Barycenter.
-!     O(t) is the position of -94 relative to 4 and T(t) is the
-!     position of 401 relative to 4.
-!
-!     The center could also be the Solar System Barycenter, body 0.
-!     For example, if the observer is 399, Earth, and the target
-!     is 299, Venus, then O(t) would be the position of 399 relative
-!     to 0 and T(t) would be the position of 299 relative to 0.
-!
-!     Ephemeris data from more than one segment may be required
-!     to determine the positions of the target body and observer
-!     relative to a common center. SPKGPS reads as many segments
-!     as necessary, from as many files as necessary, using files
-!     that have been loaded by previous calls to SPKLEF (load
-!     ephemeris file).
-!
-!     SPKGPS is similar to SPKGEO but returns geometric positions
-!     only.
-!
-! $ Examples
-!
-!     The following code example computes the geometric
-!     position of the moon with respect to the earth and
-!     then prints the distance of the moon from the
-!     the earth at a number of epochs.
-!
-!     Assume the SPK file SAMPLE.BSP contains ephemeris data
-!     for the moon relative to earth over the time interval
-!     from BEGIN to END.
-!
-!            INTEGER               EARTH
-!            PARAMETER           ( EARTH = 399 )
-!
-!            INTEGER               MOON
-!            PARAMETER           ( MOON  = 301 )
-!
-!            INTEGER               N
-!            PARAMETER           ( N     = 100 )
-!
-!            INTEGER               I
-!            CHARACTER*(20)        UTC
-!            DOUBLE PRECISION      BEGIN
-!            DOUBLE PRECISION      DELTA
-!            DOUBLE PRECISION      END
-!            DOUBLE PRECISION      ET
-!            DOUBLE PRECISION      POS ( 3 )
-!            DOUBLE PRECISION      LT
-!
-!            DOUBLE PRECISION      VNORM
-!
-!     C
-!     C      Load the binary SPK ephemeris file.
-!     C
-!            CALL FURNSH ( 'SAMPLE.BSP' )
-!
-!            .
-!            .
-!            .
-!
-!     C
-!     C      Divide the interval of coverage [BEGIN,END] into
-!     C      N steps. At each step, compute the position, and
-!     C      print out the epoch in UTC time and position norm.
-!     C
-!            DELTA = ( END - BEGIN ) / N
-!
-!            DO I = 0, N
-!
-!               ET = BEGIN + I*DELTA
-!
-!               CALL SPKGPS ( MOON, ET, 'J2000', EARTH, POS, LT )
-!
-!               CALL ET2UTC ( ET, 'C', 0, UTC )
-!
-!               WRITE (*,*) UTC, VNORM ( POS )
-!
-!            END DO
-!
-! $ Restrictions
-!
-!     1)  The ephemeris files to be used by SPKGPS must be loaded
-!         by SPKLEF before SPKGPS is called.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 09-OCT-2021 (JDR) (NJB)
-!
-!        Bug fix: added calls to FAILED after calls to SPKPVN.
-!        Previously only one call to SPKPVN was followed by a FAILED
-!        call. Moved some FAILED checks so they will be hit whether
-!        or not SPKSFS finds a segment.
-!
-!        Edited the header to comply with NAIF standard. Removed
-!        unnecessary $Revisions section.
-!
-!-    SPICELIB Version 2.0.0, 08-JAN-2014 (BVS)
-!
-!        Updated to save the input frame name and POOL state counter
-!        and to do frame name-ID conversion only if the counter has
-!        changed.
-!
-!        Updated to map the input frame name to its ID by first calling
-!        ZZNAMFRM, and then calling IRFNUM. The side effect of this
-!        change is that now the frame with the fixed name 'DEFAULT'
-!        that can be associated with any code via CHGIRF's entry point
-!        IRFDEF will be fully masked by a frame with identical name
-!        defined via a text kernel. Previously the CHGIRF's 'DEFAULT'
-!        frame masked the text kernel frame with the same name.
-!
-!        Replaced SPKLEF with FURNSH and fixed errors in $Examples.
-!
-!-    SPICELIB Version 1.2.0, 05-NOV-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VADD calls.
-!
-!-    SPICELIB Version 1.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.
-!
-!-    SPICELIB Version 1.0.0, 09-JUL-1998 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     geometric position of one body relative to another
-!
-!-&
-
-!
-!     This is the idea:
-!
-!     Every body moves with respect to some center. The center
-!     is itself a body, which in turn moves about some other
-!     center.  If we begin at the target body (T), follow
-!     the chain,
-!
-!                                   T
-!                                     \
-!           SSB                        \
-!               \                     C[1]
-!                \                     /
-!                 \                   /
-!                  \                 /
-!                   \               /
-!                  C[3]-----------C[2]
-!
-!     and avoid circular definitions (A moves about B, and B moves
-!     about A), eventually we get the position relative to the solar
-!     system barycenter (which, for our purposes, doesn't move).
-!     Thus,
-!
-!        T    = T     + C[1]     + C[2]     + ... + C[n]
-!         SSB    C[1]       C[2]       [C3]             SSB
-!
-!     where
-!
-!        X
-!         Y
-!
-!     is the position of body X relative to body Y.
-!
-!     However, we don't want to follow each chain back to the SSB
-!     if it isn't necessary.  Instead we will just follow the chain
-!     of the target body and follow the chain of the observing body
-!     until we find a common node in the tree.
-!
-!     In the example below, C is the first common node.  We compute
-!     the position of TARG relative to C and the position of OBS
-!     relative to C, then subtract the two positions.
-!
-!                                   TARG
-!                                     \
-!           SSB                        \
-!               \                       A
-!                \                     /            OBS
-!                 \                   /              |
-!                  \                 /               |
-!                   \               /                |
-!                    B-------------C-----------------D
-!
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-!
-!     CHLEN is the maximum length of a chain.  That is,
-!     it is the maximum number of bodies in the chain from
-!     the target or observer to the SSB.
-!
-
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local variables
-!
-
-
-
-
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-
-!
-!     Saved frame name/ID items.
-!
-
-
-!
-!     Initial values.
-!
-
-!
-!     In-line Function Definitions
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Compute the geometric position of a target body relative to an
+!!     observing body.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG     is the standard NAIF ID code for a target body.
+!!
+!!     ET       is the epoch (ephemeris time) at which the position
+!!              of the target body is to be computed.
+!!
+!!     REF      is the name of the reference frame to
+!!              which the vectors returned by the routine should
+!!              be rotated. This may be any frame supported by
+!!              the SPICELIB subroutine REFCHG.
+!!
+!!     OBS      is the standard NAIF ID code for an observing body.
+!!
+!! ## Detailed Output
+!!
+!!     POS      is a 3-dimensional vector that contains the position of
+!!              the target body, relative to the observing body. This
+!!              vector is rotated into the specified reference frame.
+!!              Units are always km.
+!!
+!!     LT       is the one-way light time from the observing body
+!!              to the geometric position of the target body at the
+!!              specified epoch.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If insufficient ephemeris data has been loaded to compute
+!!         the necessary positions, the error SPICE(SPKINSUFFDATA) is
+!!         signaled.
+!!
+!! ## Files
+!!
+!!     See $Restrictions.
+!!
+!! ## Particulars
+!!
+!!     SPKGPS computes the geometric position, T(t), of the target
+!!     body and the geometric position, O(t), of the observing body
+!!     relative to the first common center of motion. Subtracting
+!!     O(t) from T(t) gives the geometric position of the target
+!!     body relative to the observer.
+!!
+!!        CENTER ----- O(t)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(t) - O(t)
+!!            |  /
+!!           T(t)
+!!
+!!     The one-way light time, tau, is given by
+!!
+!!               | T(t) - O(t) |
+!!        tau = -----------------
+!!                      c
+!!
+!!     For example, if the observing body is -94, the Mars Observer
+!!     spacecraft, and the target body is 401, Phobos, then the
+!!     first common center is probably 4, the Mars Barycenter.
+!!     O(t) is the position of -94 relative to 4 and T(t) is the
+!!     position of 401 relative to 4.
+!!
+!!     The center could also be the Solar System Barycenter, body 0.
+!!     For example, if the observer is 399, Earth, and the target
+!!     is 299, Venus, then O(t) would be the position of 399 relative
+!!     to 0 and T(t) would be the position of 299 relative to 0.
+!!
+!!     Ephemeris data from more than one segment may be required
+!!     to determine the positions of the target body and observer
+!!     relative to a common center. SPKGPS reads as many segments
+!!     as necessary, from as many files as necessary, using files
+!!     that have been loaded by previous calls to SPKLEF (load
+!!     ephemeris file).
+!!
+!!     SPKGPS is similar to SPKGEO but returns geometric positions
+!!     only.
+!!
+!! ## Examples
+!!
+!!     The following code example computes the geometric
+!!     position of the moon with respect to the earth and
+!!     then prints the distance of the moon from the
+!!     the earth at a number of epochs.
+!!
+!!     Assume the SPK file SAMPLE.BSP contains ephemeris data
+!!     for the moon relative to earth over the time interval
+!!     from BEGIN to END.
+!!
+!!            INTEGER               EARTH
+!!            PARAMETER           ( EARTH = 399 )
+!!
+!!            INTEGER               MOON
+!!            PARAMETER           ( MOON  = 301 )
+!!
+!!            INTEGER               N
+!!            PARAMETER           ( N     = 100 )
+!!
+!!            INTEGER               I
+!!            CHARACTER*(20)        UTC
+!!            DOUBLE PRECISION      BEGIN
+!!            DOUBLE PRECISION      DELTA
+!!            DOUBLE PRECISION      END
+!!            DOUBLE PRECISION      ET
+!!            DOUBLE PRECISION      POS ( 3 )
+!!            DOUBLE PRECISION      LT
+!!
+!!            DOUBLE PRECISION      VNORM
+!!
+!!     C
+!!     C      Load the binary SPK ephemeris file.
+!!     C
+!!            CALL FURNSH ( 'SAMPLE.BSP' )
+!!
+!!            .
+!!            .
+!!            .
+!!
+!!     C
+!!     C      Divide the interval of coverage [BEGIN,END] into
+!!     C      N steps. At each step, compute the position, and
+!!     C      print out the epoch in UTC time and position norm.
+!!     C
+!!            DELTA = ( END - BEGIN ) / N
+!!
+!!            DO I = 0, N
+!!
+!!               ET = BEGIN + I*DELTA
+!!
+!!               CALL SPKGPS ( MOON, ET, 'J2000', EARTH, POS, LT )
+!!
+!!               CALL ET2UTC ( ET, 'C', 0, UTC )
+!!
+!!               WRITE (*,*) UTC, VNORM ( POS )
+!!
+!!            END DO
+!!
+!! ## Restrictions
+!!
+!!     1)  The ephemeris files to be used by SPKGPS must be loaded
+!!         by SPKLEF before SPKGPS is called.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 09-OCT-2021 (JDR) (NJB)
+!!
+!!        Bug fix: added calls to FAILED after calls to SPKPVN.
+!!        Previously only one call to SPKPVN was followed by a FAILED
+!!        call. Moved some FAILED checks so they will be hit whether
+!!        or not SPKSFS finds a segment.
+!!
+!!        Edited the header to comply with NAIF standard. Removed
+!!        unnecessary $Revisions section.
+!!
+!!-    SPICELIB Version 2.0.0, 08-JAN-2014 (BVS)
+!!
+!!        Updated to save the input frame name and POOL state counter
+!!        and to do frame name-ID conversion only if the counter has
+!!        changed.
+!!
+!!        Updated to map the input frame name to its ID by first calling
+!!        ZZNAMFRM, and then calling IRFNUM. The side effect of this
+!!        change is that now the frame with the fixed name 'DEFAULT'
+!!        that can be associated with any code via CHGIRF's entry point
+!!        IRFDEF will be fully masked by a frame with identical name
+!!        defined via a text kernel. Previously the CHGIRF's 'DEFAULT'
+!!        frame masked the text kernel frame with the same name.
+!!
+!!        Replaced SPKLEF with FURNSH and fixed errors in $Examples.
+!!
+!!-    SPICELIB Version 1.2.0, 05-NOV-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in VADD calls.
+!!
+!!-    SPICELIB Version 1.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.
+!!
+!!-    SPICELIB Version 1.0.0, 09-JUL-1998 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     geometric position of one body relative to another
+!!
+!!     This is the idea:
+!!
+!!     Every body moves with respect to some center. The center
+!!     is itself a body, which in turn moves about some other
+!!     center.  If we begin at the target body (T), follow
+!!     the chain,
+!!
+!!                                   T
+!!                                     \
+!!           SSB                        \
+!!               \                     C[1]
+!!                \                     /
+!!                 \                   /
+!!                  \                 /
+!!                   \               /
+!!                  C[3]-----------C[2]
+!!
+!!     and avoid circular definitions (A moves about B, and B moves
+!!     about A), eventually we get the position relative to the solar
+!!     system barycenter (which, for our purposes, doesn't move).
+!!     Thus,
+!!
+!!        T    = T     + C[1]     + C[2]     + ... + C[n]
+!!         SSB    C[1]       C[2]       [C3]             SSB
+!!
+!!     where
+!!
+!!        X
+!!         Y
+!!
+!!     is the position of body X relative to body Y.
+!!
+!!     However, we don't want to follow each chain back to the SSB
+!!     if it isn't necessary.  Instead we will just follow the chain
+!!     of the target body and follow the chain of the observing body
+!!     until we find a common node in the tree.
+!!
+!!     In the example below, C is the first common node.  We compute
+!!     the position of TARG relative to C and the position of OBS
+!!     relative to C, then subtract the two positions.
+!!
+!!                                   TARG
+!!                                     \
+!!           SSB                        \
+!!               \                       A
+!!                \                     /            OBS
+!!                 \                   /              |
+!!                  \                 /               |
+!!                   \               /                |
+!!                    B-------------C-----------------D
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     CHLEN is the maximum length of a chain.  That is,
+!!     it is the maximum number of bodies in the chain from
+!!     the target or observer to the SSB.
+!!
+!!     Saved frame name length.
+!!
+!!     Local variables
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved frame name/ID items.
+!!
+!!     Initial values.
+!!
+!!     In-line Function Definitions
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleard, isrchi, moved
       use pepper_math, only: mxv, vadd, vequ, vnorm, vsub
       use pepper_strings, only: frstnp, intstr, prefix, suffix
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       character(*), parameter :: rname = 'ZZSPKGP0'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
@@ -20606,635 +20040,596 @@ contains
       end procedure zzspkgp0
 
       module procedure zzspkpa0
-
-! $ Abstract
-!
-!     Return the position of a target body relative to an observer,
-!     optionally corrected for light time and stellar aberration.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a position vector which points
-!                 from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the position of the target body
-!                 relative to the observer is to be computed.  ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the inertial reference frame with respect to which
-!                 the observer's state SOBS is expressed. REF must be
-!                 recognized by the SPICE Toolkit.  The acceptable
-!                 frames are listed in the Frames Required Reading, as
-!                 well as in the SPICELIB routine CHGIRF.
-!
-!                 Case and blanks are not significant in the string REF.
-!
-!     SOBS        is the geometric (uncorrected) state of the observer
-!                 relative to the solar system barycenter at epoch ET.
-!                 SOBS is a 6-vector:  the first three components of
-!                 SOBS represent a Cartesian position vector; the last
-!                 three components represent the corresponding velocity
-!                 vector.  SOBS is expressed relative to the inertial
-!                 reference frame designated by REF.
-!
-!                 Units are always km and km/sec.
-!
-!     ABCORR      indicates the aberration corrections to be applied to
-!                 the position of the target body to account for
-!                 one-way light time and stellar aberration.  See the
-!                 discussion in the Particulars section for
-!                 recommendations on how to choose aberration
-!                 corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric position of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the position of the target at the
-!                               moment it emitted photons arriving at
-!                               the observer at ET.
-!
-!                               The light time correction involves
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               position obtained with the 'LT' option
-!                               to account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               position of the target---the position
-!                               of the target as seen by the observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section
-!                               of SPKEZR for a discussion of precision
-!                               of light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               position of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation  This option modifies the
-!                               position obtained with the 'XLT' option
-!                               to account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The target position
-!                               indicates the direction that photons
-!                               emitted from the observer's location
-!                               must be "aimed" to hit the target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-! $ Detailed_Output
-!
-!     PTARG       is a Cartesian 3-vector representing the position of
-!                 the target body relative to the specified observer.
-!                 PTARG is corrected for the specified aberrations, and
-!                 is expressed with respect to the specified inertial
-!                 reference frame.  The components of PTARG represent
-!                 the x-, y- and z-components of the target's position.
-!
-!                 The vector PTARG points from the observer's position
-!                 at ET to the aberration-corrected location of the
-!                 target. Note that the sense of the position vector is
-!                 independent of the direction of radiation travel
-!                 implied by the aberration correction.
-!
-!                 Units are always km.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target position is
-!                 corrected for aberrations, then LT is the one-way
-!                 light time between the observer and the light time
-!                 corrected target location.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the value of ABCORR is not recognized, the error
-!        'SPICE(SPKINVALIDOPTION)' is signaled.
-!
-!     2) If the reference frame requested is not a recognized
-!        inertial reference frame the error 'SPICE(BADFRAME)' is
-!        signaled.
-!
-!     3) If the position of the target relative to the solar system
-!        barycenter cannot be computed, the error will be diagnosed
-!        by routines in the call tree of this routine.
-!
-! $ Files
-!
-!     This routine computes positions using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH.  Application programs typically load
-!     kernels once before this routine is called, for example during
-!     program initialization; kernels need not be loaded repeatedly.
-!     See the routine FURNSH and the SPK and KERNEL Required Reading
-!     for further information on loading (and unloading) kernels.
-!
-!     If any of the ephemeris data used to compute PTARG are expressed
-!     relative to a non-inertial frame in the SPK files providing those
-!     data, additional kernels may be needed to enable the reference
-!     frame transformations required to compute PTARG.  Normally
-!     these additional kernels are PCK files or frame kernels.  Any
-!     such kernels must already be loaded at the time this routine is
-!     called.
-!
-! $ Particulars
-!
-!     In space science or engineering applications one frequently
-!     wishes to know where to point a remote sensing instrument, such
-!     as an optical camera or radio antenna, in order to observe or
-!     otherwise receive radiation from a target.  This pointing problem
-!     is complicated by the finite speed of light:  one needs to point
-!     to where the target appears to be as opposed to where it actually
-!     is at the epoch of observation.  We use the adjectives
-!     "geometric," "uncorrected," or "true" to refer to an actual
-!     position or state of a target at a specified epoch.  When a
-!     geometric position or state vector is modified to reflect how it
-!     appears to an observer, we describe that vector by any of the
-!     terms "apparent," "corrected," "aberration corrected," or "light
-!     time and stellar aberration corrected."
-!
-!     The SPICE Toolkit can correct for two phenomena affecting the
-!     apparent location of an object:  one-way light time (also called
-!     "planetary aberration") and stellar aberration.  Correcting for
-!     one-way light time is done by computing, given an observer and
-!     observation epoch, where a target was when the observed photons
-!     departed the target's location.  The vector from the observer to
-!     this computed target location is called a "light time corrected"
-!     vector.  The light time correction depends on the motion of the
-!     target, but it is independent of the velocity of the observer
-!     relative to the solar system barycenter. Relativistic effects
-!     such as light bending and gravitational delay are not accounted
-!     for in the light time correction performed by this routine.
-!
-!     The velocity of the observer also affects the apparent location
-!     of a target:  photons arriving at the observer are subject to a
-!     "raindrop effect" whereby their velocity relative to the observer
-!     is, using a Newtonian approximation, the photons' velocity
-!     relative to the solar system barycenter minus the velocity of the
-!     observer relative to the solar system barycenter.  This effect is
-!     called "stellar aberration."  Stellar aberration is independent
-!     of the motion of the target.  The stellar aberration formula used
-!     by this routine is non- relativistic.
-!
-!     Stellar aberration corrections are applied after light time
-!     corrections:  the light time corrected target position vector is
-!     used as an input to the stellar aberration correction.
-!
-!     When light time and stellar aberration corrections are both
-!     applied to a geometric position vector, the resulting position
-!     vector indicates where the target "appears to be" from the
-!     observer's location.
-!
-!     As opposed to computing the apparent position of a target, one
-!     may wish to compute the pointing direction required for
-!     transmission of photons to the target.  This requires correction
-!     of the geometric target position for the effects of light time and
-!     stellar aberration, but in this case the corrections are computed
-!     for radiation traveling from the observer to the target.
-!
-!     The "transmission" light time correction yields the target's
-!     location as it will be when photons emitted from the observer's
-!     location at ET arrive at the target.  The transmission stellar
-!     aberration correction is the inverse of the traditional stellar
-!     aberration correction:  it indicates the direction in which
-!     radiation should be emitted so that, using a Newtonian
-!     approximation, the sum of the velocity of the radiation relative
-!     to the observer and of the observer's velocity, relative to the
-!     solar system barycenter, yields a velocity vector that points in
-!     the direction of the light time corrected position of the target.
-!
-!     The traditional aberration corrections applicable to observation
-!     and those applicable to transmission are related in a simple way:
-!     one may picture the geometry of the "transmission" case by
-!     imagining the "observation" case running in reverse time order,
-!     and vice versa.
-!
-!     One may reasonably object to using the term "observer" in the
-!     transmission case, in which radiation is emitted from the
-!     observer's location.  The terminology was retained for
-!     consistency with earlier documentation.
-!
-!     Below, we indicate the aberration corrections to use for some
-!     common applications:
-!
-!        1) Find the apparent direction of a target for a remote-sensing
-!           observation.
-!
-!              Use 'LT+S' or 'CN+S: apply both light time and stellar
-!              aberration corrections.
-!
-!           Note that using light time corrections alone ('LT' or 'CN')
-!           is generally not a good way to obtain an approximation to
-!           an apparent target vector: since light time and stellar
-!           aberration corrections often partially cancel each other,
-!           it may be more accurate to use no correction at all than to
-!           use light time alone.
-!
-!        2) Find the corrected pointing direction to radiate a signal
-!           to a target. This computation is often applicable for
-!           implementing communications sessions.
-!
-!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
-!              aberration corrections for transmission.
-!
-!        3) Compute the apparent position of a target body relative
-!           to a star or other distant object.
-!
-!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
-!              correction applied to the position of the distant
-!              object. For example, if a star position is obtained from
-!              a catalog, the position vector may not be corrected for
-!              stellar aberration. In this case, to find the angular
-!              separation of the star and the limb of a planet, the
-!              vector from the observer to the planet should be
-!              corrected for light time but not stellar aberration.
-!
-!        4) Obtain an uncorrected state vector derived directly from
-!           data in an SPK file.
-!
-!              Use 'NONE'.
-!
-!        5) Use a geometric position vector as a low-accuracy estimate
-!           of the apparent position for an application where execution
-!           speed is critical:
-!
-!              Use 'NONE'.
-!
-!        6) While this routine cannot perform the relativistic
-!           aberration corrections required to compute positions
-!           with the highest possible accuracy, it can supply the
-!           geometric positions required as inputs to these
-!           computations:
-!
-!              Use 'NONE', then apply high-accuracy aberration
-!              corrections (not available in the SPICE Toolkit).
-!
-!     Below, we discuss in more detail how the aberration corrections
-!     applied by this routine are computed.
-!
-!     Geometric case
-!     ==============
-!
-!        SPKAPO begins by computing the geometric position T(ET) of the
-!        target body relative to the solar system barycenter (SSB).
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the geometric position of the target body relative to the
-!        observer. The one-way light time, LT, is given by
-!
-!                  | T(ET) - O(ET) |
-!           LT = -------------------
-!                          c
-!
-!        The geometric relationship between the observer, target, and
-!        solar system barycenter is as shown:
-!
-!           SSB ---> O(ET)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(ET) - O(ET)
-!            V  V
-!           T(ET)
-!
-!        The returned position vector is
-!
-!           T(ET) - O(ET)
-!
-!     Reception case
-!     ==============
-!
-!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' are
-!        selected, SPKAPO computes the position of the target body at
-!        epoch ET-LT, where LT is the one-way light time.  Let T(t)
-!        and O(t) represent the positions of the target and observer
-!        relative to the solar system barycenter at time t; then LT
-!        is the solution of the
-!        light-time equation
-!
-!                  | T(ET-LT) - O(ET) |
-!           LT = ------------------------                            (1)
-!                           c
-!
-!        The ratio
-!
-!            | T(ET) - O(ET) |
-!          ---------------------                                     (2)
-!                    c
-!
-!        is used as a first approximation to LT; inserting (2) into the
-!        RHS of the light-time equation (1) yields the "one-iteration"
-!        estimate of the one-way light time. Repeating the process
-!        until the estimates of LT converge yields the "converged
-!        Newtonian" light time estimate.
-!
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the position of the target body relative to the observer:
-!        T(ET-LT) - O(ET).
-!
-!           SSB ---> O(ET)
-!            | \     |
-!            |  \    |
-!            |   \   | T(ET-LT) - O(ET)
-!            |    \  |
-!            V     V V
-!           T(ET)  T(ET-LT)
-!
-!        The light-time corrected position is the vector
-!
-!           T(ET-LT) - O(ET)
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated toward the solar system barycenter-relative
-!        velocity vector of the observer. The magnitude of the rotation
-!        depends on the magnitude of the observer's velocity relative
-!        to the solar system barycenter and the angle between
-!        this velocity and the observer-target vector.  The rotation
-!        is computed as follows:
-!
-!           Let r be the light time corrected vector from the observer
-!           to the object, and v be the velocity of the observer with
-!           respect to the solar system barycenter. Let w be the angle
-!           between them. The aberration angle phi is given by
-!
-!              sin(phi) = v sin(w) / c
-!
-!           Let h be the vector given by the cross product
-!
-!              h = r X v
-!
-!           Rotate r by phi radians about h to obtain the apparent
-!           position of the object.
-!
-!     Transmission case
-!     ==================
-!
-!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' are
-!        selected, SPKAPO computes the position of the target body T at
-!        epoch ET+LT, where LT is the one-way light time.  LT is the
-!        solution of the light-time equation
-!
-!                  | T(ET+LT) - O(ET) |
-!           LT = ------------------------                            (3)
-!                            c
-!
-!        Subtracting the geometric position of the observer, O(ET),
-!        gives the position of the target body relative to the
-!        observer: T(ET-LT) - O(ET).
-!
-!                   SSB --> O(ET)
-!                  / |    *
-!                 /  |  *  T(ET+LT) - O(ET)
-!                /   |*
-!               /   *|
-!              V  V  V
-!          T(ET+LT)  T(ET)
-!
-!        The light-time corrected position is
-!
-!           T(ET+LT) - O(ET)
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated away from the solar system barycenter-
-!        relative velocity vector of the observer.  The magnitude of the
-!        rotation depends on the magnitude of the velocity and the
-!        angle between the velocity and the observer-target vector.
-!        The rotation is computed as in the reception case, but the
-!        sign of the rotation angle is negated.
-!
-!     Neither special nor general relativistic effects are accounted
-!     for in the aberration corrections performed by this routine.
-!
-! $ Examples
-!
-!     In the following code fragment, SPKSSB and SPKAPO are used
-!     to display the position of Io (body 501) as seen from the
-!     Voyager 2 spacecraft (Body -32) at a series of epochs.
-!
-!     Normally, one would call the high-level reader SPKPOS to obtain
-!     position vectors.  The example below illustrates the interface
-!     of this routine, but is not intended as a recommendation on
-!     how to use the SPICE SPK subsystem.
-!
-!     The use of integer ID codes is necessitated by the low-level
-!     interface of this routine.
-!
-!        IO    = 501
-!        VGR2  = -32
-!
-!        DO WHILE ( EPOCH .LE. END )
-!
-!           CALL SPKSSB (  VGR2,  EPOCH, 'J2000', STVGR2  )
-!           CALL SPKAPO (  IO,    EPOCH, 'J2000', STVGR2,
-!       .                 'LT+S', STIO,   LT              )
-!
-!           CALL RECRAD (  STIO,  RANGE,  RA,     DEC     )
-!           WRITE (*,*)  RA * DPR(),  DEC * DPR()
-!
-!           EPOCH = EPOCH + DELTA
-!
-!        END DO
-!
-! $ Restrictions
-!
-!     1) The ephemeris files to be used by SPKAPO must be loaded
-!        (normally by the SPICELIB kernel loader FURNSH) before
-!        this routine is called.
-!
-!     2) Unlike most other SPK position computation routines, this
-!        routine requires that the input state be relative to an
-!        inertial reference frame.  Non-inertial frames are not
-!        supported by this routine.
-!
-!     3) In a future version of this routine, the implementation
-!        of the aberration corrections may be enhanced to improve
-!        accuracy.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     H.A. Neilan     (JPL)
-!     B.V. Semenov    (JPL)
-!     W.L. Taber      (JPL)
-!     I.M. Underwood  (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.3.0, 03-JUL-2014 (NJB) (BVS)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!     Last update was 21-SEP-2013 (BVS)
-!
-!        Updated to call LJUCRS instead of CMPRSS/UCASE.
-!
-!-    SPICELIB Version 2.2.0, 17-MAY-2010 (NJB)
-!
-!        Bug fix: routine now returns immediately after
-!        state lookup failure.
-!
-!-    SPICELIB Version 2.1.0, 31-AUG-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VSUB call.
-!
-!-    SPICELIB Version 2.0.1, 20-OCT-2003 (EDW)
-!
-!        Added mention that LT returns in seconds.
-!        Corrected spelling errors.
-!
-!-    SPICELIB Version 2.0.0, 18-DEC-2001 (NJB)
-!
-!        Updated to handle aberration corrections for transmission
-!        of radiation.  Formerly, only the reception case was
-!        supported.  The header was revised and expanded to explain
-!        the functionality of this routine in more detail.
-!
-!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     apparent position from spk file
-!     get apparent position
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 31-AUG-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VSUB call.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-!
-!     Indices of flags in the FLAGS array:
-!
-
-
-
-
-
-
-
-
-
-!
-!     NAIF ID code for the solar system barycenter:
-!
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the position of a target body relative to an observer,
+!!     optionally corrected for light time and stellar aberration.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a position vector which points
+!!                 from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the position of the target body
+!!                 relative to the observer is to be computed.  ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the inertial reference frame with respect to which
+!!                 the observer's state SOBS is expressed. REF must be
+!!                 recognized by the SPICE Toolkit.  The acceptable
+!!                 frames are listed in the Frames Required Reading, as
+!!                 well as in the SPICELIB routine CHGIRF.
+!!
+!!                 Case and blanks are not significant in the string REF.
+!!
+!!     SOBS        is the geometric (uncorrected) state of the observer
+!!                 relative to the solar system barycenter at epoch ET.
+!!                 SOBS is a 6-vector:  the first three components of
+!!                 SOBS represent a Cartesian position vector; the last
+!!                 three components represent the corresponding velocity
+!!                 vector.  SOBS is expressed relative to the inertial
+!!                 reference frame designated by REF.
+!!
+!!                 Units are always km and km/sec.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied to
+!!                 the position of the target body to account for
+!!                 one-way light time and stellar aberration.  See the
+!!                 discussion in the Particulars section for
+!!                 recommendations on how to choose aberration
+!!                 corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric position of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the position of the target at the
+!!                               moment it emitted photons arriving at
+!!                               the observer at ET.
+!!
+!!                               The light time correction involves
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               position obtained with the 'LT' option
+!!                               to account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               position of the target---the position
+!!                               of the target as seen by the observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section
+!!                               of SPKEZR for a discussion of precision
+!!                               of light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               position of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation  This option modifies the
+!!                               position obtained with the 'XLT' option
+!!                               to account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The target position
+!!                               indicates the direction that photons
+!!                               emitted from the observer's location
+!!                               must be "aimed" to hit the target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!! ## Detailed Output
+!!
+!!     PTARG       is a Cartesian 3-vector representing the position of
+!!                 the target body relative to the specified observer.
+!!                 PTARG is corrected for the specified aberrations, and
+!!                 is expressed with respect to the specified inertial
+!!                 reference frame.  The components of PTARG represent
+!!                 the x-, y- and z-components of the target's position.
+!!
+!!                 The vector PTARG points from the observer's position
+!!                 at ET to the aberration-corrected location of the
+!!                 target. Note that the sense of the position vector is
+!!                 independent of the direction of radiation travel
+!!                 implied by the aberration correction.
+!!
+!!                 Units are always km.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target position is
+!!                 corrected for aberrations, then LT is the one-way
+!!                 light time between the observer and the light time
+!!                 corrected target location.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the value of ABCORR is not recognized, the error
+!!        'SPICE(SPKINVALIDOPTION)' is signaled.
+!!
+!!     2) If the reference frame requested is not a recognized
+!!        inertial reference frame the error 'SPICE(BADFRAME)' is
+!!        signaled.
+!!
+!!     3) If the position of the target relative to the solar system
+!!        barycenter cannot be computed, the error will be diagnosed
+!!        by routines in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     This routine computes positions using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH.  Application programs typically load
+!!     kernels once before this routine is called, for example during
+!!     program initialization; kernels need not be loaded repeatedly.
+!!     See the routine FURNSH and the SPK and KERNEL Required Reading
+!!     for further information on loading (and unloading) kernels.
+!!
+!!     If any of the ephemeris data used to compute PTARG are expressed
+!!     relative to a non-inertial frame in the SPK files providing those
+!!     data, additional kernels may be needed to enable the reference
+!!     frame transformations required to compute PTARG.  Normally
+!!     these additional kernels are PCK files or frame kernels.  Any
+!!     such kernels must already be loaded at the time this routine is
+!!     called.
+!!
+!! ## Particulars
+!!
+!!     In space science or engineering applications one frequently
+!!     wishes to know where to point a remote sensing instrument, such
+!!     as an optical camera or radio antenna, in order to observe or
+!!     otherwise receive radiation from a target.  This pointing problem
+!!     is complicated by the finite speed of light:  one needs to point
+!!     to where the target appears to be as opposed to where it actually
+!!     is at the epoch of observation.  We use the adjectives
+!!     "geometric," "uncorrected," or "true" to refer to an actual
+!!     position or state of a target at a specified epoch.  When a
+!!     geometric position or state vector is modified to reflect how it
+!!     appears to an observer, we describe that vector by any of the
+!!     terms "apparent," "corrected," "aberration corrected," or "light
+!!     time and stellar aberration corrected."
+!!
+!!     The SPICE Toolkit can correct for two phenomena affecting the
+!!     apparent location of an object:  one-way light time (also called
+!!     "planetary aberration") and stellar aberration.  Correcting for
+!!     one-way light time is done by computing, given an observer and
+!!     observation epoch, where a target was when the observed photons
+!!     departed the target's location.  The vector from the observer to
+!!     this computed target location is called a "light time corrected"
+!!     vector.  The light time correction depends on the motion of the
+!!     target, but it is independent of the velocity of the observer
+!!     relative to the solar system barycenter. Relativistic effects
+!!     such as light bending and gravitational delay are not accounted
+!!     for in the light time correction performed by this routine.
+!!
+!!     The velocity of the observer also affects the apparent location
+!!     of a target:  photons arriving at the observer are subject to a
+!!     "raindrop effect" whereby their velocity relative to the observer
+!!     is, using a Newtonian approximation, the photons' velocity
+!!     relative to the solar system barycenter minus the velocity of the
+!!     observer relative to the solar system barycenter.  This effect is
+!!     called "stellar aberration."  Stellar aberration is independent
+!!     of the motion of the target.  The stellar aberration formula used
+!!     by this routine is non- relativistic.
+!!
+!!     Stellar aberration corrections are applied after light time
+!!     corrections:  the light time corrected target position vector is
+!!     used as an input to the stellar aberration correction.
+!!
+!!     When light time and stellar aberration corrections are both
+!!     applied to a geometric position vector, the resulting position
+!!     vector indicates where the target "appears to be" from the
+!!     observer's location.
+!!
+!!     As opposed to computing the apparent position of a target, one
+!!     may wish to compute the pointing direction required for
+!!     transmission of photons to the target.  This requires correction
+!!     of the geometric target position for the effects of light time and
+!!     stellar aberration, but in this case the corrections are computed
+!!     for radiation traveling from the observer to the target.
+!!
+!!     The "transmission" light time correction yields the target's
+!!     location as it will be when photons emitted from the observer's
+!!     location at ET arrive at the target.  The transmission stellar
+!!     aberration correction is the inverse of the traditional stellar
+!!     aberration correction:  it indicates the direction in which
+!!     radiation should be emitted so that, using a Newtonian
+!!     approximation, the sum of the velocity of the radiation relative
+!!     to the observer and of the observer's velocity, relative to the
+!!     solar system barycenter, yields a velocity vector that points in
+!!     the direction of the light time corrected position of the target.
+!!
+!!     The traditional aberration corrections applicable to observation
+!!     and those applicable to transmission are related in a simple way:
+!!     one may picture the geometry of the "transmission" case by
+!!     imagining the "observation" case running in reverse time order,
+!!     and vice versa.
+!!
+!!     One may reasonably object to using the term "observer" in the
+!!     transmission case, in which radiation is emitted from the
+!!     observer's location.  The terminology was retained for
+!!     consistency with earlier documentation.
+!!
+!!     Below, we indicate the aberration corrections to use for some
+!!     common applications:
+!!
+!!        1) Find the apparent direction of a target for a remote-sensing
+!!           observation.
+!!
+!!              Use 'LT+S' or 'CN+S: apply both light time and stellar
+!!              aberration corrections.
+!!
+!!           Note that using light time corrections alone ('LT' or 'CN')
+!!           is generally not a good way to obtain an approximation to
+!!           an apparent target vector: since light time and stellar
+!!           aberration corrections often partially cancel each other,
+!!           it may be more accurate to use no correction at all than to
+!!           use light time alone.
+!!
+!!        2) Find the corrected pointing direction to radiate a signal
+!!           to a target. This computation is often applicable for
+!!           implementing communications sessions.
+!!
+!!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
+!!              aberration corrections for transmission.
+!!
+!!        3) Compute the apparent position of a target body relative
+!!           to a star or other distant object.
+!!
+!!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
+!!              correction applied to the position of the distant
+!!              object. For example, if a star position is obtained from
+!!              a catalog, the position vector may not be corrected for
+!!              stellar aberration. In this case, to find the angular
+!!              separation of the star and the limb of a planet, the
+!!              vector from the observer to the planet should be
+!!              corrected for light time but not stellar aberration.
+!!
+!!        4) Obtain an uncorrected state vector derived directly from
+!!           data in an SPK file.
+!!
+!!              Use 'NONE'.
+!!
+!!        5) Use a geometric position vector as a low-accuracy estimate
+!!           of the apparent position for an application where execution
+!!           speed is critical:
+!!
+!!              Use 'NONE'.
+!!
+!!        6) While this routine cannot perform the relativistic
+!!           aberration corrections required to compute positions
+!!           with the highest possible accuracy, it can supply the
+!!           geometric positions required as inputs to these
+!!           computations:
+!!
+!!              Use 'NONE', then apply high-accuracy aberration
+!!              corrections (not available in the SPICE Toolkit).
+!!
+!!     Below, we discuss in more detail how the aberration corrections
+!!     applied by this routine are computed.
+!!
+!!     Geometric case
+!!     ==============
+!!
+!!        SPKAPO begins by computing the geometric position T(ET) of the
+!!        target body relative to the solar system barycenter (SSB).
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the geometric position of the target body relative to the
+!!        observer. The one-way light time, LT, is given by
+!!
+!!                  | T(ET) - O(ET) |
+!!           LT = -------------------
+!!                          c
+!!
+!!        The geometric relationship between the observer, target, and
+!!        solar system barycenter is as shown:
+!!
+!!           SSB ---> O(ET)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(ET) - O(ET)
+!!            V  V
+!!           T(ET)
+!!
+!!        The returned position vector is
+!!
+!!           T(ET) - O(ET)
+!!
+!!     Reception case
+!!     ==============
+!!
+!!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' are
+!!        selected, SPKAPO computes the position of the target body at
+!!        epoch ET-LT, where LT is the one-way light time.  Let T(t)
+!!        and O(t) represent the positions of the target and observer
+!!        relative to the solar system barycenter at time t; then LT
+!!        is the solution of the
+!!        light-time equation
+!!
+!!                  | T(ET-LT) - O(ET) |
+!!           LT = ------------------------                            (1)
+!!                           c
+!!
+!!        The ratio
+!!
+!!            | T(ET) - O(ET) |
+!!          ---------------------                                     (2)
+!!                    c
+!!
+!!        is used as a first approximation to LT; inserting (2) into the
+!!        RHS of the light-time equation (1) yields the "one-iteration"
+!!        estimate of the one-way light time. Repeating the process
+!!        until the estimates of LT converge yields the "converged
+!!        Newtonian" light time estimate.
+!!
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the position of the target body relative to the observer:
+!!        T(ET-LT) - O(ET).
+!!
+!!           SSB ---> O(ET)
+!!            | \     |
+!!            |  \    |
+!!            |   \   | T(ET-LT) - O(ET)
+!!            |    \  |
+!!            V     V V
+!!           T(ET)  T(ET-LT)
+!!
+!!        The light-time corrected position is the vector
+!!
+!!           T(ET-LT) - O(ET)
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated toward the solar system barycenter-relative
+!!        velocity vector of the observer. The magnitude of the rotation
+!!        depends on the magnitude of the observer's velocity relative
+!!        to the solar system barycenter and the angle between
+!!        this velocity and the observer-target vector.  The rotation
+!!        is computed as follows:
+!!
+!!           Let r be the light time corrected vector from the observer
+!!           to the object, and v be the velocity of the observer with
+!!           respect to the solar system barycenter. Let w be the angle
+!!           between them. The aberration angle phi is given by
+!!
+!!              sin(phi) = v sin(w) / c
+!!
+!!           Let h be the vector given by the cross product
+!!
+!!              h = r X v
+!!
+!!           Rotate r by phi radians about h to obtain the apparent
+!!           position of the object.
+!!
+!!     Transmission case
+!!     ==================
+!!
+!!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' are
+!!        selected, SPKAPO computes the position of the target body T at
+!!        epoch ET+LT, where LT is the one-way light time.  LT is the
+!!        solution of the light-time equation
+!!
+!!                  | T(ET+LT) - O(ET) |
+!!           LT = ------------------------                            (3)
+!!                            c
+!!
+!!        Subtracting the geometric position of the observer, O(ET),
+!!        gives the position of the target body relative to the
+!!        observer: T(ET-LT) - O(ET).
+!!
+!!                   SSB --> O(ET)
+!!                  / |    *
+!!                 /  |  *  T(ET+LT) - O(ET)
+!!                /   |*
+!!               /   *|
+!!              V  V  V
+!!          T(ET+LT)  T(ET)
+!!
+!!        The light-time corrected position is
+!!
+!!           T(ET+LT) - O(ET)
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated away from the solar system barycenter-
+!!        relative velocity vector of the observer.  The magnitude of the
+!!        rotation depends on the magnitude of the velocity and the
+!!        angle between the velocity and the observer-target vector.
+!!        The rotation is computed as in the reception case, but the
+!!        sign of the rotation angle is negated.
+!!
+!!     Neither special nor general relativistic effects are accounted
+!!     for in the aberration corrections performed by this routine.
+!!
+!! ## Examples
+!!
+!!     In the following code fragment, SPKSSB and SPKAPO are used
+!!     to display the position of Io (body 501) as seen from the
+!!     Voyager 2 spacecraft (Body -32) at a series of epochs.
+!!
+!!     Normally, one would call the high-level reader SPKPOS to obtain
+!!     position vectors.  The example below illustrates the interface
+!!     of this routine, but is not intended as a recommendation on
+!!     how to use the SPICE SPK subsystem.
+!!
+!!     The use of integer ID codes is necessitated by the low-level
+!!     interface of this routine.
+!!
+!!        IO    = 501
+!!        VGR2  = -32
+!!
+!!        DO WHILE ( EPOCH .LE. END )
+!!
+!!           CALL SPKSSB (  VGR2,  EPOCH, 'J2000', STVGR2  )
+!!           CALL SPKAPO (  IO,    EPOCH, 'J2000', STVGR2,
+!!       .                 'LT+S', STIO,   LT              )
+!!
+!!           CALL RECRAD (  STIO,  RANGE,  RA,     DEC     )
+!!           WRITE (*,*)  RA * DPR(),  DEC * DPR()
+!!
+!!           EPOCH = EPOCH + DELTA
+!!
+!!        END DO
+!!
+!! ## Restrictions
+!!
+!!     1) The ephemeris files to be used by SPKAPO must be loaded
+!!        (normally by the SPICELIB kernel loader FURNSH) before
+!!        this routine is called.
+!!
+!!     2) Unlike most other SPK position computation routines, this
+!!        routine requires that the input state be relative to an
+!!        inertial reference frame.  Non-inertial frames are not
+!!        supported by this routine.
+!!
+!!     3) In a future version of this routine, the implementation
+!!        of the aberration corrections may be enhanced to improve
+!!        accuracy.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!     H.A. Neilan     (JPL)
+!!     B.V. Semenov    (JPL)
+!!     W.L. Taber      (JPL)
+!!     I.M. Underwood  (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.3.0, 03-JUL-2014 (NJB) (BVS)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!     Last update was 21-SEP-2013 (BVS)
+!!
+!!        Updated to call LJUCRS instead of CMPRSS/UCASE.
+!!
+!!-    SPICELIB Version 2.2.0, 17-MAY-2010 (NJB)
+!!
+!!        Bug fix: routine now returns immediately after
+!!        state lookup failure.
+!!
+!!-    SPICELIB Version 2.1.0, 31-AUG-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in VSUB call.
+!!
+!!-    SPICELIB Version 2.0.1, 20-OCT-2003 (EDW)
+!!
+!!        Added mention that LT returns in seconds.
+!!        Corrected spelling errors.
+!!
+!!-    SPICELIB Version 2.0.0, 18-DEC-2001 (NJB)
+!!
+!!        Updated to handle aberration corrections for transmission
+!!        of radiation.  Formerly, only the reception case was
+!!        supported.  The header was revised and expanded to explain
+!!        the functionality of this routine in more detail.
+!!
+!!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     apparent position from spk file
+!!     get apparent position
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 31-AUG-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in VSUB call.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Indices of flags in the FLAGS array:
+!!
+!!     NAIF ID code for the solar system barycenter:
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: isrchc
@@ -21420,800 +20815,773 @@ contains
       end procedure zzspkpa0
 
       module procedure zzspkzp0
-
-! $ Abstract
-!
-!     Return the position of a target body relative to an observing
-!     body, optionally corrected for light time (planetary aberration)
-!     and stellar aberration.
-!
-! $ Required_Reading
-!
-!     SPK
-!     NAIF_IDS
-!     FRAMES
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     TARG        is the NAIF ID code for a target body.  The target
-!                 and observer define a position vector which points
-!                 from the observer to the target.
-!
-!     ET          is the ephemeris time, expressed as seconds past
-!                 J2000 TDB, at which the position of the target body
-!                 relative to the observer is to be computed.  ET
-!                 refers to time at the observer's location.
-!
-!     REF         is the name of the reference frame relative to which
-!                 the output position vector should be expressed. This
-!                 may be any frame supported by the SPICE system,
-!                 including built-in frames (documented in the Frames
-!                 Required Reading) and frames defined by a loaded
-!                 frame kernel (FK).
-!
-!                 When REF designates a non-inertial frame, the
-!                 orientation of the frame is evaluated at an epoch
-!                 dependent on the selected aberration correction. See
-!                 the description of the output position vector PTARG
-!                 for details.
-!
-!     ABCORR      indicates the aberration corrections to be applied to
-!                 the position of the target body to account for
-!                 one-way light time and stellar aberration.  See the
-!                 discussion in the Particulars section for
-!                 recommendations on how to choose aberration
-!                 corrections.
-!
-!                 ABCORR may be any of the following:
-!
-!                    'NONE'     Apply no correction. Return the
-!                               geometric position of the target body
-!                               relative to the observer.
-!
-!                 The following values of ABCORR apply to the
-!                 "reception" case in which photons depart from the
-!                 target's location at the light-time corrected epoch
-!                 ET-LT and *arrive* at the observer's location at ET:
-!
-!                    'LT'       Correct for one-way light time (also
-!                               called "planetary aberration") using a
-!                               Newtonian formulation. This correction
-!                               yields the position of the target at
-!                               the moment it emitted photons arriving
-!                               at the observer at ET.
-!
-!                               The light time correction uses an
-!                               iterative solution of the light time
-!                               equation (see Particulars for details).
-!                               The solution invoked by the 'LT' option
-!                               uses one iteration.
-!
-!                    'LT+S'     Correct for one-way light time and
-!                               stellar aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               position obtained with the 'LT' option
-!                               to account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The result is the apparent
-!                               position of the target---the position
-!                               as seen by the observer.
-!
-!                    'CN'       Converged Newtonian light time
-!                               correction. In solving the light time
-!                               equation, the 'CN' correction iterates
-!                               until the solution converges (three
-!                               iterations on all supported platforms).
-!                               Whether the 'CN+S' solution is
-!                               substantially more accurate than the
-!                               'LT' solution depends on the geometry
-!                               of the participating objects and on the
-!                               accuracy of the input data. In all
-!                               cases this routine will execute more
-!                               slowly when a converged solution is
-!                               computed. See the Particulars section
-!                               below for a discussion of precision of
-!                               light time corrections.
-!
-!                    'CN+S'     Converged Newtonian light time
-!                               correction and stellar aberration
-!                               correction.
-!
-!                 The following values of ABCORR apply to the
-!                 "transmission" case in which photons *depart* from
-!                 the observer's location at ET and arrive at the
-!                 target's location at the light-time corrected epoch
-!                 ET+LT:
-!
-!                    'XLT'      "Transmission" case:  correct for
-!                               one-way light time using a Newtonian
-!                               formulation. This correction yields the
-!                               position of the target at the moment it
-!                               receives photons emitted from the
-!                               observer's location at ET.
-!
-!                    'XLT+S'    "Transmission" case:  correct for
-!                               one-way light time and stellar
-!                               aberration using a Newtonian
-!                               formulation. This option modifies the
-!                               position obtained with the 'XLT' option
-!                               to account for the observer's velocity
-!                               relative to the solar system
-!                               barycenter. The computed target
-!                               position indicates the direction that
-!                               photons emitted from the observer's
-!                               location must be "aimed" to hit the
-!                               target.
-!
-!                    'XCN'      "Transmission" case:  converged
-!                               Newtonian light time correction.
-!
-!                    'XCN+S'    "Transmission" case:  converged
-!                               Newtonian light time correction and
-!                               stellar aberration correction.
-!
-!                 Neither special nor general relativistic effects are
-!                 accounted for in the aberration corrections applied
-!                 by this routine.
-!
-!                 Case and blanks are not significant in the string
-!                 ABCORR.
-!
-!     OBS         is the NAIF ID code for the observing body.
-!
-! $ Detailed_Output
-!
-!     PTARG       is a Cartesian 3-vector representing the position of
-!                 the target body relative to the specified observer.
-!                 PTARG is corrected for the specified aberrations, and
-!                 is expressed with respect to the reference frame
-!                 specified by REF.  The three components of PTARG
-!                 represent the x-, y- and z-components of the target's
-!                 position.
-!
-!                 PTARG points from the observer's location at ET to
-!                 the aberration-corrected location of the target.
-!                 Note that the sense of this position vector is
-!                 independent of the direction of radiation travel
-!                 implied by the aberration correction.
-!
-!                 Units are always km.
-!
-!                 Non-inertial frames are treated as follows: letting
-!                 LTCENT be the one-way light time between the observer
-!                 and the central body associated with the frame, the
-!                 orientation of the frame is evaluated at ET-LTCENT,
-!                 ET+LTCENT, or ET depending on whether the requested
-!                 aberration correction is, respectively, for received
-!                 radiation, transmitted radiation, or is omitted.
-!                 LTCENT is computed using the method indicated by
-!                 ABCORR.
-!
-!     LT          is the one-way light time between the observer and
-!                 target in seconds.  If the target position is
-!                 corrected for aberrations, then LT is the one-way
-!                 light time between the observer and the light time
-!                 corrected target location.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If name of target or observer cannot be translated to its
-!        NAIF ID code, the error SPICE(IDCODENOTFOUND) is signaled.
-!
-!     2) If the reference frame REF is not a recognized reference
-!        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
-!
-!     3) If the loaded kernels provide insufficient data to
-!        compute the requested position vector, the deficiency will
-!        be diagnosed by a routine in the call tree of this routine.
-!
-!     4) If an error occurs while reading an SPK or other kernel file,
-!        the error  will be diagnosed by a routine in the call tree
-!        of this routine.
-!
-!     5) If any of the required attributes of the reference frame REF
-!        cannot be determined, 'SPICE(UNKNOWNFRAME2)' is signaled.
-!
-! $ Files
-!
-!     This routine computes positions using SPK files that have been
-!     loaded into the SPICE system, normally via the kernel loading
-!     interface routine FURNSH. See the routine FURNSH and the SPK
-!     and KERNEL Required Reading for further information on loading
-!     (and unloading) kernels.
-!
-!     If the output position PTARG is to be expressed relative to a
-!     non-inertial frame, or if any of the ephemeris data used to
-!     compute PTARG are expressed relative to a non-inertial frame in
-!     the SPK files providing those data, additional kernels may be
-!     needed to enable the reference frame transformations required to
-!     compute the position.  Normally these additional kernels are PCK
-!     files or frame kernels.  Any such kernels must already be loaded
-!     at the time this routine is called.
-!
-! $ Particulars
-!
-!     This routine is part of the user interface to the SPICE ephemeris
-!     system.  It allows you to retrieve position information for any
-!     ephemeris object relative to any other in a reference frame that
-!     is convenient for further computations.
-!
-!     Aberration corrections
-!     ======================
-!
-!     In space science or engineering applications one frequently
-!     wishes to know where to point a remote sensing instrument, such
-!     as an optical camera or radio antenna, in order to observe or
-!     otherwise receive radiation from a target.  This pointing problem
-!     is complicated by the finite speed of light:  one needs to point
-!     to where the target appears to be as opposed to where it actually
-!     is at the epoch of observation.  We use the adjectives
-!     "geometric," "uncorrected," or "true" to refer to an actual
-!     position or state of a target at a specified epoch.  When a
-!     geometric position or state vector is modified to reflect how it
-!     appears to an observer, we describe that vector by any of the
-!     terms "apparent," "corrected," "aberration corrected," or "light
-!     time and stellar aberration corrected." The SPICE Toolkit can
-!     correct for two phenomena affecting the apparent location of an
-!     object:  one-way light time (also called "planetary aberration")
-!     and stellar aberration.
-!
-!     One-way light time
-!     ------------------
-!
-!     Correcting for one-way light time is done by computing, given an
-!     observer and observation epoch, where a target was when the
-!     observed photons departed the target's location.  The vector from
-!     the observer to this computed target location is called a "light
-!     time corrected" vector.  The light time correction depends on the
-!     motion of the target relative to the solar system barycenter, but
-!     it is independent of the velocity of the observer relative to the
-!     solar system barycenter. Relativistic effects such as light
-!     bending and gravitational delay are not accounted for in the
-!     light time correction performed by this routine.
-!
-!     Stellar aberration
-!     ------------------
-!
-!     The velocity of the observer also affects the apparent location
-!     of a target:  photons arriving at the observer are subject to a
-!     "raindrop effect" whereby their velocity relative to the observer
-!     is, using a Newtonian approximation, the photons' velocity
-!     relative to the solar system barycenter minus the velocity of the
-!     observer relative to the solar system barycenter.  This effect is
-!     called "stellar aberration."  Stellar aberration is independent
-!     of the velocity of the target.  The stellar aberration formula
-!     used by this routine does not include (the much smaller)
-!     relativistic effects.
-!
-!     Stellar aberration corrections are applied after light time
-!     corrections:  the light time corrected target position vector is
-!     used as an input to the stellar aberration correction.
-!
-!     When light time and stellar aberration corrections are both
-!     applied to a geometric position vector, the resulting position
-!     vector indicates where the target "appears to be" from the
-!     observer's location.
-!
-!     As opposed to computing the apparent position of a target, one
-!     may wish to compute the pointing direction required for
-!     transmission of photons to the target.  This also requires
-!     correction of the geometric target position for the effects of
-!     light time and stellar aberration, but in this case the
-!     corrections are computed for radiation traveling *from* the
-!     observer to the target.
-!
-!     The "transmission" light time correction yields the target's
-!     location as it will be when photons emitted from the observer's
-!     location at ET arrive at the target.  The transmission stellar
-!     aberration correction is the inverse of the traditional stellar
-!     aberration correction:  it indicates the direction in which
-!     radiation should be emitted so that, using a Newtonian
-!     approximation, the sum of the velocity of the radiation relative
-!     to the observer and of the observer's velocity, relative to the
-!     solar system barycenter, yields a velocity vector that points in
-!     the direction of the light time corrected position of the target.
-!
-!     One may object to using the term "observer" in the transmission
-!     case, in which radiation is emitted from the observer's location.
-!     The terminology was retained for consistency with earlier
-!     documentation.
-!
-!     Below, we indicate the aberration corrections to use for some
-!     common applications:
-!
-!        1) Find the apparent direction of a target for a remote-sensing
-!           observation.
-!
-!              Use 'LT+S' or 'CN+S: apply both light time and stellar
-!              aberration corrections.
-!
-!           Note that using light time corrections alone ('LT' or 'CN')
-!           is generally not a good way to obtain an approximation to
-!           an apparent target vector: since light time and stellar
-!           aberration corrections often partially cancel each other,
-!           it may be more accurate to use no correction at all than to
-!           use light time alone.
-!
-!        2) Find the corrected pointing direction to radiate a signal
-!           to a target. This computation is often applicable for
-!           implementing communications sessions.
-!
-!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
-!              aberration corrections for transmission.
-!
-!        3) Compute the apparent position of a target body relative
-!           to a star or other distant object.
-!
-!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
-!              correction applied to the position of the distant
-!              object. For example, if a star position is obtained from
-!              a catalog, the position vector may not be corrected for
-!              stellar aberration. In this case, to find the angular
-!              separation of the star and the limb of a planet, the
-!              vector from the observer to the planet should be
-!              corrected for light time but not stellar aberration.
-!
-!        4) Obtain an uncorrected position vector derived directly from
-!           data in an SPK file.
-!
-!              Use 'NONE'.
-!
-!        5) Use a geometric position vector as a low-accuracy estimate
-!           of the apparent position for an application where execution
-!           speed is critical.
-!
-!              Use 'NONE'.
-!
-!        6) While this routine cannot perform the relativistic
-!           aberration corrections required to compute positions
-!           with the highest possible accuracy, it can supply the
-!           geometric positions required as inputs to these
-!           computations.
-!
-!              Use 'NONE', then apply high-accuracy aberration
-!              corrections (not available in the SPICE Toolkit).
-!
-!     Below, we discuss in more detail how the aberration corrections
-!     applied by this routine are computed.
-!
-!        Geometric case
-!        ==============
-!
-!        SPKEZP begins by computing the geometric position T(ET) of the
-!        target body relative to the solar system barycenter (SSB).
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the geometric position of the target body relative to the
-!        observer. The one-way light time, LT, is given by
-!
-!                  | T(ET) - O(ET) |
-!           LT = -------------------
-!                          c
-!
-!        The geometric relationship between the observer, target, and
-!        solar system barycenter is as shown:
-!
-!           SSB ---> O(ET)
-!            |      /
-!            |     /
-!            |    /
-!            |   /  T(ET) - O(ET)
-!            V  V
-!           T(ET)
-!
-!        The returned position vector is
-!
-!           T(ET) - O(ET)
-!
-!        Reception case
-!        ==============
-!
-!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' is selected
-!        for ABCORR, SPKEZP computes the position of the target body at
-!        epoch ET-LT, where LT is the one-way light time.  Let T(t) and
-!        O(t) represent the positions of the target and observer
-!        relative to the solar system barycenter at time t; then LT is
-!        the solution of the light-time equation
-!
-!                  | T(ET-LT) - O(ET) |
-!           LT = ------------------------                            (1)
-!                           c
-!
-!        The ratio
-!
-!            | T(ET) - O(ET) |
-!          ---------------------                                     (2)
-!                    c
-!
-!        is used as a first approximation to LT; inserting (2) into the
-!        right hand side of the light-time equation (1) yields the
-!        "one-iteration" estimate of the one-way light time ("LT").
-!        Repeating the process until the estimates of LT converge
-!        yields the "converged Newtonian" light time estimate ("CN").
-!
-!        Subtracting the geometric position of the observer O(ET) gives
-!        the position of the target body relative to the observer:
-!        T(ET-LT) - O(ET).
-!
-!           SSB ---> O(ET)
-!            | \     |
-!            |  \    |
-!            |   \   | T(ET-LT) - O(ET)
-!            |    \  |
-!            V     V V
-!           T(ET)  T(ET-LT)
-!
-!        The light time corrected position vector is
-!
-!           T(ET-LT) - O(ET)
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated toward the solar system barycenter-
-!        relative velocity vector of the observer.  The rotation is
-!        computed as follows:
-!
-!           Let r be the light time corrected vector from the observer
-!           to the object, and v be the velocity of the observer with
-!           respect to the solar system barycenter. Let w be the angle
-!           between them. The aberration angle phi is given by
-!
-!              sin(phi) = v sin(w) / c
-!
-!           Let h be the vector given by the cross product
-!
-!              h = r X v
-!
-!           Rotate r by phi radians about h to obtain the apparent
-!           position of the object.
-!
-!        Transmission case
-!        ==================
-!
-!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' is
-!        selected, SPKEZP computes the position of the target body T at
-!        epoch ET+LT, where LT is the one-way light time.  LT is the
-!        solution of the light-time equation
-!
-!                  | T(ET+LT) - O(ET) |
-!           LT = ------------------------                            (3)
-!                            c
-!
-!        Subtracting the geometric position of the observer, O(ET),
-!        gives the position of the target body relative to the
-!        observer: T(ET-LT) - O(ET).
-!
-!                   SSB --> O(ET)
-!                  / |    *
-!                 /  |  *  T(ET+LT) - O(ET)
-!                /   |*
-!               /   *|
-!              V  V  V
-!          T(ET+LT)  T(ET)
-!
-!        The light-time corrected position vector is
-!
-!           T(ET+LT) - O(ET)
-!
-!        If correction for stellar aberration is requested, the target
-!        position is rotated away from the solar system barycenter-
-!        relative velocity vector of the observer. The rotation is
-!        computed as in the reception case, but the sign of the
-!        rotation angle is negated.
-!
-!     Precision of light time corrections
-!     ===================================
-!
-!        Corrections using one iteration of the light time solution
-!        ----------------------------------------------------------
-!
-!        When the requested aberration correction is 'LT', 'LT+S',
-!        'XLT', or 'XLT+S', only one iteration is performed in the
-!        algorithm used to compute LT.
-!
-!        The relative error in this computation
-!
-!           | LT_ACTUAL - LT_COMPUTED |  /  LT_ACTUAL
-!
-!        is at most
-!
-!            (V/C)**2
-!           ----------
-!            1 - (V/C)
-!
-!        which is well approximated by (V/C)**2, where V is the
-!        velocity of the target relative to an inertial frame and C is
-!        the speed of light.
-!
-!        For nearly all objects in the solar system V is less than 60
-!        km/sec. The value of C is ~300000 km/sec. Thus the
-!        one-iteration solution for LT has a potential relative error
-!        of not more than 4e-8. This is a potential light time error of
-!        approximately 2e-5 seconds per astronomical unit of distance
-!        separating the observer and target. Given the bound on V cited
-!        above:
-!
-!           As long as the observer and target are separated by less
-!           than 50 astronomical units, the error in the light time
-!           returned using the one-iteration light time corrections is
-!           less than 1 millisecond.
-!
-!           The magnitude of the corresponding position error, given
-!           the above assumptions, may be as large as (V/C)**2 * the
-!           distance between the observer and the uncorrected target
-!           position: 300 km or equivalently 6 km/AU.
-!
-!        In practice, the difference between positions obtained using
-!        one-iteration and converged light time is usually much smaller
-!        than the value computed above and can be insignificant. For
-!        example, for the spacecraft Mars Reconnaissance Orbiter and
-!        Mars Express, the position error for the one-iteration light
-!        time correction, applied to the spacecraft-to-Mars center
-!        vector, is at the 1 cm level.
-!
-!        Comparison of results obtained using the one-iteration and
-!        converged light time solutions is recommended when adequacy of
-!        the one-iteration solution is in doubt.
-!
-!        Converged corrections
-!        ---------------------
-!
-!        When the requested aberration correction is 'CN', 'CN+S',
-!        'XCN', or 'XCN+S', as many iterations as are required for
-!        convergence are performed in the computation of LT. Usually
-!        the solution is found after three iterations. The relative
-!        error present in this case is at most
-!
-!            (V/C)**4
-!           ----------
-!            1 - (V/C)
-!
-!        which is well approximated by (V/C)**4.
-!
-!           The precision of this computation (ignoring round-off
-!           error) is better than 4e-11 seconds for any pair of objects
-!           less than 50 AU apart, and having speed relative to the
-!           solar system barycenter less than 60 km/s.
-!
-!           The magnitude of the corresponding position error, given
-!           the above assumptions, may be as large as (V/C)**4 * the
-!           distance between the observer and the uncorrected target
-!           position: 1.2 cm at 50 AU or equivalently 0.24 mm/AU.
-!
-!        However, to very accurately model the light time between
-!        target and observer one must take into account effects due to
-!        general relativity. These may be as high as a few hundredths
-!        of a millisecond for some objects.
-!
-!     Relativistic Corrections
-!     =========================
-!
-!     This routine does not attempt to perform either general or
-!     special relativistic corrections in computing the various
-!     aberration corrections.  For many applications relativistic
-!     corrections are not worth the expense of added computation
-!     cycles.  If however, your application requires these additional
-!     corrections we suggest you consult the astronomical almanac (page
-!     B36) for a discussion of how to carry out these corrections.
-!
-! $ Examples
-!
-!     1)  Load a planetary ephemeris SPK, then look up a series of
-!         geometric positions of the moon relative to the earth,
-!         referenced to the J2000 frame.
-!
-!               IMPLICIT NONE
-!         C
-!         C     Local constants
-!         C
-!               CHARACTER*(*)         FRAME
-!               PARAMETER           ( FRAME  = 'J2000' )
-!
-!               CHARACTER*(*)         ABCORR
-!               PARAMETER           ( ABCORR = 'NONE' )
-!
-!         C
-!         C     The name of the SPK file shown here is fictitious;
-!         C     you must supply the name of an SPK file available
-!         C     on your own computer system.
-!         C
-!               CHARACTER*(*)         SPK
-!               PARAMETER           ( SPK    = 'planet.bsp' )
-!
-!         C
-!         C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
-!         C
-!               DOUBLE PRECISION      ET0
-!               PARAMETER           ( ET0    = 0.0D0 )
-!
-!         C
-!         C     Use a time step of 1 hour; look up 100 positions.
-!         C
-!               DOUBLE PRECISION      STEP
-!               PARAMETER           ( STEP   = 3600.0D0 )
-!
-!               INTEGER               MAXITR
-!               PARAMETER           ( MAXITR = 100 )
-!
-!         C
-!         C     The NAIF IDs of the earth and moon are 399 and 301
-!         C     respectively.
-!         C
-!               INTEGER               OBSRVR
-!               PARAMETER           ( OBSRVR = 399 )
-!
-!               INTEGER               TARGET
-!               PARAMETER           ( TARGET = 301 )
-!
-!         C
-!         C     Local variables
-!         C
-!               DOUBLE PRECISION      ET
-!               DOUBLE PRECISION      LT
-!               DOUBLE PRECISION      POS ( 3 )
-!
-!               INTEGER               I
-!
-!         C
-!         C     Load the SPK file.
-!         C
-!               CALL FURNSH ( SPK )
-!
-!         C
-!         C     Step through a series of epochs, looking up a
-!         C     position vector at each one.
-!         C
-!               DO I = 1, MAXITR
-!
-!                  ET = ET0 + (I-1)*STEP
-!
-!                  CALL SPKEZP ( TARGET, ET, FRAME, ABCORR, OBSRVR,
-!              .                 POS,    LT                        )
-!
-!                  WRITE (*,*) 'ET = ', ET
-!                  WRITE (*,*) 'J2000 x-position (km):   ', POS(1)
-!                  WRITE (*,*) 'J2000 y-position (km):   ', POS(2)
-!                  WRITE (*,*) 'J2000 z-position (km):   ', POS(3)
-!                  WRITE (*,*) ' '
-!
-!               END DO
-!
-!               END
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     SPK Required Reading.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton      (JPL)
-!     B.V. Semenov    (JPL)
-!     N.J. Bachman    (JPL)
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.2.0, 03-JUL-2014 (NJB) (BVS)
-!
-!        Discussion of light time corrections was updated. Assertions
-!        that converged light time corrections are unlikely to be
-!        useful were removed.
-!
-!     Last update was 23-SEP-2013 (BVS)
-!
-!        Bug fix: added a check and an exception for the FOUND flag
-!        returned by FRINFO.
-!
-!        Updated to save the input frame name and POOL state counter
-!        and to do frame name-ID conversion only if the counter has
-!        changed.
-!
-!-    SPICELIB Version 3.1.1, 04-APR-2008 (NJB)
-!
-!        Corrected minor error in description of XLT+S aberration
-!        correction.
-!
-!-    SPICELIB Version 3.1.0, 06-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.
-!
-!-    SPICELIB Version 3.0.3, 12-DEC-2004 (NJB)
-!
-!        Minor header error was corrected.
-!
-!-    SPICELIB Version 3.0.2, 20-OCT-2003 (EDW)
-!
-!        Added mention that LT returns in seconds.
-!
-!-    SPICELIB Version 3.0.1, 29-JUL-2003 (NJB) (CHA)
-!
-!        Various minor header changes were made to improve clarity.
-!
-!-    SPICELIB Version 3.0.0, 31-DEC-2001 (NJB)
-!
-!        Updated to handle aberration corrections for transmission
-!        of radiation.  Formerly, only the reception case was
-!        supported.  The header was revised and expanded to explain
-!        the functionality of this routine in more detail.
-!
-!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     using body names get position relative to an observer
-!     get position relative observer corrected for aberrations
-!     read ephemeris data
-!     read trajectory data
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.  The new checks
-!        are intended to prevent arithmetic operations from
-!        being performed with uninitialized or invalid data.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-!
-!     Saved frame name length.
-!
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved frame name/ID item declarations.
-!
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return the position of a target body relative to an observing
+!!     body, optionally corrected for light time (planetary aberration)
+!!     and stellar aberration.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     NAIF_IDS
+!!     FRAMES
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     TARG        is the NAIF ID code for a target body.  The target
+!!                 and observer define a position vector which points
+!!                 from the observer to the target.
+!!
+!!     ET          is the ephemeris time, expressed as seconds past
+!!                 J2000 TDB, at which the position of the target body
+!!                 relative to the observer is to be computed.  ET
+!!                 refers to time at the observer's location.
+!!
+!!     REF         is the name of the reference frame relative to which
+!!                 the output position vector should be expressed. This
+!!                 may be any frame supported by the SPICE system,
+!!                 including built-in frames (documented in the Frames
+!!                 Required Reading) and frames defined by a loaded
+!!                 frame kernel (FK).
+!!
+!!                 When REF designates a non-inertial frame, the
+!!                 orientation of the frame is evaluated at an epoch
+!!                 dependent on the selected aberration correction. See
+!!                 the description of the output position vector PTARG
+!!                 for details.
+!!
+!!     ABCORR      indicates the aberration corrections to be applied to
+!!                 the position of the target body to account for
+!!                 one-way light time and stellar aberration.  See the
+!!                 discussion in the Particulars section for
+!!                 recommendations on how to choose aberration
+!!                 corrections.
+!!
+!!                 ABCORR may be any of the following:
+!!
+!!                    'NONE'     Apply no correction. Return the
+!!                               geometric position of the target body
+!!                               relative to the observer.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "reception" case in which photons depart from the
+!!                 target's location at the light-time corrected epoch
+!!                 ET-LT and *arrive* at the observer's location at ET:
+!!
+!!                    'LT'       Correct for one-way light time (also
+!!                               called "planetary aberration") using a
+!!                               Newtonian formulation. This correction
+!!                               yields the position of the target at
+!!                               the moment it emitted photons arriving
+!!                               at the observer at ET.
+!!
+!!                               The light time correction uses an
+!!                               iterative solution of the light time
+!!                               equation (see Particulars for details).
+!!                               The solution invoked by the 'LT' option
+!!                               uses one iteration.
+!!
+!!                    'LT+S'     Correct for one-way light time and
+!!                               stellar aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               position obtained with the 'LT' option
+!!                               to account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The result is the apparent
+!!                               position of the target---the position
+!!                               as seen by the observer.
+!!
+!!                    'CN'       Converged Newtonian light time
+!!                               correction. In solving the light time
+!!                               equation, the 'CN' correction iterates
+!!                               until the solution converges (three
+!!                               iterations on all supported platforms).
+!!                               Whether the 'CN+S' solution is
+!!                               substantially more accurate than the
+!!                               'LT' solution depends on the geometry
+!!                               of the participating objects and on the
+!!                               accuracy of the input data. In all
+!!                               cases this routine will execute more
+!!                               slowly when a converged solution is
+!!                               computed. See the Particulars section
+!!                               below for a discussion of precision of
+!!                               light time corrections.
+!!
+!!                    'CN+S'     Converged Newtonian light time
+!!                               correction and stellar aberration
+!!                               correction.
+!!
+!!                 The following values of ABCORR apply to the
+!!                 "transmission" case in which photons *depart* from
+!!                 the observer's location at ET and arrive at the
+!!                 target's location at the light-time corrected epoch
+!!                 ET+LT:
+!!
+!!                    'XLT'      "Transmission" case:  correct for
+!!                               one-way light time using a Newtonian
+!!                               formulation. This correction yields the
+!!                               position of the target at the moment it
+!!                               receives photons emitted from the
+!!                               observer's location at ET.
+!!
+!!                    'XLT+S'    "Transmission" case:  correct for
+!!                               one-way light time and stellar
+!!                               aberration using a Newtonian
+!!                               formulation. This option modifies the
+!!                               position obtained with the 'XLT' option
+!!                               to account for the observer's velocity
+!!                               relative to the solar system
+!!                               barycenter. The computed target
+!!                               position indicates the direction that
+!!                               photons emitted from the observer's
+!!                               location must be "aimed" to hit the
+!!                               target.
+!!
+!!                    'XCN'      "Transmission" case:  converged
+!!                               Newtonian light time correction.
+!!
+!!                    'XCN+S'    "Transmission" case:  converged
+!!                               Newtonian light time correction and
+!!                               stellar aberration correction.
+!!
+!!                 Neither special nor general relativistic effects are
+!!                 accounted for in the aberration corrections applied
+!!                 by this routine.
+!!
+!!                 Case and blanks are not significant in the string
+!!                 ABCORR.
+!!
+!!     OBS         is the NAIF ID code for the observing body.
+!!
+!! ## Detailed Output
+!!
+!!     PTARG       is a Cartesian 3-vector representing the position of
+!!                 the target body relative to the specified observer.
+!!                 PTARG is corrected for the specified aberrations, and
+!!                 is expressed with respect to the reference frame
+!!                 specified by REF.  The three components of PTARG
+!!                 represent the x-, y- and z-components of the target's
+!!                 position.
+!!
+!!                 PTARG points from the observer's location at ET to
+!!                 the aberration-corrected location of the target.
+!!                 Note that the sense of this position vector is
+!!                 independent of the direction of radiation travel
+!!                 implied by the aberration correction.
+!!
+!!                 Units are always km.
+!!
+!!                 Non-inertial frames are treated as follows: letting
+!!                 LTCENT be the one-way light time between the observer
+!!                 and the central body associated with the frame, the
+!!                 orientation of the frame is evaluated at ET-LTCENT,
+!!                 ET+LTCENT, or ET depending on whether the requested
+!!                 aberration correction is, respectively, for received
+!!                 radiation, transmitted radiation, or is omitted.
+!!                 LTCENT is computed using the method indicated by
+!!                 ABCORR.
+!!
+!!     LT          is the one-way light time between the observer and
+!!                 target in seconds.  If the target position is
+!!                 corrected for aberrations, then LT is the one-way
+!!                 light time between the observer and the light time
+!!                 corrected target location.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If name of target or observer cannot be translated to its
+!!        NAIF ID code, the error SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     2) If the reference frame REF is not a recognized reference
+!!        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
+!!
+!!     3) If the loaded kernels provide insufficient data to
+!!        compute the requested position vector, the deficiency will
+!!        be diagnosed by a routine in the call tree of this routine.
+!!
+!!     4) If an error occurs while reading an SPK or other kernel file,
+!!        the error  will be diagnosed by a routine in the call tree
+!!        of this routine.
+!!
+!!     5) If any of the required attributes of the reference frame REF
+!!        cannot be determined, 'SPICE(UNKNOWNFRAME2)' is signaled.
+!!
+!! ## Files
+!!
+!!     This routine computes positions using SPK files that have been
+!!     loaded into the SPICE system, normally via the kernel loading
+!!     interface routine FURNSH. See the routine FURNSH and the SPK
+!!     and KERNEL Required Reading for further information on loading
+!!     (and unloading) kernels.
+!!
+!!     If the output position PTARG is to be expressed relative to a
+!!     non-inertial frame, or if any of the ephemeris data used to
+!!     compute PTARG are expressed relative to a non-inertial frame in
+!!     the SPK files providing those data, additional kernels may be
+!!     needed to enable the reference frame transformations required to
+!!     compute the position.  Normally these additional kernels are PCK
+!!     files or frame kernels.  Any such kernels must already be loaded
+!!     at the time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     This routine is part of the user interface to the SPICE ephemeris
+!!     system.  It allows you to retrieve position information for any
+!!     ephemeris object relative to any other in a reference frame that
+!!     is convenient for further computations.
+!!
+!!     Aberration corrections
+!!     ======================
+!!
+!!     In space science or engineering applications one frequently
+!!     wishes to know where to point a remote sensing instrument, such
+!!     as an optical camera or radio antenna, in order to observe or
+!!     otherwise receive radiation from a target.  This pointing problem
+!!     is complicated by the finite speed of light:  one needs to point
+!!     to where the target appears to be as opposed to where it actually
+!!     is at the epoch of observation.  We use the adjectives
+!!     "geometric," "uncorrected," or "true" to refer to an actual
+!!     position or state of a target at a specified epoch.  When a
+!!     geometric position or state vector is modified to reflect how it
+!!     appears to an observer, we describe that vector by any of the
+!!     terms "apparent," "corrected," "aberration corrected," or "light
+!!     time and stellar aberration corrected." The SPICE Toolkit can
+!!     correct for two phenomena affecting the apparent location of an
+!!     object:  one-way light time (also called "planetary aberration")
+!!     and stellar aberration.
+!!
+!!     One-way light time
+!!     ------------------
+!!
+!!     Correcting for one-way light time is done by computing, given an
+!!     observer and observation epoch, where a target was when the
+!!     observed photons departed the target's location.  The vector from
+!!     the observer to this computed target location is called a "light
+!!     time corrected" vector.  The light time correction depends on the
+!!     motion of the target relative to the solar system barycenter, but
+!!     it is independent of the velocity of the observer relative to the
+!!     solar system barycenter. Relativistic effects such as light
+!!     bending and gravitational delay are not accounted for in the
+!!     light time correction performed by this routine.
+!!
+!!     Stellar aberration
+!!     ------------------
+!!
+!!     The velocity of the observer also affects the apparent location
+!!     of a target:  photons arriving at the observer are subject to a
+!!     "raindrop effect" whereby their velocity relative to the observer
+!!     is, using a Newtonian approximation, the photons' velocity
+!!     relative to the solar system barycenter minus the velocity of the
+!!     observer relative to the solar system barycenter.  This effect is
+!!     called "stellar aberration."  Stellar aberration is independent
+!!     of the velocity of the target.  The stellar aberration formula
+!!     used by this routine does not include (the much smaller)
+!!     relativistic effects.
+!!
+!!     Stellar aberration corrections are applied after light time
+!!     corrections:  the light time corrected target position vector is
+!!     used as an input to the stellar aberration correction.
+!!
+!!     When light time and stellar aberration corrections are both
+!!     applied to a geometric position vector, the resulting position
+!!     vector indicates where the target "appears to be" from the
+!!     observer's location.
+!!
+!!     As opposed to computing the apparent position of a target, one
+!!     may wish to compute the pointing direction required for
+!!     transmission of photons to the target.  This also requires
+!!     correction of the geometric target position for the effects of
+!!     light time and stellar aberration, but in this case the
+!!     corrections are computed for radiation traveling *from* the
+!!     observer to the target.
+!!
+!!     The "transmission" light time correction yields the target's
+!!     location as it will be when photons emitted from the observer's
+!!     location at ET arrive at the target.  The transmission stellar
+!!     aberration correction is the inverse of the traditional stellar
+!!     aberration correction:  it indicates the direction in which
+!!     radiation should be emitted so that, using a Newtonian
+!!     approximation, the sum of the velocity of the radiation relative
+!!     to the observer and of the observer's velocity, relative to the
+!!     solar system barycenter, yields a velocity vector that points in
+!!     the direction of the light time corrected position of the target.
+!!
+!!     One may object to using the term "observer" in the transmission
+!!     case, in which radiation is emitted from the observer's location.
+!!     The terminology was retained for consistency with earlier
+!!     documentation.
+!!
+!!     Below, we indicate the aberration corrections to use for some
+!!     common applications:
+!!
+!!        1) Find the apparent direction of a target for a remote-sensing
+!!           observation.
+!!
+!!              Use 'LT+S' or 'CN+S: apply both light time and stellar
+!!              aberration corrections.
+!!
+!!           Note that using light time corrections alone ('LT' or 'CN')
+!!           is generally not a good way to obtain an approximation to
+!!           an apparent target vector: since light time and stellar
+!!           aberration corrections often partially cancel each other,
+!!           it may be more accurate to use no correction at all than to
+!!           use light time alone.
+!!
+!!        2) Find the corrected pointing direction to radiate a signal
+!!           to a target. This computation is often applicable for
+!!           implementing communications sessions.
+!!
+!!              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
+!!              aberration corrections for transmission.
+!!
+!!        3) Compute the apparent position of a target body relative
+!!           to a star or other distant object.
+!!
+!!              Use 'LT', 'CN', 'LT+S', or 'CN+S' as needed to match the
+!!              correction applied to the position of the distant
+!!              object. For example, if a star position is obtained from
+!!              a catalog, the position vector may not be corrected for
+!!              stellar aberration. In this case, to find the angular
+!!              separation of the star and the limb of a planet, the
+!!              vector from the observer to the planet should be
+!!              corrected for light time but not stellar aberration.
+!!
+!!        4) Obtain an uncorrected position vector derived directly from
+!!           data in an SPK file.
+!!
+!!              Use 'NONE'.
+!!
+!!        5) Use a geometric position vector as a low-accuracy estimate
+!!           of the apparent position for an application where execution
+!!           speed is critical.
+!!
+!!              Use 'NONE'.
+!!
+!!        6) While this routine cannot perform the relativistic
+!!           aberration corrections required to compute positions
+!!           with the highest possible accuracy, it can supply the
+!!           geometric positions required as inputs to these
+!!           computations.
+!!
+!!              Use 'NONE', then apply high-accuracy aberration
+!!              corrections (not available in the SPICE Toolkit).
+!!
+!!     Below, we discuss in more detail how the aberration corrections
+!!     applied by this routine are computed.
+!!
+!!        Geometric case
+!!        ==============
+!!
+!!        SPKEZP begins by computing the geometric position T(ET) of the
+!!        target body relative to the solar system barycenter (SSB).
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the geometric position of the target body relative to the
+!!        observer. The one-way light time, LT, is given by
+!!
+!!                  | T(ET) - O(ET) |
+!!           LT = -------------------
+!!                          c
+!!
+!!        The geometric relationship between the observer, target, and
+!!        solar system barycenter is as shown:
+!!
+!!           SSB ---> O(ET)
+!!            |      /
+!!            |     /
+!!            |    /
+!!            |   /  T(ET) - O(ET)
+!!            V  V
+!!           T(ET)
+!!
+!!        The returned position vector is
+!!
+!!           T(ET) - O(ET)
+!!
+!!        Reception case
+!!        ==============
+!!
+!!        When any of the options 'LT', 'CN', 'LT+S', 'CN+S' is selected
+!!        for ABCORR, SPKEZP computes the position of the target body at
+!!        epoch ET-LT, where LT is the one-way light time.  Let T(t) and
+!!        O(t) represent the positions of the target and observer
+!!        relative to the solar system barycenter at time t; then LT is
+!!        the solution of the light-time equation
+!!
+!!                  | T(ET-LT) - O(ET) |
+!!           LT = ------------------------                            (1)
+!!                           c
+!!
+!!        The ratio
+!!
+!!            | T(ET) - O(ET) |
+!!          ---------------------                                     (2)
+!!                    c
+!!
+!!        is used as a first approximation to LT; inserting (2) into the
+!!        right hand side of the light-time equation (1) yields the
+!!        "one-iteration" estimate of the one-way light time ("LT").
+!!        Repeating the process until the estimates of LT converge
+!!        yields the "converged Newtonian" light time estimate ("CN").
+!!
+!!        Subtracting the geometric position of the observer O(ET) gives
+!!        the position of the target body relative to the observer:
+!!        T(ET-LT) - O(ET).
+!!
+!!           SSB ---> O(ET)
+!!            | \     |
+!!            |  \    |
+!!            |   \   | T(ET-LT) - O(ET)
+!!            |    \  |
+!!            V     V V
+!!           T(ET)  T(ET-LT)
+!!
+!!        The light time corrected position vector is
+!!
+!!           T(ET-LT) - O(ET)
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated toward the solar system barycenter-
+!!        relative velocity vector of the observer.  The rotation is
+!!        computed as follows:
+!!
+!!           Let r be the light time corrected vector from the observer
+!!           to the object, and v be the velocity of the observer with
+!!           respect to the solar system barycenter. Let w be the angle
+!!           between them. The aberration angle phi is given by
+!!
+!!              sin(phi) = v sin(w) / c
+!!
+!!           Let h be the vector given by the cross product
+!!
+!!              h = r X v
+!!
+!!           Rotate r by phi radians about h to obtain the apparent
+!!           position of the object.
+!!
+!!        Transmission case
+!!        ==================
+!!
+!!        When any of the options 'XLT', 'XCN', 'XLT+S', 'XCN+S' is
+!!        selected, SPKEZP computes the position of the target body T at
+!!        epoch ET+LT, where LT is the one-way light time.  LT is the
+!!        solution of the light-time equation
+!!
+!!                  | T(ET+LT) - O(ET) |
+!!           LT = ------------------------                            (3)
+!!                            c
+!!
+!!        Subtracting the geometric position of the observer, O(ET),
+!!        gives the position of the target body relative to the
+!!        observer: T(ET-LT) - O(ET).
+!!
+!!                   SSB --> O(ET)
+!!                  / |    *
+!!                 /  |  *  T(ET+LT) - O(ET)
+!!                /   |*
+!!               /   *|
+!!              V  V  V
+!!          T(ET+LT)  T(ET)
+!!
+!!        The light-time corrected position vector is
+!!
+!!           T(ET+LT) - O(ET)
+!!
+!!        If correction for stellar aberration is requested, the target
+!!        position is rotated away from the solar system barycenter-
+!!        relative velocity vector of the observer. The rotation is
+!!        computed as in the reception case, but the sign of the
+!!        rotation angle is negated.
+!!
+!!     Precision of light time corrections
+!!     ===================================
+!!
+!!        Corrections using one iteration of the light time solution
+!!        ----------------------------------------------------------
+!!
+!!        When the requested aberration correction is 'LT', 'LT+S',
+!!        'XLT', or 'XLT+S', only one iteration is performed in the
+!!        algorithm used to compute LT.
+!!
+!!        The relative error in this computation
+!!
+!!           | LT_ACTUAL - LT_COMPUTED |  /  LT_ACTUAL
+!!
+!!        is at most
+!!
+!!            (V/C)**2
+!!           ----------
+!!            1 - (V/C)
+!!
+!!        which is well approximated by (V/C)**2, where V is the
+!!        velocity of the target relative to an inertial frame and C is
+!!        the speed of light.
+!!
+!!        For nearly all objects in the solar system V is less than 60
+!!        km/sec. The value of C is ~300000 km/sec. Thus the
+!!        one-iteration solution for LT has a potential relative error
+!!        of not more than 4e-8. This is a potential light time error of
+!!        approximately 2e-5 seconds per astronomical unit of distance
+!!        separating the observer and target. Given the bound on V cited
+!!        above:
+!!
+!!           As long as the observer and target are separated by less
+!!           than 50 astronomical units, the error in the light time
+!!           returned using the one-iteration light time corrections is
+!!           less than 1 millisecond.
+!!
+!!           The magnitude of the corresponding position error, given
+!!           the above assumptions, may be as large as (V/C)**2 * the
+!!           distance between the observer and the uncorrected target
+!!           position: 300 km or equivalently 6 km/AU.
+!!
+!!        In practice, the difference between positions obtained using
+!!        one-iteration and converged light time is usually much smaller
+!!        than the value computed above and can be insignificant. For
+!!        example, for the spacecraft Mars Reconnaissance Orbiter and
+!!        Mars Express, the position error for the one-iteration light
+!!        time correction, applied to the spacecraft-to-Mars center
+!!        vector, is at the 1 cm level.
+!!
+!!        Comparison of results obtained using the one-iteration and
+!!        converged light time solutions is recommended when adequacy of
+!!        the one-iteration solution is in doubt.
+!!
+!!        Converged corrections
+!!        ---------------------
+!!
+!!        When the requested aberration correction is 'CN', 'CN+S',
+!!        'XCN', or 'XCN+S', as many iterations as are required for
+!!        convergence are performed in the computation of LT. Usually
+!!        the solution is found after three iterations. The relative
+!!        error present in this case is at most
+!!
+!!            (V/C)**4
+!!           ----------
+!!            1 - (V/C)
+!!
+!!        which is well approximated by (V/C)**4.
+!!
+!!           The precision of this computation (ignoring round-off
+!!           error) is better than 4e-11 seconds for any pair of objects
+!!           less than 50 AU apart, and having speed relative to the
+!!           solar system barycenter less than 60 km/s.
+!!
+!!           The magnitude of the corresponding position error, given
+!!           the above assumptions, may be as large as (V/C)**4 * the
+!!           distance between the observer and the uncorrected target
+!!           position: 1.2 cm at 50 AU or equivalently 0.24 mm/AU.
+!!
+!!        However, to very accurately model the light time between
+!!        target and observer one must take into account effects due to
+!!        general relativity. These may be as high as a few hundredths
+!!        of a millisecond for some objects.
+!!
+!!     Relativistic Corrections
+!!     =========================
+!!
+!!     This routine does not attempt to perform either general or
+!!     special relativistic corrections in computing the various
+!!     aberration corrections.  For many applications relativistic
+!!     corrections are not worth the expense of added computation
+!!     cycles.  If however, your application requires these additional
+!!     corrections we suggest you consult the astronomical almanac (page
+!!     B36) for a discussion of how to carry out these corrections.
+!!
+!! ## Examples
+!!
+!!     1)  Load a planetary ephemeris SPK, then look up a series of
+!!         geometric positions of the moon relative to the earth,
+!!         referenced to the J2000 frame.
+!!
+!!               IMPLICIT NONE
+!!         C
+!!         C     Local constants
+!!         C
+!!               CHARACTER*(*)         FRAME
+!!               PARAMETER           ( FRAME  = 'J2000' )
+!!
+!!               CHARACTER*(*)         ABCORR
+!!               PARAMETER           ( ABCORR = 'NONE' )
+!!
+!!         C
+!!         C     The name of the SPK file shown here is fictitious;
+!!         C     you must supply the name of an SPK file available
+!!         C     on your own computer system.
+!!         C
+!!               CHARACTER*(*)         SPK
+!!               PARAMETER           ( SPK    = 'planet.bsp' )
+!!
+!!         C
+!!         C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
+!!         C
+!!               DOUBLE PRECISION      ET0
+!!               PARAMETER           ( ET0    = 0.0D0 )
+!!
+!!         C
+!!         C     Use a time step of 1 hour; look up 100 positions.
+!!         C
+!!               DOUBLE PRECISION      STEP
+!!               PARAMETER           ( STEP   = 3600.0D0 )
+!!
+!!               INTEGER               MAXITR
+!!               PARAMETER           ( MAXITR = 100 )
+!!
+!!         C
+!!         C     The NAIF IDs of the earth and moon are 399 and 301
+!!         C     respectively.
+!!         C
+!!               INTEGER               OBSRVR
+!!               PARAMETER           ( OBSRVR = 399 )
+!!
+!!               INTEGER               TARGET
+!!               PARAMETER           ( TARGET = 301 )
+!!
+!!         C
+!!         C     Local variables
+!!         C
+!!               DOUBLE PRECISION      ET
+!!               DOUBLE PRECISION      LT
+!!               DOUBLE PRECISION      POS ( 3 )
+!!
+!!               INTEGER               I
+!!
+!!         C
+!!         C     Load the SPK file.
+!!         C
+!!               CALL FURNSH ( SPK )
+!!
+!!         C
+!!         C     Step through a series of epochs, looking up a
+!!         C     position vector at each one.
+!!         C
+!!               DO I = 1, MAXITR
+!!
+!!                  ET = ET0 + (I-1)*STEP
+!!
+!!                  CALL SPKEZP ( TARGET, ET, FRAME, ABCORR, OBSRVR,
+!!              .                 POS,    LT                        )
+!!
+!!                  WRITE (*,*) 'ET = ', ET
+!!                  WRITE (*,*) 'J2000 x-position (km):   ', POS(1)
+!!                  WRITE (*,*) 'J2000 y-position (km):   ', POS(2)
+!!                  WRITE (*,*) 'J2000 z-position (km):   ', POS(3)
+!!                  WRITE (*,*) ' '
+!!
+!!               END DO
+!!
+!!               END
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     SPK Required Reading.
+!!
+!! ## Author and Institution
+!!
+!!     C.H. Acton      (JPL)
+!!     B.V. Semenov    (JPL)
+!!     N.J. Bachman    (JPL)
+!!     W.L. Taber      (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.2.0, 03-JUL-2014 (NJB) (BVS)
+!!
+!!        Discussion of light time corrections was updated. Assertions
+!!        that converged light time corrections are unlikely to be
+!!        useful were removed.
+!!
+!!     Last update was 23-SEP-2013 (BVS)
+!!
+!!        Bug fix: added a check and an exception for the FOUND flag
+!!        returned by FRINFO.
+!!
+!!        Updated to save the input frame name and POOL state counter
+!!        and to do frame name-ID conversion only if the counter has
+!!        changed.
+!!
+!!-    SPICELIB Version 3.1.1, 04-APR-2008 (NJB)
+!!
+!!        Corrected minor error in description of XLT+S aberration
+!!        correction.
+!!
+!!-    SPICELIB Version 3.1.0, 06-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.
+!!
+!!-    SPICELIB Version 3.0.3, 12-DEC-2004 (NJB)
+!!
+!!        Minor header error was corrected.
+!!
+!!-    SPICELIB Version 3.0.2, 20-OCT-2003 (EDW)
+!!
+!!        Added mention that LT returns in seconds.
+!!
+!!-    SPICELIB Version 3.0.1, 29-JUL-2003 (NJB) (CHA)
+!!
+!!        Various minor header changes were made to improve clarity.
+!!
+!!-    SPICELIB Version 3.0.0, 31-DEC-2001 (NJB)
+!!
+!!        Updated to handle aberration corrections for transmission
+!!        of radiation.  Formerly, only the reception case was
+!!        supported.  The header was revised and expanded to explain
+!!        the functionality of this routine in more detail.
+!!
+!!-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     using body names get position relative to an observer
+!!     get position relative observer corrected for aberrations
+!!     read ephemeris data
+!!     read trajectory data
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.  The new checks
+!!        are intended to prevent arithmetic operations from
+!!        being performed with uninitialized or invalid data.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Saved frame name length.
+!!
+!!     Local variables
+!!
+!!     Saved frame name/ID item declarations.
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv
       use pepper_strings, only: eqchr, eqstr, ltrim
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzctr.inc'
       character(*), parameter :: rname = 'ZZSPKZP0'
       integer(ip), parameter :: frnmln = 32
       real(wp) :: ltcent
@@ -22382,344 +21750,325 @@ contains
       end procedure zzspkzp0
 
       module procedure zzdynfrm
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     For a specified dynamic frame, find the transformation
-!     that maps states from the dynamic frame to its base frame.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     PCK
-!     SPK
-!
-! $ Keywords
-!
-!     FRAMES
-!     PRIVATE
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     INFRAM      is the frame ID code for a dynamic reference frame.
-!                 Note that this interface differs from that of TKFRAM,
-!                 which uses a class ID to identify the frame.
-!
-!                 In this routine, we refer this frame both as the
-!                 "input frame" and the "defined frame."
-!
-!     CENTER      is NAIF ID code for the center of the frame
-!                 designated by INFRAM.  This code, although derivable
-!                 from INFRAM, is passed in for convenience.
-!
-!     ET          is an epoch in ephemeris seconds past J2000 for which
-!                 the caller requests a state transformation matrix.
-!
-! $ Detailed_Output
-!
-!     XFORM       is a 6x6 matrix that transforms states relative to
-!                 INFRAM to states relative to BASFRM.
-!
-!     BASFRM      is the frame ID code of the base frame associated
-!                 with INFRAM.  The 6x6 matrix XFORM transforms states
-!                 relative to INFRAM to states relative to BASFRM. The
-!                 state transformation is performed by left-multiplying
-!                 by XFORM a state expressed relative to INFRAM. This
-!                 is easily accomplished via the subroutine call shown
-!                 below.
-!
-!                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
-!
-! $ Parameters
-!
-!     See include file zzdyn.inc.
-!
-! $ Exceptions
-!
-!     1)  If a dynamic frame evaluation requires unavailable kernel
-!         data, the error will be diagnosed by routines in the call
-!         tree of this routine.
-!
-!     2)  If a precession model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     3)  If a nutation model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     4)  If an obliquity model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     5)  If an unrecognized precession model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     6)  If an unrecognized nutation model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     7)  If an unrecognized obliquity model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     8)  If an attempt to look up the center of a frame does
-!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
-!         signaled.
-!
-!     9)  In a two-vector frame definition, if a constant vector
-!         specification method is not recognized, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     10) In a two-vector frame definition, if a vector definition
-!         method is not recognized, the error SPICE(NOTSUPPORTED)
-!         is signaled.
-!
-!     11) If an unrecognized dynamic frame family is specified, the
-!          error SPICE(NOTSUPPORTED) is signaled.
-!
-!     12) If an unrecognized dynamic frame definition style is
-!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     13) If an unrecognized dynamic frame rotation state is
-!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     14) If both a freeze epoch and a rotation state are specified,
-!         the error SPICE(FRAMEDEFERROR) is signaled.
-!
-!     15) If neither a freeze epoch nor a rotation state are specified
-!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
-!         signaled.
-!
-!     16) In a two-vector frame definition, if an invalid axis
-!         specification is encountered, the error SPICE(INVALIDAXIS) is
-!         signaled.
-!
-!     17) In a two-vector frame definition using a target near point
-!         vector, if the body-fixed frame associated with the target
-!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
-!
-!     18) If the state of the near point on a target as seen from
-!         an observer cannot be computed, the error
-!         SPICE(DEGENERATECASE) is signaled.
-!
-!     19) If a dynamic frame evaluation requires excessive recursion
-!         depth, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-!     20) When a two-vector dynamic frame is evaluated, if the
-!         primary and secondary vectors have angular separation less
-!         than the minimum allowed value, or if the angular separation
-!         differs from Pi by less than the minimum allowed value, the
-!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
-!         separation is given by the parameter LBSEP; this value may be
-!         overridden by supplying a different value in the frame
-!         definition.
-!
-!     21) If invalid units occur in a frame definition, the error
-!         will be diagnosed by a routine in the call tree of this
-!         routine.
-!
-!     22) If an invalid Euler axis sequence occurs in a frame
-!         definition, the error will be diagnosed by a routine in the
-!         call tree of this routine.
-!
-!     23) If a body RADII vector has other than exactly thee elements,
-!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
-!         the call tree of this routine.
-!
-!     24) If a body RADII vector has any element less-than or
-!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
-!         a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     1) SPK files containing data for each observer and target
-!        are required to support two-vector frames.  Note that
-!        observer-target pairs can be implicit, as in the case
-!        of a constant vector whose frame is evaluated at a
-!        light-time corrected epoch:  the light time the frame
-!        center to an observer must be computable in this case,
-!        which implies the state of the frame center as seen by
-!        the observer must be computable.
-!
-!     2) Any of SPK, CK, PCK, and frame kernels will also be required
-!        if any frames referenced in the definition of INFRAM (as a
-!        base frame, velocity vector frame, or constant vector frame)
-!        require them, or if any vectors used to define INFRAM require
-!        these data in order to be computable.
-!
-!     3) When CK data are required, one or more associated SCLK kernels
-!        ---normally, one kernel per spacecraft clock---are
-!        required as well.  A leapseconds kernel may be required
-!        whenever an SCLK kernel is required.
-!
-!     4) When a two-vector frame is defined using a target near point,
-!        a PCK file giving orientation and providing a triaxial shape
-!        model for the target body is required.
-!
-! $ Particulars
-!
-!     Currently only parameterized dynamic frames are supported by
-!     this routine.
-!
-!     Currently supported parameterized dynamic families are:
-!
-!        Two-vector
-!        ==========
-!
-!           Vector definitions
-!           ------------------
-!           Observer-target position
-!           Observer-target velocity
-!           Near point on target
-!           Constant vector in specified frame
-!
-!        Mean Equator and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!
-!        Mean Ecliptic and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!                   1980 IAU mean obliquity model
-!
-!        True Equator and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!                   1980 IAU nutation model
-!
-!        Euler frames
-!        ============
-!
-!           Euler angle definitions
-!           -----------------------
-!           Polynomial
-!
-!        Product frames
-!        ==============
-!
-!           Product definitions
-!           -------------------
-!           Array of "from" frames
-!           Array of "to" frames
-!
-! $ Examples
-!
-!     See FRMGET.
-!
-! $ Restrictions
-!
-!     1) This is a SPICE private routine; the routine is subject
-!        to change without notice.  User applications should not
-!        call this routine.
-!
-!     2) Many numerical problems can occur when dynamic frames
-!        are evaluated.  Users must determine whether dynamic frame
-!        definitions are suitable for their applications. See the
-!        Exceptions section for a list of possible problems.
-!
-!     3) Use of aberration corrections may lead to severe loss of
-!        accuracy in state transformation derivatives.
-!
-!     4) Two-vector frame definitions can suffer extreme loss of
-!         precision due to near-singular geometry.
-!
-!     5) Two-vector frame definitions involving velocity vectors
-!        require numerical differentiation in order to compute the
-!        derivative of the state transformation.  Such derivatives may
-!        have low accuracy.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
-!
-!        Support for product frames was added. Re-ordered header
-!        sections.
-!
-!        Body radii accessed from kernel pool using ZZGFTREB.
-!
-!        Bug fix: aberration correction strings for observer-target
-!        velocity vectors are now parsed using ZZVALCOR. This improves
-!        error checking. Note that aberration correction strings for
-!        constant vectors used in two-vector frame specifications are
-!        still parsed using ZZPRSCOR.
-!
-!        Bug fix: calls to FAILED after calls to ZZDYNVAC were added.
-!
-!        Added some FAILED() calls.
-!
-!-    SPICELIB Version 1.1.1, 02-MAR-2010 (NJB)
-!
-!        Typo in Brief_I/O section was corrected: "Class ID"
-!        was changed to "Frame ID." Corrected order of header
-!        sections.
-!
-!-    SPICELIB Version 1.1.0, 23-OCT-2005 (NJB)
-!
-!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
-!
-!        Call to ZZBODVCD was replaced with call to BODVCD.
-!
-!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     For a specified dynamic frame, find the transformation
+!!     that maps states from the dynamic frame to its base frame.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     PCK
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRAM      is the frame ID code for a dynamic reference frame.
+!!                 Note that this interface differs from that of TKFRAM,
+!!                 which uses a class ID to identify the frame.
+!!
+!!                 In this routine, we refer this frame both as the
+!!                 "input frame" and the "defined frame."
+!!
+!!     CENTER      is NAIF ID code for the center of the frame
+!!                 designated by INFRAM.  This code, although derivable
+!!                 from INFRAM, is passed in for convenience.
+!!
+!!     ET          is an epoch in ephemeris seconds past J2000 for which
+!!                 the caller requests a state transformation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     XFORM       is a 6x6 matrix that transforms states relative to
+!!                 INFRAM to states relative to BASFRM.
+!!
+!!     BASFRM      is the frame ID code of the base frame associated
+!!                 with INFRAM.  The 6x6 matrix XFORM transforms states
+!!                 relative to INFRAM to states relative to BASFRM. The
+!!                 state transformation is performed by left-multiplying
+!!                 by XFORM a state expressed relative to INFRAM. This
+!!                 is easily accomplished via the subroutine call shown
+!!                 below.
+!!
+!!                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
+!!
+!! ## Parameters
+!!
+!!     See include file zzdyn.inc.
+!!
+!! ## Exceptions
+!!
+!!     1)  If a dynamic frame evaluation requires unavailable kernel
+!!         data, the error will be diagnosed by routines in the call
+!!         tree of this routine.
+!!
+!!     2)  If a precession model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     3)  If a nutation model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     4)  If an obliquity model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     5)  If an unrecognized precession model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     6)  If an unrecognized nutation model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     7)  If an unrecognized obliquity model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     8)  If an attempt to look up the center of a frame does
+!!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
+!!         signaled.
+!!
+!!     9)  In a two-vector frame definition, if a constant vector
+!!         specification method is not recognized, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     10) In a two-vector frame definition, if a vector definition
+!!         method is not recognized, the error SPICE(NOTSUPPORTED)
+!!         is signaled.
+!!
+!!     11) If an unrecognized dynamic frame family is specified, the
+!!          error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     12) If an unrecognized dynamic frame definition style is
+!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     13) If an unrecognized dynamic frame rotation state is
+!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     14) If both a freeze epoch and a rotation state are specified,
+!!         the error SPICE(FRAMEDEFERROR) is signaled.
+!!
+!!     15) If neither a freeze epoch nor a rotation state are specified
+!!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
+!!         signaled.
+!!
+!!     16) In a two-vector frame definition, if an invalid axis
+!!         specification is encountered, the error SPICE(INVALIDAXIS) is
+!!         signaled.
+!!
+!!     17) In a two-vector frame definition using a target near point
+!!         vector, if the body-fixed frame associated with the target
+!!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
+!!
+!!     18) If the state of the near point on a target as seen from
+!!         an observer cannot be computed, the error
+!!         SPICE(DEGENERATECASE) is signaled.
+!!
+!!     19) If a dynamic frame evaluation requires excessive recursion
+!!         depth, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!!     20) When a two-vector dynamic frame is evaluated, if the
+!!         primary and secondary vectors have angular separation less
+!!         than the minimum allowed value, or if the angular separation
+!!         differs from Pi by less than the minimum allowed value, the
+!!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
+!!         separation is given by the parameter LBSEP; this value may be
+!!         overridden by supplying a different value in the frame
+!!         definition.
+!!
+!!     21) If invalid units occur in a frame definition, the error
+!!         will be diagnosed by a routine in the call tree of this
+!!         routine.
+!!
+!!     22) If an invalid Euler axis sequence occurs in a frame
+!!         definition, the error will be diagnosed by a routine in the
+!!         call tree of this routine.
+!!
+!!     23) If a body RADII vector has other than exactly thee elements,
+!!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     24) If a body RADII vector has any element less-than or
+!!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     1) SPK files containing data for each observer and target
+!!        are required to support two-vector frames.  Note that
+!!        observer-target pairs can be implicit, as in the case
+!!        of a constant vector whose frame is evaluated at a
+!!        light-time corrected epoch:  the light time the frame
+!!        center to an observer must be computable in this case,
+!!        which implies the state of the frame center as seen by
+!!        the observer must be computable.
+!!
+!!     2) Any of SPK, CK, PCK, and frame kernels will also be required
+!!        if any frames referenced in the definition of INFRAM (as a
+!!        base frame, velocity vector frame, or constant vector frame)
+!!        require them, or if any vectors used to define INFRAM require
+!!        these data in order to be computable.
+!!
+!!     3) When CK data are required, one or more associated SCLK kernels
+!!        ---normally, one kernel per spacecraft clock---are
+!!        required as well.  A leapseconds kernel may be required
+!!        whenever an SCLK kernel is required.
+!!
+!!     4) When a two-vector frame is defined using a target near point,
+!!        a PCK file giving orientation and providing a triaxial shape
+!!        model for the target body is required.
+!!
+!! ## Particulars
+!!
+!!     Currently only parameterized dynamic frames are supported by
+!!     this routine.
+!!
+!!     Currently supported parameterized dynamic families are:
+!!
+!!        Two-vector
+!!        ==========
+!!
+!!           Vector definitions
+!!           ------------------
+!!           Observer-target position
+!!           Observer-target velocity
+!!           Near point on target
+!!           Constant vector in specified frame
+!!
+!!        Mean Equator and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!
+!!        Mean Ecliptic and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!                   1980 IAU mean obliquity model
+!!
+!!        True Equator and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!                   1980 IAU nutation model
+!!
+!!        Euler frames
+!!        ============
+!!
+!!           Euler angle definitions
+!!           -----------------------
+!!           Polynomial
+!!
+!!        Product frames
+!!        ==============
+!!
+!!           Product definitions
+!!           -------------------
+!!           Array of "from" frames
+!!           Array of "to" frames
+!!
+!! ## Examples
+!!
+!!     See FRMGET.
+!!
+!! ## Restrictions
+!!
+!!     1) This is a SPICE private routine; the routine is subject
+!!        to change without notice.  User applications should not
+!!        call this routine.
+!!
+!!     2) Many numerical problems can occur when dynamic frames
+!!        are evaluated.  Users must determine whether dynamic frame
+!!        definitions are suitable for their applications. See the
+!!        Exceptions section for a list of possible problems.
+!!
+!!     3) Use of aberration corrections may lead to severe loss of
+!!        accuracy in state transformation derivatives.
+!!
+!!     4) Two-vector frame definitions can suffer extreme loss of
+!!         precision due to near-singular geometry.
+!!
+!!     5) Two-vector frame definitions involving velocity vectors
+!!        require numerical differentiation in order to compute the
+!!        derivative of the state transformation.  Such derivatives may
+!!        have low accuracy.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
+!!
+!!        Support for product frames was added. Re-ordered header
+!!        sections.
+!!
+!!        Body radii accessed from kernel pool using ZZGFTREB.
+!!
+!!        Bug fix: aberration correction strings for observer-target
+!!        velocity vectors are now parsed using ZZVALCOR. This improves
+!!        error checking. Note that aberration correction strings for
+!!        constant vectors used in two-vector frame specifications are
+!!        still parsed using ZZPRSCOR.
+!!
+!!        Bug fix: calls to FAILED after calls to ZZDYNVAC were added.
+!!
+!!        Added some FAILED() calls.
+!!
+!!-    SPICELIB Version 1.1.1, 02-MAR-2010 (NJB)
+!!
+!!        Typo in Brief_I/O section was corrected: "Class ID"
+!!        was changed to "Frame ID." Corrected order of header
+!!        sections.
+!!
+!!-    SPICELIB Version 1.1.0, 23-OCT-2005 (NJB)
+!!
+!!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
+!!
+!!        Call to ZZBODVCD was replaced with call to BODVCD.
+!!
+!!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard, isrchc, moved
       use pepper_math, only: latrec, mxmg, mxvg, polyds, vequ, vhat, vminug, vpack, vsep, vsubg
       use pepper_strings, only: cmprss, eqstr, intstr, ucase
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
       implicit none
       real(wp) :: epoch_1(1)  !! one-element copy of epoch (array argument)
       real(wp) :: minsep_1(1)  !! one-element copy of minsep (array argument)
@@ -22728,9 +22077,6 @@ contains
       real(wp) :: lat_1(1)  !! one-element copy of lat (array argument)
       real(wp) :: lon_1(1)  !! one-element copy of lon (array argument)
       real(wp) :: t0_1(1)  !! one-element copy of t0 (array argument)
-      include 'frmtyp.inc'
-      include 'zzabcorr.inc'
-      include 'zzdyn.inc'
       character(*), parameter :: rname = 'ZZDYNFRM'
       integer(ip), parameter :: timlen = 50
       integer(ip), parameter :: vnamln = 4
@@ -24475,325 +23821,306 @@ contains
       end procedure zzdynfrm
 
       module procedure zzdynrot
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     For a specified dynamic frame, find the rotation that maps
-!     positions from the dynamic frame to its base frame.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     PCK
-!     SPK
-!
-! $ Keywords
-!
-!     FRAMES
-!     PRIVATE
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     INFRAM      is the frame ID code for a dynamic reference frame.
-!                 Note that this interface differs from that of TKFRAM,
-!                 which uses a class ID to identify the frame.
-!
-!                 In this routine, we refer this frame both as the
-!                 "input frame" and the "defined frame."
-!
-!     CENTER      is NAIF ID code for the center of the frame
-!                 designated by INFRAM.  This code, although derivable
-!                 from INFRAM, is passed in for convenience.
-!
-!     ET          is an epoch in ephemeris seconds past J2000 for which
-!                 the caller requests a rotation matrix.
-!
-! $ Detailed_Output
-!
-!     ROTATE      is a 3x3 rotation matrix that transforms positions
-!                 relative to INFRAM to positions relative to BASFRM.
-!
-!     BASFRM      is the frame ID code of the base frame associated
-!                 with INFRAM.  The 3x3 matrix ROTATE transforms
-!                 positions relative to INFRAM to positions relative to
-!                 BASFRM. The position transformation is performed by
-!                 left-multiplying by ROTATE a position expressed
-!                 relative to INFRAM. This is easily accomplished via
-!                 the subroutine call shown below.
-!
-!                    CALL MXV ( ROTATE, INPOS, OUTPOS )
-!
-! $ Parameters
-!
-!     See include file zzdyn.inc.
-!
-! $ Exceptions
-!
-!     1)  If a dynamic frame evaluation requires unavailable kernel
-!         data, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-!     2)  If a precession model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     3)  If a nutation model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     4)  If an obliquity model is used to implement a frame centered
-!         at a body for which the model is not applicable, the error
-!         SPICE(INVALIDSELECTION) will be signaled.
-!
-!     5)  If an unrecognized precession model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     6)  If an unrecognized nutation model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     7)  If an unrecognized obliquity model is specified, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     8)  If an attempt to look up the center of a frame does
-!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
-!         signaled.
-!
-!     9)  In a two-vector frame definition, if a constant vector
-!         specification method is not recognized, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     10) In a two-vector frame definition, if a vector definition
-!         method is not recognized, the error SPICE(NOTSUPPORTED)
-!         is signaled.
-!
-!     11) If an unrecognized dynamic frame family is specified, the
-!          error SPICE(NOTSUPPORTED) is signaled.
-!
-!     12) If an unrecognized dynamic frame definition style is
-!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     13) If an unrecognized dynamic frame rotation state is
-!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     14) If both a freeze epoch and a rotation state are specified,
-!         the error SPICE(FRAMEDEFERROR) is signaled.
-!
-!     15) If neither a freeze epoch nor a rotation state are specified
-!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
-!         signaled.
-!
-!     16) In a two-vector frame definition, if an invalid axis
-!         specification is encountered, the error SPICE(INVALIDAXIS) is
-!         signaled.
-!
-!     17) In a two-vector frame definition using a target near point
-!         vector, if the body-fixed frame associated with the target
-!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
-!
-!     18) If a dynamic frame evaluation requires excessive recursion
-!         depth, the error will be diagnosed by routines in the call
-!         tree of this routine.
-!
-!     19) When a two-vector dynamic frame is evaluated, if the
-!         primary and secondary vectors have angular separation less
-!         than the minimum allowed value, or if the angular separation
-!         differs from Pi by less than the minimum allowed value, the
-!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
-!         separation is given by the parameter LBSEP; this value may be
-!         overridden by supplying a different value in the frame
-!         definition.
-!
-!     20) If invalid units occur in a frame definition, the error
-!         will be diagnosed by a routine in the call tree of this
-!         routine.
-!
-!     21) If an invalid Euler axis sequence occurs in a frame
-!         definition, the error will be diagnosed by a routine in the
-!         call tree of this routine.
-!
-!     22) If a body RADII vector has other than exactly thee elements,
-!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
-!         the call tree of this routine.
-!
-!     23) If a body RADII vector has any element less-than or
-!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
-!         a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     1) SPK files containing data for each observer and target
-!        are required to support two-vector frames.  Note that
-!        observer-target pairs can be implicit, as in the case
-!        of a constant vector whose frame is evaluated at a
-!        light-time corrected epoch:  the light time the frame
-!        center to an observer must be computable in this case,
-!        which implies the state of the frame center as seen by
-!        the observer must be computable.
-!
-!     2) Any of SPK, CK, PCK, and frame kernels will also be required
-!        if any frames referenced in the definition of INFRAM (as a
-!        base frame, velocity vector frame, or constant vector frame)
-!        require them, or if any vectors used to define INFRAM require
-!        these data in order to be computable.
-!
-!     3) When CK data are required, one or more associated SCLK kernels
-!        ---normally, one kernel per spacecraft clock---are
-!        required as well.  A leapseconds kernel may be required
-!        whenever an SCLK kernel is required.
-!
-!     4) When a two-vector frame is defined using a target near point,
-!        a PCK file giving orientation and providing a triaxial shape
-!        model for the target body is required.
-!
-! $ Particulars
-!
-!     Currently only parameterized dynamic frames are supported by
-!     this routine.
-!
-!     Currently supported parameterized dynamic families are:
-!
-!        Two-vector
-!        ==========
-!
-!           Vector definitions
-!           ------------------
-!           Observer-target position
-!           Observer-target velocity
-!           Near point on target
-!           Constant vector in specified frame
-!
-!        Mean Equator and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!
-!        Mean Ecliptic and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!                   1980 IAU mean obliquity model
-!
-!        True Equator and Equinox of Date
-!        ================================
-!
-!           Bodies and models
-!           -----------------
-!           Earth:  1976 IAU precession model
-!                   1980 IAU nutation model
-!
-!        Euler frames
-!        ============
-!
-!           Euler angle definitions
-!           -----------------------
-!           Polynomial
-!
-!        Product frames
-!        ==============
-!
-!           Product definitions
-!           -------------------
-!           Array of "from" frames
-!           Array of "to" frames
-!
-! $ Examples
-!
-!     See ROTGET.
-!
-! $ Restrictions
-!
-!     1) This is a SPICE private routine; the routine is subject
-!        to change without notice.  User applications should not
-!        call this routine.
-!
-!     2) Many numerical problems can occur when dynamic frames
-!        are evaluated.  Users must determine whether dynamic frame
-!        definitions are suitable for their applications. See the
-!        Exceptions section for a list of possible problems.
-!
-!     3) Two-vector frame definitions can suffer extreme loss of
-!         precision due to near-singular geometry.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
-!
-!        Support for product frames was added.
-!
-!        Body radii accessed from kernel pool using ZZGFTREB.
-!
-!        Bug fix: aberration correction strings for observer-target
-!        velocity vectors are now parsed using ZZVALCOR. This improves
-!        error checking. Note that aberration correction strings for
-!        constant vectors used in two-vector frame specifications are
-!        still parsed using ZZPRSCOR.
-!
-!        Code clean-up: unnecessary call to ZZPRSCOR was removed.
-!
-!        Added and removed some FAILED() calls.
-!
-!-    SPICELIB Version 1.1.0, 24-OCT-2005 (NJB)
-!
-!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
-!
-!        Call to ZZBODVCD was replaced with call to BODVCD.
-!
-!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     For a specified dynamic frame, find the rotation that maps
+!!     positions from the dynamic frame to its base frame.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     PCK
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRAM      is the frame ID code for a dynamic reference frame.
+!!                 Note that this interface differs from that of TKFRAM,
+!!                 which uses a class ID to identify the frame.
+!!
+!!                 In this routine, we refer this frame both as the
+!!                 "input frame" and the "defined frame."
+!!
+!!     CENTER      is NAIF ID code for the center of the frame
+!!                 designated by INFRAM.  This code, although derivable
+!!                 from INFRAM, is passed in for convenience.
+!!
+!!     ET          is an epoch in ephemeris seconds past J2000 for which
+!!                 the caller requests a rotation matrix.
+!!
+!! ## Detailed Output
+!!
+!!     ROTATE      is a 3x3 rotation matrix that transforms positions
+!!                 relative to INFRAM to positions relative to BASFRM.
+!!
+!!     BASFRM      is the frame ID code of the base frame associated
+!!                 with INFRAM.  The 3x3 matrix ROTATE transforms
+!!                 positions relative to INFRAM to positions relative to
+!!                 BASFRM. The position transformation is performed by
+!!                 left-multiplying by ROTATE a position expressed
+!!                 relative to INFRAM. This is easily accomplished via
+!!                 the subroutine call shown below.
+!!
+!!                    CALL MXV ( ROTATE, INPOS, OUTPOS )
+!!
+!! ## Parameters
+!!
+!!     See include file zzdyn.inc.
+!!
+!! ## Exceptions
+!!
+!!     1)  If a dynamic frame evaluation requires unavailable kernel
+!!         data, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!!     2)  If a precession model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     3)  If a nutation model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     4)  If an obliquity model is used to implement a frame centered
+!!         at a body for which the model is not applicable, the error
+!!         SPICE(INVALIDSELECTION) will be signaled.
+!!
+!!     5)  If an unrecognized precession model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     6)  If an unrecognized nutation model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     7)  If an unrecognized obliquity model is specified, the
+!!         error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     8)  If an attempt to look up the center of a frame does
+!!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
+!!         signaled.
+!!
+!!     9)  In a two-vector frame definition, if a constant vector
+!!         specification method is not recognized, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     10) In a two-vector frame definition, if a vector definition
+!!         method is not recognized, the error SPICE(NOTSUPPORTED)
+!!         is signaled.
+!!
+!!     11) If an unrecognized dynamic frame family is specified, the
+!!          error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     12) If an unrecognized dynamic frame definition style is
+!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     13) If an unrecognized dynamic frame rotation state is
+!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     14) If both a freeze epoch and a rotation state are specified,
+!!         the error SPICE(FRAMEDEFERROR) is signaled.
+!!
+!!     15) If neither a freeze epoch nor a rotation state are specified
+!!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
+!!         signaled.
+!!
+!!     16) In a two-vector frame definition, if an invalid axis
+!!         specification is encountered, the error SPICE(INVALIDAXIS) is
+!!         signaled.
+!!
+!!     17) In a two-vector frame definition using a target near point
+!!         vector, if the body-fixed frame associated with the target
+!!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
+!!
+!!     18) If a dynamic frame evaluation requires excessive recursion
+!!         depth, the error will be diagnosed by routines in the call
+!!         tree of this routine.
+!!
+!!     19) When a two-vector dynamic frame is evaluated, if the
+!!         primary and secondary vectors have angular separation less
+!!         than the minimum allowed value, or if the angular separation
+!!         differs from Pi by less than the minimum allowed value, the
+!!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
+!!         separation is given by the parameter LBSEP; this value may be
+!!         overridden by supplying a different value in the frame
+!!         definition.
+!!
+!!     20) If invalid units occur in a frame definition, the error
+!!         will be diagnosed by a routine in the call tree of this
+!!         routine.
+!!
+!!     21) If an invalid Euler axis sequence occurs in a frame
+!!         definition, the error will be diagnosed by a routine in the
+!!         call tree of this routine.
+!!
+!!     22) If a body RADII vector has other than exactly thee elements,
+!!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     23) If a body RADII vector has any element less-than or
+!!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     1) SPK files containing data for each observer and target
+!!        are required to support two-vector frames.  Note that
+!!        observer-target pairs can be implicit, as in the case
+!!        of a constant vector whose frame is evaluated at a
+!!        light-time corrected epoch:  the light time the frame
+!!        center to an observer must be computable in this case,
+!!        which implies the state of the frame center as seen by
+!!        the observer must be computable.
+!!
+!!     2) Any of SPK, CK, PCK, and frame kernels will also be required
+!!        if any frames referenced in the definition of INFRAM (as a
+!!        base frame, velocity vector frame, or constant vector frame)
+!!        require them, or if any vectors used to define INFRAM require
+!!        these data in order to be computable.
+!!
+!!     3) When CK data are required, one or more associated SCLK kernels
+!!        ---normally, one kernel per spacecraft clock---are
+!!        required as well.  A leapseconds kernel may be required
+!!        whenever an SCLK kernel is required.
+!!
+!!     4) When a two-vector frame is defined using a target near point,
+!!        a PCK file giving orientation and providing a triaxial shape
+!!        model for the target body is required.
+!!
+!! ## Particulars
+!!
+!!     Currently only parameterized dynamic frames are supported by
+!!     this routine.
+!!
+!!     Currently supported parameterized dynamic families are:
+!!
+!!        Two-vector
+!!        ==========
+!!
+!!           Vector definitions
+!!           ------------------
+!!           Observer-target position
+!!           Observer-target velocity
+!!           Near point on target
+!!           Constant vector in specified frame
+!!
+!!        Mean Equator and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!
+!!        Mean Ecliptic and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!                   1980 IAU mean obliquity model
+!!
+!!        True Equator and Equinox of Date
+!!        ================================
+!!
+!!           Bodies and models
+!!           -----------------
+!!           Earth:  1976 IAU precession model
+!!                   1980 IAU nutation model
+!!
+!!        Euler frames
+!!        ============
+!!
+!!           Euler angle definitions
+!!           -----------------------
+!!           Polynomial
+!!
+!!        Product frames
+!!        ==============
+!!
+!!           Product definitions
+!!           -------------------
+!!           Array of "from" frames
+!!           Array of "to" frames
+!!
+!! ## Examples
+!!
+!!     See ROTGET.
+!!
+!! ## Restrictions
+!!
+!!     1) This is a SPICE private routine; the routine is subject
+!!        to change without notice.  User applications should not
+!!        call this routine.
+!!
+!!     2) Many numerical problems can occur when dynamic frames
+!!        are evaluated.  Users must determine whether dynamic frame
+!!        definitions are suitable for their applications. See the
+!!        Exceptions section for a list of possible problems.
+!!
+!!     3) Two-vector frame definitions can suffer extreme loss of
+!!         precision due to near-singular geometry.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
+!!
+!!        Support for product frames was added.
+!!
+!!        Body radii accessed from kernel pool using ZZGFTREB.
+!!
+!!        Bug fix: aberration correction strings for observer-target
+!!        velocity vectors are now parsed using ZZVALCOR. This improves
+!!        error checking. Note that aberration correction strings for
+!!        constant vectors used in two-vector frame specifications are
+!!        still parsed using ZZPRSCOR.
+!!
+!!        Code clean-up: unnecessary call to ZZPRSCOR was removed.
+!!
+!!        Added and removed some FAILED() calls.
+!!
+!!-    SPICELIB Version 1.1.0, 24-OCT-2005 (NJB)
+!!
+!!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
+!!
+!!        Call to ZZBODVCD was replaced with call to BODVCD.
+!!
+!!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard, isrchc, moved
       use pepper_math, only: latrec, mxm, mxv, polyds, vequ, vhat, vminus, vsep, vsub, xpose
       use pepper_strings, only: cmprss, eqstr, intstr, ucase
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
       implicit none
       real(wp) :: epoch_1(1)  !! one-element copy of epoch (array argument)
       real(wp) :: minsep_1(1)  !! one-element copy of minsep (array argument)
@@ -24802,9 +24129,6 @@ contains
       real(wp) :: lat_1(1)  !! one-element copy of lat (array argument)
       real(wp) :: lon_1(1)  !! one-element copy of lon (array argument)
       real(wp) :: t0_1(1)  !! one-element copy of t0 (array argument)
-      include 'frmtyp.inc'
-      include 'zzabcorr.inc'
-      include 'zzdyn.inc'
       character(*), parameter :: rname = 'ZZDYNROT'
       integer(ip), parameter :: timlen = 50
       integer(ip), parameter :: vnamln = 4

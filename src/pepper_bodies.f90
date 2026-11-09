@@ -15,26 +15,25 @@ contains
 !$Procedure ZZIDMAP ( Private --- SPICE body ID/name assignments )
 
       module procedure zzidmap
+!! ## Abstract
+!!
+!!     The default SPICE body/ID mapping assignments available
+!!     to the SPICE library.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY MAPPINGS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     The default SPICE body/ID mapping assignments available
-!     to the SPICE library.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY MAPPINGS
-!
-! $ Declarations
-
+      use pepper_inc_zzbodtrn
       implicit none
 
-      include              'zzbodtrn.inc'
 
 ! $ Detailed_Input
 !
@@ -2706,26 +2705,25 @@ contains
 !$Procedure ZZHASHI ( Private---integer hash function )
 
       module procedure zzhashi
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This function returns the hash value corresponding to an integer.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This function returns the hash value corresponding to an integer.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -3178,107 +3176,100 @@ contains
 !     Standard SPICE error handling.
 
       module procedure zzhscini
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Initialize an add-only character hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               HASHSZ
-!     INTEGER               HEDLST  (          * )
-!     INTEGER               COLLST  ( LBPOOL : * )
-!
-! $ Detailed_Input
-!
-!     HASHSZ      is the hash size. For efficiency reasons it must be a
-!                 prime number in the range from 1 to INTMAX/68 - 1.
-!
-!     HEDLST
-!     COLLST      are the head node pointer list and the node collision
-!                 list components of an add-only character hash.
-!
-! $ Detailed_Output
-!
-!     HEDLST
-!     COLLST      are the head node pointer list and the node collision
-!                 list components of an add-only character hash with all
-!                 elements of the head node pointer list HEDLST set to
-!                 zero and size and first-free elements of the head
-!                 node pointer list COLLST set to HASHSZ and 1
-!                 correspondingly.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     1) If HASHSZ is less than 1 or greater than the value that is
-!        guaranteed not to result in eventual integer overflow in
-!        ZZHASH2, the error will be signaled by ZZHASH2.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Examples
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 12-OCT-2020 (BVS)
-!
-!        Changed to not check RETURN() on entry. The entry point
-!        now initializes the hash as long as the size parameter
-!        is greater than zero.
-!
-!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     initialize add-only character hash
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Initialize an add-only character hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               HASHSZ
+!!     INTEGER               HEDLST  (          * )
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!
+!! ## Detailed Input
+!!
+!!     HASHSZ      is the hash size. For efficiency reasons it must be a
+!!                 prime number in the range from 1 to INTMAX/68 - 1.
+!!
+!!     HEDLST
+!!     COLLST      are the head node pointer list and the node collision
+!!                 list components of an add-only character hash.
+!!
+!! ## Detailed Output
+!!
+!!     HEDLST
+!!     COLLST      are the head node pointer list and the node collision
+!!                 list components of an add-only character hash with all
+!!                 elements of the head node pointer list HEDLST set to
+!!                 zero and size and first-free elements of the head
+!!                 node pointer list COLLST set to HASHSZ and 1
+!!                 correspondingly.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     1) If HASHSZ is less than 1 or greater than the value that is
+!!        guaranteed not to result in eventual integer overflow in
+!!        ZZHASH2, the error will be signaled by ZZHASH2.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Examples
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 12-OCT-2020 (BVS)
+!!
+!!        Changed to not check RETURN() on entry. The entry point
+!!        now initializes the hash as long as the size parameter
+!!        is greater than zero.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     initialize add-only character hash
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
@@ -3326,106 +3317,100 @@ contains
       end procedure zzhscini
 
       module procedure zzhscadd
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Find or add, if not present, an item to an add-only character
-!     hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               HEDLST  (          * )
-!     INTEGER               COLLST  ( LBPOOL : * )
-!     CHARACTER*(*)         ITEMS   (          * )
-!     CHARACTER*(*)         ITEM
-!     INTEGER               ITEMAT
-!     LOGICAL               NEW
-!
-! $ Detailed_Input
-!
-!     HEDLST
-!     COLLST
-!     ITEMS       are the components of an add-only character
-!                 hash.
-!
-!     ITEM        is an item to find and, if needed, add to the hash.
-!
-! $ Detailed_Output
-!
-!     HEDLST
-!     COLLST
-!     ITEMS       are the components of an add-only character
-!                 hash with the new item added to it if needed.
-!
-!     ITEMAT      is the index of the item in the node collision and
-!                 item lists. If the item could not be found in or
-!                 added to the hash, ITEMAT is set to 0.
-!
-!     NEW         is a flag indicting if item was added to the hash.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     1) If the hash is full, the error SPICE(HASHISFULL) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Examples
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     add an item to add-only character hash
-!
-!-&
-
-!
-!     Standard SPICE error handling. No checking-in here. We will do it
-!     when we have to.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Find or add, if not present, an item to an add-only character
+!!     hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               HEDLST  (          * )
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!     CHARACTER*(*)         ITEMS   (          * )
+!!     CHARACTER*(*)         ITEM
+!!     INTEGER               ITEMAT
+!!     LOGICAL               NEW
+!!
+!! ## Detailed Input
+!!
+!!     HEDLST
+!!     COLLST
+!!     ITEMS       are the components of an add-only character
+!!                 hash.
+!!
+!!     ITEM        is an item to find and, if needed, add to the hash.
+!!
+!! ## Detailed Output
+!!
+!!     HEDLST
+!!     COLLST
+!!     ITEMS       are the components of an add-only character
+!!                 hash with the new item added to it if needed.
+!!
+!!     ITEMAT      is the index of the item in the node collision and
+!!                 item lists. If the item could not be found in or
+!!                 added to the hash, ITEMAT is set to 0.
+!!
+!!     NEW         is a flag indicting if item was added to the hash.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     1) If the hash is full, the error SPICE(HASHISFULL) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Examples
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     add an item to add-only character hash
+!!
+!!     Standard SPICE error handling. No checking-in here. We will do it
+!!     when we have to.
+!!
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
@@ -3582,96 +3567,90 @@ contains
       end procedure zzhscadd
 
       module procedure zzhscchk
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Find an item in an add-only character hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               HEDLST  (          * )
-!     INTEGER               COLLST  ( LBPOOL : * )
-!     CHARACTER*(*)         ITEMS   (          * )
-!     CHARACTER*(*)         ITEM
-!     INTEGER               ITEMAT
-!
-! $ Detailed_Input
-!
-!     HEDLST
-!     COLLST
-!     ITEMS       are the components of an add-only character
-!                 hash.
-!
-!     ITEM        is an item to find in the hash.
-!
-! $ Detailed_Output
-!
-!     ITEMAT      is the index of the item in the node collision and
-!                 item lists. If item is not in the hash, ITEMAT is set
-!                 to 0.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Examples
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     find item in add-only character hash
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Find an item in an add-only character hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               HEDLST  (          * )
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!     CHARACTER*(*)         ITEMS   (          * )
+!!     CHARACTER*(*)         ITEM
+!!     INTEGER               ITEMAT
+!!
+!! ## Detailed Input
+!!
+!!     HEDLST
+!!     COLLST
+!!     ITEMS       are the components of an add-only character
+!!                 hash.
+!!
+!!     ITEM        is an item to find in the hash.
+!!
+!! ## Detailed Output
+!!
+!!     ITEMAT      is the index of the item in the node collision and
+!!                 item lists. If item is not in the hash, ITEMAT is set
+!!                 to 0.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Examples
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     find item in add-only character hash
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
@@ -3731,88 +3710,82 @@ contains
       end procedure zzhscchk
 
       module procedure zzhscavl
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Get room available in an add-only character hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               COLLST  ( LBPOOL : * )
-!     INTEGER               AVAIL
-!
-! $ Detailed_Input
-!
-!     COLLST      is the add-only character hash node collision
-!                 list.
-!
-! $ Detailed_Output
-!
-!     AVAIL       is the room (number of vacant slots) available in
-!                 the hash.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Examples
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get room available in add-only character hash
-!
-!-&
-
-!
-!     Set the number of unoccupied slots in the hash.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Get room available in an add-only character hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!     INTEGER               AVAIL
+!!
+!! ## Detailed Input
+!!
+!!     COLLST      is the add-only character hash node collision
+!!                 list.
+!!
+!! ## Detailed Output
+!!
+!!     AVAIL       is the room (number of vacant slots) available in
+!!                 the hash.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Examples
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     get room available in add-only character hash
+!!
+!!     Set the number of unoccupied slots in the hash.
+!!
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
@@ -3832,102 +3805,96 @@ contains
       end procedure zzhscavl
 
       module procedure zzhscinf
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Get information about an add-only character hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               HEDLST  (          * )
-!     INTEGER               COLLST  ( LBPOOL : * )
-!     CHARACTER*(*)         ITEMS   (          * )
-!     CHARACTER*(*)         ITEM
-!     INTEGER               AVAIL
-!
-! $ Detailed_Input
-!
-!     HEDLST
-!     COLLST
-!     ITEMS       are the components of an add-only character
-!                 hash.
-!
-!     ITEM        is the parameter to report:
-!
-!                    'HASH SIZE'
-!                    'USED HEADNODE COUNT'
-!                    'UNUSED HEADNODE COUNT'
-!                    'USED ITEM COUNT'
-!                    'UNUSED ITEM COUNT'
-!                    'LONGEST LIST SIZE'
-!
-! $ Detailed_Output
-!
-!     AVAIL       is the value of the parameter of interest.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     1) If the input ITEM is not recognized, the error
-!        SPICE(ITEMNOTRECOGNIZED) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get information about add-only character hash
-!
-!-&
-
-!
-!     Get the hash size.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Get information about an add-only character hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               HEDLST  (          * )
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!     CHARACTER*(*)         ITEMS   (          * )
+!!     CHARACTER*(*)         ITEM
+!!     INTEGER               AVAIL
+!!
+!! ## Detailed Input
+!!
+!!     HEDLST
+!!     COLLST
+!!     ITEMS       are the components of an add-only character
+!!                 hash.
+!!
+!!     ITEM        is the parameter to report:
+!!
+!!                    'HASH SIZE'
+!!                    'USED HEADNODE COUNT'
+!!                    'UNUSED HEADNODE COUNT'
+!!                    'USED ITEM COUNT'
+!!                    'UNUSED ITEM COUNT'
+!!                    'LONGEST LIST SIZE'
+!!
+!! ## Detailed Output
+!!
+!!     AVAIL       is the value of the parameter of interest.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     1) If the input ITEM is not recognized, the error
+!!        SPICE(ITEMNOTRECOGNIZED) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     get information about add-only character hash
+!!
+!!     Get the hash size.
+!!
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
@@ -4385,106 +4352,99 @@ contains
 !     Standard SPICE error handling.
 
       module procedure zzhsiini
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Initialize an add-only integer hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               HASHSZ
-!     INTEGER               HEDLST  (          * )
-!     INTEGER               COLLST  ( LBPOOL : * )
-!
-! $ Detailed_Input
-!
-!     HASHSZ      is the hash size. For efficiency reasons it must be a
-!                 positive prime number.
-!
-!     HEDLST
-!     COLLST      are the head node pointer list and the node collision
-!                 list components of an add-only integer hash.
-!
-! $ Detailed_Output
-!
-!     HEDLST
-!     COLLST      are the head node pointer list and the node collision
-!                 list components of an add-only integer hash with all
-!                 elements of the head node pointer list HEDLST set to
-!                 zero and size and first-free elements of the head
-!                 node pointer list COLLST set to HASHSZ and 1
-!                 correspondingly.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     1) If HASHSZ is less than 1, the error SPICE(INVALIDCOUNT) is
-!        signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Examples
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-OCT-2020 (JDR) (BVS) (NJB)
-!
-!        This entry point no longer checks RETURN() on entry. It
-!        initializes the hash as long as the size parameter is greater
-!        than zero.
-!
-!-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     initialize add-only integer hash
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Initialize an add-only integer hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               HASHSZ
+!!     INTEGER               HEDLST  (          * )
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!
+!! ## Detailed Input
+!!
+!!     HASHSZ      is the hash size. For efficiency reasons it must be a
+!!                 positive prime number.
+!!
+!!     HEDLST
+!!     COLLST      are the head node pointer list and the node collision
+!!                 list components of an add-only integer hash.
+!!
+!! ## Detailed Output
+!!
+!!     HEDLST
+!!     COLLST      are the head node pointer list and the node collision
+!!                 list components of an add-only integer hash with all
+!!                 elements of the head node pointer list HEDLST set to
+!!                 zero and size and first-free elements of the head
+!!                 node pointer list COLLST set to HASHSZ and 1
+!!                 correspondingly.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     1) If HASHSZ is less than 1, the error SPICE(INVALIDCOUNT) is
+!!        signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Examples
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 07-OCT-2020 (JDR) (BVS) (NJB)
+!!
+!!        This entry point no longer checks RETURN() on entry. It
+!!        initializes the hash as long as the size parameter is greater
+!!        than zero.
+!!
+!!-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     initialize add-only integer hash
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip), parameter :: lbpool = -5
@@ -4523,110 +4483,104 @@ contains
       end procedure zzhsiini
 
       module procedure zzhsiadd
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Find or add, if not present, an item to an add-only integer
-!     hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               HEDLST  (          * )
-!     INTEGER               COLLST  ( LBPOOL : * )
-!     INTEGER               ITEMS   (          * )
-!     INTEGER               ITEM
-!     INTEGER               ITEMAT
-!     LOGICAL               NEW
-!
-! $ Detailed_Input
-!
-!     HEDLST
-!     COLLST
-!     ITEMS       are the components of an add-only integer
-!                 hash.
-!
-!     ITEM        is an item to find and, if needed, add to the hash.
-!
-! $ Detailed_Output
-!
-!     HEDLST
-!     COLLST
-!     ITEMS       are the components of an add-only integer
-!                 hash with the new item added to it if needed.
-!
-!     ITEMAT      is the index of the item in the node collision and
-!                 item lists. If the item could not be found in or
-!                 added to the hash, ITEMAT is set to 0.
-!
-!     NEW         is a flag indicting if item was added to the hash.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     1) If the hash is full, the error SPICE(HASHISFULL) is signaled.
-!
-!     2) If the hash size saved in the control area of the collision
-!        list is less than 1, the error SPICE(UNINITIALIZEDHASH) is
-!        signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Examples
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     add an item to add-only integer hash
-!
-!-&
-
-!
-!     Standard SPICE error handling. No checking-in here. We will do it
-!     when we have to.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Find or add, if not present, an item to an add-only integer
+!!     hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               HEDLST  (          * )
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!     INTEGER               ITEMS   (          * )
+!!     INTEGER               ITEM
+!!     INTEGER               ITEMAT
+!!     LOGICAL               NEW
+!!
+!! ## Detailed Input
+!!
+!!     HEDLST
+!!     COLLST
+!!     ITEMS       are the components of an add-only integer
+!!                 hash.
+!!
+!!     ITEM        is an item to find and, if needed, add to the hash.
+!!
+!! ## Detailed Output
+!!
+!!     HEDLST
+!!     COLLST
+!!     ITEMS       are the components of an add-only integer
+!!                 hash with the new item added to it if needed.
+!!
+!!     ITEMAT      is the index of the item in the node collision and
+!!                 item lists. If the item could not be found in or
+!!                 added to the hash, ITEMAT is set to 0.
+!!
+!!     NEW         is a flag indicting if item was added to the hash.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     1) If the hash is full, the error SPICE(HASHISFULL) is signaled.
+!!
+!!     2) If the hash size saved in the control area of the collision
+!!        list is less than 1, the error SPICE(UNINITIALIZEDHASH) is
+!!        signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Examples
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     add an item to add-only integer hash
+!!
+!!     Standard SPICE error handling. No checking-in here. We will do it
+!!     when we have to.
+!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip), parameter :: lbpool = -5
@@ -4790,103 +4744,97 @@ contains
       end procedure zzhsiadd
 
       module procedure zzhsichk
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Find an item in an add-only integer hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               HEDLST  (          * )
-!     INTEGER               COLLST  ( LBPOOL : * )
-!     INTEGER               ITEMS   (          * )
-!     INTEGER               ITEM
-!     INTEGER               ITEMAT
-!
-! $ Detailed_Input
-!
-!     HEDLST
-!     COLLST
-!     ITEMS       are the components of an add-only integer
-!                 hash.
-!
-!     ITEM        is an item to find in the hash.
-!
-! $ Detailed_Output
-!
-!     ITEMAT      is the index of the item in the node collision and
-!                 item lists. If item is not in the hash, ITEMAT is set
-!                 to 0.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     1) If the hash size saved in the control area of the collision
-!        list is less than 1, the error SPICE(UNINITIALIZEDHASH) is
-!        signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Examples
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 14-OCT-2021 (BVS)
-!
-!        Bug fix: fixed routine name in CHKIN/CHKOUT calls
-!        (ZZHSIADD -> ZZHSICHK).
-!
-!-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     find item in add-only integer hash
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Find an item in an add-only integer hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               HEDLST  (          * )
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!     INTEGER               ITEMS   (          * )
+!!     INTEGER               ITEM
+!!     INTEGER               ITEMAT
+!!
+!! ## Detailed Input
+!!
+!!     HEDLST
+!!     COLLST
+!!     ITEMS       are the components of an add-only integer
+!!                 hash.
+!!
+!!     ITEM        is an item to find in the hash.
+!!
+!! ## Detailed Output
+!!
+!!     ITEMAT      is the index of the item in the node collision and
+!!                 item lists. If item is not in the hash, ITEMAT is set
+!!                 to 0.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     1) If the hash size saved in the control area of the collision
+!!        list is less than 1, the error SPICE(UNINITIALIZEDHASH) is
+!!        signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Examples
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 14-OCT-2021 (BVS)
+!!
+!!        Bug fix: fixed routine name in CHKIN/CHKOUT calls
+!!        (ZZHSIADD -> ZZHSICHK).
+!!
+!!-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     find item in add-only integer hash
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip), parameter :: lbpool = -5
@@ -4953,88 +4901,82 @@ contains
       end procedure zzhsichk
 
       module procedure zzhsiavl
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Get room available in an add-only integer hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               COLLST  ( LBPOOL : * )
-!     INTEGER               AVAIL
-!
-! $ Detailed_Input
-!
-!     COLLST      is the add-only integer hash node collision
-!                 list.
-!
-! $ Detailed_Output
-!
-!     AVAIL       is the room (number of vacant slots) available in
-!                 the hash.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Examples
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSI.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get room available in add-only integer hash
-!
-!-&
-
-!
-!     Set the number of unoccupied slots in the hash.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Get room available in an add-only integer hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!     INTEGER               AVAIL
+!!
+!! ## Detailed Input
+!!
+!!     COLLST      is the add-only integer hash node collision
+!!                 list.
+!!
+!! ## Detailed Output
+!!
+!!     AVAIL       is the room (number of vacant slots) available in
+!!                 the hash.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Examples
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSI.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     get room available in add-only integer hash
+!!
+!!     Set the number of unoccupied slots in the hash.
+!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip), parameter :: lbpool = -5
@@ -5052,102 +4994,96 @@ contains
       end procedure zzhsiavl
 
       module procedure zzhsiinf
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Get information about an add-only integer hash.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE UTILITY
-!
-! $ Declarations
-!
-!     INTEGER               LBPOOL
-!     PARAMETER           ( LBPOOL = -5 )
-!
-!     INTEGER               HEDLST  (          * )
-!     INTEGER               COLLST  ( LBPOOL : * )
-!     INTEGER               ITEMS   (          * )
-!     CHARACTER*(*)         PARAM
-!     INTEGER               AVAIL
-!
-! $ Detailed_Input
-!
-!     HEDLST
-!     COLLST
-!     ITEMS       are the components of an add-only integer
-!                 hash.
-!
-!     ITEM        is the parameter to report:
-!
-!                    'HASH SIZE'
-!                    'USED HEADNODE COUNT'
-!                    'UNUSED HEADNODE COUNT'
-!                    'USED ITEM COUNT'
-!                    'UNUSED ITEM COUNT'
-!                    'LONGEST LIST SIZE'
-!
-! $ Detailed_Output
-!
-!     AVAIL       is the value of the parameter of interest.
-!
-! $ Parameters
-!
-!     LBPOOL      is the lower bound of the collision list array.
-!
-! $ Exceptions
-!
-!     1) If the input ITEM is not recognized, the error
-!        SPICE(ITEMNOTRECOGNIZED) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     See the header of the umbrella routine ZZHSC.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get information about add-only integer hash
-!
-!-&
-
-!
-!     Get the hash size.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Get information about an add-only integer hash.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE UTILITY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               LBPOOL
+!!     PARAMETER           ( LBPOOL = -5 )
+!!
+!!     INTEGER               HEDLST  (          * )
+!!     INTEGER               COLLST  ( LBPOOL : * )
+!!     INTEGER               ITEMS   (          * )
+!!     CHARACTER*(*)         PARAM
+!!     INTEGER               AVAIL
+!!
+!! ## Detailed Input
+!!
+!!     HEDLST
+!!     COLLST
+!!     ITEMS       are the components of an add-only integer
+!!                 hash.
+!!
+!!     ITEM        is the parameter to report:
+!!
+!!                    'HASH SIZE'
+!!                    'USED HEADNODE COUNT'
+!!                    'UNUSED HEADNODE COUNT'
+!!                    'USED ITEM COUNT'
+!!                    'UNUSED ITEM COUNT'
+!!                    'LONGEST LIST SIZE'
+!!
+!! ## Detailed Output
+!!
+!!     AVAIL       is the value of the parameter of interest.
+!!
+!! ## Parameters
+!!
+!!     LBPOOL      is the lower bound of the collision list array.
+!!
+!! ## Exceptions
+!!
+!!     1) If the input ITEM is not recognized, the error
+!!        SPICE(ITEMNOTRECOGNIZED) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     See the header of the umbrella routine ZZHSC.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
+!!
+!! ## Index Entries
+!!
+!!     get information about add-only integer hash
+!!
+!!     Get the hash size.
+!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip), parameter :: lbpool = -5
@@ -5236,31 +5172,30 @@ contains
 !$Procedure ZZBODINI ( Private --- Body-Code Hash Initialization )
 
       module procedure zzbodini
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Initialize the name-based and ID-based hashes used for efficient
+!!     access to body-name mapping arrays. This routine should be called
+!!     by ZZBODTRN and ZZBODKER only.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Initialize the name-based and ID-based hashes used for efficient
-!     access to body-name mapping arrays. This routine should be called
-!     by ZZBODTRN and ZZBODKER only.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_zzbodtrn
       implicit none
 
-      include              'zzbodtrn.inc'
 
       integer(ip), parameter :: lbpool = -5
 
@@ -5517,32 +5452,31 @@ contains
 !$Procedure ZZBODKER ( Private --- Process Body-Name Kernel Pool Maps )
 
       module procedure zzbodker
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine processes the kernel pool vectors NAIF_BODY_NAME
+!!     and NAIF_BODY_CODE into the lists and hashes required by ZZBODTRN
+!!     to successfully compute code-name mappings.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine processes the kernel pool vectors NAIF_BODY_NAME
-!     and NAIF_BODY_CODE into the lists and hashes required by ZZBODTRN
-!     to successfully compute code-name mappings.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY
-!
-! $ Declarations
-
+      use pepper_inc_zzbodtrn
       implicit none
 
-      include               'zzbodtrn.inc'
 
       integer(ip), parameter :: lbpool = -5
 
@@ -6206,109 +6140,105 @@ contains
 !     Standard SPICE error handling.
 
       module procedure zzbodget
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Retrieve a copy of the built-in body name-code mapping lists.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE
-!     BODY
-!
-! $ Declarations
-!
-!     INTEGER               ROOM
-!     CHARACTER*(*)         NAMES  ( * )
-!     CHARACTER*(*)         NORNAM ( * )
-!     INTEGER               CODES  ( * )
-!     INTEGER               NVALS
-!
-! $ Detailed_Input
-!
-!     ROOM       is the maximum number of entries that NAMES, NORNAM,
-!                and CODES may receive.
-!
-! $ Detailed_Output
-!
-!     NAMES      the array of built-in names.  This array is parallel
-!                to NORNAM and CODES.
-!
-!     NORNAM     the array of normalized built-in body names.  This
-!                array is computed from the NAMES array by compressing
-!                groups of spaces into a single space, left-justifying
-!                the name, and uppercasing the letters.
-!
-!     CODES      the array of built-in codes associated with NAMES
-!                and NORNAM entries.
-!
-!     NVALS      the number of items returned in NAMES, NORNAM,
-!                and CODES.
-!
-! $ Parameters
-!
-!     NPERM      the number of permanent, or built-in, body name-code
-!                mappings.
-!
-! $ Exceptions
-!
-!     1) SPICE(BUG) is signaled if ROOM is less than NPERM, the
-!        amount of space required to store the entire list of
-!        body names and codes.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine simply copies it's local buffered version of the
-!     built-in name-code mappings to the output arguments.
-!
-! $ Examples
-!
-!     See ZZBODTRN for sample usage.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 17-MAR-2003 (EDW)
-!
-!        Added a call to ZZIDMAP to retrieve the default
-!        mapping list. "zzbodtrn.inc" no longer
-!        contains the default mapping list.
-!
-!-    SPICELIB Version 2.0.0, 23-AUG-2002 (FST)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Retrieve a copy of the built-in body name-code mapping lists.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     BODY
+!!
+!! ## Declarations
+!!
+!!     INTEGER               ROOM
+!!     CHARACTER*(*)         NAMES  ( * )
+!!     CHARACTER*(*)         NORNAM ( * )
+!!     INTEGER               CODES  ( * )
+!!     INTEGER               NVALS
+!!
+!! ## Detailed Input
+!!
+!!     ROOM       is the maximum number of entries that NAMES, NORNAM,
+!!                and CODES may receive.
+!!
+!! ## Detailed Output
+!!
+!!     NAMES      the array of built-in names.  This array is parallel
+!!                to NORNAM and CODES.
+!!
+!!     NORNAM     the array of normalized built-in body names.  This
+!!                array is computed from the NAMES array by compressing
+!!                groups of spaces into a single space, left-justifying
+!!                the name, and uppercasing the letters.
+!!
+!!     CODES      the array of built-in codes associated with NAMES
+!!                and NORNAM entries.
+!!
+!!     NVALS      the number of items returned in NAMES, NORNAM,
+!!                and CODES.
+!!
+!! ## Parameters
+!!
+!!     NPERM      the number of permanent, or built-in, body name-code
+!!                mappings.
+!!
+!! ## Exceptions
+!!
+!!     1) SPICE(BUG) is signaled if ROOM is less than NPERM, the
+!!        amount of space required to store the entire list of
+!!        body names and codes.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine simply copies it's local buffered version of the
+!!     built-in name-code mappings to the output arguments.
+!!
+!! ## Examples
+!!
+!!     See ZZBODTRN for sample usage.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     F.S. Turner     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 17-MAR-2003 (EDW)
+!!
+!!        Added a call to ZZIDMAP to retrieve the default
+!!        mapping list. "zzbodtrn.inc" no longer
+!!        contains the default mapping list.
+!!
+!!-    SPICELIB Version 2.0.0, 23-AUG-2002 (FST)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: movec, movei
       use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_inc_zzbodtrn
       implicit none
-      include              'zzbodtrn.inc'
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzbodblt ) ) then
          allocate ( ctx%zzbodblt )
@@ -6372,152 +6302,149 @@ contains
       end procedure zzbodget
 
       module procedure zzbodlst
-
-! $ Abstract
-!
-!     Output the complete list of built-in body/ID mappings to
-!     some output device. Thw routine generates 2 lists: one
-!     sorted by ID number, one sorted by name.
-!
-! $ Required_Reading
-!
-!     NONE.
-!
-! $ Keywords
-!
-!     BODY
-!
-! $ Declarations
-!
-!      CHARACTER*(*)         DEVICE
-!      CHARACTER*(*)         REQST
-!
-! $ Detailed_Input
-!
-!     DEVICE         identifies the device to receive the
-!                    body/ID mapping list. WRLINE performs the
-!                    output function and so DEVICE may have
-!                    the values 'SCREEN' (to generate a screen dump),
-!                    'NULL' (do nothing), or a device name (a
-!                    file, or any other name valid in a FORTRAN OPEN
-!                    statement).
-!
-!     REQST          A case insensitive string indicating the data
-!                    set to output. REQST may have the value 'ID',
-!                    'NAME', or 'BOTH'. 'ID' outputs the name/ID mapping
-!                    ordered by ID number from least to highest value.
-!                    'NAME' outputs the name/ID mapping ordered by ASCII
-!                    sort on the name string. 'BOTH' outputs both
-!                    ordered lists.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The entry point outputs ordered lists of the name/ID mappings
-!     defined in ZZBODTRN.
-!
-! $ Examples
-!
-!     1. Write both sorted lists to screen.
-!
-!     PROGRAM X
-!
-!     CALL ZZBODLST( 'SCREEN', 'BOTH' )
-!
-!     END
-!
-!     2. Write an ID number sorted list to a file, "body.txt".
-!
-!     PROGRAM X
-!
-!     CALL ZZBODLST( 'body.txt', 'ID' )
-!
-!     END
-!
-! With SCREEN output of the form:
-!
-!   Total number of name/ID mappings: 414
-!
-!   ID to name mappings.
-!   -550                                 | M96
-!   -550                                 | MARS 96
-!   -550                                 | MARS-96
-!   -550                                 | MARS96
-!   -254                                 | MER-2
-!   -253                                 | MER-1
-!
-!     ..                                   ..
-!
-!   50000020                             | SHOEMAKER-LEVY 9-B
-!   50000021                             | SHOEMAKER-LEVY 9-A
-!   50000022                             | SHOEMAKER-LEVY 9-Q1
-!   50000023                             | SHOEMAKER-LEVY 9-P2
-!
-!   Name to ID mappings.
-!   1978P1                               | 901
-!   1979J1                               | 515
-!
-!     ..                                   ..
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner    (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.2, 01-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    SPICELIB Version 2.1.1, 27-FEB-2007 (EDW)
-!
-!        Completed the ZZBODLST declarations section.
-!
-!-    SPICELIB Version 2.1.0, 17-MAR-2003 (EDW)
-!
-!        Added a call to ZZIDMAP to retrieve the default
-!        mapping list. "zzbodtrn.inc" no longer
-!        contains the default mapping list.
-!
-!-    SPICELIB Version 2.0.0, 23-AUG-2002 (FST)
-!
-!        This entry point was moved into ZZBODBLT and some
-!        variable names were changed to refer to variables
-!        in the umbrella.
-!
-!-    SPICELIB Version 1.0.0, 26-NOV-2001 (EDW)
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Output the complete list of built-in body/ID mappings to
+!!     some output device. Thw routine generates 2 lists: one
+!!     sorted by ID number, one sorted by name.
+!!
+!! ## Required Reading
+!!
+!!     NONE.
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!
+!! ## Declarations
+!!
+!!      CHARACTER*(*)         DEVICE
+!!      CHARACTER*(*)         REQST
+!!
+!! ## Detailed Input
+!!
+!!     DEVICE         identifies the device to receive the
+!!                    body/ID mapping list. WRLINE performs the
+!!                    output function and so DEVICE may have
+!!                    the values 'SCREEN' (to generate a screen dump),
+!!                    'NULL' (do nothing), or a device name (a
+!!                    file, or any other name valid in a FORTRAN OPEN
+!!                    statement).
+!!
+!!     REQST          A case insensitive string indicating the data
+!!                    set to output. REQST may have the value 'ID',
+!!                    'NAME', or 'BOTH'. 'ID' outputs the name/ID mapping
+!!                    ordered by ID number from least to highest value.
+!!                    'NAME' outputs the name/ID mapping ordered by ASCII
+!!                    sort on the name string. 'BOTH' outputs both
+!!                    ordered lists.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The entry point outputs ordered lists of the name/ID mappings
+!!     defined in ZZBODTRN.
+!!
+!! ## Examples
+!!
+!!     1. Write both sorted lists to screen.
+!!
+!!     PROGRAM X
+!!
+!!     CALL ZZBODLST( 'SCREEN', 'BOTH' )
+!!
+!!     END
+!!
+!!     2. Write an ID number sorted list to a file, "body.txt".
+!!
+!!     PROGRAM X
+!!
+!!     CALL ZZBODLST( 'body.txt', 'ID' )
+!!
+!!     END
+!!
+!! With SCREEN output of the form:
+!!
+!!   Total number of name/ID mappings: 414
+!!
+!!   ID to name mappings.
+!!   -550                                 | M96
+!!   -550                                 | MARS 96
+!!   -550                                 | MARS-96
+!!   -550                                 | MARS96
+!!   -254                                 | MER-2
+!!   -253                                 | MER-1
+!!
+!!     ..                                   ..
+!!
+!!   50000020                             | SHOEMAKER-LEVY 9-B
+!!   50000021                             | SHOEMAKER-LEVY 9-A
+!!   50000022                             | SHOEMAKER-LEVY 9-Q1
+!!   50000023                             | SHOEMAKER-LEVY 9-P2
+!!
+!!   Name to ID mappings.
+!!   1978P1                               | 901
+!!   1979J1                               | 515
+!!
+!!     ..                                   ..
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     F.S. Turner    (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.2, 01-OCT-2021 (NJB)
+!!
+!!        Corrected typos in comments.
+!!
+!!-    SPICELIB Version 2.1.1, 27-FEB-2007 (EDW)
+!!
+!!        Completed the ZZBODLST declarations section.
+!!
+!!-    SPICELIB Version 2.1.0, 17-MAR-2003 (EDW)
+!!
+!!        Added a call to ZZIDMAP to retrieve the default
+!!        mapping list. "zzbodtrn.inc" no longer
+!!        contains the default mapping list.
+!!
+!!-    SPICELIB Version 2.0.0, 23-AUG-2002 (FST)
+!!
+!!        This entry point was moved into ZZBODBLT and some
+!!        variable names were changed to refer to variables
+!!        in the umbrella.
+!!
+!!-    SPICELIB Version 1.0.0, 26-NOV-2001 (EDW)
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderc, orderi
       use pepper_strings, only: eqstr, intstr, lastnb, ucase
+      use pepper_inc_zzbodtrn
       implicit none
-      include              'zzbodtrn.inc'
       character(2*maxl+3) :: zzline
       character(4) :: zzrqst
       integer(ip) :: zzocod ( nperm )
@@ -7316,211 +7243,207 @@ contains
 !     Standard SPICELIB error handling.
 
       module procedure zzbodn2c
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Translate a body name to the corresponding SPICE integer code.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY
-!     CONVERSION
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               CODE
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     NAME       is an arbitrary name of a body which could be
-!                a planet, satellite, barycenter, spacecraft,
-!                asteroid, comet, or other ephemeris object.
-!
-!                Case and leading and trailing blanks in a name
-!                are not significant.  However, when a name consists
-!                of more than one word, they must be separated by
-!                at least one blank, i.e., all of the following
-!                strings are equivalent names:
-!
-!                   'JUPITER BARYCENTER'
-!                   'Jupiter Barycenter'
-!                   'JUPITER BARYCENTER   '
-!                   'JUPITER    BARYCENTER'
-!                   '   JUPITER BARYCENTER'
-!
-!                However, 'JUPITERBARYCENTER' is not equivalent to
-!                the names above.
-!
-!                When ignoring trailing blanks, NAME must have fewer
-!                than MAXL characters.
-!
-! $ Detailed_Output
-!
-!     CODE       is the NAIF or user defined integer code for the
-!                named body.
-!
-!     FOUND      return as true if NAME has a translation.
-!                Otherwise, FOUND returns as false.
-!
-! $ Parameters
-!
-!     MAXL       is the maximum length of a body name.  Defined in
-!                the include file 'zzbodtrn.inc'.
-!
-! $ Exceptions
-!
-!     Errors may be signaled by routines in the call tree of this
-!     routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     ZZBODN2C is one of three related entry points,
-!
-!        ZZBODN2C      Body name to code
-!
-!        ZZBODC2N      Body code to name
-!
-!        ZZBODDEF      Body name/code definition
-!
-!     ZZBODN2C and ZZBODC2N perform translations between body names
-!     and their corresponding integer codes used in SPK and PCK files
-!     and associated routines.  A default set of name/code
-!     pairs are automatically defined during the first call to
-!     any of the entry points.  Additional name/code pairs may
-!     be defined via ZZBODDEF.
-!
-! $ Examples
-!
-!     See the Examples section of the ZZBODTRN umbrella header.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     J.E. McLean    (JPL)
-!     B.V. Semenov   (JPL)
-!     M.J. Spencer   (JPL)
-!     W.L. Taber     (JPL)
-!     F.S. Turner    (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
-!
-!        Changed to use name-based hashes instead of the order arrays.
-!
-!        Changed to keep track of the POOL's and ZZBODTRN internal
-!        states using state counters.
-!
-!        Changed to call ZZCVPOOL to bypass watcher look-ups if the
-!        POOL counter did not change.
-!
-!-    SPICELIB Version 4.1.0, 05-MAR-2009 (NJB)
-!
-!        Bug fix: this routine now keeps track of whether its
-!        kernel pool look-up succeeded. If not, a kernel pool
-!        lookup is attempted on the next call to any entry
-!        point that calls ZZBODKER.
-!
-!-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
-!
-!        Cleaned up module header and source.  See the Revisions
-!        section of ZZBODTRN for detailed update information.
-!
-!-    SPICELIB Version 3.1.0, 12-FEB-2001 (EDW)
-!
-!        Added logic to ensure the routine returns the NAME string
-!        in the same format as when defined (case and space).
-!        Added logic to handle error response in ZZBODINI.
-!
-!        To improve clarity, the BEGXX block initialization now
-!        exists in the include file zzbodtrn.inc.
-!
-!        Removed the comments concerning the 851, 852, ... temporary
-!        codes.
-!
-!        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
-!        as a DATA statement.
-!
-!        Edited headers, removed typos and bad grammar, clarified
-!        descriptions.
-!
-!-    SPICELIB Version 3.0.0, 29-MAR-2000 (WLT)
-!
-!        The ID codes for Cluster 1, 2, 3 and 4 were added.  The
-!        ID coded for Pluto Express were removed.  The ID codes
-!        for Pluto-Kuiper Express, Pluto-Kuiper Express Simulation
-!        and Contour were added.
-!
-!-    SPICELIB Version 2.0.0, 21-JAN-1999 (EDW)
-!
-!        Added code to use the external name/ID kernel.
-!
-!-    SPICELIB Version 1.1.0, 29-FEB-1996 (WLT)
-!
-!        Added the id-code for Comet Hyakutake, Comet Hale-Bopp.
-!
-!-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
-!
-!        Renamed to ZZBODN2C (BVS)
-!
-!-    Beta Version 1.0.0, 29-APR-1994 (MJS)
-!
-!        SPICELIB symbol tables are no longer used. Instead, two order
-!        vectors are used to index the NAMES and CODES arrays.
-!
-!-    MOSPICE  Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    MOSPICE  Version 2.0.0, 15-JUL-1991 (WLT)
-!
-!       The body id's for the Uranian satellites discovered by Voyager
-!       were modified to conform to those established by the IAU
-!       nomenclature committee.  In addition the id's for Gaspra and
-!       Ida were added.
-!
-!-    MOSPICE  Version 1.0.0,  7-MAR-1991 (WLT)
-!
-!       Items previously considered errors were downgraded
-!       to simply be exceptions.  Any NAME is a legitimate input now.
-!       If its not in the table, the FOUND flag is just set to .FALSE.
-!
-!-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Translate a body name to the corresponding SPICE integer code.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!     CONVERSION
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               CODE
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     NAME       is an arbitrary name of a body which could be
+!!                a planet, satellite, barycenter, spacecraft,
+!!                asteroid, comet, or other ephemeris object.
+!!
+!!                Case and leading and trailing blanks in a name
+!!                are not significant.  However, when a name consists
+!!                of more than one word, they must be separated by
+!!                at least one blank, i.e., all of the following
+!!                strings are equivalent names:
+!!
+!!                   'JUPITER BARYCENTER'
+!!                   'Jupiter Barycenter'
+!!                   'JUPITER BARYCENTER   '
+!!                   'JUPITER    BARYCENTER'
+!!                   '   JUPITER BARYCENTER'
+!!
+!!                However, 'JUPITERBARYCENTER' is not equivalent to
+!!                the names above.
+!!
+!!                When ignoring trailing blanks, NAME must have fewer
+!!                than MAXL characters.
+!!
+!! ## Detailed Output
+!!
+!!     CODE       is the NAIF or user defined integer code for the
+!!                named body.
+!!
+!!     FOUND      return as true if NAME has a translation.
+!!                Otherwise, FOUND returns as false.
+!!
+!! ## Parameters
+!!
+!!     MAXL       is the maximum length of a body name.  Defined in
+!!                the include file 'zzbodtrn.inc'.
+!!
+!! ## Exceptions
+!!
+!!     Errors may be signaled by routines in the call tree of this
+!!     routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     ZZBODN2C is one of three related entry points,
+!!
+!!        ZZBODN2C      Body name to code
+!!
+!!        ZZBODC2N      Body code to name
+!!
+!!        ZZBODDEF      Body name/code definition
+!!
+!!     ZZBODN2C and ZZBODC2N perform translations between body names
+!!     and their corresponding integer codes used in SPK and PCK files
+!!     and associated routines.  A default set of name/code
+!!     pairs are automatically defined during the first call to
+!!     any of the entry points.  Additional name/code pairs may
+!!     be defined via ZZBODDEF.
+!!
+!! ## Examples
+!!
+!!     See the Examples section of the ZZBODTRN umbrella header.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     J.E. McLean    (JPL)
+!!     B.V. Semenov   (JPL)
+!!     M.J. Spencer   (JPL)
+!!     W.L. Taber     (JPL)
+!!     F.S. Turner    (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
+!!
+!!        Changed to use name-based hashes instead of the order arrays.
+!!
+!!        Changed to keep track of the POOL's and ZZBODTRN internal
+!!        states using state counters.
+!!
+!!        Changed to call ZZCVPOOL to bypass watcher look-ups if the
+!!        POOL counter did not change.
+!!
+!!-    SPICELIB Version 4.1.0, 05-MAR-2009 (NJB)
+!!
+!!        Bug fix: this routine now keeps track of whether its
+!!        kernel pool look-up succeeded. If not, a kernel pool
+!!        lookup is attempted on the next call to any entry
+!!        point that calls ZZBODKER.
+!!
+!!-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
+!!
+!!        Cleaned up module header and source.  See the Revisions
+!!        section of ZZBODTRN for detailed update information.
+!!
+!!-    SPICELIB Version 3.1.0, 12-FEB-2001 (EDW)
+!!
+!!        Added logic to ensure the routine returns the NAME string
+!!        in the same format as when defined (case and space).
+!!        Added logic to handle error response in ZZBODINI.
+!!
+!!        To improve clarity, the BEGXX block initialization now
+!!        exists in the include file zzbodtrn.inc.
+!!
+!!        Removed the comments concerning the 851, 852, ... temporary
+!!        codes.
+!!
+!!        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
+!!        as a DATA statement.
+!!
+!!        Edited headers, removed typos and bad grammar, clarified
+!!        descriptions.
+!!
+!!-    SPICELIB Version 3.0.0, 29-MAR-2000 (WLT)
+!!
+!!        The ID codes for Cluster 1, 2, 3 and 4 were added.  The
+!!        ID coded for Pluto Express were removed.  The ID codes
+!!        for Pluto-Kuiper Express, Pluto-Kuiper Express Simulation
+!!        and Contour were added.
+!!
+!!-    SPICELIB Version 2.0.0, 21-JAN-1999 (EDW)
+!!
+!!        Added code to use the external name/ID kernel.
+!!
+!!-    SPICELIB Version 1.1.0, 29-FEB-1996 (WLT)
+!!
+!!        Added the id-code for Comet Hyakutake, Comet Hale-Bopp.
+!!
+!!-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
+!!
+!!        Renamed to ZZBODN2C (BVS)
+!!
+!!-    Beta Version 1.0.0, 29-APR-1994 (MJS)
+!!
+!!        SPICELIB symbol tables are no longer used. Instead, two order
+!!        vectors are used to index the NAMES and CODES arrays.
+!!
+!!-    MOSPICE  Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    MOSPICE  Version 2.0.0, 15-JUL-1991 (WLT)
+!!
+!!       The body id's for the Uranian satellites discovered by Voyager
+!!       were modified to conform to those established by the IAU
+!!       nomenclature committee.  In addition the id's for Gaspra and
+!!       Ida were added.
+!!
+!!-    MOSPICE  Version 1.0.0,  7-MAR-1991 (WLT)
+!!
+!!       Items previously considered errors were downgraded
+!!       to simply be exceptions.  Any NAME is a legitimate input now.
+!!       If its not in the table, the FOUND flag is just set to .FALSE.
+!!
+!!-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
       character(maxl) :: tmpnam
@@ -7699,208 +7622,205 @@ contains
       end procedure zzbodn2c
 
       module procedure zzbodc2n
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Translate the integer code of a body into a common name for
-!     that body.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY
-!     CONVERSION
-!
-! $ Declarations
-!
-!     INTEGER               CODE
-!     CHARACTER*(*)         NAME
-!     LOGICAL               FOUND
-!
-! $ Detailed_Input
-!
-!     CODE       is an integer code for a body ---
-!                a planet, satellite, barycenter, spacecraft,
-!                asteroid, comet, or other ephemeris object.
-!
-! $ Detailed_Output
-!
-!     NAME       is the common name of the body identified by CODE.
-!                If CODE has more than one translation, then the
-!                most recently defined NAME corresponding to CODE
-!                is returned.  The routine returns NAME in the exact
-!                format (case and blanks) as used when defining
-!                the name/code pair.
-!
-!     FOUND      returns as true if NAME has a translation.
-!                Otherwise, FOUND returns as false.
-!
-! $ Parameters
-!
-!     MAXL       is the maximum length of a body name.  Defined in
-!                the include file 'zzbodtrn.inc'.
-! $ Exceptions
-!
-!     Errors may be signaled by routines in the call tree of this
-!     routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     ZZBODC2N is one of three related entry points,
-!
-!        ZZBODN2C      Body name to code
-!
-!        ZZBODC2N      Body code to name
-!
-!        ZZBODDEF      Body name/code definition
-!
-!     ZZBODN2C and ZZBODC2N perform translations between body names
-!     and their corresponding integer codes used in SPK and PCK files
-!     and associated routines.  A default set of name/code
-!     pairs are automatically defined during the first call to
-!     any of the entry points.  Additional name/code pairs may
-!     be defined via ZZBODDEF.
-!
-!     For the case in which multiple names map to a single code, a
-!     ZZBODC2N call returns the name last assigned to that code - a
-!     LIFO situation.
-!
-! $ Examples
-!
-!     See Examples section of ZZBODTRN umbrella header.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     J.E. McLean    (JPL)
-!     B.V. Semenov   (JPL)
-!     M.J. Spencer   (JPL)
-!     W.L. Taber     (JPL)
-!     F.S. Turner    (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
-!
-!        Changed to use name and ID-based hashes instead of the order
-!        arrays.
-!
-!        Changed to keep track of the POOL's and ZZBODTRN internal
-!        state using state counters.
-!
-!        Changed to call ZZCVPOOL to bypass watcher look-ups if the
-!        POOL counter did not change.
-!
-!-    SPICELIB Version 4.1.0, 05-MAR-2009 (NJB)
-!
-!        Bug fix: this routine now keeps track of whether its
-!        kernel pool look-up succeeded. If not, a kernel pool
-!        lookup is attempted on the next call to any entry
-!        point that calls ZZBODKER.
-!
-!-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
-!
-!        Cleaned up module header and source code.  See the Revisions
-!        section of ZZBODTRN for detailed update information.
-!
-!-    SPICELIB Version 3.2.0, 19-JUL-2002 (EDW)
-!
-!        Added logic to enforce the precedence masking.
-!
-!-    SPICELIB Version 3.1.0, 5-SEP-2001 (EDW)
-!
-!        Added logic to ensure the routine returns the NAME string
-!        in the same format as when defined (case and space).
-!        Added logic to handle error response in ZZBODINI.
-!
-!        To improve clarity, the BEGXX block initialization now
-!        exists in the include file zzbodtrn.inc.
-!
-!        Removed the comments concerning the 851, 852, ... temporary
-!        codes.
-!
-!        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
-!        as a DATA statement.
-!
-!        Edited headers, removed typos and bad grammar, clarified
-!        descriptions.
-!
-!-    SPICELIB Version 3.0.0, 29-MAR-2000 (WLT)
-!
-!        The ID codes for Cluster 1, 2, 3 and 4 were added.  The
-!        ID coded for Pluto Express were removed.  The ID codes
-!        for Pluto-Kuiper Express, Pluto-Kuiper Express Simulation
-!        and Contour were added.
-!
-!-    SPICELIB Version 2.0.0, 21-JAN-1999 (EDW)
-!
-!        Added code to use the external name/ID kernel.
-!
-!-    SPICELIB Version 1.1.0, 29-FEB-1996 (WLT)
-!
-!        Added the id-code for Comet Hyakutake, Comet Hale-Bopp.
-!
-!-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
-!
-!        Renamed to ZZBODC2N (BVS)
-!
-!-    Beta Version 1.0.0, 29-APR-1994 (MJS)
-!
-!        SPICELIB symbol tables are no longer used. Instead, two order
-!        vectors are used to index the NAMES and CODES arrays.
-!
-!-    MOSPICE  Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    MOSPICE  Version 2.0.0, 15-JUL-1991 (WLT)
-!
-!       The body id's for the Uranian satellites discovered by Voyager
-!       were modified to conform to those established by the IAU
-!       nomenclature committee.  In addition the id's for Gaspra and
-!       Ida were added.
-!
-!-    MOSPICE  Version 1.0.0,  7-MAR-1991 (WLT)
-!
-!       Checks to see the input integer code can be represented
-!       as a character string were removed along with the exceptions
-!       associated with these checks.  It is now the responsibility
-!       of a maintenance programmer to make sure MAXL is large
-!       enough to allow any integer to be converted to a string
-!       representation.
-!
-!-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Translate the integer code of a body into a common name for
+!!     that body.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!     CONVERSION
+!!
+!! ## Declarations
+!!
+!!     INTEGER               CODE
+!!     CHARACTER*(*)         NAME
+!!     LOGICAL               FOUND
+!!
+!! ## Detailed Input
+!!
+!!     CODE       is an integer code for a body ---
+!!                a planet, satellite, barycenter, spacecraft,
+!!                asteroid, comet, or other ephemeris object.
+!!
+!! ## Detailed Output
+!!
+!!     NAME       is the common name of the body identified by CODE.
+!!                If CODE has more than one translation, then the
+!!                most recently defined NAME corresponding to CODE
+!!                is returned.  The routine returns NAME in the exact
+!!                format (case and blanks) as used when defining
+!!                the name/code pair.
+!!
+!!     FOUND      returns as true if NAME has a translation.
+!!                Otherwise, FOUND returns as false.
+!!
+!! ## Parameters
+!!
+!!     MAXL       is the maximum length of a body name.  Defined in
+!!                the include file 'zzbodtrn.inc'.
+!!
+!! ## Exceptions
+!!
+!!     Errors may be signaled by routines in the call tree of this
+!!     routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     ZZBODC2N is one of three related entry points,
+!!
+!!        ZZBODN2C      Body name to code
+!!
+!!        ZZBODC2N      Body code to name
+!!
+!!        ZZBODDEF      Body name/code definition
+!!
+!!     ZZBODN2C and ZZBODC2N perform translations between body names
+!!     and their corresponding integer codes used in SPK and PCK files
+!!     and associated routines.  A default set of name/code
+!!     pairs are automatically defined during the first call to
+!!     any of the entry points.  Additional name/code pairs may
+!!     be defined via ZZBODDEF.
+!!
+!!     For the case in which multiple names map to a single code, a
+!!     ZZBODC2N call returns the name last assigned to that code - a
+!!     LIFO situation.
+!!
+!! ## Examples
+!!
+!!     See Examples section of ZZBODTRN umbrella header.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     J.E. McLean    (JPL)
+!!     B.V. Semenov   (JPL)
+!!     M.J. Spencer   (JPL)
+!!     W.L. Taber     (JPL)
+!!     F.S. Turner    (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
+!!
+!!        Changed to use name and ID-based hashes instead of the order
+!!        arrays.
+!!
+!!        Changed to keep track of the POOL's and ZZBODTRN internal
+!!        state using state counters.
+!!
+!!        Changed to call ZZCVPOOL to bypass watcher look-ups if the
+!!        POOL counter did not change.
+!!
+!!-    SPICELIB Version 4.1.0, 05-MAR-2009 (NJB)
+!!
+!!        Bug fix: this routine now keeps track of whether its
+!!        kernel pool look-up succeeded. If not, a kernel pool
+!!        lookup is attempted on the next call to any entry
+!!        point that calls ZZBODKER.
+!!
+!!-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
+!!
+!!        Cleaned up module header and source code.  See the Revisions
+!!        section of ZZBODTRN for detailed update information.
+!!
+!!-    SPICELIB Version 3.2.0, 19-JUL-2002 (EDW)
+!!
+!!        Added logic to enforce the precedence masking.
+!!
+!!-    SPICELIB Version 3.1.0, 5-SEP-2001 (EDW)
+!!
+!!        Added logic to ensure the routine returns the NAME string
+!!        in the same format as when defined (case and space).
+!!        Added logic to handle error response in ZZBODINI.
+!!
+!!        To improve clarity, the BEGXX block initialization now
+!!        exists in the include file zzbodtrn.inc.
+!!
+!!        Removed the comments concerning the 851, 852, ... temporary
+!!        codes.
+!!
+!!        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
+!!        as a DATA statement.
+!!
+!!        Edited headers, removed typos and bad grammar, clarified
+!!        descriptions.
+!!
+!!-    SPICELIB Version 3.0.0, 29-MAR-2000 (WLT)
+!!
+!!        The ID codes for Cluster 1, 2, 3 and 4 were added.  The
+!!        ID coded for Pluto Express were removed.  The ID codes
+!!        for Pluto-Kuiper Express, Pluto-Kuiper Express Simulation
+!!        and Contour were added.
+!!
+!!-    SPICELIB Version 2.0.0, 21-JAN-1999 (EDW)
+!!
+!!        Added code to use the external name/ID kernel.
+!!
+!!-    SPICELIB Version 1.1.0, 29-FEB-1996 (WLT)
+!!
+!!        Added the id-code for Comet Hyakutake, Comet Hale-Bopp.
+!!
+!!-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
+!!
+!!        Renamed to ZZBODC2N (BVS)
+!!
+!!-    Beta Version 1.0.0, 29-APR-1994 (MJS)
+!!
+!!        SPICELIB symbol tables are no longer used. Instead, two order
+!!        vectors are used to index the NAMES and CODES arrays.
+!!
+!!-    MOSPICE  Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    MOSPICE  Version 2.0.0, 15-JUL-1991 (WLT)
+!!
+!!       The body id's for the Uranian satellites discovered by Voyager
+!!       were modified to conform to those established by the IAU
+!!       nomenclature committee.  In addition the id's for Gaspra and
+!!       Ida were added.
+!!
+!!-    MOSPICE  Version 1.0.0,  7-MAR-1991 (WLT)
+!!
+!!       Checks to see the input integer code can be represented
+!!       as a character string were removed along with the exceptions
+!!       associated with these checks.  It is now the responsibility
+!!       of a maintenance programmer to make sure MAXL is large
+!!       enough to allow any integer to be converted to a string
+!!       representation.
+!!
+!!-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
       integer(ip) :: kersiz
@@ -8117,262 +8037,258 @@ contains
       !> Add a name/code pair to this context's table of defined names (the
       !> code of SPICELIB's ZZBODDEF; zzboddef also records it in the instance).
       subroutine zzboddef_apply ( ctx, name, code )
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Define a body name/code pair for later translation by
-!     ZZBODN2C or ZZBODC2N.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY
-!     CONVERSION
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         NAME
-!     INTEGER               CODE
-!
-! $ Detailed_Input
-!
-!     NAME       is an arbitrary name of a body which could be
-!                a planet, satellite, barycenter, spacecraft,
-!                asteroid, comet, or other ephemeris object.
-!
-!                The case and positions of blanks in a name
-!                are significant. ZZBODC2N returns the exact
-!                string (case and space) last mapped to a code.
-!                When a name is made up of more than one word,
-!                the words require separation by at least one blank,
-!                i.e., all of the following strings belong to
-!                the same equivalence class:
-!
-!                   'JUPITER BARYCENTER'
-!                   'Jupiter Barycenter'
-!                   'JUPITER BARYCENTER   '
-!                   'JUPITER    BARYCENTER'
-!                   '   JUPITER BARYCENTER'
-!
-!                However, 'JUPITERBARYCENTER' is not equivalent to
-!                the names above.
-!
-!                When ignoring trailing blanks, NAME must have fewer
-!                than MAXL characters.
-!
-!     CODE       is the integer code for the named body.
-!
-!                CODE may already have a name as defined by a
-!                previous call to ZZBODDEF or as part of the set of
-!                default definitions.  That previous definition
-!                remains and a translation of that name still
-!                returns the same CODE.  However, future translations
-!                of CODE will give the new NAME instead of the
-!                previous one.  This feature is useful for assigning
-!                a more familiar or abbreviated name to a body.
-!                For example, in addition to the default name for
-!                body 5, 'JUPITER BARYCENTER', you could define the
-!                abbreviation 'JB' to mean 5.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     The following relevant parameters are defined in zzbodtrn.inc:
-!
-!     MAXL        is the maximum length of a body name.
-!
-!     MAXP        is the maximum number of additional names that may
-!                 be added via the ZZBODDEF interface.
-!
-! $ Exceptions
-!
-!     1) If the maximum number of definitions is exceeded, a the
-!        error SPICE(TOOMANYPAIRS) is signaled.
-!
-!     2) If an attempt to assign a blank string an ID code is made,
-!        the error SPICE(BLANKNAMEASSIGNED) is signaled.
-!
-!     3) Routines in the call tree of this routine may signal
-!        errors.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     ZZBODDEF is one of three related entry points,
-!
-!        ZZBODN2C      Body name to code
-!
-!        ZZBODC2N      Body code to name
-!
-!        ZZBODDEF      Body name/code definition
-!
-!     ZZBODN2C and ZZBODC2N perform translations between body names
-!     and their corresponding integer codes used in SPK and PCK files
-!     and associated routines.  A default set of name/code
-!     pairs are automatically defined during the first call to
-!     any of the entry points.  Additional name/code pairs may
-!     be defined via ZZBODDEF for two purposes:
-!
-!        1.  to associate another, perhaps more familiar or
-!            abbreviated name with a previously defined body integer
-!            code or
-!
-!        2.  to define a new body integer code and name,
-!
-!     Each body has a unique integer code, but may have several
-!     names.  Thus you may associate more than one name with
-!     a particular integer code.  However, associating more
-!     than one integer code with a particular name creates ambiguity.
-!     Therefore, once a name has been defined, it may not be redefined
-!     with a different integer code.
-!
-!     For example, Europa is the name of the second satellite of
-!     Jupiter, and has the NAIF integer code 502.  Thus (EUROPA, 502)
-!     is one of the default definitions.  Europa is also the name
-!     of an asteroid.  Suppose you were able to associate the asteroid
-!     integer code with the name EUROPA.  Then when you call ZZBODN2C to
-!     translate the name EUROPA, which code should be returned?  That
-!     of the asteroid or 502?
-!
-!     ZZBODDEF prevents this ambiguity by signaling an error
-!     if the specified name has already been defined with a
-!     different code.  In the case of EUROPA, you may want to use the
-!     name ASTEROID EUROPA.  The set of default definitions are listed
-!     in DATA statements in the umbrella routine ZZBODTRN for easy
-!     reference.
-!
-! $ Examples
-!
-!     See the Examples section of the ZZBODTRN umbrella header.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J.E. McLean    (JPL)
-!     B.V. Semenov   (JPL)
-!     W.L. Taber     (JPL)
-!     F.S. Turner    (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
-!
-!        Changed to use name and ID-based hashes instead of the order
-!        arrays.
-!
-!        Changed to keep track of the POOL's and ZZBODTRN internal
-!        state using state counters.
-!
-!        Changed to call ZZCVPOOL to bypass watcher look-ups if the
-!        POOL counter did not change.
-!
-!-    SPICELIB Version 4.0.1, 17-APR-2003 (EDW)
-!
-!        Correct typo in header docs.
-!
-!     SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
-!
-!        Cleaned up module header and source code.  See the Revisions
-!        section of ZZBODTRN for detailed update information.
-!
-!        Added the error SPICE(BLANKNAMEASSIGNED), when the caller
-!        attempts to assign an ID code to a blank string.
-!
-!-    SPICELIB Version 1.3.0, 14-AUG-2002 (EDW)
-!
-!        Added logic to enforce the precedence masking;
-!        logic removes duplicate assignments of ZZBODDEF.
-!        Removed the NAMENOTUNIQUE error block.
-!
-!-    SPICELIB Version 1.2.0, 5-SEP-2001 (EDW)
-!
-!        Added logic to ensure the routine returns the NAME string
-!        in the same format as when defined (case and space).
-!        Added logic to handle error response from ZZBODINI.
-!
-!        To improve clarity, the BEGXX block initialization now
-!        exists in the include file zzbodtrn.inc.
-!
-!        Removed the comments concerning the 851, 852, ... temporary
-!        codes.
-!
-!        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
-!        as a DATA statement.
-!
-!        Edited headers, removed typos and bad grammar, clarified
-!        descriptions.
-!
-!-    SPICELIB Version 1.1.0, 29-FEB-1996 (WLT)
-!
-!        Added the id-code for Comet Hyakutake, Comet Hale-Bopp.
-!
-!-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
-!
-!        Renamed to ZZBODDEF (BVS). More careful checking for overflow
-!        of the recognized names is now performed.
-!
-!-    Beta Version 1.0.0, 29-APR-1994 (MJS)
-!
-!        SPICELIB symbol tables are no longer used. Instead, two order
-!        vectors are used to index the NAMES and CODES arrays.
-!
-!-    MOSPICE  Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    MOSPICE  Version 2.0.0, 15-JUL-1991 (WLT)
-!
-!       The body id's for the Uranian satellites discovered by Voyager
-!       were modified to conform to those established by the IAU
-!       nomenclature committee.  In addition the id's for Gaspra and
-!       Ida were added.
-!
-!-    MOSPICE  Version 1.0.0,  7-MAR-1991 (WLT)
-!
-!       Checks to see an integer code can be represented
-!       as a character string were removed along with the exceptions
-!       associated with these checks.  It is now the responsibility
-!       of a maintenance programmer to make sure MAXL is large
-!       enough to allow any integer to be converted to a string
-!       representation.
-!
-!-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Define a body name/code pair for later translation by
+!!     ZZBODN2C or ZZBODC2N.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!     CONVERSION
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         NAME
+!!     INTEGER               CODE
+!!
+!! ## Detailed Input
+!!
+!!     NAME       is an arbitrary name of a body which could be
+!!                a planet, satellite, barycenter, spacecraft,
+!!                asteroid, comet, or other ephemeris object.
+!!
+!!                The case and positions of blanks in a name
+!!                are significant. ZZBODC2N returns the exact
+!!                string (case and space) last mapped to a code.
+!!                When a name is made up of more than one word,
+!!                the words require separation by at least one blank,
+!!                i.e., all of the following strings belong to
+!!                the same equivalence class:
+!!
+!!                   'JUPITER BARYCENTER'
+!!                   'Jupiter Barycenter'
+!!                   'JUPITER BARYCENTER   '
+!!                   'JUPITER    BARYCENTER'
+!!                   '   JUPITER BARYCENTER'
+!!
+!!                However, 'JUPITERBARYCENTER' is not equivalent to
+!!                the names above.
+!!
+!!                When ignoring trailing blanks, NAME must have fewer
+!!                than MAXL characters.
+!!
+!!     CODE       is the integer code for the named body.
+!!
+!!                CODE may already have a name as defined by a
+!!                previous call to ZZBODDEF or as part of the set of
+!!                default definitions.  That previous definition
+!!                remains and a translation of that name still
+!!                returns the same CODE.  However, future translations
+!!                of CODE will give the new NAME instead of the
+!!                previous one.  This feature is useful for assigning
+!!                a more familiar or abbreviated name to a body.
+!!                For example, in addition to the default name for
+!!                body 5, 'JUPITER BARYCENTER', you could define the
+!!                abbreviation 'JB' to mean 5.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     The following relevant parameters are defined in zzbodtrn.inc:
+!!
+!!     MAXL        is the maximum length of a body name.
+!!
+!!     MAXP        is the maximum number of additional names that may
+!!                 be added via the ZZBODDEF interface.
+!!
+!! ## Exceptions
+!!
+!!     1) If the maximum number of definitions is exceeded, a the
+!!        error SPICE(TOOMANYPAIRS) is signaled.
+!!
+!!     2) If an attempt to assign a blank string an ID code is made,
+!!        the error SPICE(BLANKNAMEASSIGNED) is signaled.
+!!
+!!     3) Routines in the call tree of this routine may signal
+!!        errors.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     ZZBODDEF is one of three related entry points,
+!!
+!!        ZZBODN2C      Body name to code
+!!
+!!        ZZBODC2N      Body code to name
+!!
+!!        ZZBODDEF      Body name/code definition
+!!
+!!     ZZBODN2C and ZZBODC2N perform translations between body names
+!!     and their corresponding integer codes used in SPK and PCK files
+!!     and associated routines.  A default set of name/code
+!!     pairs are automatically defined during the first call to
+!!     any of the entry points.  Additional name/code pairs may
+!!     be defined via ZZBODDEF for two purposes:
+!!
+!!        1.  to associate another, perhaps more familiar or
+!!            abbreviated name with a previously defined body integer
+!!            code or
+!!
+!!        2.  to define a new body integer code and name,
+!!
+!!     Each body has a unique integer code, but may have several
+!!     names.  Thus you may associate more than one name with
+!!     a particular integer code.  However, associating more
+!!     than one integer code with a particular name creates ambiguity.
+!!     Therefore, once a name has been defined, it may not be redefined
+!!     with a different integer code.
+!!
+!!     For example, Europa is the name of the second satellite of
+!!     Jupiter, and has the NAIF integer code 502.  Thus (EUROPA, 502)
+!!     is one of the default definitions.  Europa is also the name
+!!     of an asteroid.  Suppose you were able to associate the asteroid
+!!     integer code with the name EUROPA.  Then when you call ZZBODN2C to
+!!     translate the name EUROPA, which code should be returned?  That
+!!     of the asteroid or 502?
+!!
+!!     ZZBODDEF prevents this ambiguity by signaling an error
+!!     if the specified name has already been defined with a
+!!     different code.  In the case of EUROPA, you may want to use the
+!!     name ASTEROID EUROPA.  The set of default definitions are listed
+!!     in DATA statements in the umbrella routine ZZBODTRN for easy
+!!     reference.
+!!
+!! ## Examples
+!!
+!!     See the Examples section of the ZZBODTRN umbrella header.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J.E. McLean    (JPL)
+!!     B.V. Semenov   (JPL)
+!!     W.L. Taber     (JPL)
+!!     F.S. Turner    (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
+!!
+!!        Changed to use name and ID-based hashes instead of the order
+!!        arrays.
+!!
+!!        Changed to keep track of the POOL's and ZZBODTRN internal
+!!        state using state counters.
+!!
+!!        Changed to call ZZCVPOOL to bypass watcher look-ups if the
+!!        POOL counter did not change.
+!!
+!!-    SPICELIB Version 4.0.1, 17-APR-2003 (EDW)
+!!
+!!        Correct typo in header docs.
+!!
+!!     SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
+!!
+!!        Cleaned up module header and source code.  See the Revisions
+!!        section of ZZBODTRN for detailed update information.
+!!
+!!        Added the error SPICE(BLANKNAMEASSIGNED), when the caller
+!!        attempts to assign an ID code to a blank string.
+!!
+!!-    SPICELIB Version 1.3.0, 14-AUG-2002 (EDW)
+!!
+!!        Added logic to enforce the precedence masking;
+!!        logic removes duplicate assignments of ZZBODDEF.
+!!        Removed the NAMENOTUNIQUE error block.
+!!
+!!-    SPICELIB Version 1.2.0, 5-SEP-2001 (EDW)
+!!
+!!        Added logic to ensure the routine returns the NAME string
+!!        in the same format as when defined (case and space).
+!!        Added logic to handle error response from ZZBODINI.
+!!
+!!        To improve clarity, the BEGXX block initialization now
+!!        exists in the include file zzbodtrn.inc.
+!!
+!!        Removed the comments concerning the 851, 852, ... temporary
+!!        codes.
+!!
+!!        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
+!!        as a DATA statement.
+!!
+!!        Edited headers, removed typos and bad grammar, clarified
+!!        descriptions.
+!!
+!!-    SPICELIB Version 1.1.0, 29-FEB-1996 (WLT)
+!!
+!!        Added the id-code for Comet Hyakutake, Comet Hale-Bopp.
+!!
+!!-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
+!!
+!!        Renamed to ZZBODDEF (BVS). More careful checking for overflow
+!!        of the recognized names is now performed.
+!!
+!!-    Beta Version 1.0.0, 29-APR-1994 (MJS)
+!!
+!!        SPICELIB symbol tables are no longer used. Instead, two order
+!!        vectors are used to index the NAMES and CODES arrays.
+!!
+!!-    MOSPICE  Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    MOSPICE  Version 2.0.0, 15-JUL-1991 (WLT)
+!!
+!!       The body id's for the Uranian satellites discovered by Voyager
+!!       were modified to conform to those established by the IAU
+!!       nomenclature committee.  In addition the id's for Gaspra and
+!!       Ida were added.
+!!
+!!-    MOSPICE  Version 1.0.0,  7-MAR-1991 (WLT)
+!!
+!!       Checks to see an integer code can be represented
+!!       as a character string were removed along with the exceptions
+!!       associated with these checks.  It is now the responsibility
+!!       of a maintenance programmer to make sure MAXL is large
+!!       enough to allow any integer to be converted to a string
+!!       representation.
+!!
+!!-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: name  !! common name of some body
          integer(ip), intent(in) :: code  !! integer code for that body
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
       integer(ip) :: index
@@ -8601,117 +8517,113 @@ contains
       end subroutine zzboddef_apply
 
       module procedure zzbodkik
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine executes the kernel pool read instructions
-!     if necessary.
-!
-! $ Required_Reading
-!
-!     NONE.
-!
-! $ Keywords
-!
-!     BODY MAPPING
-!
-! $ Declarations
-!
-!     None.
-!
-! $ Detailed_Input
-!
-!     NONE.
-!
-! $ Detailed_Output
-!
-!     NONE.
-!
-! $ Parameters
-!
-!     NONE.
-!
-! $ Exceptions
-!
-!     NONE.
-!
-! $ Files
-!
-!     NONE.
-!
-! $ Particulars
-!
-!     This entry point provides a mechanism to allow a caller
-!     to force the examination of the kernel pool variables that
-!     define name-code mappings.  This is useful, if once a new
-!     mapping is defined, diagnostics at the time of definition
-!     are useful.  The way the system performs otherwise, the
-!     diagnostics are not provided until a name-code conversion
-!     is attempted.
-!
-! $ Examples
-!
-!     See ZZLDKER for sample usage.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     B.V. Semenov   (JPL)
-!     F.S. Turner    (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
-!
-!        Changed to use name and ID-based hashes instead of the order
-!        arrays.
-!
-!        Changed to keep track of the POOL's and ZZBODTRN internal
-!        state using state counters.
-!
-!        Changed to call ZZCVPOOL to bypass watcher look-ups if the
-!        POOL counter did not change.
-!
-!-    SPICELIB Version 4.1.0, 05-MAR-2009 (NJB)
-!
-!        Bug fix: this routine now keeps track of whether its
-!        kernel pool look-up succeeded. If not, a kernel pool
-!        lookup is attempted on the next call to any entry
-!        point that calls ZZBODKER.
-!
-!-    SPICELIB Version 4.0.2, 19-SEP-2006 (EDW)
-!
-!        Added text to previously empty Declarations section.
-!
-!-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
-!
-!        Added checks to watchers and the initialization
-!        block.
-!
-!-    SPICELIB Version 1.0.0, 16-JUN-2002 (EDW)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine executes the kernel pool read instructions
+!!     if necessary.
+!!
+!! ## Required Reading
+!!
+!!     NONE.
+!!
+!! ## Keywords
+!!
+!!     BODY MAPPING
+!!
+!! ## Declarations
+!!
+!!     None.
+!!
+!! ## Detailed Input
+!!
+!!     NONE.
+!!
+!! ## Detailed Output
+!!
+!!     NONE.
+!!
+!! ## Parameters
+!!
+!!     NONE.
+!!
+!! ## Exceptions
+!!
+!!     NONE.
+!!
+!! ## Files
+!!
+!!     NONE.
+!!
+!! ## Particulars
+!!
+!!     This entry point provides a mechanism to allow a caller
+!!     to force the examination of the kernel pool variables that
+!!     define name-code mappings.  This is useful, if once a new
+!!     mapping is defined, diagnostics at the time of definition
+!!     are useful.  The way the system performs otherwise, the
+!!     diagnostics are not provided until a name-code conversion
+!!     is attempted.
+!!
+!! ## Examples
+!!
+!!     See ZZLDKER for sample usage.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     B.V. Semenov   (JPL)
+!!     F.S. Turner    (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
+!!
+!!        Changed to use name and ID-based hashes instead of the order
+!!        arrays.
+!!
+!!        Changed to keep track of the POOL's and ZZBODTRN internal
+!!        state using state counters.
+!!
+!!        Changed to call ZZCVPOOL to bypass watcher look-ups if the
+!!        POOL counter did not change.
+!!
+!!-    SPICELIB Version 4.1.0, 05-MAR-2009 (NJB)
+!!
+!!        Bug fix: this routine now keeps track of whether its
+!!        kernel pool look-up succeeded. If not, a kernel pool
+!!        lookup is attempted on the next call to any entry
+!!        point that calls ZZBODKER.
+!!
+!!-    SPICELIB Version 4.0.2, 19-SEP-2006 (EDW)
+!!
+!!        Added text to previously empty Declarations section.
+!!
+!!-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
+!!
+!!        Added checks to watchers and the initialization
+!!        block.
+!!
+!!-    SPICELIB Version 1.0.0, 16-JUN-2002 (EDW)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
       integer(ip) :: kersiz
@@ -8844,94 +8756,90 @@ contains
       !> Reset this context's table of defined names to the built-in names
       !> (the code of SPICELIB's ZZBODRST).
       subroutine zzbodrst_apply ( ctx )
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine resets the built-in body list, removing any
-!     assignments or alterations made by the ZZBODDEF entry point.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     BODY
-!
-! $ Declarations
-!
-!     None.
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) Routines in the call tree of this routine may signal errors.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     ZZBODRST resets the built-in body name-code mapping list.  This
-!     list may only be modified by ZZBODDEF.  Further, any assignments
-!     made through the kernel pool mechanism remain unaltered as a
-!     result of invoking this routine.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!     F.S. Turner     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
-!
-!        Changed to use name and ID-based hashes instead of the order
-!        arrays.
-!
-!        Changed to keep track of the POOL's and ZZBODTRN internal
-!        state using state counters.
-!
-!-    SPICELIB Version 4.0.0, 26-AUG-2002 (FST)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine resets the built-in body list, removing any
+!!     assignments or alterations made by the ZZBODDEF entry point.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!
+!! ## Declarations
+!!
+!!     None.
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) Routines in the call tree of this routine may signal errors.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     ZZBODRST resets the built-in body name-code mapping list.  This
+!!     list may only be modified by ZZBODDEF.  Further, any assignments
+!!     made through the kernel pool mechanism remain unaltered as a
+!!     result of invoking this routine.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!     F.S. Turner     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
+!!
+!!        Changed to use name and ID-based hashes instead of the order
+!!        arrays.
+!!
+!!        Changed to keep track of the POOL's and ZZBODTRN internal
+!!        state using state counters.
+!!
+!!-    SPICELIB Version 4.0.0, 26-AUG-2002 (FST)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
@@ -9043,166 +8951,162 @@ contains
       end subroutine zzbodrst_apply
 
       module procedure zzbctrck
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Check and update the ZZBODTRN state counter tracked by a caller
-!     (user) routine.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     BODY
-!     PRIVATE
-!
-! $ Declarations
-!
-!     INTEGER               USRCTR    ( CTRSIZ )
-!     LOGICAL               UPDATE
-!
-! $ Detailed_Input
-!
-!     USRCTR      is the value of the ZZBODTRN state counter tracked by
-!                 (saved in) the caller (user) routine.
-!
-! $ Detailed_Output
-!
-!     USRCTR      is the current ZZBODTRN state counter.
-!
-!     UPDATE      is the logical flag indicating whether the input
-!                 ZZBODTRN state counter was different from the current
-!                 ZZBODTRN state counter and, therefore, had to be
-!                 updated (UPDATE = .TRUE.) or if it was the same
-!                 (UPDATE = .FALSE.).
-!
-! $ Parameters
-!
-!     CTRSIZ      is the dimension of the counter array used by
-!                 various SPICE subsystems to uniquely identify
-!                 changes in their states. This parameter is
-!                 defined in the private include file 'zzctr.inc'.
-!
-! $ Exceptions
-!
-!     1) Routines in the call tree of this routine may signal errors.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is not part of the SPICELIB API. This routine may be
-!     removed in a later version of the SPICE Toolkit, or its interface
-!     may change.
-!
-!     SPICE-based application code should not call this routine.
-!
-!     This routine allows other routines to be aware of ZZBODTRN state
-!     change due to addition or deletion body name-code mappings via
-!     ZZBODTRN calls and/or kernel POOL NAIF_BODY_NAME/NAIF_BODY_CODE
-!     variables. Such awareness is needed to be able to locally save
-!     some ZZBODTRN-based data (e.g. a particular body name/ID mapping)
-!     and only update these locally saved values if the ZZBODTRN state
-!     has changed.
-!
-!     To make use of the ZZBODTRN state counter to achieve this goal the
-!     caller routines save the ZZBODTRN state counter returned by the
-!     first call to this routine and then check that saved value
-!     against the current ZZBODTRN state counter and update it by
-!     subsequent calls this routine.
-!
-!     This routine checks if the watched POOL name-ID mapping keywords
-!     changed and if so updates the internally buffered POOL-based
-!     name-ID mappings.
-!
-! $ Examples
-!
-!     The routines that need to be aware of and act on the ZZBODTRN
-!     state change initialize a local ZZBODTRN counter array using
-!     ZZCTRUIN, save it, and check it against the current ZZBODTRN
-!     state counter and update it, if needed, using this entry point,
-!     as follows:
-!
-!        C
-!        C     Include zzctr.inc to access CTRSIZ.
-!        C
-!              INCLUDE              'zzctr.inc'
-!              ...
-!
-!        C
-!        C     In local variable declarations declare and save
-!        C     the local ZZBODTRN state counter. Also declare the
-!        C     update flag.
-!        C
-!              INTEGER               USRCTR ( CTRSIZ )
-!              LOGICAL               UPDATE
-!              ...
-!              SAVE                  USRCTR
-!              ...
-!
-!        C
-!        C     In all places where initialization is done
-!        C     initialize the local ZZBODTRN state counter using
-!        C     ZZCTRUIN to ensure an update on the first check.
-!        C
-!              IF ( FIRST ) THEN
-!                 ...
-!                 CALL ZZCTRUIN( USRCTR )
-!                 FIRST = .FALSE.
-!              END IF
-!              ...
-!
-!        C
-!        C     In all places where there is a need to check for
-!        C     the ZZBODTRN state change call this entry to
-!        C     check and update the local POOL state counter.
-!        C
-!              CALL ZZBCTRCK ( USRCTR, UPDATE )
-!
-!              IF ( UPDATE ) THEN
-!
-!        C
-!        C        It the ZZBODTRN state changed, do what needs to
-!        C        be done to deal with saved values based
-!        C        on ZZBODTRN data.
-!        C
-!                 ...
-!
-!              END IF
-!
-! $ Restrictions
-!
-!     1) This is a private routine. See $Particulars above.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Check and update the ZZBODTRN state counter tracked by a caller
+!!     (user) routine.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
+!!     INTEGER               USRCTR    ( CTRSIZ )
+!!     LOGICAL               UPDATE
+!!
+!! ## Detailed Input
+!!
+!!     USRCTR      is the value of the ZZBODTRN state counter tracked by
+!!                 (saved in) the caller (user) routine.
+!!
+!! ## Detailed Output
+!!
+!!     USRCTR      is the current ZZBODTRN state counter.
+!!
+!!     UPDATE      is the logical flag indicating whether the input
+!!                 ZZBODTRN state counter was different from the current
+!!                 ZZBODTRN state counter and, therefore, had to be
+!!                 updated (UPDATE = .TRUE.) or if it was the same
+!!                 (UPDATE = .FALSE.).
+!!
+!! ## Parameters
+!!
+!!     CTRSIZ      is the dimension of the counter array used by
+!!                 various SPICE subsystems to uniquely identify
+!!                 changes in their states. This parameter is
+!!                 defined in the private include file 'zzctr.inc'.
+!!
+!! ## Exceptions
+!!
+!!     1) Routines in the call tree of this routine may signal errors.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine is not part of the SPICELIB API. This routine may be
+!!     removed in a later version of the SPICE Toolkit, or its interface
+!!     may change.
+!!
+!!     SPICE-based application code should not call this routine.
+!!
+!!     This routine allows other routines to be aware of ZZBODTRN state
+!!     change due to addition or deletion body name-code mappings via
+!!     ZZBODTRN calls and/or kernel POOL NAIF_BODY_NAME/NAIF_BODY_CODE
+!!     variables. Such awareness is needed to be able to locally save
+!!     some ZZBODTRN-based data (e.g. a particular body name/ID mapping)
+!!     and only update these locally saved values if the ZZBODTRN state
+!!     has changed.
+!!
+!!     To make use of the ZZBODTRN state counter to achieve this goal the
+!!     caller routines save the ZZBODTRN state counter returned by the
+!!     first call to this routine and then check that saved value
+!!     against the current ZZBODTRN state counter and update it by
+!!     subsequent calls this routine.
+!!
+!!     This routine checks if the watched POOL name-ID mapping keywords
+!!     changed and if so updates the internally buffered POOL-based
+!!     name-ID mappings.
+!!
+!! ## Examples
+!!
+!!     The routines that need to be aware of and act on the ZZBODTRN
+!!     state change initialize a local ZZBODTRN counter array using
+!!     ZZCTRUIN, save it, and check it against the current ZZBODTRN
+!!     state counter and update it, if needed, using this entry point,
+!!     as follows:
+!!
+!!        C
+!!        C     Include zzctr.inc to access CTRSIZ.
+!!        C
+!!              INCLUDE              'zzctr.inc'
+!!              ...
+!!
+!!        C
+!!        C     In local variable declarations declare and save
+!!        C     the local ZZBODTRN state counter. Also declare the
+!!        C     update flag.
+!!        C
+!!              INTEGER               USRCTR ( CTRSIZ )
+!!              LOGICAL               UPDATE
+!!              ...
+!!              SAVE                  USRCTR
+!!              ...
+!!
+!!        C
+!!        C     In all places where initialization is done
+!!        C     initialize the local ZZBODTRN state counter using
+!!        C     ZZCTRUIN to ensure an update on the first check.
+!!        C
+!!              IF ( FIRST ) THEN
+!!                 ...
+!!                 CALL ZZCTRUIN( USRCTR )
+!!                 FIRST = .FALSE.
+!!              END IF
+!!              ...
+!!
+!!        C
+!!        C     In all places where there is a need to check for
+!!        C     the ZZBODTRN state change call this entry to
+!!        C     check and update the local POOL state counter.
+!!        C
+!!              CALL ZZBCTRCK ( USRCTR, UPDATE )
+!!
+!!              IF ( UPDATE ) THEN
+!!
+!!        C
+!!        C        It the ZZBODTRN state changed, do what needs to
+!!        C        be done to deal with saved values based
+!!        C        on ZZBODTRN data.
+!!        C
+!!                 ...
+!!
+!!              END IF
+!!
+!! ## Restrictions
+!!
+!!     1) This is a private routine. See $Particulars above.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     B.V. Semenov    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
       integer(ip) :: kersiz
@@ -9279,26 +9183,25 @@ contains
 !$Procedure BODN2C ( Body name to ID code translation )
 
       module procedure bodn2c
+!! ## Abstract
+!!
+!!     Translate the name of a body or object to the corresponding SPICE
+!!     integer ID code.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!     CONVERSION
+!!     ID
+!!     NAME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Translate the name of a body or object to the corresponding SPICE
-!     integer ID code.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY
-!     CONVERSION
-!     ID
-!     NAME
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -9537,24 +9440,23 @@ contains
 !$Procedure BODC2N ( Body ID code to name translation )
 
       module procedure bodc2n
+!! ## Abstract
+!!
+!!     Translate the SPICE integer code of a body into a common name
+!!     for that body.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!     CONVERSION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Translate the SPICE integer code of a body into a common name
-!     for that body.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY
-!     CONVERSION
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -9777,28 +9679,27 @@ contains
 !$Procedure BODS2C ( Body string to ID code translation )
 
       module procedure bods2c
+!! ## Abstract
+!!
+!!     Translate a string containing a body name or ID code to an
+!!     integer code.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!     CONVERSION
+!!     ID
+!!     NAME
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: beint, nparsi
-
-! $ Abstract
-!
-!     Translate a string containing a body name or ID code to an
-!     integer code.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY
-!     CONVERSION
-!     ID
-!     NAME
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -10072,29 +9973,28 @@ contains
 !$Procedure BODC2S ( Body ID code to string translation )
 
       module procedure bodc2s
+!! ## Abstract
+!!
+!!     Translate a body ID code to either the corresponding name
+!!     or if no name to ID code mapping exists, the string
+!!     representation of the body ID value.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!     CONVERSION
+!!     ID
+!!     NAME
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr
-
-! $ Abstract
-!
-!     Translate a body ID code to either the corresponding name
-!     or if no name to ID code mapping exists, the string
-!     representation of the body ID value.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY
-!     CONVERSION
-!     ID
-!     NAME
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -10323,24 +10223,23 @@ contains
 !$Procedure BODDEF ( Body name/ID code definition )
 
       module procedure boddef
+!! ## Abstract
+!!
+!!     Define a body name/ID code pair for later translation via
+!!     BODN2C or BODC2N.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     BODY
+!!     CONVERSION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Define a body name/ID code pair for later translation via
-!     BODN2C or BODC2N.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     BODY
-!     CONVERSION
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -10598,26 +10497,25 @@ contains
 !$Procedure BODFND ( Find values from the kernel pool )
 
       module procedure bodfnd
+!! ## Abstract
+!!
+!!     Determine whether values exist for some item for any body
+!!     in the kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!     PCK
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, suffix
-
-! $ Abstract
-!
-!     Determine whether values exist for some item for any body
-!     in the kernel pool.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!     PCK
-!     SPK
-!
-! $ Keywords
-!
-!     CONSTANTS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -10783,33 +10681,32 @@ contains
 !$Procedure ZZBODS2C ( Body name to ID translation, with bypass )
 
       module procedure zzbods2c
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Translate a string containing a body name or ID code to an
+!!     integer code, but bypass calling BODS2C and return saved values
+!!     provided by the caller if the name is the same as the saved name
+!!     and the ZZBODTRN state did not change.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     BODY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Translate a string containing a body name or ID code to an
-!     integer code, but bypass calling BODS2C and return saved values
-!     provided by the caller if the name is the same as the saved name
-!     and the ZZBODTRN state did not change.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     PRIVATE
-!     BODY
-!
-! $ Declarations
-
+      use pepper_inc_zzctr
       implicit none
 
-      include              'zzctr.inc'
 
 ! $ Detailed_Input
 !
@@ -11069,33 +10966,32 @@ contains
 !$Procedure ZZBODVCD ( Get d.p. kernel variable for body, with bypass )
 
       module procedure zzbodvcd
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Fetch from the kernel pool the double precision values of an item
+!!     associated with a body, where the body is specified by an integer
+!!     ID code. Perform lookup only if kernel variable or kernel pool
+!!     state has changed; otherwise, bypass kernel pool lookup and
+!!     return input values.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Fetch from the kernel pool the double precision values of an item
-!     associated with a body, where the body is specified by an integer
-!     ID code. Perform lookup only if kernel variable or kernel pool
-!     state has changed; otherwise, bypass kernel pool lookup and
-!     return input values.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     CONSTANTS
-!
-! $ Declarations
-
+      use pepper_inc_zzctr
       implicit none
-      include 'zzctr.inc'
 
 ! $ Detailed_Input
 !
@@ -11375,30 +11271,29 @@ contains
 !$Procedure BODVAR ( Return values from the kernel pool )
 
       module procedure bodvar
+!! ## Abstract
+!!
+!!     Deprecated: This routine has been superseded by BODVCD and
+!!     BODVRD. This routine is supported for purposes of backward
+!!     compatibility only.
+!!
+!!     Return the values of some item for any body in the
+!!     kernel pool.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!     PCK
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, suffix
-
-! $ Abstract
-!
-!     Deprecated: This routine has been superseded by BODVCD and
-!     BODVRD. This routine is supported for purposes of backward
-!     compatibility only.
-!
-!     Return the values of some item for any body in the
-!     kernel pool.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!     PCK
-!     SPK
-!
-! $ Keywords
-!
-!     CONSTANTS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -11615,26 +11510,25 @@ contains
 !$Procedure BODVCD ( Return d.p. values from the kernel pool )
 
       module procedure bodvcd
+!! ## Abstract
+!!
+!!     Fetch from the kernel pool the double precision values
+!!     of an item associated with a body, where the body is
+!!     specified by an integer ID code.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, suffix
-
-! $ Abstract
-!
-!     Fetch from the kernel pool the double precision values
-!     of an item associated with a body, where the body is
-!     specified by an integer ID code.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     CONSTANTS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -11966,349 +11860,327 @@ contains
       end procedure bodvcd
 
       module procedure bodvrd
-
-! $ Abstract
-!
-!     Fetch from the kernel pool the double precision values
-!     of an item associated with a body.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     CONSTANTS
-!
-! $ Declarations
-
-! $ Detailed_Input
-!
-!     BODYNM   is the name of the body for which ITEM is requested.
-!              BODYNM is case-insensitive, and leading and trailing
-!              blanks in BODYNM are not significant. Optionally, you
-!              may supply the integer ID code for the object as an
-!              integer string. For example both 'MOON' and '301' are
-!              legitimate strings that indicate the moon is the body
-!              of interest.
-!
-!     ITEM     is the item to be returned. Together, the NAIF ID
-!              code of the body and the item name combine to form a
-!              kernel variable name, e.g.,
-!
-!                    'BODY599_RADII'
-!                    'BODY401_POLE_RA'
-!
-!              The values associated with the kernel variable having
-!              the name constructed as shown are sought. Below
-!              we'll take the shortcut of calling this kernel variable
-!              the "requested kernel variable."
-!
-!              Note that ITEM *is* case-sensitive. This attribute
-!              is inherited from the case-sensitivity of kernel
-!              variable names.
-!
-!     MAXN     is the maximum number of values that may be returned.
-!              The output array VALUES must be declared with size at
-!              least MAXN. It's an error to supply an output array
-!              that is too small to hold all of the values associated
-!              with the requested kernel variable.
-!
-! $ Detailed_Output
-!
-!     DIM      is the number of values returned; this is always the
-!              number of values associated with the requested kernel
-!              variable unless an error has been signaled.
-!
-!     VALUES   is the array of values associated with the requested
-!              kernel variable. If VALUES is too small to hold all
-!              of the values associated with the kernel variable, the
-!              returned values of DIM and VALUES are undefined.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input body name cannot be translated to an ID code,
-!         and if the name is not a string representation of an integer
-!         (for example, '399'), the error SPICE(NOTRANSLATION) is
-!         signaled.
-!
-!     2)  If the requested kernel variable is not found in the kernel
-!         pool, the error SPICE(KERNELVARNOTFOUND) is signaled.
-!
-!     3)  If the requested kernel variable is found but the associated
-!         values aren't numeric, the error SPICE(TYPEMISMATCH) is
-!         signaled.
-!
-!     4)  If the dimension of VALUES indicated by MAXN is too small to
-!         contain the requested values, the error SPICE(ARRAYTOOSMALL)
-!         is signaled. The output array VALUES must be declared with
-!         sufficient size to contain all of the values associated with
-!         the requested kernel variable.
-!
-!     5)  If the input dimension MAXN indicates there is more room
-!         in VALUES than there really is---for example, if MAXN is
-!         10 but values is declared with dimension 5---and the dimension
-!         of the requested kernel variable is larger than the actual
-!         dimension of VALUES, then this routine may overwrite
-!         memory. The results are unpredictable.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine simplifies looking up PCK kernel variables by
-!     constructing names of requested kernel variables and by
-!     performing error checking.
-!
-!     This routine is intended for use in cases where the maximum number
-!     of values that may be returned is known at compile time. The
-!     caller fetches all of the values associated with the specified
-!     kernel variable via a single call to this routine. If the number
-!     of values to be fetched cannot be known until run time, the
-!     lower-level routine GDPOOL should be used instead. GDPOOL supports
-!     fetching arbitrary amounts of data in multiple "chunks."
-!
-!     This routine is intended for use in cases where the requested
-!     kernel variable is expected to be present in the kernel pool. If
-!     the variable is not found or has the wrong data type, this
-!     routine signals an error. In cases where it is appropriate to
-!     indicate absence of an expected kernel variable by returning a
-!     boolean "found flag" with the value .FALSE., again the routine
-!     GDPOOL should be used.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Retrieve the radii of the Earth from the kernel pool, using
-!        both 'RADII' and 'radii' as the item name to return. Since
-!        the ITEM variable possesses case sensitivity, the later case
-!        should fail. Trap the error and print it to the output.
-!
-!        Use the PCK kernel below to load the required triaxial
-!        ellipsoidal shape model for the Earth.
-!
-!           pck00008.tpc
-!
-!        Example code begins here.
-!
-!              PROGRAM BODVRD_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               NVALS
-!              PARAMETER           ( NVALS = 3 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              DOUBLE PRECISION      VALUES (NVALS)
-!
-!              INTEGER               DIM
-!
-!        C
-!        C     Load a PCK.
-!        C
-!              CALL FURNSH ( 'pck00008.tpc' )
-!
-!        C
-!        C     When the kernel variable
-!        C
-!        C        BODY399_RADII
-!        C
-!        C     is present in the kernel pool---normally because a PCK
-!        C     defining this variable has been loaded (as is the case
-!        C     here)---the call
-!        C
-!              CALL BODVRD ( 'EARTH', 'RADII', 3, DIM, VALUES )
-!
-!        C
-!        C     returns the dimension and values associated with the
-!        C     variable 'BODY399_RADII'
-!        C
-!              WRITE(*,'(A,3F10.3)') 'EARTH RADII: ', VALUES
-!
-!        C
-!        C     The call
-!        C
-!              CALL BODVRD ( 'earth', 'RADII', 3, DIM, VALUES )
-!
-!        C
-!        C     will produce the same results since the case of the
-!        C     input argument BODYNM is not significant.
-!        C
-!              WRITE(*,'(A,3F10.3)') 'earth RADII: ', VALUES
-!
-!        C
-!        C     The call
-!        C
-!              CALL BODVRD ( '399', 'RADII', 3, DIM, VALUES )
-!
-!        C
-!        C     will also produce the same results since strings
-!        C     containing integer codes are accepted
-!        C     by this routine.
-!        C
-!              WRITE(*,'(A,3F10.3)') '''399'' RADII: ', VALUES
-!
-!        C
-!        C     The ITEM variable possesses case sensitivity. This
-!        C     call should cause an error.
-!        C
-!              CALL BODVRD ( 'EARTH', 'radii', 3, DIM, VALUES )
-!              WRITE(*,'(A,3F10.3)') 'EARTH radii: ', VALUES
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        EARTH RADII:   6378.140  6378.140  6356.750
-!        earth RADII:   6378.140  6378.140  6356.750
-!        '399' RADII:   6378.140  6378.140  6356.750
-!
-!        ============================================================***
-!
-!        Toolkit version: N0066
-!
-!        SPICE(KERNELVARNOTFOUND) -- The Variable Was not Found in th***
-!        Pool.
-!
-!        The variable BODY399_radii could not be found in the kernel ***
-!
-!        A traceback follows.  The name of the highest level module i***
-!        BODVRD
-!
-!        Oh, by the way:  The SPICELIB error handling actions are USER-
-!        TAILORABLE.  You can choose whether the Toolkit aborts or co***
-!        when errors occur, which error messages to output, and where***
-!        the output.  Please read the ERROR "Required Reading" file, ***
-!        the routines ERRACT, ERRDEV, and ERRPRT.
-!
-!        ============================================================***
-!
-!        Warning: incomplete output. 8 lines extended past the right
-!        margin of the header and have been truncated. These lines are
-!        marked by "***" at the end of each line.
-!
-!        Note that, usually, the last call will cause a
-!        SPICE(KERNELVARNOTFOUND) error to be signaled, because this
-!        call will attempt to look up the values associated with a
-!        kernel variable of the name
-!
-!           'BODY399_radii'
-!
-!        Since kernel variable names are case sensitive, this
-!        name is not considered to match the name
-!
-!           'BODY399_RADII'
-!
-!        which normally would be present after a text PCK
-!        containing data for all planets and satellites has
-!        been loaded.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 27-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete example code based on the existing fragments.
-!
-!        Removed note about GDPOOL being entry point of POOL from
-!        $Particulars section.
-!
-!-    SPICELIB Version 1.2.0, 19-SEP-2013 (BVS)
-!
-!        Updated to save the input body name and ZZBODTRN state counter
-!        and to do name-ID conversion only if the counter has changed.
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-2004 (NJB)
-!
-!        Updated to use BODS2C.
-!
-!-    SPICELIB Version 1.0.0, 23-FEB-2004 (NJB) (BVS) (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     fetch constants for a body from the kernel pool
-!     physical constants for a body
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 22-JUL-2004 (NJB)
-!
-!        Updated to use BODS2C. This simplifies the name-to-ID
-!        mapping code.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Saved body name length.
-!
-
-!
-!     Local variables
-!
-
-!
-!     Saved name/ID item declarations.
-!
-
-!
-!     Saved name/ID items.
-!
-
-!
-!     Initial values.
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Fetch from the kernel pool the double precision values
+!!     of an item associated with a body.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     BODYNM   is the name of the body for which ITEM is requested.
+!!              BODYNM is case-insensitive, and leading and trailing
+!!              blanks in BODYNM are not significant. Optionally, you
+!!              may supply the integer ID code for the object as an
+!!              integer string. For example both 'MOON' and '301' are
+!!              legitimate strings that indicate the moon is the body
+!!              of interest.
+!!
+!!     ITEM     is the item to be returned. Together, the NAIF ID
+!!              code of the body and the item name combine to form a
+!!              kernel variable name, e.g.,
+!!
+!!                    'BODY599_RADII'
+!!                    'BODY401_POLE_RA'
+!!
+!!              The values associated with the kernel variable having
+!!              the name constructed as shown are sought. Below
+!!              we'll take the shortcut of calling this kernel variable
+!!              the "requested kernel variable."
+!!
+!!              Note that ITEM *is* case-sensitive. This attribute
+!!              is inherited from the case-sensitivity of kernel
+!!              variable names.
+!!
+!!     MAXN     is the maximum number of values that may be returned.
+!!              The output array VALUES must be declared with size at
+!!              least MAXN. It's an error to supply an output array
+!!              that is too small to hold all of the values associated
+!!              with the requested kernel variable.
+!!
+!! ## Detailed Output
+!!
+!!     DIM      is the number of values returned; this is always the
+!!              number of values associated with the requested kernel
+!!              variable unless an error has been signaled.
+!!
+!!     VALUES   is the array of values associated with the requested
+!!              kernel variable. If VALUES is too small to hold all
+!!              of the values associated with the kernel variable, the
+!!              returned values of DIM and VALUES are undefined.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input body name cannot be translated to an ID code,
+!!         and if the name is not a string representation of an integer
+!!         (for example, '399'), the error SPICE(NOTRANSLATION) is
+!!         signaled.
+!!
+!!     2)  If the requested kernel variable is not found in the kernel
+!!         pool, the error SPICE(KERNELVARNOTFOUND) is signaled.
+!!
+!!     3)  If the requested kernel variable is found but the associated
+!!         values aren't numeric, the error SPICE(TYPEMISMATCH) is
+!!         signaled.
+!!
+!!     4)  If the dimension of VALUES indicated by MAXN is too small to
+!!         contain the requested values, the error SPICE(ARRAYTOOSMALL)
+!!         is signaled. The output array VALUES must be declared with
+!!         sufficient size to contain all of the values associated with
+!!         the requested kernel variable.
+!!
+!!     5)  If the input dimension MAXN indicates there is more room
+!!         in VALUES than there really is---for example, if MAXN is
+!!         10 but values is declared with dimension 5---and the dimension
+!!         of the requested kernel variable is larger than the actual
+!!         dimension of VALUES, then this routine may overwrite
+!!         memory. The results are unpredictable.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine simplifies looking up PCK kernel variables by
+!!     constructing names of requested kernel variables and by
+!!     performing error checking.
+!!
+!!     This routine is intended for use in cases where the maximum number
+!!     of values that may be returned is known at compile time. The
+!!     caller fetches all of the values associated with the specified
+!!     kernel variable via a single call to this routine. If the number
+!!     of values to be fetched cannot be known until run time, the
+!!     lower-level routine GDPOOL should be used instead. GDPOOL supports
+!!     fetching arbitrary amounts of data in multiple "chunks."
+!!
+!!     This routine is intended for use in cases where the requested
+!!     kernel variable is expected to be present in the kernel pool. If
+!!     the variable is not found or has the wrong data type, this
+!!     routine signals an error. In cases where it is appropriate to
+!!     indicate absence of an expected kernel variable by returning a
+!!     boolean "found flag" with the value .FALSE., again the routine
+!!     GDPOOL should be used.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Retrieve the radii of the Earth from the kernel pool, using
+!!        both 'RADII' and 'radii' as the item name to return. Since
+!!        the ITEM variable possesses case sensitivity, the later case
+!!        should fail. Trap the error and print it to the output.
+!!
+!!        Use the PCK kernel below to load the required triaxial
+!!        ellipsoidal shape model for the Earth.
+!!
+!!           pck00008.tpc
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM BODVRD_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!              INTEGER               NVALS
+!!              PARAMETER           ( NVALS = 3 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              DOUBLE PRECISION      VALUES (NVALS)
+!!
+!!              INTEGER               DIM
+!!
+!!        C
+!!        C     Load a PCK.
+!!        C
+!!              CALL FURNSH ( 'pck00008.tpc' )
+!!
+!!        C
+!!        C     When the kernel variable
+!!        C
+!!        C        BODY399_RADII
+!!        C
+!!        C     is present in the kernel pool---normally because a PCK
+!!        C     defining this variable has been loaded (as is the case
+!!        C     here)---the call
+!!        C
+!!              CALL BODVRD ( 'EARTH', 'RADII', 3, DIM, VALUES )
+!!
+!!        C
+!!        C     returns the dimension and values associated with the
+!!        C     variable 'BODY399_RADII'
+!!        C
+!!              WRITE(*,'(A,3F10.3)') 'EARTH RADII: ', VALUES
+!!
+!!        C
+!!        C     The call
+!!        C
+!!              CALL BODVRD ( 'earth', 'RADII', 3, DIM, VALUES )
+!!
+!!        C
+!!        C     will produce the same results since the case of the
+!!        C     input argument BODYNM is not significant.
+!!        C
+!!              WRITE(*,'(A,3F10.3)') 'earth RADII: ', VALUES
+!!
+!!        C
+!!        C     The call
+!!        C
+!!              CALL BODVRD ( '399', 'RADII', 3, DIM, VALUES )
+!!
+!!        C
+!!        C     will also produce the same results since strings
+!!        C     containing integer codes are accepted
+!!        C     by this routine.
+!!        C
+!!              WRITE(*,'(A,3F10.3)') '''399'' RADII: ', VALUES
+!!
+!!        C
+!!        C     The ITEM variable possesses case sensitivity. This
+!!        C     call should cause an error.
+!!        C
+!!              CALL BODVRD ( 'EARTH', 'radii', 3, DIM, VALUES )
+!!              WRITE(*,'(A,3F10.3)') 'EARTH radii: ', VALUES
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        EARTH RADII:   6378.140  6378.140  6356.750
+!!        earth RADII:   6378.140  6378.140  6356.750
+!!        '399' RADII:   6378.140  6378.140  6356.750
+!!
+!!        ============================================================***
+!!
+!!        Toolkit version: N0066
+!!
+!!        SPICE(KERNELVARNOTFOUND) -- The Variable Was not Found in th***
+!!        Pool.
+!!
+!!        The variable BODY399_radii could not be found in the kernel ***
+!!
+!!        A traceback follows.  The name of the highest level module i***
+!!        BODVRD
+!!
+!!        Oh, by the way:  The SPICELIB error handling actions are USER-
+!!        TAILORABLE.  You can choose whether the Toolkit aborts or co***
+!!        when errors occur, which error messages to output, and where***
+!!        the output.  Please read the ERROR "Required Reading" file, ***
+!!        the routines ERRACT, ERRDEV, and ERRPRT.
+!!
+!!        ============================================================***
+!!
+!!        Warning: incomplete output. 8 lines extended past the right
+!!        margin of the header and have been truncated. These lines are
+!!        marked by "***" at the end of each line.
+!!
+!!        Note that, usually, the last call will cause a
+!!        SPICE(KERNELVARNOTFOUND) error to be signaled, because this
+!!        call will attempt to look up the values associated with a
+!!        kernel variable of the name
+!!
+!!           'BODY399_radii'
+!!
+!!        Since kernel variable names are case sensitive, this
+!!        name is not considered to match the name
+!!
+!!           'BODY399_RADII'
+!!
+!!        which normally would be present after a text PCK
+!!        containing data for all planets and satellites has
+!!        been loaded.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.1, 27-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!        Added complete example code based on the existing fragments.
+!!
+!!        Removed note about GDPOOL being entry point of POOL from
+!!        $Particulars section.
+!!
+!!-    SPICELIB Version 1.2.0, 19-SEP-2013 (BVS)
+!!
+!!        Updated to save the input body name and ZZBODTRN state counter
+!!        and to do name-ID conversion only if the counter has changed.
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-2004 (NJB)
+!!
+!!        Updated to use BODS2C.
+!!
+!!-    SPICELIB Version 1.0.0, 23-FEB-2004 (NJB) (BVS) (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     fetch constants for a body from the kernel pool
+!!     physical constants for a body
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 22-JUL-2004 (NJB)
+!!
+!!        Updated to use BODS2C. This simplifies the name-to-ID
+!!        mapping code.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Saved body name length.
+!!
+!!     Local variables
+!!
+!!     Saved name/ID item declarations.
+!!
+!!     Saved name/ID items.
+!!
+!!     Initial values.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, suffix
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       integer(ip), parameter :: cdelen = 16
       integer(ip), parameter :: namlen = 32
       integer(ip), parameter :: maxl = 36

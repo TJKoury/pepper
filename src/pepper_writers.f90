@@ -14,22 +14,21 @@ contains
 !$Procedure CKCLS ( CK, Close file )
 
       module procedure ckcls
+!! ## Abstract
+!!
+!!     Close an open CK file.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Close an open CK file.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -387,25 +386,24 @@ contains
 !$Procedure CKGR01 ( C-kernel, get record, type 01 )
 
       module procedure ckgr01
+!! ## Abstract
+!!
+!!     Return a specified pointing instance from a CK type 01 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return a specified pointing instance from a CK type 01 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
       real(wp) :: n_1(1)  !! one-element copy of n (array argument)
 
@@ -765,25 +763,24 @@ contains
 !$Procedure CKGR03 ( C-kernel, get record, type 03 )
 
       module procedure ckgr03
+!! ## Abstract
+!!
+!!     Return a specified pointing instance from a CK type 03 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return a specified pointing instance from a CK type 03 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
@@ -1238,28 +1235,27 @@ contains
 !$Procedure CKGR04 ( C-kernel, get record, type 04 )
 
       module procedure ckgr04
+!! ## Abstract
+!!
+!!     Return a specified pointing record from a CK type 04 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return a specified pointing record from a CK type 04 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ckparam
       implicit none
 
-      include               'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -1590,29 +1586,28 @@ contains
 !$Procedure CKGR05 ( C-kernel, get record, type 05 )
 
       module procedure ckgr05
+!! ## Abstract
+!!
+!!     Return a specified pointing instance from a CK type 05 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return a specified pointing instance from a CK type 05 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ck05
       implicit none
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
-      include 'ck05.inc'
 
 
 ! $ Detailed_Input
@@ -2014,27 +2009,26 @@ contains
 !$Procedure CKGR06 ( C-kernel, get record, type 06 )
 
       module procedure ckgr06
+!! ## Abstract
+!!
+!!     Return a specified pointing record from a type 6 CK segment, given
+!!     the CK file's handle and the segment's descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return a specified pointing record from a type 6 CK segment, given
-!     the CK file's handle and the segment's descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ck06
       implicit none
 
-      include 'ck06.inc'
 
 
 ! $ Detailed_Input
@@ -2758,25 +2752,24 @@ contains
 !$Procedure CKMP06 ( C-kernel, get mini-segment parameters, type 06 )
 
       module procedure ckmp06
+!! ## Abstract
+!!
+!!     Return the mini-segment control parameters, mini-segment interval
+!!     bounds, and last epoch for a specified mini-segment in a type 6
+!!     CK segment.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the mini-segment control parameters, mini-segment interval
-!     bounds, and last epoch for a specified mini-segment in a type 6
-!     CK segment.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
       real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
 
@@ -3392,24 +3385,23 @@ contains
 !$Procedure CKNM06 ( C-kernel, number of mini-segments, type 06 )
 
       module procedure cknm06
+!! ## Abstract
+!!
+!!     Return the number of mini-segments in a type 6 CK segment, given
+!!     the handle of the type 6 CK file and the segment's descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the number of mini-segments in a type 6 CK segment, given
-!     the handle of the type 6 CK file and the segment's descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -3894,25 +3886,24 @@ contains
 !$Procedure CKNR01 ( C-kernel, number of records, type 01 )
 
       module procedure cknr01
+!! ## Abstract
+!!
+!!     Return the number of pointing instances in a CK type 01 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the number of pointing instances in a CK type 01 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
       real(wp) :: n_1(1)  !! one-element copy of n (array argument)
 
@@ -4189,25 +4180,24 @@ contains
 !$Procedure CKNR02 ( C-kernel, number of records, type 02 )
 
       module procedure cknr02
+!! ## Abstract
+!!
+!!     Return the number of pointing records in a CK type 02 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the number of pointing records in a CK type 02 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -4642,25 +4632,24 @@ contains
 !$Procedure CKNR03 ( C-kernel, number of records, type 03 )
 
       module procedure cknr03
+!! ## Abstract
+!!
+!!     Return the number of pointing instances in a CK type 03 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the number of pointing instances in a CK type 03 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
@@ -5032,25 +5021,24 @@ contains
 !$Procedure CKNR05 ( C-kernel, number of records, type 05 )
 
       module procedure cknr05
+!! ## Abstract
+!!
+!!     Return the number of pointing instances in a CK type 05 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the number of pointing instances in a CK type 05 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
@@ -5303,22 +5291,21 @@ contains
 !$Procedure CKOPN ( CK, open new file. )
 
       module procedure ckopn
+!! ## Abstract
+!!
+!!     Open a new CK file, returning the handle of the opened file.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!
+!! ## Keywords
+!!
+!!     CK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Open a new CK file, returning the handle of the opened file.
-!
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     CK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -5680,27 +5667,26 @@ contains
 !$Procedure CKW01 ( C-Kernel, write segment to C-kernel, data type 1 )
 
       module procedure ckw01
+!! ## Abstract
+!!
+!!     Add a type 1 segment to a C-kernel.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!     SCLK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vzerog
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Add a type 1 segment to a C-kernel.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!     SCLK
-!
-! $ Keywords
-!
-!     POINTING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 
@@ -6555,27 +6541,26 @@ contains
 !$Procedure CKW02 ( C-Kernel, write segment to C-kernel, data type 2 )
 
       module procedure ckw02
+!! ## Abstract
+!!
+!!     Write a type 2 segment to a C-kernel.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!     SCLK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vzerog
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 2 segment to a C-kernel.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!     SCLK
-!
-! $ Keywords
-!
-!     POINTING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 
@@ -7524,28 +7509,27 @@ contains
 !$Procedure CKW03 ( C-Kernel, write segment to C-kernel, data type 3 )
 
       module procedure ckw03
+!! ## Abstract
+!!
+!!     Add a type 3 segment to a C-kernel.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!     ROTATION
+!!     SCLK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vzerog
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Add a type 3 segment to a C-kernel.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!     ROTATION
-!     SCLK
-!
-! $ Keywords
-!
-!     POINTING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 
@@ -8620,29 +8604,28 @@ contains
 !$Procedure CKW04B ( CK type 04: Begin a segment )
 
       module procedure ckw04b
+!! ## Abstract
+!!
+!!     Begin a type CK04 segment in the DAF file associated with
+!!     HANDLE. See also CKW04A and CKW04E.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Begin a type CK04 segment in the DAF file associated with
-!     HANDLE. See also CKW04A and CKW04E.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_sgparam
+      use pepper_inc_ckparam
       implicit none
 
-      include               'sgparam.inc'
-      include               'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -9015,24 +8998,23 @@ contains
 !$Procedure CKW04E ( CK type 04: End a segment )
 
       module procedure ckw04e
+!! ## Abstract
+!!
+!!     End the type 04 CK segment currently being written to the DAF
+!!     file associated with HANDLE. See also CKW04B and CKW04E.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     End the type 04 CK segment currently being written to the DAF
-!     file associated with HANDLE. See also CKW04B and CKW04E.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -9321,32 +9303,31 @@ contains
 !$Procedure CKW05 ( Write CK segment, type 5 )
 
       module procedure ckw05
+!! ## Abstract
+!!
+!!     Write a type 5 segment to a CK file.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     NAIF_IDS
+!!     ROTATION
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd, lstltd
       use pepper_math, only: odd, vzerog
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 5 segment to a CK file.
-!
-! $ Required_Reading
-!
-!     CK
-!     NAIF_IDS
-!     ROTATION
-!     TIME
-!
-! $ Keywords
-!
-!     FILES
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ck05
       implicit none
 
-      include 'ck05.inc'
 
 
       integer(ip), parameter :: maxdeg = 23
@@ -10349,36 +10330,35 @@ contains
 !$Procedure CKW06 ( CK, Write segment, type 6 )
 
       module procedure ckw06
+!! ## Abstract
+!!
+!!     Write a type 6 segment to a CK file.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!     NAIF_IDS
+!!     SCLK
+!!     SPC
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     ATTITUDE
+!!     FILES
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       use pepper_math, only: even, odd, vdistg, vminug, vzerog
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 6 segment to a CK file.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!     NAIF_IDS
-!     SCLK
-!     SPC
-!     TIME
-!
-! $ Keywords
-!
-!     ATTITUDE
-!     FILES
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ck06
+      use pepper_inc_ckparam
       implicit none
 
-      include 'ck06.inc'
-      include 'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -11755,23 +11735,22 @@ contains
 !$Procedure PCK03A ( PCK, add data to a type 3 segment )
 
       module procedure pck03a
+!! ## Abstract
+!!
+!!     Add data to a type 03 PCK segment in the binary PCK file
+!!     associated with HANDLE. See also PCK03B and PCK03E.
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Add data to a type 03 PCK segment in the binary PCK file
-!     associated with HANDLE. See also PCK03B and PCK03E.
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -12104,23 +12083,22 @@ contains
 !$Procedure PCK03E ( PCK, end a type 3 segment )
 
       module procedure pck03e
+!! ## Abstract
+!!
+!!     End the type 03 PCK segment currently being written to the binary
+!!     PCK file associated with HANDLE. See also PCK03B and PCK03A.
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     End the type 03 PCK segment currently being written to the binary
-!     PCK file associated with HANDLE. See also PCK03B and PCK03A.
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -12420,22 +12398,21 @@ contains
 !$Procedure PCKCLS ( PCK, close file )
 
       module procedure pckcls
+!! ## Abstract
+!!
+!!     Close an open PCK file.
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Close an open PCK file.
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -12729,22 +12706,21 @@ contains
 !$Procedure PCKOPN ( PCK, open new file )
 
       module procedure pckopn
+!! ## Abstract
+!!
+!!     Create a new PCK file, returning the handle of the opened file.
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Create a new PCK file, returning the handle of the opened file.
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -13040,23 +13016,22 @@ contains
 !$Procedure PCKPDS ( PCK, pack descriptor )
 
       module procedure pckpds
+!! ## Abstract
+!!
+!!     Perform routine error checks and if all checks pass, pack the
+!!     descriptor for a PCK segment
+!!
+!! ## Required Reading
+!!
+!!     PCK.
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Perform routine error checks and if all checks pass, pack the
-!     descriptor for a PCK segment
-!
-! $ Required_Reading
-!
-!     PCK.
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -13276,22 +13251,21 @@ contains
 !$Procedure PCKUDS (PCK, unpack segment descriptor )
 
       module procedure pckuds
+!! ## Abstract
+!!
+!!     Unpack the contents of a PCK segment descriptor
+!!
+!! ## Required Reading
+!!
+!!     PCK.
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Unpack the contents of a PCK segment descriptor
-!
-! $ Required_Reading
-!
-!     PCK.
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -13443,26 +13417,25 @@ contains
 !$Procedure PCKW02 ( PCK, write type 2 segment )
 
       module procedure pckw02
+!! ## Abstract
+!!
+!!     Write a type 2 segment to a PCK binary file given the file
+!!     handle, body-fixed frame class ID, frame, time range covered by
+!!     the segment, and the Chebyshev polynomial coefficients.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPC
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Write a type 2 segment to a PCK binary file given the file
-!     handle, body-fixed frame class ID, frame, time range covered by
-!     the segment, and the Chebyshev polynomial coefficients.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPC
-!     PCK
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -14009,30 +13982,29 @@ contains
 !$Procedure PCKW20 ( PCK, write segment, type 20 )
 
       module procedure pckw20
+!! ## Abstract
+!!
+!!     Write a type 20 segment to a PCK file.
+!!
+!! ## Required Reading
+!!
+!!     DAF
+!!     NAIF_IDS
+!!     TIME
+!!     PCK
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     ORIENTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
-
-! $ Abstract
-!
-!     Write a type 20 segment to a PCK file.
-!
-! $ Required_Reading
-!
-!     DAF
-!     NAIF_IDS
-!     TIME
-!     PCK
-!     ROTATION
-!
-! $ Keywords
-!
-!     ORIENTATION
-!
-! $ Declarations
-
+      use pepper_inc_spk20
       implicit none
 
-      include 'spk20.inc'
 
 
 ! $ Detailed_Input
@@ -14699,314 +14671,294 @@ contains
       end procedure pckw20
 
       module procedure spcac
-
-! $ Abstract
-!
-!     Store text from a text file in the comment area of a binary SPK
-!     or CK file, appending it to whatever text may already have
-!     been stored there.
-!
-! $ Required_Reading
-!
-!     SPC
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle assigned to the binary SPK or CK file
-!              which has been opened for write access.
-!
-!              Use the SPICELIB routine DAFOPW to open the file for
-!              write access and get HANDLE. Upon exit, this binary file
-!              will contain the specified text from the comment file in
-!              its comment area, appended to whatever text may already
-!              have been stored there. SPCAC will include an extra blank
-!              line between the original text and the appended text.
-!
-!     UNIT     is the logical unit connected to the comment file.
-!              This file must contain only text (printable
-!              ASCII characters, namely ASCII 32-126).  Open this
-!              file with read access and get its UNIT using TXTOPR.
-!
-!     BMARK,
-!     EMARK    are markers that delimit a group of consecutive
-!              lines in the text file (UNIT), that get stored in the
-!              comment area of the binary file (HANDLE).
-!
-!              The group of lines begins with the line that
-!              immediately follows the first line of the file
-!              equivalent to BMARK. It ends with line that
-!              precedes the next line of the file equivalent to
-!              EMARK, including blank lines. Leading and
-!              trailing blanks are ignored when testing for
-!              equivalence.
-!
-!              By convention, if BMARK is blank, the first line of
-!              the group is the first line of the file; if EMARK is
-!              blank, the last line of the group is the last line
-!              of the file.
-!
-!              If a marker is non-blank and is not found, or if
-!              non-blank markers are on successive lines in the text
-!              file, nothing gets stored in the comment area of
-!              the binary file.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the specified DAF file is not open for write access, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     2)  If there is a problem reading from the comment area of the
-!         binary file, the error SPICE(FILEREADFAILED) is signaled.
-!
-!     3)  If there is a problem writing to the comment area of the
-!         binary file, the error SPICE(FILEWRITEFAILED) is signaled.
-!
-!     4)  If there is a problem reading from the text file, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     5)  If a non-printing ASCII character is encountered in the
-!         comments, an error is signaled by a routine in the call tree
-!         of this routine.
-!
-! $ Files
-!
-!     See arguments HANDLE and UNIT.
-!
-! $ Particulars
-!
-!     The structure of SPK and CK files accommodates comments in
-!     addition to data. The following three routines are available
-!     for accessing the comment area of a binary SPK or CK file:
-!
-!           SPCAC           add comments
-!
-!           SPCEC           extract comments
-!
-!           SPCDC           delete comments
-!
-!     Note that comments must consist of only text, that is, printable
-!     ASCII characters, specifically ASCII 32-126. This excludes
-!     tabs (ASCII 9) and control characters.
-!
-!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
-!     SPCT2B---include these comments when converting SPK and CK
-!     files between binary and text formats.
-!
-! $ Examples
-!
-!     Suppose we have a binary SPK file called A.BSP and we have
-!     a text file called COMMENTS.TXT that contains comments
-!     about the data in the SPK file.
-!
-!     The following code fragment stores the entire contents of
-!     COMMENTS.TXT in the comment area of A.BSP.
-!
-!            CALL DAFOPW ( 'A.BSP', HANDLE )
-!
-!            CALL TXTOPR ( 'COMMENTS.TXT', UNIT )
-!
-!            BMARK = ' '
-!            EMARK = ' '
-!
-!            CALL SPCAC  ( HANDLE, UNIT, BMARK, EMARK )
-!
-!            CLOSE ( UNIT )
-!
-!     Now suppose MORE.TXT is a text file that contains additional
-!     information about the data in A.BSP, as well as information
-!     about several other SPK files.  The contents of MORE.TXT are
-!
-!               \begin A info
-!
-!                 DATAFILE = A
-!                 SOURCE   = JPL, 1990 September 12
-!                 MISSION  = Galileo
-!
-!               \end A info
-!
-!               \begin B info
-!
-!                 DATAFILE = B
-!                 SOURCE   = JPL, 1988 August 1
-!                 MISSION  = Voyager 2
-!
-!               \end B info
-!
-!               \begin C info
-!
-!                 DATAFILE = C
-!                 SOURCE   = JPL, 1994 January 31
-!                 MISSION  = Mars Observer
-!
-!               \end C info
-!
-!     This code fragment stores only the information that pertains
-!     to A.BSP, and appends it to the text from COMMENTS.TXT that
-!     has already been stored in the comment area of A.BSP
-!
-!            CALL TXTOPR ( 'MORE.TXT', UNIT )
-!
-!            BMARK = '\begin A info'
-!            EMARK = '\end A info'
-!
-!            CALL SPCAC  ( HANDLE, UNIT, BMARK, EMARK )
-!
-!            CLOSE ( UNIT )
-!
-!            CALL DAFCLS ( HANDLE )
-!
-!     Note that, ignoring leading and trailing blanks, BMARK and
-!     EMARK are exactly equivalent to lines in the text file.
-!     If the assignment had been instead BMARK = '\ begin A info',
-!     with an extra space between the slash and the word begin,
-!     SPCAC would not have found the marker and no comments from
-!     the text file would be written to the binary file.
-!
-! $ Restrictions
-!
-!     1)  The lines in the comment file should not exceed 1000
-!         characters in length. SPCAC truncates lines longer than
-!         this on the right.
-!
-!     2)  Use TXTOPR to open text files for read access and get
-!         the logical unit. System dependencies regarding
-!         opening text files have been isolated in the routines
-!         TXTOPN and TXTOPR.
-!
-!     3)  This routine assumes that the comment area of the binary SPK
-!         or CK file contains only text stored by SPCAC. Comments
-!         written any other way may not be handled properly.
-!
-!     4)  The comment area of the binary SPK or CK file must contain
-!         only one EOT character. This routine seeks back from the
-!         last reserved record searching for the first EOT it
-!         encounters. Thus the multiple EOT's will cause the appended
-!         comments to be invisible to any reader that starts at the
-!         first reserved record and reads until the first EOT present.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     J.E. McLean        (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 13-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Moved the contents of the $Files section to the description of
-!        HANDLE and UNIT in $Detailed_Input section, and referred to
-!        them from $Files. Removed unnecessary entries from $Revisions
-!        section.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        Updated this routine to utilize new handle manager
-!        interfaces.
-!
-!-    SPICELIB Version 1.3.0, 12-FEB-1999 (FST)
-!
-!        Modified the EOT search code to seek back through any
-!        reserved records, as opposed to just the last one. This
-!        provides the flexibility to use DAFOPN to reserve records
-!        that may ultimately be used for storing comments. As a direct
-!        result of these changes the SPICE(MISSINGEOT) error is no
-!        longer signaled, since if no EOT is found in the reserved
-!        records, they are considered available for writes.
-!
-!-    SPICELIB Version 1.2.0, 12-MAY-1994 (KRG)
-!
-!        Added an IF statement so that DAFARR is called only if new
-!        reserved records need to be added to the comment area.
-!
-!-    SPICELIB Version 1.1.0, 09-APR-1993 (KRG)
-!
-!        Added code to initialize the variable LASTRR to zero. This
-!        variable is used in a function call, MAX ( LASTRR-1, 1 ),
-!        regardless of whether or not any reserved records are in
-!        the file. Thus the need to initialize it.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-!
-!-&
-
-! $ Index_Entries
-!
-!     add comments to SPK or CK file
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        This routine now utilizes DAFSIH to determine if
-!        HANDLE is open for WRITE access. The call to DAFHLU
-!        has been replaced with a call to ZZDDHHLU, the handle
-!        manager interface for retrieving a logical unit.
-!        DAFHLU is no longer used, since it locks the unit
-!        returned to its HANDLE, tying up resources in the
-!        handle manager.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-!     IFNLEN      is the length of a DAF internal file name.
-!
-!     MAXCPR      is the maximum number of characters per DAF record and
-!                 hence the maximum comment line length.
-!
-
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Store text from a text file in the comment area of a binary SPK
+!!     or CK file, appending it to whatever text may already have
+!!     been stored there.
+!!
+!! ## Required Reading
+!!
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE   is the handle assigned to the binary SPK or CK file
+!!              which has been opened for write access.
+!!
+!!              Use the SPICELIB routine DAFOPW to open the file for
+!!              write access and get HANDLE. Upon exit, this binary file
+!!              will contain the specified text from the comment file in
+!!              its comment area, appended to whatever text may already
+!!              have been stored there. SPCAC will include an extra blank
+!!              line between the original text and the appended text.
+!!
+!!     UNIT     is the logical unit connected to the comment file.
+!!              This file must contain only text (printable
+!!              ASCII characters, namely ASCII 32-126).  Open this
+!!              file with read access and get its UNIT using TXTOPR.
+!!
+!!     BMARK,
+!!     EMARK    are markers that delimit a group of consecutive
+!!              lines in the text file (UNIT), that get stored in the
+!!              comment area of the binary file (HANDLE).
+!!
+!!              The group of lines begins with the line that
+!!              immediately follows the first line of the file
+!!              equivalent to BMARK. It ends with line that
+!!              precedes the next line of the file equivalent to
+!!              EMARK, including blank lines. Leading and
+!!              trailing blanks are ignored when testing for
+!!              equivalence.
+!!
+!!              By convention, if BMARK is blank, the first line of
+!!              the group is the first line of the file; if EMARK is
+!!              blank, the last line of the group is the last line
+!!              of the file.
+!!
+!!              If a marker is non-blank and is not found, or if
+!!              non-blank markers are on successive lines in the text
+!!              file, nothing gets stored in the comment area of
+!!              the binary file.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the specified DAF file is not open for write access, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     2)  If there is a problem reading from the comment area of the
+!!         binary file, the error SPICE(FILEREADFAILED) is signaled.
+!!
+!!     3)  If there is a problem writing to the comment area of the
+!!         binary file, the error SPICE(FILEWRITEFAILED) is signaled.
+!!
+!!     4)  If there is a problem reading from the text file, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     5)  If a non-printing ASCII character is encountered in the
+!!         comments, an error is signaled by a routine in the call tree
+!!         of this routine.
+!!
+!! ## Files
+!!
+!!     See arguments HANDLE and UNIT.
+!!
+!! ## Particulars
+!!
+!!     The structure of SPK and CK files accommodates comments in
+!!     addition to data. The following three routines are available
+!!     for accessing the comment area of a binary SPK or CK file:
+!!
+!!           SPCAC           add comments
+!!
+!!           SPCEC           extract comments
+!!
+!!           SPCDC           delete comments
+!!
+!!     Note that comments must consist of only text, that is, printable
+!!     ASCII characters, specifically ASCII 32-126. This excludes
+!!     tabs (ASCII 9) and control characters.
+!!
+!!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
+!!     SPCT2B---include these comments when converting SPK and CK
+!!     files between binary and text formats.
+!!
+!! ## Examples
+!!
+!!     Suppose we have a binary SPK file called A.BSP and we have
+!!     a text file called COMMENTS.TXT that contains comments
+!!     about the data in the SPK file.
+!!
+!!     The following code fragment stores the entire contents of
+!!     COMMENTS.TXT in the comment area of A.BSP.
+!!
+!!            CALL DAFOPW ( 'A.BSP', HANDLE )
+!!
+!!            CALL TXTOPR ( 'COMMENTS.TXT', UNIT )
+!!
+!!            BMARK = ' '
+!!            EMARK = ' '
+!!
+!!            CALL SPCAC  ( HANDLE, UNIT, BMARK, EMARK )
+!!
+!!            CLOSE ( UNIT )
+!!
+!!     Now suppose MORE.TXT is a text file that contains additional
+!!     information about the data in A.BSP, as well as information
+!!     about several other SPK files.  The contents of MORE.TXT are
+!!
+!!               \begin A info
+!!
+!!                 DATAFILE = A
+!!                 SOURCE   = JPL, 1990 September 12
+!!                 MISSION  = Galileo
+!!
+!!               \end A info
+!!
+!!               \begin B info
+!!
+!!                 DATAFILE = B
+!!                 SOURCE   = JPL, 1988 August 1
+!!                 MISSION  = Voyager 2
+!!
+!!               \end B info
+!!
+!!               \begin C info
+!!
+!!                 DATAFILE = C
+!!                 SOURCE   = JPL, 1994 January 31
+!!                 MISSION  = Mars Observer
+!!
+!!               \end C info
+!!
+!!     This code fragment stores only the information that pertains
+!!     to A.BSP, and appends it to the text from COMMENTS.TXT that
+!!     has already been stored in the comment area of A.BSP
+!!
+!!            CALL TXTOPR ( 'MORE.TXT', UNIT )
+!!
+!!            BMARK = '\begin A info'
+!!            EMARK = '\end A info'
+!!
+!!            CALL SPCAC  ( HANDLE, UNIT, BMARK, EMARK )
+!!
+!!            CLOSE ( UNIT )
+!!
+!!            CALL DAFCLS ( HANDLE )
+!!
+!!     Note that, ignoring leading and trailing blanks, BMARK and
+!!     EMARK are exactly equivalent to lines in the text file.
+!!     If the assignment had been instead BMARK = '\ begin A info',
+!!     with an extra space between the slash and the word begin,
+!!     SPCAC would not have found the marker and no comments from
+!!     the text file would be written to the binary file.
+!!
+!! ## Restrictions
+!!
+!!     1)  The lines in the comment file should not exceed 1000
+!!         characters in length. SPCAC truncates lines longer than
+!!         this on the right.
+!!
+!!     2)  Use TXTOPR to open text files for read access and get
+!!         the logical unit. System dependencies regarding
+!!         opening text files have been isolated in the routines
+!!         TXTOPN and TXTOPR.
+!!
+!!     3)  This routine assumes that the comment area of the binary SPK
+!!         or CK file contains only text stored by SPCAC. Comments
+!!         written any other way may not be handled properly.
+!!
+!!     4)  The comment area of the binary SPK or CK file must contain
+!!         only one EOT character. This routine seeks back from the
+!!         last reserved record searching for the first EOT it
+!!         encounters. Thus the multiple EOT's will cause the appended
+!!         comments to be invisible to any reader that starts at the
+!!         first reserved record and reads until the first EOT present.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     K.R. Gehringer     (JPL)
+!!     J.E. McLean        (JPL)
+!!     W.L. Taber         (JPL)
+!!     F.S. Turner        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 13-AUG-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Moved the contents of the $Files section to the description of
+!!        HANDLE and UNIT in $Detailed_Input section, and referred to
+!!        them from $Files. Removed unnecessary entries from $Revisions
+!!        section.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!!
+!!        Updated this routine to utilize new handle manager
+!!        interfaces.
+!!
+!!-    SPICELIB Version 1.3.0, 12-FEB-1999 (FST)
+!!
+!!        Modified the EOT search code to seek back through any
+!!        reserved records, as opposed to just the last one. This
+!!        provides the flexibility to use DAFOPN to reserve records
+!!        that may ultimately be used for storing comments. As a direct
+!!        result of these changes the SPICE(MISSINGEOT) error is no
+!!        longer signaled, since if no EOT is found in the reserved
+!!        records, they are considered available for writes.
+!!
+!!-    SPICELIB Version 1.2.0, 12-MAY-1994 (KRG)
+!!
+!!        Added an IF statement so that DAFARR is called only if new
+!!        reserved records need to be added to the comment area.
+!!
+!!-    SPICELIB Version 1.1.0, 09-APR-1993 (KRG)
+!!
+!!        Added code to initialize the variable LASTRR to zero. This
+!!        variable is used in a function call, MAX ( LASTRR-1, 1 ),
+!!        regardless of whether or not any reserved records are in
+!!        the file. Thus the need to initialize it.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+!!
+!! ## Index Entries
+!!
+!!     add comments to SPK or CK file
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!!
+!!        This routine now utilizes DAFSIH to determine if
+!!        HANDLE is open for WRITE access. The call to DAFHLU
+!!        has been replaced with a call to ZZDDHHLU, the handle
+!!        manager interface for retrieving a logical unit.
+!!        DAFHLU is no longer used, since it locks the unit
+!!        returned to its HANDLE, tying up resources in the
+!!        handle manager.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     IFNLEN      is the length of a DAF internal file name.
+!!
+!!     MAXCPR      is the maximum number of characters per DAF record and
+!!                 hence the maximum comment line length.
+!!
+!!     Local variables
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: lastnb
       implicit none
@@ -15371,22 +15323,21 @@ contains
 !$Procedure SPCDC ( SPK and CK, delete comments )
 
       module procedure spcdc
+!! ## Abstract
+!!
+!!     Empty the comment area of a binary SPK or CK file.
+!!
+!! ## Required Reading
+!!
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Empty the comment area of a binary SPK or CK file.
-!
-! $ Required_Reading
-!
-!     SPC
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 
@@ -15575,23 +15526,22 @@ contains
 !$Procedure SPCEC ( SPK and CK, extract comments )
 
       module procedure spcec
+!! ## Abstract
+!!
+!!     Extract the text from the comment area of a binary SPK or CK file
+!!     and write it to a text file.
+!!
+!! ## Required Reading
+!!
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Extract the text from the comment area of a binary SPK or CK file
-!     and write it to a text file.
-!
-! $ Required_Reading
-!
-!     SPC
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 
@@ -15902,24 +15852,23 @@ contains
 !$Procedure SPCOPN ( SPK or CK, open new file )
 
       module procedure spcopn
+!! ## Abstract
+!!
+!!     Open a new SPK or CK file for subsequent write requests.
+!!
+!! ## Required Reading
+!!
+!!     DAF
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Open a new SPK or CK file for subsequent write requests.
-!
-! $ Required_Reading
-!
-!     DAF
-!     SPC
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 
@@ -16084,229 +16033,207 @@ contains
       end procedure spcopn
 
       module procedure spcrfl
-
-! $ Abstract
-!
-!     Read the first line of text from the comment area
-!     of a binary SPK or CK file.
-!
-! $ Required_Reading
-!
-!     SPC
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle assigned to the binary SPK or CK file
-!              which has been opened for read access.
-!
-!              Use the SPICELIB routine DAFOPR to open the file for read
-!              access and get HANDLE, unless SPKLEF or CKLPF has already
-!              been called and returned the handle. This file is
-!              unchanged by calling SPCRFL.
-!
-! $ Detailed_Output
-!
-!     LINE     is the first line of text from the comment area of
-!              the SPK or CK file specified by HANDLE. LINE may
-!              be blank.
-!
-!     EOC      is .TRUE. if the comment area is empty. If there
-!              are comments in the comment area, then EOC is .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the comment area of the SPK or CK file is empty, LINE
-!         will be blank.
-!
-!     2)  If the first line of comments in the comment area is longer
-!         than the declared length of LINE, it will be truncated to
-!         fit into the variable.
-!
-!     3)  If there is a problem reading from the comment area, the error
-!         SPICE(FILEREADFAILED) is signaled.
-!
-!     4)  If the comments are not in the correct format, the error
-!         SPICE(FORMATERROR) is signaled.
-!
-! $ Files
-!
-!     See argument HANDLE.
-!
-! $ Particulars
-!
-!     The structure of SPK and CK files accommodates comments in
-!     addition to data. The following routines are available
-!     for accessing the comment area of a binary SPK or CK file:
-!
-!           SPCAC           add comments
-!
-!           SPCEC           extract comments
-!
-!           SPCDC           delete comments
-!
-!           SPCRFL          read first line of comments
-!
-!           SPCRNL          read next line of comments
-!
-!     Note that comments must consist of only text, that is, printable
-!     ASCII characters, specifically ASCII 32-126. This excludes
-!     tabs (ASCII 9) and control characters.
-!
-!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
-!     SPCT2B---include these comments when converting SPK and CK
-!     files between binary and text formats.
-!
-! $ Examples
-!
-!     Suppose we have a binary SPK file called A.BSP. The following
-!     code fragment searches the comment area for a lines containing
-!     the character string `SOURCE' and writes the lines to standard
-!     output.
-!
-!      C
-!      C     Open the binary SPK file and get its handle.
-!      C
-!            CALL DAFOPR ( 'A.BSP', HANDLE )
-!
-!      C
-!      C     Read the first line of comments.
-!      C
-!            CALL SPCRFL ( HANDLE, LINE, EOC )
-!
-!      C
-!      C     Search for the string 'SOURCE' in the line. If
-!      C     it is found, write the line. Then get the next
-!      C     line of comments and repeat as long as we're not
-!      C     at the end.
-!      C
-!            DO WHILE ( .NOT. EOC )
-!
-!               IF (  POS ( LINE, 'SOURCE', 1 ) .NE. 0  ) THEN
-!                  WRITE (*,*) LINE
-!               END IF
-!
-!               CALL SPCRNL ( LINE, EOC )
-!
-!            END DO
-!
-! $ Restrictions
-!
-!     1)  This routine assumes that the comment area of the binary SPK
-!         or CK file contains only text stored by SPCAC. Comments
-!         written any other way may not be handled properly.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     J.E. McLean        (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Moved the contents of the $Files section to the description of
-!        HANDLE in $Detailed_Input section, and referred to it from
-!        $Files.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        Updated this routine to utilize the new handle manager
-!        interfaces.
-!
-!-    SPICELIB Version 1.1.0, 27-JUL-1992 (KRG)
-!
-!        Removed a call to the SPICELIB subroutine SUFFIX() which
-!        was used to join two parts of a comment line that may be
-!        broken across two comment records. The problem was, SUFFIX
-!        cannot know about leading/embedded blanks when it appends, so
-!        blanks were inadvertently removed when they happened to be
-!        stored at the end of comment record.
-!
-!        Added the variable TMPLEN to record the length of the first
-!        part of a comment line that may be broken across comment
-!        records.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 15-APR-1991 (JEM)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read the first comment line of an SPK or CK file
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        Calls to DAFHLU now lock handles to their logical units.
-!        While at first glance it may seem this is the appropriate
-!        course of action due to the buffering of the logical unit
-!        by this routine for its entry point, adding a call to
-!        ZZDDHUNL in the entry point removes the need to lock DAFU
-!        to its handle. The value of HANDLE is now buffered in
-!        HANBUF, to allow the entry point to retrieve a logical
-!        unit.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-!     IFNLEN      is the length of a DAF internal file name.
-!
-!     MAXCPR      is the maximum number of characters per DAF record and
-!                 hence the maximum comment line length.
-!
-
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Read the first line of text from the comment area
+!!     of a binary SPK or CK file.
+!!
+!! ## Required Reading
+!!
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE   is the handle assigned to the binary SPK or CK file
+!!              which has been opened for read access.
+!!
+!!              Use the SPICELIB routine DAFOPR to open the file for read
+!!              access and get HANDLE, unless SPKLEF or CKLPF has already
+!!              been called and returned the handle. This file is
+!!              unchanged by calling SPCRFL.
+!!
+!! ## Detailed Output
+!!
+!!     LINE     is the first line of text from the comment area of
+!!              the SPK or CK file specified by HANDLE. LINE may
+!!              be blank.
+!!
+!!     EOC      is .TRUE. if the comment area is empty. If there
+!!              are comments in the comment area, then EOC is .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the comment area of the SPK or CK file is empty, LINE
+!!         will be blank.
+!!
+!!     2)  If the first line of comments in the comment area is longer
+!!         than the declared length of LINE, it will be truncated to
+!!         fit into the variable.
+!!
+!!     3)  If there is a problem reading from the comment area, the error
+!!         SPICE(FILEREADFAILED) is signaled.
+!!
+!!     4)  If the comments are not in the correct format, the error
+!!         SPICE(FORMATERROR) is signaled.
+!!
+!! ## Files
+!!
+!!     See argument HANDLE.
+!!
+!! ## Particulars
+!!
+!!     The structure of SPK and CK files accommodates comments in
+!!     addition to data. The following routines are available
+!!     for accessing the comment area of a binary SPK or CK file:
+!!
+!!           SPCAC           add comments
+!!
+!!           SPCEC           extract comments
+!!
+!!           SPCDC           delete comments
+!!
+!!           SPCRFL          read first line of comments
+!!
+!!           SPCRNL          read next line of comments
+!!
+!!     Note that comments must consist of only text, that is, printable
+!!     ASCII characters, specifically ASCII 32-126. This excludes
+!!     tabs (ASCII 9) and control characters.
+!!
+!!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
+!!     SPCT2B---include these comments when converting SPK and CK
+!!     files between binary and text formats.
+!!
+!! ## Examples
+!!
+!!     Suppose we have a binary SPK file called A.BSP. The following
+!!     code fragment searches the comment area for a lines containing
+!!     the character string `SOURCE' and writes the lines to standard
+!!     output.
+!!
+!!      C
+!!      C     Open the binary SPK file and get its handle.
+!!      C
+!!            CALL DAFOPR ( 'A.BSP', HANDLE )
+!!
+!!      C
+!!      C     Read the first line of comments.
+!!      C
+!!            CALL SPCRFL ( HANDLE, LINE, EOC )
+!!
+!!      C
+!!      C     Search for the string 'SOURCE' in the line. If
+!!      C     it is found, write the line. Then get the next
+!!      C     line of comments and repeat as long as we're not
+!!      C     at the end.
+!!      C
+!!            DO WHILE ( .NOT. EOC )
+!!
+!!               IF (  POS ( LINE, 'SOURCE', 1 ) .NE. 0  ) THEN
+!!                  WRITE (*,*) LINE
+!!               END IF
+!!
+!!               CALL SPCRNL ( LINE, EOC )
+!!
+!!            END DO
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes that the comment area of the binary SPK
+!!         or CK file contains only text stored by SPCAC. Comments
+!!         written any other way may not be handled properly.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     K.R. Gehringer     (JPL)
+!!     J.E. McLean        (JPL)
+!!     W.L. Taber         (JPL)
+!!     F.S. Turner        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Moved the contents of the $Files section to the description of
+!!        HANDLE in $Detailed_Input section, and referred to it from
+!!        $Files.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!!
+!!        Updated this routine to utilize the new handle manager
+!!        interfaces.
+!!
+!!-    SPICELIB Version 1.1.0, 27-JUL-1992 (KRG)
+!!
+!!        Removed a call to the SPICELIB subroutine SUFFIX() which
+!!        was used to join two parts of a comment line that may be
+!!        broken across two comment records. The problem was, SUFFIX
+!!        cannot know about leading/embedded blanks when it appends, so
+!!        blanks were inadvertently removed when they happened to be
+!!        stored at the end of comment record.
+!!
+!!        Added the variable TMPLEN to record the length of the first
+!!        part of a comment line that may be broken across comment
+!!        records.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 15-APR-1991 (JEM)
+!!
+!! ## Index Entries
+!!
+!!     read the first comment line of an SPK or CK file
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!!
+!!        Calls to DAFHLU now lock handles to their logical units.
+!!        While at first glance it may seem this is the appropriate
+!!        course of action due to the buffering of the logical unit
+!!        by this routine for its entry point, adding a call to
+!!        ZZDDHUNL in the entry point removes the need to lock DAFU
+!!        to its handle. The value of HANDLE is now buffered in
+!!        HANBUF, to allow the entry point to retrieve a logical
+!!        unit.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     IFNLEN      is the length of a DAF internal file name.
+!!
+!!     MAXCPR      is the maximum number of characters per DAF record and
+!!                 hence the maximum comment line length.
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
@@ -16440,195 +16367,189 @@ contains
       end procedure spcrfl
 
       module procedure spcrnl
-
-! $ Abstract
-!
-!     Continue reading lines from the comment area of a binary
-!     SPK or CK file specified by the most recent call to
-!     the routine SPCRFL.
-!
-! $ Required_Reading
-!
-!     SPC
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-!
-!     IMPLICIT NONE
-!
-!     CHARACTER*(*)         LINE
-!     LOGICAL               EOC
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     LINE     is the next line of text from the comment area of
-!              the SPK or CK file. LINE may be blank.
-!              SPCRFL reads the first line of comments from
-!              a specified binary SPK or CK file. Once SPCRFL
-!              has been called, SPCRNL may be called repetitively
-!              to read the next lines of the comment area until
-!              the end.
-!
-!     EOC      is .TRUE. if there are no more comments to read.
-!              Otherwise, EOC is .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If SPCRFL is not called prior to calling SPCRNL, the error
-!         SPICE(SPCRFLNOTCALLED) is signaled.
-!
-!     2)  If the most recent call to SPCRFL returned EOC with the value
-!         true, then SPCRNL will return EOC with the same value.
-!
-!     3)  If EOC is .TRUE., LINE will be blank.
-!
-!     4)  If the first line of comments in the comment area is longer
-!         than the declared length of LINE, it will be truncated to
-!         fit into the variable.
-!
-!     5)  If there is a problem reading from the comment area, the error
-!         SPICE(FILEREADFAILED) is signaled.
-!
-!     6)  If the comments are not in the correct format, the error
-!         SPICE(FORMATERROR) is signaled.
-!
-! $ Files
-!
-!     The handle of the binary SPK or CK is specified with the routine
-!     SPCRFL.
-!
-! $ Particulars
-!
-!     The structure of SPK and CK files accommodates comments in
-!     addition to data. The following five routines are available
-!     for accessing the comment area of a binary SPK or CK file:
-!
-!           SPCAC           add comments
-!
-!           SPCEC           extract comments
-!
-!           SPCDC           delete comments
-!
-!           SPCRFL          read first line of comments
-!
-!           SPCRNL          read next line of comments
-!
-!     Note that comments must consist of only text, that is, printable
-!     ASCII characters, specifically ASCII 32-126. This excludes
-!     tabs (ASCII 9) and control characters.
-!
-!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
-!     SPCT2B---include these comments when converting SPK and CK
-!     files between binary and text formats.
-!
-! $ Examples
-!
-!     Suppose we have a binary SPK file called A.BSP. The following
-!     code fragment searches the comment area for a lines containing
-!     the character string `SOURCE' and writes the lines to standard
-!     output.
-!
-!      C
-!      C     Open the binary SPK file and get its handle.
-!      C
-!            CALL DAFOPR ( 'A.BSP', HANDLE )
-!
-!      C
-!      C     Read the first line of comments.
-!      C
-!            CALL SPCRFL ( HANDLE, LINE, EOC )
-!
-!      C
-!      C     Search for the string 'SOURCE' in the line. If
-!      C     it is found, write the line. Then get the next
-!      C     line of comments and repeat as long as we're not
-!      C     at the end.
-!      C
-!            DO WHILE ( .NOT. EOC )
-!
-!               IF (  POS ( LINE, 'SOURCE', 1 ) .NE. 0  ) THEN
-!                  WRITE (*,*) LINE
-!               END IF
-!
-!               CALL SPCRNL ( LINE, EOC )
-!
-!            END DO
-!
-! $ Restrictions
-!
-!     1)  This routine assumes that the comment area of the binary SPK
-!         or CK file contains only text stored by SPCAC. Comments
-!         written any other way may not be handled properly.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     J.E. McLean        (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        Updated this entry point to utilize the handle manager
-!        interfaces. See the $Revisions section of the subroutine
-!        header above for a detailed discussion of the changes.
-!
-!-    SPICELIB Version 1.1.0, 27-JUL-1992 (KRG)
-!
-!        Removed a call to the SPICELIB subroutine SUFFIX() which
-!        was used to join two parts of a comment line that may be
-!        broken across two comment records. The problem was, SUFFIX
-!        cannot know about leading/embedded blanks when it appends, so
-!        blanks were inadvertently removed when they happened to be
-!        stored at the end of comment record.
-!
-!        Added the variable TMPLEN to record the length of the first
-!        part of a comment line that may be broken across comment
-!        records.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 15-APR-1991 (JEM)
-!
-!-&
-
-! $ Index_Entries
-!
-!     continue reading comments from an SPK or CK file
-!     read the next comment line of an SPK or CK file
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Continue reading lines from the comment area of a binary
+!!     SPK or CK file specified by the most recent call to
+!!     the routine SPCRFL.
+!!
+!! ## Required Reading
+!!
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
+!!     IMPLICIT NONE
+!!
+!!     CHARACTER*(*)         LINE
+!!     LOGICAL               EOC
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     LINE     is the next line of text from the comment area of
+!!              the SPK or CK file. LINE may be blank.
+!!              SPCRFL reads the first line of comments from
+!!              a specified binary SPK or CK file. Once SPCRFL
+!!              has been called, SPCRNL may be called repetitively
+!!              to read the next lines of the comment area until
+!!              the end.
+!!
+!!     EOC      is .TRUE. if there are no more comments to read.
+!!              Otherwise, EOC is .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If SPCRFL is not called prior to calling SPCRNL, the error
+!!         SPICE(SPCRFLNOTCALLED) is signaled.
+!!
+!!     2)  If the most recent call to SPCRFL returned EOC with the value
+!!         true, then SPCRNL will return EOC with the same value.
+!!
+!!     3)  If EOC is .TRUE., LINE will be blank.
+!!
+!!     4)  If the first line of comments in the comment area is longer
+!!         than the declared length of LINE, it will be truncated to
+!!         fit into the variable.
+!!
+!!     5)  If there is a problem reading from the comment area, the error
+!!         SPICE(FILEREADFAILED) is signaled.
+!!
+!!     6)  If the comments are not in the correct format, the error
+!!         SPICE(FORMATERROR) is signaled.
+!!
+!! ## Files
+!!
+!!     The handle of the binary SPK or CK is specified with the routine
+!!     SPCRFL.
+!!
+!! ## Particulars
+!!
+!!     The structure of SPK and CK files accommodates comments in
+!!     addition to data. The following five routines are available
+!!     for accessing the comment area of a binary SPK or CK file:
+!!
+!!           SPCAC           add comments
+!!
+!!           SPCEC           extract comments
+!!
+!!           SPCDC           delete comments
+!!
+!!           SPCRFL          read first line of comments
+!!
+!!           SPCRNL          read next line of comments
+!!
+!!     Note that comments must consist of only text, that is, printable
+!!     ASCII characters, specifically ASCII 32-126. This excludes
+!!     tabs (ASCII 9) and control characters.
+!!
+!!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
+!!     SPCT2B---include these comments when converting SPK and CK
+!!     files between binary and text formats.
+!!
+!! ## Examples
+!!
+!!     Suppose we have a binary SPK file called A.BSP. The following
+!!     code fragment searches the comment area for a lines containing
+!!     the character string `SOURCE' and writes the lines to standard
+!!     output.
+!!
+!!      C
+!!      C     Open the binary SPK file and get its handle.
+!!      C
+!!            CALL DAFOPR ( 'A.BSP', HANDLE )
+!!
+!!      C
+!!      C     Read the first line of comments.
+!!      C
+!!            CALL SPCRFL ( HANDLE, LINE, EOC )
+!!
+!!      C
+!!      C     Search for the string 'SOURCE' in the line. If
+!!      C     it is found, write the line. Then get the next
+!!      C     line of comments and repeat as long as we're not
+!!      C     at the end.
+!!      C
+!!            DO WHILE ( .NOT. EOC )
+!!
+!!               IF (  POS ( LINE, 'SOURCE', 1 ) .NE. 0  ) THEN
+!!                  WRITE (*,*) LINE
+!!               END IF
+!!
+!!               CALL SPCRNL ( LINE, EOC )
+!!
+!!            END DO
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine assumes that the comment area of the binary SPK
+!!         or CK file contains only text stored by SPCAC. Comments
+!!         written any other way may not be handled properly.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     K.R. Gehringer     (JPL)
+!!     J.E. McLean        (JPL)
+!!     W.L. Taber         (JPL)
+!!     F.S. Turner        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!!
+!!        Updated this entry point to utilize the handle manager
+!!        interfaces. See the $Revisions section of the subroutine
+!!        header above for a detailed discussion of the changes.
+!!
+!!-    SPICELIB Version 1.1.0, 27-JUL-1992 (KRG)
+!!
+!!        Removed a call to the SPICELIB subroutine SUFFIX() which
+!!        was used to join two parts of a comment line that may be
+!!        broken across two comment records. The problem was, SUFFIX
+!!        cannot know about leading/embedded blanks when it appends, so
+!!        blanks were inadvertently removed when they happened to be
+!!        stored at the end of comment record.
+!!
+!!        Added the variable TMPLEN to record the length of the first
+!!        part of a comment line that may be broken across comment
+!!        records.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 15-APR-1991 (JEM)
+!!
+!! ## Index Entries
+!!
+!!     continue reading comments from an SPK or CK file
+!!     read the next comment line of an SPK or CK file
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
@@ -16867,22 +16788,21 @@ contains
 !$Procedure SPKCLS ( SPK, Close file )
 
       module procedure spkcls
+!! ## Abstract
+!!
+!!     Close an open SPK file.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     SPK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Close an open SPK file.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -17157,22 +17077,21 @@ contains
 !$Procedure SPKOPA ( SPK open for addition )
 
       module procedure spkopa
+!! ## Abstract
+!!
+!!     Open an existing SPK file for subsequent write.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     SPK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Open an existing SPK file for subsequent write.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -17503,22 +17422,21 @@ contains
 !$Procedure SPKOPN ( SPK, open new file. )
 
       module procedure spkopn
+!! ## Abstract
+!!
+!!     Create a new SPK file, returning the handle of the opened file.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     SPK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Create a new SPK file, returning the handle of the opened file.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -17803,26 +17721,25 @@ contains
 !$Procedure SPKW01 ( Write SPK segment, type 1 )
 
       module procedure spkw01
+!! ## Abstract
+!!
+!!     Write a type 1 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 1 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: dlsize = 71
@@ -18228,27 +18145,26 @@ contains
 !$Procedure SPKW02 ( SPK, write segment, type 2 )
 
       module procedure spkw02
+!! ## Abstract
+!!
+!!     Write a type 2 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPC
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Write a type 2 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPC
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
+      use pepper_inc_spk02
       implicit none
 
-      include 'spk02.inc'
 
 
 ! $ Detailed_Input
@@ -18885,27 +18801,26 @@ contains
 !$Procedure SPKW03 ( SPK, write segment, type 3 )
 
       module procedure spkw03
+!! ## Abstract
+!!
+!!     Write a type 3 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPC
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Write a type 3 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPC
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
+      use pepper_inc_spk03
       implicit none
 
-      include 'spk03.inc'
 
 
 ! $ Detailed_Input
@@ -19565,27 +19480,26 @@ contains
 !$Procedure SPKW05 ( Write SPK segment, type 5 )
 
       module procedure spkw05
+!! ## Abstract
+!!
+!!     Write an SPK segment of type 5 given a time-ordered set of
+!!     discrete states and epochs, and the gravitational parameter
+!!     of a central body.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     SPC
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write an SPK segment of type 5 given a time-ordered set of
-!     discrete states and epochs, and the gravitational parameter
-!     of a central body.
-!
-! $ Required_Reading
-!
-!     SPK
-!     SPC
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -20062,30 +19976,29 @@ contains
 !$Procedure SPKW08 ( Write SPK segment, type 8 )
 
       module procedure spkw08
+!! ## Abstract
+!!
+!!     Write a type 8 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPC
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 8 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPC
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_spk08
       implicit none
 
-      include 'spk08.inc'
 
 
 ! $ Detailed_Input
@@ -20692,27 +20605,26 @@ contains
 !$Procedure SPKW09 ( Write SPK segment, type 9 )
 
       module procedure spkw09
+!! ## Abstract
+!!
+!!     Write a type 9 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPC
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 9 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPC
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 
@@ -21360,28 +21272,27 @@ contains
 !$Procedure SPKW10 (SPK - write a type 10 segment )
 
       module procedure spkw10
+!! ## Abstract
+!!
+!!     Write an SPK type 10 segment to the file specified by
+!!     the input HANDLE.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     SPK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Write an SPK type 10 segment to the file specified by
-!     the input HANDLE.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
-!
-! $ Declarations
-
+      use pepper_inc_sgparam
       implicit none
 
-      include              'sgparam.inc'
 
 
 ! $ Detailed_Input
@@ -21943,31 +21854,30 @@ contains
 !$Procedure SPKW12 ( SPK, write segment, type 12 )
 
       module procedure spkw12
+!! ## Abstract
+!!
+!!     Write a type 12 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPC
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: even
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 12 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPC
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_spk12
       implicit none
 
-      include 'spk12.inc'
 
 
 ! $ Detailed_Input
@@ -22546,28 +22456,27 @@ contains
 !$Procedure SPKW13 ( Write SPK segment, type 13 )
 
       module procedure spkw13
+!! ## Abstract
+!!
+!!     Write a type 13 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPC
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: even
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 13 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPC
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 
@@ -23185,25 +23094,24 @@ contains
 !$Procedure SPKW15 ( SPK, write a type 15 segment )
 
       module procedure spkw15
+!! ## Abstract
+!!
+!!     Write an SPK segment of type 15 given a type 15 data record.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
       use pepper_math, only: vdot, vequ, vhat, vsep, vzero
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write an SPK segment of type 15 given a type 15 data record.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -23679,24 +23587,23 @@ contains
 !$Procedure SPKW17 ( SPK, write a type 17 segment )
 
       module procedure spkw17
+!! ## Abstract
+!!
+!!     Write an SPK segment of type 17 given a type 17 data record.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write an SPK segment of type 17 given a type 17 data record.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -24209,31 +24116,30 @@ contains
 !$Procedure SPKW18 ( Write SPK segment, type 18 )
 
       module procedure spkw18
+!! ## Abstract
+!!
+!!     Write a type 18 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPC
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 18 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPC
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_spk18
       implicit none
 
-      include 'spk18.inc'
 
 
       integer(ip), parameter :: maxdeg = 15
@@ -24765,33 +24671,32 @@ contains
 !$Procedure SPKW19 ( Write SPK segment, type 19 )
 
       module procedure spkw19
+!! ## Abstract
+!!
+!!     Write a type 19 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     DAF
+!!     NAIF_IDS
+!!     SPC
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 19 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     DAF
-!     NAIF_IDS
-!     SPC
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
       implicit none
 
-      include 'spk19.inc'
-      include 'spkrec.inc'
 
 
 ! $ Detailed_Input
@@ -25776,29 +25681,28 @@ contains
 !$Procedure SPKW20 ( SPK, write segment, type 20 )
 
       module procedure spkw20
+!! ## Abstract
+!!
+!!     Write a type 20 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     DAF
+!!     NAIF_IDS
+!!     TIME
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
-
-! $ Abstract
-!
-!     Write a type 20 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     DAF
-!     NAIF_IDS
-!     TIME
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
+      use pepper_inc_spk20
       implicit none
 
-      include 'spk20.inc'
 
 
 ! $ Detailed_Input
@@ -26420,29 +26324,28 @@ contains
 !$Procedure SPKW21 ( Write SPK segment, type 21 )
 
       module procedure spkw21
+!! ## Abstract
+!!
+!!     Write a type 21 segment to an SPK file.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!     Write a type 21 segment to an SPK file.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     FILES
-!
-! $ Declarations
-
+      use pepper_inc_spk21
       implicit none
 
-      include 'spk21.inc'
 
 
 ! $ Detailed_Input
@@ -26945,32 +26848,31 @@ contains
 !$Procedure      ZZCK4I2D ( Pack set of integers into a single DP )
 
       module procedure zzck4i2d
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This is the routine that packs a set integer numbers into a
+!!     single double precision number.
+!!
+!!     Its current specific use is to "compress" seven integer numbers
+!!     representing numbers of polynomial coefficients in a logical
+!!     type 4 CK record into a single DP number stored in a physical
+!!     type 4 CK record in a file.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This is the routine that packs a set integer numbers into a
-!     single double precision number.
-!
-!     Its current specific use is to "compress" seven integer numbers
-!     representing numbers of polynomial coefficients in a logical
-!     type 4 CK record into a single DP number stored in a physical
-!     type 4 CK record in a file.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
       implicit none
 
 
@@ -27077,26 +26979,25 @@ contains
 !$Procedure CKGR02 ( C-kernel, get record, type 02 )
 
       module procedure ckgr02
+!! ## Abstract
+!!
+!!     Return a specified pointing instance from a CK type 02 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Return a specified pointing instance from a CK type 02 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -27579,27 +27480,26 @@ contains
 !$Procedure CKW04A ( CK type 04: Add data to a segment )
 
       module procedure ckw04a
+!! ## Abstract
+!!
+!!     Add data to a type 4 CK segment currently being written to
+!!     the file associated with HANDLE. See also CKW04B and CKW04E.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Add data to a type 4 CK segment currently being written to
-!     the file associated with HANDLE. See also CKW04B and CKW04E.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ckparam
       implicit none
 
-      include               'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -28158,26 +28058,25 @@ contains
 !$Procedure PCK03B ( PCK, begin a type 3 segment )
 
       module procedure pck03b
+!! ## Abstract
+!!
+!!     Begin a type 03 PCK segment in the binary PCK file associated with
+!!     HANDLE. See also PCK03A and PCK03E.
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Begin a type 03 PCK segment in the binary PCK file associated with
-!     HANDLE. See also PCK03A and PCK03E.
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
+      use pepper_inc_sgparam
       implicit none
 
-      include 'sgparam.inc'
 
 
 ! $ Detailed_Input
@@ -28568,24 +28467,23 @@ contains
 !$Procedure SPCB2T ( SPK and CK, binary to text )
 
       module procedure spcb2t
+!! ## Abstract
+!!
+!!     Convert the contents of a binary SPK or CK file to text,
+!!     including comments if present, and write them to a text file
+!!     opened by the calling program.
+!!
+!! ## Required Reading
+!!
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Convert the contents of a binary SPK or CK file to text,
-!     including comments if present, and write them to a text file
-!     opened by the calling program.
-!
-! $ Required_Reading
-!
-!     SPC
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 
@@ -28805,24 +28703,23 @@ contains
 !$Procedure SPCT2B ( SPK and CK, text to binary )
 
       module procedure spct2b
+!! ## Abstract
+!!
+!!     Reconstruct a binary SPK or CK file including comments
+!!     from a text file opened by the calling program.
+!!
+!! ## Required Reading
+!!
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ltrim, rtrim
-
-! $ Abstract
-!
-!     Reconstruct a binary SPK or CK file including comments
-!     from a text file opened by the calling program.
-!
-! $ Required_Reading
-!
-!     SPC
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 
@@ -29158,23 +29055,22 @@ contains
 !$Procedure SPCA2B ( SPK and CK, ASCII to binary )
 
       module procedure spca2b
+!! ## Abstract
+!!
+!!     Convert a text (ASCII) format SPK or CK file to an equivalent
+!!     binary file, including comments.
+!!
+!! ## Required Reading
+!!
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Convert a text (ASCII) format SPK or CK file to an equivalent
-!     binary file, including comments.
-!
-! $ Required_Reading
-!
-!     SPC
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 
@@ -29348,23 +29244,22 @@ contains
 !$Procedure SPCB2A ( SPK and CK, binary to ASCII )
 
       module procedure spcb2a
+!! ## Abstract
+!!
+!!     Convert a binary SPK or CK file to an equivalent text (ASCII)
+!!     file, including the comment area.
+!!
+!! ## Required Reading
+!!
+!!     SPC
+!!
+!! ## Keywords
+!!
+!!     FILES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Convert a binary SPK or CK file to an equivalent text (ASCII)
-!     file, including the comment area.
-!
-! $ Required_Reading
-!
-!     SPC
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
       implicit none
 
 

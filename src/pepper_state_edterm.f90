@@ -8,12 +8,12 @@
 module pepper_state_edterm
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzctr.inc'
    integer(ip), parameter :: maxl = 36
    integer(ip), parameter :: frnmln = 32
 

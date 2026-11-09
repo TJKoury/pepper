@@ -7,16 +7,16 @@
 module pepper_state_srfnrm
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_dsktol
+      use pepper_inc_gf
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
 
    implicit none
 
    private
 
-   include 'dsk.inc'
-   include 'dsktol.inc'
-   include 'gf.inc'
-   include 'zzctr.inc'
-   include 'zzdsk.inc'
    integer(ip), parameter :: bdnmln = 36
    integer(ip), parameter :: frnmln = 32
 

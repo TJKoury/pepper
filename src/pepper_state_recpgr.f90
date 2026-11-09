@@ -6,12 +6,12 @@
 module pepper_state_recpgr
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzctr.inc'
    integer(ip), parameter :: maxl = 36
 
    public :: init_recpgr_state

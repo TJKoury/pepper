@@ -16,9 +16,9 @@
       use pepper_instance, only: pepper_context, pepper_zzdynbid => zzdynbid
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzdyn
       implicit none
-      include 'zzbodtrn.inc'
-      include 'zzdyn.inc'
       character(*) :: frname  !! Frame name.
       integer(ip) :: frcode  !! Frame ID code.
       character(*) :: item  !! Item associated with frame definition.
@@ -37,8 +37,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdynvai => zzdynvai
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzdyn
       implicit none
-      include 'zzdyn.inc'
       character(*) :: frname  !! Frame name.
       integer(ip) :: frcode  !! Frame ID code.
       character(*) :: item  !! Item associated with frame definition.
@@ -60,8 +60,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdynoac => zzdynoac
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzdyn
       implicit none
-      include 'zzdyn.inc'
       character(*) :: frname  !! Frame name.
       integer(ip) :: frcode  !! Frame ID code.
       character(*) :: item  !! Item associated with frame definition.
@@ -84,9 +84,9 @@
       use pepper_instance, only: pepper_context, pepper_zzdynoad => zzdynoad
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzdyn
       implicit none
-      include 'zzbodtrn.inc'
-      include 'zzdyn.inc'
       character(*) :: frname  !! Frame name.
       integer(ip) :: frcode  !! Frame ID code.
       character(*) :: item  !! Item associated with frame definition.
@@ -108,8 +108,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdynvac => zzdynvac
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzdyn
       implicit none
-      include 'zzdyn.inc'
       character(*) :: frname  !! Frame name.
       integer(ip) :: frcode  !! Frame ID code.
       character(*) :: item  !! Item associated with frame definition.
@@ -130,8 +130,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdynvad => zzdynvad
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzdyn
       implicit none
-      include 'zzdyn.inc'
       character(*) :: frname  !! Frame name.
       integer(ip) :: frcode  !! Frame ID code.
       character(*) :: item  !! Item associated with frame definition.
@@ -152,8 +152,8 @@
       use pepper_instance, only: pepper_context, pepper_zzswfcln => zzswfcln
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzswtchf
       implicit none
-      include 'zzswtchf.inc'
       integer(ip) :: hdfram ( * )  !! Array of hash collision list head nodes.
       integer(ip) :: frpool ( lbsngl : * )  !! Hash collision list pool.
       integer(ip) :: basbeg ( * )  !! Start indices of base lists of switch frames.
@@ -173,8 +173,8 @@
       use pepper_instance, only: pepper_context, pepper_zzswfini => zzswfini
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzswtchf
       implicit none
-      include 'zzswtchf.inc'
       integer(ip) :: hdfram ( * )  !! Array of hash collision list head nodes.
       integer(ip) :: frpool ( lbsngl : * )  !! Hash collision list pool.
       integer(ip) :: fidlst ( * )  !! Frame IDs corresponding to list nodes.
@@ -216,10 +216,10 @@
       use pepper_instance, only: pepper_context, pepper_zzfdat => zzfdat
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_frmtyp
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
       implicit none
-      include              'frmtyp.inc'
-      include              'ninert.inc'
-      include              'nninrt.inc'
       integer(ip), parameter :: lbpool = -5
       integer(ip) :: ncount  !! Input checking variable.
       integer(ip) :: maxbfr  !! build-in frame hash size.
@@ -249,11 +249,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include              'ninert.inc'
-      include              'nninrt.inc'
-      include              'frmtyp.inc'
-      include              'zzctr.inc'
       character(*) :: frname  !! The name of some reference frame
       integer(ip) :: frcode  !! The SPICE ID code of the frame.
       type(pepper_context), pointer :: ctx
@@ -269,11 +269,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include              'ninert.inc'
-      include              'nninrt.inc'
-      include              'frmtyp.inc'
-      include              'zzctr.inc'
       character(*) :: frname  !! the name associated with the reference frame.
       integer(ip) :: frcode  !! an integer code for a reference frame
       type(pepper_context), pointer :: ctx
@@ -289,11 +289,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include              'ninert.inc'
-      include              'nninrt.inc'
-      include              'frmtyp.inc'
-      include              'zzctr.inc'
       integer(ip) :: frcode  !! the ID code for some frame
       integer(ip) :: cent  !! the center of the frame
       integer(ip) :: frclss  !! the class (type) of the frame
@@ -311,11 +311,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include              'ninert.inc'
-      include              'nninrt.inc'
-      include              'frmtyp.inc'
-      include              'zzctr.inc'
       character(*) :: frname  !! the name of the frame with ID FRCODE
       integer(ip) :: frcode  !! the ID code of the frame associated with CENT
       integer(ip) :: cent  !! an object to associate a frame with.
@@ -332,11 +332,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include              'ninert.inc'
-      include              'nninrt.inc'
-      include              'frmtyp.inc'
-      include              'zzctr.inc'
       character(*) :: cname  !! name of the object to find a frame for
       character(*) :: frname  !! the name of the frame with ID FRCODE
       integer(ip) :: frcode  !! the ID code of the frame associated with CNAME
@@ -354,11 +354,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include              'ninert.inc'
-      include              'nninrt.inc'
-      include              'frmtyp.inc'
-      include              'zzctr.inc'
       character(*) :: frname  !! Name of the frame identified by FRCLSS, CLSSID.
       integer(ip) :: frcode  !! ID code of the frame identified by FRCLSS, CLSSID.
       integer(ip) :: cent  !! Center of the frame identified by FRCLSS, CLSSID.
@@ -373,11 +373,11 @@
       !> Umbrella of the FRAMEX routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine framex ( cname, frname, frcode, cent, frclss, clssid, found )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include              'ninert.inc'
-      include              'nninrt.inc'
-      include              'frmtyp.inc'
-      include              'zzctr.inc'
       character(*) :: cname
       character(*) :: frname
       integer(ip) :: frcode

@@ -114,8 +114,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdasgrd => zzdasgrd
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_das
       implicit none
-      include 'das.inc'
       integer(ip) :: handle  !! Handle of DAS file.
       integer(ip) :: recno  !! Record number.
       real(wp) :: record ( nwd )  !! Double precision data read from record.
@@ -133,8 +133,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdasgri => zzdasgri
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
       implicit none
-      include 'das.inc'
       integer(ip) :: handle  !! Handle of DAS file.
       integer(ip) :: recno  !! Record number.
       integer(ip) :: record ( nwi )  !! Integer data read from record.
@@ -150,8 +150,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdasnfr => zzdasnfr
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzftprms
       implicit none
-      include              'zzftprms.inc'
       integer(ip) :: lun  !! Logical unit number of an open DAS file.
       character(*) :: idword  !! DAS File ID word.
       character(*) :: ifname  !! DAS internal file name.
@@ -172,8 +172,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdasrfr => zzdasrfr
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include 'zzddhman.inc'
       integer(ip) :: handle  !! DAS file handle.
       character(*) :: idword  !! ID word.
       character(*) :: ifname  !! DAS internal file name.
@@ -193,9 +193,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       character(*) :: fname  !! Name of a DAS file to be opened.
       integer(ip) :: handle  !! Handle assigned to the opened DAS file.
       type(pepper_context), pointer :: ctx
@@ -210,9 +210,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       character(*) :: fname  !! Name of a DAS file to be opened.
       integer(ip) :: handle  !! Handle assigned to the opened DAS file.
       type(pepper_context), pointer :: ctx
@@ -227,9 +227,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       character(*) :: fname  !! Name of a DAS file to be opened.
       character(*) :: ftype  !! Mnemonic code for type of data in the DAS file.
       character(*) :: ifname  !! Internal file name.
@@ -240,7 +240,7 @@
       call ctx%dasonw ( fname, ftype, ifname, ncomr, handle )
       end subroutine dasonw
 
-      !> Obsolete: This routine has been superseded by DASONW, and it is
+      !> **Obsolete:** This routine has been superseded by DASONW, and it is
       !> supported for purposes of backward compatibility only.
       !>
       !> Legacy interface: calls ctx%dasopn with the legacy context.
@@ -248,9 +248,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       character(*) :: fname  !! Name of a DAS file to be opened.
       character(*) :: ifname  !! Internal file name.
       integer(ip) :: handle  !! Handle assigned to the opened DAS file.
@@ -266,9 +266,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip) :: handle  !! Handle assigned to a scratch DAS file.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -283,9 +283,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip) :: handle  !! Handle of a DAS file to be closed.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -299,9 +299,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip) :: handle  !! Handle of a DAS file.
       integer(ip) :: free  !! Number of first free record.
       integer(ip) :: lastla ( 3 )  !! Array of last logical addresses for each data type.
@@ -323,9 +323,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip) :: handle  !! Handle of an open DAS file.
       integer(ip) :: free  !! Number of first free record.
       integer(ip) :: lastla ( 3 )  !! Array of last logical addresses for each data type.
@@ -349,9 +349,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip) :: handle  !! Handle of a DAS file.
       integer(ip) :: unit  !! Corresponding logical unit.
       type(pepper_context), pointer :: ctx
@@ -366,9 +366,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip) :: handle  !! Corresponding handle.
       integer(ip) :: unit  !! Logical unit connected to a DAS file.
       type(pepper_context), pointer :: ctx
@@ -383,9 +383,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       character(*) :: fname  !! Corresponding file name.
       integer(ip) :: handle  !! Handle of a DAS file.
       type(pepper_context), pointer :: ctx
@@ -400,9 +400,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       character(*) :: fname  !! Name of a DAS file.
       integer(ip) :: handle  !! Corresponding handle.
       type(pepper_context), pointer :: ctx
@@ -418,9 +418,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: fhset  ( lbcell : * )  !! A set containing handles of currently open DAS files.
       type(pepper_context), pointer :: ctx
@@ -436,9 +436,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip) :: handle  !! HANDLE to be validated.
       character(*) :: access  !! String indicating access type.
       type(pepper_context), pointer :: ctx
@@ -453,9 +453,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip) :: handle  !! HANDLE of a DAS file.
       character(*) :: access  !! String indicating allowed access method.
       type(pepper_context), pointer :: ctx
@@ -945,8 +945,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
       implicit none
-      include 'das.inc'
       integer(ip) :: handle  !! Handle of an open DAS file.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1060,8 +1060,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_das
       implicit none
-      include 'das.inc'
       integer(ip) :: handle  !! Handle of binary DAS file open with read access.
       integer(ip) :: bufsiz  !! Maximum size, in lines, of BUFFER.
       integer(ip) :: n  !! Number of comments extracted from the DAS file.

@@ -172,8 +172,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
       implicit none
-      include              'ninert.inc'
       integer(ip) :: refa  !! Indices of target reference frames (A,B).
       integer(ip) :: refb  !! Indices of target reference frames (A,B).
       real(wp) :: rotab    ( 3,3 )  !! Rotation from frame A to frame B.
@@ -190,8 +190,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
       implicit none
-      include              'ninert.inc'
       character(*) :: name  !! Name of standard inertial reference frame.
       integer(ip) :: index  !! Index of frame.
       type(pepper_context), pointer :: ctx
@@ -207,8 +207,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
       implicit none
-      include              'ninert.inc'
       character(*) :: name  !! Name of frame.
       integer(ip) :: index  !! Index of standard inertial reference frame.
       type(pepper_context), pointer :: ctx
@@ -224,8 +224,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
       implicit none
-      include              'ninert.inc'
       integer(ip) :: index  !! Index of default frame.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -368,8 +368,8 @@
       !> Umbrella of the CHGIRF routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine chgirf ( refa, refb, rotab, name, index )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
       implicit none
-      include              'ninert.inc'
       integer(ip) :: refa
       integer(ip) :: refb
       real(wp) :: rotab    ( 3,3 )

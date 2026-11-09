@@ -15,23 +15,22 @@ contains
 !$Procedure CHBASE ( Character set base )
 
       module procedure chbase
+!! ## Abstract
+!!
+!!     Return the base value used to encode unsigned integer values
+!!     in character strings.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONSTANTS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the base value used to encode unsigned integer values
-!     in character strings.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONSTANTS
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -419,25 +418,24 @@ contains
 !$Procedure ENCHAR ( Encode a character string )
 
       module procedure enchar
+!! ## Abstract
+!!
+!!     Encode a nonnegative integer number into a character string
+!!     as the expansion of the number in base CHBASE (a function of
+!!     the size of the available character set).
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Encode a nonnegative integer number into a character string
-!     as the expansion of the number in base CHBASE (a function of
-!     the size of the available character set).
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CELLS
-!     CHARACTER
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)        minlen
@@ -617,127 +615,119 @@ contains
 !$Procedure DECHAR ( Decode a character string )
 
       module procedure dechar
-
-! $ Abstract
-!
-!     Decode a character string encoded by ENCHAR.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!
-! $ Declarations
-!
-!     IMPLICIT NONE
-!
-!     CHARACTER*(*)      STRING
-!     INTEGER            NUMBER
-!
-! $ Detailed_Input
-!
-!     STRING   is a character string previously encoded by ENCHAR.
-!              This contains an integer in base CHBASE notation,
-!              where CHBASE is a function of the size of the
-!              available character set. See ENCHAR for details
-!              about the format of STRING.
-!
-! $ Detailed_Output
-!
-!     NUMBER   is the integer encoded in the input string.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the length of the input string is less than MINLEN,
-!         the error SPICE(INSUFFLEN) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     DECHAR is the inverse of ENCHAR. In the example below,
-!
-!           CALL ENCHAR (      I, STRING )
-!           CALL DECHAR ( STRING,      J )
-!
-!           IF ( I .EQ. J ) THEN
-!            .
-!            .
-!           END IF
-!
-!     the logical test (I .EQ. J) is always true.
-!
-! $ Examples
-!
-!     See: CARDC, SIZEC.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.2, 31-JAN-2008 (BVS)
-!
-!        Changed header section title '$C Revision' to '$C Revisions'.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     decode a character_string
-!
-!-&
-
-! $ Revisions
-!
-!-    Beta Version 2.0.0, 13-JAN-1989 (IMU)
-!
-!        Changed to reflect changes in ENCHAR. In particular,
-!        it now checks the length of the input string. It is
-!        also an entry point of ENCHAR, to make sure they always
-!        have the same value of MINLEN. (Also, if CHBASE is
-!        changed, ENCHAR and DECHAR will always be recompiled
-!        simultaneously.)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Decode a character string encoded by ENCHAR.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
+!!     IMPLICIT NONE
+!!
+!!     CHARACTER*(*)      STRING
+!!     INTEGER            NUMBER
+!!
+!! ## Detailed Input
+!!
+!!     STRING   is a character string previously encoded by ENCHAR.
+!!              This contains an integer in base CHBASE notation,
+!!              where CHBASE is a function of the size of the
+!!              available character set. See ENCHAR for details
+!!              about the format of STRING.
+!!
+!! ## Detailed Output
+!!
+!!     NUMBER   is the integer encoded in the input string.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the length of the input string is less than MINLEN,
+!!         the error SPICE(INSUFFLEN) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     DECHAR is the inverse of ENCHAR. In the example below,
+!!
+!!           CALL ENCHAR (      I, STRING )
+!!           CALL DECHAR ( STRING,      J )
+!!
+!!           IF ( I .EQ. J ) THEN
+!!            .
+!!            .
+!!           END IF
+!!
+!!     the logical test (I .EQ. J) is always true.
+!!
+!! ## Examples
+!!
+!!     See: CARDC, SIZEC.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.2, 31-JAN-2008 (BVS)
+!!
+!!        Changed header section title '$C Revision' to '$C Revisions'.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     decode a character_string
+!!
+!! ## Revisions
+!!
+!!-    Beta Version 2.0.0, 13-JAN-1989 (IMU)
+!!
+!!        Changed to reflect changes in ENCHAR. In particular,
+!!        it now checks the length of the input string. It is
+!!        also an entry point of ENCHAR, to make sure they always
+!!        have the same value of MINLEN. (Also, if CHBASE is
+!!        changed, ENCHAR and DECHAR will always be recompiled
+!!        simultaneously.)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip)        minlen
@@ -772,26 +762,25 @@ contains
 !$Procedure EXCESS ( Report an excess of elements in a cell )
 
       module procedure excess
+!! ## Abstract
+!!
+!!     Set the long error message so as to indicate the number of excess
+!!     elements encountered by a routine operating on cells or on data
+!!     structures based on cells.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     ERROR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, prefix, suffix
-
-! $ Abstract
-!
-!     Set the long error message so as to indicate the number of excess
-!     elements encountered by a routine operating on cells or on data
-!     structures based on cells.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!     ERROR
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -984,22 +973,21 @@ contains
 !$Procedure CARDC ( Cardinality of a character cell )
 
       module procedure cardc
+!! ## Abstract
+!!
+!!     Return the cardinality (number of elements) of a character cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the cardinality (number of elements) of a character cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -1184,23 +1172,22 @@ contains
 !$Procedure CARDD ( Cardinality of a double precision cell )
 
       module procedure cardd
+!! ## Abstract
+!!
+!!     Return the cardinality (number of elements) of a double
+!!     precision cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the cardinality (number of elements) of a double
-!     precision cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -1377,22 +1364,21 @@ contains
 !$Procedure CARDI ( Cardinality of an integer cell )
 
       module procedure cardi
+!! ## Abstract
+!!
+!!     Return the cardinality (number of elements) of an integer cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the cardinality (number of elements) of an integer cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -1569,22 +1555,21 @@ contains
 !$Procedure SIZEC ( Size of a character cell )
 
       module procedure sizec
+!! ## Abstract
+!!
+!!     Return the size (maximum cardinality) of a character cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the size (maximum cardinality) of a character cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -1755,23 +1740,22 @@ contains
 !$Procedure SIZED ( Size of a double precision cell )
 
       module procedure sized
+!! ## Abstract
+!!
+!!     Return the size (maximum cardinality) of a double precision
+!!     cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the size (maximum cardinality) of a double precision
-!     cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -1934,22 +1918,21 @@ contains
 !$Procedure SIZEI ( Size of an integer cell )
 
       module procedure sizei
+!! ## Abstract
+!!
+!!     Return the size (maximum cardinality) of an integer cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the size (maximum cardinality) of an integer cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -2112,22 +2095,21 @@ contains
 !$Procedure SCARDC ( Set the cardinality of a character cell )
 
       module procedure scardc
+!! ## Abstract
+!!
+!!     Set the cardinality of a character cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Set the cardinality of a character cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -2299,22 +2281,21 @@ contains
 !$Procedure SCARDD ( Set the cardinality of a double precision cell )
 
       module procedure scardd
+!! ## Abstract
+!!
+!!     Set the cardinality of a double precision cell.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Set the cardinality of a double precision cell.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -2478,22 +2459,21 @@ contains
 !$Procedure SCARDI ( Set the cardinality of an integer cell )
 
       module procedure scardi
+!! ## Abstract
+!!
+!!     Set the cardinality of an integer cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Set the cardinality of an integer cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -2657,22 +2637,21 @@ contains
 !$Procedure SSIZEC ( Set the size of a character cell )
 
       module procedure ssizec
+!! ## Abstract
+!!
+!!     Set the size (maximum cardinality) of a character cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Set the size (maximum cardinality) of a character cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -2845,22 +2824,21 @@ contains
 !$Procedure SSIZED ( Set the size of a double precision cell )
 
       module procedure ssized
+!! ## Abstract
+!!
+!!     Set the size (maximum cardinality) of a double precision cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Set the size (maximum cardinality) of a double precision cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -3033,22 +3011,21 @@ contains
 !$Procedure SSIZEI ( Set the size of an integer cell )
 
       module procedure ssizei
+!! ## Abstract
+!!
+!!     Set the size (maximum cardinality) of an integer cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Set the size (maximum cardinality) of an integer cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -3221,24 +3198,23 @@ contains
 !$Procedure VALIDC ( Validate a character set )
 
       module procedure validc
+!! ## Abstract
+!!
+!!     Create a valid set from a character set array.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupc
-
-! $ Abstract
-!
-!     Create a valid set from a character set array.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -3419,24 +3395,23 @@ contains
 !$Procedure VALIDD ( Validate a double precision set )
 
       module procedure validd
+!! ## Abstract
+!!
+!!     Create a valid set from a double precision set array.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: rmdupd
-
-! $ Abstract
-!
-!     Create a valid set from a double precision set array.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -3620,24 +3595,23 @@ contains
 !$Procedure VALIDI ( Validate an integer set )
 
       module procedure validi
+!! ## Abstract
+!!
+!!     Create a valid set from an integer set array.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupi
-
-! $ Abstract
-!
-!     Create a valid set from an integer set array.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -3818,22 +3792,21 @@ contains
 !$Procedure APPNDC ( Append an item to a character cell )
 
       module procedure appndc
+!! ## Abstract
+!!
+!!     Append an item to a character cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Append an item to a character cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -3988,22 +3961,21 @@ contains
 !$Procedure APPNDD ( Append an item to a double precision cell )
 
       module procedure appndd
+!! ## Abstract
+!!
+!!     Append an item to a double precision cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Append an item to a double precision cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -4235,22 +4207,21 @@ contains
 !$Procedure APPNDI ( Append an item to an integer cell )
 
       module procedure appndi
+!! ## Abstract
+!!
+!!     Append an item to an integer cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Append an item to an integer cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -4480,23 +4451,22 @@ contains
 !$Procedure COPYC ( Copy a character cell )
 
       module procedure copyc
+!! ## Abstract
+!!
+!!     Copy the contents of a character cell to another cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: lastpc
-
-! $ Abstract
-!
-!     Copy the contents of a character cell to another cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -4698,22 +4668,21 @@ contains
 !$Procedure COPYD ( Copy a double precision cell )
 
       module procedure copyd
+!! ## Abstract
+!!
+!!     Copy the contents of a double precision cell to another cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Copy the contents of a double precision cell to another cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -4866,22 +4835,21 @@ contains
 !$Procedure COPYI ( Copy an integer cell )
 
       module procedure copyi
+!! ## Abstract
+!!
+!!     Copy the contents of an integer cell to another cell.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Copy the contents of an integer cell to another cell.
-!
-! $ Required_Reading
-!
-!     CELLS
-!
-! $ Keywords
-!
-!     CELLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -5034,24 +5002,23 @@ contains
 !$Procedure INSRTC ( Insert an item into a character set )
 
       module procedure insrtc
+!! ## Abstract
+!!
+!!     Insert an item into a character set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
-
-! $ Abstract
-!
-!     Insert an item into a character set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -5349,24 +5316,23 @@ contains
 !$Procedure INSRTD ( Insert an item into a double precision set )
 
       module procedure insrtd
+!! ## Abstract
+!!
+!!     Insert an item into a double precision set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
-
-! $ Abstract
-!
-!     Insert an item into a double precision set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -5633,24 +5599,23 @@ contains
 !$Procedure INSRTI ( Insert an item into an integer set )
 
       module procedure insrti
+!! ## Abstract
+!!
+!!     Insert an item into an integer set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
-
-! $ Abstract
-!
-!     Insert an item into an integer set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -5919,24 +5884,23 @@ contains
 !$Procedure REMOVC ( Remove an item from a character set )
 
       module procedure removc
+!! ## Abstract
+!!
+!!     Remove an item from a character set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
-
-! $ Abstract
-!
-!     Remove an item from a character set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -6172,24 +6136,23 @@ contains
 !$Procedure REMOVD ( Remove an item from a double precision set )
 
       module procedure removd
+!! ## Abstract
+!!
+!!     Remove an item from a double precision set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd
-
-! $ Abstract
-!
-!     Remove an item from a double precision set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -6427,24 +6390,23 @@ contains
 !$Procedure REMOVI ( Remove an item from an integer set )
 
       module procedure removi
+!! ## Abstract
+!!
+!!     Remove an item from an integer set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
-
-! $ Abstract
-!
-!     Remove an item from an integer set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -6680,24 +6642,23 @@ contains
 !$Procedure ELEMC ( Element of a character set )
 
       module procedure elemc
+!! ## Abstract
+!!
+!!     Determine whether an item is an element of a character set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
-
-! $ Abstract
-!
-!     Determine whether an item is an element of a character set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -6904,25 +6865,24 @@ contains
 !$Procedure ELEMD ( Element of a double precision set )
 
       module procedure elemd
+!! ## Abstract
+!!
+!!     Determine whether an item is an element of a double
+!!     precision set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd
-
-! $ Abstract
-!
-!     Determine whether an item is an element of a double
-!     precision set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)               lbcell
@@ -7121,24 +7081,23 @@ contains
 !$Procedure ELEMI ( Element of an integer set )
 
       module procedure elemi
+!! ## Abstract
+!!
+!!     Determine whether an item is an element of an integer set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
-
-! $ Abstract
-!
-!     Determine whether an item is an element of an integer set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)      lbcell
@@ -7333,25 +7292,24 @@ contains
 !$Procedure ORDC ( The ordinal position of an element in a set )
 
       module procedure ordc
+!! ## Abstract
+!!
+!!     Return the ordinal position of a given item in a set. If the
+!!     item does not appear in the set, return zero.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
-
-! $ Abstract
-!
-!     Return the ordinal position of a given item in a set. If the
-!     item does not appear in the set, return zero.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     SEARCH
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -7524,25 +7482,24 @@ contains
 !$Procedure ORDD ( The ordinal position of an element in a set )
 
       module procedure ordd
+!! ## Abstract
+!!
+!!     Return the ordinal position of a given item in a set. If the
+!!     item does not appear in the set, return zero.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd
-
-! $ Abstract
-!
-!     Return the ordinal position of a given item in a set. If the
-!     item does not appear in the set, return zero.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     SEARCH
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -7713,25 +7670,24 @@ contains
 !$Procedure ORDI ( The ordinal position of an element in a set )
 
       module procedure ordi
+!! ## Abstract
+!!
+!!     Return the ordinal position of a given item in a set. If the
+!!     item does not appear in the set, return zero.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
-
-! $ Abstract
-!
-!     Return the ordinal position of a given item in a set. If the
-!     item does not appear in the set, return zero.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     SEARCH
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -7899,24 +7855,23 @@ contains
 !$Procedure SETC ( Compare character sets )
 
       module procedure setc
+!! ## Abstract
+!!
+!!     Compare two character sets, as indicated by a relational operator.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Compare two character sets, as indicated by a relational operator.
-!
-! $ Required_Reading
-!
-!     CELLS
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)                lbcell
@@ -8493,25 +8448,24 @@ contains
 !$Procedure SETD ( Compare double precision sets )
 
       module procedure setd
+!! ## Abstract
+!!
+!!     Compare two double precision sets, as indicated by a relational
+!!     operator.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compare two double precision sets, as indicated by a relational
-!     operator.
-!
-! $ Required_Reading
-!
-!     CELLS
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)                lbcell
@@ -9088,24 +9042,23 @@ contains
 !$Procedure SETI ( Compare integer sets )
 
       module procedure seti
+!! ## Abstract
+!!
+!!     Compare two integer sets, as indicated by a relational operator.
+!!
+!! ## Required Reading
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Compare two integer sets, as indicated by a relational operator.
-!
-! $ Required_Reading
-!
-!     CELLS
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)                lbcell
@@ -9682,23 +9635,22 @@ contains
 !$Procedure UNIONC ( Union two character sets )
 
       module procedure unionc
+!! ## Abstract
+!!
+!!     Compute the union of two character sets to form a third set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Compute the union of two character sets to form a third set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -9989,24 +9941,23 @@ contains
 !$Procedure UNIOND ( Union two double precision sets )
 
       module procedure uniond
+!! ## Abstract
+!!
+!!     Compute the union of two double precision sets to form a third
+!!     set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the union of two double precision sets to form a third
-!     set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -10271,23 +10222,22 @@ contains
 !$Procedure UNIONI ( Union two integer sets )
 
       module procedure unioni
+!! ## Abstract
+!!
+!!     Compute the union of two integer sets to form a third set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Compute the union of two integer sets to form a third set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -10551,23 +10501,22 @@ contains
 !$Procedure INTERC ( Intersect two character sets )
 
       module procedure interc
+!! ## Abstract
+!!
+!!     Intersect two character sets to form a third set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Intersect two character sets to form a third set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -10830,23 +10779,22 @@ contains
 !$Procedure INTERD ( Intersect two double precision sets )
 
       module procedure interd
+!! ## Abstract
+!!
+!!     Intersect two double precision sets to form a third set.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Intersect two double precision sets to form a third set.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -11082,23 +11030,22 @@ contains
 !$Procedure INTERI ( Intersect two integer sets )
 
       module procedure interi
+!! ## Abstract
+!!
+!!     Intersect two integer sets to form a third set.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Intersect two integer sets to form a third set.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -11334,23 +11281,22 @@ contains
 !$Procedure DIFFC ( Difference of two character sets )
 
       module procedure diffc
+!! ## Abstract
+!!
+!!     Take the difference of two character sets to form a third set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Take the difference of two character sets to form a third set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -11630,24 +11576,23 @@ contains
 !$Procedure DIFFD ( Difference of two double precision sets )
 
       module procedure diffd
+!! ## Abstract
+!!
+!!     Take the difference of two double precision sets to form
+!!     a third set.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Take the difference of two double precision sets to form
-!     a third set.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -11901,23 +11846,22 @@ contains
 !$Procedure DIFFI ( Difference of two integer sets )
 
       module procedure diffi
+!! ## Abstract
+!!
+!!     Take the difference of two integer sets to form a third set.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Take the difference of two integer sets to form a third set.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -12172,24 +12116,23 @@ contains
 !$Procedure SDIFFC ( Symmetric difference of two character sets )
 
       module procedure sdiffc
+!! ## Abstract
+!!
+!!     Take the symmetric difference of two character sets to form
+!!     a third set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Take the symmetric difference of two character sets to form
-!     a third set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -12476,24 +12419,23 @@ contains
 !$Procedure SDIFFD ( Symmetric difference of two double precision sets )
 
       module procedure sdiffd
+!! ## Abstract
+!!
+!!     Take the symmetric difference of two double precision sets
+!!     to form a third set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Take the symmetric difference of two double precision sets
-!     to form a third set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -12756,24 +12698,23 @@ contains
 !$Procedure SDIFFI ( Symmetric difference of two integer sets )
 
       module procedure sdiffi
+!! ## Abstract
+!!
+!!     Take the symmetric difference of two integer sets to form
+!!     a third set.
+!!
+!! ## Required Reading
+!!
+!!     SETS
+!!
+!! ## Keywords
+!!
+!!     CELLS
+!!     SETS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Take the symmetric difference of two integer sets to form
-!     a third set.
-!
-! $ Required_Reading
-!
-!     SETS
-!
-! $ Keywords
-!
-!     CELLS
-!     SETS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -13035,26 +12976,25 @@ contains
 !$Procedure ZZWNINSD ( Insert an interval into a DP window )
 
       module procedure zzwninsd
+!! ## Abstract
+!!
+!!      Insert an interval into a double precision window.
+!!
+!! ## Required Reading
+!!
+!!      WINDOWS
+!!
+!! ## Keywords
+!!
+!!      WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lastnb
-
-! $ Abstract
-!
-!      Insert an interval into a double precision window.
-!
-! $ Required_Reading
-!
-!      WINDOWS
-!
-! $ Keywords
-!
-!      WINDOWS
-!
-! $ Declarations
-
+      use pepper_inc_errhnd
       implicit none
 
-      include                'errhnd.inc'
 
       integer(ip)             lbcell
       parameter             ( lbcell = -5 )
@@ -13360,24 +13300,23 @@ contains
 !$Procedure WNCARD ( Cardinality of a double precision window )
 
       module procedure wncard
+!! ## Abstract
+!!
+!!     Return the cardinality (number of intervals) of a double
+!!     precision window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: even
-
-! $ Abstract
-!
-!     Return the cardinality (number of intervals) of a double
-!     precision window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -13571,23 +13510,22 @@ contains
 !$Procedure WNCOMD ( Complement a DP window )
 
       module procedure wncomd
+!! ## Abstract
+!!
+!!     Determine the complement of a double precision window with
+!!     respect to the interval [LEFT,RIGHT].
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine the complement of a double precision window with
-!     respect to the interval [LEFT,RIGHT].
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -13840,22 +13778,21 @@ contains
 !$Procedure WNCOND ( Contract the intervals of a DP window )
 
       module procedure wncond
+!! ## Abstract
+!!
+!!     Contract each of the intervals of a double precision window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Contract each of the intervals of a double precision window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -13997,23 +13934,22 @@ contains
 !$Procedure WNDIFD ( Difference two DP windows )
 
       module procedure wndifd
+!! ## Abstract
+!!
+!!     Place the difference of two double precision windows into
+!!     a third window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Place the difference of two double precision windows into
-!     a third window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -14411,23 +14347,22 @@ contains
 !$Procedure WNELMD ( Element of a DP window )
 
       module procedure wnelmd
+!! ## Abstract
+!!
+!!     Determine whether a point is an element of a double precision
+!!     window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine whether a point is an element of a double precision
-!     window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -14581,22 +14516,21 @@ contains
 !$Procedure WNEXPD ( Expand the intervals of a DP window )
 
       module procedure wnexpd
+!! ## Abstract
+!!
+!!     Expand each of the intervals of a double precision window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Expand each of the intervals of a double precision window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -14805,23 +14739,22 @@ contains
 !$Procedure WNEXTD ( Extract the endpoints from a DP window )
 
       module procedure wnextd
+!! ## Abstract
+!!
+!!     Extract the left or right endpoints from a double precision
+!!     window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Extract the left or right endpoints from a double precision
-!     window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -14996,22 +14929,21 @@ contains
 !$Procedure WNFETD ( Fetch an interval from a DP window )
 
       module procedure wnfetd
+!! ## Abstract
+!!
+!!     Fetch a particular interval from a double precision window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Fetch a particular interval from a double precision window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -15222,23 +15154,22 @@ contains
 !$Procedure WNFILD ( Fill small gaps in a DP window )
 
       module procedure wnfild
+!! ## Abstract
+!!
+!!     Fill small gaps between adjacent intervals of a double precision
+!!     window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Fill small gaps between adjacent intervals of a double precision
-!     window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -15534,22 +15465,21 @@ contains
 !$Procedure WNFLTD ( Filter small intervals from a DP window )
 
       module procedure wnfltd
+!! ## Abstract
+!!
+!!     Filter (remove) small intervals from a double precision window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Filter (remove) small intervals from a double precision window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -15826,23 +15756,22 @@ contains
 !$Procedure WNINCD ( Included in a double precision window )
 
       module procedure wnincd
+!! ## Abstract
+!!
+!!     Determine whether an interval is included in a double precision
+!!     window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine whether an interval is included in a double precision
-!     window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -16001,22 +15930,21 @@ contains
 !$Procedure WNINSD ( Insert an interval into a DP window )
 
       module procedure wninsd
+!! ## Abstract
+!!
+!!     Insert an interval into a double precision window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Insert an interval into a double precision window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -16422,23 +16350,22 @@ contains
 !$Procedure WNINTD ( Intersect two DP windows )
 
       module procedure wnintd
+!! ## Abstract
+!!
+!!     Place the intersection of two double precision windows into
+!!     a third window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Place the intersection of two double precision windows into
-!     a third window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -16678,22 +16605,21 @@ contains
 !$Procedure WNRELD ( Compare two DP windows )
 
       module procedure wnreld
+!! ## Abstract
+!!
+!!     Compare two double precision windows.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compare two double precision windows.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -17029,23 +16955,22 @@ contains
 !$Procedure WNSUMD ( Summary of a double precision window )
 
       module procedure wnsumd
+!! ## Abstract
+!!
+!!     Summarize the contents of a double precision window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: even
-
-! $ Abstract
-!
-!     Summarize the contents of a double precision window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -17430,23 +17355,22 @@ contains
 !$Procedure WNUNID ( Union two DP windows )
 
       module procedure wnunid
+!! ## Abstract
+!!
+!!     Place the union of two double precision windows into a third
+!!     window.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Place the union of two double precision windows into a third
-!     window.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell
@@ -17727,24 +17651,23 @@ contains
 !$Procedure WNVALD ( Validate a DP window )
 
       module procedure wnvald
+!! ## Abstract
+!!
+!!     Form a valid double precision window from the contents
+!!     of a window array.
+!!
+!! ## Required Reading
+!!
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
-
-! $ Abstract
-!
-!     Form a valid double precision window from the contents
-!     of a window array.
-!
-! $ Required_Reading
-!
-!     WINDOWS
-!
-! $ Keywords
-!
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbcell

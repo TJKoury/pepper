@@ -14,35 +14,34 @@ contains
 !$Procedure DSKW02 ( DSK, write type 2 segment )
 
       module procedure dskw02
+!! ## Abstract
+!!
+!!     Write a type 2 segment to a DSK file.
+!!
+!! ## Required Reading
+!!
+!!     DAS
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DAS
+!!     DSK
+!!     FILES
+!!     PLATE
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi, twopi
       use pepper_arrays, only: cleard, moved, movei
       use pepper_math, only: vequ
-
-! $ Abstract
-!
-!     Write a type 2 segment to a DSK file.
-!
-! $ Required_Reading
-!
-!     DAS
-!     DSK
-!
-! $ Keywords
-!
-!     DAS
-!     DSK
-!     FILES
-!     PLATE
-!     TOPOGRAPHY
-!
-! $ Declarations
-
+      use pepper_inc_dskdsc
+      use pepper_inc_dsktol
+      use pepper_inc_dsk02
       implicit none
 
-      include  'dskdsc.inc'
-      include  'dsktol.inc'
-      include  'dsk02.inc'
 
 
 ! $ Detailed_Input

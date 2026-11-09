@@ -8,14 +8,14 @@
 module pepper_state_tisbod
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'errhnd.inc'
-   include               'frmtyp.inc'
-   include               'zzctr.inc'
    integer(ip), parameter :: maxang = 200
    integer(ip), parameter :: mxphas = 4
    integer(ip), parameter :: mxpoly = 3

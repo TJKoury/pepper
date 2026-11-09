@@ -7,12 +7,12 @@
 module pepper_state_scencd
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
 
    implicit none
 
    private
 
-   include               'sclk.inc'
 
    public :: init_scencd_state
 

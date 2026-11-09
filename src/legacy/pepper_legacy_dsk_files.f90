@@ -52,8 +52,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       character(*) :: file  !! The name of a file to be examined.
       character(*) :: arch  !! The architecture of the kernel file.
       character(*) :: kertyp  !! The type of the kernel file.
@@ -131,8 +131,8 @@
       use pepper_instance, only: pepper_context, pepper_zzvrtplt => zzvrtplt
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dsk02
       implicit none
-      include              'dsk02.inc'
       integer(ip) :: nv  !! Number of vertices.
       integer(ip) :: np  !! Number of plates.
       integer(ip) :: plates ( 3, * )  !! Plate array.
@@ -308,8 +308,8 @@
       use pepper_instance, only: pepper_context, pepper_zzmkspin => zzmkspin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk02
       implicit none
-      include               'dsk02.inc'
       integer(ip) :: np  !! Number of plates.
       integer(ip) :: plates ( 3, * )  !! Array of plates.
       real(wp) :: vrtces ( 3, * )  !! Array of vertices.
@@ -341,8 +341,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       character(*) :: fname  !! Name of a DLA file to be opened.
       character(*) :: ftype  !! Mnemonic code for type of data in the DLA file.
       character(*) :: ifname  !! Internal file name.
@@ -360,8 +360,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       integer(ip) :: handle  !! Handle of open DLA file.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -375,8 +375,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       integer(ip) :: handle  !! Handle of open DLA file.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -390,8 +390,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       integer(ip) :: handle  !! Handle of open DLA file.
       integer(ip) :: dladsc  ( * )  !! Descriptor of first segment in DLA file.
       logical :: found  !! Flag indicating whether a segment was found.
@@ -407,8 +407,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       integer(ip) :: handle  !! Handle of open DLA file.
       integer(ip) :: dladsc  ( * )  !! Descriptor of last segment in DLA file.
       logical :: found  !! Flag indicating whether a segment was found.
@@ -424,8 +424,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       integer(ip) :: handle  !! Handle of open DLA file.
       integer(ip) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
       integer(ip) :: nxtdsc ( * )  !! Descriptor of next segment in DLA file.
@@ -442,8 +442,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       integer(ip) :: handle  !! Handle of open DLA file.
       integer(ip) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
       integer(ip) :: prvdsc ( * )  !! Descriptor of previous segment in DLA file.
@@ -462,8 +462,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       integer(ip) :: han1  !! Handle of an open DLA file.
       integer(ip) :: han2  !! Handle of a second open DLA file.
       integer(ip) :: dsc1 ( dladsz )  !! DLA descriptor of a segment in the first file.
@@ -480,8 +480,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       character(*) :: fname  !! Name of a DSK file to be opened.
       character(*) :: ifname  !! Internal file name.
       integer(ip) :: ncomch  !! Number of comment characters to allocate.
@@ -498,8 +498,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
       implicit none
-      include 'dla.inc'
       integer(ip) :: handle  !! Handle assigned to the opened DSK file.
       logical :: optmiz  !! Flag indicating whether to segregate the DSK.
       type(pepper_context), pointer :: ctx
@@ -515,8 +515,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       integer(ip) :: keywrd  !! Code specifying parameter to retrieve.
       real(wp) :: dpval  !! Value of parameter.
       type(pepper_context), pointer :: ctx
@@ -531,8 +531,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
       implicit none
-      include 'dsktol.inc'
       integer(ip) :: keywrd  !! Code specifying parameter to modify.
       real(wp) :: dpval  !! New value of parameter.
       type(pepper_context), pointer :: ctx
@@ -548,9 +548,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
       integer(ip) :: handle  !! Handle of a DSK file.
       integer(ip) :: dladsc ( * )  !! DLA segment descriptor.
       real(wp) :: dskdsc ( * )  !! DSK segment descriptor.
@@ -568,10 +568,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip) :: handle  !! DSK file handle.
       integer(ip) :: dladsc ( * )  !! DLA descriptor.
       integer(ip) :: nv  !! Number of vertices in model.
@@ -597,10 +597,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip) :: handle  !! DSK file handle.
       integer(ip) :: dladsc ( * )  !! DLA descriptor.
       integer(ip) :: item  !! Keyword identifying item to fetch.
@@ -620,10 +620,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip) :: handle  !! DSK file handle.
       integer(ip) :: dladsc ( * )  !! DLA descriptor.
       integer(ip) :: item  !! Keyword identifying item to fetch.
@@ -644,10 +644,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip) :: handle  !! DSK file handle.
       integer(ip) :: dladsc ( * )  !! DLA descriptor.
       integer(ip) :: plid  !! Plate ID.
@@ -664,10 +664,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip) :: handle  !! DSK file handle.
       integer(ip) :: dladsc ( * )  !! DLA descriptor.
       integer(ip) :: start  !! Start index.
@@ -686,10 +686,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip) :: handle  !! DSK file handle.
       integer(ip) :: dladsc ( * )  !! DLA descriptor.
       integer(ip) :: start  !! Start index.
@@ -709,10 +709,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip) :: handle  !! DSK file handle.
       integer(ip) :: dladsc ( * )  !! DLA descriptor.
       integer(ip) :: nv  !! Number of vertices.
@@ -734,9 +734,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
       implicit none
-      include 'dskdsc.inc'
-      include 'dsk02.inc'
       integer(ip) :: nv  !! Number of vertices.
       real(wp) :: vrtces ( 3, * )  !! Vertices.
       integer(ip) :: np  !! Number of plates.
@@ -765,8 +765,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dskdsc
       implicit none
-      include 'dskdsc.inc'
       integer(ip) :: nv  !! Number of vertices.
       real(wp) :: vrtces ( 3, * )  !! Vertices.
       integer(ip) :: np  !! Number of plates.
@@ -788,9 +788,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: dskfnm  !! Name of DSK file.
       integer(ip) :: bodids ( lbcell : * )  !! Set of ID codes of objects in DSK file.
@@ -807,9 +807,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: dskfnm  !! Name of DSK file.
       integer(ip) :: bodyid  !! Integer body ID code.

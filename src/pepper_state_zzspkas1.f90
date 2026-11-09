@@ -10,12 +10,12 @@
 module pepper_state_zzspkas1
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
 
    implicit none
 
    private
 
-   include 'zzabcorr.inc'
 
    public :: init_zzspkas1_state
 

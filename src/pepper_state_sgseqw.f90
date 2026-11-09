@@ -9,13 +9,13 @@
 module pepper_state_sgseqw
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
 
    implicit none
 
    private
 
    integer(ip), parameter :: ftsize = 20
-   include 'sgparam.inc'
 
    public :: init_sgseqw_state
 

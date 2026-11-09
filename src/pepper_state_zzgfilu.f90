@@ -8,12 +8,12 @@
 module pepper_state_zzgfilu
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
 
    implicit none
 
    private
 
-   include 'zzabcorr.inc'
    integer(ip), parameter :: bdnmln = 36
    integer(ip), parameter :: frnmln = 32
    integer(ip), parameter :: mthlen = 200

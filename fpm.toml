@@ -8,8 +8,6 @@ copyright = "Copyright 2026, Jacob Williams"
 
 [library]
 source-dir = "src"
-# SPICELIB include files; the test suite (test/) uses them too.
-include-dir = ["src/spicelib"]
 
 [build]
 auto-executables = true
@@ -43,11 +41,12 @@ platform.macos.flags = "-DSPICE_OS_MACOS"
 platform.linux.flags = "-DSPICE_OS_LINUX"
 platform.windows.flags = "-DSPICE_OS_WINDOWS"
 platform.cygwin.flags = "-DSPICE_OS_CYGWIN"
-# gfortran >= 10 rejects SPICELIB's argument rank/type mismatches without
-# -fallow-argument-mismatch. -frecursive puts all local variables that are not
+# The library needs no -fallow-argument-mismatch (all calls have explicit
+# interfaces); NAIF's tspice test code does, and the pixi tasks that build it
+# add the flag (--flag). -frecursive puts all local variables that are not
 # saved on the stack (gfortran otherwise makes large local arrays static),
 # which is needed for reentrant, thread-safe code.
-platform.gfortran.flags = "-DSPICE_COMPILER_GFORTRAN -fallow-argument-mismatch -frecursive"
+platform.gfortran.flags = "-DSPICE_COMPILER_GFORTRAN -frecursive"
 platform.ifx.flags = "-DSPICE_COMPILER_INTEL"
 platform.ifort.flags = "-DSPICE_COMPILER_INTEL"
 platform.windows.ifx.flags = "/fpp"

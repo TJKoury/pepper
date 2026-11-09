@@ -14,8 +14,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       integer(ip) :: sc  !! NAIF spacecraft ID code.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -31,10 +31,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include               'errhnd.inc'
-      include               'frmtyp.inc'
-      include               'zzctr.inc'
       character(*) :: ref  !! ID of inertial reference frame to transform from
       integer(ip) :: body  !! ID code of body
       real(wp) :: et  !! Epoch of transformation
@@ -71,8 +71,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdynfid => zzdynfid
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzdyn
       implicit none
-      include 'zzdyn.inc'
       character(*) :: frname  !! Frame name.
       integer(ip) :: frcode  !! Frame ID code.
       character(*) :: item  !! Item associated with frame definition.
@@ -91,8 +91,8 @@
       use pepper_instance, only: pepper_context, pepper_zznamfrm => zznamfrm
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip) :: usrctr    ( ctrsiz )  !! POOL state counter saved by the caller.
       character(*) :: savnam  !! Frame name saved by the caller.
       integer(ip) :: savcde  !! Frame ID code saved by the caller.
@@ -112,8 +112,8 @@
       use pepper_instance, only: pepper_context, pepper_zznofcon => zznofcon
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
       implicit none
-      include 'frmtyp.inc'
       real(wp) :: et  !! Epoch.
       integer(ip) :: frame1  !! "From" frame ID code.
       integer(ip) :: endp1  !! "From" path endpoint frame ID code.
@@ -136,8 +136,8 @@
       use pepper_instance, only: pepper_context, pepper_zzswffet => zzswffet
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzswtchf
       implicit none
-      include              'zzswtchf.inc'
       integer(ip) :: framid  !! The frame ID of a switch frame.
       integer(ip) :: hdfram ( * )  !! Array of hash collision list head nodes.
       integer(ip) :: frpool ( lbsngl : * )  !! Hash collision list pool.
@@ -202,8 +202,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       real(wp) :: et  !! Target epoch.
       real(wp) :: record   ( * )  !! Data record.
       real(wp) :: state    ( 6 )  !! State (position and velocity).
@@ -282,8 +282,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spkrec
       implicit none
-      include 'spkrec.inc'
       integer(ip) :: handle  !! File handle.
       real(wp) :: descr    ( 5 )  !! Segment descriptor.
       real(wp) :: et  !! Target epoch.
@@ -304,10 +304,10 @@
       use pepper_instance, only: pepper_context, pepper_zzswfxfm => zzswfxfm
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzswtchf
+      use pepper_inc_zzctr
       implicit none
-      include              'frmtyp.inc'
-      include              'zzswtchf.inc'
-      include              'zzctr.inc'
       integer(ip) :: infrm  !! Frame ID code of switch frame.
       real(wp) :: et  !! Time, expressed as seconds past J2000 TDB.
       integer(ip) :: ndim  !! Dimension: 3 or 6.

@@ -14,27 +14,26 @@ contains
 !$Procedure CKE01 ( CK evaluate pointing record, data type 1 )
 
       module procedure cke01
+!! ## Abstract
+!!
+!!     Evaluate a pointing record returned by CKR01 from a CK data type 1
+!!     segment. Return the C-matrix and optionally the angular velocity
+!!     vector associated with the time CLKOUT.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: q2m
-
-! $ Abstract
-!
-!     Evaluate a pointing record returned by CKR01 from a CK data type 1
-!     segment. Return the C-matrix and optionally the angular velocity
-!     vector associated with the time CLKOUT.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!     ROTATION
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -372,26 +371,25 @@ contains
 !$Procedure CKE02 ( C-kernel, evaluate pointing record, data type 2 )
 
       module procedure cke02
+!! ## Abstract
+!!
+!!     Evaluate a pointing record returned by CKR02 from a CK data type 2
+!!     segment. Return the C-matrix and angular velocity vector
+!!     associated with the time CLKOUT.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_math, only: axisar, mxmt, q2m, vequ, vequg, vnorm
-
-! $ Abstract
-!
-!     Evaluate a pointing record returned by CKR02 from a CK data type 2
-!     segment. Return the C-matrix and angular velocity vector
-!     associated with the time CLKOUT.
-!
-! $ Required_Reading
-!
-!     CK
-!     ROTATION
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -726,27 +724,26 @@ contains
 !$Procedure CKE03  ( C-kernel, evaluate pointing record, data type 3 )
 
       module procedure cke03
+!! ## Abstract
+!!
+!!     Evaluate a pointing record returned by CKR03 from a CK type 3
+!!     segment. Return the C-matrix and angular velocity vector
+!!     associated with the time CLKOUT.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_arrays, only: moved
       use pepper_math, only: axisar, mtxm, mxmt, q2m, vequ, vlcom
-
-! $ Abstract
-!
-!     Evaluate a pointing record returned by CKR03 from a CK type 3
-!     segment. Return the C-matrix and angular velocity vector
-!     associated with the time CLKOUT.
-!
-! $ Required_Reading
-!
-!     CK
-!     ROTATION
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -1242,28 +1239,27 @@ contains
 !$Procedure CKE04 ( C-kernel, evaluate pointing record, type 4 )
 
       module procedure cke04
+!! ## Abstract
+!!
+!!     Evaluate a pointing record returned by CKR04 from a CK type 4
+!!     segment. Return the C-matrix and angular velocity vector
+!!     associated with the time CLKOUT.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: chbval, q2m, vhatg
-
-! $ Abstract
-!
-!     Evaluate a pointing record returned by CKR04 from a CK type 4
-!     segment. Return the C-matrix and angular velocity vector
-!     associated with the time CLKOUT.
-!
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ckparam
       implicit none
 
-      include               'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -1630,28 +1626,27 @@ contains
 !$Procedure CKE05 ( C-Kernel, evaluate, type 5 )
 
       module procedure cke05
+!! ## Abstract
+!!
+!!     Evaluate a single data record from a type 5 CK segment.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       use pepper_math, only: q2m, qdq2av, vdistg, vdotg, vequ, vhatg, vminug, vnormg, vsclg, vsclip, vsubg, xpsgip
-
-! $ Abstract
-!
-!     Evaluate a single data record from a type 5 CK segment.
-!
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ck05
+      use pepper_inc_ckparam
       implicit none
 
-      include 'ck05.inc'
-      include 'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -2514,24 +2509,23 @@ contains
 !$Procedure CKR01 ( C-kernel, read pointing record, data type 1 )
 
       module procedure ckr01
+!! ## Abstract
+!!
+!!     Read a pointing record from a CK segment, data type 1.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstcld, lstled
-
-! $ Abstract
-!
-!     Read a pointing record from a CK segment, data type 1.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -3113,25 +3107,24 @@ contains
 !$Procedure CKR02 ( C-kernel, read pointing record, data type 2 )
 
       module procedure ckr02
+!! ## Abstract
+!!
+!!     Read a pointing record from a CK segment, data type 2.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
       use pepper_math, only: vequg
-
-! $ Abstract
-!
-!     Read a pointing record from a CK segment, data type 2.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
       real(wp) :: stopi_1(1)  !! one-element copy of stopi (array argument)
 
@@ -3783,386 +3776,353 @@ contains
       end procedure ckr02
 
       module procedure ckr03
-
-! $ Abstract
-!
-!     Read a pointing record from a CK segment, data type 3.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE   is the integer handle of the CK file containing the
-!              segment.
-!
-!     DESCR    is the descriptor of the segment.
-!
-!     SCLKDP   is the encoded spacecraft clock time for which
-!              pointing is being requested.
-!
-!     TOL      is a time tolerance, measured in the same units as
-!              encoded spacecraft clock.
-!
-!              When SCLKDP falls within the bounds of one of the
-!              interpolation intervals then the tolerance has no
-!              effect because pointing will be returned at the
-!              request time.
-!
-!              However, if the request time is not in one of the
-!              intervals, then the tolerance is used to determine
-!              if pointing at one of the interval endpoints should
-!              be returned.
-!
-!     NEEDAV   is .TRUE. if angular velocity is requested.
-!
-! $ Detailed_Output
-!
-!     RECORD   is the record that CKE03 will evaluate to determine
-!              the pointing.
-!
-!              When the request time falls within an interval for
-!              which linear interpolation is valid, the values of
-!              the two pointing instances that bracket the request
-!              time are returned in RECORD as follows:
-!
-!                 RECORD( 1  ) = Left bracketing SCLK time.
-!
-!                 RECORD( 2  ) = lq0  \
-!                 RECORD( 3  ) = lq1   \    Left bracketing
-!                 RECORD( 4  ) = lq2   /      quaternion.
-!                 RECORD( 5  ) = lq3  /
-!
-!                 RECORD( 6  ) = lav1 \     Left bracketing
-!                 RECORD( 7  ) = lav2       angular velocity
-!                 RECORD( 8  ) = lav3 /       ( optional )
-!
-!                 RECORD( 9  ) = Right bracketing SCLK time.
-!
-!                 RECORD( 10 ) = rq0  \
-!                 RECORD( 11 ) = rq1   \    Right bracketing
-!                 RECORD( 12 ) = rq2   /       quaternion.
-!                 RECORD( 13 ) = rq3  /
-!
-!                 RECORD( 14 ) = rav1 \     Right bracketing
-!                 RECORD( 15 ) = rav2       angular velocity
-!                 RECORD( 16 ) = rav3 /       ( optional )
-!
-!                 RECORD( 17 ) = pointing request time, SCLKDP.
-!
-!              The quantities lq0 - lq3 and rq0 - rq3 are the
-!              components of the quaternions that represent the
-!              C-matrices associated with the times that bracket
-!              the requested time.
-!
-!              The quantities lav1, lav2, lav3 and rav1, rav2, rav3
-!              are the components of the angular velocity vectors at
-!              the respective bracketing times. The components of the
-!              angular velocity vectors are specified relative to
-!              the inertial reference frame of the segment.
-!
-!              If the request time does not fall within an
-!              interpolation interval, but is within TOL of an
-!              interval endpoint, the values of that pointing
-!              instance are returned in both parts of RECORD
-!              ( i.e. RECORD(1-9) and RECORD(10-16) ).
-!
-!     FOUND    is .TRUE. if a record was found to satisfy the pointing
-!              request. This occurs when the time for which pointing
-!              is requested falls inside one of the interpolation
-!              intervals, or when the request time is within the
-!              tolerance of an interval endpoint.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the specified handle does not belong to an open DAF file,
-!         an error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     2)  If DESCR is not a valid descriptor of a segment in the CK
-!         file specified by HANDLE, the results of this routine are
-!         unpredictable.
-!
-!     3)  If the segment is not of data type 3, as specified in the
-!         third integer component of the segment descriptor,
-!         the error SPICE(WRONGDATATYPE) is signaled.
-!
-!     4)  If angular velocity data was requested but the segment
-!         contains no such data, the error SPICE(NOAVDATA) is signaled.
-!
-! $ Files
-!
-!     The file containing the segment is specified by its handle and
-!     should be opened for read or write access, either by CKLPF,
-!     DAFOPR, or DAFOPW.
-!
-! $ Particulars
-!
-!     See the CK Required Reading file for a detailed description of
-!     the structure of a type 3 pointing segment.
-!
-!     When the time for which pointing was requested falls within an
-!     interpolation interval, then FOUND will be true and RECORD will
-!     contain the pointing instances in the segment that bracket the
-!     request time.  CKE03 will evaluate RECORD to give pointing at
-!     the request time.
-!
-!     However, when the request time is not within any of the
-!     interpolation intervals, then FOUND will be true only if the
-!     interval endpoint closest to the request time is within the
-!     tolerance specified by the user. In this case both parts of
-!     RECORD will contain this closest pointing instance, and CKE03
-!     will evaluate RECORD to give pointing at the time associated
-!     with the returned pointing instance.
-!
-! $ Examples
-!
-!     The CKRnn routines are usually used in tandem with the CKEnn
-!     routines, which evaluate the record returned by CKRnn to give
-!     the pointing information and output time.
-!
-!     The following code fragment searches backwards through all of the
-!     segments in a file applicable to the Mars Observer spacecraft bus
-!     that are of data type 3, for a particular spacecraft clock time.
-!     It then evaluates the pointing for that epoch and prints the
-!     result.
-!
-!     The search performed here does not mimic the behavior of the CK
-!     reader APIs CKGP and CKGPAV, which consider data from multiple CK
-!     files, when available. See the CK Required reading for details.
-!
-!           CHARACTER*(20)        SCLKCH
-!           CHARACTER*(20)        SCTIME
-!           CHARACTER*(40)        IDENT
-!
-!           INTEGER               I
-!           INTEGER               SC
-!           INTEGER               INST
-!           INTEGER               HANDLE
-!           INTEGER               DTYPE
-!           INTEGER               ICD      (    6 )
-!
-!           DOUBLE PRECISION      SCLKDP
-!           DOUBLE PRECISION      TOL
-!           DOUBLE PRECISION      CLKOUT
-!           DOUBLE PRECISION      DESCR    (    5 )
-!           DOUBLE PRECISION      DCD      (    2 )
-!           DOUBLE PRECISION      RECORD   (   17 )
-!           DOUBLE PRECISION      CMAT     ( 3, 3 )
-!           DOUBLE PRECISION      AV       (    3 )
-!
-!           LOGICAL               NEEDAV
-!           LOGICAL               FND
-!           LOGICAL               SFND
-!
-!           SC     = -94
-!           INST   = -94000
-!           DTYPE  =  3
-!           NEEDAV = .FALSE.
-!
-!     C
-!     C     Load the MO SCLK kernel and the C-kernel.
-!     C
-!           CALL FURNSH ( 'MO_SCLK.TSC'       )
-!           CALL DAFOPR ( 'MO_CK.BC',  HANDLE )
-!     C
-!     C     Get the spacecraft clock time. Then encode it for use
-!     C     in the C-kernel.
-!     C
-!           WRITE (*,*) 'Enter spacecraft clock time string:'
-!           READ (*,FMT='(A)') SCLKCH
-!
-!           CALL SCENCD ( SC, SCLKCH, SCLKDP )
-!     C
-!     C     Use a tolerance of 2 seconds ( half of the nominal
-!     C     separation between MO pointing instances ).
-!     C
-!           CALL SCTIKS ( SC, '0000000002:000', TOL )
-!
-!     C
-!     C     Search backwards from the end of the CK file through all
-!     C     of the segments.
-!     C
-!           CALL DAFBBS ( HANDLE )
-!           CALL DAFFPA ( SFND   )
-!
-!           FND    = .FALSE.
-!
-!           DO WHILE ( ( SFND ) .AND. ( .NOT. FND ) )
-!
-!     C
-!     C        Get the segment identifier and descriptor.
-!     C
-!
-!              CALL DAFGN ( IDENT                 )
-!              CALL DAFGS ( DESCR                 )
-!     C
-!     C        Unpack the segment descriptor into its integer and
-!     C        double precision components.
-!     C
-!              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
-!
-!     C
-!     C        Determine if this segment should be processed.
-!     C
-!              IF ( ( INST          .EQ. ICD( 1 ) ) .AND.
-!          .        ( SCLKDP + TOL  .GE. DCD( 1 ) ) .AND.
-!          .        ( SCLKDP - TOL  .LE. DCD( 2 ) ) .AND.
-!          .        ( DTYPE         .EQ. ICD( 3 ) )      ) THEN
-!
-!                 CALL CKR03 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
-!          .                   RECORD, FND )
-!
-!                 IF ( FND ) THEN
-!
-!                    CALL CKE03 (NEEDAV,RECORD,CMAT,AV,CLKOUT)
-!
-!                    CALL SCDECD ( SC, CLKOUT, SCTIME )
-!
-!                    WRITE (*,*)
-!                    WRITE (*,*) 'Segment identifier: ', IDENT
-!                    WRITE (*,*)
-!                    WRITE (*,*) 'Pointing returned for time: ',
-!          .                      SCTIME
-!                    WRITE (*,*)
-!                    WRITE (*,*) 'C-matrix:'
-!                    WRITE (*,*)
-!                    WRITE (*,*) ( CMAT(1,I), I = 1, 3 )
-!                    WRITE (*,*) ( CMAT(2,I), I = 1, 3 )
-!                    WRITE (*,*) ( CMAT(3,I), I = 1, 3 )
-!                    WRITE (*,*)
-!
-!                 END IF
-!
-!              END IF
-!
-!              CALL DAFFPA ( SFND )
-!
-!           END DO
-!
-! $ Restrictions
-!
-!     1)  The file containing the segment should be opened for read
-!         or write access either by CKLPF, DAFOPR, or DAFOPW.
-!
-!     2)  The record returned by this routine is intended to be
-!         evaluated by CKE03.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     J.M. Lynch         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.2, 12-AUG-2021 (NJB) (JDR)
-!
-!        Updated code example to use backwards search. Added
-!        note regarding difference between this search and those
-!        performed by the CK reader APIs CKGP and CKGPAV.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.1.1, 22-AUG-2006 (EDW)
-!
-!        Replaced references to LDPOOL with references
-!        to FURNSH.
-!
-!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
-!
-!        Replaced DAFRDA call with DAFGDA.
-!        Added IMPLICIT NONE.
-!
-!-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read CK type_3 pointing data record
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-!        DIRSIZ     is the directory size.
-!
-!        BUFSIZ     is the maximum number of double precision numbers
-!                   that we will read from the DAF file at one time.
-!                   BUFSIZ is normally set equal to DIRSIZ.
-!
-!        ND         is the number of double precision components in an
-!                   unpacked C-kernel segment descriptor.
-!
-!        NI         is the number of integer components in an unpacked
-!                   C-kernel segment descriptor.
-!
-!        QSIZ       is the number of double precision numbers making up
-!                   the quaternion portion of a pointing record.
-!
-!        QAVSIZ     is the number of double precision numbers making up
-!                   the quaternion and angular velocity portion of a
-!                   pointing record.
-!
-!        DTYPE      is the data type of the segment that this routine
-!                   operates on.
-!
-
-
-
-
-
-
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved variables.
-!
-
-
-!
-!     Initial values.
-!
-
-
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Read a pointing record from a CK segment, data type 3.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE   is the integer handle of the CK file containing the
+!!              segment.
+!!
+!!     DESCR    is the descriptor of the segment.
+!!
+!!     SCLKDP   is the encoded spacecraft clock time for which
+!!              pointing is being requested.
+!!
+!!     TOL      is a time tolerance, measured in the same units as
+!!              encoded spacecraft clock.
+!!
+!!              When SCLKDP falls within the bounds of one of the
+!!              interpolation intervals then the tolerance has no
+!!              effect because pointing will be returned at the
+!!              request time.
+!!
+!!              However, if the request time is not in one of the
+!!              intervals, then the tolerance is used to determine
+!!              if pointing at one of the interval endpoints should
+!!              be returned.
+!!
+!!     NEEDAV   is .TRUE. if angular velocity is requested.
+!!
+!! ## Detailed Output
+!!
+!!     RECORD   is the record that CKE03 will evaluate to determine
+!!              the pointing.
+!!
+!!              When the request time falls within an interval for
+!!              which linear interpolation is valid, the values of
+!!              the two pointing instances that bracket the request
+!!              time are returned in RECORD as follows:
+!!
+!!                 RECORD( 1  ) = Left bracketing SCLK time.
+!!
+!!                 RECORD( 2  ) = lq0  \
+!!                 RECORD( 3  ) = lq1   \    Left bracketing
+!!                 RECORD( 4  ) = lq2   /      quaternion.
+!!                 RECORD( 5  ) = lq3  /
+!!
+!!                 RECORD( 6  ) = lav1 \     Left bracketing
+!!                 RECORD( 7  ) = lav2       angular velocity
+!!                 RECORD( 8  ) = lav3 /       ( optional )
+!!
+!!                 RECORD( 9  ) = Right bracketing SCLK time.
+!!
+!!                 RECORD( 10 ) = rq0  \
+!!                 RECORD( 11 ) = rq1   \    Right bracketing
+!!                 RECORD( 12 ) = rq2   /       quaternion.
+!!                 RECORD( 13 ) = rq3  /
+!!
+!!                 RECORD( 14 ) = rav1 \     Right bracketing
+!!                 RECORD( 15 ) = rav2       angular velocity
+!!                 RECORD( 16 ) = rav3 /       ( optional )
+!!
+!!                 RECORD( 17 ) = pointing request time, SCLKDP.
+!!
+!!              The quantities lq0 - lq3 and rq0 - rq3 are the
+!!              components of the quaternions that represent the
+!!              C-matrices associated with the times that bracket
+!!              the requested time.
+!!
+!!              The quantities lav1, lav2, lav3 and rav1, rav2, rav3
+!!              are the components of the angular velocity vectors at
+!!              the respective bracketing times. The components of the
+!!              angular velocity vectors are specified relative to
+!!              the inertial reference frame of the segment.
+!!
+!!              If the request time does not fall within an
+!!              interpolation interval, but is within TOL of an
+!!              interval endpoint, the values of that pointing
+!!              instance are returned in both parts of RECORD
+!!              ( i.e. RECORD(1-9) and RECORD(10-16) ).
+!!
+!!     FOUND    is .TRUE. if a record was found to satisfy the pointing
+!!              request. This occurs when the time for which pointing
+!!              is requested falls inside one of the interpolation
+!!              intervals, or when the request time is within the
+!!              tolerance of an interval endpoint.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the specified handle does not belong to an open DAF file,
+!!         an error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     2)  If DESCR is not a valid descriptor of a segment in the CK
+!!         file specified by HANDLE, the results of this routine are
+!!         unpredictable.
+!!
+!!     3)  If the segment is not of data type 3, as specified in the
+!!         third integer component of the segment descriptor,
+!!         the error SPICE(WRONGDATATYPE) is signaled.
+!!
+!!     4)  If angular velocity data was requested but the segment
+!!         contains no such data, the error SPICE(NOAVDATA) is signaled.
+!!
+!! ## Files
+!!
+!!     The file containing the segment is specified by its handle and
+!!     should be opened for read or write access, either by CKLPF,
+!!     DAFOPR, or DAFOPW.
+!!
+!! ## Particulars
+!!
+!!     See the CK Required Reading file for a detailed description of
+!!     the structure of a type 3 pointing segment.
+!!
+!!     When the time for which pointing was requested falls within an
+!!     interpolation interval, then FOUND will be true and RECORD will
+!!     contain the pointing instances in the segment that bracket the
+!!     request time.  CKE03 will evaluate RECORD to give pointing at
+!!     the request time.
+!!
+!!     However, when the request time is not within any of the
+!!     interpolation intervals, then FOUND will be true only if the
+!!     interval endpoint closest to the request time is within the
+!!     tolerance specified by the user. In this case both parts of
+!!     RECORD will contain this closest pointing instance, and CKE03
+!!     will evaluate RECORD to give pointing at the time associated
+!!     with the returned pointing instance.
+!!
+!! ## Examples
+!!
+!!     The CKRnn routines are usually used in tandem with the CKEnn
+!!     routines, which evaluate the record returned by CKRnn to give
+!!     the pointing information and output time.
+!!
+!!     The following code fragment searches backwards through all of the
+!!     segments in a file applicable to the Mars Observer spacecraft bus
+!!     that are of data type 3, for a particular spacecraft clock time.
+!!     It then evaluates the pointing for that epoch and prints the
+!!     result.
+!!
+!!     The search performed here does not mimic the behavior of the CK
+!!     reader APIs CKGP and CKGPAV, which consider data from multiple CK
+!!     files, when available. See the CK Required reading for details.
+!!
+!!           CHARACTER*(20)        SCLKCH
+!!           CHARACTER*(20)        SCTIME
+!!           CHARACTER*(40)        IDENT
+!!
+!!           INTEGER               I
+!!           INTEGER               SC
+!!           INTEGER               INST
+!!           INTEGER               HANDLE
+!!           INTEGER               DTYPE
+!!           INTEGER               ICD      (    6 )
+!!
+!!           DOUBLE PRECISION      SCLKDP
+!!           DOUBLE PRECISION      TOL
+!!           DOUBLE PRECISION      CLKOUT
+!!           DOUBLE PRECISION      DESCR    (    5 )
+!!           DOUBLE PRECISION      DCD      (    2 )
+!!           DOUBLE PRECISION      RECORD   (   17 )
+!!           DOUBLE PRECISION      CMAT     ( 3, 3 )
+!!           DOUBLE PRECISION      AV       (    3 )
+!!
+!!           LOGICAL               NEEDAV
+!!           LOGICAL               FND
+!!           LOGICAL               SFND
+!!
+!!           SC     = -94
+!!           INST   = -94000
+!!           DTYPE  =  3
+!!           NEEDAV = .FALSE.
+!!
+!!     C
+!!     C     Load the MO SCLK kernel and the C-kernel.
+!!     C
+!!           CALL FURNSH ( 'MO_SCLK.TSC'       )
+!!           CALL DAFOPR ( 'MO_CK.BC',  HANDLE )
+!!     C
+!!     C     Get the spacecraft clock time. Then encode it for use
+!!     C     in the C-kernel.
+!!     C
+!!           WRITE (*,*) 'Enter spacecraft clock time string:'
+!!           READ (*,FMT='(A)') SCLKCH
+!!
+!!           CALL SCENCD ( SC, SCLKCH, SCLKDP )
+!!     C
+!!     C     Use a tolerance of 2 seconds ( half of the nominal
+!!     C     separation between MO pointing instances ).
+!!     C
+!!           CALL SCTIKS ( SC, '0000000002:000', TOL )
+!!
+!!     C
+!!     C     Search backwards from the end of the CK file through all
+!!     C     of the segments.
+!!     C
+!!           CALL DAFBBS ( HANDLE )
+!!           CALL DAFFPA ( SFND   )
+!!
+!!           FND    = .FALSE.
+!!
+!!           DO WHILE ( ( SFND ) .AND. ( .NOT. FND ) )
+!!
+!!     C
+!!     C        Get the segment identifier and descriptor.
+!!     C
+!!
+!!              CALL DAFGN ( IDENT                 )
+!!              CALL DAFGS ( DESCR                 )
+!!     C
+!!     C        Unpack the segment descriptor into its integer and
+!!     C        double precision components.
+!!     C
+!!              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!!
+!!     C
+!!     C        Determine if this segment should be processed.
+!!     C
+!!              IF ( ( INST          .EQ. ICD( 1 ) ) .AND.
+!!          .        ( SCLKDP + TOL  .GE. DCD( 1 ) ) .AND.
+!!          .        ( SCLKDP - TOL  .LE. DCD( 2 ) ) .AND.
+!!          .        ( DTYPE         .EQ. ICD( 3 ) )      ) THEN
+!!
+!!                 CALL CKR03 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
+!!          .                   RECORD, FND )
+!!
+!!                 IF ( FND ) THEN
+!!
+!!                    CALL CKE03 (NEEDAV,RECORD,CMAT,AV,CLKOUT)
+!!
+!!                    CALL SCDECD ( SC, CLKOUT, SCTIME )
+!!
+!!                    WRITE (*,*)
+!!                    WRITE (*,*) 'Segment identifier: ', IDENT
+!!                    WRITE (*,*)
+!!                    WRITE (*,*) 'Pointing returned for time: ',
+!!          .                      SCTIME
+!!                    WRITE (*,*)
+!!                    WRITE (*,*) 'C-matrix:'
+!!                    WRITE (*,*)
+!!                    WRITE (*,*) ( CMAT(1,I), I = 1, 3 )
+!!                    WRITE (*,*) ( CMAT(2,I), I = 1, 3 )
+!!                    WRITE (*,*) ( CMAT(3,I), I = 1, 3 )
+!!                    WRITE (*,*)
+!!
+!!                 END IF
+!!
+!!              END IF
+!!
+!!              CALL DAFFPA ( SFND )
+!!
+!!           END DO
+!!
+!! ## Restrictions
+!!
+!!     1)  The file containing the segment should be opened for read
+!!         or write access either by CKLPF, DAFOPR, or DAFOPW.
+!!
+!!     2)  The record returned by this routine is intended to be
+!!         evaluated by CKE03.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     J.M. Lynch         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.2, 12-AUG-2021 (NJB) (JDR)
+!!
+!!        Updated code example to use backwards search. Added
+!!        note regarding difference between this search and those
+!!        performed by the CK reader APIs CKGP and CKGPAV.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.1.1, 22-AUG-2006 (EDW)
+!!
+!!        Replaced references to LDPOOL with references
+!!        to FURNSH.
+!!
+!!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+!!
+!!        Replaced DAFRDA call with DAFGDA.
+!!        Added IMPLICIT NONE.
+!!
+!!-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
+!!
+!! ## Index Entries
+!!
+!!     read CK type_3 pointing data record
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!        DIRSIZ     is the directory size.
+!!
+!!        BUFSIZ     is the maximum number of double precision numbers
+!!                   that we will read from the DAF file at one time.
+!!                   BUFSIZ is normally set equal to DIRSIZ.
+!!
+!!        ND         is the number of double precision components in an
+!!                   unpacked C-kernel segment descriptor.
+!!
+!!        NI         is the number of integer components in an unpacked
+!!                   C-kernel segment descriptor.
+!!
+!!        QSIZ       is the number of double precision numbers making up
+!!                   the quaternion portion of a pointing record.
+!!
+!!        QAVSIZ     is the number of double precision numbers making up
+!!                   the quaternion and angular velocity portion of a
+!!                   pointing record.
+!!
+!!        DTYPE      is the data type of the segment that this routine
+!!                   operates on.
+!!
+!!     Local variables
+!!
+!!     Saved variables.
+!!
+!!     Initial values.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: lstled, lstltd, moved
@@ -4863,255 +4823,225 @@ contains
       end procedure ckr03
 
       module procedure ckr05
-
-! $ Abstract
-!
-!     Read a single CK data record from a segment of type 05
-!     (MEX/Rosetta Attitude file interpolation).
-!
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE,
-!     DESCR    are the file handle and segment descriptor for
-!              a CK segment of type 05.
-!
-!     SCLKDP   is an encoded spacecraft clock time indicating
-!              the epoch for which pointing is desired.
-!
-!     TOL      is a time tolerance, measured in the same units as
-!              encoded spacecraft clock.
-!
-!              When SCLKDP falls within the bounds of one of the
-!              interpolation intervals then the tolerance has no
-!              effect because pointing will be returned at the
-!              request time.
-!
-!              However, if the request time is not in one of the
-!              intervals, then the tolerance is used to determine
-!              if pointing at one of the interval endpoints should
-!              be returned.
-!
-!     NEEDAV   is .TRUE. if angular velocity is requested.
-!
-! $ Detailed_Output
-!
-!     RECORD   is a set of data from the specified segment which,
-!              when evaluated at epoch SCLKDP, will give the
-!              attitude and angular velocity of some body, relative
-!              to the reference frame indicated by DESCR.
-!
-!              The structure of the record is as follows:
-!
-!                 +----------------------+
-!                 | evaluation epoch     |
-!                 +----------------------+
-!                 | subtype code         |
-!                 +----------------------+
-!                 | number of packets (n)|
-!                 +----------------------+
-!                 | nominal SCLK rate    |
-!                 +----------------------+
-!                 | packet 1             |
-!                 +----------------------+
-!                 | packet 2             |
-!                 +----------------------+
-!                             .
-!                             .
-!                             .
-!                 +----------------------+
-!                 | packet n             |
-!                 +----------------------+
-!                 | epochs 1--n          |
-!                 +----------------------+
-!
-!              The packet size is a function of the subtype code.
-!              All packets in a record have the same size.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     This routine follows the pattern established in the lower-numbered
-!     CK data type readers of not explicitly performing error
-!     diagnoses. Exceptions are listed below nonetheless.
-!
-!     1)  If the input HANDLE does not designate a loaded CK file, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     2)  If the segment specified by DESCR is not of data type 05,
-!         the error SPICE(WRONGCKTYPE) is signaled.
-!
-!     3)  If the input SCLK value is not within the range specified
-!         in the segment descriptor, the error SPICE(TIMEOUTOFBOUNDS)
-!         is signaled.
-!
-!     4)  If the window size is non-positive or greater than the
-!         maximum allowed value, the error SPICE(INVALIDVALUE) is
-!         signaled.
-!
-!     5)  If the window size is not compatible with the segment
-!         subtype, the error SPICE(INVALIDVALUE) is signaled.
-!
-!     6)  If the segment subtype is not recognized, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     7)  If the tolerance is negative, the error SPICE(VALUEOUTOFRANGE)
-!         is signaled.
-!
-! $ Files
-!
-!     See argument HANDLE.
-!
-! $ Particulars
-!
-!     See the CK Required Reading file for a description of the
-!     structure of a data type 05 segment.
-!
-! $ Examples
-!
-!     The data returned by the CKRnn routine is in its rawest form,
-!     taken directly from the segment. As such, it will be meaningless
-!     to a user unless he/she understands the structure of the data type
-!     completely. Given that understanding, however, the CKRxx
-!     routines might be used to "dump" and check segment data for a
-!     particular epoch.
-!
-!     The search performed here does not mimic the behavior of the CK
-!     reader APIs CKGP and CKGPAV, which continue searching when an
-!     applicable segment doesn't satisfy a pointing request. See the CK
-!     Required reading for details.
-!
-!     C
-!     C     Get a segment applicable to a specified body and epoch.
-!     C
-!           CALL CKBSS ( INST,   SCLKDP, TOL,   NEEDAV )
-!           CALL CKSNS ( HANDLE, DESCR,  SEGID, SFND   )
-!
-!           IF ( .NOT. SFND ) THEN
-!              [Handle case of pointing not being found]
-!           END IF
-!
-!     C
-!     C     Look at parts of the descriptor.
-!     C
-!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
-!           CENTER = ICD( 2 )
-!           REF    = ICD( 3 )
-!           TYPE   = ICD( 4 )
-!
-!           IF ( TYPE .EQ. 05 ) THEN
-!
-!              CALL CKR05 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
-!          .                RECORD, FOUND                       )
-!
-!              IF ( .NOT. FOUND ) THEN
-!                 [Handle case of pointing not being found]
-!              END IF
-!
-!              [Look at the RECORD data]
-!                  .
-!                  .
-!                  .
-!           END IF
-!
-! $ Restrictions
-!
-!     1)  Correctness of inputs must be ensured by the caller of
-!         this routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 06-JUL-2021 (NJB) (JDR)
-!
-!        Corrected code example: removed comment character preceding
-!        CKBSS call. Added note regarding difference between this
-!        search and those performed by the CK reader APIs CKGP and
-!        CKGPAV.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 27-JAN-2014 (NJB)
-!
-!        Increased MAXDEG to 23 for compatibility with CK type 6.
-!
-!-    SPICELIB Version 1.1.0, 06-SEP-2002 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read record from type_5 CK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-
-
-
-
-
-
-!
-!     Maximum polynomial degree:
-!
-
-!
-!     Local variables
-!
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Read a single CK data record from a segment of type 05
+!!     (MEX/Rosetta Attitude file interpolation).
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE,
+!!     DESCR    are the file handle and segment descriptor for
+!!              a CK segment of type 05.
+!!
+!!     SCLKDP   is an encoded spacecraft clock time indicating
+!!              the epoch for which pointing is desired.
+!!
+!!     TOL      is a time tolerance, measured in the same units as
+!!              encoded spacecraft clock.
+!!
+!!              When SCLKDP falls within the bounds of one of the
+!!              interpolation intervals then the tolerance has no
+!!              effect because pointing will be returned at the
+!!              request time.
+!!
+!!              However, if the request time is not in one of the
+!!              intervals, then the tolerance is used to determine
+!!              if pointing at one of the interval endpoints should
+!!              be returned.
+!!
+!!     NEEDAV   is .TRUE. if angular velocity is requested.
+!!
+!! ## Detailed Output
+!!
+!!     RECORD   is a set of data from the specified segment which,
+!!              when evaluated at epoch SCLKDP, will give the
+!!              attitude and angular velocity of some body, relative
+!!              to the reference frame indicated by DESCR.
+!!
+!!              The structure of the record is as follows:
+!!
+!!                 +----------------------+
+!!                 | evaluation epoch     |
+!!                 +----------------------+
+!!                 | subtype code         |
+!!                 +----------------------+
+!!                 | number of packets (n)|
+!!                 +----------------------+
+!!                 | nominal SCLK rate    |
+!!                 +----------------------+
+!!                 | packet 1             |
+!!                 +----------------------+
+!!                 | packet 2             |
+!!                 +----------------------+
+!!                             .
+!!                             .
+!!                             .
+!!                 +----------------------+
+!!                 | packet n             |
+!!                 +----------------------+
+!!                 | epochs 1--n          |
+!!                 +----------------------+
+!!
+!!              The packet size is a function of the subtype code.
+!!              All packets in a record have the same size.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     This routine follows the pattern established in the lower-numbered
+!!     CK data type readers of not explicitly performing error
+!!     diagnoses. Exceptions are listed below nonetheless.
+!!
+!!     1)  If the input HANDLE does not designate a loaded CK file, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     2)  If the segment specified by DESCR is not of data type 05,
+!!         the error SPICE(WRONGCKTYPE) is signaled.
+!!
+!!     3)  If the input SCLK value is not within the range specified
+!!         in the segment descriptor, the error SPICE(TIMEOUTOFBOUNDS)
+!!         is signaled.
+!!
+!!     4)  If the window size is non-positive or greater than the
+!!         maximum allowed value, the error SPICE(INVALIDVALUE) is
+!!         signaled.
+!!
+!!     5)  If the window size is not compatible with the segment
+!!         subtype, the error SPICE(INVALIDVALUE) is signaled.
+!!
+!!     6)  If the segment subtype is not recognized, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     7)  If the tolerance is negative, the error SPICE(VALUEOUTOFRANGE)
+!!         is signaled.
+!!
+!! ## Files
+!!
+!!     See argument HANDLE.
+!!
+!! ## Particulars
+!!
+!!     See the CK Required Reading file for a description of the
+!!     structure of a data type 05 segment.
+!!
+!! ## Examples
+!!
+!!     The data returned by the CKRnn routine is in its rawest form,
+!!     taken directly from the segment. As such, it will be meaningless
+!!     to a user unless he/she understands the structure of the data type
+!!     completely. Given that understanding, however, the CKRxx
+!!     routines might be used to "dump" and check segment data for a
+!!     particular epoch.
+!!
+!!     The search performed here does not mimic the behavior of the CK
+!!     reader APIs CKGP and CKGPAV, which continue searching when an
+!!     applicable segment doesn't satisfy a pointing request. See the CK
+!!     Required reading for details.
+!!
+!!     C
+!!     C     Get a segment applicable to a specified body and epoch.
+!!     C
+!!           CALL CKBSS ( INST,   SCLKDP, TOL,   NEEDAV )
+!!           CALL CKSNS ( HANDLE, DESCR,  SEGID, SFND   )
+!!
+!!           IF ( .NOT. SFND ) THEN
+!!              [Handle case of pointing not being found]
+!!           END IF
+!!
+!!     C
+!!     C     Look at parts of the descriptor.
+!!     C
+!!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!!           CENTER = ICD( 2 )
+!!           REF    = ICD( 3 )
+!!           TYPE   = ICD( 4 )
+!!
+!!           IF ( TYPE .EQ. 05 ) THEN
+!!
+!!              CALL CKR05 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
+!!          .                RECORD, FOUND                       )
+!!
+!!              IF ( .NOT. FOUND ) THEN
+!!                 [Handle case of pointing not being found]
+!!              END IF
+!!
+!!              [Look at the RECORD data]
+!!                  .
+!!                  .
+!!                  .
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     1)  Correctness of inputs must be ensured by the caller of
+!!         this routine.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 06-JUL-2021 (NJB) (JDR)
+!!
+!!        Corrected code example: removed comment character preceding
+!!        CKBSS call. Added note regarding difference between this
+!!        search and those performed by the CK reader APIs CKGP and
+!!        CKGPAV.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 27-JAN-2014 (NJB)
+!!
+!!        Increased MAXDEG to 23 for compatibility with CK type 6.
+!!
+!!-    SPICELIB Version 1.1.0, 06-SEP-2002 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     read record from type_5 CK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Maximum polynomial degree:
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: lstled, lstltd, moved
       use pepper_math, only: brcktd, odd
+      use pepper_inc_ck05
+      use pepper_inc_ckparam
       implicit none
-      include 'ck05.inc'
-      include 'ckparam.inc'
       integer(ip), parameter :: nd = 2
       integer(ip), parameter :: ni = 6
       integer(ip), parameter :: dirsiz = 100
@@ -5947,293 +5877,260 @@ contains
       end procedure ckr05
 
       module procedure ckr06
-
-! $ Abstract
-!
-!     Read a single CK data record from a segment of type 6
-!     (ESOC/DDID Piecewise Interpolation).
-!
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE,
-!     DESCR    are the file handle and segment descriptor for a CK
-!              segment of type 6.
-!
-!     SCLKDP   is an encoded spacecraft clock time indicating the
-!              epoch for which pointing is desired.
-!
-!     TOL      is a time tolerance, measured in the same units as
-!              encoded spacecraft clock.
-!
-!              When SCLKDP falls between the start time of one of
-!              the mini-segment intervals and the last time tag of
-!              that interval, the tolerance has no effect because
-!              pointing will be returned at the request time.
-!
-!              However, if the request time falls within a coverage
-!              gap in one of the intervals, or outside of any
-!              interval, then the tolerance is used to determine if
-!              pointing should be returned at the closest epoch for
-!              which pointing is available. This epoch is either an
-!              interval's start time or the smaller of an interval's
-!              end time and its last time tag.
-!
-!     NEEDAV   is .TRUE. if angular velocity is requested. If the
-!              input segment descriptor indicates angular velocity
-!              is absent, the error SPICE(NOAVDATA) is signaled.
-!
-!              Note: although all subtypes of type 6 records either
-!              contain or compute angular velocity, a CK creator may
-!              choose to indicate that the provided angular velocity
-!              data are not valid; this can be done by setting the
-!              segment descriptor angular velocity flag to .FALSE.
-!
-! $ Detailed_Output
-!
-!     RECORD   is a set of data from the specified segment which,
-!              when evaluated at epoch SCLKDP, will give the
-!              attitude and angular velocity of some body, relative
-!              to the reference frame indicated by DESCR.
-!
-!              The structure of the record is as follows:
-!
-!                 +----------------------+
-!                 | evaluation epoch     |
-!                 +----------------------+
-!                 | subtype code         |
-!                 +----------------------+
-!                 | number of packets (n)|
-!                 +----------------------+
-!                 | nominal SCLK rate    |
-!                 +----------------------+
-!                 | packet 1             |
-!                 +----------------------+
-!                 | packet 2             |
-!                 +----------------------+
-!                             .
-!                             .
-!                             .
-!                 +----------------------+
-!                 | packet n             |
-!                 +----------------------+
-!                 | epochs 1--n          |
-!                 +----------------------+
-!
-!              The packet size is a function of the subtype code.
-!              All packets in a record have the same size.
-!
-!     FOUND    is a logical flag indicating whether data were found.
-!              If NEEDAV is .FALSE., data will be found if the
-!              request time is within TOL ticks of a time for which
-!              the segment provides data. If NEEDAV is .TRUE., the
-!              segment's angular velocity flag must also be set in
-!              order for data to be found.
-!
-!              A type 6 segment provides data for times that are
-!              between its descriptor time bounds and that are
-!              within the coverage region of a mini-segment
-!              interval. The coverage region of a mini-segment
-!              interval extends from its start time to the lesser of
-!              its stop time and its last time tag.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     This routine roughly follows the pattern established in the
-!     lower-numbered CK data type readers of not explicitly performing
-!     error diagnoses. In particular, the C-kernel from which data are
-!     read is assumed to be valid in most respects. The few exceptions
-!     that are handled here are listed below.
-!
-!     1)  If the input HANDLE does not designate a loaded CK file, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     2)  If the segment specified by DESCR is not of data type 6, the
-!         error SPICE(WRONGCKTYPE) is signaled.
-!
-!     3)  If the input SCLK value is not within TOL ticks of a time
-!         for which the segment provides data, FOUND is set to .FALSE.
-!         and the output record is undefined.
-!
-!     4)  If the window size is non-positive or greater than the
-!         maximum allowed value, the error SPICE(INVALIDVALUE) is
-!         signaled.
-!
-!     5)  If the window size is not compatible with the segment
-!         subtype, the error SPICE(INVALIDVALUE) is signaled.
-!
-!     6)  If the segment subtype is not recognized, the error
-!         SPICE(INVALIDSUBTYPE) is signaled.
-!
-!     7)  If the tolerance is negative, the error SPICE(NEGATIVETOL) is
-!         signaled.
-!
-!     8)  If an error occurs while trying to read data from a C-kernel,
-!         the error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     9)  If the input segment descriptor indicates that angular
-!         velocity data are not present, and if the input flag NEEDAV
-!         is set to .TRUE., the error SPICE(NOAVDATA) is signaled.
-!
-! $ Files
-!
-!     See argument HANDLE.
-!
-! $ Particulars
-!
-!     See the CK Required Reading file for a description of the
-!     structure of a data type 6 segment.
-!
-! $ Examples
-!
-!     The data returned by the CKRnn routine is in its rawest form,
-!     taken directly from the segment. As such, it will be meaningless
-!     to a user unless he/she understands the structure of the data type
-!     completely. Given that understanding, however, the CKRxx
-!     routines might be used to "dump" and check segment data for a
-!     particular epoch.
-!
-!     The search performed here does not mimic the behavior of the CK
-!     reader APIs CKGP and CKGPAV, which continue searching when an
-!     applicable segment doesn't satisfy a pointing request. See the CK
-!     Required reading for details.
-!
-!     C
-!     C     Get a segment applicable to a specified body and epoch.
-!     C
-!           CALL CKBSS ( INST,   SCLKDP, TOL,   NEEDAV )
-!           CALL CKSNS ( HANDLE, DESCR,  SEGID, SFND   )
-!
-!           IF ( .NOT. SFND ) THEN
-!              [Handle case of pointing not being found]
-!           END IF
-!
-!     C
-!     C     Look at parts of the descriptor.
-!     C
-!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
-!           CENTER = ICD( 2 )
-!           REF    = ICD( 3 )
-!           TYPE   = ICD( 4 )
-!
-!           IF ( TYPE .EQ. 6 ) THEN
-!
-!              CALL CKR06 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
-!          .                RECORD, FOUND                       )
-!
-!              IF ( .NOT. FOUND ) THEN
-!                 [Handle case of pointing not being found]
-!              END IF
-!
-!              [Look at the RECORD data]
-!                  .
-!                  .
-!                  .
-!           END IF
-!
-! $ Restrictions
-!
-!     1)  Correctness of the C-kernel read by this routine is
-!         assumed.
-!
-!     2)  Correctness of inputs must be ensured by the caller of
-!         this routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 06-JUL-2021 (NJB) (JDR)
-!
-!        Corrected code example: removed comment character preceding
-!        CKBSS call. Added note regarding difference between this
-!        search and those performed by the CK reader APIs CKGP and
-!        CKGPAV.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read record from type_6 CK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-
-
-
-
-
-!
-!     Maximum window sizes, based on subtypes:
-!
-
-
-
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Read a single CK data record from a segment of type 6
+!!     (ESOC/DDID Piecewise Interpolation).
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE,
+!!     DESCR    are the file handle and segment descriptor for a CK
+!!              segment of type 6.
+!!
+!!     SCLKDP   is an encoded spacecraft clock time indicating the
+!!              epoch for which pointing is desired.
+!!
+!!     TOL      is a time tolerance, measured in the same units as
+!!              encoded spacecraft clock.
+!!
+!!              When SCLKDP falls between the start time of one of
+!!              the mini-segment intervals and the last time tag of
+!!              that interval, the tolerance has no effect because
+!!              pointing will be returned at the request time.
+!!
+!!              However, if the request time falls within a coverage
+!!              gap in one of the intervals, or outside of any
+!!              interval, then the tolerance is used to determine if
+!!              pointing should be returned at the closest epoch for
+!!              which pointing is available. This epoch is either an
+!!              interval's start time or the smaller of an interval's
+!!              end time and its last time tag.
+!!
+!!     NEEDAV   is .TRUE. if angular velocity is requested. If the
+!!              input segment descriptor indicates angular velocity
+!!              is absent, the error SPICE(NOAVDATA) is signaled.
+!!
+!!              Note: although all subtypes of type 6 records either
+!!              contain or compute angular velocity, a CK creator may
+!!              choose to indicate that the provided angular velocity
+!!              data are not valid; this can be done by setting the
+!!              segment descriptor angular velocity flag to .FALSE.
+!!
+!! ## Detailed Output
+!!
+!!     RECORD   is a set of data from the specified segment which,
+!!              when evaluated at epoch SCLKDP, will give the
+!!              attitude and angular velocity of some body, relative
+!!              to the reference frame indicated by DESCR.
+!!
+!!              The structure of the record is as follows:
+!!
+!!                 +----------------------+
+!!                 | evaluation epoch     |
+!!                 +----------------------+
+!!                 | subtype code         |
+!!                 +----------------------+
+!!                 | number of packets (n)|
+!!                 +----------------------+
+!!                 | nominal SCLK rate    |
+!!                 +----------------------+
+!!                 | packet 1             |
+!!                 +----------------------+
+!!                 | packet 2             |
+!!                 +----------------------+
+!!                             .
+!!                             .
+!!                             .
+!!                 +----------------------+
+!!                 | packet n             |
+!!                 +----------------------+
+!!                 | epochs 1--n          |
+!!                 +----------------------+
+!!
+!!              The packet size is a function of the subtype code.
+!!              All packets in a record have the same size.
+!!
+!!     FOUND    is a logical flag indicating whether data were found.
+!!              If NEEDAV is .FALSE., data will be found if the
+!!              request time is within TOL ticks of a time for which
+!!              the segment provides data. If NEEDAV is .TRUE., the
+!!              segment's angular velocity flag must also be set in
+!!              order for data to be found.
+!!
+!!              A type 6 segment provides data for times that are
+!!              between its descriptor time bounds and that are
+!!              within the coverage region of a mini-segment
+!!              interval. The coverage region of a mini-segment
+!!              interval extends from its start time to the lesser of
+!!              its stop time and its last time tag.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     This routine roughly follows the pattern established in the
+!!     lower-numbered CK data type readers of not explicitly performing
+!!     error diagnoses. In particular, the C-kernel from which data are
+!!     read is assumed to be valid in most respects. The few exceptions
+!!     that are handled here are listed below.
+!!
+!!     1)  If the input HANDLE does not designate a loaded CK file, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     2)  If the segment specified by DESCR is not of data type 6, the
+!!         error SPICE(WRONGCKTYPE) is signaled.
+!!
+!!     3)  If the input SCLK value is not within TOL ticks of a time
+!!         for which the segment provides data, FOUND is set to .FALSE.
+!!         and the output record is undefined.
+!!
+!!     4)  If the window size is non-positive or greater than the
+!!         maximum allowed value, the error SPICE(INVALIDVALUE) is
+!!         signaled.
+!!
+!!     5)  If the window size is not compatible with the segment
+!!         subtype, the error SPICE(INVALIDVALUE) is signaled.
+!!
+!!     6)  If the segment subtype is not recognized, the error
+!!         SPICE(INVALIDSUBTYPE) is signaled.
+!!
+!!     7)  If the tolerance is negative, the error SPICE(NEGATIVETOL) is
+!!         signaled.
+!!
+!!     8)  If an error occurs while trying to read data from a C-kernel,
+!!         the error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     9)  If the input segment descriptor indicates that angular
+!!         velocity data are not present, and if the input flag NEEDAV
+!!         is set to .TRUE., the error SPICE(NOAVDATA) is signaled.
+!!
+!! ## Files
+!!
+!!     See argument HANDLE.
+!!
+!! ## Particulars
+!!
+!!     See the CK Required Reading file for a description of the
+!!     structure of a data type 6 segment.
+!!
+!! ## Examples
+!!
+!!     The data returned by the CKRnn routine is in its rawest form,
+!!     taken directly from the segment. As such, it will be meaningless
+!!     to a user unless he/she understands the structure of the data type
+!!     completely. Given that understanding, however, the CKRxx
+!!     routines might be used to "dump" and check segment data for a
+!!     particular epoch.
+!!
+!!     The search performed here does not mimic the behavior of the CK
+!!     reader APIs CKGP and CKGPAV, which continue searching when an
+!!     applicable segment doesn't satisfy a pointing request. See the CK
+!!     Required reading for details.
+!!
+!!     C
+!!     C     Get a segment applicable to a specified body and epoch.
+!!     C
+!!           CALL CKBSS ( INST,   SCLKDP, TOL,   NEEDAV )
+!!           CALL CKSNS ( HANDLE, DESCR,  SEGID, SFND   )
+!!
+!!           IF ( .NOT. SFND ) THEN
+!!              [Handle case of pointing not being found]
+!!           END IF
+!!
+!!     C
+!!     C     Look at parts of the descriptor.
+!!     C
+!!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!!           CENTER = ICD( 2 )
+!!           REF    = ICD( 3 )
+!!           TYPE   = ICD( 4 )
+!!
+!!           IF ( TYPE .EQ. 6 ) THEN
+!!
+!!              CALL CKR06 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
+!!          .                RECORD, FOUND                       )
+!!
+!!              IF ( .NOT. FOUND ) THEN
+!!                 [Handle case of pointing not being found]
+!!              END IF
+!!
+!!              [Look at the RECORD data]
+!!                  .
+!!                  .
+!!                  .
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     1)  Correctness of the C-kernel read by this routine is
+!!         assumed.
+!!
+!!     2)  Correctness of inputs must be ensured by the caller of
+!!         this routine.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 06-JUL-2021 (NJB) (JDR)
+!!
+!!        Corrected code example: removed comment character preceding
+!!        CKBSS call. Added note regarding difference between this
+!!        search and those performed by the CK reader APIs CKGP and
+!!        CKGPAV.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
+!!
+!! ## Index Entries
+!!
+!!     read record from type_6 CK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Maximum window sizes, based on subtypes:
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled, lstltd, touchl
       use pepper_math, only: brcktd, odd
+      use pepper_inc_ckparam
+      use pepper_inc_ck06
       implicit none
       real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
-      include 'ckparam.inc'
-      include 'ck06.inc'
       integer(ip), parameter :: nd = 2
       integer(ip), parameter :: ni = 6
       integer(ip), parameter :: dirsiz = 100
@@ -7552,23 +7449,22 @@ contains
 !$Procedure PCKR02 ( PCK, read record from type 2 segment )
 
       module procedure pckr02
+!! ## Abstract
+!!
+!!     Read a single PCK data record from a segment of type 2
+!!     (Chebyshev, 3-vector only).
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single PCK data record from a segment of type 2
-!     (Chebyshev, 3-vector only).
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -7927,27 +7823,26 @@ contains
 !$Procedure PCKR20 ( PCK, read record from segment, type 20 )
 
       module procedure pckr20
+!! ## Abstract
+!!
+!!     Read a single PCK data record from a segment of type 20
+!!     (Chebyshev, derivative coefficients only).
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     ORIENTATION
+!!     ROTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_arrays, only: moved
       use pepper_math, only: vsclip
-
-! $ Abstract
-!
-!     Read a single PCK data record from a segment of type 20
-!     (Chebyshev, derivative coefficients only).
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     ORIENTATION
-!     ROTATION
-!
-! $ Declarations
-
       implicit none
 
 
@@ -8253,247 +8148,227 @@ contains
       end procedure pckr20
 
       module procedure sgmeta
-
-! $ Abstract
-!
-!     Obtain the value of a specified generic segment meta data item.
-!
-! $ Required_Reading
-!
-!     DAF
-!
-! $ Keywords
-!
-!     GENERIC SEGMENTS
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DAF opened for reading that
-!              contains the generic segment described by DESCR.
-!
-!     DESCR    is the descriptor of a generic segment. This must
-!              be the descriptor for a generic segment in the DAF
-!              associated with HANDLE.
-!
-!     MNEMON   is the mnemonic used to represent the desired piece of
-!              meta data. See the file 'sgparam.inc' for details, the
-!              mnemonics, and their values.
-!
-! $ Detailed_Output
-!
-!     VALUE    is the value of the meta data item associated with
-!              the mnemonic MNEMON that is in the generic segment
-!              specified by HANDLE and DESCR.
-!
-! $ Parameters
-!
-!     This subroutine makes use of parameters defined in the file
-!     'sgparam.inc'.
-!
-! $ Exceptions
-!
-!     1)  If the mnemonic for the meta data item is not valid, the error
-!         SPICE(UNKNOWNMETAITEM) is signaled.
-!
-!     2)  If the last address in the DAF segment that reports the number
-!         of meta data items that exist in the segment is less than
-!         MNMETA, the error SPICE(INVALIDMETADATA) is signaled.
-!
-! $ Files
-!
-!     See the description of HANDLE above.
-!
-! $ Particulars
-!
-!     This routine is a utility for fetching the meta data associated
-!     with a DAF generic segment.
-!
-!     A DAF generic segment contains several logical data partitions:
-!
-!        1) A partition for constant values to be associated with each
-!           data packet in the segment.
-!
-!        2) A partition for the data packets.
-!
-!        3) A partition for reference values.
-!
-!        4) A partition for a packet directory, if the segment contains
-!           variable sized packets.
-!
-!        5) A partition for a reference value directory.
-!
-!        6) A reserved partition that is not currently used. This
-!           partition is only for the use of the NAIF group at the Jet
-!           Propulsion Laboratory (JPL).
-!
-!        7) A partition for the meta data which describes the locations
-!           and sizes of other partitions as well as providing some
-!           additional descriptive information about the generic
-!           segment.
-!
-!                 +============================+
-!                 |         Constants          |
-!                 +============================+
-!                 |          Packet 1          |
-!                 |----------------------------|
-!                 |          Packet 2          |
-!                 |----------------------------|
-!                 |              .             |
-!                 |              .             |
-!                 |              .             |
-!                 |----------------------------|
-!                 |          Packet N          |
-!                 +============================+
-!                 |      Reference Values      |
-!                 +============================+
-!                 |      Packet Directory      |
-!                 +============================+
-!                 |    Reference  Directory    |
-!                 +============================+
-!                 |       Reserved  Area       |
-!                 +============================+
-!                 |     Segment Meta Data      |
-!                 +----------------------------+
-!
-!     Only the placement of the meta data at the end of a segment is
-!     required. The other data partitions may occur in any order in the
-!     segment because the meta data will contain pointers to the
-!     appropriate locations of the other data partitions within the
-!     segment.
-!
-!     The meta data for the segment should be obtained only through
-!     use of this routine, SGMETA.
-!
-! $ Examples
-!
-!     Suppose that we would like to know how many constants, data
-!     packets, and reference values are in the generic segment that we
-!     have located in the DAF file associated with HANDLE.
-!
-!     C
-!     C     Get the number of constants.
-!     C
-!           CALL SGMETA ( HANDLE, DESCR, NCON, NCONST )
-!     C
-!     C     Get the number of data packets.
-!     C
-!           CALL SGMETA ( HANDLE, DESCR, NPKT, NPKTS )
-!     C
-!     C     Get the number of constants.
-!     C
-!           CALL SGMETA ( HANDLE, DESCR, NREF, NREFS )
-!
-!     C
-!     C     Print the values.
-!     C
-!           WRITE (*, *) 'Number of Constants       : ', NCONST
-!           WRITE (*, *) 'Number of Data Packets    : ', NPKTS
-!           WRITE (*, *) 'Number of Reference Values: ', NREFS
-!
-! $ Restrictions
-!
-!     1)  The segment described by DESCR MUST be a generic segment,
-!         otherwise the results of this routine are not predictable.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.4.1, 20-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.4.0, 07-SEP-2001 (EDW)
-!
-!        Replaced DAFRDA call with DAFGDA.
-!
-!-    SPICELIB Version 1.3.0, 14-JUN-1999 (FST)
-!
-!        Altered the check in/out structure to be more reasonable.
-!        This introduced redundant code, but only to increase the
-!        efficiency of the normal mode of operation.
-!
-!-    SPICELIB Version 1.2.0, 24-SEP-1998 (FST)
-!
-!        Modified the code that handles reading the meta data from the
-!        DAF to handle the case when the number of meta data items in
-!        the file exceeds the current maximum defined in sgparam.inc.
-!        In the event that this situation occurs, the routine loads
-!        what meta data it can interpret and ignores the rest. In
-!        this event if NMETA is requested, it is returned as MXMETA in
-!        sgparam.inc.
-!
-!        An additional exception is now trapped by the routine. If
-!        a generic segment in a DAF reports less than the known minimum
-!        number of meta data items, then the routine signals the
-!        error SPICE(INVALIDMETADATA).
-!
-!        The conditions that cause the SPICE(UNKNOWNMETAITEM) to be
-!        signaled have been altered. Now if the integer mnemonic
-!        is not between 1 and METASZ inclusive, or NMETA the error
-!        is signaled. In the versions preceding this change, for
-!        segments that reported less than NMETA items of meta data
-!        could not use this routine to request the number of meta
-!        data items without signaling SPICE(UNKNOWNMETAITEM).
-!
-!-    SPICELIB Version 1.1.0, 11-APR-1995 (KRG)
-!
-!        Modified the code that deals with the EQUIVALENCEd part
-!        descriptor. We now call MOVED rather than using a direct
-!        assignment.
-!
-!-    SPICELIB Version 1.0.0, 11-APR-1995 (KRG) (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     retrieve a meta data value for a generic segment
-!
-!-&
-
-!
-!     Spicelib Functions
-!
-
-!
-!     Local Parameters
-!
-!     Include the mnemonic values for the generic segment declarations.
-!
-
-!
-!     Local Variables
-!
-
-
-
-
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Obtain the value of a specified generic segment meta data item.
+!!
+!! ## Required Reading
+!!
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     GENERIC SEGMENTS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE   is the handle of a DAF opened for reading that
+!!              contains the generic segment described by DESCR.
+!!
+!!     DESCR    is the descriptor of a generic segment. This must
+!!              be the descriptor for a generic segment in the DAF
+!!              associated with HANDLE.
+!!
+!!     MNEMON   is the mnemonic used to represent the desired piece of
+!!              meta data. See the file 'sgparam.inc' for details, the
+!!              mnemonics, and their values.
+!!
+!! ## Detailed Output
+!!
+!!     VALUE    is the value of the meta data item associated with
+!!              the mnemonic MNEMON that is in the generic segment
+!!              specified by HANDLE and DESCR.
+!!
+!! ## Parameters
+!!
+!!     This subroutine makes use of parameters defined in the file
+!!     'sgparam.inc'.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the mnemonic for the meta data item is not valid, the error
+!!         SPICE(UNKNOWNMETAITEM) is signaled.
+!!
+!!     2)  If the last address in the DAF segment that reports the number
+!!         of meta data items that exist in the segment is less than
+!!         MNMETA, the error SPICE(INVALIDMETADATA) is signaled.
+!!
+!! ## Files
+!!
+!!     See the description of HANDLE above.
+!!
+!! ## Particulars
+!!
+!!     This routine is a utility for fetching the meta data associated
+!!     with a DAF generic segment.
+!!
+!!     A DAF generic segment contains several logical data partitions:
+!!
+!!        1) A partition for constant values to be associated with each
+!!           data packet in the segment.
+!!
+!!        2) A partition for the data packets.
+!!
+!!        3) A partition for reference values.
+!!
+!!        4) A partition for a packet directory, if the segment contains
+!!           variable sized packets.
+!!
+!!        5) A partition for a reference value directory.
+!!
+!!        6) A reserved partition that is not currently used. This
+!!           partition is only for the use of the NAIF group at the Jet
+!!           Propulsion Laboratory (JPL).
+!!
+!!        7) A partition for the meta data which describes the locations
+!!           and sizes of other partitions as well as providing some
+!!           additional descriptive information about the generic
+!!           segment.
+!!
+!!                 +============================+
+!!                 |         Constants          |
+!!                 +============================+
+!!                 |          Packet 1          |
+!!                 |----------------------------|
+!!                 |          Packet 2          |
+!!                 |----------------------------|
+!!                 |              .             |
+!!                 |              .             |
+!!                 |              .             |
+!!                 |----------------------------|
+!!                 |          Packet N          |
+!!                 +============================+
+!!                 |      Reference Values      |
+!!                 +============================+
+!!                 |      Packet Directory      |
+!!                 +============================+
+!!                 |    Reference  Directory    |
+!!                 +============================+
+!!                 |       Reserved  Area       |
+!!                 +============================+
+!!                 |     Segment Meta Data      |
+!!                 +----------------------------+
+!!
+!!     Only the placement of the meta data at the end of a segment is
+!!     required. The other data partitions may occur in any order in the
+!!     segment because the meta data will contain pointers to the
+!!     appropriate locations of the other data partitions within the
+!!     segment.
+!!
+!!     The meta data for the segment should be obtained only through
+!!     use of this routine, SGMETA.
+!!
+!! ## Examples
+!!
+!!     Suppose that we would like to know how many constants, data
+!!     packets, and reference values are in the generic segment that we
+!!     have located in the DAF file associated with HANDLE.
+!!
+!!     C
+!!     C     Get the number of constants.
+!!     C
+!!           CALL SGMETA ( HANDLE, DESCR, NCON, NCONST )
+!!     C
+!!     C     Get the number of data packets.
+!!     C
+!!           CALL SGMETA ( HANDLE, DESCR, NPKT, NPKTS )
+!!     C
+!!     C     Get the number of constants.
+!!     C
+!!           CALL SGMETA ( HANDLE, DESCR, NREF, NREFS )
+!!
+!!     C
+!!     C     Print the values.
+!!     C
+!!           WRITE (*, *) 'Number of Constants       : ', NCONST
+!!           WRITE (*, *) 'Number of Data Packets    : ', NPKTS
+!!           WRITE (*, *) 'Number of Reference Values: ', NREFS
+!!
+!! ## Restrictions
+!!
+!!     1)  The segment described by DESCR MUST be a generic segment,
+!!         otherwise the results of this routine are not predictable.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     K.R. Gehringer     (JPL)
+!!     W.L. Taber         (JPL)
+!!     F.S. Turner        (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.4.1, 20-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.4.0, 07-SEP-2001 (EDW)
+!!
+!!        Replaced DAFRDA call with DAFGDA.
+!!
+!!-    SPICELIB Version 1.3.0, 14-JUN-1999 (FST)
+!!
+!!        Altered the check in/out structure to be more reasonable.
+!!        This introduced redundant code, but only to increase the
+!!        efficiency of the normal mode of operation.
+!!
+!!-    SPICELIB Version 1.2.0, 24-SEP-1998 (FST)
+!!
+!!        Modified the code that handles reading the meta data from the
+!!        DAF to handle the case when the number of meta data items in
+!!        the file exceeds the current maximum defined in sgparam.inc.
+!!        In the event that this situation occurs, the routine loads
+!!        what meta data it can interpret and ignores the rest. In
+!!        this event if NMETA is requested, it is returned as MXMETA in
+!!        sgparam.inc.
+!!
+!!        An additional exception is now trapped by the routine. If
+!!        a generic segment in a DAF reports less than the known minimum
+!!        number of meta data items, then the routine signals the
+!!        error SPICE(INVALIDMETADATA).
+!!
+!!        The conditions that cause the SPICE(UNKNOWNMETAITEM) to be
+!!        signaled have been altered. Now if the integer mnemonic
+!!        is not between 1 and METASZ inclusive, or NMETA the error
+!!        is signaled. In the versions preceding this change, for
+!!        segments that reported less than NMETA items of meta data
+!!        could not use this routine to request the number of meta
+!!        data items without signaling SPICE(UNKNOWNMETAITEM).
+!!
+!!-    SPICELIB Version 1.1.0, 11-APR-1995 (KRG)
+!!
+!!        Modified the code that deals with the EQUIVALENCEd part
+!!        descriptor. We now call MOVED rather than using a direct
+!!        assignment.
+!!
+!!-    SPICELIB Version 1.0.0, 11-APR-1995 (KRG) (WLT)
+!!
+!! ## Index Entries
+!!
+!!     retrieve a meta data value for a generic segment
+!!
+!!     Spicelib Functions
+!!
+!!     Local Parameters
+!!
+!!     Include the mnemonic values for the generic segment declarations.
+!!
+!!     Local Variables
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
+      use pepper_inc_sgparam
       implicit none
       real(wp) :: dmtasz_1(1)  !! one-element copy of dmtasz (array argument)
-      include 'sgparam.inc'
       integer(ip)           ametas
       integer(ip)           begin
       integer(ip)           begmta
@@ -8759,158 +8634,139 @@ contains
       end procedure sgmeta
 
       module procedure spke01
-
-! $ Abstract
-!
-!     Evaluate a single SPK data record from a segment of type 1
-!     (Difference Lines).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     ET       is a target epoch, at which a state vector is to
-!              be computed.
-!
-!     RECORD   is a data record which, when evaluated at epoch ET,
-!              will give the state (position and velocity) of some
-!              body, relative to some center, in some inertial
-!              reference frame.
-!
-! $ Detailed_Output
-!
-!     STATE    is the state. Units are km and km/sec.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The exact format and structure of type 1 (difference lines)
-!     segments are described in the SPK Required Reading file.
-!
-!     Difference lines (DL's) are generated by JPL navigation
-!     system programs P and PV. Each data record is equivalent
-!     to the (slightly rearranged) 'P' portion of a NAVIO PV file
-!     data record.
-!
-!     SPKE01 is a specialized version of Fred Krogh's subroutine DAINT.
-!     Only the calling sequence has been changed.
-!
-!     Because the original version was undocumented, only Fred
-!     knows how this really works.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     F.T. Krogh         (JPL)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 14-APR-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Moved SPK
-!        required reading from $Literature_References to
-!        $Required_Reading section.
-!
-!-    SPICELIB Version 1.1.0, 14-FEB-1997 (WLT)
-!
-!        The goto's were removed and loop and if structures
-!        revealed. We still don't know exactly what's going
-!        on, but at least the bones of this routine have been
-!        cleaned off and are ready for assembly. (WLT)
-!
-!-    SPICELIB Version 1.0.4, 30-OCT-1996 (WLT)
-!
-!        Removed redundant SAVE statements from the declaration
-!        section. Thanks to Steve Schlaifer for finding this
-!        error.
-!
-!-    SPICELIB Version 1.0.3, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.2, 23-AUG-1991 (HAN)
-!
-!        SPK01 was removed from the $Required_Reading section of the
-!        header. The information in the SPK01 Required Reading file
-!        is now part of the SPK Required Reading file.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (FTK)
-!
-!-&
-
-! $ Index_Entries
-!
-!     evaluate type_1 SPK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
-!     The names below are original to the routine. They correspond
-!     roughly to the original memos written by Fred Krogh to explain
-!     how all this stuff really works.
-!
-
-
-
-
-
-
-!
-!     Save everything between calls.
-!
-
-!
-!     If the RETURN function is set, don't even bother with this.
-!
+!! ## Abstract
+!!
+!!     Evaluate a single SPK data record from a segment of type 1
+!!     (Difference Lines).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     ET       is a target epoch, at which a state vector is to
+!!              be computed.
+!!
+!!     RECORD   is a data record which, when evaluated at epoch ET,
+!!              will give the state (position and velocity) of some
+!!              body, relative to some center, in some inertial
+!!              reference frame.
+!!
+!! ## Detailed Output
+!!
+!!     STATE    is the state. Units are km and km/sec.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The exact format and structure of type 1 (difference lines)
+!!     segments are described in the SPK Required Reading file.
+!!
+!!     Difference lines (DL's) are generated by JPL navigation
+!!     system programs P and PV. Each data record is equivalent
+!!     to the (slightly rearranged) 'P' portion of a NAVIO PV file
+!!     data record.
+!!
+!!     SPKE01 is a specialized version of Fred Krogh's subroutine DAINT.
+!!     Only the calling sequence has been changed.
+!!
+!!     Because the original version was undocumented, only Fred
+!!     knows how this really works.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     F.T. Krogh         (JPL)
+!!     H.A. Neilan        (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0, 14-APR-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard. Moved SPK
+!!        required reading from $Literature_References to
+!!        $Required_Reading section.
+!!
+!!-    SPICELIB Version 1.1.0, 14-FEB-1997 (WLT)
+!!
+!!        The goto's were removed and loop and if structures
+!!        revealed. We still don't know exactly what's going
+!!        on, but at least the bones of this routine have been
+!!        cleaned off and are ready for assembly. (WLT)
+!!
+!!-    SPICELIB Version 1.0.4, 30-OCT-1996 (WLT)
+!!
+!!        Removed redundant SAVE statements from the declaration
+!!        section. Thanks to Steve Schlaifer for finding this
+!!        error.
+!!
+!!-    SPICELIB Version 1.0.3, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.2, 23-AUG-1991 (HAN)
+!!
+!!        SPK01 was removed from the $Required_Reading section of the
+!!        header. The information in the SPK01 Required Reading file
+!!        is now part of the SPK Required Reading file.
+!!
+!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+!!
+!!        Literature references added to the header.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (FTK)
+!!
+!! ## Index Entries
+!!
+!!     evaluate type_1 SPK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
+!!     The names below are original to the routine. They correspond
+!!     roughly to the original memos written by Fred Krogh to explain
+!!     how all this stuff really works.
+!!
+!!     Save everything between calls.
+!!
+!!     If the RETURN function is set, don't even bother with this.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       implicit none
@@ -9088,200 +8944,191 @@ contains
 !$Procedure SPKE02 ( SPK, evaluate record, type 2 )
 
       module procedure spke02
+!! ## Abstract
+!!
+!!     Evaluate a single data record from an PCK or SPK segment of type
+!!     2 (Chebyshev Polynomials, 3 components).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the epoch at which a state vector or Euler angle
+!!              state is to be computed. The epoch is represented as
+!!              seconds past J2000 TDB.
+!!
+!!     RECORD   is a data record which, when evaluated at epoch ET,
+!!              will yield three function components and their
+!!              derivatives with respect to time. The record
+!!              structure for SPK type 2 data is:
+!!
+!!                 +--------------------------------------+
+!!                 | record size (excluding this element) |
+!!                 +--------------------------------------+
+!!                 | Coverage interval midpoint           |
+!!                 +--------------------------------------+
+!!                 | Coverage interval radius             |
+!!                 +--------------------------------------+
+!!                 | Coeffs for X position component      |
+!!                 +--------------------------------------+
+!!                 | Coeffs for Y position component      |
+!!                 +--------------------------------------+
+!!                 | Coeffs for Z position component      |
+!!                 +--------------------------------------+
+!!
+!!              In the above record
+!!
+!!                 - Times are expressed as seconds past J2000 TDB.
+!!                 - Position components have units of km.
+!!
+!!              See PCKE02 for a description of PCK type 2 records.
+!!
+!!              RECORD must be declared by the caller with size large
+!!              enough to accommodate the largest record that can be
+!!              returned by this routine. See the INCLUDE file
+!!              spkrec.inc for the correct record length.
+!!
+!! ## Detailed Output
+!!
+!!     XYZDOT   is a 6-vector. In order, the components of XYZDOT are
+!!              X, Y, Z, X', Y', and Z'. Units for state evaluations
+!!              will be km and km/sec. Units for angles will be
+!!              radians and radians/sec.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input record contains an invalid coefficient count,
+!!         the error SPICE(INVALIDCOUNT) is signaled.
+!!
+!!     2)  If the input record contains invalid domain transformation
+!!         parameters, an error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The exact format and structure of type 2 (Chebyshev polynomials,
+!!     position only) segments are described in the SPK and PCK Required
+!!     Reading files.
+!!
+!!     A type 2 segment contains three sets of Chebyshev coefficients,
+!!     one set each for components X, Y, and Z. SPKE02 calls the routine
+!!     CHBINT for each set to evaluate the polynomial AND its first
+!!     derivative (which it computes internally) at the input epoch,
+!!     thereby arriving at the complete state.
+!!
+!! ## Examples
+!!
+!!     The data returned by the routine is in its rawest form,
+!!     taken directly from the segment. As such, it will be meaningless
+!!     to a user unless he/she understands the structure of the data type
+!!     completely.
+!!
+!!     C
+!!     C     Get a segment applicable to a specified body and epoch.
+!!     C
+!!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
+!!
+!!     C
+!!     C     Look at parts of the descriptor.
+!!     C
+!!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!!           CENTER = ICD( 2 )
+!!           REF    = ICD( 3 )
+!!           TYPE   = ICD( 4 )
+!!
+!!           IF ( TYPE .EQ. 2 ) THEN
+!!
+!!              CALL SPKR02 ( HANDLE, DESCR, ET, RECORD )
+!!                  .
+!!                  .  Look at the RECORD data.
+!!                  .
+!!              CALL SPKE02 ( ET, RECORD, XYZDOT )
+!!                  .
+!!                  .  Check out the evaluated state.
+!!                  .
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     H.A. Neilan        (JPL)
+!!     W.L. Taber         (JPL)
+!!     R.E. Thurman       (JPL)
+!!     K.S. Zukor         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 14-APR-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Moved SPK
+!!        required reading from $Literature_References to
+!!        $Required_Reading section.
+!!
+!!-    SPICELIB Version 2.0.0, 18-JAN-2014 (NJB)
+!!
+!!        Added error checks for invalid coefficient counts
+!!        and invalid interval radius. Changed error handling
+!!        style to "discovery." Enhanced header documentation.
+!!
+!!-    SPICELIB Version 1.0.4, 22-MAR-1994 (KSZ)
+!!
+!!     Comments changed so this can be used as
+!!     a generic Chebyshev evaluator, rather than just for
+!!     SPK type 2 files.  (KSZ)
+!!
+!!-    SPICELIB Version 1.0.3, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.2, 23-AUG-1991 (HAN)
+!!
+!!        SPK02 was removed from the $Required_Reading section of the
+!!        header. The information in the SPK02 Required Reading file
+!!        is now part of the SPK Required Reading file.
+!!
+!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+!!
+!!        Literature references added to the header.
+!!
+!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
+!!
+!! ## Index Entries
+!!
+!!     evaluate type_2 SPK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: chbint
-
-! $ Abstract
-!
-!     Evaluate a single data record from an PCK or SPK segment of type
-!     2 (Chebyshev Polynomials, 3 components).
-!
-! $ Required_Reading
-!
-!     SPK
-!     PCK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-!
-!
-! $ Detailed_Input
-!
-!     ET       is the epoch at which a state vector or Euler angle
-!              state is to be computed. The epoch is represented as
-!              seconds past J2000 TDB.
-!
-!     RECORD   is a data record which, when evaluated at epoch ET,
-!              will yield three function components and their
-!              derivatives with respect to time. The record
-!              structure for SPK type 2 data is:
-!
-!                 +--------------------------------------+
-!                 | record size (excluding this element) |
-!                 +--------------------------------------+
-!                 | Coverage interval midpoint           |
-!                 +--------------------------------------+
-!                 | Coverage interval radius             |
-!                 +--------------------------------------+
-!                 | Coeffs for X position component      |
-!                 +--------------------------------------+
-!                 | Coeffs for Y position component      |
-!                 +--------------------------------------+
-!                 | Coeffs for Z position component      |
-!                 +--------------------------------------+
-!
-!              In the above record
-!
-!                 - Times are expressed as seconds past J2000 TDB.
-!                 - Position components have units of km.
-!
-!              See PCKE02 for a description of PCK type 2 records.
-!
-!              RECORD must be declared by the caller with size large
-!              enough to accommodate the largest record that can be
-!              returned by this routine. See the INCLUDE file
-!              spkrec.inc for the correct record length.
-!
-! $ Detailed_Output
-!
-!     XYZDOT   is a 6-vector. In order, the components of XYZDOT are
-!              X, Y, Z, X', Y', and Z'. Units for state evaluations
-!              will be km and km/sec. Units for angles will be
-!              radians and radians/sec.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input record contains an invalid coefficient count,
-!         the error SPICE(INVALIDCOUNT) is signaled.
-!
-!     2)  If the input record contains invalid domain transformation
-!         parameters, an error is signaled by a routine in the
-!         call tree of this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The exact format and structure of type 2 (Chebyshev polynomials,
-!     position only) segments are described in the SPK and PCK Required
-!     Reading files.
-!
-!     A type 2 segment contains three sets of Chebyshev coefficients,
-!     one set each for components X, Y, and Z. SPKE02 calls the routine
-!     CHBINT for each set to evaluate the polynomial AND its first
-!     derivative (which it computes internally) at the input epoch,
-!     thereby arriving at the complete state.
-!
-! $ Examples
-!
-!     The data returned by the routine is in its rawest form,
-!     taken directly from the segment. As such, it will be meaningless
-!     to a user unless he/she understands the structure of the data type
-!     completely.
-!
-!     C
-!     C     Get a segment applicable to a specified body and epoch.
-!     C
-!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
-!
-!     C
-!     C     Look at parts of the descriptor.
-!     C
-!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
-!           CENTER = ICD( 2 )
-!           REF    = ICD( 3 )
-!           TYPE   = ICD( 4 )
-!
-!           IF ( TYPE .EQ. 2 ) THEN
-!
-!              CALL SPKR02 ( HANDLE, DESCR, ET, RECORD )
-!                  .
-!                  .  Look at the RECORD data.
-!                  .
-!              CALL SPKE02 ( ET, RECORD, XYZDOT )
-!                  .
-!                  .  Check out the evaluated state.
-!                  .
-!           END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     R.E. Thurman       (JPL)
-!     K.S. Zukor         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 14-APR-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Moved SPK
-!        required reading from $Literature_References to
-!        $Required_Reading section.
-!
-!-    SPICELIB Version 2.0.0, 18-JAN-2014 (NJB)
-!
-!        Added error checks for invalid coefficient counts
-!        and invalid interval radius. Changed error handling
-!        style to "discovery." Enhanced header documentation.
-!
-!-    SPICELIB Version 1.0.4, 22-MAR-1994 (KSZ)
-!
-!     Comments changed so this can be used as
-!     a generic Chebyshev evaluator, rather than just for
-!     SPK type 2 files.  (KSZ)
-!
-!-    SPICELIB Version 1.0.3, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.2, 23-AUG-1991 (HAN)
-!
-!        SPK02 was removed from the $Required_Reading section of the
-!        header. The information in the SPK02 Required Reading file
-!        is now part of the SPK Required Reading file.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
-!
-!-&
-
-! $ Index_Entries
-!
-!     evaluate type_2 SPK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           cofloc
       integer(ip)           degp
       integer(ip)           i
@@ -9355,24 +9202,23 @@ contains
 !$Procedure SPKE03 ( S/P Kernel, evaluate, type 3 )
 
       module procedure spke03
+!! ## Abstract
+!!
+!!     Evaluate a single SPK data record from a segment of type 3
+!!     (Chebyshev Polynomials, position and velocity).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: chbval
-
-! $ Abstract
-!
-!     Evaluate a single SPK data record from a segment of type 3
-!     (Chebyshev Polynomials, position and velocity).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -9624,216 +9470,190 @@ contains
       end procedure spke03
 
       module procedure spke08
-
-! $ Abstract
-!
-!     Evaluate a single SPK data record from a segment of type 8
-!     (equally spaced discrete states, interpolated by Lagrange
-!     polynomials).
-!
-! $ Required_Reading
-!
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     ET       is a target epoch, at which a state vector is to
-!              be computed.
-!
-!     RECORD   is a data record which, when evaluated at epoch ET,
-!              will give the state (position and velocity) of some
-!              body, relative to some center, in some inertial
-!              reference frame. Normally, the caller of this routine
-!              will obtain RECORD by calling SPKR08.
-!
-!              The structure of the record is as follows:
-!
-!                 +----------------------+
-!                 | number of states (n) |
-!                 +----------------------+
-!                 | start epoch          |
-!                 +----------------------+
-!                 | step size            |
-!                 +----------------------+
-!                 | state 1 (6 elts.)    |
-!                 +----------------------+
-!                 | state 2 (6 elts.)    |
-!                 +----------------------+
-!                             .
-!                             .
-!                             .
-!                 +----------------------+
-!                 | state n (6 elts.)    |
-!                 +----------------------+
-!
-! $ Detailed_Output
-!
-!     STATE    is the state. In order, the elements are
-!
-!                 X, Y, Z, X', Y', and Z'
-!
-!              Units are km and km/sec.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  The caller of this routine must ensure that the input record
-!         is appropriate for the supplied ET value. Otherwise,
-!         arithmetic overflow may result.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The exact format and structure of type 8 (equally spaced discrete
-!     states, interpolated by Lagrange polynomials) segments are
-!     described in the SPK Required Reading file.
-!
-! $ Examples
-!
-!     The SPKEnn routines are almost always used in conjunction with
-!     the corresponding SPKRnn routines, which read the records from
-!     SPK files.
-!
-!     The data returned by the SPKRnn routine is in its rawest form,
-!     taken directly from the segment. As such, it will be meaningless
-!     to a user unless he/she understands the structure of the data type
-!     completely. Given that understanding, however, the SPKRnn
-!     routines might be used to examine raw segment data before
-!     evaluating it with the SPKEnn routines.
-!
-!     C
-!     C     Get a segment applicable to a specified body and epoch.
-!     C
-!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
-!
-!     C
-!     C     Look at parts of the descriptor.
-!     C
-!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
-!           CENTER = ICD( 2 )
-!           REF    = ICD( 3 )
-!           TYPE   = ICD( 4 )
-!
-!           IF ( TYPE .EQ. 8 ) THEN
-!
-!              CALL SPKR08 ( HANDLE, DESCR, ET, RECORD )
-!                  .
-!                  .  Look at the RECORD data.
-!                  .
-!              CALL SPKE08 ( ET, RECORD, STATE )
-!                  .
-!                  .  Check out the evaluated state.
-!                  .
-!           END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 12-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 10-DEC-2013 (NJB)
-!
-!        RECORD is now strictly an input; it is not overwritten by this
-!        routine. Formerly RECORD was used as a workspace array.
-!
-!-    SPICELIB Version 1.1.0, 25-AUG-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in XPOSEG and LGRESP calls.
-!
-!-    SPICELIB Version 1.0.0, 14-AUG-1993 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     evaluate type_8 SPK segment
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 25-AUG-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in XPOSEG and LGRESP calls.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-!     Size of a state vector:
-!
-
-!
-!     Indices of input record elements:
-!
-!        -- size
-!        -- start epoch
-!        -- step size
-!        -- start of state information
-!
-
-
-
-
-!
-!     Local variables
-!
-
-
-!
-!     Saved values
-!
-!     Save arrays to prevent stack overflow problems on some
-!     platforms.
-!
-
-!
-!     Initial values
-!
-!     Initialize the workspace array to suppress compiler warnings.
-!
-
+!! ## Abstract
+!!
+!!     Evaluate a single SPK data record from a segment of type 8
+!!     (equally spaced discrete states, interpolated by Lagrange
+!!     polynomials).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     ET       is a target epoch, at which a state vector is to
+!!              be computed.
+!!
+!!     RECORD   is a data record which, when evaluated at epoch ET,
+!!              will give the state (position and velocity) of some
+!!              body, relative to some center, in some inertial
+!!              reference frame. Normally, the caller of this routine
+!!              will obtain RECORD by calling SPKR08.
+!!
+!!              The structure of the record is as follows:
+!!
+!!                 +----------------------+
+!!                 | number of states (n) |
+!!                 +----------------------+
+!!                 | start epoch          |
+!!                 +----------------------+
+!!                 | step size            |
+!!                 +----------------------+
+!!                 | state 1 (6 elts.)    |
+!!                 +----------------------+
+!!                 | state 2 (6 elts.)    |
+!!                 +----------------------+
+!!                             .
+!!                             .
+!!                             .
+!!                 +----------------------+
+!!                 | state n (6 elts.)    |
+!!                 +----------------------+
+!!
+!! ## Detailed Output
+!!
+!!     STATE    is the state. In order, the elements are
+!!
+!!                 X, Y, Z, X', Y', and Z'
+!!
+!!              Units are km and km/sec.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  The caller of this routine must ensure that the input record
+!!         is appropriate for the supplied ET value. Otherwise,
+!!         arithmetic overflow may result.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The exact format and structure of type 8 (equally spaced discrete
+!!     states, interpolated by Lagrange polynomials) segments are
+!!     described in the SPK Required Reading file.
+!!
+!! ## Examples
+!!
+!!     The SPKEnn routines are almost always used in conjunction with
+!!     the corresponding SPKRnn routines, which read the records from
+!!     SPK files.
+!!
+!!     The data returned by the SPKRnn routine is in its rawest form,
+!!     taken directly from the segment. As such, it will be meaningless
+!!     to a user unless he/she understands the structure of the data type
+!!     completely. Given that understanding, however, the SPKRnn
+!!     routines might be used to examine raw segment data before
+!!     evaluating it with the SPKEnn routines.
+!!
+!!     C
+!!     C     Get a segment applicable to a specified body and epoch.
+!!     C
+!!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
+!!
+!!     C
+!!     C     Look at parts of the descriptor.
+!!     C
+!!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!!           CENTER = ICD( 2 )
+!!           REF    = ICD( 3 )
+!!           TYPE   = ICD( 4 )
+!!
+!!           IF ( TYPE .EQ. 8 ) THEN
+!!
+!!              CALL SPKR08 ( HANDLE, DESCR, ET, RECORD )
+!!                  .
+!!                  .  Look at the RECORD data.
+!!                  .
+!!              CALL SPKE08 ( ET, RECORD, STATE )
+!!                  .
+!!                  .  Check out the evaluated state.
+!!                  .
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 12-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 10-DEC-2013 (NJB)
+!!
+!!        RECORD is now strictly an input; it is not overwritten by this
+!!        routine. Formerly RECORD was used as a workspace array.
+!!
+!!-    SPICELIB Version 1.1.0, 25-AUG-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in XPOSEG and LGRESP calls.
+!!
+!!-    SPICELIB Version 1.0.0, 14-AUG-1993 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     evaluate type_8 SPK segment
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.1.0, 25-AUG-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in XPOSEG and LGRESP calls.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Size of a state vector:
+!!
+!!     Indices of input record elements:
+!!
+!!        -- size
+!!        -- start epoch
+!!        -- step size
+!!        -- start of state information
+!!
+!!     Local variables
+!!
+!!     Saved values
+!!
+!!     Save arrays to prevent stack overflow problems on some
+!!     platforms.
+!!
+!!     Initial values
+!!
+!!     Initialize the workspace array to suppress compiler warnings.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: xposeg
+      use pepper_inc_spkrec
       implicit none
-      include 'spkrec.inc'
       integer(ip), parameter :: statsz = 6
       integer(ip), parameter :: sizidx = 1
       integer(ip), parameter :: begidx = 2
@@ -9876,28 +9696,27 @@ contains
 !$Procedure SPKE09 ( S/P Kernel, evaluate, type 9 )
 
       module procedure spke09
+!! ## Abstract
+!!
+!!     Evaluate a single SPK data record from a segment of type 9
+!!     (discrete states, evaluated by Lagrange interpolation).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       use pepper_math, only: xposeg
-
-! $ Abstract
-!
-!     Evaluate a single SPK data record from a segment of type 9
-!     (discrete states, evaluated by Lagrange interpolation).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
+      use pepper_inc_spkrec
       implicit none
 
-      include 'spkrec.inc'
 
 
 ! $ Detailed_Input
@@ -10112,22 +9931,21 @@ contains
 !$Procedure SPKE12 ( S/P Kernel, evaluate, type 12 )
 
       module procedure spke12
+!! ## Abstract
+!!
+!!     Evaluate a single data record from a type 12 SPK segment.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Evaluate a single data record from a type 12 SPK segment.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: maxrec = 129
@@ -10340,22 +10158,21 @@ contains
 !$Procedure SPKE13 ( S/P Kernel, evaluate, type 13 )
 
       module procedure spke13
+!! ## Abstract
+!!
+!!     Evaluate a single data record from a type 13 SPK segment.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Evaluate a single data record from a type 13 SPK segment.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: maxrec = 129
@@ -10557,23 +10374,22 @@ contains
 !$Procedure SPKE14 ( S/P Kernel, evaluate, type 14 )
 
       module procedure spke14
+!! ## Abstract
+!!
+!!     Evaluate a single data record from a type 14 SPK segment.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: chbval
-
-! $ Abstract
-!
-!     Evaluate a single data record from a type 14 SPK segment.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -10745,23 +10561,22 @@ contains
 !$Procedure SPKE17 ( Evaluate a type 17 SPK data record)
 
       module procedure spke17
+!! ## Abstract
+!!
+!!     Evaluate a single SPK data record from a segment of type 17
+!!     (Equinoctial Elements).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Evaluate a single SPK data record from a segment of type 17
-!     (Equinoctial Elements).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -10996,27 +10811,26 @@ contains
 !$Procedure SPKE18 ( S/P Kernel, evaluate, type 18 )
 
       module procedure spke18
+!! ## Abstract
+!!
+!!     Evaluate a single data record from a type 18 SPK segment.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vequ, xpsgip
-
-! $ Abstract
-!
-!     Evaluate a single data record from a type 18 SPK segment.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
+      use pepper_inc_spk18
+      use pepper_inc_spkrec
       implicit none
 
-      include 'spk18.inc'
-      include 'spkrec.inc'
 
 
 ! $ Detailed_Input
@@ -11341,28 +11155,27 @@ contains
 !$Procedure SPKE19 ( SPK, evaluate record, type 19 )
 
       module procedure spke19
+!! ## Abstract
+!!
+!!     Evaluate a single data record from a type 19 SPK segment.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     SPK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vequ, xpsgip
-
-! $ Abstract
-!
-!     Evaluate a single data record from a type 19 SPK segment.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     SPK
-!
-! $ Declarations
-
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
       implicit none
 
-      include 'spk19.inc'
-      include 'spkrec.inc'
 
 
 ! $ Detailed_Input
@@ -11742,25 +11555,24 @@ contains
 !$Procedure SPKE20 ( SPK, evaluate Chebyshev polynomials, type 20 )
 
       module procedure spke20
+!! ## Abstract
+!!
+!!     Evaluate a single data record from an SPK or PCK segment of type
+!!     20 (Chebyshev polynomials, velocity only).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vadd
-
-! $ Abstract
-!
-!     Evaluate a single data record from an SPK or PCK segment of type
-!     20 (Chebyshev polynomials, velocity only).
-!
-! $ Required_Reading
-!
-!     SPK
-!     PCK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -11994,173 +11806,149 @@ contains
       end procedure spke20
 
       module procedure spke21
-
-! $ Abstract
-!
-!     Evaluate a single SPK data record from a segment of type 21
-!     (Extended Difference Lines).
-!
-! $ Required_Reading
-!
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     ET       is an epoch at which a state vector is to be
-!              computed. The epoch is represented as seconds past
-!              J2000 TDB.
-!
-!     RECORD   is a data record which, when evaluated at epoch ET,
-!              will give the state (position and velocity) of an
-!              ephemeris object, relative to its center of motion,
-!              in an inertial reference frame.
-!
-!              The contents of RECORD are as follows:
-!
-!                 RECORD(1):         The difference table size per
-!                                    Cartesian component. Call this
-!                                    size MAXDIM; then the difference
-!                                    line (MDA) size DLSIZE is
-!
-!                                      ( 4 * MAXDIM ) + 11
-!
-!                 RECORD(2)
-!                    ...
-!                 RECORD(1+DLSIZE):  An extended difference line.
-!                                    The contents are:
-!
-!                    Dimension  Description
-!                    ---------  ----------------------------------
-!                    1          Reference epoch of difference line
-!                    MAXDIM     Stepsize function vector
-!                    1          Reference position vector,  x
-!                    1          Reference velocity vector,  x
-!                    1          Reference position vector,  y
-!                    1          Reference velocity vector,  y
-!                    1          Reference position vector,  z
-!                    1          Reference velocity vector,  z
-!                    MAXDIM,3   Modified divided difference
-!                               arrays (MDAs)
-!                    1          Maximum integration order plus 1
-!                    3          Integration order array
-!
-! $ Detailed_Output
-!
-!     STATE    is the state resulting from evaluation of the input
-!              record at ET. Units are km and km/sec.
-!
-! $ Parameters
-!
-!     MAXTRM   is the maximum number of terms allowed in
-!              each component of the difference table
-!              contained in the input argument RECORD.
-!              See the INCLUDE file spk21.inc for the value
-!              of MAXTRM.
-!
-! $ Exceptions
-!
-!     1)  If the maximum table size of the input record exceeds
-!         MAXTRM, the error SPICE(DIFFLINETOOLARGE) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The exact format and structure of type 21 (difference lines)
-!     segments are described in the SPK Required Reading file.
-!
-!     SPKE21 is a modified version of SPKE01. The routine has been
-!     generalized to support variable size difference lines.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     F.T. Krogh         (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Moved SPK
-!        required reading from $Literature_References to
-!        $Required_Reading section.
-!
-!-    SPICELIB Version 1.0.0, 03-FEB-2014 (NJB) (FTK) (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     evaluate type_21 SPK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
-!     The names below are original to the routine. They correspond
-!     roughly to the original memos written by Fred Krogh to explain
-!     how all this stuff really works.
-!
-
-
-
-
-
-
-!
-!     Save everything between calls.
-!
-
-!
-!     Initial values
-!
-
-!
-!     If the RETURN function is set, don't even bother with this.
-!
+!! ## Abstract
+!!
+!!     Evaluate a single SPK data record from a segment of type 21
+!!     (Extended Difference Lines).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     ET       is an epoch at which a state vector is to be
+!!              computed. The epoch is represented as seconds past
+!!              J2000 TDB.
+!!
+!!     RECORD   is a data record which, when evaluated at epoch ET,
+!!              will give the state (position and velocity) of an
+!!              ephemeris object, relative to its center of motion,
+!!              in an inertial reference frame.
+!!
+!!              The contents of RECORD are as follows:
+!!
+!!                 RECORD(1):         The difference table size per
+!!                                    Cartesian component. Call this
+!!                                    size MAXDIM; then the difference
+!!                                    line (MDA) size DLSIZE is
+!!
+!!                                      ( 4 * MAXDIM ) + 11
+!!
+!!                 RECORD(2)
+!!                    ...
+!!                 RECORD(1+DLSIZE):  An extended difference line.
+!!                                    The contents are:
+!!
+!!                    Dimension  Description
+!!                    ---------  ----------------------------------
+!!                    1          Reference epoch of difference line
+!!                    MAXDIM     Stepsize function vector
+!!                    1          Reference position vector,  x
+!!                    1          Reference velocity vector,  x
+!!                    1          Reference position vector,  y
+!!                    1          Reference velocity vector,  y
+!!                    1          Reference position vector,  z
+!!                    1          Reference velocity vector,  z
+!!                    MAXDIM,3   Modified divided difference
+!!                               arrays (MDAs)
+!!                    1          Maximum integration order plus 1
+!!                    3          Integration order array
+!!
+!! ## Detailed Output
+!!
+!!     STATE    is the state resulting from evaluation of the input
+!!              record at ET. Units are km and km/sec.
+!!
+!! ## Parameters
+!!
+!!     MAXTRM   is the maximum number of terms allowed in
+!!              each component of the difference table
+!!              contained in the input argument RECORD.
+!!              See the INCLUDE file spk21.inc for the value
+!!              of MAXTRM.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the maximum table size of the input record exceeds
+!!         MAXTRM, the error SPICE(DIFFLINETOOLARGE) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     The exact format and structure of type 21 (difference lines)
+!!     segments are described in the SPK Required Reading file.
+!!
+!!     SPKE21 is a modified version of SPKE01. The routine has been
+!!     generalized to support variable size difference lines.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     F.T. Krogh         (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard. Moved SPK
+!!        required reading from $Literature_References to
+!!        $Required_Reading section.
+!!
+!!-    SPICELIB Version 1.0.0, 03-FEB-2014 (NJB) (FTK) (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     evaluate type_21 SPK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     The names below are original to the routine. They correspond
+!!     roughly to the original memos written by Fred Krogh to explain
+!!     how all this stuff really works.
+!!
+!!     Save everything between calls.
+!!
+!!     Initial values
+!!
+!!     If the RETURN function is set, don't even bother with this.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
+      use pepper_inc_spk21
       implicit none
       real(wp) :: tl_1(1)  !! one-element copy of tl (array argument)
-      include 'spk21.inc'
       integer(ip) :: maxdim
       integer(ip) :: j
       real(wp) :: delta
@@ -12373,24 +12161,23 @@ contains
 !$Procedure SPKR01 ( Read SPK record from segment, type 1 )
 
       module procedure spkr01
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 1
+!!     (Difference Lines).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 1
-!     (Difference Lines).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -12627,23 +12414,22 @@ contains
 !$Procedure SPKR02 ( SPK, read record from segment, type 2 )
 
       module procedure spkr02
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 2
+!!     (Chebyshev, position only).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 2
-!     (Chebyshev, position only).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -12869,23 +12655,22 @@ contains
 !$Procedure SPKR03 ( SPK, read record from segment, type 3 )
 
       module procedure spkr03
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 3
+!!     (Chebyshev coefficients, position and velocity).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 3
-!     (Chebyshev coefficients, position and velocity).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -13121,24 +12906,23 @@ contains
 !$Procedure SPKR05 ( Read SPK record from segment, type 5 )
 
       module procedure spkr05
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 5
+!!     ( two body propagation between discrete state vectors ).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd, moved
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 5
-!     ( two body propagation between discrete state vectors ).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -13602,26 +13386,25 @@ contains
 !$Procedure SPKR08 ( Read SPK record from segment, type 8 )
 
       module procedure spkr08
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 8
+!!     (equally spaced discrete states, interpolated by Lagrange
+!!     polynomials).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 8
-!     (equally spaced discrete states, interpolated by Lagrange
-!     polynomials).
-!
-! $ Required_Reading
-!
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -13930,26 +13713,25 @@ contains
 !$Procedure SPKR09 ( Read SPK record from segment, type 9 )
 
       module procedure spkr09
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 9
+!!     (Unequally spaced discrete states, interpolated by Lagrange
+!!     polynomials).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd
       use pepper_math, only: odd
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 9
-!     (Unequally spaced discrete states, interpolated by Lagrange
-!     polynomials).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -14402,23 +14184,22 @@ contains
 !$Procedure SPKR15 ( Read SPK record from segment, type 15 )
 
       module procedure spkr15
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 15
+!!     (Precessing Conic Propagation).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 15
-!     (Precessing Conic Propagation).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -14633,23 +14414,22 @@ contains
 !$Procedure SPKR17 ( Read SPK record from segment, type 17 )
 
       module procedure spkr17
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 17
+!!     (Equinoctial Elements).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 17
-!     (Equinoctial Elements).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -14878,28 +14658,27 @@ contains
 !$Procedure SPKR18 ( Read SPK record from segment, type 18 )
 
       module procedure spkr18
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 18
+!!     (MEX/Rosetta Orbit file interpolation).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd
       use pepper_math, only: odd
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 18
-!     (MEX/Rosetta Orbit file interpolation).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
+      use pepper_inc_spk18
       implicit none
 
-      include 'spk18.inc'
 
 
 ! $ Detailed_Input
@@ -15473,217 +15252,188 @@ contains
       end procedure spkr18
 
       module procedure spkr19
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 19
-!     (ESOC/DDID Piecewise Interpolation).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE,
-!     DESCR    are the file handle and segment descriptor for an SPK
-!              segment of type 19. The SPK file designated by HANDLE
-!              must be open for read access.
-!
-!     ET       is an epoch for which a data record from a specific
-!              segment is required. ET is expressed as seconds past
-!              J2000 TDB.
-!
-! $ Detailed_Output
-!
-!     RECORD   is an array of data from the specified segment which,
-!              when evaluated at epoch ET, will give the state
-!              (position and velocity) of the target body identified
-!              by the input segment descriptor. The descriptor
-!              specifies the center of motion and reference frame of
-!              the state.
-!
-!              The structure of the record is as follows:
-!
-!                 +----------------------+
-!                 | subtype code         |
-!                 +----------------------+
-!                 | number of packets (n)|
-!                 +----------------------+
-!                 | packet 1             |
-!                 +----------------------+
-!                 | packet 2             |
-!                 +----------------------+
-!                             .
-!                             .
-!                             .
-!                 +----------------------+
-!                 | packet n             |
-!                 +----------------------+
-!                 | epochs 1--n          |
-!                 +----------------------+
-!
-!              The packet size is a function of the type 19 subtype.
-!              All packets in a record have the same size.
-!
-! $ Parameters
-!
-!     See the Fortran INCLUDE file spk19.inc.
-!
-! $ Exceptions
-!
-!     1)  If the input HANDLE does not designate a loaded SPK file, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     2)  If the segment specified by DESCR is not of data type 19,
-!         the error SPICE(WRONGSPKTYPE) is signaled.
-!
-!     3)  If the input ET value is not within the range specified
-!         in the segment descriptor, the error SPICE(TIMEOUTOFBOUNDS)
-!         is signaled.
-!
-!     4)  If the window size is non-positive or greater than the
-!         maximum allowed value, the error SPICE(INVALIDVALUE) is
-!         signaled.
-!
-!     5)  If the window size is not compatible with the segment
-!         subtype, the error SPICE(INVALIDVALUE) is signaled.
-!
-!     6)  If the segment subtype is not recognized, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-! $ Files
-!
-!     See argument HANDLE.
-!
-! $ Particulars
-!
-!     SPICE user applications normally will have no need to call this
-!     routine directly. For further information, see the headers of the
-!     SPICE SPK APIs
-!
-!        SPKEZR
-!        SPKPOS
-!
-!     the SPK Required Reading file spk.req, and the SPICE SPK
-!     tutorial.
-!
-!     See the SPK Required Reading file for a description of the
-!     structure of a data type 19 segment.
-!
-! $ Examples
-!
-!     The data returned by the SPKRnn routine is in its rawest form,
-!     taken directly from the segment. As such, it will be meaningless
-!     to a user unless he/she understands the structure of the data type
-!     completely. Given that understanding, however, the SPKRxx
-!     routines might be used to "dump" and check segment data for a
-!     particular epoch.
-!
-!     C
-!     C     Get a segment applicable to a specified body and epoch.
-!     C
-!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
-!
-!     C
-!     C     Look at parts of the descriptor.
-!     C
-!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
-!           CENTER = ICD( 2 )
-!           REF    = ICD( 3 )
-!           TYPE   = ICD( 4 )
-!
-!           IF ( TYPE .EQ. 19 ) THEN
-!              CALL SPKR19 ( HANDLE, DESCR, ET, RECORD )
-!                  .
-!                  .  Look at the RECORD data.
-!                  .
-!           END IF
-!
-! $ Restrictions
-!
-!     1)  Correctness of inputs must be ensured by the caller of
-!         this routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 12-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 11-MAY-2015 (NJB)
-!
-!        Updated to support subtype 2.
-!
-!-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read record from type_19 SPK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-
-
-
-
-!
-!     Maximum window sizes, based on subtypes:
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 19
+!!     (ESOC/DDID Piecewise Interpolation).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE,
+!!     DESCR    are the file handle and segment descriptor for an SPK
+!!              segment of type 19. The SPK file designated by HANDLE
+!!              must be open for read access.
+!!
+!!     ET       is an epoch for which a data record from a specific
+!!              segment is required. ET is expressed as seconds past
+!!              J2000 TDB.
+!!
+!! ## Detailed Output
+!!
+!!     RECORD   is an array of data from the specified segment which,
+!!              when evaluated at epoch ET, will give the state
+!!              (position and velocity) of the target body identified
+!!              by the input segment descriptor. The descriptor
+!!              specifies the center of motion and reference frame of
+!!              the state.
+!!
+!!              The structure of the record is as follows:
+!!
+!!                 +----------------------+
+!!                 | subtype code         |
+!!                 +----------------------+
+!!                 | number of packets (n)|
+!!                 +----------------------+
+!!                 | packet 1             |
+!!                 +----------------------+
+!!                 | packet 2             |
+!!                 +----------------------+
+!!                             .
+!!                             .
+!!                             .
+!!                 +----------------------+
+!!                 | packet n             |
+!!                 +----------------------+
+!!                 | epochs 1--n          |
+!!                 +----------------------+
+!!
+!!              The packet size is a function of the type 19 subtype.
+!!              All packets in a record have the same size.
+!!
+!! ## Parameters
+!!
+!!     See the Fortran INCLUDE file spk19.inc.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input HANDLE does not designate a loaded SPK file, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     2)  If the segment specified by DESCR is not of data type 19,
+!!         the error SPICE(WRONGSPKTYPE) is signaled.
+!!
+!!     3)  If the input ET value is not within the range specified
+!!         in the segment descriptor, the error SPICE(TIMEOUTOFBOUNDS)
+!!         is signaled.
+!!
+!!     4)  If the window size is non-positive or greater than the
+!!         maximum allowed value, the error SPICE(INVALIDVALUE) is
+!!         signaled.
+!!
+!!     5)  If the window size is not compatible with the segment
+!!         subtype, the error SPICE(INVALIDVALUE) is signaled.
+!!
+!!     6)  If the segment subtype is not recognized, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!! ## Files
+!!
+!!     See argument HANDLE.
+!!
+!! ## Particulars
+!!
+!!     SPICE user applications normally will have no need to call this
+!!     routine directly. For further information, see the headers of the
+!!     SPICE SPK APIs
+!!
+!!        SPKEZR
+!!        SPKPOS
+!!
+!!     the SPK Required Reading file spk.req, and the SPICE SPK
+!!     tutorial.
+!!
+!!     See the SPK Required Reading file for a description of the
+!!     structure of a data type 19 segment.
+!!
+!! ## Examples
+!!
+!!     The data returned by the SPKRnn routine is in its rawest form,
+!!     taken directly from the segment. As such, it will be meaningless
+!!     to a user unless he/she understands the structure of the data type
+!!     completely. Given that understanding, however, the SPKRxx
+!!     routines might be used to "dump" and check segment data for a
+!!     particular epoch.
+!!
+!!     C
+!!     C     Get a segment applicable to a specified body and epoch.
+!!     C
+!!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
+!!
+!!     C
+!!     C     Look at parts of the descriptor.
+!!     C
+!!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!!           CENTER = ICD( 2 )
+!!           REF    = ICD( 3 )
+!!           TYPE   = ICD( 4 )
+!!
+!!           IF ( TYPE .EQ. 19 ) THEN
+!!              CALL SPKR19 ( HANDLE, DESCR, ET, RECORD )
+!!                  .
+!!                  .  Look at the RECORD data.
+!!                  .
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     1)  Correctness of inputs must be ensured by the caller of
+!!         this routine.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 12-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 11-MAY-2015 (NJB)
+!!
+!!        Updated to support subtype 2.
+!!
+!!-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
+!!
+!! ## Index Entries
+!!
+!!     read record from type_19 SPK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Maximum window sizes, based on subtypes:
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled, lstltd
       use pepper_math, only: odd
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
       implicit none
-      include 'spk19.inc'
-      include 'spkrec.inc'
       integer(ip), parameter :: nd = 2
       integer(ip), parameter :: ni = 6
       integer(ip), parameter :: dirsiz = 100
@@ -16692,26 +16442,25 @@ contains
 !$Procedure SPKR20 ( SPK, read record from segment, type 20 )
 
       module procedure spkr20
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 20
+!!     (Chebyshev, velocity coefficients only).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_arrays, only: moved
       use pepper_math, only: vsclip
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 20
-!     (Chebyshev, velocity coefficients only).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -17022,28 +16771,27 @@ contains
 !$Procedure SPKR21 ( Read SPK record from segment, type 21 )
 
       module procedure spkr21
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 21
+!!     (Extended Difference Lines).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 21
-!     (Extended Difference Lines).
-!
-! $ Required_Reading
-!
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
+      use pepper_inc_spk21
       implicit none
 
-      include 'spk21.inc'
 
 
 ! $ Detailed_Input
@@ -17333,520 +17081,491 @@ contains
       end procedure spkr21
 
       module procedure stmp03
-
-! $ Abstract
-!
-!     Compute the values of the Stumpff functions C_0 through C_3 at
-!     a specified point.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONIC
-!     MATH
-!     UTILITY
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     X        is the argument to use in each of the Stumpff functions
-!              C_0, C_1, C_2, and C_3.
-!
-! $ Detailed_Output
-!
-!     C0,
-!     C1,
-!     C2,
-!     C3       are the values of the Stumpff functions C_0(X), C_1(X),
-!              C_2(X), and C_3(X).
-!
-! $ Parameters
-!
-!     TRUNC    is the Maclaurin series for C_3 and C_2 respectively are:
-!
-!                                     2     3                 k
-!                        1     X     X     X              (-X)
-!              C_3(X) =  --- - --- + --- - --- + . . . + ----------. . .
-!                        3!    5!    7!    9!           (3 + 2*K)!
-!
-!              and
-!
-!                                     2     3                 k
-!                        1     X     X     X              (-X)
-!              C_2(X) =  --- - --- + --- - --- + . . . + ----------. . .
-!                        2!    4!    6!    8!           (2 + 2*K)!
-!
-!              These series are used in the evaluation of C_3 and C_2.
-!              Thus, it is necessary to make a decision about where to
-!              truncate the series in our evaluation of C_3 and C_2.
-!
-!              TRUNC is used to tell this routine where to truncate
-!              the Maclaurin series for C_3 and C_2.
-!
-!              The value of TRUNC for your machine  is the smallest
-!              integer such that
-!
-!                                1
-!                  1.0D0  +  ----------        =  1.0D0
-!                            (2*TRUNC)!
-!
-!              The following program will (if compiled and linked)
-!              will produce the values of TRUNC for your machine.
-!
-!              INTEGER               TRUNC
-!
-!              DOUBLE PRECISION      DENOM
-!              DOUBLE PRECISION      FACTR
-!
-!              DOUBLE PRECISION      X
-!
-!              DENOM = 2.0D0
-!              FACTR = 2.0D0
-!              TRUNC = 1
-!
-!              X      = 1.0D0 / DENOM
-!
-!              DO WHILE ( 1.0D0 + X .GT. 1.0D0 )
-!                 DENOM = DENOM * (2.0D0+FACTR) * (1.0D0+FACTR)
-!                 FACTR = FACTR +  2.0D0
-!                 TRUNC = TRUNC +  1
-!                 X     = 1.0D0 /  DENOM
-!              END DO
-!
-!              WRITE (*,*) 'The value of TRUNC is: ', TRUNC
-!
-!              END
-!
-! $ Exceptions
-!
-!     1)  If the input value of X is not in the domain of values
-!         for which the Stumpff functions can be computed, the error
-!         SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!         The range of valid inputs is from  -[ln(2) + ln(DPMAX)]**2
-!         to DPMAX.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine computes the values of the Stumpff functions C_0,
-!     C_1, C_2, and C_3 at the input X.
-!
-!     The Stumpff function C_k(X) for k = 0, 1, ... is given by the
-!     series:
-!
-!                                 2        3                  m
-!                1      X        X        X               (-X)
-!     C_k(X) =  --- - ------ + ------ - ------ + . . . + ------- + . . .
-!                k!   (k+2)!   (k+4)!   (k+6)!           (k+2m)!
-!
-!     These series converge for all real values of X.
-!
-! $ Examples
-!
-!     For positive X,
-!
-!        C_0(X)   =  COS ( DSQRT(X) )
-!
-!                    SIN ( DSQRT(X) )
-!        C_1(X)   =  ---------------
-!                          DSQRT(X)
-!
-!                    1 - COS ( DSQRT(X) )
-!        C_2(X)   = ---------------------
-!                           X
-!
-!                    1  -  SIN ( DSQRT(X) ) / DSQRT(X)
-!        C_3(X)   =  ----------------------------------
-!                              X
-!
-!     Thus the following block of code can be used to check this
-!     routine for reasonableness:
-!
-!     INTEGER               I
-!
-!     DOUBLE PRECISION      X
-!     DOUBLE PRECISION      ROOTX
-!
-!     DOUBLE PRECISION      TC0
-!     DOUBLE PRECISION      TC1
-!     DOUBLE PRECISION      TC2
-!     DOUBLE PRECISION      TC3
-!
-!     DOUBLE PRECISION      C0
-!     DOUBLE PRECISION      C1
-!     DOUBLE PRECISION      C2
-!     DOUBLE PRECISION      C3
-!
-!     DO I = 1, 10
-!
-!        X     = DBLE (I)
-!        ROOTX = DSQRT(X)
-!
-!        TC0   = COS ( ROOTX )
-!        TC1   = SIN ( ROOTX ) / ROOTX
-!
-!        TC2   = ( 1.0D0 - COS( ROOTX )         ) / X
-!        TC3   = ( 1.0D0 - SIN( ROOTX ) / ROOTX ) / X
-!
-!        CALL STMP03 ( X, C0, C1, C2, C3 )
-!
-!        WRITE (*,*)
-!        WRITE (*,*) 'Expected - Computed for X = ', X
-!        WRITE (*,*)
-!        WRITE (*,*) 'Delta C0 :', TC0 - C0
-!        WRITE (*,*) 'Delta C1 :', TC1 - C1
-!        WRITE (*,*) 'Delta C2 :', TC2 - C2
-!        WRITE (*,*) 'Delta C3 :', TC3 - C3
-!
-!     END DO
-!
-!     END
-!
-!     You should expect all of the differences to be on the order of
-!     the precision of the machine on which this program is executed.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1]  J. Danby, "Fundamentals of Celestial Mechanics," 2nd Edition,
-!          pp.345-347, Willman-Bell, 1989.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.29.0, 28-NOV-2021 (BVS)
-!
-!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!
-!-    SPICELIB Version 3.28.0, 12-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 3.27.0, 08-APR-2014 (NJB)
-!
-!        Updated in-line documentation and cleaned up
-!        code following changes made in version 3.21.0.
-!
-!-    SPICELIB Version 3.26.0, 10-MAR-2014 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!
-!-    SPICELIB Version 3.25.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-IFORT.
-!
-!-    SPICELIB Version 3.24.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-GFORTRAN.
-!
-!-    SPICELIB Version 3.23.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 3.22.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!
-!-    SPICELIB Version 3.21.0, 09-APR-2012 (WLT)
-!
-!        Code was updated to correct excessive round-off
-!        errors in the case where |X| > 1.
-!
-!-    SPICELIB Version 3.20.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL.
-!
-!-    SPICELIB Version 3.19.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!
-!-    SPICELIB Version 3.18.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!
-!-    SPICELIB Version 3.17.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!
-!-    SPICELIB Version 3.16.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-WINDOWS-64BIT-IFORT.
-!
-!-    SPICELIB Version 3.15.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 3.14.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-64BIT-MS_C.
-!
-!-    SPICELIB Version 3.13.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-INTEL_C.
-!
-!-    SPICELIB Version 3.12.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-IFORT.
-!
-!-    SPICELIB Version 3.11.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 3.10.0, 18-MAR-2009 (BVS)
-!
-!        Updated for PC-LINUX-GFORTRAN.
-!
-!-    SPICELIB Version 3.9.0, 18-MAR-2009 (BVS)
-!
-!        Updated for MAC-OSX-GFORTRAN.
-!
-!-    SPICELIB Version 3.8.0, 19-FEB-2008 (BVS)
-!
-!        Updated for PC-LINUX-IFORT.
-!
-!-    SPICELIB Version 3.7.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GCC_C.
-!
-!-    SPICELIB Version 3.6.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-INTEL_C.
-!
-!-    SPICELIB Version 3.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-IFORT.
-!
-!-    SPICELIB Version 3.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-WINDOWS-IFORT.
-!
-!-    SPICELIB Version 3.3.0, 26-OCT-2005 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!
-!-    SPICELIB Version 3.2.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN_C.
-!
-!-    SPICELIB Version 3.1.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN.
-!
-!-    SPICELIB Version 3.0.5, 17-JUL-2002 (BVS)
-!
-!        Added MAC-OSX environments.
-!
-!-    SPICELIB Version 3.0.4, 08-OCT-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are WIN-NT
-!
-!-    SPICELIB Version 3.0.3, 24-SEP-1999 (NJB)
-!
-!        CSPICE environments were added. Some typos were corrected.
-!
-!-    SPICELIB Version 3.0.2, 28-JUL-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!
-!-    SPICELIB Version 3.0.1, 18-MAR-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. Previously,
-!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!        by the environment label SUN.
-!
-!-    SPICELIB Version 3.0.0, 08-APR-1998 (NJB)
-!
-!        Module was updated for the PC-LINUX platform.
-!
-!-    SPICELIB Version 2.0.0, 11-NOV-1993 (HAN)
-!
-!        The file was modified to include values for other platforms.
-!        Also, the file was formatted for use by the program that
-!        creates the environment specific source files.
-!
-!-    SPICELIB Version 1.0.0, 17-FEB-1992 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Evaluate the first four Stumpff functions
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 3.27.0, 08-APR-2014 (NJB) (WLT)
-!
-!        In version 3.21.0, the routine was re-written to use the
-!        standard trigonometric and hyperbolic trigonometric formulas
-!        for the Stumpff functions for input arguments having magnitude
-!        greater than or equal to 1. This was done to prevent loss of
-!        accuracy for some input values.
-!
-!        In version 3.27.0, the code was cleaned up: unreachable code
-!        was deleted, and comments were changed to match the updated
-!        code.
-!
-!        The derivation of the argument mapping formulas has been
-!        retained as an appendix in a comment section at the end of
-!        this source file. These formulas may be used a future revision
-!        of this routine.
-!
-!-    SPICELIB Version 3.0.0, 08-APR-1998 (NJB)
-!
-!        Module was updated for the PC-LINUX platform.
-!
-!-    SPICELIB Version 2.0.0, 11-NOV-1993 (HAN)
-!
-!        The file was modified to include values for other platforms.
-!        Also, the file was formatted for use by the program that
-!        creates the environment specific source files.
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Parameters
-!
-
-
-
-!
-!     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
-!     space for Maclaurin series coefficients and for determining how
-!     many terms of these series to use in the computation of
-!     C_2 and C_3.
-!
-!     Here's what is supposed to be true.
-!
-!        1/(TRUNC*2)!  + 1.0D0 = 1.0D0
-!
-!     using this machine's double precision arithmetic.
-!
-!     We will map the input X to a value y between -1 and 1 and then
-!     construct the values of the functions at X from their values at y.
-!     Since we will only evaluate the series expansion for C_2 and C_3
-!     for values of y between -1 and 1, its easy to show that we don't
-!     need to consider terms in the series whose coefficients have
-!     magnitudes less than or equal 1/(2*TRUNC)! .
-!
-!     If the value of TRUNC is 10, then the series expansions for
-!     C_2(y) and C_3(y) are can be truncated as shown here:
-!
-!                                   2             7       8
-!              .    1      y       y             y       y
-!       C_3(y) =   --- -  ---  +  ---  +  ... - ---  +  ---
-!                   3!     5!      7!           17!     19!
-!
-!                 1        y         y            y           y
-!              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
-!                2*3      4*5       6*7          16*17       18*19
-!
-!              .    1      y       y             y       y
-!       C_2(y) =   --- -  ---  +  ---  +  ... + ---  -  ---
-!                   2!     4!      6!           16!     18!
-!
-!                 1        y         y            y           y
-!              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
-!                1*2      3*4       5*6          15*16       17*18
-!
-!     As is evident from the above, we are going to need the
-!     "reciprocal pairs"
-!
-!       1/(1*2),  1/(2*3),  1/(3*4), 1/(4*5), ...
-!
-!     The number of such fractions be computed directly from
-!     TRUNC. LPAIR3 and LPAIR2 indicate which of these pairs
-!     (counting 1/(1*2) as the first) will be the last one needed in
-!     the evaluation of C_2 and C_3.
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     We are going to need the numbers
-!
-!        1/(2*3), 1/(3*4), 1/(4*5), ...
-!
-!     but we don't want to compute them every time this routine is
-!     called.  So the first time this routine is called we compute
-!     them and put them in the array PAIRS for use on subsequent
-!     calls. (This could be done via parameters, but computing them
-!     at run time seems to have a better chance of being
-!     easily maintained.)
-!
-!     In addition we will need to compute the lower bound for which
-!     C_0,...,C_3 can be computed.  This lower bound is computed by
-!     noting that C_0 has the largest magnitude of all the Stumpff
-!     functions over the domain from -infinity to -1.  Moreover, in this
-!     range
-!
-!        C_0(X) = Cosh( SQRT(-X) )
-!
-!     Thus the range of X for which the Stumpff functions can be
-!     computed is bounded below by the value of X for which
-!
-!        Cosh ( SQRT(-X) ) = DPMAX
-!
-!     Which implies the lower bound for valid inputs is at
-!
-!        X = - ( DLOG ( 2.0 ) + DLOG( DPMAX ) ) ** 2
-!
-!          = - ( DLOG ( 2*N ) + DLOG ( DPMAX/N  ) ) ** 2
-!
-!     We point out the second formulation of the bound just in case
-!     your compiler can't handle the computation of DLOG ( DPMAX ).
-!     If this unfortunate situation should arise, complain to the
-!     company that produces your compiler and in the code below
-!     compute LBOUND using the second form above with N equal to
-!     some large power of 2 (say 2**20).
-!
+!! ## Abstract
+!!
+!!     Compute the values of the Stumpff functions C_0 through C_3 at
+!!     a specified point.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONIC
+!!     MATH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     X        is the argument to use in each of the Stumpff functions
+!!              C_0, C_1, C_2, and C_3.
+!!
+!! ## Detailed Output
+!!
+!!     C0,
+!!     C1,
+!!     C2,
+!!     C3       are the values of the Stumpff functions C_0(X), C_1(X),
+!!              C_2(X), and C_3(X).
+!!
+!! ## Parameters
+!!
+!!     TRUNC    is the Maclaurin series for C_3 and C_2 respectively are:
+!!
+!!                                     2     3                 k
+!!                        1     X     X     X              (-X)
+!!              C_3(X) =  --- - --- + --- - --- + . . . + ----------. . .
+!!                        3!    5!    7!    9!           (3 + 2*K)!
+!!
+!!              and
+!!
+!!                                     2     3                 k
+!!                        1     X     X     X              (-X)
+!!              C_2(X) =  --- - --- + --- - --- + . . . + ----------. . .
+!!                        2!    4!    6!    8!           (2 + 2*K)!
+!!
+!!              These series are used in the evaluation of C_3 and C_2.
+!!              Thus, it is necessary to make a decision about where to
+!!              truncate the series in our evaluation of C_3 and C_2.
+!!
+!!              TRUNC is used to tell this routine where to truncate
+!!              the Maclaurin series for C_3 and C_2.
+!!
+!!              The value of TRUNC for your machine  is the smallest
+!!              integer such that
+!!
+!!                                1
+!!                  1.0D0  +  ----------        =  1.0D0
+!!                            (2*TRUNC)!
+!!
+!!              The following program will (if compiled and linked)
+!!              will produce the values of TRUNC for your machine.
+!!
+!!              INTEGER               TRUNC
+!!
+!!              DOUBLE PRECISION      DENOM
+!!              DOUBLE PRECISION      FACTR
+!!
+!!              DOUBLE PRECISION      X
+!!
+!!              DENOM = 2.0D0
+!!              FACTR = 2.0D0
+!!              TRUNC = 1
+!!
+!!              X      = 1.0D0 / DENOM
+!!
+!!              DO WHILE ( 1.0D0 + X .GT. 1.0D0 )
+!!                 DENOM = DENOM * (2.0D0+FACTR) * (1.0D0+FACTR)
+!!                 FACTR = FACTR +  2.0D0
+!!                 TRUNC = TRUNC +  1
+!!                 X     = 1.0D0 /  DENOM
+!!              END DO
+!!
+!!              WRITE (*,*) 'The value of TRUNC is: ', TRUNC
+!!
+!!              END
+!!
+!! ## Exceptions
+!!
+!!     1)  If the input value of X is not in the domain of values
+!!         for which the Stumpff functions can be computed, the error
+!!         SPICE(VALUEOUTOFRANGE) is signaled.
+!!
+!!         The range of valid inputs is from  -[ln(2) + ln(DPMAX)]**2
+!!         to DPMAX.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine computes the values of the Stumpff functions C_0,
+!!     C_1, C_2, and C_3 at the input X.
+!!
+!!     The Stumpff function C_k(X) for k = 0, 1, ... is given by the
+!!     series:
+!!
+!!                                 2        3                  m
+!!                1      X        X        X               (-X)
+!!     C_k(X) =  --- - ------ + ------ - ------ + . . . + ------- + . . .
+!!                k!   (k+2)!   (k+4)!   (k+6)!           (k+2m)!
+!!
+!!     These series converge for all real values of X.
+!!
+!! ## Examples
+!!
+!!     For positive X,
+!!
+!!        C_0(X)   =  COS ( DSQRT(X) )
+!!
+!!                    SIN ( DSQRT(X) )
+!!        C_1(X)   =  ---------------
+!!                          DSQRT(X)
+!!
+!!                    1 - COS ( DSQRT(X) )
+!!        C_2(X)   = ---------------------
+!!                           X
+!!
+!!                    1  -  SIN ( DSQRT(X) ) / DSQRT(X)
+!!        C_3(X)   =  ----------------------------------
+!!                              X
+!!
+!!     Thus the following block of code can be used to check this
+!!     routine for reasonableness:
+!!
+!!     INTEGER               I
+!!
+!!     DOUBLE PRECISION      X
+!!     DOUBLE PRECISION      ROOTX
+!!
+!!     DOUBLE PRECISION      TC0
+!!     DOUBLE PRECISION      TC1
+!!     DOUBLE PRECISION      TC2
+!!     DOUBLE PRECISION      TC3
+!!
+!!     DOUBLE PRECISION      C0
+!!     DOUBLE PRECISION      C1
+!!     DOUBLE PRECISION      C2
+!!     DOUBLE PRECISION      C3
+!!
+!!     DO I = 1, 10
+!!
+!!        X     = DBLE (I)
+!!        ROOTX = DSQRT(X)
+!!
+!!        TC0   = COS ( ROOTX )
+!!        TC1   = SIN ( ROOTX ) / ROOTX
+!!
+!!        TC2   = ( 1.0D0 - COS( ROOTX )         ) / X
+!!        TC3   = ( 1.0D0 - SIN( ROOTX ) / ROOTX ) / X
+!!
+!!        CALL STMP03 ( X, C0, C1, C2, C3 )
+!!
+!!        WRITE (*,*)
+!!        WRITE (*,*) 'Expected - Computed for X = ', X
+!!        WRITE (*,*)
+!!        WRITE (*,*) 'Delta C0 :', TC0 - C0
+!!        WRITE (*,*) 'Delta C1 :', TC1 - C1
+!!        WRITE (*,*) 'Delta C2 :', TC2 - C2
+!!        WRITE (*,*) 'Delta C3 :', TC3 - C3
+!!
+!!     END DO
+!!
+!!     END
+!!
+!!     You should expect all of the differences to be on the order of
+!!     the precision of the machine on which this program is executed.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     [1]  J. Danby, "Fundamentals of Celestial Mechanics," 2nd Edition,
+!!          pp.345-347, Willman-Bell, 1989.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     H.A. Neilan        (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.29.0, 28-NOV-2021 (BVS)
+!!
+!!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+!!
+!!-    SPICELIB Version 3.28.0, 12-AUG-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 3.27.0, 08-APR-2014 (NJB)
+!!
+!!        Updated in-line documentation and cleaned up
+!!        code following changes made in version 3.21.0.
+!!
+!!-    SPICELIB Version 3.26.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-64BIT-INTEL.
+!!
+!!-    SPICELIB Version 3.25.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for PC-LINUX-64BIT-IFORT.
+!!
+!!-    SPICELIB Version 3.24.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for PC-CYGWIN-GFORTRAN.
+!!
+!!-    SPICELIB Version 3.23.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+!!
+!!-    SPICELIB Version 3.22.0, 10-MAR-2014 (BVS)
+!!
+!!        Updated for PC-CYGWIN-64BIT-GCC_C.
+!!
+!!-    SPICELIB Version 3.21.0, 09-APR-2012 (WLT)
+!!
+!!        Code was updated to correct excessive round-off
+!!        errors in the case where |X| > 1.
+!!
+!!-    SPICELIB Version 3.20.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-INTEL.
+!!
+!!-    SPICELIB Version 3.19.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-INTEL-CC_C.
+!!
+!!-    SPICELIB Version 3.18.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+!!
+!!-    SPICELIB Version 3.17.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+!!
+!!-    SPICELIB Version 3.16.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for PC-WINDOWS-64BIT-IFORT.
+!!
+!!-    SPICELIB Version 3.15.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for PC-LINUX-64BIT-GFORTRAN.
+!!
+!!-    SPICELIB Version 3.14.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for PC-64BIT-MS_C.
+!!
+!!-    SPICELIB Version 3.13.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for MAC-OSX-64BIT-INTEL_C.
+!!
+!!-    SPICELIB Version 3.12.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for MAC-OSX-64BIT-IFORT.
+!!
+!!-    SPICELIB Version 3.11.0, 13-MAY-2010 (BVS)
+!!
+!!        Updated for MAC-OSX-64BIT-GFORTRAN.
+!!
+!!-    SPICELIB Version 3.10.0, 18-MAR-2009 (BVS)
+!!
+!!        Updated for PC-LINUX-GFORTRAN.
+!!
+!!-    SPICELIB Version 3.9.0, 18-MAR-2009 (BVS)
+!!
+!!        Updated for MAC-OSX-GFORTRAN.
+!!
+!!-    SPICELIB Version 3.8.0, 19-FEB-2008 (BVS)
+!!
+!!        Updated for PC-LINUX-IFORT.
+!!
+!!-    SPICELIB Version 3.7.0, 14-NOV-2006 (BVS)
+!!
+!!        Updated for PC-LINUX-64BIT-GCC_C.
+!!
+!!-    SPICELIB Version 3.6.0, 14-NOV-2006 (BVS)
+!!
+!!        Updated for MAC-OSX-INTEL_C.
+!!
+!!-    SPICELIB Version 3.5.0, 14-NOV-2006 (BVS)
+!!
+!!        Updated for MAC-OSX-IFORT.
+!!
+!!-    SPICELIB Version 3.4.0, 14-NOV-2006 (BVS)
+!!
+!!        Updated for PC-WINDOWS-IFORT.
+!!
+!!-    SPICELIB Version 3.3.0, 26-OCT-2005 (BVS)
+!!
+!!        Updated for SUN-SOLARIS-64BIT-GCC_C.
+!!
+!!-    SPICELIB Version 3.2.0, 03-JAN-2005 (BVS)
+!!
+!!        Updated for PC-CYGWIN_C.
+!!
+!!-    SPICELIB Version 3.1.0, 03-JAN-2005 (BVS)
+!!
+!!        Updated for PC-CYGWIN.
+!!
+!!-    SPICELIB Version 3.0.5, 17-JUL-2002 (BVS)
+!!
+!!        Added MAC-OSX environments.
+!!
+!!-    SPICELIB Version 3.0.4, 08-OCT-1999 (WLT)
+!!
+!!        The environment lines were expanded so that the supported
+!!        environments are now explicitly given. New
+!!        environments are WIN-NT
+!!
+!!-    SPICELIB Version 3.0.3, 24-SEP-1999 (NJB)
+!!
+!!        CSPICE environments were added. Some typos were corrected.
+!!
+!!-    SPICELIB Version 3.0.2, 28-JUL-1999 (WLT)
+!!
+!!        The environment lines were expanded so that the supported
+!!        environments are now explicitly given. New
+!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+!!
+!!-    SPICELIB Version 3.0.1, 18-MAR-1999 (WLT)
+!!
+!!        The environment lines were expanded so that the supported
+!!        environments are now explicitly given. Previously,
+!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+!!        by the environment label SUN.
+!!
+!!-    SPICELIB Version 3.0.0, 08-APR-1998 (NJB)
+!!
+!!        Module was updated for the PC-LINUX platform.
+!!
+!!-    SPICELIB Version 2.0.0, 11-NOV-1993 (HAN)
+!!
+!!        The file was modified to include values for other platforms.
+!!        Also, the file was formatted for use by the program that
+!!        creates the environment specific source files.
+!!
+!!-    SPICELIB Version 1.0.0, 17-FEB-1992 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Evaluate the first four Stumpff functions
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 3.27.0, 08-APR-2014 (NJB) (WLT)
+!!
+!!        In version 3.21.0, the routine was re-written to use the
+!!        standard trigonometric and hyperbolic trigonometric formulas
+!!        for the Stumpff functions for input arguments having magnitude
+!!        greater than or equal to 1. This was done to prevent loss of
+!!        accuracy for some input values.
+!!
+!!        In version 3.27.0, the code was cleaned up: unreachable code
+!!        was deleted, and comments were changed to match the updated
+!!        code.
+!!
+!!        The derivation of the argument mapping formulas has been
+!!        retained as an appendix in a comment section at the end of
+!!        this source file. These formulas may be used a future revision
+!!        of this routine.
+!!
+!!-    SPICELIB Version 3.0.0, 08-APR-1998 (NJB)
+!!
+!!        Module was updated for the PC-LINUX platform.
+!!
+!!-    SPICELIB Version 2.0.0, 11-NOV-1993 (HAN)
+!!
+!!        The file was modified to include values for other platforms.
+!!        Also, the file was formatted for use by the program that
+!!        creates the environment specific source files.
+!!
+!!     SPICELIB Functions
+!!
+!!     Local Parameters
+!!
+!!     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
+!!     space for Maclaurin series coefficients and for determining how
+!!     many terms of these series to use in the computation of
+!!     C_2 and C_3.
+!!
+!!     Here's what is supposed to be true.
+!!
+!!        1/(TRUNC*2)!  + 1.0D0 = 1.0D0
+!!
+!!     using this machine's double precision arithmetic.
+!!
+!!     We will map the input X to a value y between -1 and 1 and then
+!!     construct the values of the functions at X from their values at y.
+!!     Since we will only evaluate the series expansion for C_2 and C_3
+!!     for values of y between -1 and 1, its easy to show that we don't
+!!     need to consider terms in the series whose coefficients have
+!!     magnitudes less than or equal 1/(2*TRUNC)! .
+!!
+!!     If the value of TRUNC is 10, then the series expansions for
+!!     C_2(y) and C_3(y) are can be truncated as shown here:
+!!
+!!                                   2             7       8
+!!              .    1      y       y             y       y
+!!       C_3(y) =   --- -  ---  +  ---  +  ... - ---  +  ---
+!!                   3!     5!      7!           17!     19!
+!!
+!!                 1        y         y            y           y
+!!              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
+!!                2*3      4*5       6*7          16*17       18*19
+!!
+!!              .    1      y       y             y       y
+!!       C_2(y) =   --- -  ---  +  ---  +  ... + ---  -  ---
+!!                   2!     4!      6!           16!     18!
+!!
+!!                 1        y         y            y           y
+!!              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
+!!                1*2      3*4       5*6          15*16       17*18
+!!
+!!     As is evident from the above, we are going to need the
+!!     "reciprocal pairs"
+!!
+!!       1/(1*2),  1/(2*3),  1/(3*4), 1/(4*5), ...
+!!
+!!     The number of such fractions be computed directly from
+!!     TRUNC. LPAIR3 and LPAIR2 indicate which of these pairs
+!!     (counting 1/(1*2) as the first) will be the last one needed in
+!!     the evaluation of C_2 and C_3.
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     We are going to need the numbers
+!!
+!!        1/(2*3), 1/(3*4), 1/(4*5), ...
+!!
+!!     but we don't want to compute them every time this routine is
+!!     called.  So the first time this routine is called we compute
+!!     them and put them in the array PAIRS for use on subsequent
+!!     calls. (This could be done via parameters, but computing them
+!!     at run time seems to have a better chance of being
+!!     easily maintained.)
+!!
+!!     In addition we will need to compute the lower bound for which
+!!     C_0,...,C_3 can be computed.  This lower bound is computed by
+!!     noting that C_0 has the largest magnitude of all the Stumpff
+!!     functions over the domain from -infinity to -1.  Moreover, in this
+!!     range
+!!
+!!        C_0(X) = Cosh( SQRT(-X) )
+!!
+!!     Thus the range of X for which the Stumpff functions can be
+!!     computed is bounded below by the value of X for which
+!!
+!!        Cosh ( SQRT(-X) ) = DPMAX
+!!
+!!     Which implies the lower bound for valid inputs is at
+!!
+!!        X = - ( DLOG ( 2.0 ) + DLOG( DPMAX ) ) ** 2
+!!
+!!          = - ( DLOG ( 2*N ) + DLOG ( DPMAX/N  ) ) ** 2
+!!
+!!     We point out the second formulation of the bound just in case
+!!     your compiler can't handle the computation of DLOG ( DPMAX ).
+!!     If this unfortunate situation should arise, complain to the
+!!     company that produces your compiler and in the code below
+!!     compute LBOUND using the second form above with N equal to
+!!     some large power of 2 (say 2**20).
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       implicit none
@@ -18049,168 +17768,164 @@ contains
 !$Procedure      ZZBODBRY ( Return barycenter code for a body )
 
       module procedure zzbodbry
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Return the barycenter code associated with a body belonging to
+!!     a planetary system.  For other bodies, simply return the
+!!     input ID code.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!      BODY        is the integer ID code of the body for which the
+!!                  barycenter ID code is requested.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns the NAIF integer ID code of the barycenter,
+!!     if any, associated with BODY.  If BODY is not the NAIF integer
+!!     ID code of a planet or satellite, the value BODY is returned.
+!!
+!!     Planetary barycenter codes are the integers 1, ..., 9.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1) If BODY is not the NAIF integer ID code of a planet or
+!!        satellite, the value BODY is returned.  This case is
+!!        not considered to be an error.
+!!
+!!     2) Codes of the form
+!!
+!!           PXNNN, where
+!!
+!!                  P   is    1, ...,  9,
+!!                  X   is    1, 2, 3, 4, 6, 7, 8, 9
+!!              and NNN is  001, ... 999
+!!
+!!        are mapped to the integer P.  These codes are not
+!!        considered to be erroneous, though they were not
+!!        part of the planned satellite numbering scheme at
+!!        the date this routine was released.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine enables the caller to determine to which
+!!     planetary system, if any, a planet or natural satellite belongs.
+!!     This capability is used by the SPICELIB PCK subsystem.
+!!
+!!     Planets have ID codes of the form P99, where P is 1, ..., 9.
+!!
+!!     Natural satellites have ID codes of the form
+!!
+!!        PNN, where
+!!
+!!               P  is  1, ..., 9
+!!           and NN is 01, ... 98
+!!
+!!     or
+!!
+!!        PXNNN, where
+!!
+!!               P   is    1, ...,  9,
+!!               X   is    0  or    5,
+!!           and NNN is  001, ... 999
+!!
+!!     Codes with X = 5 are provisional.
+!!
+!! ## Examples
+!!
+!!     1) Find the planetary system (indicated by a barycenter ID
+!!        code) associated with the ID code 65001 (a provisional code
+!!        for a Saturnian satellite):
+!!
+!!            BODY = 65001
+!!            BARY = ZZBODBRY ( BODY )
+!!
+!!        BARY is assigned the value 6.
+!!
+!!     2) Find the planetary system associated with the ID code
+!!        60001 (an "extended" code for a Saturnian satellite):
+!!
+!!            BODY = 60001
+!!            BARY = ZZBODBRY ( BODY )
+!!
+!!        BARY is assigned the value 6.
+!!
+!!     3) Find the planetary system associated with the ID code
+!!        606 (Titan):
+!!
+!!            BODY = 606
+!!            BARY = ZZBODBRY ( BODY )
+!!
+!!        BARY is assigned the value 6.
+!!
+!!     4) Find the planetary system associated with the ID code
+!!        699 (Saturn):
+!!
+!!            BODY = 699
+!!            BARY = ZZBODBRY ( BODY )
+!!
+!!        BARY is assigned the value 6.
+!!
+!!     5) Find the planetary system associated with the ID code 6
+!!        (Saturn system barycenter):
+!!
+!!            BODY = 6
+!!            BARY = ZZBODBRY ( BODY )
+!!
+!!        BARY is assigned the value 6.
+!!
+!!     6) Find the planetary system associated with the ID code
+!!        9511010 (asteroid Gaspra):
+!!
+!!            BODY = 9511010
+!!            BARY = ZZBODBRY ( BODY )
+!!
+!!        BARY is assigned the value 9511010.
+!!
+!! ## Restrictions
+!!
+!!     1) This routine should not be called from routines outside
+!!        of SPICELIB.  The interface and functionality may change
+!!        without notice.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 01-FEB-2004 (NJB)
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Return the barycenter code associated with a body belonging to
-!     a planetary system.  For other bodies, simply return the
-!     input ID code.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
-
-! $ Detailed_Input
-!
-!      BODY        is the integer ID code of the body for which the
-!                  barycenter ID code is requested.
-!
-! $ Detailed_Output
-!
-!     The function returns the NAIF integer ID code of the barycenter,
-!     if any, associated with BODY.  If BODY is not the NAIF integer
-!     ID code of a planet or satellite, the value BODY is returned.
-!
-!     Planetary barycenter codes are the integers 1, ..., 9.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1) If BODY is not the NAIF integer ID code of a planet or
-!        satellite, the value BODY is returned.  This case is
-!        not considered to be an error.
-!
-!     2) Codes of the form
-!
-!           PXNNN, where
-!
-!                  P   is    1, ...,  9,
-!                  X   is    1, 2, 3, 4, 6, 7, 8, 9
-!              and NNN is  001, ... 999
-!
-!        are mapped to the integer P.  These codes are not
-!        considered to be erroneous, though they were not
-!        part of the planned satellite numbering scheme at
-!        the date this routine was released.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine enables the caller to determine to which
-!     planetary system, if any, a planet or natural satellite belongs.
-!     This capability is used by the SPICELIB PCK subsystem.
-!
-!     Planets have ID codes of the form P99, where P is 1, ..., 9.
-!
-!     Natural satellites have ID codes of the form
-!
-!        PNN, where
-!
-!               P  is  1, ..., 9
-!           and NN is 01, ... 98
-!
-!     or
-!
-!        PXNNN, where
-!
-!               P   is    1, ...,  9,
-!               X   is    0  or    5,
-!           and NNN is  001, ... 999
-!
-!     Codes with X = 5 are provisional.
-!
-! $ Examples
-!
-!     1) Find the planetary system (indicated by a barycenter ID
-!        code) associated with the ID code 65001 (a provisional code
-!        for a Saturnian satellite):
-!
-!            BODY = 65001
-!            BARY = ZZBODBRY ( BODY )
-!
-!        BARY is assigned the value 6.
-!
-!     2) Find the planetary system associated with the ID code
-!        60001 (an "extended" code for a Saturnian satellite):
-!
-!            BODY = 60001
-!            BARY = ZZBODBRY ( BODY )
-!
-!        BARY is assigned the value 6.
-!
-!     3) Find the planetary system associated with the ID code
-!        606 (Titan):
-!
-!            BODY = 606
-!            BARY = ZZBODBRY ( BODY )
-!
-!        BARY is assigned the value 6.
-!
-!     4) Find the planetary system associated with the ID code
-!        699 (Saturn):
-!
-!            BODY = 699
-!            BARY = ZZBODBRY ( BODY )
-!
-!        BARY is assigned the value 6.
-!
-!     5) Find the planetary system associated with the ID code 6
-!        (Saturn system barycenter):
-!
-!            BODY = 6
-!            BARY = ZZBODBRY ( BODY )
-!
-!        BARY is assigned the value 6.
-!
-!     6) Find the planetary system associated with the ID code
-!        9511010 (asteroid Gaspra):
-!
-!            BODY = 9511010
-!            BARY = ZZBODBRY ( BODY )
-!
-!        BARY is assigned the value 9511010.
-!
-! $ Restrictions
-!
-!     1) This routine should not be called from routines outside
-!        of SPICELIB.  The interface and functionality may change
-!        without notice.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 01-FEB-2004 (NJB)
-!
-!-&
-
       if (  ( body >= 100 ) .and. ( body <= 999 )  ) then
 !
 !        BODY is a "traditional" NAIF planet or natural satellite
@@ -18240,32 +17955,31 @@ contains
 !$Procedure ZZCK4D2I ( Unpack a set of integers from DP number )
 
       module procedure zzck4d2i
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This is the routine that unpacks a set integer numbers stored in
+!!     a single double precision number.
+!!
+!!     Its current specific use is to "uncompress" seven integer numbers
+!!     representing numbers of polynomial coefficients in a logical
+!!     type 4 CK record from a single DP number stored in a physical
+!!     type 4 CK record in a file.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This is the routine that unpacks a set integer numbers stored in
-!     a single double precision number.
-!
-!     Its current specific use is to "uncompress" seven integer numbers
-!     representing numbers of polynomial coefficients in a logical
-!     type 4 CK record from a single DP number stored in a physical
-!     type 4 CK record in a file.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
       implicit none
 
 
@@ -18364,27 +18078,26 @@ contains
 !$Procedure ZZDSCM ( SGP4 deep space common calculations )
 
       module procedure zzdscm
+!! ## Abstract
+!!
+!!     This subroutine provides deep space common items used by both the
+!!     secular and periodics subroutines.
+!!
+!!     This routine previously had the name DPPER, but the functions
+!!     inside weren't well organized.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-
-! $ Abstract
-!
-!     This subroutine provides deep space common items used by both the
-!     secular and periodics subroutines.
-!
-!     This routine previously had the name DPPER, but the functions
-!     inside weren't well organized.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
       implicit none
 
 
@@ -18897,28 +18610,27 @@ contains
 !$Procedure ZZDSIN ( SGP4 deep space initialization )
 
       module procedure zzdsin
+!! ## Abstract
+!!
+!!     This Subroutine provides Deep Space contributions to Mean
+!!     Motion Dot due to geopotential resonance with half day and one
+!!     day orbits.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
-
-! $ Abstract
-!
-!     This Subroutine provides Deep Space contributions to Mean
-!     Motion Dot due to geopotential resonance with half day and one
-!     day orbits.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
+      use pepper_inc_zzsgp4
       implicit none
 
-      include 'zzsgp4.inc'
 
 
 
@@ -19522,27 +19234,26 @@ contains
 !$Procedure ZZDSPC ( SGP4 deep space routine )
 
       module procedure zzdspc
+!! ## Abstract
+!!
+!!     This subroutine provides deep space contributions to mean
+!!     elements for perturbing third body. These effects have been
+!!     averaged over one revolution of the sun and moon. For earth
+!!     resonance effects, the effects have been averaged over NO
+!!     revolutions of the satellite.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-
-! $ Abstract
-!
-!     This subroutine provides deep space contributions to mean
-!     elements for perturbing third body. These effects have been
-!     averaged over one revolution of the sun and moon. For earth
-!     resonance effects, the effects have been averaged over NO
-!     revolutions of the satellite.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
       implicit none
 
 
@@ -19947,29 +19658,28 @@ contains
 !$Procedure ZZDSPR ( SGP4 deep space long period )
 
       module procedure zzdspr
+!! ## Abstract
+!!
+!!     Provide deep space long period periodic contributions to the mean
+!!     elements. By design, these periodics are zero at epoch. This used
+!!     to be dscom which included initialization, but it's really a
+!!     recurring function.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
-
-! $ Abstract
-!
-!     Provide deep space long period periodic contributions to the mean
-!     elements. By design, these periodics are zero at epoch. This used
-!     to be dscom which included initialization, but it's really a
-!     recurring function.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
+      use pepper_inc_zzsgp4
       implicit none
 
-      include 'zzsgp4.inc'
 
 
 ! $ Detailed_Input
@@ -20342,28 +20052,27 @@ contains
 !$Procedure ZZINIL ( SGP4 initializer )
 
       module procedure zzinil
+!! ## Abstract
+!!
+!!     This subroutine initializes the SGP4 propagator. All the
+!!     initialization is consolidated here instead of having multiple
+!!     loops inside other routines.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-
-! $ Abstract
-!
-!     This subroutine initializes the SGP4 propagator. All the
-!     initialization is consolidated here instead of having multiple
-!     loops inside other routines.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
+      use pepper_inc_zzsgp4
       implicit none
 
-      include 'zzsgp4.inc'
 
 
 
@@ -20636,26 +20345,25 @@ contains
 !$Procedure CKE06 ( C-Kernel, evaluate, type 6 )
 
       module procedure cke06
+!! ## Abstract
+!!
+!!     Evaluate a single data record from a type 6 CK segment.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Evaluate a single data record from a type 6 CK segment.
-!
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ck06
+      use pepper_inc_ckparam
       implicit none
 
-      include 'ck06.inc'
-      include 'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -20951,321 +20659,296 @@ contains
       end procedure cke06
 
       module procedure ckmeta
-
-! $ Abstract
-!
-!     Return (depending upon the user's request) the ID code of either
-!     the spacecraft or spacecraft clock associated with a C-Kernel ID
-!     code.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     CKID     is the ID code for some object whose attitude
-!              and possibly angular velocity are stored in
-!              some C-kernel.
-!
-!     META     is a character string that indicates which piece
-!              of meta data to fetch. Acceptable values are
-!              'SCLK' and 'SPK'. The routine is case insensitive.
-!              Leading and trailing blanks are insignificant.
-!              However, blanks between characters are regarded
-!              as being significant.
-!
-! $ Detailed_Output
-!
-!     IDCODE   if META is 'SCLK' then the value returned in IDCODE
-!              is the ID code of the spacecraft clock used for
-!              converting ET to TICKS and TICKS to ET for the
-!              C-kernel used to represent the attitude of the
-!              object with ID code CKID.
-!
-!              If META is 'SPK' then the value returned in IDCODE is the
-!              ID code of the spacecraft on which the platform indicated
-!              by CKID is mounted.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the variable META is not recognized to be one of the
-!         inputs 'SPK' or 'SCLK', the error SPICE(UNKNOWNCKMETA)
-!         is signaled.
-!
-!     2)  If CKID is greater than -1000, the associated SCLK and SPK
-!         IDs must be in the kernel pool. If they are not present
-!         a value of zero is returned for the requested item. Zero
-!         is never the valid ID of a spacecraft clock.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is a utility routine for mapping C-kernels to associated
-!     spacecraft clocks.
-!
-!     An association of an SCLK ID and spacecraft ID with a CK frame
-!     class ID may be made by placing in a text kernel the kernel
-!     variable assignments
-!
-!        CK_<ck_frame_class_ID_code>_SCLK = <ID code of SCLK>
-!        CK_<ck_frame_class_ID_code>_SPK  = <SPK ID code>
-!
-!     See the Frames Required Reading section on CK frames.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Suppose you would like to look up the attitude of an object
-!        in a C-kernel but have ET and seconds as your input time and
-!        tolerance.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File name: ckmeta_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name              Contents
-!              --------------------   -----------------------
-!              cas00071.tsc           CASSINI SCLK
-!              naif0012.tls           Leapseconds
-!              04153_04182ca_ISS.bc   CASSINI image navigated
-!                                     spacecraft CK
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'naif0012.tls',
-!                                  'cas00071.tsc'
-!                                  '04153_04182ca_ISS.bc' )
-!
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM CKMETA_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!        C     -- The code for CASSINI spacecraft reference frame is
-!        C        -82000.
-!        C
-!        C     -- The reference frame we want is J2000.
-!        C
-!              CHARACTER*(*)         REF
-!              PARAMETER           ( REF = 'J2000' )
-!
-!              INTEGER               CKID
-!              PARAMETER           ( CKID = -82000  )
-!
-!        C
-!        C     Local variables.
-!        C
-!              DOUBLE PRECISION      AV     ( 3 )
-!              DOUBLE PRECISION      CLKOUT
-!              DOUBLE PRECISION      CMAT   ( 3, 3 )
-!              DOUBLE PRECISION      ET
-!              DOUBLE PRECISION      ETOUT
-!              DOUBLE PRECISION      SECTOL
-!              DOUBLE PRECISION      TICKS
-!              DOUBLE PRECISION      TICK2
-!              DOUBLE PRECISION      TOL
-!
-!              INTEGER               IDCODE
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Initial values.
-!        C
-!              DATA                  ET      / 141162208.034340D0 /
-!              DATA                  SECTOL  / 0.5D0 /
-!
-!        C
-!        C     First load the CK, LSK and SCLK files.
-!        C
-!              CALL FURNSH ( 'ckmeta_ex1.tm' )
-!
-!        C
-!        C     Get the SCLK identifier of the spacecraft clock required
-!        C     to convert from ET to TICKS.
-!        C
-!              CALL CKMETA ( CKID, 'SCLK', IDCODE )
-!
-!        C
-!        C     Convert ET and ET+SECTOL to spacecraft clock ticks.
-!        C
-!              CALL SCE2C  ( IDCODE, ET,        TICKS  )
-!              CALL SCE2C  ( IDCODE, ET+SECTOL, TICK2  )
-!
-!        C
-!        C     Compute the tolerance in spacecraft clock ticks.
-!        C
-!              TOL = TICK2 - TICKS
-!
-!        C
-!        C     Look the attitude up.
-!        C
-!              CALL CKGPAV ( CKID, TICKS, TOL,    REF,
-!             .              CMAT, AV,    CLKOUT, FOUND )
-!
-!              WRITE(*,'(A,F20.6)')    'Input ET:            ', ET
-!
-!              IF ( FOUND ) THEN
-!
-!                 CALL SCT2E ( IDCODE, CLKOUT, ETOUT )
-!                 WRITE(*,'(A,F20.6)') 'Attitude found at ET:', ETOUT
-!
-!              ELSE
-!
-!                 WRITE(*,'(A)') 'No attitude found at ET.'
-!
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Input ET:                141162208.034340
-!        Attitude found at ET:    141162208.034586
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 07-JUN-2021 (JDR) (NJB)
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example based on existing fragment.
-!
-!-    SPICELIB Version 1.2.0, 06-SEP-2013 (BVS)
-!
-!        BUG FIX: the POOL agents now watch both variables --
-!        CK_<ID>_SCLK and CK_<ID>_SPK. Before they watched only
-!        CK_<ID>_SCLK.
-!
-!        BUG FIX: if a previously available CK_<ID>_SCLK or CK_<ID>_SPK
-!        variable that was used to populate a saved value disappears,
-!        the routine now resets and returns the value based on the
-!        default rule rather than keeping and returning the stale
-!        POOL-based saved value.
-!
-!        BUG FIX: the routine now deletes watchers for the CK IDs that
-!        were bumped from the local buffer.
-!
-!        Updated to keep track of agent-specific POOL counters and call
-!        ZZCVPOOL to make use of them.
-!
-!-    SPICELIB Version 1.1.0, 05-MAR-2009 (NJB)
-!
-!        This routine now keeps track of whether its kernel pool
-!        look-up failed. If so, a kernel pool lookup is attempted on
-!        the next call to this routine. This change is an enhancement,
-!        not a bug fix (unlike similar modifications in SCLK routines).
-!
-!        Header sections were put in correct order.
-!
-!-    SPICELIB Version 1.0.1, 09-MAR-1999 (NJB)
-!
-!        Comments referring to SCE2T have been updated to refer to
-!        SCE2C. Occurrences of "id" replaced by "ID."
-!
-!-    SPICELIB Version 1.0.0, 04-OCT-1994 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Map C-kernel ID to SCLK and SPK ID
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-
-!
-!     Local parameters
-!
-
-
-
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return (depending upon the user's request) the ID code of either
+!!     the spacecraft or spacecraft clock associated with a C-Kernel ID
+!!     code.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     CKID     is the ID code for some object whose attitude
+!!              and possibly angular velocity are stored in
+!!              some C-kernel.
+!!
+!!     META     is a character string that indicates which piece
+!!              of meta data to fetch. Acceptable values are
+!!              'SCLK' and 'SPK'. The routine is case insensitive.
+!!              Leading and trailing blanks are insignificant.
+!!              However, blanks between characters are regarded
+!!              as being significant.
+!!
+!! ## Detailed Output
+!!
+!!     IDCODE   if META is 'SCLK' then the value returned in IDCODE
+!!              is the ID code of the spacecraft clock used for
+!!              converting ET to TICKS and TICKS to ET for the
+!!              C-kernel used to represent the attitude of the
+!!              object with ID code CKID.
+!!
+!!              If META is 'SPK' then the value returned in IDCODE is the
+!!              ID code of the spacecraft on which the platform indicated
+!!              by CKID is mounted.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the variable META is not recognized to be one of the
+!!         inputs 'SPK' or 'SCLK', the error SPICE(UNKNOWNCKMETA)
+!!         is signaled.
+!!
+!!     2)  If CKID is greater than -1000, the associated SCLK and SPK
+!!         IDs must be in the kernel pool. If they are not present
+!!         a value of zero is returned for the requested item. Zero
+!!         is never the valid ID of a spacecraft clock.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This is a utility routine for mapping C-kernels to associated
+!!     spacecraft clocks.
+!!
+!!     An association of an SCLK ID and spacecraft ID with a CK frame
+!!     class ID may be made by placing in a text kernel the kernel
+!!     variable assignments
+!!
+!!        CK_<ck_frame_class_ID_code>_SCLK = <ID code of SCLK>
+!!        CK_<ck_frame_class_ID_code>_SPK  = <SPK ID code>
+!!
+!!     See the Frames Required Reading section on CK frames.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Suppose you would like to look up the attitude of an object
+!!        in a C-kernel but have ET and seconds as your input time and
+!!        tolerance.
+!!
+!!        Use the meta-kernel shown below to load the required SPICE
+!!        kernels.
+!!
+!!           KPL/MK
+!!
+!!           File name: ckmeta_ex1.tm
+!!
+!!           This meta-kernel is intended to support operation of SPICE
+!!           example programs. The kernels shown here should not be
+!!           assumed to contain adequate or correct versions of data
+!!           required by SPICE-based user applications.
+!!
+!!           In order for an application to use this meta-kernel, the
+!!           kernels referenced here must be present in the user's
+!!           current working directory.
+!!
+!!           The names and contents of the kernels referenced
+!!           by this meta-kernel are as follows:
+!!
+!!              File name              Contents
+!!              --------------------   -----------------------
+!!              cas00071.tsc           CASSINI SCLK
+!!              naif0012.tls           Leapseconds
+!!              04153_04182ca_ISS.bc   CASSINI image navigated
+!!                                     spacecraft CK
+!!
+!!           \begindata
+!!
+!!              KERNELS_TO_LOAD = ( 'naif0012.tls',
+!!                                  'cas00071.tsc'
+!!                                  '04153_04182ca_ISS.bc' )
+!!
+!!           \begintext
+!!
+!!           End of meta-kernel
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM CKMETA_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!        C     -- The code for CASSINI spacecraft reference frame is
+!!        C        -82000.
+!!        C
+!!        C     -- The reference frame we want is J2000.
+!!        C
+!!              CHARACTER*(*)         REF
+!!              PARAMETER           ( REF = 'J2000' )
+!!
+!!              INTEGER               CKID
+!!              PARAMETER           ( CKID = -82000  )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              DOUBLE PRECISION      AV     ( 3 )
+!!              DOUBLE PRECISION      CLKOUT
+!!              DOUBLE PRECISION      CMAT   ( 3, 3 )
+!!              DOUBLE PRECISION      ET
+!!              DOUBLE PRECISION      ETOUT
+!!              DOUBLE PRECISION      SECTOL
+!!              DOUBLE PRECISION      TICKS
+!!              DOUBLE PRECISION      TICK2
+!!              DOUBLE PRECISION      TOL
+!!
+!!              INTEGER               IDCODE
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Initial values.
+!!        C
+!!              DATA                  ET      / 141162208.034340D0 /
+!!              DATA                  SECTOL  / 0.5D0 /
+!!
+!!        C
+!!        C     First load the CK, LSK and SCLK files.
+!!        C
+!!              CALL FURNSH ( 'ckmeta_ex1.tm' )
+!!
+!!        C
+!!        C     Get the SCLK identifier of the spacecraft clock required
+!!        C     to convert from ET to TICKS.
+!!        C
+!!              CALL CKMETA ( CKID, 'SCLK', IDCODE )
+!!
+!!        C
+!!        C     Convert ET and ET+SECTOL to spacecraft clock ticks.
+!!        C
+!!              CALL SCE2C  ( IDCODE, ET,        TICKS  )
+!!              CALL SCE2C  ( IDCODE, ET+SECTOL, TICK2  )
+!!
+!!        C
+!!        C     Compute the tolerance in spacecraft clock ticks.
+!!        C
+!!              TOL = TICK2 - TICKS
+!!
+!!        C
+!!        C     Look the attitude up.
+!!        C
+!!              CALL CKGPAV ( CKID, TICKS, TOL,    REF,
+!!             .              CMAT, AV,    CLKOUT, FOUND )
+!!
+!!              WRITE(*,'(A,F20.6)')    'Input ET:            ', ET
+!!
+!!              IF ( FOUND ) THEN
+!!
+!!                 CALL SCT2E ( IDCODE, CLKOUT, ETOUT )
+!!                 WRITE(*,'(A,F20.6)') 'Attitude found at ET:', ETOUT
+!!
+!!              ELSE
+!!
+!!                 WRITE(*,'(A)') 'No attitude found at ET.'
+!!
+!!              END IF
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Input ET:                141162208.034340
+!!        Attitude found at ET:    141162208.034586
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.1, 07-JUN-2021 (JDR) (NJB)
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example based on existing fragment.
+!!
+!!-    SPICELIB Version 1.2.0, 06-SEP-2013 (BVS)
+!!
+!!        BUG FIX: the POOL agents now watch both variables --
+!!        CK_<ID>_SCLK and CK_<ID>_SPK. Before they watched only
+!!        CK_<ID>_SCLK.
+!!
+!!        BUG FIX: if a previously available CK_<ID>_SCLK or CK_<ID>_SPK
+!!        variable that was used to populate a saved value disappears,
+!!        the routine now resets and returns the value based on the
+!!        default rule rather than keeping and returning the stale
+!!        POOL-based saved value.
+!!
+!!        BUG FIX: the routine now deletes watchers for the CK IDs that
+!!        were bumped from the local buffer.
+!!
+!!        Updated to keep track of agent-specific POOL counters and call
+!!        ZZCVPOOL to make use of them.
+!!
+!!-    SPICELIB Version 1.1.0, 05-MAR-2009 (NJB)
+!!
+!!        This routine now keeps track of whether its kernel pool
+!!        look-up failed. If so, a kernel pool lookup is attempted on
+!!        the next call to this routine. This change is an enhancement,
+!!        not a bug fix (unlike similar modifications in SCLK routines).
+!!
+!!        Header sections were put in correct order.
+!!
+!!-    SPICELIB Version 1.0.1, 09-MAR-1999 (NJB)
+!!
+!!        Comments referring to SCE2T have been updated to refer to
+!!        SCE2C. Occurrences of "id" replaced by "ID."
+!!
+!!-    SPICELIB Version 1.0.0, 04-OCT-1994 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Map C-kernel ID to SCLK and SPK ID
+!!
+!!     SPICELIB Functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bschoi, clearc, orderi
       use pepper_strings, only: intstr, ljucrs, prefix, suffix
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nck = 30
       integer(ip), parameter :: sclk = 1
@@ -21514,28 +21197,27 @@ contains
 !$Procedure CKNR04 ( C-kernel, number of records, data type 4 )
 
       module procedure cknr04
+!! ## Abstract
+!!
+!!     Return the number of pointing records in a CK type 04 segment.
+!!     The segment is identified by a CK file handle and segment
+!!     descriptor.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the number of pointing records in a CK type 04 segment.
-!     The segment is identified by a CK file handle and segment
-!     descriptor.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ckparam
       implicit none
 
-      include               'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -21769,25 +21451,24 @@ contains
 !$Procedure PCKE02 ( PCK, evaluate data record from type 2 segment )
 
       module procedure pcke02
+!! ## Abstract
+!!
+!!     Evaluate a single PCK data record from a segment of type 2
+!!     (Chebyshev Polynomials, position only).
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     ROTATION
+!!     TRANSFORMATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
-
-! $ Abstract
-!
-!     Evaluate a single PCK data record from a segment of type 2
-!     (Chebyshev Polynomials, position only).
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     ROTATION
-!     TRANSFORMATION
-!
-! $ Declarations
-
       implicit none
 
 
@@ -21942,26 +21623,25 @@ contains
 !$Procedure PCKE20 ( PCK, evaluate record, type 20 )
 
       module procedure pcke20
+!! ## Abstract
+!!
+!!     Evaluate a single PCK data record from a segment of type 20
+!!     (Chebyshev Polynomials, rotation derivative only).
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     ORIENTATION
+!!     ROTATION
+!!     TRANSFORMATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
-
-! $ Abstract
-!
-!     Evaluate a single PCK data record from a segment of type 20
-!     (Chebyshev Polynomials, rotation derivative only).
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     ORIENTATION
-!     ROTATION
-!     TRANSFORMATION
-!
-! $ Declarations
-
       implicit none
 
 
@@ -22192,305 +21872,277 @@ contains
       end procedure pcke20
 
       module procedure prop2b
-
-! $ Abstract
-!
-!     Compute the state of a massless body at time t_0 + DT by applying
-!     the two-body force model to a given central mass and a given body
-!     state at time t_0.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONIC
-!     EPHEMERIS
-!     UTILITY
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     GM       is the gravitational constant G times the mass M of the
-!              central body.
-!
-!     PVINIT   is the state at some specified time relative to the
-!              central mass. The mass of the object is assumed to
-!              be negligible when compared to the central mass.
-!
-!     DT       is a offset in time from the time of the initial
-!              state to which the two-body state should be
-!              propagated. (The units of time and distance must be
-!              the same in GM, PVINIT, and DT).
-!
-! $ Detailed_Output
-!
-!     PVPROP   is the two-body propagation of the initial state
-!              DT units of time past the epoch of the initial state.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If GM is not positive, the error SPICE(NONPOSITIVEMASS) is
-!         signaled.
-!
-!     2)  If the position of the initial state is the zero vector, the
-!         error SPICE(ZEROPOSITION) is signaled.
-!
-!     3)  If the velocity of the initial state is the zero vector, the
-!         error SPICE(ZEROVELOCITY) is signaled.
-!
-!     4)  If the cross product of the position and velocity of PVINIT
-!         has squared length of zero, the error SPICE(NONCONICMOTION)
-!         is signaled.
-!
-!     5)  If DT is so large that there is a danger of floating point
-!         overflow during computation, the error SPICE(DTOUTOFRANGE) is
-!         signaled and a message is generated describing the problem.
-!         The value of DT must be "reasonable". In other words, DT
-!         should be less than 10**20 seconds for realistic solar system
-!         orbits specified in the MKS system. (The actual bounds on DT
-!         are much greater but require substantial computation.) The
-!         "reasonableness" of DT is checked at run-time.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine uses a universal variables formulation for the
-!     two-body motion of an object in orbit about a central mass. It
-!     propagates an initial state to an epoch offset from the
-!     epoch of the initial state by time DT.
-!
-!     This routine does not suffer from the finite precision
-!     problems of the machine that are inherent to classical
-!     formulations based on the solutions to Kepler's equation:
-!
-!           n( t - T ) = E - e Sin(E)         elliptic case
-!           n( t - T ) = e sinh(F) - F        hyperbolic case
-!
-!     The derivation used to determine the propagated state is a
-!     slight variation of the derivation in Danby's book
-!     "Fundamentals of Celestial Mechanics" [1].
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) When the eccentricity of an orbit is near 1, and the epoch
-!        of classical elements is near the epoch of periapse, classical
-!        formulations that propagate a state from elements tend to
-!        lack robustness due to the finite precision of floating point
-!        machines. In those situations it is better to use a universal
-!        variables formulation to propagate the state.
-!
-!        By using this routine, you need not go from a state to
-!        elements and back to a state. Instead, you can get the state
-!        from an initial state.
-!
-!        If PVINIT is your initial state and you want the state 3600
-!        seconds later, the following call will suffice.
-!
-!           Look up GM somewhere
-!
-!           DT = 3600.0D0
-!
-!           CALL PROP2B ( GM, PVINIT, DT, PVPROP )
-!
-!        After the call, PVPROP will contain the state of the
-!        object 3600 seconds after the time it had state PVINIT.
-!
-!     2) Use the two-body force model to propagate the state of a
-!        massless body orbiting the Earth at 100,000,000 km after half
-!        a period.
-!
-!        In circular two-body motion, the orbital speed is
-!
-!           s     = sqrt(mu/r)
-!
-!        where mu is the central mass. After tau/2 = pi*r/s seconds
-!        (half period), the state should equal the negative of the
-!        original state.
-!
-!        Example code begins here.
-!
-!              PROGRAM PROP2B_EX2
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      PI
-!
-!        C
-!        C     Local variables.
-!        C
-!              DOUBLE PRECISION      MU
-!              DOUBLE PRECISION      PVINIT ( 6 )
-!              DOUBLE PRECISION      R
-!              DOUBLE PRECISION      SPEED
-!              DOUBLE PRECISION      STATE  ( 6 )
-!              DOUBLE PRECISION      T
-!
-!        C
-!        C     Initial values.
-!        C
-!              MU    =  3.9860043543609598D+05
-!              R     =  1.0D+08
-!              SPEED =  SQRT( MU / R )
-!              T     =  PI( )*R/SPEED
-!
-!              PVINIT(1) =  0.0D0
-!              PVINIT(2) =  R/SQRT(2.0D0)
-!              PVINIT(3) =  R/SQRT(2.0D0)
-!              PVINIT(4) =  0.0D0
-!              PVINIT(5) = -SPEED/SQRT(2.0D0)
-!              PVINIT(6) =  SPEED/SQRT(2.0D0)
-!
-!        C
-!        C     Calculate the state of the body at 0.5 period
-!        C     after the epoch.
-!        C
-!              CALL PROP2B ( MU, PVINIT, T, STATE )
-!
-!        C
-!        C     The `state' vector should equal -pvinit
-!        C
-!              WRITE(*,*) 'State at t0:'
-!              WRITE(*,'(A,3F17.5)') '   R   (km):',
-!             .                 PVINIT(1), PVINIT(2), PVINIT(3)
-!              WRITE(*,'(A,3F17.5)') '   V (km/s):',
-!             .                 PVINIT(4), PVINIT(5), PVINIT(6)
-!
-!              WRITE(*,*) ' '
-!              WRITE(*,*) 'State at tau/2:'
-!              WRITE(*,'(A,3F17.5)') '   R   (km):',
-!             .                    STATE(1), STATE(2), STATE(3)
-!              WRITE(*,'(A,3F17.5)') '   V (km/s):',
-!             .                    STATE(4), STATE(5), STATE(6)
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         State at t0:
-!           R   (km):          0.00000   70710678.11865   70710678.11865
-!           V (km/s):          0.00000         -0.04464          0.04464
-!
-!         State at tau/2:
-!           R   (km):         -0.00000  -70710678.11865  -70710678.11865
-!           V (km/s):          0.00000          0.04464         -0.04464
-!
-! $ Restrictions
-!
-!     1)  Users should be sure that GM, PVINIT and DT are all in the
-!         same system of units ( for example MKS ).
-!
-! $ Literature_References
-!
-!     [1]  J. Danby, "Fundamentals of Celestial Mechanics," 2nd Edition,
-!          pp 168-180, Willman-Bell, 1988.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.2.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Removed unnecessary $Revisions section.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example.
-!
-!-    SPICELIB Version 2.1.0, 31-AUG-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VSCL call.
-!
-!-    SPICELIB Version 2.0.1, 22-AUG-2001 (EDW)
-!
-!        Corrected ENDIF to END IF.
-!
-!-    SPICELIB Version 2.0.0, 16-MAY-1995 (WLT)
-!
-!        The initial guess at a solution to Kepler's equation was
-!        modified slightly and a loop counter was added to the
-!        bisection loop together with logic that will force termination
-!        of the bisection loop.
-!
-!-    SPICELIB Version 1.0.0, 10-MAR-1992 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Propagate state vector using two-body force model
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local Parameters
-!
-
-
-!
-!     Local variables
-!
-!     The following quantities are needed in the solution of Kepler's
-!     equation and in the propagation of the input state.  They are
-!     described as they are introduced in the code below.
-!
-
-!
-!     The variables below store intermediate results that can be
-!     reused if PVINIT is supplied more than once to this routine.
-!     In this way, the number of redundant computations can be reduced.
-!
-
-
-!
-!     Variables used to bracket X in our solution of Kepler's equation.
-!
-
-
-
-!
-!     Save everything.
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Compute the state of a massless body at time t_0 + DT by applying
+!!     the two-body force model to a given central mass and a given body
+!!     state at time t_0.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONIC
+!!     EPHEMERIS
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     GM       is the gravitational constant G times the mass M of the
+!!              central body.
+!!
+!!     PVINIT   is the state at some specified time relative to the
+!!              central mass. The mass of the object is assumed to
+!!              be negligible when compared to the central mass.
+!!
+!!     DT       is a offset in time from the time of the initial
+!!              state to which the two-body state should be
+!!              propagated. (The units of time and distance must be
+!!              the same in GM, PVINIT, and DT).
+!!
+!! ## Detailed Output
+!!
+!!     PVPROP   is the two-body propagation of the initial state
+!!              DT units of time past the epoch of the initial state.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If GM is not positive, the error SPICE(NONPOSITIVEMASS) is
+!!         signaled.
+!!
+!!     2)  If the position of the initial state is the zero vector, the
+!!         error SPICE(ZEROPOSITION) is signaled.
+!!
+!!     3)  If the velocity of the initial state is the zero vector, the
+!!         error SPICE(ZEROVELOCITY) is signaled.
+!!
+!!     4)  If the cross product of the position and velocity of PVINIT
+!!         has squared length of zero, the error SPICE(NONCONICMOTION)
+!!         is signaled.
+!!
+!!     5)  If DT is so large that there is a danger of floating point
+!!         overflow during computation, the error SPICE(DTOUTOFRANGE) is
+!!         signaled and a message is generated describing the problem.
+!!         The value of DT must be "reasonable". In other words, DT
+!!         should be less than 10**20 seconds for realistic solar system
+!!         orbits specified in the MKS system. (The actual bounds on DT
+!!         are much greater but require substantial computation.) The
+!!         "reasonableness" of DT is checked at run-time.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine uses a universal variables formulation for the
+!!     two-body motion of an object in orbit about a central mass. It
+!!     propagates an initial state to an epoch offset from the
+!!     epoch of the initial state by time DT.
+!!
+!!     This routine does not suffer from the finite precision
+!!     problems of the machine that are inherent to classical
+!!     formulations based on the solutions to Kepler's equation:
+!!
+!!           n( t - T ) = E - e Sin(E)         elliptic case
+!!           n( t - T ) = e sinh(F) - F        hyperbolic case
+!!
+!!     The derivation used to determine the propagated state is a
+!!     slight variation of the derivation in Danby's book
+!!     "Fundamentals of Celestial Mechanics" [1].
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for these examples may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) When the eccentricity of an orbit is near 1, and the epoch
+!!        of classical elements is near the epoch of periapse, classical
+!!        formulations that propagate a state from elements tend to
+!!        lack robustness due to the finite precision of floating point
+!!        machines. In those situations it is better to use a universal
+!!        variables formulation to propagate the state.
+!!
+!!        By using this routine, you need not go from a state to
+!!        elements and back to a state. Instead, you can get the state
+!!        from an initial state.
+!!
+!!        If PVINIT is your initial state and you want the state 3600
+!!        seconds later, the following call will suffice.
+!!
+!!           Look up GM somewhere
+!!
+!!           DT = 3600.0D0
+!!
+!!           CALL PROP2B ( GM, PVINIT, DT, PVPROP )
+!!
+!!        After the call, PVPROP will contain the state of the
+!!        object 3600 seconds after the time it had state PVINIT.
+!!
+!!     2) Use the two-body force model to propagate the state of a
+!!        massless body orbiting the Earth at 100,000,000 km after half
+!!        a period.
+!!
+!!        In circular two-body motion, the orbital speed is
+!!
+!!           s     = sqrt(mu/r)
+!!
+!!        where mu is the central mass. After tau/2 = pi*r/s seconds
+!!        (half period), the state should equal the negative of the
+!!        original state.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM PROP2B_EX2
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              DOUBLE PRECISION      PI
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              DOUBLE PRECISION      MU
+!!              DOUBLE PRECISION      PVINIT ( 6 )
+!!              DOUBLE PRECISION      R
+!!              DOUBLE PRECISION      SPEED
+!!              DOUBLE PRECISION      STATE  ( 6 )
+!!              DOUBLE PRECISION      T
+!!
+!!        C
+!!        C     Initial values.
+!!        C
+!!              MU    =  3.9860043543609598D+05
+!!              R     =  1.0D+08
+!!              SPEED =  SQRT( MU / R )
+!!              T     =  PI( )*R/SPEED
+!!
+!!              PVINIT(1) =  0.0D0
+!!              PVINIT(2) =  R/SQRT(2.0D0)
+!!              PVINIT(3) =  R/SQRT(2.0D0)
+!!              PVINIT(4) =  0.0D0
+!!              PVINIT(5) = -SPEED/SQRT(2.0D0)
+!!              PVINIT(6) =  SPEED/SQRT(2.0D0)
+!!
+!!        C
+!!        C     Calculate the state of the body at 0.5 period
+!!        C     after the epoch.
+!!        C
+!!              CALL PROP2B ( MU, PVINIT, T, STATE )
+!!
+!!        C
+!!        C     The `state' vector should equal -pvinit
+!!        C
+!!              WRITE(*,*) 'State at t0:'
+!!              WRITE(*,'(A,3F17.5)') '   R   (km):',
+!!             .                 PVINIT(1), PVINIT(2), PVINIT(3)
+!!              WRITE(*,'(A,3F17.5)') '   V (km/s):',
+!!             .                 PVINIT(4), PVINIT(5), PVINIT(6)
+!!
+!!              WRITE(*,*) ' '
+!!              WRITE(*,*) 'State at tau/2:'
+!!              WRITE(*,'(A,3F17.5)') '   R   (km):',
+!!             .                    STATE(1), STATE(2), STATE(3)
+!!              WRITE(*,'(A,3F17.5)') '   V (km/s):',
+!!             .                    STATE(4), STATE(5), STATE(6)
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         State at t0:
+!!           R   (km):          0.00000   70710678.11865   70710678.11865
+!!           V (km/s):          0.00000         -0.04464          0.04464
+!!
+!!         State at tau/2:
+!!           R   (km):         -0.00000  -70710678.11865  -70710678.11865
+!!           V (km/s):          0.00000          0.04464         -0.04464
+!!
+!! ## Restrictions
+!!
+!!     1)  Users should be sure that GM, PVINIT and DT are all in the
+!!         same system of units ( for example MKS ).
+!!
+!! ## Literature References
+!!
+!!     [1]  J. Danby, "Fundamentals of Celestial Mechanics," 2nd Edition,
+!!          pp 168-180, Willman-Bell, 1988.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.2.0, 26-OCT-2021 (JDR)
+!!
+!!        Added IMPLICIT NONE statement.
+!!
+!!        Removed unnecessary $Revisions section.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example.
+!!
+!!-    SPICELIB Version 2.1.0, 31-AUG-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in VSCL call.
+!!
+!!-    SPICELIB Version 2.0.1, 22-AUG-2001 (EDW)
+!!
+!!        Corrected ENDIF to END IF.
+!!
+!!-    SPICELIB Version 2.0.0, 16-MAY-1995 (WLT)
+!!
+!!        The initial guess at a solution to Kepler's equation was
+!!        modified slightly and a loop counter was added to the
+!!        bisection loop together with logic that will force termination
+!!        of the bisection loop.
+!!
+!!-    SPICELIB Version 1.0.0, 10-MAR-1992 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Propagate state vector using two-body force model
+!!
+!!     SPICELIB functions
+!!
+!!     Local Parameters
+!!
+!!     Local variables
+!!
+!!     The following quantities are needed in the solution of Kepler's
+!!     equation and in the propagation of the input state.  They are
+!!     described as they are introduced in the code below.
+!!
+!!     The variables below store intermediate results that can be
+!!     reused if PVINIT is supplied more than once to this routine.
+!!     In this way, the number of redundant computations can be reduced.
+!!
+!!     Variables used to bracket X in our solution of Kepler's equation.
+!!
+!!     Save everything.
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: brcktd, brckti, vcrss, vdot, vequg, vlcom, vnorm, vzero
@@ -23332,24 +22984,24 @@ contains
 !$Procedure SGFCON ( Generic Segments: Fetch constants )
 
       module procedure sgfcon
+!! ## Abstract
+!!
+!!     Fetch from the constants partition of a generic segment the
+!!     double precision numbers from FIRST to LAST. The segment is
+!!     identified by a DAF file handle and segment descriptor.
+!!
+!! ## Required Reading
+!!
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     GENERIC SEGMENTS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Fetch from the constants partition of a generic segment the
-!     double precision numbers from FIRST to LAST. The segment is
-!     identified by a DAF file handle and segment descriptor.
-!
-! $ Required_Reading
-!
-!     DAF
-!
-! $ Keywords
-!
-!     GENERIC SEGMENTS
-!
-! $ Declarations
-
+      use pepper_inc_sgparam
       implicit none
 
 
@@ -23465,7 +23117,6 @@ contains
 !
 !     Include the mnemonic values for the generic segment declarations.
 !
-      include 'sgparam.inc'
 
 !
 !     Local Variables
@@ -23534,24 +23185,24 @@ contains
 !$Procedure SGFPKT ( Generic Segment: Fetch data packets )
 
       module procedure sgfpkt
+!! ## Abstract
+!!
+!!     Fetch the data packets indexed from FIRST to LAST from the
+!!     packet partition of a generic segment. The segment is
+!!     identified by a DAF file handle and segment descriptor.
+!!
+!! ## Required Reading
+!!
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     GENERIC SEGMENTS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Fetch the data packets indexed from FIRST to LAST from the
-!     packet partition of a generic segment. The segment is
-!     identified by a DAF file handle and segment descriptor.
-!
-! $ Required_Reading
-!
-!     DAF
-!
-! $ Keywords
-!
-!     GENERIC SEGMENTS
-!
-! $ Declarations
-
+      use pepper_inc_sgparam
       implicit none
 
 
@@ -23712,7 +23363,6 @@ contains
 !
 !     Include the mnemonic values.
 !
-      include 'sgparam.inc'
 
 !
 !     Local Variables
@@ -23913,26 +23563,26 @@ contains
 !$Procedure SGFRVI ( Generic Segments: Fetch ref. value and index )
 
       module procedure sgfrvi
+!! ## Abstract
+!!
+!!     Find the reference value associated with the value X and its
+!!     index in a generic segment. The segment is identified by a DAF
+!!     file handle and segment descriptor.
+!!
+!! ## Required Reading
+!!
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     GENERIC SEGMENTS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_arrays, only: lstled
-
-! $ Abstract
-!
-!     Find the reference value associated with the value X and its
-!     index in a generic segment. The segment is identified by a DAF
-!     file handle and segment descriptor.
-!
-! $ Required_Reading
-!
-!     DAF
-!
-! $ Keywords
-!
-!     GENERIC SEGMENTS
-!
-! $ Declarations
-
+      use pepper_inc_sgparam
       implicit none
       real(wp) :: myvalu_1(1)  !! one-element copy of myvalu (array argument)
 
@@ -24078,7 +23728,6 @@ contains
 !
 !     Include the mnemonic values for the generic segment declarations.
 !
-      include 'sgparam.inc'
 
       integer(ip), parameter :: dirsiz = 100
 
@@ -24801,22 +24450,21 @@ contains
 !$Procedure SPKR12 ( Read SPK record from segment, type 12 )
 
       module procedure spkr12
+!! ## Abstract
+!!
+!!     Read a single data record from a type 12 SPK segment.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single data record from a type 12 SPK segment.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: maxrec = 129
@@ -24967,22 +24615,21 @@ contains
 !$Procedure SPKR13 ( Read SPK record from segment, type 13 )
 
       module procedure spkr13
+!! ## Abstract
+!!
+!!     Read a single data record from a type 13 SPK segment.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single data record from a type 13 SPK segment.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: maxrec = 129
@@ -25139,27 +24786,26 @@ contains
 !$Procedure CKR04 ( C-kernel, read pointing record, data type 4 )
 
       module procedure ckr04
+!! ## Abstract
+!!
+!!     Read a single data record from a type 4 CK segment.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single data record from a type 4 CK segment.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ckparam
       implicit none
       integer(ip) :: ends_1(1)  !! one-element copy of ends (array argument)
 
-      include               'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -25802,26 +25448,25 @@ contains
 !$Procedure PCKE03 ( PCK, evaluate data record from type 3 segment )
 
       module procedure pcke03
+!! ## Abstract
+!!
+!!     Evaluate a single PCK data record from a segment of type 03
+!!     (Variable width Chebyshev Polynomials for RA, DEC, and W) to
+!!     obtain a state transformation matrix.
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, rpd
       use pepper_math, only: chbval, vcrss
-
-! $ Abstract
-!
-!     Evaluate a single PCK data record from a segment of type 03
-!     (Variable width Chebyshev Polynomials for RA, DEC, and W) to
-!     obtain a state transformation matrix.
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
       implicit none
 
 
@@ -26136,22 +25781,21 @@ contains
 !$Procedure PCKR03 ( PCK, read record from type 3 segment )
 
       module procedure pckr03
+!! ## Abstract
+!!
+!!     Read a single PCK data record from a segment of type 03.
+!!
+!! ## Required Reading
+!!
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     PCK
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single PCK data record from a segment of type 03.
-!
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     PCK
-!
-! $ Declarations
-
       implicit none
       integer(ip) :: ends_1(1)  !! one-element copy of ends (array argument)
 
@@ -26342,26 +25986,25 @@ contains
 !$Procedure SPKE05 ( Evaluate SPK record, type 5 )
 
       module procedure spke05
+!! ## Abstract
+!!
+!!     Evaluate a single SPK data record from a segment of type 5
+!!     (two body propagation between discrete state vectors).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: pi
       use pepper_arrays, only: moved
       use pepper_math, only: vadd, vequ, vlcom, vlcomg
-
-! $ Abstract
-!
-!     Evaluate a single SPK data record from a segment of type 5
-!     (two body propagation between discrete state vectors).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -26629,26 +26272,25 @@ contains
 !$Procedure SPKE15 ( Evaluate a type 15 SPK data record)
 
       module procedure spke15
+!! ## Abstract
+!!
+!!     Evaluate a single SPK data record from a segment of type 15
+!!     (Precessing Conic Propagation).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, pi, twopi
       use pepper_arrays, only: moved
       use pepper_math, only: vcrss, vdot, vequ, vhatip, vrotv, vscl, vsclip, vsep, vzero
-
-! $ Abstract
-!
-!     Evaluate a single SPK data record from a segment of type 15
-!     (Precessing Conic Propagation).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
 
 
@@ -27196,164 +26838,142 @@ contains
       end procedure spke15
 
       module procedure spkr10
-
-! $ Abstract
-!
-!     Read a single SPK data record from a segment of type 10
-!     (NORAD two line element sets).
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-! $ Detailed_Input
-!
-!     HANDLE,
-!     DESCR    are the file handle and segment descriptor for
-!              a SPK segment of type 10.
-!
-!     ET       is a target epoch, for which a data record from
-!              a specific segment is required.
-!
-! $ Detailed_Output
-!
-!     RECORD   is the record from the specified segment which,
-!              when evaluated at epoch ET, will give the state
-!              (position and velocity) of some body, relative
-!              to some center, in some inertial reference frame.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  It is assumed that the descriptor and handle supplied are
-!         for a properly constructed type 10 segment. No checks are
-!         performed to ensure this.
-!
-!     2)  If an error occurs while looking up SPK data, the error is
-!         signaled by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See argument HANDLE.
-!
-! $ Particulars
-!
-!     See the SPK Required Reading file for a description of the
-!     structure of a data type 10 segment.
-!
-! $ Examples
-!
-!     The data returned by the SPKRnn routine is in its rawest form,
-!     taken directly from the segment. As such, it will be meaningless
-!     to a user unless he/she understands the structure of the data type
-!     completely. Given that understanding, however, the SPKRxx
-!     routines might be used to "dump" and check segment data for a
-!     particular epoch.
-!
-!     C
-!     C     Get a segment applicable to a specified body and epoch.
-!     C
-!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
-!
-!     C
-!     C     Look at parts of the descriptor.
-!     C
-!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
-!           CENTER = ICD( 2 )
-!           REF    = ICD( 3 )
-!           TYPE   = ICD( 4 )
-!
-!           IF ( TYPE .EQ. 1 ) THEN
-!              CALL SPKR10 ( HANDLE, DESCR, ET, RECORD )
-!                  .
-!                  .  Look at the RECORD data.
-!                  .
-!           END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 17-JUN-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Updated entry
-!        #2 in $Exceptions section. Moved SPK required reading from
-!        $Literature_References to $Required_Reading section.
-!
-!-    SPICELIB Version 1.1.0, 09-MAR-2009 (EDW)
-!
-!        Removed declaration of unused variable DOINT.
-!
-!-    SPICELIB Version 1.0.0, 05-JAN-1994 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read record from type_10 SPK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
-
-!
-!     We have 2 nutation/obliquity terms and their rates giving us
-!     four angle components for each packet.
-!
-!
-!     BEGEL1 is the location in the record where the first
-!     two-line element set will begin.
-!
-!
-!     BEGEL2 is the location in the record where the second
-!     two-line element set will begin.
-!
-!
-!     ENSET1 and ENSET2 are the locations in the record where the
-!     last element of set 1 and set 2 will be located.
-!
-
-
-
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Read a single SPK data record from a segment of type 10
+!!     (NORAD two line element sets).
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     HANDLE,
+!!     DESCR    are the file handle and segment descriptor for
+!!              a SPK segment of type 10.
+!!
+!!     ET       is a target epoch, for which a data record from
+!!              a specific segment is required.
+!!
+!! ## Detailed Output
+!!
+!!     RECORD   is the record from the specified segment which,
+!!              when evaluated at epoch ET, will give the state
+!!              (position and velocity) of some body, relative
+!!              to some center, in some inertial reference frame.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  It is assumed that the descriptor and handle supplied are
+!!         for a properly constructed type 10 segment. No checks are
+!!         performed to ensure this.
+!!
+!!     2)  If an error occurs while looking up SPK data, the error is
+!!         signaled by a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See argument HANDLE.
+!!
+!! ## Particulars
+!!
+!!     See the SPK Required Reading file for a description of the
+!!     structure of a data type 10 segment.
+!!
+!! ## Examples
+!!
+!!     The data returned by the SPKRnn routine is in its rawest form,
+!!     taken directly from the segment. As such, it will be meaningless
+!!     to a user unless he/she understands the structure of the data type
+!!     completely. Given that understanding, however, the SPKRxx
+!!     routines might be used to "dump" and check segment data for a
+!!     particular epoch.
+!!
+!!     C
+!!     C     Get a segment applicable to a specified body and epoch.
+!!     C
+!!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
+!!
+!!     C
+!!     C     Look at parts of the descriptor.
+!!     C
+!!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!!           CENTER = ICD( 2 )
+!!           REF    = ICD( 3 )
+!!           TYPE   = ICD( 4 )
+!!
+!!           IF ( TYPE .EQ. 1 ) THEN
+!!              CALL SPKR10 ( HANDLE, DESCR, ET, RECORD )
+!!                  .
+!!                  .  Look at the RECORD data.
+!!                  .
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 17-JUN-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard. Updated entry
+!!        #2 in $Exceptions section. Moved SPK required reading from
+!!        $Literature_References to $Required_Reading section.
+!!
+!!-    SPICELIB Version 1.1.0, 09-MAR-2009 (EDW)
+!!
+!!        Removed declaration of unused variable DOINT.
+!!
+!!-    SPICELIB Version 1.0.0, 05-JAN-1994 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     read record from type_10 SPK segment
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
+!!     We have 2 nutation/obliquity terms and their rates giving us
+!!     four angle components for each packet.
+!!
+!!     BEGEL1 is the location in the record where the first
+!!     two-line element set will begin.
+!!
+!!     BEGEL2 is the location in the record where the second
+!!     two-line element set will begin.
+!!
+!!     ENSET1 and ENSET2 are the locations in the record where the
+!!     last element of set 1 and set 2 will be located.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
+      use pepper_inc_sgparam
       implicit none
-      include               'sgparam.inc'
       integer(ip), parameter :: nconst = 8
       integer(ip), parameter :: nelems = 10
       integer(ip), parameter :: nangs = 4
@@ -27456,22 +27076,21 @@ contains
 !$Procedure SPKR14 ( Read SPK record from segment, type 14 )
 
       module procedure spkr14
+!! ## Abstract
+!!
+!!     Read a single data record from a type 14 SPK segment.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Read a single data record from a type 14 SPK segment.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
       implicit none
       integer(ip) :: ends_1(1)  !! one-element copy of ends (array argument)
 
@@ -27661,26 +27280,25 @@ contains
 !$Procedure CKPFS ( C-kernel, get pointing from segment )
 
       module procedure ckpfs
+!! ## Abstract
+!!
+!!     Evaluate pointing data from a segment for a given time.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     DAF
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Evaluate pointing data from a segment for a given time.
-!
-! $ Required_Reading
-!
-!     CK
-!     DAF
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
+      use pepper_inc_ckparam
       implicit none
 
-      include               'ckparam.inc'
 
 
 ! $ Detailed_Input
@@ -28130,28 +27748,27 @@ contains
 !$Procedure PCKMAT ( PCK, get transformation matrix at time )
 
       module procedure pckmat
+!! ## Abstract
+!!
+!!     Return the name of an inertial reference frame and the 6 x 6
+!!     state transformation matrix from that frame to the body fixed
+!!     frame of a given body at a specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     ROTATION
+!!     TIME
+!!     PCK
+!!
+!! ## Keywords
+!!
+!!     ROTATION
+!!     TRANSFORMATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the name of an inertial reference frame and the 6 x 6
-!     state transformation matrix from that frame to the body fixed
-!     frame of a given body at a specified epoch.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     ROTATION
-!     TIME
-!     PCK
-!
-! $ Keywords
-!
-!     ROTATION
-!     TRANSFORMATION
-!
-! $ Declarations
-
       implicit none
 
 
@@ -28968,219 +28585,213 @@ contains
 !     SPICELIB routines.
 
       module procedure xxsgp4i
-
-! $ Abstract
-!
-!     This subroutine initializes variables for SGP4.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION         GEOPHS    ( 8 )
-!     DOUBLE PRECISION         ELEMS     ( 10 )
-!     INTEGER                  OPMODE
-!
-! $ Detailed_Input
-!
-!     GEOPHS   is a collection of 8 geophysical constants needed
-!              for computing a state. The order of these
-!              constants must be:
-!
-!              GEOPHS(1) = J2 gravitational harmonic for earth
-!              GEOPHS(2) = J3 gravitational harmonic for earth
-!              GEOPHS(3) = J4 gravitational harmonic for earth
-!
-!              These first three constants are dimensionless.
-!
-!              GEOPHS(4) = KE: Square root of the GM for earth where
-!                          GM is expressed in earth radii cubed per
-!                          minutes squared.
-!
-!              GEOPHS(5) = QO: High altitude bound for atmospheric
-!                          model in km.
-!
-!              GEOPHS(6) = SO: Low altitude bound for atmospheric
-!                          model in km.
-!
-!              GEOPHS(7) = RE: Equatorial radius of the earth in km.
-!
-!              GEOPHS(8) = AE: Distance units/earth radius
-!                          (normally 1)
-!
-!              Below are currently recommended values for these
-!              items:
-!
-!                J2 =    1.082616D-3
-!                J3 =   -2.53881D-6
-!                J4 =   -1.65597D-6
-!
-!              The next item is the square root of GM for the
-!              earth given in units of earth-radii**1.5/Minute
-!
-!                KE =    7.43669161D-2
-!
-!              The next two items give the top and
-!              bottom of the atmospheric drag model
-!              used by the type 10 ephemeris type.
-!              Don't adjust these unless you understand
-!              the full implications of such changes.
-!
-!                QO =  120.0D0
-!                SO =   78.0D0
-!
-!              The following is the equatorial radius
-!              of the earth as used by NORAD in km.
-!
-!                ER = 6378.135D0
-!
-!              The value of AE is the number of
-!              distance units per earth radii used by
-!              the NORAD state propagation software.
-!              The value should be 1 unless you've got
-!              a very good understanding of the NORAD
-!              routine SGP4 and the affect of changing
-!              this value..
-!
-!                AE =    1.0D0
-!
-!     ELEMS    is an array containing two-line element data
-!              as prescribed below. The elements XNDD6O and BSTAR
-!              must already be scaled by the proper exponent stored
-!              in the two line elements set. Moreover, the
-!              various items must be converted to the units shown
-!              here.
-!
-!                 ELEMS (  1 ) = XNDT2O in radians/minute**2
-!                 ELEMS (  2 ) = XNDD6O in radians/minute**3
-!                 ELEMS (  3 ) = BSTAR
-!                 ELEMS (  4 ) = XINCL  in radians
-!                 ELEMS (  5 ) = XNODEO in radians
-!                 ELEMS (  6 ) = EO
-!                 ELEMS (  7 ) = OMEGAO in radians
-!                 ELEMS (  8 ) = XMO    in radians
-!                 ELEMS (  9 ) = XNO    in radians/minute
-!                 ELEMS ( 10 ) = EPOCH of the elements in seconds
-!                                past ephemeris epoch J2000.
-!
-!     OPMODE   Flag indicating which technique
-!              to use to calculate sidereal time.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If radius of perigee has value less-than 1, the error
-!         SPICE(SUBORBITAL) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is based on the SGP4INIT code by David Vallado
-!     corresponding to "Revisiting Spacetrack Report #3".
-!     The intent is to maintain the original Vallado algorithm,
-!     changing code only to meet NAIF format standards and to
-!     integrate with SPICELIB.
-!
-!        1) Implemented error checks using SPICE error subsystem.
-!           On detecting an error, control returns to the calling
-!           routine. This behavior differs from the original
-!           version.
-!
-!        2) Comments prefixed with "SGP4FIX" indicate a comment
-!           from the code by Vallado et. al concerning a correction
-!           to the STR#3 code.
-!
-!        3) Eliminated the use of COMMON blocks.
-!
-!        Removed getgravconst call, replaced with GEOPHS array.
-!
-!        xBStar,
-!        xEcco,
-!        Epoch,
-!        xArgpo,
-!        xInclo,
-!        xMo,
-!        xNo,
-!        xnodeo replaced with ELEMS array.
-!        radiusearthkm replaced with ER
-!
-! $ Examples
-!
-!     Refer to $Examples section in ZZSGP4.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
-!         Propagation of the NORAD Element Sets." Spacetrack Report #3.
-!         U.S. Air Force: Aerospace Defense Command.
-!
-!     [2] Hoots, Felix R. "Spacetrack Report #6: Models for Propagation
-!         of Space Command Element Sets." Space Command,
-!         U. S. Air Force, CO.
-!
-!     [3] Hoots, Felix R., P. W. Schumacher, and R. A. Glover. 2004.
-!         History of Analytical Orbit Modeling in the U. S. Space
-!         Surveillance System. Journal of Guidance, Control, and
-!         Dynamics. 27(2):174-185.
-!
-!     [4] Vallado, David, Crawford, Paul, Hujsak, Richard,
-!         and Kelso, T.S. 2006. Revisiting Spacetrack Report #3. Paper
-!         AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
-!         Specialist Conference, August 21-24, 2006. Keystone, CO.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 30-MAY-2021 (EDW) (JDR)
-!
-!        Correction of documentation error in listing of GEOPHS
-!        constants. The definition of index 5, "High altitude bound
-!        for atmospheric model in km.", and index 6, "Low altitude
-!        bound for atmospheric model in km." were switched.
-!
-!-    SPICELIB Version 1.0.0, 11-DEC-2014 (EDW)
-!
-!        Based on routine SGP4INIT, 28-JUN-2005, Vallado 2006 [4].
-!
-!-&
-
-! $ Index_Entries
-!
-!     SGP4
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     This subroutine initializes variables for SGP4.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION         GEOPHS    ( 8 )
+!!     DOUBLE PRECISION         ELEMS     ( 10 )
+!!     INTEGER                  OPMODE
+!!
+!! ## Detailed Input
+!!
+!!     GEOPHS   is a collection of 8 geophysical constants needed
+!!              for computing a state. The order of these
+!!              constants must be:
+!!
+!!              GEOPHS(1) = J2 gravitational harmonic for earth
+!!              GEOPHS(2) = J3 gravitational harmonic for earth
+!!              GEOPHS(3) = J4 gravitational harmonic for earth
+!!
+!!              These first three constants are dimensionless.
+!!
+!!              GEOPHS(4) = KE: Square root of the GM for earth where
+!!                          GM is expressed in earth radii cubed per
+!!                          minutes squared.
+!!
+!!              GEOPHS(5) = QO: High altitude bound for atmospheric
+!!                          model in km.
+!!
+!!              GEOPHS(6) = SO: Low altitude bound for atmospheric
+!!                          model in km.
+!!
+!!              GEOPHS(7) = RE: Equatorial radius of the earth in km.
+!!
+!!              GEOPHS(8) = AE: Distance units/earth radius
+!!                          (normally 1)
+!!
+!!              Below are currently recommended values for these
+!!              items:
+!!
+!!                J2 =    1.082616D-3
+!!                J3 =   -2.53881D-6
+!!                J4 =   -1.65597D-6
+!!
+!!              The next item is the square root of GM for the
+!!              earth given in units of earth-radii**1.5/Minute
+!!
+!!                KE =    7.43669161D-2
+!!
+!!              The next two items give the top and
+!!              bottom of the atmospheric drag model
+!!              used by the type 10 ephemeris type.
+!!              Don't adjust these unless you understand
+!!              the full implications of such changes.
+!!
+!!                QO =  120.0D0
+!!                SO =   78.0D0
+!!
+!!              The following is the equatorial radius
+!!              of the earth as used by NORAD in km.
+!!
+!!                ER = 6378.135D0
+!!
+!!              The value of AE is the number of
+!!              distance units per earth radii used by
+!!              the NORAD state propagation software.
+!!              The value should be 1 unless you've got
+!!              a very good understanding of the NORAD
+!!              routine SGP4 and the affect of changing
+!!              this value..
+!!
+!!                AE =    1.0D0
+!!
+!!     ELEMS    is an array containing two-line element data
+!!              as prescribed below. The elements XNDD6O and BSTAR
+!!              must already be scaled by the proper exponent stored
+!!              in the two line elements set. Moreover, the
+!!              various items must be converted to the units shown
+!!              here.
+!!
+!!                 ELEMS (  1 ) = XNDT2O in radians/minute**2
+!!                 ELEMS (  2 ) = XNDD6O in radians/minute**3
+!!                 ELEMS (  3 ) = BSTAR
+!!                 ELEMS (  4 ) = XINCL  in radians
+!!                 ELEMS (  5 ) = XNODEO in radians
+!!                 ELEMS (  6 ) = EO
+!!                 ELEMS (  7 ) = OMEGAO in radians
+!!                 ELEMS (  8 ) = XMO    in radians
+!!                 ELEMS (  9 ) = XNO    in radians/minute
+!!                 ELEMS ( 10 ) = EPOCH of the elements in seconds
+!!                                past ephemeris epoch J2000.
+!!
+!!     OPMODE   Flag indicating which technique
+!!              to use to calculate sidereal time.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If radius of perigee has value less-than 1, the error
+!!         SPICE(SUBORBITAL) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine is based on the SGP4INIT code by David Vallado
+!!     corresponding to "Revisiting Spacetrack Report #3".
+!!     The intent is to maintain the original Vallado algorithm,
+!!     changing code only to meet NAIF format standards and to
+!!     integrate with SPICELIB.
+!!
+!!        1) Implemented error checks using SPICE error subsystem.
+!!           On detecting an error, control returns to the calling
+!!           routine. This behavior differs from the original
+!!           version.
+!!
+!!        2) Comments prefixed with "SGP4FIX" indicate a comment
+!!           from the code by Vallado et. al concerning a correction
+!!           to the STR#3 code.
+!!
+!!        3) Eliminated the use of COMMON blocks.
+!!
+!!        Removed getgravconst call, replaced with GEOPHS array.
+!!
+!!        xBStar,
+!!        xEcco,
+!!        Epoch,
+!!        xArgpo,
+!!        xInclo,
+!!        xMo,
+!!        xNo,
+!!        xnodeo replaced with ELEMS array.
+!!        radiusearthkm replaced with ER
+!!
+!! ## Examples
+!!
+!!     Refer to $Examples section in ZZSGP4.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
+!!         Propagation of the NORAD Element Sets." Spacetrack Report #3.
+!!         U.S. Air Force: Aerospace Defense Command.
+!!
+!!     [2] Hoots, Felix R. "Spacetrack Report #6: Models for Propagation
+!!         of Space Command Element Sets." Space Command,
+!!         U. S. Air Force, CO.
+!!
+!!     [3] Hoots, Felix R., P. W. Schumacher, and R. A. Glover. 2004.
+!!         History of Analytical Orbit Modeling in the U. S. Space
+!!         Surveillance System. Journal of Guidance, Control, and
+!!         Dynamics. 27(2):174-185.
+!!
+!!     [4] Vallado, David, Crawford, Paul, Hujsak, Richard,
+!!         and Kelso, T.S. 2006. Revisiting Spacetrack Report #3. Paper
+!!         AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
+!!         Specialist Conference, August 21-24, 2006. Keystone, CO.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 30-MAY-2021 (EDW) (JDR)
+!!
+!!        Correction of documentation error in listing of GEOPHS
+!!        constants. The definition of index 5, "High altitude bound
+!!        for atmospheric model in km.", and index 6, "Low altitude
+!!        bound for atmospheric model in km." were switched.
+!!
+!!-    SPICELIB Version 1.0.0, 11-DEC-2014 (EDW)
+!!
+!!        Based on routine SGP4INIT, 28-JUN-2005, Vallado 2006 [4].
+!!
+!! ## Index Entries
+!!
+!!     SGP4
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       real(wp)                 ainv
       real(wp)                 am
       real(wp)                 ao
@@ -29750,161 +29361,155 @@ contains
       end procedure xxsgp4i
 
       module procedure xxsgp4e
-
-! $ Abstract
-!
-!     This procedure is the SGP4 prediction model from Space Command.
-!     This is an updated and combined version of SGP4 and SDP4
-!     originally published separately in Spacetrack report #3 [1].
-!     This version follows the methodology from the 2006 AIAA
-!     Vallado paper [4] describing the history and development of
-!     the code.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     TLE
-!     TWO LINE ELEMENTS
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION         T
-!     DOUBLE PRECISION         STATE     ( 6 )
-!
-! $ Detailed_Input
-!
-!     T        is the time in minutes from the elements epoch
-!              at which to calculate a state from the
-!              TLE set.
-!
-! $ Detailed_Output
-!
-!     STATE    is the state produced by evaluating the input elements
-!              at the input epoch T. Units are km and km/sec.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the mean motion is less than 0, the error
-!         SPICE(BADMEANMOTION) is signaled.0D0.
-!
-!     2)  If the mean eccentricity is not bounded by [-0, the error
-!         SPICE(BADMECCENTRICITY) is signaled.001, 1].
-!
-!     3)  If the mean semimajor axis has value less-than ,, the error
-!         SPICE(BADMSEMIMAJOR) is signaled.95.
-!
-!     4)  If the perturbed eccentricity is not bounded by [0, 1], the
-!         error SPICE(BADPECCENTRICITY) is signaled.
-!
-!     5)  If the semi-latus rectum has value less-than 0, the error
-!         SPICE(BADSEMILATUS) is signaled.
-!
-!     6)  If the scaled orbit radial distance has value less than 1, the
-!         error SPICE(ORBITDECAY) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is based on the SGP4 code by David Vallado
-!     corresponding to "Revisiting Spacetrack Report #3."
-!     The intent is to maintain the original Vallado algorithm,
-!     changing code only to meet NAIF format standards and to
-!     integrate with SPICELIB.
-!
-!        1) Implemented error checks using SPICE error subsystem.
-!           On detecting an error, control returns to the calling
-!           routine. This behavior differs from the original
-!           version.
-!
-!        2) Comments prefixed with "SGP4FIX" indicate a comment
-!           from the code by Vallado et. al concerning a correction
-!           to the STR#3 code.
-!
-!        3) Eliminated the use of COMMON blocks.
-!
-!        Removed getgravconst call, replaced with GEOPHS array.
-!
-!        Capitalize all variables.
-!
-!        radiusearthkm replaced with ER
-!        VKmPerSec     replaced with KPS
-!        r, v          replaced with STATE
-!        method        replaced with DODEEP
-!        isimp         replaced with DOSIMP
-!        Error         eliminated
-!        whichconst    eliminated, function provided by GEOPHS
-!
-! $ Examples
-!
-!     Refer to $Examples section in ZZSGP4.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
-!         Propagation of the NORAD Element Sets." Spacetrack Report #3.
-!         U.S. Air Force: Aerospace Defense Command.
-!
-!     [2] Hoots, Felix R. "Spacetrack Report #6: Models for Propagation
-!         of Space Command Element Sets." Space Command,
-!         U. S. Air Force, CO.
-!
-!     [3] Hoots, Felix R., P. W. Schumacher, and R. A. Glover. 2004.
-!         History of Analytical Orbit Modeling in the U. S. Space
-!         Surveillance System. Journal of Guidance, Control, and
-!         Dynamics. 27(2):174-185.
-!
-!     [4] Vallado, David, Crawford, Paul, Hujsak, Richard,
-!         and Kelso, T.S. 2006. Revisiting Spacetrack Report #3. Paper
-!         AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
-!         Specialist Conference, August 21-24, 2006. Keystone, CO.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 30-MAY-2021 (BVS) (JDR)
-!
-!        Added missing 'D' to literal DP constants.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 15-SEP-2014 (EDW)
-!
-!        Based on routine SGP4, 28-JUN-2005 [4].
-!
-!-&
-
-! $ Index_Entries
-!
-!     SGP4
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     This procedure is the SGP4 prediction model from Space Command.
+!!     This is an updated and combined version of SGP4 and SDP4
+!!     originally published separately in Spacetrack report #3 [1].
+!!     This version follows the methodology from the 2006 AIAA
+!!     Vallado paper [4] describing the history and development of
+!!     the code.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     TLE
+!!     TWO LINE ELEMENTS
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION         T
+!!     DOUBLE PRECISION         STATE     ( 6 )
+!!
+!! ## Detailed Input
+!!
+!!     T        is the time in minutes from the elements epoch
+!!              at which to calculate a state from the
+!!              TLE set.
+!!
+!! ## Detailed Output
+!!
+!!     STATE    is the state produced by evaluating the input elements
+!!              at the input epoch T. Units are km and km/sec.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the mean motion is less than 0, the error
+!!         SPICE(BADMEANMOTION) is signaled.0D0.
+!!
+!!     2)  If the mean eccentricity is not bounded by [-0, the error
+!!         SPICE(BADMECCENTRICITY) is signaled.001, 1].
+!!
+!!     3)  If the mean semimajor axis has value less-than ,, the error
+!!         SPICE(BADMSEMIMAJOR) is signaled.95.
+!!
+!!     4)  If the perturbed eccentricity is not bounded by [0, 1], the
+!!         error SPICE(BADPECCENTRICITY) is signaled.
+!!
+!!     5)  If the semi-latus rectum has value less-than 0, the error
+!!         SPICE(BADSEMILATUS) is signaled.
+!!
+!!     6)  If the scaled orbit radial distance has value less than 1, the
+!!         error SPICE(ORBITDECAY) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine is based on the SGP4 code by David Vallado
+!!     corresponding to "Revisiting Spacetrack Report #3."
+!!     The intent is to maintain the original Vallado algorithm,
+!!     changing code only to meet NAIF format standards and to
+!!     integrate with SPICELIB.
+!!
+!!        1) Implemented error checks using SPICE error subsystem.
+!!           On detecting an error, control returns to the calling
+!!           routine. This behavior differs from the original
+!!           version.
+!!
+!!        2) Comments prefixed with "SGP4FIX" indicate a comment
+!!           from the code by Vallado et. al concerning a correction
+!!           to the STR#3 code.
+!!
+!!        3) Eliminated the use of COMMON blocks.
+!!
+!!        Removed getgravconst call, replaced with GEOPHS array.
+!!
+!!        Capitalize all variables.
+!!
+!!        radiusearthkm replaced with ER
+!!        VKmPerSec     replaced with KPS
+!!        r, v          replaced with STATE
+!!        method        replaced with DODEEP
+!!        isimp         replaced with DOSIMP
+!!        Error         eliminated
+!!        whichconst    eliminated, function provided by GEOPHS
+!!
+!! ## Examples
+!!
+!!     Refer to $Examples section in ZZSGP4.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
+!!         Propagation of the NORAD Element Sets." Spacetrack Report #3.
+!!         U.S. Air Force: Aerospace Defense Command.
+!!
+!!     [2] Hoots, Felix R. "Spacetrack Report #6: Models for Propagation
+!!         of Space Command Element Sets." Space Command,
+!!         U. S. Air Force, CO.
+!!
+!!     [3] Hoots, Felix R., P. W. Schumacher, and R. A. Glover. 2004.
+!!         History of Analytical Orbit Modeling in the U. S. Space
+!!         Surveillance System. Journal of Guidance, Control, and
+!!         Dynamics. 27(2):174-185.
+!!
+!!     [4] Vallado, David, Crawford, Paul, Hujsak, Richard,
+!!         and Kelso, T.S. 2006. Revisiting Spacetrack Report #3. Paper
+!!         AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
+!!         Specialist Conference, August 21-24, 2006. Keystone, CO.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0, 30-MAY-2021 (BVS) (JDR)
+!!
+!!        Added missing 'D' to literal DP constants.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 15-SEP-2014 (EDW)
+!!
+!!        Based on routine SGP4, 28-JUN-2005 [4].
+!!
+!! ## Index Entries
+!!
+!!     SGP4
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       real(wp)                 ainv
       real(wp)                 am
       real(wp)                 ao

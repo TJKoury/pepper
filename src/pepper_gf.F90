@@ -14,22 +14,21 @@ contains
 !$Procedure GFBAIL ( GF, default bailout function )
 
       module procedure gfbail
-
-! $ Abstract
-!
-!     Serve as a placeholder for an interrupt detection function.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     INTERRUPT
-!     UTILITY
-!
-! $ Declarations
-
+!! ## Abstract
+!!
+!!     Serve as a placeholder for an interrupt detection function.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     INTERRUPT
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       implicit none
 
 ! $ Detailed_Input
@@ -201,27 +200,26 @@ contains
 !$Procedure GFSTOL ( GF, set a tolerance value for GF )
 
       module procedure gfstol
+!! ## Abstract
+!!
+!!     Override the default GF convergence value used in the high
+!!     level GF routines.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Override the default GF convergence value used in the high
-!     level GF routines.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     GEOMETRY
-!
-! $ Declarations
-
+      use pepper_inc_zzholdd
       implicit none
       real(wp) :: putval  !! copy of the value to store
 
-      include               'zzholdd.inc'
 
 
 ! $ Detailed_Input
@@ -526,400 +524,370 @@ contains
       end procedure gfstol
 
       module procedure zzgfcoq
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Return the value of a specified coordinate of a vector.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     SEARCH
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     VECDEF     Every coordinate computed by this routine is a
-!                function of an underlying vector. VECDEF is a short
-!                string describing the means by which the vector of
-!                interest is defined. Only parameters from the Fortran
-!                INCLUDE file zzgf.inc should be used. Parameter names
-!                and meanings are:
-!
-!                   POSDEF               Vector is position of
-!                                        target relative to observer.
-!
-!                   SOBDEF               Vector is sub-observer
-!                                        point on target body.  Vector
-!                                        points from target body
-!                                        center to sub-observer point.
-!                                        The target must be an extended
-!                                        body modeled as a triaxial
-!                                        ellipsoid.
-!
-!                   SINDEF               Vector is ray-surface intercept
-!                                        point on target body. Vector
-!                                        points from target body
-!                                        center to sub-observer point.
-!                                        The target must be an extended
-!                                        body modeled as a triaxial
-!                                        ellipsoid.
-!
-!                Case, leading and trailing blanks ARE significant
-!                in the string VECDEF.
-!
-!     METHOD     is a string specifying the computational method
-!                applicable to the vector of interest. When VECDEF
-!                is the parameter
-!
-!                   SOBDEF
-!
-!                METHOD should be set to one of the values accepted
-!                by the SPICELIB routine SUBPNT.
-!
-!                When VECDEF is the parameter
-!
-!                   SINDEF
-!
-!                METHOD should be set to one of the values accepted
-!                by the SPICELIB routine SINCPT.
-!
-!                METHOD is ignored if VECDEF is set to
-!
-!                   POSDEF
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string METHOD.
-!
-!     TRGID      is the NAIF ID code of the target object.
-!
-!     ET         is the time, expressed as ephemeris seconds past J2000
-!                TDB, at which the specified coordinate is to be
-!                computed.
-!
-!     REF        is the name of the reference frame relative to which
-!                the vector of interest is specified.  The specified
-!                condition applies to the specified coordinate of
-!                of this vector in frame REF.
-!
-!                When geodetic or planetographic coordinates are used,
-!                the reference ellipsoid is assumed to be that
-!                associated with the central body of the frame
-!                designated by REF. In this case, the central body of
-!                the frame must be an extended body.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string REF.
-!
-!     ABCORR     indicates the aberration corrections to be applied to
-!                the state of the target body to account for one-way
-!                light time and stellar aberration.  The orientation
-!                of the target body will also be corrected for one-way
-!                light time when light time corrections are requested.
-!
-!                Supported aberration correction options for
-!                observation (case where radiation is received by
-!                observer at ET) are:
-!
-!                   NONE           No correction.
-!                   LT             Light time only.
-!                   LT+S           Light time and stellar aberration.
-!                   CN             Converged Newtonian (CN) light time.
-!                   CN+S           CN light time and stellar aberration.
-!
-!                Supported aberration correction options for
-!                transmission (case where radiation is emitted from
-!                observer at ET) are:
-!
-!                   XLT            Light time only.
-!                   XLT+S          Light time and stellar aberration.
-!                   XCN            Converged Newtonian (CN) light time.
-!                   XCN+S          CN light time and stellar aberration.
-!
-!                For detailed information, see the geometry finder
-!                required reading, gf.req.  Also see the header of
-!                SPKEZR, which contains a detailed discussion of
-!                aberration corrections.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string ABCORR.
-!
-!     OBSID      is the NAIF ID code of the observer.
-!
-!     DREF       is the name of the reference frame relative to which a
-!                ray's direction vector is expressed. This may be any
-!                frame supported by the SPICE system, including
-!                built-in frames (documented in the Frames Required
-!                Reading) and frames defined by a loaded frame kernel
-!                (FK). The string DREF is case-insensitive, and leading
-!                and trailing blanks in FIXREF are not significant.
-!
-!                When DREF designates a non-inertial frame, the
-!                orientation of the frame is evaluated at an epoch
-!                dependent on the frame's center and, if the center is
-!                not the observer, on the selected aberration
-!                correction. See the description of the direction
-!                vector DVEC for details.
-!
-!     DVEC       Ray direction vector emanating from the observer. The
-!                intercept with the target body's surface of the ray
-!                defined by the observer and DVEC is sought.
-!
-!                DVEC is specified relative to the reference frame
-!                designated by DREF.
-!
-!                Non-inertial reference frames are treated as follows:
-!                if the center of the frame is at the observer's
-!                location, the frame is evaluated at ET. If the frame's
-!                center is located elsewhere, then letting LTCENT be
-!                the one-way light time between the observer and the
-!                central body associated with the frame, the
-!                orientation of the frame is evaluated at ET-LTCENT,
-!                ET+LTCENT, or ET depending on whether the requested
-!                aberration correction is, respectively, for received
-!                radiation, transmitted radiation, or is omitted.
-!                LTCENT is computed using the method indicated by
-!                ABCORR.
-!
-!     CRDSYS     is the name of the coordinate system to which the
-!                coordinate of interest belongs. Allowed values are
-!                those defined in the GF Fortran INCLUDE file
-!
-!                   zzgf.inc.
-!
-!                Case, leading and trailing blanks ARE significant
-!                in the string CRDSYS.
-!
-!     CTRID      is the NAIF ID code of the input frame REF's center.
-!
-!     RE         is the equatorial radius associated with the body
-!                designated by CTRID. RE is used only when the
-!                coordinate system is GEOSYS or PGRSYS; otherwise
-!                RE may be set to 0.D0.
-!
-!     F          is the flattening coefficient associated with the body
-!                designated by CTRID. RE is used only when the
-!                coordinate system is GEOSYS or PGRSYS; otherwise RE
-!                may be set to 0.D0.
-!
-!     CRDNAM     is the name of the coordinate of interest:  this is
-!                the coordinate to which the specified condition
-!                applies.  The set of coordinate names is a function of
-!                the coordinate system. Allowed values are those
-!                defined in the GF Fortran INCLUDE file
-!
-!                   zzgf.inc.
-!
-!                Case, leading and trailing blanks ARE significant
-!                in the string CRDNAM.
-!
-! $ Detailed_Output
-!
-!     VALUE     is the specified coordinate, evaluated at the epoch ET.
-!               Coordinates having dimensions of length have units of
-!               km. Coordinates having angular dimensions have units of
-!               radians.
-!
-!               VALUE is defined if and only if the output argument
-!               FOUND is set to .TRUE.
-!
-!     FOUND     is a logical flag indicating whether the requested
-!               coordinate could be computed. FOUND is set to .FALSE.
-!               if and only if the vector definition is SINDEF and
-!               either
-!
-!                  - no surface intercept is found
-!
-!                  - the velocity of the surface intercept is not
-!                    computable
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the vector definition VECDEF is not recognized,
-!         the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     2)  If the vector definition is either SOBDEF or SINDEF
-!         and the computation method METHOD is not recognized,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     3)  If the aberration correction ABCORR is not recognized,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     4)  If the coordinate system name CRDSYS is not recognized,
-!         the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     5)  If the coordinate name CRDNAM is not recognized,
-!         the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     6)  If the frame REF is not recognized by the frames subsystem,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     7)  If VECDEF calls for a computation involving a target surface
-!         point and the radii defining the reference ellipsoid
-!         associated with the target body are not available in the
-!         kernel pool, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-!     8)  If VECDEF calls for a computation involving a target surface
-!         point and the name and ID code of the frame associated with
-!         the target body is not available from the frame subsystem,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     9)  If ephemeris data are required but not available to compute
-!         the state of the target, the coordinate frame REF's center,
-!         or the input ray's frame DREF's center relative to the
-!         observer, the error will be diagnosed by routines in the call
-!         tree of this routine.
-!
-!     10) If orientation data for the frame REF are not available,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     11) If orientation data for the frame DREF are required but
-!         not available, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-! $ Files
-!
-!     This routine doesn't directly participate in SPICE kernel loading
-!     or unloading.  However, a variety of SPICE kernels must be loaded
-!     in order for this routine to work:
-!
-!        - Since all coordinate computations supported by this routine
-!          depend on observer-target vectors, at a minimum, SPK files
-!          providing ephemeris data enabling computation of these
-!          vectors are required.
-!
-!        - If non-inertial reference frames are used, then PCK
-!          files, frame kernels, C-kernels, and SCLK kernels may be
-!          needed.
-!
-!        - If the coordinate of interest is defined in terms of a target
-!          surface point, then (currently) a PCK providing radii for a
-!          triaxial shape model must be loaded.
-!
-!        - If geodetic or planetographic coordinates are used, then a
-!          PCK providing radii for a triaxial shape model must be
-!          loaded.
-!
-!     See the Files section of GFEVNT's header for further information.
-!
-! $ Particulars
-!
-!     This routine is used by the GF coordinate utility routines in
-!     order to solve for time windows on which specified mathematical
-!     conditions involving coordinates are satisfied.
-!
-! $ Examples
-!
-!     See ZZGFCOU.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice.  These routines should be called only
-!         by SPICELIB routines.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0 12-MAY-2009 (NJB)
-!
-!        Upgraded to support targets and observers having
-!        no names associated with their ID codes.
-!
-!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     compute coordinates of a vector
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-!
-!     The Ith coordinate system in the array SYSNMS has coordinates
-!     in the Ith row of the array CRDNMS. This association must be
-!     preserved when this routine is updated.
-!
-
-!
-!     The order of the coordinate names in the Ith row of this array
-!     matches the order of the outputs of the corresponding
-!     SPICELIB routine REC*, which maps a Cartesian vector to
-!     the Ith coordinate system in the array SYSNMS. Again, this
-!     order must be preserved.
-!
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Return the value of a specified coordinate of a vector.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     VECDEF     Every coordinate computed by this routine is a
+!!                function of an underlying vector. VECDEF is a short
+!!                string describing the means by which the vector of
+!!                interest is defined. Only parameters from the Fortran
+!!                INCLUDE file zzgf.inc should be used. Parameter names
+!!                and meanings are:
+!!
+!!                   POSDEF               Vector is position of
+!!                                        target relative to observer.
+!!
+!!                   SOBDEF               Vector is sub-observer
+!!                                        point on target body.  Vector
+!!                                        points from target body
+!!                                        center to sub-observer point.
+!!                                        The target must be an extended
+!!                                        body modeled as a triaxial
+!!                                        ellipsoid.
+!!
+!!                   SINDEF               Vector is ray-surface intercept
+!!                                        point on target body. Vector
+!!                                        points from target body
+!!                                        center to sub-observer point.
+!!                                        The target must be an extended
+!!                                        body modeled as a triaxial
+!!                                        ellipsoid.
+!!
+!!                Case, leading and trailing blanks ARE significant
+!!                in the string VECDEF.
+!!
+!!     METHOD     is a string specifying the computational method
+!!                applicable to the vector of interest. When VECDEF
+!!                is the parameter
+!!
+!!                   SOBDEF
+!!
+!!                METHOD should be set to one of the values accepted
+!!                by the SPICELIB routine SUBPNT.
+!!
+!!                When VECDEF is the parameter
+!!
+!!                   SINDEF
+!!
+!!                METHOD should be set to one of the values accepted
+!!                by the SPICELIB routine SINCPT.
+!!
+!!                METHOD is ignored if VECDEF is set to
+!!
+!!                   POSDEF
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string METHOD.
+!!
+!!     TRGID      is the NAIF ID code of the target object.
+!!
+!!     ET         is the time, expressed as ephemeris seconds past J2000
+!!                TDB, at which the specified coordinate is to be
+!!                computed.
+!!
+!!     REF        is the name of the reference frame relative to which
+!!                the vector of interest is specified.  The specified
+!!                condition applies to the specified coordinate of
+!!                of this vector in frame REF.
+!!
+!!                When geodetic or planetographic coordinates are used,
+!!                the reference ellipsoid is assumed to be that
+!!                associated with the central body of the frame
+!!                designated by REF. In this case, the central body of
+!!                the frame must be an extended body.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string REF.
+!!
+!!     ABCORR     indicates the aberration corrections to be applied to
+!!                the state of the target body to account for one-way
+!!                light time and stellar aberration.  The orientation
+!!                of the target body will also be corrected for one-way
+!!                light time when light time corrections are requested.
+!!
+!!                Supported aberration correction options for
+!!                observation (case where radiation is received by
+!!                observer at ET) are:
+!!
+!!                   NONE           No correction.
+!!                   LT             Light time only.
+!!                   LT+S           Light time and stellar aberration.
+!!                   CN             Converged Newtonian (CN) light time.
+!!                   CN+S           CN light time and stellar aberration.
+!!
+!!                Supported aberration correction options for
+!!                transmission (case where radiation is emitted from
+!!                observer at ET) are:
+!!
+!!                   XLT            Light time only.
+!!                   XLT+S          Light time and stellar aberration.
+!!                   XCN            Converged Newtonian (CN) light time.
+!!                   XCN+S          CN light time and stellar aberration.
+!!
+!!                For detailed information, see the geometry finder
+!!                required reading, gf.req.  Also see the header of
+!!                SPKEZR, which contains a detailed discussion of
+!!                aberration corrections.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string ABCORR.
+!!
+!!     OBSID      is the NAIF ID code of the observer.
+!!
+!!     DREF       is the name of the reference frame relative to which a
+!!                ray's direction vector is expressed. This may be any
+!!                frame supported by the SPICE system, including
+!!                built-in frames (documented in the Frames Required
+!!                Reading) and frames defined by a loaded frame kernel
+!!                (FK). The string DREF is case-insensitive, and leading
+!!                and trailing blanks in FIXREF are not significant.
+!!
+!!                When DREF designates a non-inertial frame, the
+!!                orientation of the frame is evaluated at an epoch
+!!                dependent on the frame's center and, if the center is
+!!                not the observer, on the selected aberration
+!!                correction. See the description of the direction
+!!                vector DVEC for details.
+!!
+!!     DVEC       Ray direction vector emanating from the observer. The
+!!                intercept with the target body's surface of the ray
+!!                defined by the observer and DVEC is sought.
+!!
+!!                DVEC is specified relative to the reference frame
+!!                designated by DREF.
+!!
+!!                Non-inertial reference frames are treated as follows:
+!!                if the center of the frame is at the observer's
+!!                location, the frame is evaluated at ET. If the frame's
+!!                center is located elsewhere, then letting LTCENT be
+!!                the one-way light time between the observer and the
+!!                central body associated with the frame, the
+!!                orientation of the frame is evaluated at ET-LTCENT,
+!!                ET+LTCENT, or ET depending on whether the requested
+!!                aberration correction is, respectively, for received
+!!                radiation, transmitted radiation, or is omitted.
+!!                LTCENT is computed using the method indicated by
+!!                ABCORR.
+!!
+!!     CRDSYS     is the name of the coordinate system to which the
+!!                coordinate of interest belongs. Allowed values are
+!!                those defined in the GF Fortran INCLUDE file
+!!
+!!                   zzgf.inc.
+!!
+!!                Case, leading and trailing blanks ARE significant
+!!                in the string CRDSYS.
+!!
+!!     CTRID      is the NAIF ID code of the input frame REF's center.
+!!
+!!     RE         is the equatorial radius associated with the body
+!!                designated by CTRID. RE is used only when the
+!!                coordinate system is GEOSYS or PGRSYS; otherwise
+!!                RE may be set to 0.D0.
+!!
+!!     F          is the flattening coefficient associated with the body
+!!                designated by CTRID. RE is used only when the
+!!                coordinate system is GEOSYS or PGRSYS; otherwise RE
+!!                may be set to 0.D0.
+!!
+!!     CRDNAM     is the name of the coordinate of interest:  this is
+!!                the coordinate to which the specified condition
+!!                applies.  The set of coordinate names is a function of
+!!                the coordinate system. Allowed values are those
+!!                defined in the GF Fortran INCLUDE file
+!!
+!!                   zzgf.inc.
+!!
+!!                Case, leading and trailing blanks ARE significant
+!!                in the string CRDNAM.
+!!
+!! ## Detailed Output
+!!
+!!     VALUE     is the specified coordinate, evaluated at the epoch ET.
+!!               Coordinates having dimensions of length have units of
+!!               km. Coordinates having angular dimensions have units of
+!!               radians.
+!!
+!!               VALUE is defined if and only if the output argument
+!!               FOUND is set to .TRUE.
+!!
+!!     FOUND     is a logical flag indicating whether the requested
+!!               coordinate could be computed. FOUND is set to .FALSE.
+!!               if and only if the vector definition is SINDEF and
+!!               either
+!!
+!!                  - no surface intercept is found
+!!
+!!                  - the velocity of the surface intercept is not
+!!                    computable
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the vector definition VECDEF is not recognized,
+!!         the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     2)  If the vector definition is either SOBDEF or SINDEF
+!!         and the computation method METHOD is not recognized,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     3)  If the aberration correction ABCORR is not recognized,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     4)  If the coordinate system name CRDSYS is not recognized,
+!!         the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     5)  If the coordinate name CRDNAM is not recognized,
+!!         the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     6)  If the frame REF is not recognized by the frames subsystem,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     7)  If VECDEF calls for a computation involving a target surface
+!!         point and the radii defining the reference ellipsoid
+!!         associated with the target body are not available in the
+!!         kernel pool, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!!     8)  If VECDEF calls for a computation involving a target surface
+!!         point and the name and ID code of the frame associated with
+!!         the target body is not available from the frame subsystem,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     9)  If ephemeris data are required but not available to compute
+!!         the state of the target, the coordinate frame REF's center,
+!!         or the input ray's frame DREF's center relative to the
+!!         observer, the error will be diagnosed by routines in the call
+!!         tree of this routine.
+!!
+!!     10) If orientation data for the frame REF are not available,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     11) If orientation data for the frame DREF are required but
+!!         not available, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!! ## Files
+!!
+!!     This routine doesn't directly participate in SPICE kernel loading
+!!     or unloading.  However, a variety of SPICE kernels must be loaded
+!!     in order for this routine to work:
+!!
+!!        - Since all coordinate computations supported by this routine
+!!          depend on observer-target vectors, at a minimum, SPK files
+!!          providing ephemeris data enabling computation of these
+!!          vectors are required.
+!!
+!!        - If non-inertial reference frames are used, then PCK
+!!          files, frame kernels, C-kernels, and SCLK kernels may be
+!!          needed.
+!!
+!!        - If the coordinate of interest is defined in terms of a target
+!!          surface point, then (currently) a PCK providing radii for a
+!!          triaxial shape model must be loaded.
+!!
+!!        - If geodetic or planetographic coordinates are used, then a
+!!          PCK providing radii for a triaxial shape model must be
+!!          loaded.
+!!
+!!     See the Files section of GFEVNT's header for further information.
+!!
+!! ## Particulars
+!!
+!!     This routine is used by the GF coordinate utility routines in
+!!     order to solve for time windows on which specified mathematical
+!!     conditions involving coordinates are satisfied.
+!!
+!! ## Examples
+!!
+!!     See ZZGFCOU.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice.  These routines should be called only
+!!         by SPICELIB routines.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0 12-MAY-2009 (NJB)
+!!
+!!        Upgraded to support targets and observers having
+!!        no names associated with their ID codes.
+!!
+!!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     compute coordinates of a vector
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     The Ith coordinate system in the array SYSNMS has coordinates
+!!     in the Ith row of the array CRDNMS. This association must be
+!!     preserved when this routine is updated.
+!!
+!!     The order of the coordinate names in the Ith row of this array
+!!     matches the order of the outputs of the corresponding
+!!     SPICELIB routine REC*, which maps a Cartesian vector to
+!!     the Ith coordinate system in the array SYSNMS. Again, this
+!!     order must be preserved.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc, moved
       use pepper_math, only: reccyl, reclat, recrad, recsph
+      use pepper_inc_gf
+      use pepper_inc_zzgf
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: crdlen = 32
       integer(ip), parameter :: nsys = 7
@@ -1140,33 +1108,32 @@ contains
 !$Procedure ZZGFCPRX ( GF, coordinate derivative proxy )
 
       module procedure zzgfcprx
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Return the signs of a Cartesian velocity vector's coordinates
+!!     when the velocity is transformed to a given coordinate system.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATE
+!!     GEOMETRY
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleari
       use pepper_math, only: latrec, mxv, vdot, vhat, vhatip, vpack, vzero
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Return the signs of a Cartesian velocity vector's coordinates
-!     when the velocity is transformed to a given coordinate system.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATE
-!     GEOMETRY
-!     UTILITY
-!
-! $ Declarations
-
+      use pepper_inc_zzgf
       implicit none
-      include 'zzgf.inc'
 
 
 ! $ Detailed_Input
@@ -1815,34 +1782,33 @@ contains
 !$Procedure      ZZGFDIQ ( GF, return distance between objects )
 
       module procedure zzgfdiq
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Return the distance between two ephemeris objects, optionally
+!!     corrected for light time and stellar aberration.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     DISTANCE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vnorm
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Return the distance between two ephemeris objects, optionally
-!     corrected for light time and stellar aberration.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     DISTANCE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
 
@@ -1974,31 +1940,30 @@ contains
 !$Procedure   ZZGFDSPS  ( GF, display string  )
 
       module procedure zzgfdsps
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Display a character string at a position at the first column on
+!!     the previous line on the screen.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     STRING
+!!     DISPLAY
+!!     CURSOR
+!!     POSITION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim, suffix
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Display a character string at a position at the first column on
-!     the previous line on the screen.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     STRING
-!     DISPLAY
-!     CURSOR
-!     POSITION
-!
-! $ Declarations
-
       implicit none
 
 
@@ -2471,410 +2436,404 @@ contains
 !     This routine should never be called directly.
 
       module procedure zzgffvin
-
-! $ Abstract
-!
-!    Perform initialization functions for visibility state
-!    determination.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     FRAMES
-!     PCK
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     SEARCH
-!     GEOMETRY
-!     VISIBILITY
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         INST
-!     CHARACTER*(*)         TSHAPE
-!     DOUBLE PRECISION      RAYDIR ( 3 )
-!     CHARACTER*(*)         TARGET
-!     CHARACTER*(*)         TFRAME
-!     CHARACTER*(*)         ABCORR
-!     CHARACTER*(*)         OBSRVR
-!
-! $ Detailed_Input
-!
-!     INST       indicates the name of the instrument, such as a
-!                spacecraft-mounted framing camera, the field of view
-!                (FOV) of which is to be used for a target intersection
-!                search: times when the specified target intersects the
-!                region of space corresponding to the FOV are sought.
-!
-!                The position of the instrument designated by INST is
-!                considered to coincide with that of the ephemeris
-!                object designated by the input argument OBSRVR (see
-!                description below).
-!
-!                INST must have a corresponding NAIF ID and a frame
-!                defined, as is normally done in a frame kernel. It
-!                must also have an associated reference frame and a FOV
-!                shape, boresight and boundary vertices (or reference
-!                vector and reference angles) defined, as is usually
-!                done in an instrument kernel.
-!
-!                See the header of the SPICELIB routine GETFOV for a
-!                description of the required parameters associated with
-!                an instrument.
-!
-!     TSHAPE     is a string indicating the geometric model used to
-!                represent the location and shape of the target body.
-!                The target body may be represented by either an
-!                ephemeris object or a ray emanating from the observer.
-!
-!                The supported values of TSHAPE are:
-!
-!                   'ELLIPSOID'     The target is an ephemeris object.
-!
-!                                   The target's shape is represented
-!                                   using triaxial ellipsoid model,
-!                                   with radius values provided via the
-!                                   kernel pool. A kernel variable
-!                                   having a name of the form
-!
-!                                      'BODYnnn_RADII'
-!
-!                                   where nnn represents the NAIF
-!                                   integer code associated with the
-!                                   body, must be present in the kernel
-!                                   pool. This variable must be
-!                                   associated with three numeric
-!                                   values giving the lengths of the
-!                                   ellipsoid's X, Y, and Z semi-axes.
-!
-!                   'POINT'         The target is an ephemeris object.
-!                                   The body is treated as a single
-!                                   point.
-!
-!                   'RAY'           The target is NOT an ephemeris
-!                                   object. Instead, the target is
-!                                   considered to be represented by the
-!                                   ray emanating from the observer's
-!                                   location and having direction
-!                                   vector RAYDIR. The target is
-!                                   considered to be visible if and
-!                                   only if the ray is contained within
-!                                   the space bounded by the instrument
-!                                   FOV.
-!
-!                Case and leading or trailing blanks are not
-!                significant in the string TSHAPE.
-!
-!     RAYDIR     is the direction vector associated with a ray
-!                representing the target. RAYDIR is used if and only
-!                if TSHAPE (see description above) indicates the
-!                target is modeled as a ray.
-!
-!     TARGET     is the name of the target body, the appearances of
-!                which in the specified instrument's field of view are
-!                sought. The body must be an ephemeris object.
-!
-!                Optionally, you may supply the integer NAIF ID code
-!                for the body as a string. For example both 'MOON' and
-!                '301' are legitimate strings that designate the Moon.
-!
-!                Case and leading or trailing blanks are not
-!                significant in the string TARGET.
-!
-!                The input argument TARGET is used if and only if the
-!                target is NOT modeled as ray; equivalently, the input
-!                argument TSHAPE (see description above) does not
-!                contain a string equivalent---that is, ignoring case
-!                and leading and trailing blanks---to 'RAY'.
-!
-!                TARGET may be set to a blank string if the target is
-!                modeled as a ray.
-!
-!     TFRAME     is the name of the reference frame associated with the
-!                target. Examples of such names are 'IAU_SATURN'
-!                (for Saturn) and 'ITRF93' (for the Earth).
-!
-!                If the target is an ephemeris object modeled as an
-!                ellipsoid, TFRAME must designate a body-fixed
-!                reference frame centered on the target body.
-!
-!                If the target is an ephemeris object modeled as a
-!                point, TFRAME is ignored; TFRAME should be left blank.
-!
-!                If the target is modeled as a ray, TFRAME may
-!                designate any reference frame. Since light time
-!                corrections are not supported for rays, the
-!                orientation of the frame is always evaluated at the
-!                epoch associated with the observer, as opposed to the
-!                epoch associated with the light-time corrected
-!                position of the frame center.
-!
-!                Case and leading or trailing blanks bracketing a
-!                non-blank frame name are not significant in the string
-!                TFRAME.
-!
-!     ABCORR     indicates the aberration corrections to be applied
-!                when computing the target's position and orientation.
-!                The supported values of ABCORR depend on the target
-!                representation.
-!
-!                If the target is represented by a ray, the aberration
-!                correction options are
-!
-!                   'NONE'          No correction.
-!                   'S'             Stellar aberration correction,
-!                                   reception case.
-!                   'XS'            Stellar aberration correction,
-!                                   transmission case.
-!
-!                If the target is an ephemeris object, the aberration
-!                correction options are those supported by the SPICE
-!                SPK system. For remote sensing applications, where the
-!                apparent position and orientation of the target seen
-!                by the observer are desired, normally either of the
-!                corrections
-!
-!                   'LT+S'
-!                   'CN+S'
-!
-!                should be used. These and the other supported options
-!                are described below.
-!
-!                Supported aberration correction options for
-!                observation (case where radiation is received by
-!                observer at ET) are:
-!
-!                   'NONE'       No correction.
-!                   'LT'         Light time only
-!                   'LT+S'       Light time and stellar aberration.
-!                   'CN'         Converged Newtonian (CN) light time.
-!                   'CN+S'       CN light time and stellar aberration.
-!
-!                Supported aberration correction options for
-!                transmission (case where radiation is emitted from
-!                observer at ET) are:
-!
-!                   'XLT'        Light time only.
-!                   'XLT+S'      Light time and stellar aberration.
-!                   'XCN'        Converged Newtonian (CN) light time.
-!                   'XCN+S'      CN light time and stellar aberration.
-!
-!                For detailed information, see the geometry finder
-!                required reading, gf.req.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string ABCORR.
-!
-!     OBSRVR     is the name of the body from which the target is
-!                observed. The instrument designated by INST is treated
-!                as if it were co-located with the observer.
-!
-!                Optionally, you may supply the integer NAIF ID code
-!                for the body as a string.
-!
-!                Case and leading or trailing blanks are not
-!                significant in the string OBSRVR.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the observer's name cannot be mapped to an ID code, the
-!         error SPICE(IDCODENOTFOUND) is signaled.
-!
-!     2)  If the target is an ephemeris object and its name cannot be
-!         mapped to an ID code, the error SPICE(IDCODENOTFOUND) is
-!         signaled. If the target is represented by a ray, the input
-!         target name argument is ignored.
-!
-!     3)  If target is an ephemeris object, and the observer and
-!         target have the same ID codes, the error
-!         SPICE(BODIESNOTDISTINCT) is signaled.
-!
-!     4)  If target is an ephemeris object, and the target shape
-!         is not equivalent to PTSHAP (point) or EDSHAP (ellipsoid),
-!         the error SPICE(INVALIDSHAPE) is signaled.
-!
-!     5)  If target is an ephemeris object, the target shape is
-!         equivalent to EDSHAP (ellipsoid), and the reference frame
-!         argument TFRAME is blank, the error SPICE(INVALIDFRAME) is
-!         signaled.
-!
-!     6)  If target is an ephemeris object, the target shape is
-!         equivalent to EDSHAP (ellipsoid), and the reference frame
-!         argument TFRAME cannot be mapped to a frame ID code, the
-!         error SPICE(INVALIDFRAME) is signaled.
-!
-!     7)  If target is an ephemeris object, the target shape is
-!         equivalent to EDSHAP (ellipsoid), and the reference frame
-!         argument TFRAME's ID cannot be mapped to a frame description,
-!         the error SPICE(FRAMEINFONOTFOUND) is signaled.
-!
-!     8)  If target is an ephemeris object, the target shape is
-!         equivalent to EDSHAP (ellipsoid), and the reference frame
-!         specified by TFRAME is not centered on the target body, the
-!         error SPICE(INVALIDFRAME) is signaled.
-!
-!     9)  If the target is represented by a ray and the aberration
-!         correction flag calls for light time correction, the error
-!         SPICE(INVALIDOPTION) is signaled.
-!
-!     10) If target is an ephemeris object and the aberration
-!         correction flag calls for a correction not supported by
-!         the SPICE SPK system, the error is diagnosed by a routine
-!         in the call tree of this routine.
-!
-!     11) If target is an ephemeris object, the target shape is
-!         equivalent to EDSHAP (ellipsoid), and the kernel pool
-!         does not contain radii for the target body,
-!         not  target body, the error is diagnosed by a routine
-!         in the call tree of this routine.
-!
-!     12) If target is an ephemeris object, the target shape is
-!         equivalent to EDSHAP (ellipsoid), and the kernel pool
-!         contains the wrong number of radii for the target body, the
-!         error SPICE(INVALIDDIMENSION) is signaled.
-!
-!     13) If target is an ephemeris object, the target shape is
-!         equivalent to EDSHAP (ellipsoid), and the kernel pool
-!         contains one or more non-positive radii for the target body,
-!         the error SPICE(BADAXISLENGTH) is signaled.
-!
-!     14) If the target is represented by a ray and the ray's
-!         direction vector is zero, the error SPICE(ZEROVECTOR) is
-!         signaled.
-!
-!     15) If the instrument name INST cannot be mapped to an ID code,
-!         the error SPICE(IDCODENOTFOUND) is signaled.
-!
-!     16) If an error occurs while fetching the instrument parameters
-!         from the kernel pool, the error will be diagnosed by a
-!         routine in the call tree of this routine.
-!
-!     17) If any ray defined by the observer's position and one of
-!         the instrument FOV's boundary vectors fails to intersect
-!         the "FOV plane"---a plane normal to the instrument FOV axis
-!         and intersected by the FOV axis at distance 1 km from the
-!         observer---the error SPICE(DEGENERATECASE) is signaled.
-!
-!     18) If the FOV is circular or elliptical and the FOV's radius
-!         or one of the FOV's semi-axis lengths is zero, the error
-!         SPICE(DEGENERATECASE) is signaled.
-!
-!     19) If the maximum angular separation of the instrument
-!         FOV axis and any FOV boundary vector exceeds the limit
-!         (which is slightly less than 90 degrees), either the error
-!         SPICE(FOVTOOWIDE) will be signaled or the error will be
-!         diagnosed by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See the header of the umbrella routine ZZGFFVU.
-!
-! $ Particulars
-!
-!     This entry point initializes the parameters needed by the
-!     occultation state determination entry point ZZGFFVST.
-!
-! $ Examples
-!
-!     See implementation of GFFOVE.
-!
-! $ Restrictions
-!
-!     1) The reference frame associated with INST must be
-!        centered at the observer or must be inertial. No check is done
-!        to ensure this.
-!
-!     2) This is a SPICELIB private routine; it should not be called by
-!        user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     L.S. Elson     (JPL)
-!     W.L. Taber     (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 1.3.0, 25-AUG-2021 (EDW)
-!
-!        Body radii accessed from kernel pool using ZZGFTREB.
-!
-!-    SPICELIB Version 1.2.0, 01-NOV-2020 (NJB)
-!
-!        Bug fix: boresight is now scaled to unit length.
-!
-!        Bug fix: in the case of a circular or elliptical FOV, where
-!        the target shape is an ellipsoid, this routine creates an
-!        ellipsoid such that its limb coincides with the FOV.
-!        Previously this ellipsoid was allowed to be very large when
-!        the FOV itself was large. Now the sum of the maximum ellipsoid
-!        radius plus the distance between the ellipsoid center and the
-!        observer is limited to FVEMAX km. These changes were made on
-!        09-JUN-2017. Minor updates were made on the date given by the
-!        version line.
-!
-!-    SPICELIB Version 1.1.0, 04-JUN-2013 (EDW)
-!
-!        ABCORR now stripped of all spaces before saving.
-!        Specifically, the call
-!
-!        CALL LJUST ( ABCORR, SVCORR )
-!
-!        replaced with
-!
-!        CALL CMPRSS ( ' ', 0, ABCORR, SVCORR )
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT) (EDW)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.2.0, 29-OCT-2020 (NJB)
-!
-!        Bug fix: in the case of a circular or elliptical FOV, where
-!        the target shape is an ellipsoid, this routine creates an
-!        ellipsoid such that its limb coincides with the FOV. Previously
-!        this ellipsoid was allowed to be very large when the FOV itself
-!        was large. Now the sum of the maximum ellipsoid radius plus
-!        the distance between the ellipsoid center and the observer is
-!        limited to FVEMAX km.
-!
-!        Renamed local LOGICAL variable SVXTRG (save extended target)
-!        to SVETRG (save ellipsoidal target), since it does not apply
-!        to DSK targets. Note that DSK targets currently are not
-!        supported.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!    Perform initialization functions for visibility state
+!!    determination.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     FRAMES
+!!     PCK
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     GEOMETRY
+!!     VISIBILITY
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         INST
+!!     CHARACTER*(*)         TSHAPE
+!!     DOUBLE PRECISION      RAYDIR ( 3 )
+!!     CHARACTER*(*)         TARGET
+!!     CHARACTER*(*)         TFRAME
+!!     CHARACTER*(*)         ABCORR
+!!     CHARACTER*(*)         OBSRVR
+!!
+!! ## Detailed Input
+!!
+!!     INST       indicates the name of the instrument, such as a
+!!                spacecraft-mounted framing camera, the field of view
+!!                (FOV) of which is to be used for a target intersection
+!!                search: times when the specified target intersects the
+!!                region of space corresponding to the FOV are sought.
+!!
+!!                The position of the instrument designated by INST is
+!!                considered to coincide with that of the ephemeris
+!!                object designated by the input argument OBSRVR (see
+!!                description below).
+!!
+!!                INST must have a corresponding NAIF ID and a frame
+!!                defined, as is normally done in a frame kernel. It
+!!                must also have an associated reference frame and a FOV
+!!                shape, boresight and boundary vertices (or reference
+!!                vector and reference angles) defined, as is usually
+!!                done in an instrument kernel.
+!!
+!!                See the header of the SPICELIB routine GETFOV for a
+!!                description of the required parameters associated with
+!!                an instrument.
+!!
+!!     TSHAPE     is a string indicating the geometric model used to
+!!                represent the location and shape of the target body.
+!!                The target body may be represented by either an
+!!                ephemeris object or a ray emanating from the observer.
+!!
+!!                The supported values of TSHAPE are:
+!!
+!!                   'ELLIPSOID'     The target is an ephemeris object.
+!!
+!!                                   The target's shape is represented
+!!                                   using triaxial ellipsoid model,
+!!                                   with radius values provided via the
+!!                                   kernel pool. A kernel variable
+!!                                   having a name of the form
+!!
+!!                                      'BODYnnn_RADII'
+!!
+!!                                   where nnn represents the NAIF
+!!                                   integer code associated with the
+!!                                   body, must be present in the kernel
+!!                                   pool. This variable must be
+!!                                   associated with three numeric
+!!                                   values giving the lengths of the
+!!                                   ellipsoid's X, Y, and Z semi-axes.
+!!
+!!                   'POINT'         The target is an ephemeris object.
+!!                                   The body is treated as a single
+!!                                   point.
+!!
+!!                   'RAY'           The target is NOT an ephemeris
+!!                                   object. Instead, the target is
+!!                                   considered to be represented by the
+!!                                   ray emanating from the observer's
+!!                                   location and having direction
+!!                                   vector RAYDIR. The target is
+!!                                   considered to be visible if and
+!!                                   only if the ray is contained within
+!!                                   the space bounded by the instrument
+!!                                   FOV.
+!!
+!!                Case and leading or trailing blanks are not
+!!                significant in the string TSHAPE.
+!!
+!!     RAYDIR     is the direction vector associated with a ray
+!!                representing the target. RAYDIR is used if and only
+!!                if TSHAPE (see description above) indicates the
+!!                target is modeled as a ray.
+!!
+!!     TARGET     is the name of the target body, the appearances of
+!!                which in the specified instrument's field of view are
+!!                sought. The body must be an ephemeris object.
+!!
+!!                Optionally, you may supply the integer NAIF ID code
+!!                for the body as a string. For example both 'MOON' and
+!!                '301' are legitimate strings that designate the Moon.
+!!
+!!                Case and leading or trailing blanks are not
+!!                significant in the string TARGET.
+!!
+!!                The input argument TARGET is used if and only if the
+!!                target is NOT modeled as ray; equivalently, the input
+!!                argument TSHAPE (see description above) does not
+!!                contain a string equivalent---that is, ignoring case
+!!                and leading and trailing blanks---to 'RAY'.
+!!
+!!                TARGET may be set to a blank string if the target is
+!!                modeled as a ray.
+!!
+!!     TFRAME     is the name of the reference frame associated with the
+!!                target. Examples of such names are 'IAU_SATURN'
+!!                (for Saturn) and 'ITRF93' (for the Earth).
+!!
+!!                If the target is an ephemeris object modeled as an
+!!                ellipsoid, TFRAME must designate a body-fixed
+!!                reference frame centered on the target body.
+!!
+!!                If the target is an ephemeris object modeled as a
+!!                point, TFRAME is ignored; TFRAME should be left blank.
+!!
+!!                If the target is modeled as a ray, TFRAME may
+!!                designate any reference frame. Since light time
+!!                corrections are not supported for rays, the
+!!                orientation of the frame is always evaluated at the
+!!                epoch associated with the observer, as opposed to the
+!!                epoch associated with the light-time corrected
+!!                position of the frame center.
+!!
+!!                Case and leading or trailing blanks bracketing a
+!!                non-blank frame name are not significant in the string
+!!                TFRAME.
+!!
+!!     ABCORR     indicates the aberration corrections to be applied
+!!                when computing the target's position and orientation.
+!!                The supported values of ABCORR depend on the target
+!!                representation.
+!!
+!!                If the target is represented by a ray, the aberration
+!!                correction options are
+!!
+!!                   'NONE'          No correction.
+!!                   'S'             Stellar aberration correction,
+!!                                   reception case.
+!!                   'XS'            Stellar aberration correction,
+!!                                   transmission case.
+!!
+!!                If the target is an ephemeris object, the aberration
+!!                correction options are those supported by the SPICE
+!!                SPK system. For remote sensing applications, where the
+!!                apparent position and orientation of the target seen
+!!                by the observer are desired, normally either of the
+!!                corrections
+!!
+!!                   'LT+S'
+!!                   'CN+S'
+!!
+!!                should be used. These and the other supported options
+!!                are described below.
+!!
+!!                Supported aberration correction options for
+!!                observation (case where radiation is received by
+!!                observer at ET) are:
+!!
+!!                   'NONE'       No correction.
+!!                   'LT'         Light time only
+!!                   'LT+S'       Light time and stellar aberration.
+!!                   'CN'         Converged Newtonian (CN) light time.
+!!                   'CN+S'       CN light time and stellar aberration.
+!!
+!!                Supported aberration correction options for
+!!                transmission (case where radiation is emitted from
+!!                observer at ET) are:
+!!
+!!                   'XLT'        Light time only.
+!!                   'XLT+S'      Light time and stellar aberration.
+!!                   'XCN'        Converged Newtonian (CN) light time.
+!!                   'XCN+S'      CN light time and stellar aberration.
+!!
+!!                For detailed information, see the geometry finder
+!!                required reading, gf.req.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string ABCORR.
+!!
+!!     OBSRVR     is the name of the body from which the target is
+!!                observed. The instrument designated by INST is treated
+!!                as if it were co-located with the observer.
+!!
+!!                Optionally, you may supply the integer NAIF ID code
+!!                for the body as a string.
+!!
+!!                Case and leading or trailing blanks are not
+!!                significant in the string OBSRVR.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the observer's name cannot be mapped to an ID code, the
+!!         error SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     2)  If the target is an ephemeris object and its name cannot be
+!!         mapped to an ID code, the error SPICE(IDCODENOTFOUND) is
+!!         signaled. If the target is represented by a ray, the input
+!!         target name argument is ignored.
+!!
+!!     3)  If target is an ephemeris object, and the observer and
+!!         target have the same ID codes, the error
+!!         SPICE(BODIESNOTDISTINCT) is signaled.
+!!
+!!     4)  If target is an ephemeris object, and the target shape
+!!         is not equivalent to PTSHAP (point) or EDSHAP (ellipsoid),
+!!         the error SPICE(INVALIDSHAPE) is signaled.
+!!
+!!     5)  If target is an ephemeris object, the target shape is
+!!         equivalent to EDSHAP (ellipsoid), and the reference frame
+!!         argument TFRAME is blank, the error SPICE(INVALIDFRAME) is
+!!         signaled.
+!!
+!!     6)  If target is an ephemeris object, the target shape is
+!!         equivalent to EDSHAP (ellipsoid), and the reference frame
+!!         argument TFRAME cannot be mapped to a frame ID code, the
+!!         error SPICE(INVALIDFRAME) is signaled.
+!!
+!!     7)  If target is an ephemeris object, the target shape is
+!!         equivalent to EDSHAP (ellipsoid), and the reference frame
+!!         argument TFRAME's ID cannot be mapped to a frame description,
+!!         the error SPICE(FRAMEINFONOTFOUND) is signaled.
+!!
+!!     8)  If target is an ephemeris object, the target shape is
+!!         equivalent to EDSHAP (ellipsoid), and the reference frame
+!!         specified by TFRAME is not centered on the target body, the
+!!         error SPICE(INVALIDFRAME) is signaled.
+!!
+!!     9)  If the target is represented by a ray and the aberration
+!!         correction flag calls for light time correction, the error
+!!         SPICE(INVALIDOPTION) is signaled.
+!!
+!!     10) If target is an ephemeris object and the aberration
+!!         correction flag calls for a correction not supported by
+!!         the SPICE SPK system, the error is diagnosed by a routine
+!!         in the call tree of this routine.
+!!
+!!     11) If target is an ephemeris object, the target shape is
+!!         equivalent to EDSHAP (ellipsoid), and the kernel pool
+!!         does not contain radii for the target body,
+!!         not  target body, the error is diagnosed by a routine
+!!         in the call tree of this routine.
+!!
+!!     12) If target is an ephemeris object, the target shape is
+!!         equivalent to EDSHAP (ellipsoid), and the kernel pool
+!!         contains the wrong number of radii for the target body, the
+!!         error SPICE(INVALIDDIMENSION) is signaled.
+!!
+!!     13) If target is an ephemeris object, the target shape is
+!!         equivalent to EDSHAP (ellipsoid), and the kernel pool
+!!         contains one or more non-positive radii for the target body,
+!!         the error SPICE(BADAXISLENGTH) is signaled.
+!!
+!!     14) If the target is represented by a ray and the ray's
+!!         direction vector is zero, the error SPICE(ZEROVECTOR) is
+!!         signaled.
+!!
+!!     15) If the instrument name INST cannot be mapped to an ID code,
+!!         the error SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     16) If an error occurs while fetching the instrument parameters
+!!         from the kernel pool, the error will be diagnosed by a
+!!         routine in the call tree of this routine.
+!!
+!!     17) If any ray defined by the observer's position and one of
+!!         the instrument FOV's boundary vectors fails to intersect
+!!         the "FOV plane"---a plane normal to the instrument FOV axis
+!!         and intersected by the FOV axis at distance 1 km from the
+!!         observer---the error SPICE(DEGENERATECASE) is signaled.
+!!
+!!     18) If the FOV is circular or elliptical and the FOV's radius
+!!         or one of the FOV's semi-axis lengths is zero, the error
+!!         SPICE(DEGENERATECASE) is signaled.
+!!
+!!     19) If the maximum angular separation of the instrument
+!!         FOV axis and any FOV boundary vector exceeds the limit
+!!         (which is slightly less than 90 degrees), either the error
+!!         SPICE(FOVTOOWIDE) will be signaled or the error will be
+!!         diagnosed by a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the header of the umbrella routine ZZGFFVU.
+!!
+!! ## Particulars
+!!
+!!     This entry point initializes the parameters needed by the
+!!     occultation state determination entry point ZZGFFVST.
+!!
+!! ## Examples
+!!
+!!     See implementation of GFFOVE.
+!!
+!! ## Restrictions
+!!
+!!     1) The reference frame associated with INST must be
+!!        centered at the observer or must be inertial. No check is done
+!!        to ensure this.
+!!
+!!     2) This is a SPICELIB private routine; it should not be called by
+!!        user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     L.S. Elson     (JPL)
+!!     W.L. Taber     (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 1.3.0, 25-AUG-2021 (EDW)
+!!
+!!        Body radii accessed from kernel pool using ZZGFTREB.
+!!
+!!-    SPICELIB Version 1.2.0, 01-NOV-2020 (NJB)
+!!
+!!        Bug fix: boresight is now scaled to unit length.
+!!
+!!        Bug fix: in the case of a circular or elliptical FOV, where
+!!        the target shape is an ellipsoid, this routine creates an
+!!        ellipsoid such that its limb coincides with the FOV.
+!!        Previously this ellipsoid was allowed to be very large when
+!!        the FOV itself was large. Now the sum of the maximum ellipsoid
+!!        radius plus the distance between the ellipsoid center and the
+!!        observer is limited to FVEMAX km. These changes were made on
+!!        09-JUN-2017. Minor updates were made on the date given by the
+!!        version line.
+!!
+!!-    SPICELIB Version 1.1.0, 04-JUN-2013 (EDW)
+!!
+!!        ABCORR now stripped of all spaces before saving.
+!!        Specifically, the call
+!!
+!!        CALL LJUST ( ABCORR, SVCORR )
+!!
+!!        replaced with
+!!
+!!        CALL CMPRSS ( ' ', 0, ABCORR, SVCORR )
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT) (EDW)
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 1.2.0, 29-OCT-2020 (NJB)
+!!
+!!        Bug fix: in the case of a circular or elliptical FOV, where
+!!        the target shape is an ellipsoid, this routine creates an
+!!        ellipsoid such that its limb coincides with the FOV. Previously
+!!        this ellipsoid was allowed to be very large when the FOV itself
+!!        was large. Now the sum of the maximum ellipsoid radius plus
+!!        the distance between the ellipsoid center and the observer is
+!!        limited to FVEMAX km.
+!!
+!!        Renamed local LOGICAL variable SVXTRG (save extended target)
+!!        to SVETRG (save ellipsoidal target), since it does not apply
+!!        to DSK targets. Note that DSK targets currently are not
+!!        supported.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi
       use pepper_arrays, only: cleard
       use pepper_math, only: frame, mxv, ucrss, vequ, vhat, vhatip, vnorm, vrotv, vscl, vsclip, vsep, vsub, vzero
       use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzocced
+      use pepper_inc_gf
       implicit none
-      include 'zzabcorr.inc'
-      include 'zzocced.inc'
-      include 'gf.inc'
       integer(ip), parameter :: ubel = 9
       integer(ip), parameter :: ubpl = 4
       real(wp), parameter :: atol = 1.0e-6_wp
@@ -3631,119 +3590,115 @@ contains
       end procedure zzgffvin
 
       module procedure zzgffvst
-
-! $ Abstract
-!
-!     Indicate whether the target is currently in the instrument FOV.
-!
-! $ Required_Reading
-!
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     SEARCH
-!     GEOMETRY
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      TIME
-!     LOGICAL               VISTAT
-!
-! $ Detailed_Input
-!
-!     TIME       is the epoch of interest in TDB seconds past the
-!                J2000 epoch.
-!
-! $ Detailed_Output
-!
-!     VISTAT     is a logical flag indicating the state of visibility.
-!                If the target is in the instrument FOV at epoch TIME,
-!                where target and instrument are those specified by the
-!                last call to ZZGFFVIN, VISTAT is returned with the
-!                value .TRUE.; otherwise VISTAT is .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If any SPK lookup fails, the error will be diagnosed by
-!        routines in the call tree of this routine.
-!
-!     2) If any frame transformation lookup fails, the error will be
-!        diagnosed by routines in the call tree of this routine.
-!
-!     3) If the FOV is polygonal, the target is an ellipsoid,
-!        and while testing whether the target is visible, an error
-!        occurs due to FOV errors not detected in the initialization
-!        step, the error will be diagnosed by routines in the call tree
-!        of this routine.
-!
-!     4) If the FOV is circular or elliptical, the target is an
-!        ellipsoid, and while testing whether the target is visible, an
-!        error occurs due to degenerate geometry of the limb, FOV, or
-!        both, the error will be diagnosed by routines in the call tree
-!        of this routine.
-!
-!     5) If the target shape is not recognized, the error will be
-!        diagnosed by routines in the call tree of this routine.
-!
-!     6)  If a body RADII vector has other than exactly thee elements,
-!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
-!         the call tree of this routine.
-!
-!     7)  If a body RADII vector has any element less-than or
-!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
-!         a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See the Files header section of the umbrella routine ZZGFFVU.
-!
-! $ Particulars
-!
-!     This routine determines the visibility state of the
-!     configuration specified by the last call to ZZGFFVIN and the
-!     input time value.
-!
-! $ Examples
-!
-!     See the umbrella routine ZZGFFVU.
-!
-! $ Restrictions
-!
-!     This is a SPICELIB private routine; it should not be called by
-!     user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     L.S. Elson     (JPL)
-!     W.L. Taber     (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT) (EDW)
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Indicate whether the target is currently in the instrument FOV.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     GEOMETRY
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      TIME
+!!     LOGICAL               VISTAT
+!!
+!! ## Detailed Input
+!!
+!!     TIME       is the epoch of interest in TDB seconds past the
+!!                J2000 epoch.
+!!
+!! ## Detailed Output
+!!
+!!     VISTAT     is a logical flag indicating the state of visibility.
+!!                If the target is in the instrument FOV at epoch TIME,
+!!                where target and instrument are those specified by the
+!!                last call to ZZGFFVIN, VISTAT is returned with the
+!!                value .TRUE.; otherwise VISTAT is .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If any SPK lookup fails, the error will be diagnosed by
+!!        routines in the call tree of this routine.
+!!
+!!     2) If any frame transformation lookup fails, the error will be
+!!        diagnosed by routines in the call tree of this routine.
+!!
+!!     3) If the FOV is polygonal, the target is an ellipsoid,
+!!        and while testing whether the target is visible, an error
+!!        occurs due to FOV errors not detected in the initialization
+!!        step, the error will be diagnosed by routines in the call tree
+!!        of this routine.
+!!
+!!     4) If the FOV is circular or elliptical, the target is an
+!!        ellipsoid, and while testing whether the target is visible, an
+!!        error occurs due to degenerate geometry of the limb, FOV, or
+!!        both, the error will be diagnosed by routines in the call tree
+!!        of this routine.
+!!
+!!     5) If the target shape is not recognized, the error will be
+!!        diagnosed by routines in the call tree of this routine.
+!!
+!!     6)  If a body RADII vector has other than exactly thee elements,
+!!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     7)  If a body RADII vector has any element less-than or
+!!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the Files header section of the umbrella routine ZZGFFVU.
+!!
+!! ## Particulars
+!!
+!!     This routine determines the visibility state of the
+!!     configuration specified by the last call to ZZGFFVIN and the
+!!     input time value.
+!!
+!! ## Examples
+!!
+!!     See the umbrella routine ZZGFFVU.
+!!
+!! ## Restrictions
+!!
+!!     This is a SPICELIB private routine; it should not be called by
+!!     user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     L.S. Elson     (JPL)
+!!     W.L. Taber     (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT) (EDW)
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: el2cgv, mtxv, mxm, mxv, vadd, vdot, vequ, vminus, vscl, vsep, vsub
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzocced
+      use pepper_inc_gf
       implicit none
-      include 'zzabcorr.inc'
-      include 'zzocced.inc'
-      include 'gf.inc'
       integer(ip), parameter :: ubel = 9
       integer(ip), parameter :: ubpl = 4
       real(wp), parameter :: atol = 1.0e-6_wp
@@ -4399,226 +4354,221 @@ contains
 !     This routine should never be called directly.
 
       module procedure zzgfilin
-
-! $ Abstract
-!
-!     Initialize the GF illumination angle constraint search utilities.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     ANGLE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!      CHARACTER*(*)         METHOD
-!      CHARACTER*(*)         ANGTYP
-!      CHARACTER*(*)         TARGET
-!      CHARACTER*(*)         ILLUM
-!      CHARACTER*(*)         FIXREF
-!      CHARACTER*(*)         ABCORR
-!      CHARACTER*(*)         OBSRVR
-!      DOUBLE PRECISION      SPOINT ( 3 )
-!
-! $ Detailed_Input
-!
-!     METHOD   is a short string providing parameters defining
-!              the computation method to be used. Parameters
-!              include, but are not limited to, the shape model
-!              used to represent the surface of the target body.
-!
-!              The only choice currently supported is
-!
-!                 'Ellipsoid'        The illumination angle
-!                                    computation uses a triaxial
-!                                    ellipsoid to model the surface
-!                                    of the target body. The
-!                                    ellipsoid's radii must be
-!                                    available in the kernel pool.
-!
-!              Neither case nor blanks are significant in METHOD.
-!              For example, the string ' eLLipsoid ' is valid.
-!
-!     ANGTYP   is a string specifying the type of illumination
-!              angle for which a search is to be performed. The
-!              possible values of ANGTYP are
-!
-!                 'PHASE'
-!                 'INCIDENCE'
-!                 'EMISSION'
-!
-!              When the illumination source is the sun, the
-!              incidence angle is commonly called the "solar
-!              incidence angle."
-!
-!              See the $Particulars section below for a detailed
-!              description of these angles.
-!
-!              Neither case nor white space are significant in
-!              ANGTYP. For example, the string ' Incidence ' is
-!              valid.
-!
-!     TARGET   is the name of a target body. Optionally, you may
-!              supply the integer ID code for the object as
-!              an integer string. For example both 'MOON' and
-!              '301' are legitimate strings that indicate the
-!              moon is the target body.
-!
-!              The target and observer define a position vector
-!              which points from the observer to the target.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string TARGET.
-!
-!     ILLUM    is the name of the illumination source. This source
-!              may be any ephemeris object. Case, blanks, and
-!              numeric values are treated in the same way as for the
-!              input TARGET.
-!
-!     FIXREF   is the name of the body-fixed, body-centered
-!              reference frame associated with the target body. The
-!              input surface point SPOINT is expressed relative to
-!              this reference frame, and this frame is used to
-!              define the orientation of the target body as a
-!              function of time.
-!
-!              The string FIXREF is case-insensitive, and leading
-!              and trailing blanks in FIXREF are not significant.
-!
-!     ABCORR   indicates the aberration corrections to be applied
-!              when computing the target's position and orientation.
-!              Any value accepted by SPKEZR may be used.
-!
-!              See the header of the SPICE routine SPKEZR for a
-!              detailed description of the aberration correction
-!              options.
-!
-!              Case and embedded blanks are not significant in
-!              ABCORR.
-!
-!     OBSRVR   is the name of the body from which the occultation is
-!              observed. Optionally, you may supply the integer NAIF
-!              ID code for the body as a string.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string OBSRVR.
-!
-!     SPOINT   is a surface point on the target body, expressed in
-!              Cartesian coordinates, relative to the body-fixed
-!              target frame designated by FIXREF.
-!
-!              SPOINT need not be visible from the observer's
-!              location in order for the constraint specified by
-!              RELATE and REFVAL (see descriptions below) to be
-!              satisfied.
-!
-!              The components of SPOINT have units of km.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If name of the target, observer, or illumination source
-!         cannot be translated to a NAIF ID code, the error
-!         SPICE(IDCODENOTFOUND) is signaled.
-!
-!     2)  If  target body coincides with the observer body OBSRVR or
-!         the illumination source SOURCE, error,
-!         the error SPICE(BODIESNOTDISTINCT) is signaled.
-!
-!     3)  If transmission-style aberration corrections are requested,
-!         the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     4)  If the aberration correction string is invalid, an error
-!         is signaled by a routine in the call tree of this
-!         routine.
-!
-!     5)  If the illumination angle type is not recognized, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     6)  If the input target body-fixed frame FIXREF is not
-!         recognized, the error SPICE(UNKNOWNFRAME) is signaled. A
-!         frame name may fail to be recognized because a required frame
-!         specification kernel has not been loaded; another cause is a
-!         misspelling of the frame name.
-!
-!     7)  If the input frame FIXREF is not centered at the target body,
-!         the error SPICE(INVALIDFRAME) is signaled.
-!
-!     8)  If the input argument METHOD is not recognized, the error
-!         SPICE(INVALIDMETHOD) is signaled.
-!
-! $ Files
-!
-!     See the header of the umbrella routine ZZGFILU.
-!
-! $ Particulars
-!
-!     This routine must be called once before each GF search for
-!     illumination angle events.
-!
-! $ Examples
-!
-!     See GFEVNT.
-!
-! $ Restrictions
-!
-!     1)  This is a SPICELIB private routine; it should not be called by
-!         user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 30-MAY-2021 (NJB) (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Updated header: added missing argument documentation.
-!
-!-    SPICELIB Version 1.1.0, 08-MAR-2017 (NJB)
-!
-!        Bug fixes: now checks FAILED after each BODS2C call
-!        and after the BODVRD call.
-!
-!-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     illumination angle initialization routine
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Initialize the GF illumination angle constraint search utilities.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     ANGLE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!      CHARACTER*(*)         METHOD
+!!      CHARACTER*(*)         ANGTYP
+!!      CHARACTER*(*)         TARGET
+!!      CHARACTER*(*)         ILLUM
+!!      CHARACTER*(*)         FIXREF
+!!      CHARACTER*(*)         ABCORR
+!!      CHARACTER*(*)         OBSRVR
+!!      DOUBLE PRECISION      SPOINT ( 3 )
+!!
+!! ## Detailed Input
+!!
+!!     METHOD   is a short string providing parameters defining
+!!              the computation method to be used. Parameters
+!!              include, but are not limited to, the shape model
+!!              used to represent the surface of the target body.
+!!
+!!              The only choice currently supported is
+!!
+!!                 'Ellipsoid'        The illumination angle
+!!                                    computation uses a triaxial
+!!                                    ellipsoid to model the surface
+!!                                    of the target body. The
+!!                                    ellipsoid's radii must be
+!!                                    available in the kernel pool.
+!!
+!!              Neither case nor blanks are significant in METHOD.
+!!              For example, the string ' eLLipsoid ' is valid.
+!!
+!!     ANGTYP   is a string specifying the type of illumination
+!!              angle for which a search is to be performed. The
+!!              possible values of ANGTYP are
+!!
+!!                 'PHASE'
+!!                 'INCIDENCE'
+!!                 'EMISSION'
+!!
+!!              When the illumination source is the sun, the
+!!              incidence angle is commonly called the "solar
+!!              incidence angle."
+!!
+!!              See the $Particulars section below for a detailed
+!!              description of these angles.
+!!
+!!              Neither case nor white space are significant in
+!!              ANGTYP. For example, the string ' Incidence ' is
+!!              valid.
+!!
+!!     TARGET   is the name of a target body. Optionally, you may
+!!              supply the integer ID code for the object as
+!!              an integer string. For example both 'MOON' and
+!!              '301' are legitimate strings that indicate the
+!!              moon is the target body.
+!!
+!!              The target and observer define a position vector
+!!              which points from the observer to the target.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string TARGET.
+!!
+!!     ILLUM    is the name of the illumination source. This source
+!!              may be any ephemeris object. Case, blanks, and
+!!              numeric values are treated in the same way as for the
+!!              input TARGET.
+!!
+!!     FIXREF   is the name of the body-fixed, body-centered
+!!              reference frame associated with the target body. The
+!!              input surface point SPOINT is expressed relative to
+!!              this reference frame, and this frame is used to
+!!              define the orientation of the target body as a
+!!              function of time.
+!!
+!!              The string FIXREF is case-insensitive, and leading
+!!              and trailing blanks in FIXREF are not significant.
+!!
+!!     ABCORR   indicates the aberration corrections to be applied
+!!              when computing the target's position and orientation.
+!!              Any value accepted by SPKEZR may be used.
+!!
+!!              See the header of the SPICE routine SPKEZR for a
+!!              detailed description of the aberration correction
+!!              options.
+!!
+!!              Case and embedded blanks are not significant in
+!!              ABCORR.
+!!
+!!     OBSRVR   is the name of the body from which the occultation is
+!!              observed. Optionally, you may supply the integer NAIF
+!!              ID code for the body as a string.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string OBSRVR.
+!!
+!!     SPOINT   is a surface point on the target body, expressed in
+!!              Cartesian coordinates, relative to the body-fixed
+!!              target frame designated by FIXREF.
+!!
+!!              SPOINT need not be visible from the observer's
+!!              location in order for the constraint specified by
+!!              RELATE and REFVAL (see descriptions below) to be
+!!              satisfied.
+!!
+!!              The components of SPOINT have units of km.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If name of the target, observer, or illumination source
+!!         cannot be translated to a NAIF ID code, the error
+!!         SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     2)  If  target body coincides with the observer body OBSRVR or
+!!         the illumination source SOURCE, error,
+!!         the error SPICE(BODIESNOTDISTINCT) is signaled.
+!!
+!!     3)  If transmission-style aberration corrections are requested,
+!!         the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     4)  If the aberration correction string is invalid, an error
+!!         is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     5)  If the illumination angle type is not recognized, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     6)  If the input target body-fixed frame FIXREF is not
+!!         recognized, the error SPICE(UNKNOWNFRAME) is signaled. A
+!!         frame name may fail to be recognized because a required frame
+!!         specification kernel has not been loaded; another cause is a
+!!         misspelling of the frame name.
+!!
+!!     7)  If the input frame FIXREF is not centered at the target body,
+!!         the error SPICE(INVALIDFRAME) is signaled.
+!!
+!!     8)  If the input argument METHOD is not recognized, the error
+!!         SPICE(INVALIDMETHOD) is signaled.
+!!
+!! ## Files
+!!
+!!     See the header of the umbrella routine ZZGFILU.
+!!
+!! ## Particulars
+!!
+!!     This routine must be called once before each GF search for
+!!     illumination angle events.
+!!
+!! ## Examples
+!!
+!!     See GFEVNT.
+!!
+!! ## Restrictions
+!!
+!!     1)  This is a SPICELIB private routine; it should not be called by
+!!         user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 30-MAY-2021 (NJB) (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Updated header: added missing argument documentation.
+!!
+!!-    SPICELIB Version 1.1.0, 08-MAR-2017 (NJB)
+!!
+!!        Bug fixes: now checks FAILED after each BODS2C call
+!!        and after the BODVRD call.
+!!
+!!-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     illumination angle initialization routine
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vequ
       use pepper_strings, only: cmprss, esrchc, ljust, ucase
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: mthlen = 200
@@ -4886,120 +4836,114 @@ contains
       end procedure zzgfilin
 
       module subroutine zzgfildc ( ctx, udfunc, et, decres )
-
-! $ Abstract
-!
-!     Indicate whether a specified illumination angle is decreasing at
-!     a specified time.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     ANGLE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!     EXTERNAL              UDFUNC
-!     DOUBLE PRECISION      ET
-!     LOGICAL               DECRES
-!
-! $ Detailed_Input
-!
-!     UDFUNC   is a placeholder subroutine argument. This argument is
-!              provided for compatibility with ZZGFSOLVX. It is not
-!              used by the entry points of this package.
-!
-!     ET       is the time, expressed as seconds past J2000 TDB, at
-!              which to determine whether or not the illumination
-!              angle between the observer and target is decreasing.
-!
-! $ Detailed_Output
-!
-!     DECRES   is a logical flag that indicates whether the
-!              observer-target illumination angle is decreasing at
-!              ET. The observer, target, and aberration correction
-!              used to compute the illumination angle are defined by
-!              the latest call to the initialization entry point
-!              ZZGFILIN.
-!
-!              DECRES is .TRUE. if and only if the observer-target
-!              illumination angle is decreasing at ET.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the state of the target relative to the observer at ET can
-!         not be found due to an SPK lookup failure, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See the header of the umbrella routine ZZGFILU.
-!
-! $ Particulars
-!
-!     This routine is used by ZZGFRELX, and indirectly by GFILUM, to
-!     determine the time intervals, within the confinement window, on
-!     which the observer-target illumination angle is monotone
-!     increasing or monotone decreasing.
-!
-! $ Examples
-!
-!     See GFILUM, GFEVNT, ZZGFRELX.
-!
-! $ Restrictions
-!
-!     1)  This is a SPICELIB private routine; it should not be called by
-!         user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 29-MAY-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.1.0, 08-MAR-2017 (NJB)
-!
-!        Bug fix: now checks FAILED after ZZILUSTA call.
-!
-!-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     indicate whether illumination angle is decreasing
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Indicate whether a specified illumination angle is decreasing at
+!!     a specified time.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     ANGLE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!     EXTERNAL              UDFUNC
+!!     DOUBLE PRECISION      ET
+!!     LOGICAL               DECRES
+!!
+!! ## Detailed Input
+!!
+!!     UDFUNC   is a placeholder subroutine argument. This argument is
+!!              provided for compatibility with ZZGFSOLVX. It is not
+!!              used by the entry points of this package.
+!!
+!!     ET       is the time, expressed as seconds past J2000 TDB, at
+!!              which to determine whether or not the illumination
+!!              angle between the observer and target is decreasing.
+!!
+!! ## Detailed Output
+!!
+!!     DECRES   is a logical flag that indicates whether the
+!!              observer-target illumination angle is decreasing at
+!!              ET. The observer, target, and aberration correction
+!!              used to compute the illumination angle are defined by
+!!              the latest call to the initialization entry point
+!!              ZZGFILIN.
+!!
+!!              DECRES is .TRUE. if and only if the observer-target
+!!              illumination angle is decreasing at ET.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the state of the target relative to the observer at ET can
+!!         not be found due to an SPK lookup failure, an error is
+!!         signaled by a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the header of the umbrella routine ZZGFILU.
+!!
+!! ## Particulars
+!!
+!!     This routine is used by ZZGFRELX, and indirectly by GFILUM, to
+!!     determine the time intervals, within the confinement window, on
+!!     which the observer-target illumination angle is monotone
+!!     increasing or monotone decreasing.
+!!
+!! ## Examples
+!!
+!!     See GFILUM, GFEVNT, ZZGFRELX.
+!!
+!! ## Restrictions
+!!
+!!     1)  This is a SPICELIB private routine; it should not be called by
+!!         user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 29-MAY-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.1.0, 08-MAR-2017 (NJB)
+!!
+!!        Bug fix: now checks FAILED after ZZILUSTA call.
+!!
+!!-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     indicate whether illumination angle is decreasing
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: mthlen = 200
@@ -5085,108 +5029,103 @@ contains
       end subroutine zzgfildc
 
       module procedure zzgfilgq
-
-! $ Abstract
-!
-!     Return the specified illumination angle at a specified epoch.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     GEOMETRY
-!     ILLUMINATION ANGLE
-!     SEARCH
-!
-! $ Declarations
-!
-!      DOUBLE PRECISION      ET
-!      DOUBLE PRECISION      ANGLE
-!
-! $ Detailed_Input
-!
-!     ET       is the time, expressed as seconds past J2000 TDB, at
-!              which the illumination angle is to be computed.
-!
-! $ Detailed_Output
-!
-!     ANGLE    is the illumination angle as seen by the observer at
-!              time ET. The observer, target, and aberration
-!              correction used to compute the illumination angle are
-!              defined by the latest call to the initialization entry
-!              point ZZGFILIN.
-!
-!              Units are radians.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the position of the target relative to the observer at ET
-!         can not be found due to an SPK lookup failure, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See the header of the umbrella routine ZZGFILU.
-!
-! $ Particulars
-!
-!     This routine determines the apparent illumination angle as seen
-!     from the observer at time ET. This functionality supports GFREL's
-!     comparisons of relative extrema in order to determine absolute
-!     extrema.
-!
-! $ Examples
-!
-!     See GFREL.
-!
-! $ Restrictions
-!
-!     1)  This is a SPICELIB private routine; it should not be called by
-!         user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 29-MAY-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.1.0, 08-MAR-2017 (NJB)
-!
-!        Bug fix: now checks FAILED after ILLUMG call.
-!
-!-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return illumination angle
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Return the specified illumination angle at a specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     ILLUMINATION ANGLE
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!      DOUBLE PRECISION      ET
+!!      DOUBLE PRECISION      ANGLE
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the time, expressed as seconds past J2000 TDB, at
+!!              which the illumination angle is to be computed.
+!!
+!! ## Detailed Output
+!!
+!!     ANGLE    is the illumination angle as seen by the observer at
+!!              time ET. The observer, target, and aberration
+!!              correction used to compute the illumination angle are
+!!              defined by the latest call to the initialization entry
+!!              point ZZGFILIN.
+!!
+!!              Units are radians.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the position of the target relative to the observer at ET
+!!         can not be found due to an SPK lookup failure, an error is
+!!         signaled by a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the header of the umbrella routine ZZGFILU.
+!!
+!! ## Particulars
+!!
+!!     This routine determines the apparent illumination angle as seen
+!!     from the observer at time ET. This functionality supports GFREL's
+!!     comparisons of relative extrema in order to determine absolute
+!!     extrema.
+!!
+!! ## Examples
+!!
+!!     See GFREL.
+!!
+!! ## Restrictions
+!!
+!!     1)  This is a SPICELIB private routine; it should not be called by
+!!         user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 29-MAY-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.1.0, 08-MAR-2017 (NJB)
+!!
+!!        Bug fix: now checks FAILED after ILLUMG call.
+!!
+!!-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     return illumination angle
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: mthlen = 200
@@ -5499,376 +5438,370 @@ contains
 !     This routine should never be called directly.
 
       module procedure zzgfocin
-
-! $ Abstract
-!
-!     Perform initialization functions for occultation state
-!     determination.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!     FRAMES
-!     PCK
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     OCCULTATION
-!     SEARCH
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         OCCTYP
-!     CHARACTER*(*)         FRONT
-!     CHARACTER*(*)         FSHAPE
-!     CHARACTER*(*)         FFRAME
-!     CHARACTER*(*)         BACK
-!     CHARACTER*(*)         BSHAPE
-!     CHARACTER*(*)         BFRAME
-!     CHARACTER*(*)         OBSRVR
-!     CHARACTER*(*)         ABCORR
-!
-! $ Detailed_Input
-!
-!     OCCTYP   indicates the type of occultation that is to be found.
-!              The full set of possible values of OCCTYP may be used
-!              when both target bodies are modeled as ellipsoids.
-!              When either target is modeled as a point, OCCTYP must
-!              be set to 'ANY' (see description below).
-!
-!              Supported values of OCCTYP and corresponding
-!              definitions are:
-!
-!                 'FULL'      denotes the full occultation of the
-!                             body designated by BACK by the body
-!                             designated by FRONT, as seen from the
-!                             location of the observer. In other
-!                             words, the occulted body is completely
-!                             invisible as seen from the observer's
-!                             location.
-!
-!                 'ANNULAR'   denotes an annular occultation: the
-!                             body designated by FRONT blocks part
-!                             of, but not the limb of, the body
-!                             designated by BACK, as seen from the
-!                             location of the observer.
-!
-!                 'PARTIAL'   denotes a partial, non-annular
-!                             occultation: the body designated by
-!                             FRONT blocks part, but not all, of the
-!                             limb of the body designated by BACK, as
-!                             seen from the location of the observer.
-!
-!                 'ANY'       denotes any of the above three types of
-!                             occultations: 'PARTIAL', 'ANNULAR', or
-!                             'FULL'.
-!
-!                             'ANY' should be used to search for
-!                             times when the body designated by FRONT
-!                             blocks any part of the body designated
-!                             by BACK.
-!
-!                             The option 'ANY' must be used if either
-!                             the front or back target body is
-!                             modeled as a point.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string OCCTYP.
-!
-!     FRONT    is the name of the target body that occults---that is,
-!              passes in front of---the other. Optionally, you may
-!              supply the integer NAIF ID code for the body as a
-!              string. For example both 'MOON' and '301' are
-!              legitimate strings that designate the Moon.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string FRONT.
-!
-!     FSHAPE   is a string indicating the geometric model used to
-!              represent the shape of the front target body. The
-!              supported options are:
-!
-!                 'ELLIPSOID'
-!
-!                     Use a triaxial ellipsoid model with radius
-!                     values provided via the kernel pool. A kernel
-!                     variable having a name of the form
-!
-!                        'BODYnnn_RADII'
-!
-!                     where nnn represents the NAIF integer code
-!                     associated with the body, must be present in
-!                     the kernel pool. This variable must be
-!                     associated with three numeric values giving the
-!                     lengths of the ellipsoid's X, Y, and Z
-!                     semi-axes.
-!
-!                 'POINT'
-!
-!                     Treat the body as a single point. When a point
-!                     target is specified, the occultation type must
-!                     be set to 'ANY'.
-!
-!                 'DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
-!
-!                     Use topographic data provided by DSK files to
-!                     model the body's shape. These data must be
-!                     provided by loaded DSK files.
-!
-!                     The surface list specification is optional. The
-!                     syntax of the list is
-!
-!                        <surface 1> [, <surface 2>...]
-!
-!                     If present, it indicates that data only for the
-!                     listed surfaces are to be used; however, data
-!                     need not be available for all surfaces in the
-!                     list. If absent, loaded DSK data for any surface
-!                     associated with the target body are used.
-!
-!                     The surface list may contain surface names or
-!                     surface ID codes. Names containing blanks must
-!                     be delimited by double quotes, for example
-!
-!                        SURFACES = "Mars MEGDR 128 PIXEL/DEG"
-!
-!                     If multiple surfaces are specified, their names
-!                     or IDs must be separated by commas.
-!
-!                     See the $Particulars section below for details
-!                     concerning use of DSK data.
-!
-!              The combinations of the shapes of the target bodies
-!              FRONT and BACK must be one of:
-!
-!                 One ELLIPSOID, one POINT
-!                 Two ELLIPSOIDs
-!                 One DSK, one POINT
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string FSHAPE.
-!
-!     FFRAME   is the name of the body-fixed, body-centered reference
-!              frame associated with the front target body. Examples
-!              of such names are 'IAU_SATURN' (for Saturn) and
-!              'ITRF93' (for the Earth).
-!
-!              If the front target body is modeled as a point, FFRAME
-!              should be left blank.
-!
-!              Case and leading or trailing blanks bracketing a
-!              non-blank frame name are not significant in the string
-!              FFRAME.
-!
-!     BACK     is the name of the target body that is occulted
-!              by---that is, passes in back of---the other.
-!              Optionally, you may supply the integer NAIF ID code
-!              for the body as a string. For example both 'MOON' and
-!              '301' are legitimate strings that designate the Moon.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string BACK.
-!
-!     BSHAPE   is the shape specification for the body designated
-!              by BACK. See the description of FSHAPE above for
-!              details.
-!
-!     BFRAME   is the name of the body-fixed, body-centered reference
-!              frame associated with the ``back'' target body.
-!              Examples of such names are 'IAU_SATURN' (for Saturn)
-!              and 'ITRF93' (for the Earth).
-!
-!              If the back target body is modeled as a point, BFRAME
-!              should be left blank.
-!
-!              Case and leading or trailing blanks bracketing a
-!              non-blank frame name are not significant in the string
-!              BFRAME.
-!
-!     OBSRVR   is the name of the body from which the occultation is
-!              observed. Optionally, you may supply the integer NAIF
-!              ID code for the body as a string.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string OBSRVR.
-!
-!     ABCORR   indicates the aberration corrections to be applied to
-!              the state of the target body to account for one-way
-!              light time. Stellar aberration corrections are
-!              ignored if specified, since these corrections don't
-!              improve the accuracy of the occultation determination.
-!
-!              See the header of the SPICE routine SPKEZR for a
-!              detailed description of the aberration correction
-!              options. For convenience, the options supported by
-!              this routine are listed below:
-!
-!                 'NONE'     Apply no correction.
-!
-!                 'LT'       "Reception" case: correct for
-!                            one-way light time using a Newtonian
-!                            formulation.
-!
-!                 'CN'       "Reception" case: converged
-!                            Newtonian light time correction.
-!
-!                 'XLT'      "Transmission" case: correct for
-!                            one-way light time using a Newtonian
-!                            formulation.
-!
-!                 'XCN'      "Transmission" case: converged
-!                            Newtonian light time correction.
-!
-!              Case and blanks are not significant in the string
-!              ABCORR.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If name of either target or the observer cannot be translated
-!         to a NAIF ID code, the error SPICE(IDCODENOTFOUND) is
-!         signaled.
-!
-!     2)  If either of the target bodies FRONT or BACK coincides with
-!         the observer body OBSRVR, or if the targets coincide,
-!         the error SPICE(BODIESNOTDISTINCT) is signaled.
-!
-!     3)  If either of the body model specifiers FSHAPE or BSHAPE
-!         is not recognized, the error SPICE(INVALIDSHAPE) is signaled.
-!
-!     4)  If both of the body model specifiers FSHAPE and BSHAPE
-!         specify point targets, the error SPICE(INVALIDSHAPECOMBO)
-!         is signaled.
-!
-!     5)  If one of the target shape arguments FSHAPE and BSHAPE
-!         specifies a DSK model, and the other argument does not
-!         specify a point target, the error SPICE(INVALIDSHAPECOMBO)
-!         is signaled.
-!
-!     6)  If an unrecognized value of OCCTYP is seen, the error
-!         SPICE(INVALIDOCCTYPE) is signaled.
-!
-!     7)  If one target body is modeled as a point and OCCTYP is not
-!         set to 'ANY', the error SPICE(BADTYPESHAPECOMBO) is signaled.
-!
-!     8)  If a target body-fixed reference frame associated with a
-!         non-point target is not recognized, the error
-!         SPICE(INVALIDFRAME) is signaled.
-!
-!     9)  If a target body-fixed reference frame is not centered at
-!         the corresponding target body, the error
-!         SPICE(INVALIDFRAME) is signaled.
-!
-!     10) If the aberration correction string is invalid, an error
-!         is signaled by a routine in the call tree of this
-!         routine.
-!
-!     11) If either FSHAPE or BSHAPE specifies that the target surface
-!         is represented by DSK data, and no DSK files are loaded for
-!         the specified target, an error is signaled by a routine in
-!         the call tree of this routine.
-!
-!     12) If either FSHAPE or BSHAPE specifies that the target surface
-!         is represented by DSK data, but the shape specification is
-!         invalid, an error is signaled by a routine in the call tree
-!         of this routine.
-!
-!     13) If a body RADII vector has other than exactly thee elements,
-!         an error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     14) If a body RADII vector has any element less-than or equal to
-!         zero, an error is signaled by a routine in the call tree of
-!         this routine.
-!
-! $ Files
-!
-!     See the header of the umbrella routine ZZGFOCU.
-!
-! $ Particulars
-!
-!     This entry point initializes the parameters needed by the
-!     occultation state determination entry point ZZGFOCST.
-!
-! $ Examples
-!
-!     See implementation of GFOCCE.
-!
-! $ Restrictions
-!
-!     1)  This is a SPICELIB private routine; it should not be called by
-!         user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     L.S. Elson         (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 07-SEP-2021 (EDW) (JDR)
-!
-!        Body radii accessed from kernel pool using ZZGFTREB.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 21-FEB-2017 (NJB)
-!
-!        Modified FAILED tests.
-!
-!        20-FEB-2016 (NJB)
-!
-!        DSK capability was integrated.
-!
-!        04-MAR-2015 (NJB)
-!
-!        Initial updates to support surfaces represented by DSKs.
-!
-!-    SPICELIB Version 1.1.0, 18-MAY-2014 (NJB)
-!
-!        Bug fix: corrected long error message for the case in which a
-!        body-fixed reference frame is not centered on the correct
-!        body.
-!
-!-    SPICELIB Version 1.0.0, 15-APR-2009 (LSE) (WLT) (NJB) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     initialization for occultation state determination
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Perform initialization functions for occultation state
+!!     determination.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!     FRAMES
+!!     PCK
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     OCCULTATION
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         OCCTYP
+!!     CHARACTER*(*)         FRONT
+!!     CHARACTER*(*)         FSHAPE
+!!     CHARACTER*(*)         FFRAME
+!!     CHARACTER*(*)         BACK
+!!     CHARACTER*(*)         BSHAPE
+!!     CHARACTER*(*)         BFRAME
+!!     CHARACTER*(*)         OBSRVR
+!!     CHARACTER*(*)         ABCORR
+!!
+!! ## Detailed Input
+!!
+!!     OCCTYP   indicates the type of occultation that is to be found.
+!!              The full set of possible values of OCCTYP may be used
+!!              when both target bodies are modeled as ellipsoids.
+!!              When either target is modeled as a point, OCCTYP must
+!!              be set to 'ANY' (see description below).
+!!
+!!              Supported values of OCCTYP and corresponding
+!!              definitions are:
+!!
+!!                 'FULL'      denotes the full occultation of the
+!!                             body designated by BACK by the body
+!!                             designated by FRONT, as seen from the
+!!                             location of the observer. In other
+!!                             words, the occulted body is completely
+!!                             invisible as seen from the observer's
+!!                             location.
+!!
+!!                 'ANNULAR'   denotes an annular occultation: the
+!!                             body designated by FRONT blocks part
+!!                             of, but not the limb of, the body
+!!                             designated by BACK, as seen from the
+!!                             location of the observer.
+!!
+!!                 'PARTIAL'   denotes a partial, non-annular
+!!                             occultation: the body designated by
+!!                             FRONT blocks part, but not all, of the
+!!                             limb of the body designated by BACK, as
+!!                             seen from the location of the observer.
+!!
+!!                 'ANY'       denotes any of the above three types of
+!!                             occultations: 'PARTIAL', 'ANNULAR', or
+!!                             'FULL'.
+!!
+!!                             'ANY' should be used to search for
+!!                             times when the body designated by FRONT
+!!                             blocks any part of the body designated
+!!                             by BACK.
+!!
+!!                             The option 'ANY' must be used if either
+!!                             the front or back target body is
+!!                             modeled as a point.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string OCCTYP.
+!!
+!!     FRONT    is the name of the target body that occults---that is,
+!!              passes in front of---the other. Optionally, you may
+!!              supply the integer NAIF ID code for the body as a
+!!              string. For example both 'MOON' and '301' are
+!!              legitimate strings that designate the Moon.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string FRONT.
+!!
+!!     FSHAPE   is a string indicating the geometric model used to
+!!              represent the shape of the front target body. The
+!!              supported options are:
+!!
+!!                 'ELLIPSOID'
+!!
+!!                     Use a triaxial ellipsoid model with radius
+!!                     values provided via the kernel pool. A kernel
+!!                     variable having a name of the form
+!!
+!!                        'BODYnnn_RADII'
+!!
+!!                     where nnn represents the NAIF integer code
+!!                     associated with the body, must be present in
+!!                     the kernel pool. This variable must be
+!!                     associated with three numeric values giving the
+!!                     lengths of the ellipsoid's X, Y, and Z
+!!                     semi-axes.
+!!
+!!                 'POINT'
+!!
+!!                     Treat the body as a single point. When a point
+!!                     target is specified, the occultation type must
+!!                     be set to 'ANY'.
+!!
+!!                 'DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
+!!
+!!                     Use topographic data provided by DSK files to
+!!                     model the body's shape. These data must be
+!!                     provided by loaded DSK files.
+!!
+!!                     The surface list specification is optional. The
+!!                     syntax of the list is
+!!
+!!                        <surface 1> [, <surface 2>...]
+!!
+!!                     If present, it indicates that data only for the
+!!                     listed surfaces are to be used; however, data
+!!                     need not be available for all surfaces in the
+!!                     list. If absent, loaded DSK data for any surface
+!!                     associated with the target body are used.
+!!
+!!                     The surface list may contain surface names or
+!!                     surface ID codes. Names containing blanks must
+!!                     be delimited by double quotes, for example
+!!
+!!                        SURFACES = "Mars MEGDR 128 PIXEL/DEG"
+!!
+!!                     If multiple surfaces are specified, their names
+!!                     or IDs must be separated by commas.
+!!
+!!                     See the $Particulars section below for details
+!!                     concerning use of DSK data.
+!!
+!!              The combinations of the shapes of the target bodies
+!!              FRONT and BACK must be one of:
+!!
+!!                 One ELLIPSOID, one POINT
+!!                 Two ELLIPSOIDs
+!!                 One DSK, one POINT
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string FSHAPE.
+!!
+!!     FFRAME   is the name of the body-fixed, body-centered reference
+!!              frame associated with the front target body. Examples
+!!              of such names are 'IAU_SATURN' (for Saturn) and
+!!              'ITRF93' (for the Earth).
+!!
+!!              If the front target body is modeled as a point, FFRAME
+!!              should be left blank.
+!!
+!!              Case and leading or trailing blanks bracketing a
+!!              non-blank frame name are not significant in the string
+!!              FFRAME.
+!!
+!!     BACK     is the name of the target body that is occulted
+!!              by---that is, passes in back of---the other.
+!!              Optionally, you may supply the integer NAIF ID code
+!!              for the body as a string. For example both 'MOON' and
+!!              '301' are legitimate strings that designate the Moon.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string BACK.
+!!
+!!     BSHAPE   is the shape specification for the body designated
+!!              by BACK. See the description of FSHAPE above for
+!!              details.
+!!
+!!     BFRAME   is the name of the body-fixed, body-centered reference
+!!              frame associated with the ``back'' target body.
+!!              Examples of such names are 'IAU_SATURN' (for Saturn)
+!!              and 'ITRF93' (for the Earth).
+!!
+!!              If the back target body is modeled as a point, BFRAME
+!!              should be left blank.
+!!
+!!              Case and leading or trailing blanks bracketing a
+!!              non-blank frame name are not significant in the string
+!!              BFRAME.
+!!
+!!     OBSRVR   is the name of the body from which the occultation is
+!!              observed. Optionally, you may supply the integer NAIF
+!!              ID code for the body as a string.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string OBSRVR.
+!!
+!!     ABCORR   indicates the aberration corrections to be applied to
+!!              the state of the target body to account for one-way
+!!              light time. Stellar aberration corrections are
+!!              ignored if specified, since these corrections don't
+!!              improve the accuracy of the occultation determination.
+!!
+!!              See the header of the SPICE routine SPKEZR for a
+!!              detailed description of the aberration correction
+!!              options. For convenience, the options supported by
+!!              this routine are listed below:
+!!
+!!                 'NONE'     Apply no correction.
+!!
+!!                 'LT'       "Reception" case: correct for
+!!                            one-way light time using a Newtonian
+!!                            formulation.
+!!
+!!                 'CN'       "Reception" case: converged
+!!                            Newtonian light time correction.
+!!
+!!                 'XLT'      "Transmission" case: correct for
+!!                            one-way light time using a Newtonian
+!!                            formulation.
+!!
+!!                 'XCN'      "Transmission" case: converged
+!!                            Newtonian light time correction.
+!!
+!!              Case and blanks are not significant in the string
+!!              ABCORR.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If name of either target or the observer cannot be translated
+!!         to a NAIF ID code, the error SPICE(IDCODENOTFOUND) is
+!!         signaled.
+!!
+!!     2)  If either of the target bodies FRONT or BACK coincides with
+!!         the observer body OBSRVR, or if the targets coincide,
+!!         the error SPICE(BODIESNOTDISTINCT) is signaled.
+!!
+!!     3)  If either of the body model specifiers FSHAPE or BSHAPE
+!!         is not recognized, the error SPICE(INVALIDSHAPE) is signaled.
+!!
+!!     4)  If both of the body model specifiers FSHAPE and BSHAPE
+!!         specify point targets, the error SPICE(INVALIDSHAPECOMBO)
+!!         is signaled.
+!!
+!!     5)  If one of the target shape arguments FSHAPE and BSHAPE
+!!         specifies a DSK model, and the other argument does not
+!!         specify a point target, the error SPICE(INVALIDSHAPECOMBO)
+!!         is signaled.
+!!
+!!     6)  If an unrecognized value of OCCTYP is seen, the error
+!!         SPICE(INVALIDOCCTYPE) is signaled.
+!!
+!!     7)  If one target body is modeled as a point and OCCTYP is not
+!!         set to 'ANY', the error SPICE(BADTYPESHAPECOMBO) is signaled.
+!!
+!!     8)  If a target body-fixed reference frame associated with a
+!!         non-point target is not recognized, the error
+!!         SPICE(INVALIDFRAME) is signaled.
+!!
+!!     9)  If a target body-fixed reference frame is not centered at
+!!         the corresponding target body, the error
+!!         SPICE(INVALIDFRAME) is signaled.
+!!
+!!     10) If the aberration correction string is invalid, an error
+!!         is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     11) If either FSHAPE or BSHAPE specifies that the target surface
+!!         is represented by DSK data, and no DSK files are loaded for
+!!         the specified target, an error is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     12) If either FSHAPE or BSHAPE specifies that the target surface
+!!         is represented by DSK data, but the shape specification is
+!!         invalid, an error is signaled by a routine in the call tree
+!!         of this routine.
+!!
+!!     13) If a body RADII vector has other than exactly thee elements,
+!!         an error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     14) If a body RADII vector has any element less-than or equal to
+!!         zero, an error is signaled by a routine in the call tree of
+!!         this routine.
+!!
+!! ## Files
+!!
+!!     See the header of the umbrella routine ZZGFOCU.
+!!
+!! ## Particulars
+!!
+!!     This entry point initializes the parameters needed by the
+!!     occultation state determination entry point ZZGFOCST.
+!!
+!! ## Examples
+!!
+!!     See implementation of GFOCCE.
+!!
+!! ## Restrictions
+!!
+!!     1)  This is a SPICELIB private routine; it should not be called by
+!!         user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     L.S. Elson         (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 07-SEP-2021 (EDW) (JDR)
+!!
+!!        Body radii accessed from kernel pool using ZZGFTREB.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 21-FEB-2017 (NJB)
+!!
+!!        Modified FAILED tests.
+!!
+!!        20-FEB-2016 (NJB)
+!!
+!!        DSK capability was integrated.
+!!
+!!        04-MAR-2015 (NJB)
+!!
+!!        Initial updates to support surfaces represented by DSKs.
+!!
+!!-    SPICELIB Version 1.1.0, 18-MAY-2014 (NJB)
+!!
+!!        Bug fix: corrected long error message for the case in which a
+!!        body-fixed reference frame is not centered on the correct
+!!        body.
+!!
+!!-    SPICELIB Version 1.0.0, 15-APR-2009 (LSE) (WLT) (NJB) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     initialization for occultation state determination
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard, isrchc, maxad, minad, moved
       use pepper_strings, only: eqstr, ljust, suffix, ucase
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdsk
+      use pepper_inc_zzocced
       implicit none
-      include 'dsk.inc'
-      include 'gf.inc'
-      include 'zzabcorr.inc'
-      include 'zzdsk.inc'
-      include 'zzocced.inc'
       real(wp), parameter :: alpha = 1.0e-2_wp
       real(wp), parameter :: atol = 1.0e-12_wp
       integer(ip), parameter :: bdnmln = 36
@@ -6441,138 +6374,132 @@ contains
       end procedure zzgfocin
 
       module procedure zzgfocst
-
-! $ Abstract
-!
-!     See if the object is currently occulted.
-!
-! $ Required_Reading
-!
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     OCCULTATION
-!     SEARCH
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      TIME
-!     LOGICAL               OCSTAT
-!
-! $ Detailed_Input
-!
-!     TIME     is the epoch of interest in TDB seconds past the
-!              J2000 epoch.
-!
-! $ Detailed_Output
-!
-!     OCSTAT   is a logical flag indicating the state of
-!              occultation. If the configuration initialized by
-!              ZZGFOCIN is in occultation at the epoch TIME, OCSTAT is
-!              returned with the value .TRUE. Otherwise it is
-!              returned with the value .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If any SPK lookup fails, an error is signaled by a routine in
-!         the call tree of this routine.
-!
-!     2)  If any frame transformation lookup fails, an error is signaled
-!         by a routine in the call tree of this routine.
-!
-!     3)  If any occultation computation is done for ellipsoidal
-!         targets, and if either semi-axis matrix is invalid, an error
-!         is signaled by a routine in the call tree of this
-!         routine.
-!
-!     4)  If any two of the bodies defining the occultation geometry
-!         intersect, either error, the error SPICE(NOTDISJOINT) is
-!         signaled by this routine, or, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     5)  If the body model specifiers FSHAPE and BSHAPE don't specify
-!         either two ellipsoidal targets or one ellipsoidal target and
-!         one point target, the error SPICE(INVALIDSHAPECOMBO)
-!         is signaled.
-!
-! $ Files
-!
-!     See the $Files header section of the umbrella routine ZZGFOCU.
-!
-! $ Particulars
-!
-!     This routine determines the occultation state of the
-!     configuration specified by the last call to ZZGFOCIN and the
-!     input time value.
-!
-! $ Examples
-!
-!     See the umbrella routine ZZGFOCU.
-!
-! $ Restrictions
-!
-!     1)  This is a SPICELIB private routine; it should not be called by
-!         user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     L.S. Elson         (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 21-FEB-2017 (NJB)
-!
-!        Modified FAILED tests.
-!
-!        20-FEB-2016 (NJB)
-!
-!        DSK capability was integrated.
-!
-!        04-MAR-2015 (NJB)
-!
-!        Initial updates to support surfaces represented by DSKs.
-!
-!-    SPICELIB Version 1.0.0, 30-DEC-2008 (NJB) (LSE) (WLT) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     None.
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     See if the object is currently occulted.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     OCCULTATION
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      TIME
+!!     LOGICAL               OCSTAT
+!!
+!! ## Detailed Input
+!!
+!!     TIME     is the epoch of interest in TDB seconds past the
+!!              J2000 epoch.
+!!
+!! ## Detailed Output
+!!
+!!     OCSTAT   is a logical flag indicating the state of
+!!              occultation. If the configuration initialized by
+!!              ZZGFOCIN is in occultation at the epoch TIME, OCSTAT is
+!!              returned with the value .TRUE. Otherwise it is
+!!              returned with the value .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If any SPK lookup fails, an error is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     2)  If any frame transformation lookup fails, an error is signaled
+!!         by a routine in the call tree of this routine.
+!!
+!!     3)  If any occultation computation is done for ellipsoidal
+!!         targets, and if either semi-axis matrix is invalid, an error
+!!         is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     4)  If any two of the bodies defining the occultation geometry
+!!         intersect, either error, the error SPICE(NOTDISJOINT) is
+!!         signaled by this routine, or, the error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     5)  If the body model specifiers FSHAPE and BSHAPE don't specify
+!!         either two ellipsoidal targets or one ellipsoidal target and
+!!         one point target, the error SPICE(INVALIDSHAPECOMBO)
+!!         is signaled.
+!!
+!! ## Files
+!!
+!!     See the $Files header section of the umbrella routine ZZGFOCU.
+!!
+!! ## Particulars
+!!
+!!     This routine determines the occultation state of the
+!!     configuration specified by the last call to ZZGFOCIN and the
+!!     input time value.
+!!
+!! ## Examples
+!!
+!!     See the umbrella routine ZZGFOCU.
+!!
+!! ## Restrictions
+!!
+!!     1)  This is a SPICELIB private routine; it should not be called by
+!!         user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     L.S. Elson         (JPL)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 21-FEB-2017 (NJB)
+!!
+!!        Modified FAILED tests.
+!!
+!!        20-FEB-2016 (NJB)
+!!
+!!        DSK capability was integrated.
+!!
+!!        04-MAR-2015 (NJB)
+!!
+!!        Initial updates to support surfaces represented by DSKs.
+!!
+!!-    SPICELIB Version 1.0.0, 30-DEC-2008 (NJB) (LSE) (WLT) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     None.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: vminus, vnorm, vscl, vsep, vsub
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdsk
+      use pepper_inc_zzocced
       implicit none
-      include 'dsk.inc'
-      include 'gf.inc'
-      include 'zzabcorr.inc'
-      include 'zzdsk.inc'
-      include 'zzocced.inc'
       real(wp), parameter :: alpha = 1.0e-2_wp
       real(wp), parameter :: atol = 1.0e-12_wp
       integer(ip), parameter :: bdnmln = 36
@@ -7088,33 +7015,32 @@ contains
 !$Procedure ZZGFPAQ ( Private --- GF, phase angle between bodies )
 
       module procedure zzgfpaq
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Compute the apparent phase angle for a target, observer,
+!!     illuminator set of ephemeris objects.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PHASE ANGLE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_math, only: vsep
       use pepper_strings, only: eqstr
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Compute the apparent phase angle for a target, observer,
-!     illuminator set of ephemeris objects.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PHASE ANGLE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
 
@@ -7303,31 +7229,30 @@ contains
 !$Procedure ZZGFREF ( Private --- GF, update REFVAL )
 
       module procedure zzgfref
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Set reference value in the GF sub-system.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     STORE_VALUE
+!!     GEOMETRY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Set reference value in the GF sub-system.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     STORE_VALUE
-!     GEOMETRY
-!
-! $ Declarations
-
+      use pepper_inc_zzholdd
       implicit none
       real(wp) :: putval  !! copy of the value to store
 
-      include 'zzholdd.inc'
 
 
 ! $ Detailed_Input
@@ -7407,30 +7332,29 @@ contains
 !$Procedure ZZGFRRQ ( Private - GF, range rate between objects )
 
       module procedure zzgfrrq
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Compute the apparent range rate between two ephemeris objects.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     RANGE RATE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: dvnorm
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Compute the apparent range rate between two ephemeris objects.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     RANGE RATE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
 
@@ -7589,36 +7513,35 @@ contains
 !$Procedure ZZGFSOLV ( Private --- GF, event finding routine )
 
       module subroutine zzgfsolv ( ctx, udcond, udstep, udrefn, bail, udbail, cstep, step, start, finish, tol, rpt, udrepu, result )
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine is a root finding general purpose event location
+!!     routine. Most of the HARD work has been delegated to other
+!!     routines (In particular, how the dynamic step size is chosen).
+!!
+!!     Sister routine to ZZGFSOLVX. Copy any edits to ZZGFSOLV or
+!!     ZZGFSOLVX to the sister routine.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ROOT
+!!     SEARCH
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: touchd
       use pepper_math, only: brcktd
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine is a root finding general purpose event location
-!     routine. Most of the HARD work has been delegated to other
-!     routines (In particular, how the dynamic step size is chosen).
-!
-!     Sister routine to ZZGFSOLVX. Copy any edits to ZZGFSOLV or
-!     ZZGFSOLVX to the sister routine.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ROOT
-!     SEARCH
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8411,36 +8334,35 @@ contains
 
       module subroutine zzgfsolvx ( ctx, udfuns, udfunb, udstep, udrefn, bail, udbail, cstep, step, &
             start, finish, tol, rpt, udrepu, result )
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine is a root finding general purpose event location
+!!     routine. Most of the HARD work has been delegated to other
+!!     routines (In particular, how the dynamic step size is chosen).
+!!
+!!     Sister routine to ZZGFSOLV. Copy any edits to ZZGFSOLV or
+!!     ZZGFSOLVX to the sister routine.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ROOT
+!!     SEARCH
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: touchd
       use pepper_math, only: brcktd
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine is a root finding general purpose event location
-!     routine. Most of the HARD work has been delegated to other
-!     routines (In particular, how the dynamic step size is chosen).
-!
-!     Sister routine to ZZGFSOLV. Copy any edits to ZZGFSOLV or
-!     ZZGFSOLVX to the sister routine.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ROOT
-!     SEARCH
-!     WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9246,29 +9168,28 @@ contains
 !$Procedure ZZGFSPQ ( GF, separation quantity )
 
       module procedure zzgfspq
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Compute the angular separation between the limbs of two objects.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     ANGLE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: vnorm, vsep
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Compute the angular separation between the limbs of two objects.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     ANGLE
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -9777,220 +9698,215 @@ contains
 !     Never directly call this routine.
 
       module procedure zzgfspin
-
-! $ Abstract
-!
-!     This routine initializes variables that describe an angular
-!     separation event of interest for solution by ZZGFSOLV.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ANGLE
-!     GEOMETRY
-!     ROOT
-!
-! $ Declarations
-!
-!      CHARACTER*(*)         OF   ( 2 )
-!      CHARACTER*(*)         FROM
-!      CHARACTER*(*)         SHAPE( 2 )
-!      CHARACTER*(*)         FRAME( 2 )
-!      CHARACTER*(*)         ABCORR
-!
-! $ Detailed_Input
-!
-!     OF       the string array naming the bodies whose angular
-!              separation is of interest.
-!
-!     FROM     the string naming the observer.
-!
-!     SHAPE    the string array naming the geometric model used to
-!              represent the shapes of OF. The relation between SHAPE
-!              and OF is 1-to-1 and onto.
-!
-!              Models supported by this routine:
-!
-!                 'SPHERE'        Treat the body as a sphere with
-!                                 radius equal to the maximum value of
-!                                 BODYnnn_RADII
-!
-!                 'POINT'         Treat the body as a single point;
-!                                 radius has value zero.
-!
-!              The SHAPE string lacks sensitivity to case and leading
-!              or trailing blank.
-!
-!     FRAME    the string array naming the body-fixed reference frames
-!              corresponding to OF. The relation between FRAME
-!              and OF is 1-to-1.
-!
-!     ABCORR   the string description of the aberration corrections
-!              to apply to the state evaluations to account for
-!              one-way light time and stellar aberration.
-!
-!              This routine accepts the same aberration corrections
-!              as does the SPICE routine SPKEZR. See the header of
-!              SPKEZR for a detailed description of the aberration
-!              correction options. For convenience, the options are
-!              listed below:
-!
-!                 'NONE'     Apply no correction.
-!
-!                 'LT'       "Reception" case: correct for
-!                            one-way light time using a Newtonian
-!                            formulation.
-!
-!                 'LT+S'     "Reception" case: correct for
-!                            one-way light time and stellar
-!                            aberration using a Newtonian
-!                            formulation.
-!
-!                 'CN'       "Reception" case: converged
-!                            Newtonian light time correction.
-!
-!                 'CN+S'     "Reception" case: converged
-!                            Newtonian light time and stellar
-!                            aberration corrections.
-!
-!                 'XLT'      "Transmission" case: correct for
-!                            one-way light time using a Newtonian
-!                            formulation.
-!
-!                 'XLT+S'    "Transmission" case: correct for
-!                            one-way light time and stellar
-!                            aberration using a Newtonian
-!                            formulation.
-!
-!                 'XCN'      "Transmission" case: converged
-!                            Newtonian light time correction.
-!
-!                 'XCN+S'    "Transmission" case: converged
-!                            Newtonian light time and stellar
-!                            aberration corrections.
-!
-!                 The ABCORR string lacks sensitivity to case, leading
-!                 and trailing blanks.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the object name for target 1, OF(1), is not a recognized
-!         name, the error SPICE(IDCODENOTFOUND) is signaled.
-!
-!     2)  If the object name for target 2, OF(2), is not a recognized
-!         name, the error SPICE(IDCODENOTFOUND) is signaled.
-!
-!     3)  If the object name for the observer, FROM, is not a recognized
-!         name, the error SPICE(IDCODENOTFOUND) is signaled.
-!
-!     4)  If the three objects associated with an ANGULAR SEPARATION
-!         search are not distinct, the error SPICE(BODIESNOTDISTINCT) is
-!         signaled.
-!
-!     5)  If the body shape for target 1, SHAPE(1), is not recognized,
-!         the error SPICE(NOTRECOGNIZED) is signaled.
-!
-!     6)  If the SHAPE(1) value lacks a corresponding case block, the
-!         error SPICE(BUG) is signaled. This indicates a programming
-!         error.
-!
-!     7)  If the body shape for target 2, SHAPE(2), is not recognized,
-!         the error SPICE(NOTRECOGNIZED) is signaled.
-!
-!     8)  If the SHAPE(2) value lacks a corresponding case block, the
-!         error SPICE(BUG) is signaled. This indicates a programming
-!         error.
-!
-!     9)  If frame subsystem did not recognize frame name FRAME(1), the
-!         error SPICE(NOFRAME) is signaled.
-!
-!     10) If the reference frame associated with target body 1, OF(1),
-!         is not centered on target body 1, the error
-!         SPICE(INVALIDFRAME) is signaled.
-!
-!     11) If frame subsystem did not recognize frame name FRAME(2), the
-!         error SPICE(NOFRAME) is signaled.
-!
-!     12) If the reference frame associated with target body 2, OF(2),
-!         is not centered on target body 2, the error
-!         SPICE(INVALIDFRAME) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 31-MAY-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 27-JUN-2012 (EDW)
-!
-!        REFVAL removed from routine argument list due to the use
-!        of ZZGFRELX to calculate the events.
-!
-!        Implemented a proper $Exceptions section. Update to
-!        $Author_and_Institution section.
-!
-!-    SPICELIB Version 1.1.0, 29-DEC-2009 (NJB) (EDW)
-!
-!        Edited argument descriptions. Removed mention of "ELLIPSOID"
-!        shape from SHAPE as that option is not yet implemented.
-!
-!        Added an error check on body frame centers to enforce
-!        a body frame center is the body. This check does not apply
-!        to "POINT" or "SPHERE" shape targets, and so will not
-!        execute for this version of the routine.
-!
-!-    SPICELIB Version 1.0.0, 14-APR-2008 (NJB) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     angular separation initialization routine
-!
-!-&
-
+!! ## Abstract
+!!
+!!     This routine initializes variables that describe an angular
+!!     separation event of interest for solution by ZZGFSOLV.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ANGLE
+!!     GEOMETRY
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!      CHARACTER*(*)         OF   ( 2 )
+!!      CHARACTER*(*)         FROM
+!!      CHARACTER*(*)         SHAPE( 2 )
+!!      CHARACTER*(*)         FRAME( 2 )
+!!      CHARACTER*(*)         ABCORR
+!!
+!! ## Detailed Input
+!!
+!!     OF       the string array naming the bodies whose angular
+!!              separation is of interest.
+!!
+!!     FROM     the string naming the observer.
+!!
+!!     SHAPE    the string array naming the geometric model used to
+!!              represent the shapes of OF. The relation between SHAPE
+!!              and OF is 1-to-1 and onto.
+!!
+!!              Models supported by this routine:
+!!
+!!                 'SPHERE'        Treat the body as a sphere with
+!!                                 radius equal to the maximum value of
+!!                                 BODYnnn_RADII
+!!
+!!                 'POINT'         Treat the body as a single point;
+!!                                 radius has value zero.
+!!
+!!              The SHAPE string lacks sensitivity to case and leading
+!!              or trailing blank.
+!!
+!!     FRAME    the string array naming the body-fixed reference frames
+!!              corresponding to OF. The relation between FRAME
+!!              and OF is 1-to-1.
+!!
+!!     ABCORR   the string description of the aberration corrections
+!!              to apply to the state evaluations to account for
+!!              one-way light time and stellar aberration.
+!!
+!!              This routine accepts the same aberration corrections
+!!              as does the SPICE routine SPKEZR. See the header of
+!!              SPKEZR for a detailed description of the aberration
+!!              correction options. For convenience, the options are
+!!              listed below:
+!!
+!!                 'NONE'     Apply no correction.
+!!
+!!                 'LT'       "Reception" case: correct for
+!!                            one-way light time using a Newtonian
+!!                            formulation.
+!!
+!!                 'LT+S'     "Reception" case: correct for
+!!                            one-way light time and stellar
+!!                            aberration using a Newtonian
+!!                            formulation.
+!!
+!!                 'CN'       "Reception" case: converged
+!!                            Newtonian light time correction.
+!!
+!!                 'CN+S'     "Reception" case: converged
+!!                            Newtonian light time and stellar
+!!                            aberration corrections.
+!!
+!!                 'XLT'      "Transmission" case: correct for
+!!                            one-way light time using a Newtonian
+!!                            formulation.
+!!
+!!                 'XLT+S'    "Transmission" case: correct for
+!!                            one-way light time and stellar
+!!                            aberration using a Newtonian
+!!                            formulation.
+!!
+!!                 'XCN'      "Transmission" case: converged
+!!                            Newtonian light time correction.
+!!
+!!                 'XCN+S'    "Transmission" case: converged
+!!                            Newtonian light time and stellar
+!!                            aberration corrections.
+!!
+!!                 The ABCORR string lacks sensitivity to case, leading
+!!                 and trailing blanks.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the object name for target 1, OF(1), is not a recognized
+!!         name, the error SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     2)  If the object name for target 2, OF(2), is not a recognized
+!!         name, the error SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     3)  If the object name for the observer, FROM, is not a recognized
+!!         name, the error SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     4)  If the three objects associated with an ANGULAR SEPARATION
+!!         search are not distinct, the error SPICE(BODIESNOTDISTINCT) is
+!!         signaled.
+!!
+!!     5)  If the body shape for target 1, SHAPE(1), is not recognized,
+!!         the error SPICE(NOTRECOGNIZED) is signaled.
+!!
+!!     6)  If the SHAPE(1) value lacks a corresponding case block, the
+!!         error SPICE(BUG) is signaled. This indicates a programming
+!!         error.
+!!
+!!     7)  If the body shape for target 2, SHAPE(2), is not recognized,
+!!         the error SPICE(NOTRECOGNIZED) is signaled.
+!!
+!!     8)  If the SHAPE(2) value lacks a corresponding case block, the
+!!         error SPICE(BUG) is signaled. This indicates a programming
+!!         error.
+!!
+!!     9)  If frame subsystem did not recognize frame name FRAME(1), the
+!!         error SPICE(NOFRAME) is signaled.
+!!
+!!     10) If the reference frame associated with target body 1, OF(1),
+!!         is not centered on target body 1, the error
+!!         SPICE(INVALIDFRAME) is signaled.
+!!
+!!     11) If frame subsystem did not recognize frame name FRAME(2), the
+!!         error SPICE(NOFRAME) is signaled.
+!!
+!!     12) If the reference frame associated with target body 2, OF(2),
+!!         is not centered on target body 2, the error
+!!         SPICE(INVALIDFRAME) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 31-MAY-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 27-JUN-2012 (EDW)
+!!
+!!        REFVAL removed from routine argument list due to the use
+!!        of ZZGFRELX to calculate the events.
+!!
+!!        Implemented a proper $Exceptions section. Update to
+!!        $Author_and_Institution section.
+!!
+!!-    SPICELIB Version 1.1.0, 29-DEC-2009 (NJB) (EDW)
+!!
+!!        Edited argument descriptions. Removed mention of "ELLIPSOID"
+!!        shape from SHAPE as that option is not yet implemented.
+!!
+!!        Added an error check on body frame centers to enforce
+!!        a body frame center is the body. This check does not apply
+!!        to "POINT" or "SPHERE" shape targets, and so will not
+!!        execute for this version of the routine.
+!!
+!!-    SPICELIB Version 1.0.0, 14-APR-2008 (NJB) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     angular separation initialization routine
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc
       use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp)              axes1 (3)
       real(wp)              axes2 (3)
       real(wp)              pv1   (6)
@@ -10278,119 +10194,113 @@ contains
       end procedure zzgfspin
 
       module subroutine zzgfspdc ( ctx, udfunc, et, decres )
-
-! $ Abstract
-!
-!     Computes whether or not the angular separation between SVBOD1 and
-!     SVBOD2 is decreasing at time ET.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ANGLE
-!     GEOMETRY
-!     ROOT
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     LOGICAL               DECRES
-!
-! $ Detailed_Input
-!
-!     ET       time in seconds past J2000 at which one wishes to
-!              determine whether or not the angular separation of the
-!              two bodies is decreasing.
-!
-! $ Detailed_Output
-!
-!     DECRES   is .TRUE. if the angular separation between the objects
-!              is decreasing. Otherwise it is .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the observer is inside one of the objects, the object will
-!         be regarded as having a 90 degree apparent radius.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     A function f(x) is strictly decreasing at x0 if and only if there
-!     exists some delta > 0 such that for all dx satisfying
-!
-!        0  <  dx  < delta
-!
-!     we have
-!
-!        f(x0)       <  f(x0 + dx)
-!
-!     and
-!
-!        f(x0 - dx)  <  f(x)
-!
-!     Note that a strictly decreasing function need not be
-!     differentiable in a neighborhood of x0; it can have jump
-!     discontinuities in any neighborhood of x0 and even at x0.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 30-MAY-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 18-FEB-2011 (EDW)
-!
-!        Added UDFUNC to argument list for use of ZZGFRELX when
-!        calculating the events.
-!
-!-    SPICELIB Version 1.0.1, 06-JUL-2009 (NJB) (EDW)
-!
-!        Rename of the ZZDHA call to DHFA.
-!
-!-    SPICELIB Version 1.0.0, 29-APR-2008 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     angular separation is decreasing
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Computes whether or not the angular separation between SVBOD1 and
+!!     SVBOD2 is decreasing at time ET.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ANGLE
+!!     GEOMETRY
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     LOGICAL               DECRES
+!!
+!! ## Detailed Input
+!!
+!!     ET       time in seconds past J2000 at which one wishes to
+!!              determine whether or not the angular separation of the
+!!              two bodies is decreasing.
+!!
+!! ## Detailed Output
+!!
+!!     DECRES   is .TRUE. if the angular separation between the objects
+!!              is decreasing. Otherwise it is .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the observer is inside one of the objects, the object will
+!!         be regarded as having a 90 degree apparent radius.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     A function f(x) is strictly decreasing at x0 if and only if there
+!!     exists some delta > 0 such that for all dx satisfying
+!!
+!!        0  <  dx  < delta
+!!
+!!     we have
+!!
+!!        f(x0)       <  f(x0 + dx)
+!!
+!!     and
+!!
+!!        f(x0 - dx)  <  f(x)
+!!
+!!     Note that a strictly decreasing function need not be
+!!     differentiable in a neighborhood of x0; it can have jump
+!!     discontinuities in any neighborhood of x0 and even at x0.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 30-MAY-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 18-FEB-2011 (EDW)
+!!
+!!        Added UDFUNC to argument list for use of ZZGFRELX when
+!!        calculating the events.
+!!
+!!-    SPICELIB Version 1.0.1, 06-JUL-2009 (NJB) (EDW)
+!!
+!!        Rename of the ZZDHA call to DHFA.
+!!
+!!-    SPICELIB Version 1.0.0, 29-APR-2008 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     angular separation is decreasing
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp)              axes1 (3)
       real(wp)              axes2 (3)
       real(wp)              pv1   (6)
@@ -10483,101 +10393,96 @@ contains
       end subroutine zzgfspdc
 
       module procedure zzgfspgq
-
-! $ Abstract
-!
-!     Determine the angular separation between the limbs of the two
-!     bodies.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ANGLE
-!     GEOMETRY
-!     ROOT
-!
-! $ Declarations
-!
-!      DOUBLE PRECISION      ET
-!      DOUBLE PRECISION      SEP
-!
-! $ Detailed_Input
-!
-!     ET       time in ephemeris seconds past J2000 when the
-!              angular separation between the two bodies is
-!              to be computed.
-!
-! $ Detailed_Output
-!
-!     SEP      is the angular separation between SVBOD1 and SVBOD2 as
-!              seen from SVOBS at time ET.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine determines the apparent angular separation between
-!     the limbs of bodies SVBOD1 and SVBOD2 as seen from SVOBS at
-!     time ET.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     L.S. Elson         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.0.0, 30-MAY-2021 (EDW) (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Routine now calls ZZSEPQ, a copy of ZZGFSPQ cast as
-!        a function.
-!
-!-    SPICELIB Version 2.0.0, 17-FEB-2011 (EDW)
-!
-!        Routine renamed from ZZGFGSEP to ZZGFSPGQ to match geometry
-!        finder naming convention.
-!
-!-    SPICELIB Version 1.0.0, 26-AUG-2003 (LSE)
-!
-!-&
-
-! $ Index_Entries
-!
-!     angular separation between two bodies
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Determine the angular separation between the limbs of the two
+!!     bodies.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ANGLE
+!!     GEOMETRY
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!      DOUBLE PRECISION      ET
+!!      DOUBLE PRECISION      SEP
+!!
+!! ## Detailed Input
+!!
+!!     ET       time in ephemeris seconds past J2000 when the
+!!              angular separation between the two bodies is
+!!              to be computed.
+!!
+!! ## Detailed Output
+!!
+!!     SEP      is the angular separation between SVBOD1 and SVBOD2 as
+!!              seen from SVOBS at time ET.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine determines the apparent angular separation between
+!!     the limbs of bodies SVBOD1 and SVBOD2 as seen from SVOBS at
+!!     time ET.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     L.S. Elson         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.0.0, 30-MAY-2021 (EDW) (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Routine now calls ZZSEPQ, a copy of ZZGFSPQ cast as
+!!        a function.
+!!
+!!-    SPICELIB Version 2.0.0, 17-FEB-2011 (EDW)
+!!
+!!        Routine renamed from ZZGFGSEP to ZZGFSPGQ to match geometry
+!!        finder naming convention.
+!!
+!!-    SPICELIB Version 1.0.0, 26-AUG-2003 (LSE)
+!!
+!! ## Index Entries
+!!
+!!     angular separation between two bodies
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       logical               return
       real(wp)              axes1 (3)
       real(wp)              axes2 (3)
@@ -10620,111 +10525,106 @@ contains
       end procedure zzgfspgq
 
       module procedure zzgfspx
-
-! $ Abstract
-!
-!     Retrieve values set in ZZGFSPIN.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         XABCR
-!     INTEGER               XBOD  (2)
-!     CHARACTER*(*)         YREF
-!     CHARACTER*(*)         XREF  (2)
-!     INTEGER               XOBS
-!     DOUBLE PRECISION      XRAD  (2)
-!     INTEGER               XSHP  (2)
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     XABCR    initialized via ZZGFSPIN.
-!
-!     XBOD1    initialized via ZZGFSPIN.
-!
-!     XBOD2    initialized via ZZGFSPIN.
-!
-!     YREF     initialized via ZZGFSPIN.
-!
-!     XREF1    initialized via ZZGFSPIN.
-!
-!     XREF2    initialized via ZZGFSPIN.
-!
-!     XOBS     initialized via ZZGFSPIN.
-!
-!     XRAD1    initialized via ZZGFSPIN.
-!
-!     XRAD2    initialized via ZZGFSPIN.
-!
-!     XSHP1    initialized via ZZGFSPIN.
-!
-!     XSHP2    initialized via ZZGFSPIN.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 30-MAY-2021 (EDW) (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Completed descriptions for $Brief_I/O.
-!
-!-    SPICELIB Version 1.0.0, 24-SEP-2012 (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get saved separation angle parameters
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Retrieve values set in ZZGFSPIN.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         XABCR
+!!     INTEGER               XBOD  (2)
+!!     CHARACTER*(*)         YREF
+!!     CHARACTER*(*)         XREF  (2)
+!!     INTEGER               XOBS
+!!     DOUBLE PRECISION      XRAD  (2)
+!!     INTEGER               XSHP  (2)
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     XABCR    initialized via ZZGFSPIN.
+!!
+!!     XBOD1    initialized via ZZGFSPIN.
+!!
+!!     XBOD2    initialized via ZZGFSPIN.
+!!
+!!     YREF     initialized via ZZGFSPIN.
+!!
+!!     XREF1    initialized via ZZGFSPIN.
+!!
+!!     XREF2    initialized via ZZGFSPIN.
+!!
+!!     XOBS     initialized via ZZGFSPIN.
+!!
+!!     XRAD1    initialized via ZZGFSPIN.
+!!
+!!     XRAD2    initialized via ZZGFSPIN.
+!!
+!!     XSHP1    initialized via ZZGFSPIN.
+!!
+!!     XSHP2    initialized via ZZGFSPIN.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 30-MAY-2021 (EDW) (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Completed descriptions for $Brief_I/O.
+!!
+!!-    SPICELIB Version 1.0.0, 24-SEP-2012 (EDW)
+!!
+!! ## Index Entries
+!!
+!!     get saved separation angle parameters
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       logical               return
       real(wp)              axes1 (3)
       real(wp)              axes2 (3)
@@ -10778,341 +10678,315 @@ contains
       end procedure zzgfspx
 
       module procedure zzgfssin
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Return the state of a ray-target surface intercept point used to
-!     define coordinates referenced in a GF search.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     SEARCH
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     METHOD      is a short string providing parameters defining
-!                 the computation method to be used. Any value
-!                 supported by SUBPNT may be used.
-!
-!     TRGID      is the NAIF ID code of the target object.
-!
-!                *This routine assumes that the target is modeled
-!                as a tri-axial ellipsoid.*
-!
-!     ET         is the time, expressed as ephemeris seconds past J2000
-!                TDB, at which the specified state is to be computed.
-!
-!     FIXREF     is the name of the reference frame relative to which
-!                the state of interest is specified.
-!
-!                FIXREF must be centered on the target body.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string FIXREF.
-!
-!     ABCORR     indicates the aberration corrections to be applied to
-!                the state of the target body to account for one-way
-!                light time and stellar aberration. The orientation
-!                of the target body will also be corrected for one-way
-!                light time when light time corrections are requested.
-!
-!                Supported aberration correction options for
-!                observation (case where radiation is received by
-!                observer at ET) are:
-!
-!                   NONE           No correction.
-!                   LT             Light time only.
-!                   LT+S           Light time and stellar aberration.
-!                   CN             Converged Newtonian (CN) light time.
-!                   CN+S           CN light time and stellar aberration.
-!
-!                Supported aberration correction options for
-!                transmission (case where radiation is emitted from
-!                observer at ET) are:
-!
-!                   XLT            Light time only.
-!                   XLT+S          Light time and stellar aberration.
-!                   XCN            Converged Newtonian (CN) light time.
-!                   XCN+S          CN light time and stellar aberration.
-!
-!                For detailed information, see the geometry finder
-!                required reading, gf.req.  Also see the header of
-!                SPKEZR, which contains a detailed discussion of
-!                aberration corrections.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string ABCORR.
-!
-!     OBSID      is the NAIF ID code of the observer.
-!
-!     DREF        is the name of the reference frame relative to which
-!                 a ray's direction vector is expressed. This may be
-!                 any frame supported by the SPICE system, including
-!                 built-in frames (documented in the Frames Required
-!                 Reading) and frames defined by a loaded frame kernel
-!                 (FK). The string DREF is case-insensitive, and
-!                 leading and trailing blanks in DREF are not
-!                 significant.
-!
-!                 When DREF designates a non-inertial frame, the
-!                 orientation of the frame is evaluated at an epoch
-!                 dependent on the frame's center and, if the center is
-!                 not the observer, on the selected aberration
-!                 correction. See the description of the direction
-!                 vector DVEC for details.
-!
-!     DCTR        is the NAIF ID code of the body at which the frame
-!                 designated by DREF is centered. While DCTR can
-!                 be obtained from the FRAMEX system, passing in
-!                 the ID code is more efficient. DCTR should be looked
-!                 up by the coordinate search utility initialization
-!                 routine before a search is performed.
-!
-!     DVEC        Ray direction vector emanating from the observer. The
-!                 intercept with the target body's surface of the ray
-!                 defined by the observer and DVEC is sought.
-!
-!                 DVEC is specified relative to the reference frame
-!                 designated by DREF.
-!
-!                 Non-inertial reference frames are treated as follows:
-!                 if the center of the frame is at the observer's
-!                 location, the frame is evaluated at ET. If the
-!                 frame's center is located elsewhere, then letting
-!                 LTCENT be the one-way light time between the observer
-!                 and the central body associated with the frame, the
-!                 orientation of the frame is evaluated at ET-LTCENT,
-!                 ET+LTCENT, or ET depending on whether the requested
-!                 aberration correction is, respectively, for received
-!                 radiation, transmitted radiation, or is omitted.
-!                 LTCENT is computed using the method indicated by
-!                 ABCORR.
-!
-!     RADII      is an array containing three radii defining
-!                a reference ellipsoid for the target body.
-!
-! $ Detailed_Output
-!
-!     STATE     is the state of the surface intercept point at ET.
-!               The first three components of STATE contain the
-!               surface intercept point itself; the last three
-!               components contain the derivative with respect to
-!               time of the intercept. The state is expressed
-!               relative to the body-fixed frame designated by
-!               FIXREF.
-!
-!               Units are km and km/s.
-!
-!               STATE is defined if and only if the output flag FOUND
-!               is set to .TRUE.
-!
-!     FOUND     is a logical flag indicating whether the requested
-!               state was found. FOUND is set to .TRUE. if and only
-!               if
-!
-!                  - the surface intercept exists
-!
-!                  - the velocity of the surface intercept
-!                    is computable
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the aberration correction ABCORR is not recognized,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     2)  If the frame FIXREF is not recognized by the frames
-!         subsystem, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-!     3)  FIXREF must be centered on the target body; if it isn't,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     4)  Any error that occurs while look up the state of the target
-!         or observer will be diagnosed by routines in the call tree of
-!         this routine.
-!
-!     5)  Any error that occurs while look up the orientation of
-!         the target will be diagnosed by routines in the call tree of
-!         this routine.
-!
-!     6)  If the input method is not recognized, the error
-!         SPICE(NOTSUPPORTED) will be signaled.
-!
-!     7)  The input ray direction frame center DCTR must be compatible
-!         with the ray direction frame DREF. This routine *does not
-!         check* the validity of DCTR.
-!
-!     8)  If the input ray's direction vector is the zero vector, the
-!         error will be diagnosed by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     Appropriate kernels must be loaded by the calling program before
-!     this routine is called.
-!
-!     The following data are required:
-!
-!        - SPK data: ephemeris data for target and observer must be
-!          loaded. If aberration corrections are used, the states of
-!          target and observer relative to the solar system barycenter
-!          must be calculable from the available ephemeris data.
-!          Typically ephemeris data are made available by loading one
-!          or more SPK files via FURNSH.
-!
-!        - PCK data: if the target body shape is modeled as an
-!          ellipsoid, triaxial radii for the target body must be loaded
-!          into the kernel pool. Typically this is done by loading a
-!          text PCK file via FURNSH.
-!
-!        - Further PCK data: rotation data for the target body must be
-!          loaded. These may be provided in a text or binary PCK file.
-!
-!        - Frame data: if a frame definition is required to convert the
-!          observer and target states to the body-fixed frame of the
-!          target, that definition must be available in the kernel
-!          pool. Typically the definition is supplied by loading a
-!          frame kernel via FURNSH.
-!
-!     In all cases, kernel data are normally loaded once per program
-!     run, NOT every time this routine is called.
-!
-! $ Particulars
-!
-!     This routine isolates the computation of the surface intercept
-!     state (that is, the surface intercept point and its derivative
-!     with respect to time).
-!
-!     This routine is used by the GF coordinate utility routines in
-!     order to solve for time windows on which specified mathematical
-!     conditions involving coordinates are satisfied. The role of
-!     this routine is to provide Cartesian state vectors enabling
-!     the GF coordinate utilities to determine the signs of the
-!     derivatives with respect to time of coordinates of interest.
-!
-! $ Examples
-!
-!     See ZZGFCOST.
-!
-! $ Restrictions
-!
-!     1)  This routine is restricted to use with ellipsoidal target
-!         shape models.
-!
-!     2)  The computations performed by this routine are intended
-!         to be compatible with those performed by the SPICE
-!         routine SUBPNT. If that routine changes, this routine
-!         may need to be updated.
-!
-!     3)  This routine presumes that error checking of inputs
-!         has, where possible, already been performed by the
-!         GF coordinate utility initialization routine.
-!
-!     4)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.2.0 09-OCT-2021 (NJB)
-!
-!        Bug fix: now returns after detecting bad aberration
-!        correction string.
-!
-!        Bug fix: aberration correction strings are now parsed using
-!        ZZVALCOR. This improves error checking.
-!
-!-    SPICELIB Version 2.1.0 08-MAR-2017 (NJB)
-!
-!        Bug fix: now returns after SINCPT call if FOUND is .FALSE.
-!
-!-    SPICELIB Version 2.0.0 12-MAY-2009 (NJB)
-!
-!        Upgraded to support targets and observers having
-!        no names associated with their ID codes.
-!
-!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     surface intercept state
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Return the state of a ray-target surface intercept point used to
+!!     define coordinates referenced in a GF search.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     METHOD      is a short string providing parameters defining
+!!                 the computation method to be used. Any value
+!!                 supported by SUBPNT may be used.
+!!
+!!     TRGID      is the NAIF ID code of the target object.
+!!
+!!                *This routine assumes that the target is modeled
+!!                as a tri-axial ellipsoid.*
+!!
+!!     ET         is the time, expressed as ephemeris seconds past J2000
+!!                TDB, at which the specified state is to be computed.
+!!
+!!     FIXREF     is the name of the reference frame relative to which
+!!                the state of interest is specified.
+!!
+!!                FIXREF must be centered on the target body.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string FIXREF.
+!!
+!!     ABCORR     indicates the aberration corrections to be applied to
+!!                the state of the target body to account for one-way
+!!                light time and stellar aberration. The orientation
+!!                of the target body will also be corrected for one-way
+!!                light time when light time corrections are requested.
+!!
+!!                Supported aberration correction options for
+!!                observation (case where radiation is received by
+!!                observer at ET) are:
+!!
+!!                   NONE           No correction.
+!!                   LT             Light time only.
+!!                   LT+S           Light time and stellar aberration.
+!!                   CN             Converged Newtonian (CN) light time.
+!!                   CN+S           CN light time and stellar aberration.
+!!
+!!                Supported aberration correction options for
+!!                transmission (case where radiation is emitted from
+!!                observer at ET) are:
+!!
+!!                   XLT            Light time only.
+!!                   XLT+S          Light time and stellar aberration.
+!!                   XCN            Converged Newtonian (CN) light time.
+!!                   XCN+S          CN light time and stellar aberration.
+!!
+!!                For detailed information, see the geometry finder
+!!                required reading, gf.req.  Also see the header of
+!!                SPKEZR, which contains a detailed discussion of
+!!                aberration corrections.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string ABCORR.
+!!
+!!     OBSID      is the NAIF ID code of the observer.
+!!
+!!     DREF        is the name of the reference frame relative to which
+!!                 a ray's direction vector is expressed. This may be
+!!                 any frame supported by the SPICE system, including
+!!                 built-in frames (documented in the Frames Required
+!!                 Reading) and frames defined by a loaded frame kernel
+!!                 (FK). The string DREF is case-insensitive, and
+!!                 leading and trailing blanks in DREF are not
+!!                 significant.
+!!
+!!                 When DREF designates a non-inertial frame, the
+!!                 orientation of the frame is evaluated at an epoch
+!!                 dependent on the frame's center and, if the center is
+!!                 not the observer, on the selected aberration
+!!                 correction. See the description of the direction
+!!                 vector DVEC for details.
+!!
+!!     DCTR        is the NAIF ID code of the body at which the frame
+!!                 designated by DREF is centered. While DCTR can
+!!                 be obtained from the FRAMEX system, passing in
+!!                 the ID code is more efficient. DCTR should be looked
+!!                 up by the coordinate search utility initialization
+!!                 routine before a search is performed.
+!!
+!!     DVEC        Ray direction vector emanating from the observer. The
+!!                 intercept with the target body's surface of the ray
+!!                 defined by the observer and DVEC is sought.
+!!
+!!                 DVEC is specified relative to the reference frame
+!!                 designated by DREF.
+!!
+!!                 Non-inertial reference frames are treated as follows:
+!!                 if the center of the frame is at the observer's
+!!                 location, the frame is evaluated at ET. If the
+!!                 frame's center is located elsewhere, then letting
+!!                 LTCENT be the one-way light time between the observer
+!!                 and the central body associated with the frame, the
+!!                 orientation of the frame is evaluated at ET-LTCENT,
+!!                 ET+LTCENT, or ET depending on whether the requested
+!!                 aberration correction is, respectively, for received
+!!                 radiation, transmitted radiation, or is omitted.
+!!                 LTCENT is computed using the method indicated by
+!!                 ABCORR.
+!!
+!!     RADII      is an array containing three radii defining
+!!                a reference ellipsoid for the target body.
+!!
+!! ## Detailed Output
+!!
+!!     STATE     is the state of the surface intercept point at ET.
+!!               The first three components of STATE contain the
+!!               surface intercept point itself; the last three
+!!               components contain the derivative with respect to
+!!               time of the intercept. The state is expressed
+!!               relative to the body-fixed frame designated by
+!!               FIXREF.
+!!
+!!               Units are km and km/s.
+!!
+!!               STATE is defined if and only if the output flag FOUND
+!!               is set to .TRUE.
+!!
+!!     FOUND     is a logical flag indicating whether the requested
+!!               state was found. FOUND is set to .TRUE. if and only
+!!               if
+!!
+!!                  - the surface intercept exists
+!!
+!!                  - the velocity of the surface intercept
+!!                    is computable
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the aberration correction ABCORR is not recognized,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     2)  If the frame FIXREF is not recognized by the frames
+!!         subsystem, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!!     3)  FIXREF must be centered on the target body; if it isn't,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     4)  Any error that occurs while look up the state of the target
+!!         or observer will be diagnosed by routines in the call tree of
+!!         this routine.
+!!
+!!     5)  Any error that occurs while look up the orientation of
+!!         the target will be diagnosed by routines in the call tree of
+!!         this routine.
+!!
+!!     6)  If the input method is not recognized, the error
+!!         SPICE(NOTSUPPORTED) will be signaled.
+!!
+!!     7)  The input ray direction frame center DCTR must be compatible
+!!         with the ray direction frame DREF. This routine *does not
+!!         check* the validity of DCTR.
+!!
+!!     8)  If the input ray's direction vector is the zero vector, the
+!!         error will be diagnosed by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     Appropriate kernels must be loaded by the calling program before
+!!     this routine is called.
+!!
+!!     The following data are required:
+!!
+!!        - SPK data: ephemeris data for target and observer must be
+!!          loaded. If aberration corrections are used, the states of
+!!          target and observer relative to the solar system barycenter
+!!          must be calculable from the available ephemeris data.
+!!          Typically ephemeris data are made available by loading one
+!!          or more SPK files via FURNSH.
+!!
+!!        - PCK data: if the target body shape is modeled as an
+!!          ellipsoid, triaxial radii for the target body must be loaded
+!!          into the kernel pool. Typically this is done by loading a
+!!          text PCK file via FURNSH.
+!!
+!!        - Further PCK data: rotation data for the target body must be
+!!          loaded. These may be provided in a text or binary PCK file.
+!!
+!!        - Frame data: if a frame definition is required to convert the
+!!          observer and target states to the body-fixed frame of the
+!!          target, that definition must be available in the kernel
+!!          pool. Typically the definition is supplied by loading a
+!!          frame kernel via FURNSH.
+!!
+!!     In all cases, kernel data are normally loaded once per program
+!!     run, NOT every time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     This routine isolates the computation of the surface intercept
+!!     state (that is, the surface intercept point and its derivative
+!!     with respect to time).
+!!
+!!     This routine is used by the GF coordinate utility routines in
+!!     order to solve for time windows on which specified mathematical
+!!     conditions involving coordinates are satisfied. The role of
+!!     this routine is to provide Cartesian state vectors enabling
+!!     the GF coordinate utilities to determine the signs of the
+!!     derivatives with respect to time of coordinates of interest.
+!!
+!! ## Examples
+!!
+!!     See ZZGFCOST.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine is restricted to use with ellipsoidal target
+!!         shape models.
+!!
+!!     2)  The computations performed by this routine are intended
+!!         to be compatible with those performed by the SPICE
+!!         routine SUBPNT. If that routine changes, this routine
+!!         may need to be updated.
+!!
+!!     3)  This routine presumes that error checking of inputs
+!!         has, where possible, already been performed by the
+!!         GF coordinate utility initialization routine.
+!!
+!!     4)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.2.0 09-OCT-2021 (NJB)
+!!
+!!        Bug fix: now returns after detecting bad aberration
+!!        correction string.
+!!
+!!        Bug fix: aberration correction strings are now parsed using
+!!        ZZVALCOR. This improves error checking.
+!!
+!!-    SPICELIB Version 2.1.0 08-MAR-2017 (NJB)
+!!
+!!        Bug fix: now returns after SINCPT call if FOUND is .FALSE.
+!!
+!!-    SPICELIB Version 2.0.0 12-MAY-2009 (NJB)
+!!
+!!        Upgraded to support targets and observers having
+!!        no names associated with their ID codes.
+!!
+!!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     surface intercept state
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleard, moved
       use pepper_math, only: mxvg, vaddg, vdot, vhat, vminug, vscl, vsubg
       use pepper_strings, only: eqstr
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       real(wp), parameter :: tdelta = 1.0_wp
       integer(ip), parameter :: bdnmln = 36
       real(wp)              acc    ( 3 )
@@ -11666,274 +11540,248 @@ contains
       end procedure zzgfssin
 
       module procedure zzgfssob
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Return the state of a sub-observer point used to define
-!     coordinates referenced in a GF search.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     SEARCH
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     METHOD      is a short string providing parameters defining
-!                 the computation method to be used. Any value
-!                 supported by SUBPNT may be used.
-!
-!     TRGID      is the NAIF ID code of the target object.
-!
-!                *This routine assumes that the target is modeled
-!                as a tri-axial ellipsoid.*
-!
-!     ET         is the time, expressed as ephemeris seconds past J2000
-!                TDB, at which the specified state is to be computed.
-!
-!     FIXREF     is the name of the reference frame relative to which
-!                the state of interest is specified.
-!
-!                FIXREF must be centered on the target body.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string FIXREF.
-!
-!     ABCORR     indicates the aberration corrections to be applied to
-!                the state of the target body to account for one-way
-!                light time and stellar aberration. The orientation
-!                of the target body will also be corrected for one-way
-!                light time when light time corrections are requested.
-!
-!                Supported aberration correction options for
-!                observation (case where radiation is received by
-!                observer at ET) are:
-!
-!                   NONE           No correction.
-!                   LT             Light time only.
-!                   LT+S           Light time and stellar aberration.
-!                   CN             Converged Newtonian (CN) light time.
-!                   CN+S           CN light time and stellar aberration.
-!
-!                Supported aberration correction options for
-!                transmission (case where radiation is emitted from
-!                observer at ET) are:
-!
-!                   XLT            Light time only.
-!                   XLT+S          Light time and stellar aberration.
-!                   XCN            Converged Newtonian (CN) light time.
-!                   XCN+S          CN light time and stellar aberration.
-!
-!                For detailed information, see the geometry finder
-!                required reading, gf.req.  Also see the header of
-!                SPKEZR, which contains a detailed discussion of
-!                aberration corrections.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string ABCORR.
-!
-!     OBSID      is the NAIF ID code of the observer.
-!
-!     RADII      is an array containing three radii defining
-!                a reference ellipsoid for the target body.
-!
-! $ Detailed_Output
-!
-!     STATE     is the state of the sub-observer point at ET.
-!               The first three components of STATE contain the
-!               sub-observer point itself; the last three
-!               components contain the derivative with respect to
-!               time of the position. The state is expressed
-!               relative to the body-fixed frame designated by
-!               FIXREF.
-!
-!               Units are km and km/s.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the aberration correction ABCORR is not recognized,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     2)  If the frame FIXREF is not recognized by the frames
-!         subsystem, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-!     3)  FIXREF must be centered on the target body; if it isn't,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     4)  Any error that occurs while look up the state of the target
-!         or observer will be diagnosed by routines in the call tree of
-!         this routine.
-!
-!     5)  Any error that occurs while look up the orientation of
-!         the target will be diagnosed by routines in the call tree of
-!         this routine.
-!
-!     6)  If the input method is not recognized, the error
-!         SPICE(NOTSUPPORTED) will be signaled.
-!
-! $ Files
-!
-!     Appropriate kernels must be loaded by the calling program before
-!     this routine is called.
-!
-!     The following data are required:
-!
-!        - SPK data: ephemeris data for target and observer must be
-!          loaded. If aberration corrections are used, the states of
-!          target and observer relative to the solar system barycenter
-!          must be calculable from the available ephemeris data.
-!          Typically ephemeris data are made available by loading one
-!          or more SPK files via FURNSH.
-!
-!        - PCK data: if the target body shape is modeled as an
-!          ellipsoid, triaxial radii for the target body must be loaded
-!          into the kernel pool. Typically this is done by loading a
-!          text PCK file via FURNSH.
-!
-!        - Further PCK data: rotation data for the target body must be
-!          loaded. These may be provided in a text or binary PCK file.
-!
-!        - Frame data: if a frame definition is required to convert the
-!          observer and target states to the body-fixed frame of the
-!          target, that definition must be available in the kernel
-!          pool. Typically the definition is supplied by loading a
-!          frame kernel via FURNSH.
-!
-!     In all cases, kernel data are normally loaded once per program
-!     run, NOT every time this routine is called.
-!
-! $ Particulars
-!
-!     This routine isolates the computation of the sub-observer state
-!     (that is, the sub-observer point and its derivative with respect
-!     to time).
-!
-!     This routine is used by the GF coordinate utility routines in
-!     order to solve for time windows on which specified mathematical
-!     conditions involving coordinates are satisfied. The role of
-!     this routine is to provide Cartesian state vectors enabling
-!     the GF coordinate utilities to determine the signs of the
-!     derivatives with respect to time of coordinates of interest.
-!
-! $ Examples
-!
-!     See ZZGFCOST.
-!
-! $ Restrictions
-!
-!     1)  This routine is restricted to use with ellipsoidal target
-!         shape models.
-!
-!     2)  The computations performed by this routine are intended
-!         to be compatible with those performed by the SPICE
-!         routine SUBPNT. If that routine changes, this routine
-!         may need to be updated.
-!
-!     3)  This routine presumes that error checking of inputs
-!         has, where possible, already been performed by the
-!         GF coordinate utility initialization routine.
-!
-!     4)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0 09-OCT-2021 (NJB)
-!
-!        Bug fix: now returns after detecting bad aberration
-!        correction string.
-!
-!        Bug fix: aberration correction strings are now parsed using
-!        ZZVALCOR. This improves error checking.
-!
-!-    SPICELIB Version 2.0.0 12-MAY-2009 (NJB)
-!
-!        Upgraded to support targets and observers having
-!        no names associated with their ID codes.
-!
-!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     sub-observer state
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Return the state of a sub-observer point used to define
+!!     coordinates referenced in a GF search.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     METHOD      is a short string providing parameters defining
+!!                 the computation method to be used. Any value
+!!                 supported by SUBPNT may be used.
+!!
+!!     TRGID      is the NAIF ID code of the target object.
+!!
+!!                *This routine assumes that the target is modeled
+!!                as a tri-axial ellipsoid.*
+!!
+!!     ET         is the time, expressed as ephemeris seconds past J2000
+!!                TDB, at which the specified state is to be computed.
+!!
+!!     FIXREF     is the name of the reference frame relative to which
+!!                the state of interest is specified.
+!!
+!!                FIXREF must be centered on the target body.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string FIXREF.
+!!
+!!     ABCORR     indicates the aberration corrections to be applied to
+!!                the state of the target body to account for one-way
+!!                light time and stellar aberration. The orientation
+!!                of the target body will also be corrected for one-way
+!!                light time when light time corrections are requested.
+!!
+!!                Supported aberration correction options for
+!!                observation (case where radiation is received by
+!!                observer at ET) are:
+!!
+!!                   NONE           No correction.
+!!                   LT             Light time only.
+!!                   LT+S           Light time and stellar aberration.
+!!                   CN             Converged Newtonian (CN) light time.
+!!                   CN+S           CN light time and stellar aberration.
+!!
+!!                Supported aberration correction options for
+!!                transmission (case where radiation is emitted from
+!!                observer at ET) are:
+!!
+!!                   XLT            Light time only.
+!!                   XLT+S          Light time and stellar aberration.
+!!                   XCN            Converged Newtonian (CN) light time.
+!!                   XCN+S          CN light time and stellar aberration.
+!!
+!!                For detailed information, see the geometry finder
+!!                required reading, gf.req.  Also see the header of
+!!                SPKEZR, which contains a detailed discussion of
+!!                aberration corrections.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string ABCORR.
+!!
+!!     OBSID      is the NAIF ID code of the observer.
+!!
+!!     RADII      is an array containing three radii defining
+!!                a reference ellipsoid for the target body.
+!!
+!! ## Detailed Output
+!!
+!!     STATE     is the state of the sub-observer point at ET.
+!!               The first three components of STATE contain the
+!!               sub-observer point itself; the last three
+!!               components contain the derivative with respect to
+!!               time of the position. The state is expressed
+!!               relative to the body-fixed frame designated by
+!!               FIXREF.
+!!
+!!               Units are km and km/s.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the aberration correction ABCORR is not recognized,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     2)  If the frame FIXREF is not recognized by the frames
+!!         subsystem, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!!     3)  FIXREF must be centered on the target body; if it isn't,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     4)  Any error that occurs while look up the state of the target
+!!         or observer will be diagnosed by routines in the call tree of
+!!         this routine.
+!!
+!!     5)  Any error that occurs while look up the orientation of
+!!         the target will be diagnosed by routines in the call tree of
+!!         this routine.
+!!
+!!     6)  If the input method is not recognized, the error
+!!         SPICE(NOTSUPPORTED) will be signaled.
+!!
+!! ## Files
+!!
+!!     Appropriate kernels must be loaded by the calling program before
+!!     this routine is called.
+!!
+!!     The following data are required:
+!!
+!!        - SPK data: ephemeris data for target and observer must be
+!!          loaded. If aberration corrections are used, the states of
+!!          target and observer relative to the solar system barycenter
+!!          must be calculable from the available ephemeris data.
+!!          Typically ephemeris data are made available by loading one
+!!          or more SPK files via FURNSH.
+!!
+!!        - PCK data: if the target body shape is modeled as an
+!!          ellipsoid, triaxial radii for the target body must be loaded
+!!          into the kernel pool. Typically this is done by loading a
+!!          text PCK file via FURNSH.
+!!
+!!        - Further PCK data: rotation data for the target body must be
+!!          loaded. These may be provided in a text or binary PCK file.
+!!
+!!        - Frame data: if a frame definition is required to convert the
+!!          observer and target states to the body-fixed frame of the
+!!          target, that definition must be available in the kernel
+!!          pool. Typically the definition is supplied by loading a
+!!          frame kernel via FURNSH.
+!!
+!!     In all cases, kernel data are normally loaded once per program
+!!     run, NOT every time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     This routine isolates the computation of the sub-observer state
+!!     (that is, the sub-observer point and its derivative with respect
+!!     to time).
+!!
+!!     This routine is used by the GF coordinate utility routines in
+!!     order to solve for time windows on which specified mathematical
+!!     conditions involving coordinates are satisfied. The role of
+!!     this routine is to provide Cartesian state vectors enabling
+!!     the GF coordinate utilities to determine the signs of the
+!!     derivatives with respect to time of coordinates of interest.
+!!
+!! ## Examples
+!!
+!!     See ZZGFCOST.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine is restricted to use with ellipsoidal target
+!!         shape models.
+!!
+!!     2)  The computations performed by this routine are intended
+!!         to be compatible with those performed by the SPICE
+!!         routine SUBPNT. If that routine changes, this routine
+!!         may need to be updated.
+!!
+!!     3)  This routine presumes that error checking of inputs
+!!         has, where possible, already been performed by the
+!!         GF coordinate utility initialization routine.
+!!
+!!     4)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0 09-OCT-2021 (NJB)
+!!
+!!        Bug fix: now returns after detecting bad aberration
+!!        correction string.
+!!
+!!        Bug fix: aberration correction strings are now parsed using
+!!        ZZVALCOR. This improves error checking.
+!!
+!!-    SPICELIB Version 2.0.0 12-MAY-2009 (NJB)
+!!
+!!        Upgraded to support targets and observers having
+!!        no names associated with their ID codes.
+!!
+!!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     sub-observer state
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleard, moved
       use pepper_math, only: mxvg, vaddg, vdot, vhat, vminug, vscl, vsubg
       use pepper_strings, only: eqstr
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       real(wp), parameter :: tdelta = 1.0_wp
       integer(ip), parameter :: bdnmln = 36
       real(wp)              acc    ( 3 )
@@ -12468,31 +12316,30 @@ contains
 !$Procedure ZZGFUDLT ( Private --- GF, scalar function < ref value )
 
       module subroutine zzgfudlt ( ctx, udfunc, et, isless )
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     This routine determines if the value of the scalar quantity
+!!     function is less than a previously defined reference value.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     This routine determines if the value of the scalar quantity
-!     function is less than a previously defined reference value.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!
-! $ Declarations
-
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'zzholdd.inc'
 
 
 
@@ -12643,28 +12490,27 @@ contains
 !$Procedure ZZGFWSTS ( Private --- GF, sift first window thru second )
 
       module procedure zzgfwsts
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Determine those intervals of the first window that are
+!!     properly contained in an interval of the second.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERVALS,  WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Determine those intervals of the first window that are
-!     properly contained in an interval of the second.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERVALS,  WINDOWS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -12986,35 +12832,34 @@ contains
 !$Procedure FOVRAY ( Is ray in FOV at time? )
 
       module procedure fovray
+!! ## Abstract
+!!
+!!     Determine if a specified ray is within the field-of-view (FOV) of
+!!     a specified instrument at a given time.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     KERNEL
+!!     NAIF_IDS
+!!     PCK
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EVENT
+!!     FOV
+!!     GEOMETRY
+!!     INSTRUMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Determine if a specified ray is within the field-of-view (FOV) of
-!     a specified instrument at a given time.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     KERNEL
-!     NAIF_IDS
-!     PCK
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EVENT
-!     FOV
-!     GEOMETRY
-!     INSTRUMENT
-!
-! $ Declarations
-
+      use pepper_inc_gf
       implicit none
 
-      include               'gf.inc'
 
 
 ! $ Detailed_Input
@@ -13434,576 +13279,559 @@ contains
       end procedure fovray
 
       module procedure fovtrg
-
-! $ Abstract
-!
-!     Determine if a specified ephemeris object is within the
-!     field-of-view (FOV) of a specified instrument at a given time.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     KERNEL
-!     NAIF_IDS
-!     PCK
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     EVENT
-!     FOV
-!     GEOMETRY
-!     INSTRUMENT
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     INST     indicates the name of an instrument, such as a
-!              spacecraft-mounted framing camera. The field of view
-!              (FOV) of the instrument will be used to determine if
-!              the target is visible with respect to the instrument.
-!
-!              The position of the instrument INST is considered to
-!              coincide with that of the ephemeris object OBSRVR (see
-!              description below).
-!
-!              The size of the instrument's FOV is constrained by the
-!              following: There must be a vector A such that all of
-!              the instrument's FOV boundary vectors have an angular
-!              separation from A of less than (pi/2)-MARGIN radians
-!              (see description below). For FOVs that are circular or
-!              elliptical, the vector A is the boresight. For FOVs
-!              that are rectangular or polygonal, the vector A is
-!              calculated.
-!
-!              See the header of the SPICELIB routine GETFOV for a
-!              description of the required parameters associated with
-!              an instrument.
-!
-!              Both object names and NAIF IDs are accepted. For
-!              example, both 'CASSINI_ISS_NAC' and '-82360' are
-!              accepted. Case and leading or trailing blanks are not
-!              significant in the string.
-!
-!     TARGET   is the name of the target body. This routine determines
-!              if the target body appears in the instrument's field of
-!              view.
-!
-!              Both object names and NAIF IDs are accepted. For
-!              example, both 'Moon' and '301' are accepted. Case and
-!              leading or trailing blanks are not significant in the
-!              string.
-!
-!     TSHAPE   is a string indicating the geometric model used to
-!              represent the shape of the target body. The supported
-!              options are:
-!
-!                 'ELLIPSOID'     Use a triaxial ellipsoid model,
-!                                 with radius values provided via the
-!                                 kernel pool. A kernel variable
-!                                 having a name of the form
-!
-!                                    'BODYnnn_RADII'
-!
-!                                 where nnn represents the NAIF
-!                                 integer code associated with the
-!                                 body, must be present in the kernel
-!                                 pool. This variable must be
-!                                 associated with three numeric
-!                                 values giving the lengths of the
-!                                 ellipsoid's X, Y, and Z semi-axes.
-!
-!                 'POINT'         Treat the body as a single point.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string.
-!
-!     TFRAME   is the name of the body-fixed, body-centered reference
-!              frame associated with the target body. Examples of
-!              such names are 'IAU_SATURN' (for Saturn) and 'ITRF93'
-!              (for Earth).
-!
-!              If the target body is modeled as a point, TFRAME
-!              is ignored and should be left blank. (Ex: ' ').
-!
-!              Case and leading or trailing blanks bracketing a
-!              non-blank frame name are not significant in the string.
-!
-!     ABCORR   indicates the aberration corrections to be applied
-!              when computing the target's position and orientation.
-!
-!              For remote sensing applications, where the apparent
-!              position and orientation of the target seen by the
-!              observer are desired, normally either of the
-!              corrections:
-!
-!                 'LT+S'
-!                 'CN+S'
-!
-!              should be used. These and the other supported options
-!              are described below.
-!
-!              Supported aberration correction options for
-!              observation (the case where radiation is received by
-!              observer at ET) are:
-!
-!                 'NONE'         No correction.
-!                 'LT'           Light time only
-!                 'LT+S'         Light time and stellar aberration.
-!                 'CN'           Converged Newtonian (CN) light time.
-!                 'CN+S'         CN light time and stellar aberration.
-!
-!              Supported aberration correction options for
-!              transmission (the case where radiation is emitted from
-!              observer at ET) are:
-!
-!                 'XLT'          Light time only.
-!                 'XLT+S'        Light time and stellar aberration.
-!                 'XCN'          Converged Newtonian (CN) light time.
-!                 'XCN+S'        CN light time and stellar aberration.
-!
-!              Case, leading and trailing blanks are not significant
-!              in the string.
-!
-!     OBSRVR   is the name of the body from which the target is
-!              observed. The instrument INST is treated as if it were
-!              co-located with the observer.
-!
-!              Both object names and NAIF IDs are accepted. For
-!              example, both 'CASSINI' and '-82' are accepted. Case
-!              and leading or trailing blanks are not significant in
-!              the string.
-!
-!     ET       is the observation time in seconds past the J2000
-!              epoch.
-!
-! $ Detailed_Output
-!
-!     VISIBL   is .TRUE. if TARGET is fully or partially in the
-!              field-of-view of INST at the time ET. Otherwise,
-!              VISIBL is .FALSE.
-!
-! $ Parameters
-!
-!     MAXVRT   is the maximum number of vertices that may be used
-!              to define the boundary of the specified instrument's
-!              field of view. See the INCLUDE file gf.inc for details.
-!
-!     MARGIN   is a small positive number used to constrain the
-!              orientation of the boundary vectors of polygonal
-!              FOVs. Such FOVs must satisfy the following constraints:
-!
-!                 1)  The boundary vectors must be contained within
-!                     a right circular cone of angular radius less
-!                     than (pi/2) - MARGIN radians; in other
-!                     words, there must be a vector A such that all
-!                     boundary vectors have angular separation from
-!                     A of less than (pi/2)-MARGIN radians.
-!
-!                 2)  There must be a pair of boundary vectors U, V
-!                     such that all other boundary vectors lie in
-!                     the same half space bounded by the plane
-!                     containing U and V. Furthermore, all other
-!                     boundary vectors must have orthogonal
-!                     projections onto a specific plane normal to
-!                     this plane (the normal plane contains the angle
-!                     bisector defined by U and V) such that the
-!                     projections have angular separation of at least
-!                     2*MARGIN radians from the plane spanned by U
-!                     and V.
-!
-!              MARGIN is currently set to 1.D-12.
-!
-! $ Exceptions
-!
-!     1)  If the name of either the target or observer cannot be
-!         translated to a NAIF ID code, an error is signaled by
-!         a routine in the call tree of this routine.
-!
-!     2)  If the specified aberration correction is an unrecognized
-!         value, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     3)  If the radii of a target body modeled as an ellipsoid cannot
-!         be determined by searching the kernel pool for a kernel
-!         variable having a name of the form
-!
-!            'BODYnnn_RADII'
-!
-!         where nnn represents the NAIF integer code associated with
-!         the body, an error is signaled by a routine in the
-!         call tree of this routine.
-!
-!     4)  If the target and observer bodies are the same, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-!     5)  If the body model specifier TSHAPE is invalid, an error is
-!         signaled by either this routine or a routine in the call tree
-!         of this routine.
-!
-!     6)  If a target body-fixed reference frame associated with a
-!         non-point target is not recognized, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     7)  If a target body-fixed reference frame is not centered at the
-!         corresponding target body, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     8)  If the instrument name INST does not have a corresponding NAIF
-!         ID code, an error is signaled by a routine in the call
-!         tree of this routine.
-!
-!     9)  If the FOV parameters of the instrument are not present in
-!         the kernel pool, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     10) If the FOV boundary has more than MAXVRT vertices, an error
-!         is signaled by a routine in the call tree of this
-!         routine.
-!
-!     11) If the instrument FOV shape is a polygon or rectangle, and
-!         this routine cannot find a ray R emanating from the FOV vertex
-!         such that maximum angular separation of R and any FOV boundary
-!         vector is within the limit (pi/2)-MARGIN radians, an error is
-!         signaled by a routine in the call tree of this routine. If the
-!         FOV is any other shape, the same error check will be applied
-!         with the instrument boresight vector serving the role of R.
-!
-!     12) If the loaded kernels provide insufficient data to compute a
-!         requested state vector, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     13) If an error occurs while reading an SPK or other kernel file,
-!         the error is signaled by a routine in the call tree
-!         of this routine.
-!
-! $ Files
-!
-!     Appropriate SPICE kernels must be loaded by the calling program
-!     before this routine is called.
-!
-!     The following data are required:
-!
-!     -  SPK data: ephemeris data for target and observer that
-!        describe the ephemerides of these objects at the time ET.
-!        If aberration corrections are used, the states of
-!        target and observer relative to the solar system barycenter
-!        must be calculable from the available ephemeris data.
-!
-!     -  Frame data: if a frame definition is required to convert
-!        the observer and target states to the body-fixed frame of
-!        the target, that definition must be available in the kernel
-!        pool. Typically the definitions of frames not already
-!        built-in to SPICE are supplied by loading a frame kernel.
-!
-!     -  Data defining the reference frame in which the instrument's
-!        FOV is defined must be available in the kernel pool.
-!        Additionally the name INST must be associated with an ID
-!        code.
-!
-!     -  IK data: the kernel pool must contain data such that
-!        the SPICELIB routine GETFOV may be called to obtain
-!        parameters for INST.
-!
-!     The following data may be required:
-!
-!     -  PCK data: bodies modeled as triaxial ellipsoids must have
-!        orientation data provided by variables in the kernel pool.
-!
-!        Bodies modeled as triaxial ellipsoids must have radii
-!        lengths provided by variables in the kernel pool.
-!
-!     -  CK data: if the frame in which the instrument's FOV is
-!        defined is fixed to a spacecraft, at least one CK file will
-!        be needed to permit transformation of vectors between that
-!        frame and both J2000 and the target body-fixed frame.
-!
-!     -  SCLK data: if a CK file is needed, an associated SCLK
-!        kernel is required to enable conversion between encoded SCLK
-!        (used to time-tag CK data) and barycentric dynamical time
-!        (TDB).
-!
-!     Kernel data are normally loaded via FURNSH once per program run,
-!     NOT every time this routine is called.
-!
-! $ Particulars
-!
-!     To treat the target as a ray rather than as an ephemeris object,
-!     use the higher-level SPICELIB routine FOVRAY. FOVRAY may be used
-!     to determine if distant target objects such as stars are visible
-!     in an instrument's FOV at a given time, as long as the direction
-!     from the observer to the target can be modeled as a ray.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) A spectacular picture was taken by Cassini's
-!        narrow-angle camera on Oct. 6, 2010 that shows
-!        six of Saturn's moons. Let's verify that the moons
-!        in the picture are Epimetheus, Atlas, Daphnis, Pan,
-!        Janus, and Enceladus.
-!
-!        To see this picture, visit:
-!        http://photojournal.jpl.nasa.gov/catalog/PIA12741
-!        or go to the PDS Image Node's Image Atlas at
-!        http://pds-imaging.jpl.nasa.gov/search/search.html.
-!        Select Cassini as the mission, ISS as the instrument,
-!        and enter 1_N1665078907.122 as the Product ID in the
-!        Product tab. Note: these directions may change as the
-!        PDS Imaging Node changes.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File name: fovtrg_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                     Contents
-!              ---------                     --------
-!              naif0010.tls                  Leapseconds
-!              cpck*.tpc                     Satellite orientation and
-!                                            radii
-!              pck00010.tpc                  Planet orientation and
-!                                            radii
-!              cas_rocks_v18.tf              FK for small satellites
-!                                            around Saturn
-!              cas_v40.tf                    Cassini FK
-!              cas_iss_v10.ti                Cassini ISS IK
-!              cas00149.tsc                  Cassini SCLK
-!              *.bsp                         Ephemeris for Cassini,
-!                                            planets, and satellites
-!              10279_10284ra.bc              Orientation for Cassini
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'naif0010.tls'
-!                                  'cpck14Oct2010.tpc'
-!                                  'cpck_rock_21Jan2011_merged.tpc'
-!                                  'pck00010.tpc'
-!                                  'cas_rocks_v18.tf'
-!                                  'cas_v40.tf'
-!                                  'cas_iss_v10.ti'
-!                                  'cas00149.tsc'
-!                                  '110317AP_RE_90165_18018.bsp'
-!                                  '110120BP_IRRE_00256_25017.bsp'
-!                                  '101210R_SCPSE_10256_10302.bsp'
-!                                  '10279_10284ra.bc'              )
-!
-!           \begintext
-!
-!           For project meta-kernels similar to the one shown
-!           here, please see the CASSINI SPICE PDS archive.
-!
-!        Example code begins here.
-!
-!              PROGRAM FOVTRG_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         META
-!              PARAMETER           ( META   =  'fovtrg_ex1.tm' )
-!
-!              CHARACTER*(*)         TIMFMT
-!              PARAMETER           ( TIMFMT =
-!             .      'YYYY-MON-DD HR:MN:SC.#####::TDB (TDB)' )
-!
-!        C
-!        C     This is the spacecraft clock time of the image.
-!        C
-!              CHARACTER*(*)         SCLK
-!              PARAMETER           ( SCLK = '1665078907.122' )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(32)        BODY
-!              CHARACTER*(32)        FRNAME
-!              CHARACTER*(32)        TIME
-!              DOUBLE PRECISION      ET
-!              INTEGER               BODYID
-!              INTEGER               CAS_ID
-!              INTEGER               FRCODE
-!              LOGICAL               FOUND
-!              LOGICAL               VISIBL
-!
-!        C
-!        C     Load the kernels.
-!        C
-!              CALL FURNSH ( META )
-!
-!        C
-!        C     Retrieve Cassini's NAIF ID.
-!        C
-!              CALL BODN2C ( 'CASSINI', CAS_ID, FOUND )
-!
-!              IF (.NOT. FOUND) THEN
-!                 CALL SETMSG ( 'Could not find ID code for Cassini.' )
-!                 CALL SIGERR ( 'SPICE(NOTRANSLATION)' )
-!              END IF
-!
-!        C
-!        C     Convert the image tag SCLK to ET.
-!        C
-!              CALL SCS2E ( CAS_ID, SCLK, ET )
-!
-!        C
-!        C     Convert the ET to a string format for the output.
-!        C
-!              CALL TIMOUT ( ET, TIMFMT, TIME )
-!
-!        C
-!        C     Search through all of Saturn's moons to see if each
-!        C     satellite was in the ISS NAC's field-of-view at
-!        C     the image time. We're going to take advantage of the
-!        C     fact that all Saturn's moons have a NAIF ID of 6xx.
-!        C
-!              WRITE (*,*) 'At time ', TIME, ' the following were '
-!              WRITE (*,*) 'in the field of view of CASSINI_ISS_NAC'
-!
-!              DO BODYID = 600, 699
-!        C
-!        C        Check to see if the BODYID has a translation.
-!        C
-!                 CALL BODC2N ( BODYID, BODY, FOUND )
-!
-!                 IF ( FOUND ) THEN
-!        C
-!        C           Check to see if a body-fixed frame for this ID
-!        C           exists.  If the frame is not in the kernel pool,
-!        C           we cannot perform the visibility test.  The main
-!        C           cause of a failure is a missing kernel.
-!        C
-!                    CALL CIDFRM ( BODYID, FRCODE, FRNAME, FOUND )
-!
-!                    IF ( FOUND ) THEN
-!        C
-!        C              Is this body in the field-of-view of Cassini's
-!        C              ISS narrow-angle camera?
-!        C
-!                       CALL FOVTRG ( 'CASSINI_ISS_NAC',
-!             .                        BODY,  'ellipsoid', FRNAME,
-!             .                       'CN+S', 'CASSINI', ET, VISIBL )
-!
-!        C
-!        C              Report results.
-!        C
-!                       IF ( VISIBL ) THEN
-!                          WRITE (*,*) '  ', BODY
-!                       END IF
-!
-!                    END IF
-!
-!                 END IF
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         At time 2010-OCT-06 17:09:45.34695 (TDB) the following were
-!         in the field of view of CASSINI_ISS_NAC
-!           ENCELADUS
-!           JANUS
-!           EPIMETHEUS
-!           ATLAS
-!           PAN
-!           DAPHNIS
-!           ANTHE
-!
-!        Note: there were actually 7 of Saturn's satellites in the
-!        field-of-view of Cassini's narrow-angle camera. However, Anthe
-!        is very small and was probably obscured by other objects or
-!        shadow.
-!
-! $ Restrictions
-!
-!     1)  The reference frame associated with INST must be centered at
-!         the observer or must be inertial. No check is done to ensure
-!         this.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     S.C. Krening       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 13-AUG-2021 (JDR)
-!
-!        Edited header to comply with NAIF standard. Corrected the
-!        value of MARGIN in the $Parameters section.
-!
-!-    SPICELIB Version 1.0.0, 15-FEB-2012 (SCK) (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Target in instrument FOV at specified time
-!     Target in instrument field_of_view at specified time
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
-!     Ray direction vector required by ZZGFFVIN. This is
-!     an unused variable as far is this routine is concerned:
-!     the target is an ephemeris object. We initialize the
-!     ray to prevent portability problems.
-!
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Determine if a specified ephemeris object is within the
+!!     field-of-view (FOV) of a specified instrument at a given time.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     KERNEL
+!!     NAIF_IDS
+!!     PCK
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     EVENT
+!!     FOV
+!!     GEOMETRY
+!!     INSTRUMENT
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INST     indicates the name of an instrument, such as a
+!!              spacecraft-mounted framing camera. The field of view
+!!              (FOV) of the instrument will be used to determine if
+!!              the target is visible with respect to the instrument.
+!!
+!!              The position of the instrument INST is considered to
+!!              coincide with that of the ephemeris object OBSRVR (see
+!!              description below).
+!!
+!!              The size of the instrument's FOV is constrained by the
+!!              following: There must be a vector A such that all of
+!!              the instrument's FOV boundary vectors have an angular
+!!              separation from A of less than (pi/2)-MARGIN radians
+!!              (see description below). For FOVs that are circular or
+!!              elliptical, the vector A is the boresight. For FOVs
+!!              that are rectangular or polygonal, the vector A is
+!!              calculated.
+!!
+!!              See the header of the SPICELIB routine GETFOV for a
+!!              description of the required parameters associated with
+!!              an instrument.
+!!
+!!              Both object names and NAIF IDs are accepted. For
+!!              example, both 'CASSINI_ISS_NAC' and '-82360' are
+!!              accepted. Case and leading or trailing blanks are not
+!!              significant in the string.
+!!
+!!     TARGET   is the name of the target body. This routine determines
+!!              if the target body appears in the instrument's field of
+!!              view.
+!!
+!!              Both object names and NAIF IDs are accepted. For
+!!              example, both 'Moon' and '301' are accepted. Case and
+!!              leading or trailing blanks are not significant in the
+!!              string.
+!!
+!!     TSHAPE   is a string indicating the geometric model used to
+!!              represent the shape of the target body. The supported
+!!              options are:
+!!
+!!                 'ELLIPSOID'     Use a triaxial ellipsoid model,
+!!                                 with radius values provided via the
+!!                                 kernel pool. A kernel variable
+!!                                 having a name of the form
+!!
+!!                                    'BODYnnn_RADII'
+!!
+!!                                 where nnn represents the NAIF
+!!                                 integer code associated with the
+!!                                 body, must be present in the kernel
+!!                                 pool. This variable must be
+!!                                 associated with three numeric
+!!                                 values giving the lengths of the
+!!                                 ellipsoid's X, Y, and Z semi-axes.
+!!
+!!                 'POINT'         Treat the body as a single point.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string.
+!!
+!!     TFRAME   is the name of the body-fixed, body-centered reference
+!!              frame associated with the target body. Examples of
+!!              such names are 'IAU_SATURN' (for Saturn) and 'ITRF93'
+!!              (for Earth).
+!!
+!!              If the target body is modeled as a point, TFRAME
+!!              is ignored and should be left blank. (Ex: ' ').
+!!
+!!              Case and leading or trailing blanks bracketing a
+!!              non-blank frame name are not significant in the string.
+!!
+!!     ABCORR   indicates the aberration corrections to be applied
+!!              when computing the target's position and orientation.
+!!
+!!              For remote sensing applications, where the apparent
+!!              position and orientation of the target seen by the
+!!              observer are desired, normally either of the
+!!              corrections:
+!!
+!!                 'LT+S'
+!!                 'CN+S'
+!!
+!!              should be used. These and the other supported options
+!!              are described below.
+!!
+!!              Supported aberration correction options for
+!!              observation (the case where radiation is received by
+!!              observer at ET) are:
+!!
+!!                 'NONE'         No correction.
+!!                 'LT'           Light time only
+!!                 'LT+S'         Light time and stellar aberration.
+!!                 'CN'           Converged Newtonian (CN) light time.
+!!                 'CN+S'         CN light time and stellar aberration.
+!!
+!!              Supported aberration correction options for
+!!              transmission (the case where radiation is emitted from
+!!              observer at ET) are:
+!!
+!!                 'XLT'          Light time only.
+!!                 'XLT+S'        Light time and stellar aberration.
+!!                 'XCN'          Converged Newtonian (CN) light time.
+!!                 'XCN+S'        CN light time and stellar aberration.
+!!
+!!              Case, leading and trailing blanks are not significant
+!!              in the string.
+!!
+!!     OBSRVR   is the name of the body from which the target is
+!!              observed. The instrument INST is treated as if it were
+!!              co-located with the observer.
+!!
+!!              Both object names and NAIF IDs are accepted. For
+!!              example, both 'CASSINI' and '-82' are accepted. Case
+!!              and leading or trailing blanks are not significant in
+!!              the string.
+!!
+!!     ET       is the observation time in seconds past the J2000
+!!              epoch.
+!!
+!! ## Detailed Output
+!!
+!!     VISIBL   is .TRUE. if TARGET is fully or partially in the
+!!              field-of-view of INST at the time ET. Otherwise,
+!!              VISIBL is .FALSE.
+!!
+!! ## Parameters
+!!
+!!     MAXVRT   is the maximum number of vertices that may be used
+!!              to define the boundary of the specified instrument's
+!!              field of view. See the INCLUDE file gf.inc for details.
+!!
+!!     MARGIN   is a small positive number used to constrain the
+!!              orientation of the boundary vectors of polygonal
+!!              FOVs. Such FOVs must satisfy the following constraints:
+!!
+!!                 1)  The boundary vectors must be contained within
+!!                     a right circular cone of angular radius less
+!!                     than (pi/2) - MARGIN radians; in other
+!!                     words, there must be a vector A such that all
+!!                     boundary vectors have angular separation from
+!!                     A of less than (pi/2)-MARGIN radians.
+!!
+!!                 2)  There must be a pair of boundary vectors U, V
+!!                     such that all other boundary vectors lie in
+!!                     the same half space bounded by the plane
+!!                     containing U and V. Furthermore, all other
+!!                     boundary vectors must have orthogonal
+!!                     projections onto a specific plane normal to
+!!                     this plane (the normal plane contains the angle
+!!                     bisector defined by U and V) such that the
+!!                     projections have angular separation of at least
+!!                     2*MARGIN radians from the plane spanned by U
+!!                     and V.
+!!
+!!              MARGIN is currently set to 1.D-12.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the name of either the target or observer cannot be
+!!         translated to a NAIF ID code, an error is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!!     2)  If the specified aberration correction is an unrecognized
+!!         value, an error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!!     3)  If the radii of a target body modeled as an ellipsoid cannot
+!!         be determined by searching the kernel pool for a kernel
+!!         variable having a name of the form
+!!
+!!            'BODYnnn_RADII'
+!!
+!!         where nnn represents the NAIF integer code associated with
+!!         the body, an error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!!     4)  If the target and observer bodies are the same, an error is
+!!         signaled by a routine in the call tree of this routine.
+!!
+!!     5)  If the body model specifier TSHAPE is invalid, an error is
+!!         signaled by either this routine or a routine in the call tree
+!!         of this routine.
+!!
+!!     6)  If a target body-fixed reference frame associated with a
+!!         non-point target is not recognized, an error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     7)  If a target body-fixed reference frame is not centered at the
+!!         corresponding target body, an error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!!     8)  If the instrument name INST does not have a corresponding NAIF
+!!         ID code, an error is signaled by a routine in the call
+!!         tree of this routine.
+!!
+!!     9)  If the FOV parameters of the instrument are not present in
+!!         the kernel pool, an error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!!     10) If the FOV boundary has more than MAXVRT vertices, an error
+!!         is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     11) If the instrument FOV shape is a polygon or rectangle, and
+!!         this routine cannot find a ray R emanating from the FOV vertex
+!!         such that maximum angular separation of R and any FOV boundary
+!!         vector is within the limit (pi/2)-MARGIN radians, an error is
+!!         signaled by a routine in the call tree of this routine. If the
+!!         FOV is any other shape, the same error check will be applied
+!!         with the instrument boresight vector serving the role of R.
+!!
+!!     12) If the loaded kernels provide insufficient data to compute a
+!!         requested state vector, an error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     13) If an error occurs while reading an SPK or other kernel file,
+!!         the error is signaled by a routine in the call tree
+!!         of this routine.
+!!
+!! ## Files
+!!
+!!     Appropriate SPICE kernels must be loaded by the calling program
+!!     before this routine is called.
+!!
+!!     The following data are required:
+!!
+!!     -  SPK data: ephemeris data for target and observer that
+!!        describe the ephemerides of these objects at the time ET.
+!!        If aberration corrections are used, the states of
+!!        target and observer relative to the solar system barycenter
+!!        must be calculable from the available ephemeris data.
+!!
+!!     -  Frame data: if a frame definition is required to convert
+!!        the observer and target states to the body-fixed frame of
+!!        the target, that definition must be available in the kernel
+!!        pool. Typically the definitions of frames not already
+!!        built-in to SPICE are supplied by loading a frame kernel.
+!!
+!!     -  Data defining the reference frame in which the instrument's
+!!        FOV is defined must be available in the kernel pool.
+!!        Additionally the name INST must be associated with an ID
+!!        code.
+!!
+!!     -  IK data: the kernel pool must contain data such that
+!!        the SPICELIB routine GETFOV may be called to obtain
+!!        parameters for INST.
+!!
+!!     The following data may be required:
+!!
+!!     -  PCK data: bodies modeled as triaxial ellipsoids must have
+!!        orientation data provided by variables in the kernel pool.
+!!
+!!        Bodies modeled as triaxial ellipsoids must have radii
+!!        lengths provided by variables in the kernel pool.
+!!
+!!     -  CK data: if the frame in which the instrument's FOV is
+!!        defined is fixed to a spacecraft, at least one CK file will
+!!        be needed to permit transformation of vectors between that
+!!        frame and both J2000 and the target body-fixed frame.
+!!
+!!     -  SCLK data: if a CK file is needed, an associated SCLK
+!!        kernel is required to enable conversion between encoded SCLK
+!!        (used to time-tag CK data) and barycentric dynamical time
+!!        (TDB).
+!!
+!!     Kernel data are normally loaded via FURNSH once per program run,
+!!     NOT every time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     To treat the target as a ray rather than as an ephemeris object,
+!!     use the higher-level SPICELIB routine FOVRAY. FOVRAY may be used
+!!     to determine if distant target objects such as stars are visible
+!!     in an instrument's FOV at a given time, as long as the direction
+!!     from the observer to the target can be modeled as a ray.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) A spectacular picture was taken by Cassini's
+!!        narrow-angle camera on Oct. 6, 2010 that shows
+!!        six of Saturn's moons. Let's verify that the moons
+!!        in the picture are Epimetheus, Atlas, Daphnis, Pan,
+!!        Janus, and Enceladus.
+!!
+!!        To see this picture, visit:
+!!        http://photojournal.jpl.nasa.gov/catalog/PIA12741
+!!        or go to the PDS Image Node's Image Atlas at
+!!        http://pds-imaging.jpl.nasa.gov/search/search.html.
+!!        Select Cassini as the mission, ISS as the instrument,
+!!        and enter 1_N1665078907.122 as the Product ID in the
+!!        Product tab. Note: these directions may change as the
+!!        PDS Imaging Node changes.
+!!
+!!        Use the meta-kernel shown below to load the required SPICE
+!!        kernels.
+!!
+!!           KPL/MK
+!!
+!!           File name: fovtrg_ex1.tm
+!!
+!!           This meta-kernel is intended to support operation of SPICE
+!!           example programs. The kernels shown here should not be
+!!           assumed to contain adequate or correct versions of data
+!!           required by SPICE-based user applications.
+!!
+!!           In order for an application to use this meta-kernel, the
+!!           kernels referenced here must be present in the user's
+!!           current working directory.
+!!
+!!           The names and contents of the kernels referenced
+!!           by this meta-kernel are as follows:
+!!
+!!              File name                     Contents
+!!              ---------                     --------
+!!              naif0010.tls                  Leapseconds
+!!              cpck*.tpc                     Satellite orientation and
+!!                                            radii
+!!              pck00010.tpc                  Planet orientation and
+!!                                            radii
+!!              cas_rocks_v18.tf              FK for small satellites
+!!                                            around Saturn
+!!              cas_v40.tf                    Cassini FK
+!!              cas_iss_v10.ti                Cassini ISS IK
+!!              cas00149.tsc                  Cassini SCLK
+!!              *.bsp                         Ephemeris for Cassini,
+!!                                            planets, and satellites
+!!              10279_10284ra.bc              Orientation for Cassini
+!!
+!!           \begindata
+!!
+!!              KERNELS_TO_LOAD = ( 'naif0010.tls'
+!!                                  'cpck14Oct2010.tpc'
+!!                                  'cpck_rock_21Jan2011_merged.tpc'
+!!                                  'pck00010.tpc'
+!!                                  'cas_rocks_v18.tf'
+!!                                  'cas_v40.tf'
+!!                                  'cas_iss_v10.ti'
+!!                                  'cas00149.tsc'
+!!                                  '110317AP_RE_90165_18018.bsp'
+!!                                  '110120BP_IRRE_00256_25017.bsp'
+!!                                  '101210R_SCPSE_10256_10302.bsp'
+!!                                  '10279_10284ra.bc'              )
+!!
+!!           \begintext
+!!
+!!           For project meta-kernels similar to the one shown
+!!           here, please see the CASSINI SPICE PDS archive.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM FOVTRG_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         META
+!!              PARAMETER           ( META   =  'fovtrg_ex1.tm' )
+!!
+!!              CHARACTER*(*)         TIMFMT
+!!              PARAMETER           ( TIMFMT =
+!!             .      'YYYY-MON-DD HR:MN:SC.#####::TDB (TDB)' )
+!!
+!!        C
+!!        C     This is the spacecraft clock time of the image.
+!!        C
+!!              CHARACTER*(*)         SCLK
+!!              PARAMETER           ( SCLK = '1665078907.122' )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(32)        BODY
+!!              CHARACTER*(32)        FRNAME
+!!              CHARACTER*(32)        TIME
+!!              DOUBLE PRECISION      ET
+!!              INTEGER               BODYID
+!!              INTEGER               CAS_ID
+!!              INTEGER               FRCODE
+!!              LOGICAL               FOUND
+!!              LOGICAL               VISIBL
+!!
+!!        C
+!!        C     Load the kernels.
+!!        C
+!!              CALL FURNSH ( META )
+!!
+!!        C
+!!        C     Retrieve Cassini's NAIF ID.
+!!        C
+!!              CALL BODN2C ( 'CASSINI', CAS_ID, FOUND )
+!!
+!!              IF (.NOT. FOUND) THEN
+!!                 CALL SETMSG ( 'Could not find ID code for Cassini.' )
+!!                 CALL SIGERR ( 'SPICE(NOTRANSLATION)' )
+!!              END IF
+!!
+!!        C
+!!        C     Convert the image tag SCLK to ET.
+!!        C
+!!              CALL SCS2E ( CAS_ID, SCLK, ET )
+!!
+!!        C
+!!        C     Convert the ET to a string format for the output.
+!!        C
+!!              CALL TIMOUT ( ET, TIMFMT, TIME )
+!!
+!!        C
+!!        C     Search through all of Saturn's moons to see if each
+!!        C     satellite was in the ISS NAC's field-of-view at
+!!        C     the image time. We're going to take advantage of the
+!!        C     fact that all Saturn's moons have a NAIF ID of 6xx.
+!!        C
+!!              WRITE (*,*) 'At time ', TIME, ' the following were '
+!!              WRITE (*,*) 'in the field of view of CASSINI_ISS_NAC'
+!!
+!!              DO BODYID = 600, 699
+!!        C
+!!        C        Check to see if the BODYID has a translation.
+!!        C
+!!                 CALL BODC2N ( BODYID, BODY, FOUND )
+!!
+!!                 IF ( FOUND ) THEN
+!!        C
+!!        C           Check to see if a body-fixed frame for this ID
+!!        C           exists.  If the frame is not in the kernel pool,
+!!        C           we cannot perform the visibility test.  The main
+!!        C           cause of a failure is a missing kernel.
+!!        C
+!!                    CALL CIDFRM ( BODYID, FRCODE, FRNAME, FOUND )
+!!
+!!                    IF ( FOUND ) THEN
+!!        C
+!!        C              Is this body in the field-of-view of Cassini's
+!!        C              ISS narrow-angle camera?
+!!        C
+!!                       CALL FOVTRG ( 'CASSINI_ISS_NAC',
+!!             .                        BODY,  'ellipsoid', FRNAME,
+!!             .                       'CN+S', 'CASSINI', ET, VISIBL )
+!!
+!!        C
+!!        C              Report results.
+!!        C
+!!                       IF ( VISIBL ) THEN
+!!                          WRITE (*,*) '  ', BODY
+!!                       END IF
+!!
+!!                    END IF
+!!
+!!                 END IF
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         At time 2010-OCT-06 17:09:45.34695 (TDB) the following were
+!!         in the field of view of CASSINI_ISS_NAC
+!!           ENCELADUS
+!!           JANUS
+!!           EPIMETHEUS
+!!           ATLAS
+!!           PAN
+!!           DAPHNIS
+!!           ANTHE
+!!
+!!        Note: there were actually 7 of Saturn's satellites in the
+!!        field-of-view of Cassini's narrow-angle camera. However, Anthe
+!!        is very small and was probably obscured by other objects or
+!!        shadow.
+!!
+!! ## Restrictions
+!!
+!!     1)  The reference frame associated with INST must be centered at
+!!         the observer or must be inertial. No check is done to ensure
+!!         this.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     S.C. Krening       (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 13-AUG-2021 (JDR)
+!!
+!!        Edited header to comply with NAIF standard. Corrected the
+!!        value of MARGIN in the $Parameters section.
+!!
+!!-    SPICELIB Version 1.0.0, 15-FEB-2012 (SCK) (NJB)
+!!
+!! ## Index Entries
+!!
+!!     Target in instrument FOV at specified time
+!!     Target in instrument field_of_view at specified time
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
+!!     Ray direction vector required by ZZGFFVIN. This is
+!!     an unused variable as far is this routine is concerned:
+!!     the target is an ephemeris object. We initialize the
+!!     ray to prevent portability problems.
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: wp
       use pepper_strings, only: eqstr
+      use pepper_inc_gf
       implicit none
-      include              'gf.inc'
       if ( .not. allocated ( ctx%fovtrg_state ) ) then
          allocate ( ctx%fovtrg_state )
          call init_fovtrg_state ( ctx%fovtrg_state )
@@ -14051,41 +13879,40 @@ contains
 
       module subroutine gffove ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr, tol, &
             udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
+!! ## Abstract
+!!
+!!     Determine time intervals when a specified target body or ray
+!!     intersects the space bounded by the field-of-view (FOV) of a
+!!     specified instrument. Report progress and handle interrupts if so
+!!     commanded.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     GF
+!!     KERNEL
+!!     NAIF_IDS
+!!     PCK
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EVENT
+!!     FOV
+!!     GEOMETRY
+!!     INSTRUMENT
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine time intervals when a specified target body or ray
-!     intersects the space bounded by the field-of-view (FOV) of a
-!     specified instrument. Report progress and handle interrupts if so
-!     commanded.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     GF
-!     KERNEL
-!     NAIF_IDS
-!     PCK
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EVENT
-!     FOV
-!     GEOMETRY
-!     INSTRUMENT
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
+      use pepper_inc_gf
       implicit none
 
-      include 'gf.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -15602,38 +15429,37 @@ contains
 
       module subroutine gfocce ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, &
             obsrvr, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
+!! ## Abstract
+!!
+!!     Determine time intervals when an observer sees one target
+!!     occulted by another. Report progress and handle interrupts
+!!     if so commanded.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!     GF
+!!     KERNEL
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EVENT
+!!     GEOMETRY
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ljust, ucase
-
-! $ Abstract
-!
-!     Determine time intervals when an observer sees one target
-!     occulted by another. Report progress and handle interrupts
-!     if so commanded.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!     GF
-!     KERNEL
-!     NAIF_IDS
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EVENT
-!     GEOMETRY
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzdsk
       implicit none
 
-      include 'gf.inc'
-      include 'zzdsk.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -16915,38 +16741,37 @@ contains
 !$Procedure OCCULT ( find occultation type at time )
 
       module procedure occult
+!! ## Abstract
+!!
+!!     Determine the occultation condition (not occulted, partially
+!!     occulted, etc.) of one target relative to another target as seen
+!!     by an observer at a given time.
+!!
+!!     The surfaces of the target bodies may be represented by triaxial
+!!     ellipsoids, points, or by topographic data provided by DSK files.
+!!
+!! ## Required Reading
+!!
+!!     KERNEL
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     ELLIPSOID
+!!     GEOMETRY
+!!     OCCULTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ljust, ucase
-
-! $ Abstract
-!
-!     Determine the occultation condition (not occulted, partially
-!     occulted, etc.) of one target relative to another target as seen
-!     by an observer at a given time.
-!
-!     The surfaces of the target bodies may be represented by triaxial
-!     ellipsoids, points, or by topographic data provided by DSK files.
-!
-! $ Required_Reading
-!
-!     KERNEL
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     ELLIPSOID
-!     GEOMETRY
-!     OCCULTATION
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_occult
+      use pepper_inc_dsk
+      use pepper_inc_zzdsk
       implicit none
 
-      include 'gf.inc'
-      include 'occult.inc'
-      include 'dsk.inc'
-      include 'zzdsk.inc'
 
 
 ! $ Detailed_Input
@@ -17982,512 +17807,482 @@ contains
       end procedure occult
 
       module procedure phaseq
-
-! $ Abstract
-!
-!     Compute the apparent phase angle for a target, observer,
-!     illuminator set of ephemeris objects.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     GEOMETRY
-!     PHASE ANGLE
-!     SEARCH
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     ET       is the time in ephemeris seconds past J2000 TDB at which
-!              to compute the phase angle.
-!
-!     TARGET   is the name of the target body. Optionally, you may
-!              supply a string containing the integer ID code
-!              for the object. For example both 'MOON' and '301'
-!              are legitimate strings that indicate the Moon is the
-!              target body. The TARGET string lack sensitivity to
-!              case, leading and trailing blanks.
-!
-!     ILLMN    is the name of the illuminating body. Optionally, you may
-!              supply a string containing the integer ID code
-!              for the object. For example both 'SUN' and '10'
-!              are legitimate strings that indicate the sun is the
-!              illuminating body. The ILLMN string lack sensitivity
-!              to case, leading and trailing blanks.
-!
-!              In most cases, ILLMN is the sun.
-!
-!     OBSRVR   is the name of the observer body. Optionally, you may
-!              supply a string containing the integer ID code
-!              for the object. For example both 'MOON' and '301'
-!              are legitimate strings that indicate the Moon is the
-!              observer body. The OBSRVR string lack sensitivity
-!              to case, leading and trailing blanks.
-!
-!     ABCORR   is the string description of the aberration corrections
-!              to apply to the state evaluations to account for one-way
-!              light time and stellar aberration. The ABCORR string lack
-!              sensitivity to case, leading and trailing blanks.
-!
-!              This routine accepts only reception mode aberration
-!              corrections. See the header of SPKEZR for a detailed
-!              description of the aberration correction options.
-!              For convenience, the appropriate aberration options are
-!              listed below:
-!
-!                 'NONE'     Apply no correction. Returns the "true"
-!                            geometric state.
-!
-!                 'LT'       "Reception" case: correct for
-!                            one-way light time using a Newtonian
-!                            formulation.
-!
-!                 'LT+S'     "Reception" case: correct for
-!                            one-way light time and stellar
-!                            aberration using a Newtonian
-!                            formulation.
-!
-!                 'CN'       "Reception" case: converged
-!                            Newtonian light time correction.
-!
-!                 'CN+S'     "Reception" case: converged
-!                            Newtonian light time and stellar
-!                            aberration corrections.
-!
-! $ Detailed_Output
-!
-!     The function returns the optionally light-time corrected phase
-!     angle between TARGET and ILLMN as observed from OBSRVR.
-!
-!     The range of the phase angle is [0, pi].
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the body name to SPICE ID look-up fails for any of the
-!         TARGET, ILLMN, or OBSRVR names, the error
-!         SPICE(IDCODENOTFOUND) is signaled.
-!
-!     2)  If the aberration correct, ABCORR, indicates a transmission
-!         based correction, the error SPICE(INVALIDOPTION) is signaled.
-!
-!     3)  If the TARGET, ILLMN, and OBSRVR are not unique, the error
-!         SPICE(BODIESNOTDISTINCT) is signaled.
-!
-! $ Files
-!
-!   Appropriate kernels must be loaded by the calling program before
-!   this routine is called.
-!
-!   The following data are required:
-!
-!   -  SPK data: ephemeris data for the observer, illuminator, and
-!      target must be loaded. If aberration corrections are used,
-!      the states of the ephemeris bodies relative to the solar
-!      system barycenter must be calculable from the available
-!      ephemeris data. Typically ephemeris data are made
-!      available by loading one or more SPK files using FURNSH.
-!
-!   The following data may be required:
-!
-!   -  Frame data: if a frame definition not built into SPICE is
-!      required, that definition must be available in the kernel
-!      pool. Typically frame definitions are supplied by loading a
-!      frame kernel using FURNSH.
-!
-!   -  Orientation data: if a CK based frame is used in this routine's
-!      state computation, then at least one CK and corresponding SCLK
-!      kernel is required. If dynamic frames are used, additional
-!      SPK, PCK, CK, or SCLK kernels may be required.
-!
-! $ Particulars
-!
-!     This routine returns the phase angle using the location of the
-!     bodies (if point objects) or the center of the bodies (if finite
-!     bodies).
-!
-!                       ILLMN     OBSRVR
-!       ILLMN as seen      ^       /
-!       from TARGET at     |      /
-!       ET - LT.           |     /
-!                         >|..../< phase angle
-!                          |   /
-!                        . |  /
-!                      .   | /
-!                     .    |v        TARGET as seen from OBSRVR
-!               SEP   .  TARGET      at ET
-!                      .  /
-!                        /
-!                       v
-!
-!        PI = SEP + PHASE
-!
-!        so
-!
-!        PHASE = PI - SEP
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Determine the time windows from December 1, 2006 UTC to
-!        January 31, 2007 UTC for which the sun-moon-earth configuration
-!        phase angle satisfies the relation conditions with respect to a
-!        reference value of 0.57598845 radians (the phase angle at
-!        January 1, 2007 00:00:00.000 UTC, 33.001707 degrees). Also
-!        determine the time windows corresponding to the local maximum
-!        and minimum phase angles, and the absolute maximum and minimum
-!        phase angles during the search interval. The configuration
-!        defines the Sun as the illuminator, the Moon as the target, and
-!        the Earth as the observer.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File name: phaseq_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                     Contents
-!              ---------                     --------
-!              de421.bsp                     Planetary ephemeris
-!              pck00009.tpc                  Planet orientation and
-!                                            radii
-!              naif0009.tls                  Leapseconds
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'de421.bsp',
-!                                  'pck00009.tpc',
-!                                  'naif0009.tls'  )
-!
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM PHASEQ_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include GF parameter declarations:
-!        C
-!              INCLUDE 'gf.inc'
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      SPD
-!              DOUBLE PRECISION      PHASEQ
-!
-!              INTEGER               WNCARD
-!
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               LBCELL
-!              PARAMETER           ( LBCELL = -5 )
-!
-!        C
-!        C     Use the parameter MAXWIN for both the result window size
-!        C     and the workspace size.
-!        C
-!              INTEGER               MAXWIN
-!              PARAMETER           ( MAXWIN = 1000 )
-!
-!        C
-!        C     Length of strings:
-!        C
-!              INTEGER               TIMLEN
-!              PARAMETER           ( TIMLEN = 26 )
-!
-!              INTEGER               NLOOPS
-!              PARAMETER           ( NLOOPS = 7 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(TIMLEN)    RELATE (NLOOPS)
-!              CHARACTER*(6)         ABCORR
-!              CHARACTER*(6)         ILLMN
-!              CHARACTER*(6)         OBSRVR
-!              CHARACTER*(6)         TARGET
-!              CHARACTER*(TIMLEN)    TIMSTR
-!
-!              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-!              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-!              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWPA )
-!              DOUBLE PRECISION      ADJUST
-!              DOUBLE PRECISION      ET0
-!              DOUBLE PRECISION      ET1
-!              DOUBLE PRECISION      FINISH
-!              DOUBLE PRECISION      PHASE
-!              DOUBLE PRECISION      REFVAL
-!              DOUBLE PRECISION      START
-!              DOUBLE PRECISION      STEP
-!
-!              INTEGER               I
-!              INTEGER               J
-!
-!        C
-!        C     The relation values for the search.
-!        C
-!              DATA                  RELATE / '=',
-!             .                               '<',
-!             .                               '>',
-!             .                               'LOCMIN',
-!             .                               'ABSMIN',
-!             .                               'LOCMAX',
-!             .                               'ABSMAX'  /
-!
-!        C
-!        C     Load kernels.
-!        C
-!              CALL FURNSH ( 'phaseq_ex1.tm' )
-!
-!        C
-!        C     Initialize windows.
-!        C
-!              CALL SSIZED ( MAXWIN, RESULT )
-!              CALL SSIZED ( 2,      CNFINE )
-!
-!        C
-!        C     Store the time bounds of our search interval in
-!        C     the confinement window.
-!        C
-!              CALL STR2ET ( '2006 DEC 01', ET0 )
-!              CALL STR2ET ( '2007 JAN 31', ET1 )
-!
-!              CALL WNINSD ( ET0, ET1, CNFINE )
-!
-!        C
-!        C     Search using a step size of 1 day (in units of seconds).
-!        C     The reference value is 0.57598845. We're not using the
-!        C     adjustment feature, so we set ADJUST to zero.
-!        C
-!              STEP   = SPD()
-!              REFVAL = 0.57598845D0
-!              ADJUST = 0.D0
-!
-!        C
-!        C     Define the values for target, observer, illuminator, and
-!        C     aberration correction.
-!        C
-!              TARGET = 'MOON'
-!              ILLMN  = 'SUN'
-!              ABCORR = 'LT+S'
-!              OBSRVR = 'EARTH'
-!
-!              DO J=1, NLOOPS
-!
-!                 WRITE(*,*) 'Relation condition: ', RELATE(J)
-!
-!        C
-!        C        Perform the search. The SPICE window RESULT contains
-!        C        the set of times when the condition is met.
-!        C
-!                 CALL GFPA (  TARGET,    ILLMN,  ABCORR, OBSRVR,
-!             .                RELATE(J), REFVAL, ADJUST, STEP,
-!             .                CNFINE,    MAXWIN, NWPA,   WORK,
-!             .                RESULT )
-!
-!        C
-!        C        Display the results.
-!        C
-!                 IF ( WNCARD(RESULT) .EQ. 0 ) THEN
-!
-!                    WRITE (*, '(A)') 'Result window is empty.'
-!
-!                 ELSE
-!
-!                    DO I = 1, WNCARD(RESULT)
-!        C
-!        C              Fetch the endpoints of the Ith interval
-!        C              of the result window.
-!        C
-!                       CALL WNFETD ( RESULT, I, START, FINISH )
-!
-!                       PHASE = PHASEQ( START, TARGET, ILLMN, OBSRVR,
-!             .                         ABCORR )
-!                       CALL TIMOUT ( START,
-!             .                       'YYYY-MON-DD HR:MN:SC.###',
-!             .                       TIMSTR                          )
-!
-!                       WRITE (*, '(2X,A,F16.9)') 'Start time = '
-!             .                               //   TIMSTR, PHASE
-!
-!                       PHASE = PHASEQ( FINISH, TARGET, ILLMN, OBSRVR,
-!             .                         ABCORR )
-!                       CALL TIMOUT ( FINISH,
-!             .                       'YYYY-MON-DD HR:MN:SC.###',
-!             .                       TIMSTR                          )
-!
-!                       WRITE (*, '(2X,A,F16.9)') 'Stop time  = '
-!             .                                //  TIMSTR, PHASE
-!
-!                    END DO
-!
-!                 END IF
-!
-!                 WRITE(*,*) ' '
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Relation condition: =
-!          Start time = 2006-DEC-02 13:31:34.414       0.575988450
-!          Stop time  = 2006-DEC-02 13:31:34.414       0.575988450
-!          Start time = 2006-DEC-07 14:07:55.470       0.575988450
-!          Stop time  = 2006-DEC-07 14:07:55.470       0.575988450
-!          Start time = 2006-DEC-31 23:59:59.997       0.575988450
-!          Stop time  = 2006-DEC-31 23:59:59.997       0.575988450
-!          Start time = 2007-JAN-06 08:16:25.512       0.575988450
-!          Stop time  = 2007-JAN-06 08:16:25.512       0.575988450
-!          Start time = 2007-JAN-30 11:41:32.557       0.575988450
-!          Stop time  = 2007-JAN-30 11:41:32.557       0.575988450
-!
-!         Relation condition: <
-!          Start time = 2006-DEC-02 13:31:34.414       0.575988450
-!          Stop time  = 2006-DEC-07 14:07:55.470       0.575988450
-!          Start time = 2006-DEC-31 23:59:59.997       0.575988450
-!          Stop time  = 2007-JAN-06 08:16:25.512       0.575988450
-!          Start time = 2007-JAN-30 11:41:32.557       0.575988450
-!          Stop time  = 2007-JAN-31 00:00:00.000       0.468279091
-!
-!         Relation condition: >
-!          Start time = 2006-DEC-01 00:00:00.000       0.940714974
-!          Stop time  = 2006-DEC-02 13:31:34.414       0.575988450
-!          Start time = 2006-DEC-07 14:07:55.470       0.575988450
-!          Stop time  = 2006-DEC-31 23:59:59.997       0.575988450
-!          Start time = 2007-JAN-06 08:16:25.512       0.575988450
-!          Stop time  = 2007-JAN-30 11:41:32.557       0.575988450
-!
-!         Relation condition: LOCMIN
-!          Start time = 2006-DEC-05 00:16:50.317       0.086121423
-!          Stop time  = 2006-DEC-05 00:16:50.317       0.086121423
-!          Start time = 2007-JAN-03 14:18:31.977       0.079899769
-!          Stop time  = 2007-JAN-03 14:18:31.977       0.079899769
-!
-!         Relation condition: ABSMIN
-!          Start time = 2007-JAN-03 14:18:31.977       0.079899769
-!          Stop time  = 2007-JAN-03 14:18:31.977       0.079899769
-!
-!         Relation condition: LOCMAX
-!          Start time = 2006-DEC-20 14:09:10.392       3.055062862
-!          Stop time  = 2006-DEC-20 14:09:10.392       3.055062862
-!          Start time = 2007-JAN-19 04:27:54.600       3.074603891
-!          Stop time  = 2007-JAN-19 04:27:54.600       3.074603891
-!
-!         Relation condition: ABSMAX
-!          Start time = 2007-JAN-19 04:27:54.600       3.074603891
-!          Stop time  = 2007-JAN-19 04:27:54.600       3.074603891
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 31-AUG-2021 (JDR) (EDW)
-!
-!        Edited the header to comply with NAIF standards.
-!
-!        Fixed typos in the Header. Renamed example's meta-kernel.
-!        Removed reference to private routine ZZGFPAQ from $Particulars
-!        section.
-!
-!-    SPICELIB Version 1.0.0, 27-MAR-2014 (EDW) (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     compute phase angle for arbitrary illumination source
-!
-!-&
-
-!
-!     SPICELIB functions.
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Saved body name length.
-!
-
-!
-!     Local Variables.
-!
-
-
-
-!
-!     Saved name/ID item declarations.
-!
-
-
-
-
-!
-!     Saved name/ID items.
-!
-
-
-
-
-!
-!     Initial values.
-!
-
+!! ## Abstract
+!!
+!!     Compute the apparent phase angle for a target, observer,
+!!     illuminator set of ephemeris objects.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     PHASE ANGLE
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the time in ephemeris seconds past J2000 TDB at which
+!!              to compute the phase angle.
+!!
+!!     TARGET   is the name of the target body. Optionally, you may
+!!              supply a string containing the integer ID code
+!!              for the object. For example both 'MOON' and '301'
+!!              are legitimate strings that indicate the Moon is the
+!!              target body. The TARGET string lack sensitivity to
+!!              case, leading and trailing blanks.
+!!
+!!     ILLMN    is the name of the illuminating body. Optionally, you may
+!!              supply a string containing the integer ID code
+!!              for the object. For example both 'SUN' and '10'
+!!              are legitimate strings that indicate the sun is the
+!!              illuminating body. The ILLMN string lack sensitivity
+!!              to case, leading and trailing blanks.
+!!
+!!              In most cases, ILLMN is the sun.
+!!
+!!     OBSRVR   is the name of the observer body. Optionally, you may
+!!              supply a string containing the integer ID code
+!!              for the object. For example both 'MOON' and '301'
+!!              are legitimate strings that indicate the Moon is the
+!!              observer body. The OBSRVR string lack sensitivity
+!!              to case, leading and trailing blanks.
+!!
+!!     ABCORR   is the string description of the aberration corrections
+!!              to apply to the state evaluations to account for one-way
+!!              light time and stellar aberration. The ABCORR string lack
+!!              sensitivity to case, leading and trailing blanks.
+!!
+!!              This routine accepts only reception mode aberration
+!!              corrections. See the header of SPKEZR for a detailed
+!!              description of the aberration correction options.
+!!              For convenience, the appropriate aberration options are
+!!              listed below:
+!!
+!!                 'NONE'     Apply no correction. Returns the "true"
+!!                            geometric state.
+!!
+!!                 'LT'       "Reception" case: correct for
+!!                            one-way light time using a Newtonian
+!!                            formulation.
+!!
+!!                 'LT+S'     "Reception" case: correct for
+!!                            one-way light time and stellar
+!!                            aberration using a Newtonian
+!!                            formulation.
+!!
+!!                 'CN'       "Reception" case: converged
+!!                            Newtonian light time correction.
+!!
+!!                 'CN+S'     "Reception" case: converged
+!!                            Newtonian light time and stellar
+!!                            aberration corrections.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns the optionally light-time corrected phase
+!!     angle between TARGET and ILLMN as observed from OBSRVR.
+!!
+!!     The range of the phase angle is [0, pi].
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the body name to SPICE ID look-up fails for any of the
+!!         TARGET, ILLMN, or OBSRVR names, the error
+!!         SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     2)  If the aberration correct, ABCORR, indicates a transmission
+!!         based correction, the error SPICE(INVALIDOPTION) is signaled.
+!!
+!!     3)  If the TARGET, ILLMN, and OBSRVR are not unique, the error
+!!         SPICE(BODIESNOTDISTINCT) is signaled.
+!!
+!! ## Files
+!!
+!!   Appropriate kernels must be loaded by the calling program before
+!!   this routine is called.
+!!
+!!   The following data are required:
+!!
+!!   -  SPK data: ephemeris data for the observer, illuminator, and
+!!      target must be loaded. If aberration corrections are used,
+!!      the states of the ephemeris bodies relative to the solar
+!!      system barycenter must be calculable from the available
+!!      ephemeris data. Typically ephemeris data are made
+!!      available by loading one or more SPK files using FURNSH.
+!!
+!!   The following data may be required:
+!!
+!!   -  Frame data: if a frame definition not built into SPICE is
+!!      required, that definition must be available in the kernel
+!!      pool. Typically frame definitions are supplied by loading a
+!!      frame kernel using FURNSH.
+!!
+!!   -  Orientation data: if a CK based frame is used in this routine's
+!!      state computation, then at least one CK and corresponding SCLK
+!!      kernel is required. If dynamic frames are used, additional
+!!      SPK, PCK, CK, or SCLK kernels may be required.
+!!
+!! ## Particulars
+!!
+!!     This routine returns the phase angle using the location of the
+!!     bodies (if point objects) or the center of the bodies (if finite
+!!     bodies).
+!!
+!!                       ILLMN     OBSRVR
+!!       ILLMN as seen      ^       /
+!!       from TARGET at     |      /
+!!       ET - LT.           |     /
+!!                         >|..../< phase angle
+!!                          |   /
+!!                        . |  /
+!!                      .   | /
+!!                     .    |v        TARGET as seen from OBSRVR
+!!               SEP   .  TARGET      at ET
+!!                      .  /
+!!                        /
+!!                       v
+!!
+!!        PI = SEP + PHASE
+!!
+!!        so
+!!
+!!        PHASE = PI - SEP
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Determine the time windows from December 1, 2006 UTC to
+!!        January 31, 2007 UTC for which the sun-moon-earth configuration
+!!        phase angle satisfies the relation conditions with respect to a
+!!        reference value of 0.57598845 radians (the phase angle at
+!!        January 1, 2007 00:00:00.000 UTC, 33.001707 degrees). Also
+!!        determine the time windows corresponding to the local maximum
+!!        and minimum phase angles, and the absolute maximum and minimum
+!!        phase angles during the search interval. The configuration
+!!        defines the Sun as the illuminator, the Moon as the target, and
+!!        the Earth as the observer.
+!!
+!!        Use the meta-kernel shown below to load the required SPICE
+!!        kernels.
+!!
+!!           KPL/MK
+!!
+!!           File name: phaseq_ex1.tm
+!!
+!!           This meta-kernel is intended to support operation of SPICE
+!!           example programs. The kernels shown here should not be
+!!           assumed to contain adequate or correct versions of data
+!!           required by SPICE-based user applications.
+!!
+!!           In order for an application to use this meta-kernel, the
+!!           kernels referenced here must be present in the user's
+!!           current working directory.
+!!
+!!           The names and contents of the kernels referenced
+!!           by this meta-kernel are as follows:
+!!
+!!              File name                     Contents
+!!              ---------                     --------
+!!              de421.bsp                     Planetary ephemeris
+!!              pck00009.tpc                  Planet orientation and
+!!                                            radii
+!!              naif0009.tls                  Leapseconds
+!!
+!!           \begindata
+!!
+!!              KERNELS_TO_LOAD = ( 'de421.bsp',
+!!                                  'pck00009.tpc',
+!!                                  'naif0009.tls'  )
+!!
+!!           \begintext
+!!
+!!           End of meta-kernel
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM PHASEQ_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Include GF parameter declarations:
+!!        C
+!!              INCLUDE 'gf.inc'
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              DOUBLE PRECISION      SPD
+!!              DOUBLE PRECISION      PHASEQ
+!!
+!!              INTEGER               WNCARD
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              INTEGER               LBCELL
+!!              PARAMETER           ( LBCELL = -5 )
+!!
+!!        C
+!!        C     Use the parameter MAXWIN for both the result window size
+!!        C     and the workspace size.
+!!        C
+!!              INTEGER               MAXWIN
+!!              PARAMETER           ( MAXWIN = 1000 )
+!!
+!!        C
+!!        C     Length of strings:
+!!        C
+!!              INTEGER               TIMLEN
+!!              PARAMETER           ( TIMLEN = 26 )
+!!
+!!              INTEGER               NLOOPS
+!!              PARAMETER           ( NLOOPS = 7 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(TIMLEN)    RELATE (NLOOPS)
+!!              CHARACTER*(6)         ABCORR
+!!              CHARACTER*(6)         ILLMN
+!!              CHARACTER*(6)         OBSRVR
+!!              CHARACTER*(6)         TARGET
+!!              CHARACTER*(TIMLEN)    TIMSTR
+!!
+!!              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+!!              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+!!              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWPA )
+!!              DOUBLE PRECISION      ADJUST
+!!              DOUBLE PRECISION      ET0
+!!              DOUBLE PRECISION      ET1
+!!              DOUBLE PRECISION      FINISH
+!!              DOUBLE PRECISION      PHASE
+!!              DOUBLE PRECISION      REFVAL
+!!              DOUBLE PRECISION      START
+!!              DOUBLE PRECISION      STEP
+!!
+!!              INTEGER               I
+!!              INTEGER               J
+!!
+!!        C
+!!        C     The relation values for the search.
+!!        C
+!!              DATA                  RELATE / '=',
+!!             .                               '<',
+!!             .                               '>',
+!!             .                               'LOCMIN',
+!!             .                               'ABSMIN',
+!!             .                               'LOCMAX',
+!!             .                               'ABSMAX'  /
+!!
+!!        C
+!!        C     Load kernels.
+!!        C
+!!              CALL FURNSH ( 'phaseq_ex1.tm' )
+!!
+!!        C
+!!        C     Initialize windows.
+!!        C
+!!              CALL SSIZED ( MAXWIN, RESULT )
+!!              CALL SSIZED ( 2,      CNFINE )
+!!
+!!        C
+!!        C     Store the time bounds of our search interval in
+!!        C     the confinement window.
+!!        C
+!!              CALL STR2ET ( '2006 DEC 01', ET0 )
+!!              CALL STR2ET ( '2007 JAN 31', ET1 )
+!!
+!!              CALL WNINSD ( ET0, ET1, CNFINE )
+!!
+!!        C
+!!        C     Search using a step size of 1 day (in units of seconds).
+!!        C     The reference value is 0.57598845. We're not using the
+!!        C     adjustment feature, so we set ADJUST to zero.
+!!        C
+!!              STEP   = SPD()
+!!              REFVAL = 0.57598845D0
+!!              ADJUST = 0.D0
+!!
+!!        C
+!!        C     Define the values for target, observer, illuminator, and
+!!        C     aberration correction.
+!!        C
+!!              TARGET = 'MOON'
+!!              ILLMN  = 'SUN'
+!!              ABCORR = 'LT+S'
+!!              OBSRVR = 'EARTH'
+!!
+!!              DO J=1, NLOOPS
+!!
+!!                 WRITE(*,*) 'Relation condition: ', RELATE(J)
+!!
+!!        C
+!!        C        Perform the search. The SPICE window RESULT contains
+!!        C        the set of times when the condition is met.
+!!        C
+!!                 CALL GFPA (  TARGET,    ILLMN,  ABCORR, OBSRVR,
+!!             .                RELATE(J), REFVAL, ADJUST, STEP,
+!!             .                CNFINE,    MAXWIN, NWPA,   WORK,
+!!             .                RESULT )
+!!
+!!        C
+!!        C        Display the results.
+!!        C
+!!                 IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+!!
+!!                    WRITE (*, '(A)') 'Result window is empty.'
+!!
+!!                 ELSE
+!!
+!!                    DO I = 1, WNCARD(RESULT)
+!!        C
+!!        C              Fetch the endpoints of the Ith interval
+!!        C              of the result window.
+!!        C
+!!                       CALL WNFETD ( RESULT, I, START, FINISH )
+!!
+!!                       PHASE = PHASEQ( START, TARGET, ILLMN, OBSRVR,
+!!             .                         ABCORR )
+!!                       CALL TIMOUT ( START,
+!!             .                       'YYYY-MON-DD HR:MN:SC.###',
+!!             .                       TIMSTR                          )
+!!
+!!                       WRITE (*, '(2X,A,F16.9)') 'Start time = '
+!!             .                               //   TIMSTR, PHASE
+!!
+!!                       PHASE = PHASEQ( FINISH, TARGET, ILLMN, OBSRVR,
+!!             .                         ABCORR )
+!!                       CALL TIMOUT ( FINISH,
+!!             .                       'YYYY-MON-DD HR:MN:SC.###',
+!!             .                       TIMSTR                          )
+!!
+!!                       WRITE (*, '(2X,A,F16.9)') 'Stop time  = '
+!!             .                                //  TIMSTR, PHASE
+!!
+!!                    END DO
+!!
+!!                 END IF
+!!
+!!                 WRITE(*,*) ' '
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         Relation condition: =
+!!          Start time = 2006-DEC-02 13:31:34.414       0.575988450
+!!          Stop time  = 2006-DEC-02 13:31:34.414       0.575988450
+!!          Start time = 2006-DEC-07 14:07:55.470       0.575988450
+!!          Stop time  = 2006-DEC-07 14:07:55.470       0.575988450
+!!          Start time = 2006-DEC-31 23:59:59.997       0.575988450
+!!          Stop time  = 2006-DEC-31 23:59:59.997       0.575988450
+!!          Start time = 2007-JAN-06 08:16:25.512       0.575988450
+!!          Stop time  = 2007-JAN-06 08:16:25.512       0.575988450
+!!          Start time = 2007-JAN-30 11:41:32.557       0.575988450
+!!          Stop time  = 2007-JAN-30 11:41:32.557       0.575988450
+!!
+!!         Relation condition: <
+!!          Start time = 2006-DEC-02 13:31:34.414       0.575988450
+!!          Stop time  = 2006-DEC-07 14:07:55.470       0.575988450
+!!          Start time = 2006-DEC-31 23:59:59.997       0.575988450
+!!          Stop time  = 2007-JAN-06 08:16:25.512       0.575988450
+!!          Start time = 2007-JAN-30 11:41:32.557       0.575988450
+!!          Stop time  = 2007-JAN-31 00:00:00.000       0.468279091
+!!
+!!         Relation condition: >
+!!          Start time = 2006-DEC-01 00:00:00.000       0.940714974
+!!          Stop time  = 2006-DEC-02 13:31:34.414       0.575988450
+!!          Start time = 2006-DEC-07 14:07:55.470       0.575988450
+!!          Stop time  = 2006-DEC-31 23:59:59.997       0.575988450
+!!          Start time = 2007-JAN-06 08:16:25.512       0.575988450
+!!          Stop time  = 2007-JAN-30 11:41:32.557       0.575988450
+!!
+!!         Relation condition: LOCMIN
+!!          Start time = 2006-DEC-05 00:16:50.317       0.086121423
+!!          Stop time  = 2006-DEC-05 00:16:50.317       0.086121423
+!!          Start time = 2007-JAN-03 14:18:31.977       0.079899769
+!!          Stop time  = 2007-JAN-03 14:18:31.977       0.079899769
+!!
+!!         Relation condition: ABSMIN
+!!          Start time = 2007-JAN-03 14:18:31.977       0.079899769
+!!          Stop time  = 2007-JAN-03 14:18:31.977       0.079899769
+!!
+!!         Relation condition: LOCMAX
+!!          Start time = 2006-DEC-20 14:09:10.392       3.055062862
+!!          Stop time  = 2006-DEC-20 14:09:10.392       3.055062862
+!!          Start time = 2007-JAN-19 04:27:54.600       3.074603891
+!!          Stop time  = 2007-JAN-19 04:27:54.600       3.074603891
+!!
+!!         Relation condition: ABSMAX
+!!          Start time = 2007-JAN-19 04:27:54.600       3.074603891
+!!          Stop time  = 2007-JAN-19 04:27:54.600       3.074603891
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 31-AUG-2021 (JDR) (EDW)
+!!
+!!        Edited the header to comply with NAIF standards.
+!!
+!!        Fixed typos in the Header. Renamed example's meta-kernel.
+!!        Removed reference to private routine ZZGFPAQ from $Particulars
+!!        section.
+!!
+!!-    SPICELIB Version 1.0.0, 27-MAR-2014 (EDW) (BVS)
+!!
+!! ## Index Entries
+!!
+!!     compute phase angle for arbitrary illumination source
+!!
+!!     SPICELIB functions.
+!!
+!!     Local parameters
+!!
+!!     Saved body name length.
+!!
+!!     Local Variables.
+!!
+!!     Saved name/ID item declarations.
+!!
+!!     Saved name/ID items.
+!!
+!!     Initial values.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ljucrs
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       character(*), parameter :: rname = 'PHASEQ'
       integer(ip), parameter :: maxl = 36
       integer(ip)           targ
@@ -18650,37 +18445,36 @@ contains
 !$Procedure      ZZGFCOST ( GF, coordinate definition state )
 
       module procedure zzgfcost
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     Return a state vector used to define coordinates referenced in a
+!!     GF search.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Return a state vector used to define coordinates referenced in a
-!     GF search.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     SEARCH
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzgf
       implicit none
 
-      include               'gf.inc'
-      include               'zzgf.inc'
 
 
 ! $ Detailed_Input
@@ -19196,135 +18990,130 @@ contains
 !     This routine should never be called directly.
 
       module procedure zzgfdiin
-
-! $ Abstract
-!
-!     Initialize the GF distance constraint search utilities.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     DISTANCE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!      CHARACTER*(*)         TARGET
-!      CHARACTER*(*)         ABCORR
-!      CHARACTER*(*)         OBSRVR
-!
-! $ Detailed_Input
-!
-!     TARGET     is the name of a target body. Optionally, you may
-!                supply the integer ID code for the object as
-!                an integer string. For example both 'MOON' and
-!                '301' are legitimate strings that indicate the
-!                moon is the target body.
-!
-!                The target and observer define a position vector
-!                which points from the observer to the target.
-!
-!                Case and leading or trailing blanks are not
-!                significant in the string TARGET.
-!
-!     ABCORR     indicates the aberration corrections to be applied
-!                when computing the target's position and orientation.
-!                Any value accepted by SPKEZR may be used.
-!
-!                See the header of the SPICE routine SPKEZR for a
-!                detailed description of the aberration correction
-!                options.
-!
-!                Case and embedded blanks are not significant in
-!                ABCORR.
-!
-!     OBSRVR     is the name of the body from which the occultation is
-!                observed. Optionally, you may supply the integer NAIF
-!                ID code for the body as a string.
-!
-!                Case and leading or trailing blanks are not
-!                significant in the string OBSRVR.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If name of the target or the observer cannot be translated
-!         to a NAIF ID code, the error SPICE(IDCODENOTFOUND) is
-!         signaled.
-!
-!     2)  If  target body coincides with the observer body OBSRVR, the
-!         error SPICE(BODIESNOTDISTINCT) will be signaled.
-!
-!     3)  If the aberration correction string is invalid, the error
-!         will be diagnosed by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     See the header of the umbrella routine ZZGFDIU.
-!
-! $ Particulars
-!
-!     This routine must be called once before each GF search for
-!     distance events.
-!
-! $ Examples
-!
-!     See GFEVNT.
-!
-! $ Restrictions
-!
-!     This is a SPICELIB private routine; it should not be called by
-!     user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     L.S. Elson     (JPL)
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 2.0.0 18-FEB-2011 (EDW)
-!
-!        REFVAL removed from routine argument list due to use
-!        of ZZGFRELX to calculate the events.
-!
-!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     distance initialization routine
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Initialize the GF distance constraint search utilities.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     DISTANCE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!      CHARACTER*(*)         TARGET
+!!      CHARACTER*(*)         ABCORR
+!!      CHARACTER*(*)         OBSRVR
+!!
+!! ## Detailed Input
+!!
+!!     TARGET     is the name of a target body. Optionally, you may
+!!                supply the integer ID code for the object as
+!!                an integer string. For example both 'MOON' and
+!!                '301' are legitimate strings that indicate the
+!!                moon is the target body.
+!!
+!!                The target and observer define a position vector
+!!                which points from the observer to the target.
+!!
+!!                Case and leading or trailing blanks are not
+!!                significant in the string TARGET.
+!!
+!!     ABCORR     indicates the aberration corrections to be applied
+!!                when computing the target's position and orientation.
+!!                Any value accepted by SPKEZR may be used.
+!!
+!!                See the header of the SPICE routine SPKEZR for a
+!!                detailed description of the aberration correction
+!!                options.
+!!
+!!                Case and embedded blanks are not significant in
+!!                ABCORR.
+!!
+!!     OBSRVR     is the name of the body from which the occultation is
+!!                observed. Optionally, you may supply the integer NAIF
+!!                ID code for the body as a string.
+!!
+!!                Case and leading or trailing blanks are not
+!!                significant in the string OBSRVR.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If name of the target or the observer cannot be translated
+!!         to a NAIF ID code, the error SPICE(IDCODENOTFOUND) is
+!!         signaled.
+!!
+!!     2)  If  target body coincides with the observer body OBSRVR, the
+!!         error SPICE(BODIESNOTDISTINCT) will be signaled.
+!!
+!!     3)  If the aberration correction string is invalid, the error
+!!         will be diagnosed by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the header of the umbrella routine ZZGFDIU.
+!!
+!! ## Particulars
+!!
+!!     This routine must be called once before each GF search for
+!!     distance events.
+!!
+!! ## Examples
+!!
+!!     See GFEVNT.
+!!
+!! ## Restrictions
+!!
+!!     This is a SPICELIB private routine; it should not be called by
+!!     user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     L.S. Elson     (JPL)
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 2.0.0 18-FEB-2011 (EDW)
+!!
+!!        REFVAL removed from routine argument list due to use
+!!        of ZZGFRELX to calculate the events.
+!!
+!!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     distance initialization routine
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp)              lt
       real(wp)              state  ( 6 )
       logical               attblk ( nabcor )
@@ -19406,127 +19195,121 @@ contains
       end procedure zzgfdiin
 
       module subroutine zzgfdidc ( ctx, udfunc, et, decres )
-
-! $ Abstract
-!
-!     Indicate whether the observer-target distance is decreasing at a
-!     specified time.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     DISTANCE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     LOGICAL               DECRES
-!
-! $ Detailed_Input
-!
-!     ET         is the time, expressed as seconds past J2000 TDB, at
-!                which to determine whether or not the distance between
-!                the observer and target is decreasing.
-!
-! $ Detailed_Output
-!
-!     DECRES     is a logical flag that indicates whether the
-!                observer-target distance is decreasing at ET. The
-!                observer, target, and aberration correction used to
-!                compute the distance are defined by the latest call to
-!                the initialization entry point ZZGFDIIN.
-!
-!                DECRES is .TRUE. if and only if the observer-target
-!                distance is decreasing at ET.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the state of the target relative to the observer
-!        at ET can not be found due to an SPK lookup failure,
-!        the error will be diagnosed by routines in the call
-!        tree of this routine.
-!
-! $ Files
-!
-!     See the header of the umbrella routine ZZGFDIU.
-!
-! $ Particulars
-!
-!     A function f(x) is strictly decreasing at x0 if and only if there
-!     exists some delta > 0 such that for all dx satisfying
-!
-!        0  <  dx  < delta
-!
-!     we have
-!
-!        f(x0)       <  f(x0 + dx)
-!
-!     and
-!
-!        f(x0 - dx)  <  f(x)
-!
-!     Note that a strictly decreasing function need not be
-!     differentiable in a neighborhood of x0; it can have jump
-!     discontinuities in any neighborhood of x0 and even at x0.
-!
-! $ Examples
-!
-!     See GFREL.
-!
-! $ Restrictions
-!
-!     This is a SPICELIB private routine; it should not be called by
-!     user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     L.S. Elson     (JPL)
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 2.0.0 18-FEB-2011 (EDW)
-!
-!        Added UDFUNC to argument list for use of ZZGFRELX when
-!        calculating the events.
-!
-!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     indicate whether distance is decreasing
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Indicate whether the observer-target distance is decreasing at a
+!!     specified time.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     DISTANCE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     LOGICAL               DECRES
+!!
+!! ## Detailed Input
+!!
+!!     ET         is the time, expressed as seconds past J2000 TDB, at
+!!                which to determine whether or not the distance between
+!!                the observer and target is decreasing.
+!!
+!! ## Detailed Output
+!!
+!!     DECRES     is a logical flag that indicates whether the
+!!                observer-target distance is decreasing at ET. The
+!!                observer, target, and aberration correction used to
+!!                compute the distance are defined by the latest call to
+!!                the initialization entry point ZZGFDIIN.
+!!
+!!                DECRES is .TRUE. if and only if the observer-target
+!!                distance is decreasing at ET.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the state of the target relative to the observer
+!!        at ET can not be found due to an SPK lookup failure,
+!!        the error will be diagnosed by routines in the call
+!!        tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the header of the umbrella routine ZZGFDIU.
+!!
+!! ## Particulars
+!!
+!!     A function f(x) is strictly decreasing at x0 if and only if there
+!!     exists some delta > 0 such that for all dx satisfying
+!!
+!!        0  <  dx  < delta
+!!
+!!     we have
+!!
+!!        f(x0)       <  f(x0 + dx)
+!!
+!!     and
+!!
+!!        f(x0 - dx)  <  f(x)
+!!
+!!     Note that a strictly decreasing function need not be
+!!     differentiable in a neighborhood of x0; it can have jump
+!!     discontinuities in any neighborhood of x0 and even at x0.
+!!
+!! ## Examples
+!!
+!!     See GFREL.
+!!
+!! ## Restrictions
+!!
+!!     This is a SPICELIB private routine; it should not be called by
+!!     user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     L.S. Elson     (JPL)
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 2.0.0 18-FEB-2011 (EDW)
+!!
+!!        Added UDFUNC to argument list for use of ZZGFRELX when
+!!        calculating the events.
+!!
+!!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     indicate whether distance is decreasing
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdot
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp)              lt
       real(wp)              state  ( 6 )
       logical               attblk ( nabcor )
@@ -19563,105 +19346,100 @@ contains
       end subroutine zzgfdidc
 
       module procedure zzgfdigq
-
-! $ Abstract
-!
-!     Return the distance between the target and observer
-!     at a specified epoch.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     DISTANCE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!      DOUBLE PRECISION      ET
-!      DOUBLE PRECISION      DIST
-!
-! $ Detailed_Input
-!
-!     ET         is the time, expressed as seconds past J2000 TDB, at
-!                which the distance between the observer and target is
-!                to be computed.
-!
-! $ Detailed_Output
-!
-!     DIST       is the distance between the observer and target as
-!                seen by the observer at time ET. The observer, target,
-!                and aberration correction used to compute the distance
-!                are defined by the latest call to the initialization
-!                entry point ZZGFDIIN.
-!
-!                Units are km.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the position of the target relative to the observer
-!        at ET can not be found due to an SPK lookup failure,
-!        the error will be diagnosed by routines in the call
-!        tree of this routine.
-!
-! $ Files
-!
-!     See the header of the umbrella routine ZZGFDIU.
-!
-! $ Particulars
-!
-!     This routine determines the apparent distance between the target
-!     and observer as seen from the observer at time ET. This
-!     functionality supports GFREL's comparisons of relative extrema in
-!     order to determine absolute extrema.
-!
-! $ Examples
-!
-!     See GFREL.
-!
-! $ Restrictions
-!
-!     This is a SPICELIB private routine; it should not be called by
-!     user applications.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     L.S. Elson     (JPL)
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return distance between two bodies
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Return the distance between the target and observer
+!!     at a specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     DISTANCE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!      DOUBLE PRECISION      ET
+!!      DOUBLE PRECISION      DIST
+!!
+!! ## Detailed Input
+!!
+!!     ET         is the time, expressed as seconds past J2000 TDB, at
+!!                which the distance between the observer and target is
+!!                to be computed.
+!!
+!! ## Detailed Output
+!!
+!!     DIST       is the distance between the observer and target as
+!!                seen by the observer at time ET. The observer, target,
+!!                and aberration correction used to compute the distance
+!!                are defined by the latest call to the initialization
+!!                entry point ZZGFDIIN.
+!!
+!!                Units are km.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If the position of the target relative to the observer
+!!        at ET can not be found due to an SPK lookup failure,
+!!        the error will be diagnosed by routines in the call
+!!        tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the header of the umbrella routine ZZGFDIU.
+!!
+!! ## Particulars
+!!
+!!     This routine determines the apparent distance between the target
+!!     and observer as seen from the observer at time ET. This
+!!     functionality supports GFREL's comparisons of relative extrema in
+!!     order to determine absolute extrema.
+!!
+!! ## Examples
+!!
+!!     See GFREL.
+!!
+!! ## Restrictions
+!!
+!!     This is a SPICELIB private routine; it should not be called by
+!!     user applications.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     L.S. Elson     (JPL)
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     return distance between two bodies
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp)              lt
       real(wp)              state  ( 6 )
       logical               attblk ( nabcor )
@@ -19879,159 +19657,153 @@ contains
 !     Saved Variables
 
       module procedure zzgfpain
-
-! $ Abstract
-!
-!     This is the initialization entry point used for describing
-!     the event that is to be solved for by ZZGFSOLV.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PHASE ANGLE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!      CHARACTER*(*)         TARGET
-!      CHARACTER*(*)         ABCORR
-!      CHARACTER*(*)         OBSRVR
-!
-! $ Detailed_Input
-!
-!     TARGET   the string name of a target body.  Optionally, you may
-!              supply the integer ID code for the object as an
-!              integer string.  For example both 'MOON' and '301'
-!              are legitimate strings that indicate the moon is the
-!              target body.
-!
-!              Case and leading or trailing blanks are not significant
-!              in the string TARGET.
-!
-!     ILLMN    the string name of the illuminating body. This will
-!              normally be 'SUN' but the algorithm can use any
-!              ephemeris object
-!
-!              Case and leading or trailing blanks are not significant
-!              in the string ILLMN.
-!
-!     ABCORR   the string description of the aberration corrections to
-!              apply to the state evaluations to account for one-way
-!              light time and stellar aberration.
-!
-!              Any aberration correction accepted by the SPICE
-!              routine SPKEZR is accepted here. See the header
-!              of SPKEZR for a detailed description of the
-!              aberration correction options. For convenience,
-!              the options are listed below:
-!
-!                 'NONE'     Apply no correction. Returns the "true"
-!                            geometric state.
-!
-!                 'LT'       "Reception" case:  correct for
-!                            one-way light time using a Newtonian
-!                            formulation.
-!
-!                 'LT+S'     "Reception" case:  correct for
-!                            one-way light time and stellar
-!                            aberration using a Newtonian
-!                            formulation.
-!
-!                 'CN'       "Reception" case:  converged
-!                            Newtonian light time correction.
-!
-!                'CN+S'     "Reception" case:  converged
-!                            Newtonian light time and stellar
-!                            aberration corrections.
-!
-!              Note that this routine accepts only reception mode
-!              aberration corrections.
-!
-!              The ABCORR string lacks sensitivity to case, leading
-!              and trailing blanks.
-!
-!     OBSRVR   the string name of an observing body.  Optionally, you
-!              may supply the ID code of the object as an integer
-!              string. For example, both 'EARTH' and '399' are
-!              legitimate strings to indicate the observer as Earth.
-!
-!              Case and leading or trailing blanks are not significant
-!              in the string OBSRVR.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) SPICE(IDCODENOTFOUND) signals if the object name for the
-!        target, TARGET, is not a recognized name.
-!
-!     2) SPICE(IDCODENOTFOUND) signals if the object name for the
-!        illuminator, ILLMN, is not a recognized name.
-!
-!     3) SPICE(IDCODENOTFOUND) signals if the object name for the
-!        observer, OBSRVR, is not a recognized name.
-!
-!     4) SPICE(BODIESNOTDISTINCT) signals if the three objects
-!        associated with a PHASE ANGLE search are not distinct.
-!
-!     5) SPICE(INVALIDOPTION) signals for any transmit mode aberration
-!        correction.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)(NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     phase angle initialization routine
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     This is the initialization entry point used for describing
+!!     the event that is to be solved for by ZZGFSOLV.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PHASE ANGLE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!      CHARACTER*(*)         TARGET
+!!      CHARACTER*(*)         ABCORR
+!!      CHARACTER*(*)         OBSRVR
+!!
+!! ## Detailed Input
+!!
+!!     TARGET   the string name of a target body.  Optionally, you may
+!!              supply the integer ID code for the object as an
+!!              integer string.  For example both 'MOON' and '301'
+!!              are legitimate strings that indicate the moon is the
+!!              target body.
+!!
+!!              Case and leading or trailing blanks are not significant
+!!              in the string TARGET.
+!!
+!!     ILLMN    the string name of the illuminating body. This will
+!!              normally be 'SUN' but the algorithm can use any
+!!              ephemeris object
+!!
+!!              Case and leading or trailing blanks are not significant
+!!              in the string ILLMN.
+!!
+!!     ABCORR   the string description of the aberration corrections to
+!!              apply to the state evaluations to account for one-way
+!!              light time and stellar aberration.
+!!
+!!              Any aberration correction accepted by the SPICE
+!!              routine SPKEZR is accepted here. See the header
+!!              of SPKEZR for a detailed description of the
+!!              aberration correction options. For convenience,
+!!              the options are listed below:
+!!
+!!                 'NONE'     Apply no correction. Returns the "true"
+!!                            geometric state.
+!!
+!!                 'LT'       "Reception" case:  correct for
+!!                            one-way light time using a Newtonian
+!!                            formulation.
+!!
+!!                 'LT+S'     "Reception" case:  correct for
+!!                            one-way light time and stellar
+!!                            aberration using a Newtonian
+!!                            formulation.
+!!
+!!                 'CN'       "Reception" case:  converged
+!!                            Newtonian light time correction.
+!!
+!!                'CN+S'     "Reception" case:  converged
+!!                            Newtonian light time and stellar
+!!                            aberration corrections.
+!!
+!!              Note that this routine accepts only reception mode
+!!              aberration corrections.
+!!
+!!              The ABCORR string lacks sensitivity to case, leading
+!!              and trailing blanks.
+!!
+!!     OBSRVR   the string name of an observing body.  Optionally, you
+!!              may supply the ID code of the object as an integer
+!!              string. For example, both 'EARTH' and '399' are
+!!              legitimate strings to indicate the observer as Earth.
+!!
+!!              Case and leading or trailing blanks are not significant
+!!              in the string OBSRVR.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) SPICE(IDCODENOTFOUND) signals if the object name for the
+!!        target, TARGET, is not a recognized name.
+!!
+!!     2) SPICE(IDCODENOTFOUND) signals if the object name for the
+!!        illuminator, ILLMN, is not a recognized name.
+!!
+!!     3) SPICE(IDCODENOTFOUND) signals if the object name for the
+!!        observer, OBSRVR, is not a recognized name.
+!!
+!!     4) SPICE(BODIESNOTDISTINCT) signals if the three objects
+!!        associated with a PHASE ANGLE search are not distinct.
+!!
+!!     5) SPICE(INVALIDOPTION) signals for any transmit mode aberration
+!!        correction.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)(NJB)
+!!
+!! ## Index Entries
+!!
+!!     phase angle initialization routine
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*), parameter :: ref = 'J2000'
       real(wp)              dsep
       real(wp)              lt
@@ -20154,106 +19926,100 @@ contains
       end procedure zzgfpain
 
       module subroutine zzgfpadc ( ctx, udfunc, et, decres )
-
-! $ Abstract
-!
-!     Computes whether or not the phase angle between the observer
-!     and the target is decreasing at time ET.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     LOGICAL               DECRES
-!
-! $ Detailed_Input
-!
-!     ET         the time in ephemeris seconds past J2000 TDB at which
-!                to determine whether the phase angle between SVTARG
-!                and SVILLMN as seen from SVOBS is decreasing.
-!
-! $ Detailed_Output
-!
-!     DECRES     is .TRUE. if the phase angle is decreasing at ET.
-!                Otherwise it is .FALSE..
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     A function f(x) is strictly decreasing at x0 if and only if there
-!     exists some delta > 0 such that for all dx satisfying
-!
-!        0  <  dx  < delta
-!
-!     we have
-!
-!        f(x0)       <  f(x0 + dx)
-!
-!     and
-!
-!        f(x0 - dx)  <  f(x)
-!
-!     Note that a strictly decreasing function need not be
-!     differentiable in a neighborhood of x0; it can have jump
-!     discontinuities in any neighborhood of x0 and even at x0.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 1.0.0 10-JAN-2012 (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     when phase angle is decreasing
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Computes whether or not the phase angle between the observer
+!!     and the target is decreasing at time ET.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     LOGICAL               DECRES
+!!
+!! ## Detailed Input
+!!
+!!     ET         the time in ephemeris seconds past J2000 TDB at which
+!!                to determine whether the phase angle between SVTARG
+!!                and SVILLMN as seen from SVOBS is decreasing.
+!!
+!! ## Detailed Output
+!!
+!!     DECRES     is .TRUE. if the phase angle is decreasing at ET.
+!!                Otherwise it is .FALSE..
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     A function f(x) is strictly decreasing at x0 if and only if there
+!!     exists some delta > 0 such that for all dx satisfying
+!!
+!!        0  <  dx  < delta
+!!
+!!     we have
+!!
+!!        f(x0)       <  f(x0 + dx)
+!!
+!!     and
+!!
+!!        f(x0 - dx)  <  f(x)
+!!
+!!     Note that a strictly decreasing function need not be
+!!     differentiable in a neighborhood of x0; it can have jump
+!!     discontinuities in any neighborhood of x0 and even at x0.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 1.0.0 10-JAN-2012 (EDW)
+!!
+!! ## Index Entries
+!!
+!!     when phase angle is decreasing
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: vdot, vhat, vsclip
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*), parameter :: ref = 'J2000'
       real(wp)              dsep
       real(wp)              lt
@@ -20368,86 +20134,81 @@ contains
       end subroutine zzgfpadc
 
       module procedure zzgfpagq
-
-! $ Abstract
-!
-!     Determine the phase angle between the centers of the two
-!     bodies.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PHASE ANGLE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!      DOUBLE PRECISION      ET
-!      DOUBLE PRECISION      RVL
-!
-! $ Detailed_Input
-!
-!     ET         the time in ephemeris seconds past J2000 TDB at which
-!                to compute the phase angle.
-!
-! $ Detailed_Output
-!
-!     RVL        the phase angle between SVTARG and SVILLMN as seen
-!                from SVOBS at time ET.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get phase angle between two bodies
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Determine the phase angle between the centers of the two
+!!     bodies.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PHASE ANGLE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!      DOUBLE PRECISION      ET
+!!      DOUBLE PRECISION      RVL
+!!
+!! ## Detailed Input
+!!
+!!     ET         the time in ephemeris seconds past J2000 TDB at which
+!!                to compute the phase angle.
+!!
+!! ## Detailed Output
+!!
+!!     RVL        the phase angle between SVTARG and SVILLMN as seen
+!!                from SVOBS at time ET.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)
+!!
+!! ## Index Entries
+!!
+!!     get phase angle between two bodies
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       logical               return
       character(*), parameter :: ref = 'J2000'
       real(wp)              dsep
@@ -20473,92 +20234,87 @@ contains
       end procedure zzgfpagq
 
       module procedure zzgfpax
-
-! $ Abstract
-!
-!     Retrieve values set in ZZGFPAIN.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-!
-!     None.
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     XTARG    SPICE ID value for the target body initialized
-!              via ZZGFPAIN.
-!
-!     XILLMN   SPICE ID value for the illuminator body initialized
-!              via ZZGFPAIN.
-!
-!     XABCOR   String value for the aberration correction initialized
-!              via ZZGFPAIN.
-!
-!     XOBS     SPICE ID value for the observing body initialized
-!              via ZZGFPAIN.
-!
-!     XABLK    Aberration correction attribute block as initialized
-!              by ABCORR.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get saved phase angle parameters
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Retrieve values set in ZZGFPAIN.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
+!!     None.
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     XTARG    SPICE ID value for the target body initialized
+!!              via ZZGFPAIN.
+!!
+!!     XILLMN   SPICE ID value for the illuminator body initialized
+!!              via ZZGFPAIN.
+!!
+!!     XABCOR   String value for the aberration correction initialized
+!!              via ZZGFPAIN.
+!!
+!!     XOBS     SPICE ID value for the observing body initialized
+!!              via ZZGFPAIN.
+!!
+!!     XABLK    Aberration correction attribute block as initialized
+!!              by ABCORR.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
+!!
+!! ## Index Entries
+!!
+!!     get saved phase angle parameters
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       logical               return
       character(*), parameter :: ref = 'J2000'
       real(wp)              dsep
@@ -20594,488 +20350,447 @@ contains
       module subroutine zzgfrel ( ctx, udstep, udrefn, udqdec, udcond, udfunc, udqref, relate, &
             refval, tol, adjust, cnfine, mw, nw, work, rpt, udrepi, udrepu, udrepf, rptpre, rptsuf, &
             bail, udbail, result )
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     This routine determines time intervals when the value of some
-!     geometric quantity related to one or more objects and an observer
-!     satisfies a user specified constraint within time intervals
-!     specified by the window CNFINE.
-!
-!     Sister routine to ZZGFRELX. Copy any edits to ZZGFREL or ZZGFRELX
-!     to the sister routine.
-!
-! $ Required_Reading
-!
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
-
-
-
-
-
-! $ Detailed_Input
-!
-!     UDSTEP     the routine that computes a time step in an attempt to
-!                find a transition of the state of the specified
-!                coordinate. In the context of this routine's algorithm,
-!                a "state transition" occurs where the coordinate value
-!                changes from "decreasing" to "not decreasing" or vice
-!                versa.
-!
-!                This routine relies on UDSTEP returning step sizes
-!                small enough so that state transitions within the
-!                confinement window are not overlooked.  There must
-!                never be two roots A and B separated by less than
-!                STEP, where STEP is the minimum step size returned by
-!                UDSTEP for any value of ET in the interval [A, B].
-!
-!                The calling sequence for UDSTEP is:
-!
-!                   CALL UDSTEP ( ET, STEP )
-!
-!                where:
-!
-!                   ET      is the input start time from which the
-!                           algorithm is to search forward for a state
-!                           transition. ET is expressed as seconds past
-!                           J2000 TDB. ET is a DOUBLE PRECISION number.
-!
-!                   STEP    is the output step size.  STEP indicates
-!                           how far to advance ET so that ET and
-!                           ET+STEP may bracket a state transition and
-!                           definitely do not bracket more than one
-!                           state transition.  STEP is a DOUBLE
-!                           PRECISION number.  Units are TDB seconds.
-!
-!                If a constant step size is desired, the routine
-!                GFSTEP may be used. This is the default option.
-!
-!     UDREFN     the routine that computes a refinement in the times
-!                that bracket a transition point. In other words, once
-!                a pair of times have been detected such that the system
-!                is in different states at each of the two times, UDREFN
-!                selects an intermediate time which should be closer to
-!                the transition state than one of the two known times.
-!                The calling sequence for UDREFN is:
-!
-!                   CALL UDREFN ( T1, T2, S1, S2, T )
-!
-!                where the inputs are:
-!
-!                   T1    a time when the system is in state S1.
-!
-!                   T2    a time when the system is in state S2. T2
-!                         is assumed to be larger than T1.
-!
-!                   S1    a logical indicating the state of the system
-!                         at time T1.
-!
-!                   S2    a logical indicating the state of the system
-!                         at time T2.
-!
-!                UDREFN may use or ignore the S1 and S2 values.
-!
-!                The output is:
-!
-!                   T     a time to check for a state transition
-!                         between T1 and T2.
-!
-!                If a simple bisection method is desired, the routine
-!                GFREFN may be used. This is the default option.
-!
-!     UDQDEC     the routine that determines if the geometric quantity
-!                is decreasing.
-!
-!                The calling sequence:
-!
-!                   CALL UDQDEC ( ET, ISDECR )
-!
-!                where:
-!
-!                   ET       a double precision value representing
-!                            ephemeris time, expressed as seconds past
-!                            J2000 TDB, at which to determine the time
-!                            derivative of the geometric quantity.
-!
-!                   ISDECR   a logical return indicating whether
-!                            or not the geometric quantity
-!                            is decreasing. ISDECR returns true if the
-!                            time derivative of the geometric quantity
-!                            at ET is negative.
-!
-!     UDCOND     the routine that determines if the geometric quantity
-!                satisfies some constraint condition at epoch ET.
-!
-!                The calling sequence:
-!
-!                   CALL UDCOND ( ET, IN_CON )
-!
-!                where:
-!
-!                   ET       a double precision value representing
-!                            ephemeris time, expressed as seconds past
-!                            J2000 TDB, at which to evaluate the
-!                            geometric quantity.
-!
-!                   IN_CON   a logical value indicating whether or
-!                            not the geometric quantity satisfies the
-!                            constraint at ET (TRUE) or not (FALSE).
-!
-!     UDFUNC     the routine that returns the value of the geometric
-!                quantity at the time of interest. The calling sequence
-!                for UDFUNC is:
-!
-!                   CALL UDFUNC ( TIME, VALUE )
-!
-!                where:
-!
-!                   TIME    a double precision value representing
-!                           ephemeris time, expressed as seconds past
-!                           J2000 TDB, at which  to determine
-!                           the value of the geometric quantity.
-!
-!                   VALUE   is the value of the geometric quantity at
-!                           time TIME.
-!
-!     UDQREF     the routine that resets the current value of REFVAL.
-!                The calling sequence for UDQREF is:
-!
-!                   CALL UDQREF ( REFER2 )
-!
-!                where REFER2 is a new value of REFVAL.
-!
-!     RELATE     is a comparison operator, indicating the numeric
-!                constraint of interest. Values are:
-!
-!                '>'   value of geometric quantity greater than some
-!                      reference (REFVAL).
-!
-!                '='   value of geometric quantity equal to some
-!                      reference (REFVAL).
-!
-!                '<'   value of geometric quantity less than some
-!                      reference (REFVAL).
-!
-!                ABSMAX-the geometric quantity is at an absolute
-!                maximum.
-!
-!                ABSMIN-the geometric quantity is at an absolute
-!                minimum.
-!
-!                LOCMAX-the geometric quantity is at an local maximum.
-!
-!                LOCMIN-the geometric quantity is at an local minimum.
-!
-!     REFVAL     Reference value for geometric quantity (in
-!                radians, radians/sec, km, or km/sec as appropriate).
-!
-!     TOL        is a tolerance value used to determine convergence of
-!                root-finding operations.  TOL is measured in seconds
-!                and is greater than zero.
-!
-!     ADJUST     The amount by which the numerical quantity is
-!                allowed to vary from an absolute extremum. If ADJUST
-!                is non-zero, the resulting schedule contains
-!                intervals when the geometric quantity has
-!                values either between ABSMIN and ABSMIN + ADJUST
-!                or between ABSMAX and ABSMAX - ADJUST. ADJUST must
-!                not be negative.
-!
-!     CNFINE     is a SPICE window that confines the bounds of the
-!                search. Note that like all windows (see windows.req)
-!                CNFINE can contain multiple time intervals. See the
-!                Examples section for information on how to create this
-!                window.
-!
-!     MW         is the cell size of the windows in the workspace array
-!                WORK.
-!
-!     NW         is the number of windows in the workspace array WORK.
-!                NW must be at least as large as the parameter NWREQ.
-!
-!     WORK       is an array used to store workspace windows. This
-!                array has dimensions WORK (-5 : MW, NW).
-!
-!     RPT        is a logical variable which controls whether the
-!                progress reporter is on or off. The progress reporter
-!                writes to the user's terminal.
-!
-!     UDREPI     the routine that initializes a progress report.
-!                When progress reporting is enabled, UDREPI
-!                is called at the start of a search.  The calling
-!                sequence of UDREPI is:
-!
-!                   UDREPI ( CNFINE, RPTPRE, RPTSUF )
-!
-!                   DOUBLE PRECISION    CNFINE ( LBCELL : * )
-!                   CHARACTER*(*)       RPTPRE
-!                   CHARACTER*(*)       RPTSUF
-!
-!                where
-!
-!                   CNFINE
-!
-!                is the confinement window passed into ZZGFRELX, and
-!
-!                   RPTPRE
-!                   RPTSUF
-!
-!                are prefix and suffix strings used in the progress
-!                report:  these strings are intended to bracket a
-!                representation of the fraction of work done.
-!
-!                If the user has no progress reporting initialization
-!                routine, the SPICELIB routine GFRPIN may be used. This
-!                is the default option.
-!
-!     UDREPU     the routine that updates the progress report for a
-!                search.  The calling sequence of UDREPU is:
-!
-!                   UDREPU (IVBEG, IVEND, ET )
-!
-!                   DOUBLE PRECISION      ET
-!                   DOUBLE PRECISION      IVBEG
-!                   DOUBLE PRECISION      IVEND
-!
-!                where ET is an epoch belonging to the confinement
-!                window, IVBEG and IVEND are the start and stop times,
-!                respectively of the current confinement window
-!                interval.  The ratio of the measure of the portion
-!                of CNFINE that precedes ET to the measure of CNFINE
-!                would be a logical candidate for the search's
-!                completion percentage; however the method of
-!                measurement is up to the user.
-!
-!                If the user has no progress reporting update routine,
-!                the SPICELIB routine GFRPUD may be used. This is the
-!                default option.
-!
-!     UDREPF     the routine that finalizes a progress report. UDREPF
-!                has no arguments.
-!
-!                If the user has no progress reporting finalizing
-!                routine, the SPICELIB routine GFRPEN may be used. This
-!                is the default option.
-!
-!     RPTPRE     is an array of strings containing the prefixes of
-!                the output messages reported by the progress reporter.
-!                The Ith element of RPTPRE is the prefix for the
-!                message corresponding to the Ith traversal of the
-!                confinement window executed by this routine; such
-!                traversals are called "passes." The number of passes
-!                executed depends on the relational operator RELATE.
-!                Searches for local extrema and unadjusted absolute
-!                extrema require one pass; searches for adjusted
-!                absolute extrema, equalities, and inequalities require
-!                two passes.
-!
-!                An example of the contents of RPTPRE for a distance
-!                equality search:
-!
-!                   RPTPRE(1) = 'Distance pass 1 of 2'
-!                   RPTPRE(2) = 'Distance pass 2 of 2'
-!
-!     RPTSUF     is an array of strings containing the suffixes of
-!                the output messages reported by the progress reporter.
-!                The Ith element of RPTSUF is the suffix for the
-!                message corresponding to the Ith pass.
-!
-!                An example of the contents of RPTSUF for a distance
-!                equality search:
-!
-!                   RPTSUF(1) = 'done.'
-!                   RPTSUF(2) = 'done.'
-!
-!                For this search, the complete progress report message
-!                for the Ith pass has the form
-!
-!                   'Distance pass I of 2 xxx.xx% done.'
-!
-!     BAIL       is a logical indicating whether or not interrupt
-!                signaling is enabled.
-!
-!     UDBAIL     the routine that checks to see whether an interrupt
-!                signal has been issued from, e.g. the keyboard. If
-!                this capability is not to be used, a dummy function,
-!                ZZGFBAIL must be supplied.
-!
-!     RESULT     is an initialized SPICE window. RESULT is large
-!                enough to hold all of the intervals, within the
-!                confinement window, on which the specified condition
-!                is met.
-!
-! $ Detailed_Output
-!
-!     RESULT     is a SPICE window containing the time intervals within
-!                the confinement window, over which the specified
-!                condition is met.
-!
-!                RESULT is emptied before new values are assigned to
-!                it.
-!
-! $ Parameters
-!
-!     LBCELL     is the SPICELIB cell lower bound.
-!
-!     NWREQ      is the required number of workspace windows; the
-!                input argument NW must not be less than NWREQ.
-!
-! $ Exceptions
-!
-!     1)  A negative value for ADJUST causes the routine to signal
-!         the error SPICE(VALUEOUTOFRANGE). A non-zero value for ADJUST
-!         when RELATE has any value other than "ABSMIN" or "ABSMAX",
-!         causes the routine to signal the error SPICE(INVALIDVALUE).
-!
-!     2)  If an improper comparison operator is specified, the error
-!         SPICE(NOTRECOGNIZED) is signaled.
-!
-!     3)  If TOL is not greater than zero, the error
-!         SPICE(VALUEOUTOFRANGE) will be signaled by routines called
-!         from this routine.
-!
-!     4)  If the number of workspace windows is less than NWREQ, the
-!         error SPICE(TOOFEWWINDOWS) is signaled.
-!
-!     5)  If the window size MW is less than 2, the error
-!         SPICE(INVALIDDIMENSION) will be signaled.
-!
-!     6)  If the output SPICE window RESULT has insufficient capacity
-!         to contain the number of intervals on which the specified
-!         visibility condition is met, the error will be diagnosed
-!         by a routine in the call tree of this routine. If the result
-!         window has size less than 2, the error SPICE(WINDOWTOOSMALL)
-!         will be signaled by this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine determines time intervals when the value of some
-!     geometric quantity related to one or more objects and an observer
-!     satisfies a user specified constraint. It puts these times in a
-!     result window called RESULT. It does this by first finding
-!     schedules (windows) when the quantity of interest is either
-!     monotonically increasing or decreasing. These schedules are then
-!     manipulated to give the final result. Note that the determination
-!     of "=" involves finding intervals where the quantity is "less
-!     than" to a tolerance of TOL. This means that the end points of
-!     these intervals are within TOL of being equal to the value.
-!
-! $ Examples
-!
-!     See GFEVNT.
-!
-! $ Restrictions
-!
-!     The kernel files to be used by ZZGFREL must be loaded (normally
-!     via the SPICELIB routine FURNSH) before ZZGFREL is called.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     L.S. Elson     (JPL)
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1  21-DEC-2009 (EDW)
-!
-!        Edit to Abstract to document sister routine ZZGFRELX.
-!
-!-    SPICELIB Version 1.0.0  21-FEB-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     determine when a scalar quantity satisfies a condition
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Workspace window indices:
-!
-
-
-
-
-
-!
-!     Number of supported comparison operators.
-!
-
-!     One-letter alias for LBCELL to make references to the workspace
-!     array tolerable:
-!
-
-!
-!     Context string length:
-!
-
-!
-!     Local variables
-!
-
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Below we initialize the list of comparison operator names.
-!
-
-!
-!     Set constant step parameter to .FALSE..
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     This routine determines time intervals when the value of some
+!!     geometric quantity related to one or more objects and an observer
+!!     satisfies a user specified constraint within time intervals
+!!     specified by the window CNFINE.
+!!
+!!     Sister routine to ZZGFRELX. Copy any edits to ZZGFREL or ZZGFRELX
+!!     to the sister routine.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     UDSTEP     the routine that computes a time step in an attempt to
+!!                find a transition of the state of the specified
+!!                coordinate. In the context of this routine's algorithm,
+!!                a "state transition" occurs where the coordinate value
+!!                changes from "decreasing" to "not decreasing" or vice
+!!                versa.
+!!
+!!                This routine relies on UDSTEP returning step sizes
+!!                small enough so that state transitions within the
+!!                confinement window are not overlooked.  There must
+!!                never be two roots A and B separated by less than
+!!                STEP, where STEP is the minimum step size returned by
+!!                UDSTEP for any value of ET in the interval [A, B].
+!!
+!!                The calling sequence for UDSTEP is:
+!!
+!!                   CALL UDSTEP ( ET, STEP )
+!!
+!!                where:
+!!
+!!                   ET      is the input start time from which the
+!!                           algorithm is to search forward for a state
+!!                           transition. ET is expressed as seconds past
+!!                           J2000 TDB. ET is a DOUBLE PRECISION number.
+!!
+!!                   STEP    is the output step size.  STEP indicates
+!!                           how far to advance ET so that ET and
+!!                           ET+STEP may bracket a state transition and
+!!                           definitely do not bracket more than one
+!!                           state transition.  STEP is a DOUBLE
+!!                           PRECISION number.  Units are TDB seconds.
+!!
+!!                If a constant step size is desired, the routine
+!!                GFSTEP may be used. This is the default option.
+!!
+!!     UDREFN     the routine that computes a refinement in the times
+!!                that bracket a transition point. In other words, once
+!!                a pair of times have been detected such that the system
+!!                is in different states at each of the two times, UDREFN
+!!                selects an intermediate time which should be closer to
+!!                the transition state than one of the two known times.
+!!                The calling sequence for UDREFN is:
+!!
+!!                   CALL UDREFN ( T1, T2, S1, S2, T )
+!!
+!!                where the inputs are:
+!!
+!!                   T1    a time when the system is in state S1.
+!!
+!!                   T2    a time when the system is in state S2. T2
+!!                         is assumed to be larger than T1.
+!!
+!!                   S1    a logical indicating the state of the system
+!!                         at time T1.
+!!
+!!                   S2    a logical indicating the state of the system
+!!                         at time T2.
+!!
+!!                UDREFN may use or ignore the S1 and S2 values.
+!!
+!!                The output is:
+!!
+!!                   T     a time to check for a state transition
+!!                         between T1 and T2.
+!!
+!!                If a simple bisection method is desired, the routine
+!!                GFREFN may be used. This is the default option.
+!!
+!!     UDQDEC     the routine that determines if the geometric quantity
+!!                is decreasing.
+!!
+!!                The calling sequence:
+!!
+!!                   CALL UDQDEC ( ET, ISDECR )
+!!
+!!                where:
+!!
+!!                   ET       a double precision value representing
+!!                            ephemeris time, expressed as seconds past
+!!                            J2000 TDB, at which to determine the time
+!!                            derivative of the geometric quantity.
+!!
+!!                   ISDECR   a logical return indicating whether
+!!                            or not the geometric quantity
+!!                            is decreasing. ISDECR returns true if the
+!!                            time derivative of the geometric quantity
+!!                            at ET is negative.
+!!
+!!     UDCOND     the routine that determines if the geometric quantity
+!!                satisfies some constraint condition at epoch ET.
+!!
+!!                The calling sequence:
+!!
+!!                   CALL UDCOND ( ET, IN_CON )
+!!
+!!                where:
+!!
+!!                   ET       a double precision value representing
+!!                            ephemeris time, expressed as seconds past
+!!                            J2000 TDB, at which to evaluate the
+!!                            geometric quantity.
+!!
+!!                   IN_CON   a logical value indicating whether or
+!!                            not the geometric quantity satisfies the
+!!                            constraint at ET (TRUE) or not (FALSE).
+!!
+!!     UDFUNC     the routine that returns the value of the geometric
+!!                quantity at the time of interest. The calling sequence
+!!                for UDFUNC is:
+!!
+!!                   CALL UDFUNC ( TIME, VALUE )
+!!
+!!                where:
+!!
+!!                   TIME    a double precision value representing
+!!                           ephemeris time, expressed as seconds past
+!!                           J2000 TDB, at which  to determine
+!!                           the value of the geometric quantity.
+!!
+!!                   VALUE   is the value of the geometric quantity at
+!!                           time TIME.
+!!
+!!     UDQREF     the routine that resets the current value of REFVAL.
+!!                The calling sequence for UDQREF is:
+!!
+!!                   CALL UDQREF ( REFER2 )
+!!
+!!                where REFER2 is a new value of REFVAL.
+!!
+!!     RELATE     is a comparison operator, indicating the numeric
+!!                constraint of interest. Values are:
+!!
+!!                '>'   value of geometric quantity greater than some
+!!                      reference (REFVAL).
+!!
+!!                '='   value of geometric quantity equal to some
+!!                      reference (REFVAL).
+!!
+!!                '<'   value of geometric quantity less than some
+!!                      reference (REFVAL).
+!!
+!!                ABSMAX-the geometric quantity is at an absolute
+!!                maximum.
+!!
+!!                ABSMIN-the geometric quantity is at an absolute
+!!                minimum.
+!!
+!!                LOCMAX-the geometric quantity is at an local maximum.
+!!
+!!                LOCMIN-the geometric quantity is at an local minimum.
+!!
+!!     REFVAL     Reference value for geometric quantity (in
+!!                radians, radians/sec, km, or km/sec as appropriate).
+!!
+!!     TOL        is a tolerance value used to determine convergence of
+!!                root-finding operations.  TOL is measured in seconds
+!!                and is greater than zero.
+!!
+!!     ADJUST     The amount by which the numerical quantity is
+!!                allowed to vary from an absolute extremum. If ADJUST
+!!                is non-zero, the resulting schedule contains
+!!                intervals when the geometric quantity has
+!!                values either between ABSMIN and ABSMIN + ADJUST
+!!                or between ABSMAX and ABSMAX - ADJUST. ADJUST must
+!!                not be negative.
+!!
+!!     CNFINE     is a SPICE window that confines the bounds of the
+!!                search. Note that like all windows (see windows.req)
+!!                CNFINE can contain multiple time intervals. See the
+!!                Examples section for information on how to create this
+!!                window.
+!!
+!!     MW         is the cell size of the windows in the workspace array
+!!                WORK.
+!!
+!!     NW         is the number of windows in the workspace array WORK.
+!!                NW must be at least as large as the parameter NWREQ.
+!!
+!!     WORK       is an array used to store workspace windows. This
+!!                array has dimensions WORK (-5 : MW, NW).
+!!
+!!     RPT        is a logical variable which controls whether the
+!!                progress reporter is on or off. The progress reporter
+!!                writes to the user's terminal.
+!!
+!!     UDREPI     the routine that initializes a progress report.
+!!                When progress reporting is enabled, UDREPI
+!!                is called at the start of a search.  The calling
+!!                sequence of UDREPI is:
+!!
+!!                   UDREPI ( CNFINE, RPTPRE, RPTSUF )
+!!
+!!                   DOUBLE PRECISION    CNFINE ( LBCELL : * )
+!!                   CHARACTER*(*)       RPTPRE
+!!                   CHARACTER*(*)       RPTSUF
+!!
+!!                where
+!!
+!!                   CNFINE
+!!
+!!                is the confinement window passed into ZZGFRELX, and
+!!
+!!                   RPTPRE
+!!                   RPTSUF
+!!
+!!                are prefix and suffix strings used in the progress
+!!                report:  these strings are intended to bracket a
+!!                representation of the fraction of work done.
+!!
+!!                If the user has no progress reporting initialization
+!!                routine, the SPICELIB routine GFRPIN may be used. This
+!!                is the default option.
+!!
+!!     UDREPU     the routine that updates the progress report for a
+!!                search.  The calling sequence of UDREPU is:
+!!
+!!                   UDREPU (IVBEG, IVEND, ET )
+!!
+!!                   DOUBLE PRECISION      ET
+!!                   DOUBLE PRECISION      IVBEG
+!!                   DOUBLE PRECISION      IVEND
+!!
+!!                where ET is an epoch belonging to the confinement
+!!                window, IVBEG and IVEND are the start and stop times,
+!!                respectively of the current confinement window
+!!                interval.  The ratio of the measure of the portion
+!!                of CNFINE that precedes ET to the measure of CNFINE
+!!                would be a logical candidate for the search's
+!!                completion percentage; however the method of
+!!                measurement is up to the user.
+!!
+!!                If the user has no progress reporting update routine,
+!!                the SPICELIB routine GFRPUD may be used. This is the
+!!                default option.
+!!
+!!     UDREPF     the routine that finalizes a progress report. UDREPF
+!!                has no arguments.
+!!
+!!                If the user has no progress reporting finalizing
+!!                routine, the SPICELIB routine GFRPEN may be used. This
+!!                is the default option.
+!!
+!!     RPTPRE     is an array of strings containing the prefixes of
+!!                the output messages reported by the progress reporter.
+!!                The Ith element of RPTPRE is the prefix for the
+!!                message corresponding to the Ith traversal of the
+!!                confinement window executed by this routine; such
+!!                traversals are called "passes." The number of passes
+!!                executed depends on the relational operator RELATE.
+!!                Searches for local extrema and unadjusted absolute
+!!                extrema require one pass; searches for adjusted
+!!                absolute extrema, equalities, and inequalities require
+!!                two passes.
+!!
+!!                An example of the contents of RPTPRE for a distance
+!!                equality search:
+!!
+!!                   RPTPRE(1) = 'Distance pass 1 of 2'
+!!                   RPTPRE(2) = 'Distance pass 2 of 2'
+!!
+!!     RPTSUF     is an array of strings containing the suffixes of
+!!                the output messages reported by the progress reporter.
+!!                The Ith element of RPTSUF is the suffix for the
+!!                message corresponding to the Ith pass.
+!!
+!!                An example of the contents of RPTSUF for a distance
+!!                equality search:
+!!
+!!                   RPTSUF(1) = 'done.'
+!!                   RPTSUF(2) = 'done.'
+!!
+!!                For this search, the complete progress report message
+!!                for the Ith pass has the form
+!!
+!!                   'Distance pass I of 2 xxx.xx% done.'
+!!
+!!     BAIL       is a logical indicating whether or not interrupt
+!!                signaling is enabled.
+!!
+!!     UDBAIL     the routine that checks to see whether an interrupt
+!!                signal has been issued from, e.g. the keyboard. If
+!!                this capability is not to be used, a dummy function,
+!!                ZZGFBAIL must be supplied.
+!!
+!!     RESULT     is an initialized SPICE window. RESULT is large
+!!                enough to hold all of the intervals, within the
+!!                confinement window, on which the specified condition
+!!                is met.
+!!
+!! ## Detailed Output
+!!
+!!     RESULT     is a SPICE window containing the time intervals within
+!!                the confinement window, over which the specified
+!!                condition is met.
+!!
+!!                RESULT is emptied before new values are assigned to
+!!                it.
+!!
+!! ## Parameters
+!!
+!!     LBCELL     is the SPICELIB cell lower bound.
+!!
+!!     NWREQ      is the required number of workspace windows; the
+!!                input argument NW must not be less than NWREQ.
+!!
+!! ## Exceptions
+!!
+!!     1)  A negative value for ADJUST causes the routine to signal
+!!         the error SPICE(VALUEOUTOFRANGE). A non-zero value for ADJUST
+!!         when RELATE has any value other than "ABSMIN" or "ABSMAX",
+!!         causes the routine to signal the error SPICE(INVALIDVALUE).
+!!
+!!     2)  If an improper comparison operator is specified, the error
+!!         SPICE(NOTRECOGNIZED) is signaled.
+!!
+!!     3)  If TOL is not greater than zero, the error
+!!         SPICE(VALUEOUTOFRANGE) will be signaled by routines called
+!!         from this routine.
+!!
+!!     4)  If the number of workspace windows is less than NWREQ, the
+!!         error SPICE(TOOFEWWINDOWS) is signaled.
+!!
+!!     5)  If the window size MW is less than 2, the error
+!!         SPICE(INVALIDDIMENSION) will be signaled.
+!!
+!!     6)  If the output SPICE window RESULT has insufficient capacity
+!!         to contain the number of intervals on which the specified
+!!         visibility condition is met, the error will be diagnosed
+!!         by a routine in the call tree of this routine. If the result
+!!         window has size less than 2, the error SPICE(WINDOWTOOSMALL)
+!!         will be signaled by this routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine determines time intervals when the value of some
+!!     geometric quantity related to one or more objects and an observer
+!!     satisfies a user specified constraint. It puts these times in a
+!!     result window called RESULT. It does this by first finding
+!!     schedules (windows) when the quantity of interest is either
+!!     monotonically increasing or decreasing. These schedules are then
+!!     manipulated to give the final result. Note that the determination
+!!     of "=" involves finding intervals where the quantity is "less
+!!     than" to a tolerance of TOL. This means that the end points of
+!!     these intervals are within TOL of being equal to the value.
+!!
+!! ## Examples
+!!
+!!     See GFEVNT.
+!!
+!! ## Restrictions
+!!
+!!     The kernel files to be used by ZZGFREL must be loaded (normally
+!!     via the SPICELIB routine FURNSH) before ZZGFREL is called.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     L.S. Elson     (JPL)
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1  21-DEC-2009 (EDW)
+!!
+!!        Edit to Abstract to document sister routine ZZGFRELX.
+!!
+!!-    SPICELIB Version 1.0.0  21-FEB-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     determine when a scalar quantity satisfies a condition
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Workspace window indices:
+!!
+!!     Number of supported comparison operators.
+!!
+!!     One-letter alias for LBCELL to make references to the workspace
+!!     array tolerable:
+!!
+!!     Context string length:
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Below we initialize the list of comparison operator names.
+!!
+!!     Set constant step parameter to .FALSE..
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc, swapi
       use pepper_strings, only: ljust, ucase
+      use pepper_inc_gf
       implicit none
-      include               'gf.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: nwreq = 5
       integer(ip), parameter :: left = 1
@@ -21723,494 +21438,453 @@ contains
       module subroutine zzgfrelx ( ctx, udstep, udrefn, udqdec, udcond, udfunc, relate, refval, &
             tol, adjust, cnfine, mw, nw, work, rpt, udrepi, udrepu, udrepf, rptpre, rptsuf, bail, &
             udbail, result )
-
-! $ Abstract
-!
-!     SPICE private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     This routine determines time intervals when the value of some
-!     geometric quantity related to one or more objects and an observer
-!     satisfies a user specified constraint within time intervals
-!     specified by the window CNFINE.
-!
-!     Sister routine to ZZGFREL. Copy any edits to ZZGFREL or ZZGFRELX
-!     to the sister routine.
-!
-! $ Required_Reading
-!
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
-
-
-
-
-
-! $ Detailed_Input
-!
-!     UDSTEP     the routine that computes a time step in an attempt to
-!                find a transition of the scalar quantity. In the
-!                context of this routine's algorithm, a "transition"
-!                occurs where the scalar quantity value changes from
-!                "decreasing" to "not decreasing" or vice versa.
-!
-!                This routine relies on UDSTEP returning step sizes
-!                small enough so that state transitions within the
-!                confinement window are not overlooked.  There must
-!                never be two roots A and B separated by less than
-!                STEP, where STEP is the minimum step size returned by
-!                UDSTEP for any value of ET in the interval [A, B].
-!
-!                The calling sequence for UDSTEP is:
-!
-!                   CALL UDSTEP ( ET, STEP )
-!
-!                where:
-!
-!                   ET      is the input start time from which the
-!                           algorithm is to search forward for a state
-!                           transition. ET is expressed as seconds past
-!                           J2000 TDB. ET is a DOUBLE PRECISION number.
-!
-!                   STEP    is the output step size.  STEP indicates
-!                           how far to advance ET so that ET and
-!                           ET+STEP may bracket a state transition and
-!                           definitely do not bracket more than one
-!                           state transition.  STEP is a DOUBLE
-!                           PRECISION number.  Units are TDB seconds.
-!
-!                If a constant step size is desired, the routine
-!                GFSTEP may be used. This is the default option.
-!
-!     UDREFN     the routine that computes a refinement in the times
-!                that bracket a transition point. In other words, once
-!                a pair of times have been detected such that the system
-!                is in different states at each of the two times, UDREFN
-!                selects an intermediate time which should be closer to
-!                the transition state than one of the two known times.
-!                The calling sequence for UDREFN is:
-!
-!                   CALL UDREFN ( T1, T2, S1, S2, T )
-!
-!                where the inputs are:
-!
-!                   T1    a time when the system is in state S1.
-!
-!                   T2    a time when the system is in state S2. T2
-!                         is assumed to be larger than T1.
-!
-!                   S1    a logical indicating the state of the system
-!                         at time T1.
-!
-!                   S2    a logical indicating the state of the system
-!                         at time T2.
-!
-!                UDREFN may use or ignore the S1 and S2 values.
-!
-!                The output is:
-!
-!                   T     a time to check for a state transition
-!                         between T1 and T2.
-!
-!                If a simple bisection method is desired, the routine
-!                GFREFN may be used. This is the default option.
-!
-!     UDQDEC     the routine that determines if the scalar quantity
-!                calculated by UDFUNC is decreasing.
-!
-!                The calling sequence:
-!
-!                   CALL UDQDEC ( UDFUNC, ET, ISDECR )
-!
-!                where:
-!
-!                   ET       a double precision value representing
-!                            ephemeris time, expressed as seconds past
-!                            J2000 TDB, at which to determine the time
-!                            derivative of UDFUNC.
-!
-!                   ISDECR   a logical return indicating whether
-!                            or not the scalar value returned by UDFUNC
-!                            is decreasing. ISDECR returns true if the
-!                            time derivative of UDFUNC at ET is
-!                            negative.
-!
-!     UDCOND     the routine that determines if UDFUNC satisfies
-!                some constraint condition at epoch ET.
-!
-!                The calling sequence:
-!
-!                   CALL UDCOND ( UDFUNC, ET, IN_CON )
-!
-!                where:
-!
-!                   ET       a double precision value representing
-!                            ephemeris time, expressed as seconds past
-!                            J2000 TDB, at which to evaluate UDFUNC.
-!
-!                   IN_CON   a logical value indicating whether
-!                            or not UDFUNC satisfies the constraint
-!                            at ET (TRUE) or not (FALSE).
-!
-!     UDFUNC     the routine that returns the value of the scalar
-!                quantity of interest at time ET. The calling sequence
-!                for UDFUNC is:
-!
-!                   CALL UDFUNC ( ET, VALUE )
-!
-!                where:
-!
-!                   ET      a double precision value representing
-!                           ephemeris time, expressed as seconds past
-!                           J2000 TDB, at which to determine the scalar
-!                           value.
-!
-!                   VALUE   the double precision value of the scalar
-!                           quantity at ET.
-!
-!     RELATE     is a comparison operator, indicating the numeric
-!                constraint of interest. Values are:
-!
-!                '>'   value of scalar quantity greater than REFVAL.
-!
-!                '='   value of scalar quantity equal to REFVAL.
-!
-!                '<'   value of scalar quantity less than REFVAL.
-!
-!                ABSMAX-the scalar quantity is at an absolute
-!                maximum.
-!
-!                ABSMIN-the scalar quantity is at an absolute
-!                minimum.
-!
-!                LOCMAX-the scalar quantity is at an local maximum.
-!
-!                LOCMIN-the scalar quantity is at an local minimum.
-!
-!     REFVAL     reference value for scalar quantity (in
-!                radians, radians/sec, km, or km/sec as appropriate).
-!
-!     TOL        is a tolerance value used to determine convergence of
-!                root-finding operations.  TOL is measured in seconds
-!                and is greater than zero.
-!
-!     ADJUST     the amount by which the numerical quantity is
-!                allowed to vary from an absolute extremum. If ADJUST
-!                is non-zero, the resulting window contains
-!                intervals when the scalar quantity has
-!                values either between ABSMIN and ABSMIN + ADJUST
-!                or between ABSMAX and ABSMAX - ADJUST. ADJUST must
-!                not be negative.
-!
-!     CNFINE     is a SPICE window that confines the bounds of the
-!                search. Note that like all windows (see windows.req)
-!                CNFINE can contain multiple time intervals. See the
-!                Examples section for information on how to create this
-!                window.
-!
-!     MW         is the cell size of the windows in the workspace array
-!                WORK.
-!
-!     NW         is the number of windows in the workspace array WORK.
-!                NW must be at least as large as the parameter NWREQ.
-!
-!     WORK       is an array used to store workspace windows. This
-!                array has dimensions WORK (-5 : MW, NW).
-!
-!     RPT        is a logical variable which controls whether the
-!                progress reporter is on or off. The progress reporter
-!                writes to the user's terminal.
-!
-!     UDREPI     the routine that initializes a progress report.
-!                When progress reporting is enabled, UDREPI
-!                is called at the start of a search.  The calling
-!                sequence of UDREPI is:
-!
-!                   UDREPI ( CNFINE, RPTPRE, RPTSUF )
-!
-!                   DOUBLE PRECISION    CNFINE ( LBCELL : * )
-!                   CHARACTER*(*)       RPTPRE
-!                   CHARACTER*(*)       RPTSUF
-!
-!                where
-!
-!                   CNFINE
-!
-!                is the confinement window passed into ZZGFRELX, and
-!
-!                   RPTPRE
-!                   RPTSUF
-!
-!                are prefix and suffix strings used in the progress
-!                report:  these strings are intended to bracket a
-!                representation of the fraction of work done.
-!
-!                If the user has no progress reporting initialization
-!                routine, the SPICELIB routine GFREPI may be used. This
-!                is the default option.
-!
-!     UDREPU     the routine that updates the progress report for a
-!                search.  The calling sequence of UDREPU is:
-!
-!                   UDREPU (IVBEG, IVEND, ET )
-!
-!                   DOUBLE PRECISION      ET
-!                   DOUBLE PRECISION      IVBEG
-!                   DOUBLE PRECISION      IVEND
-!
-!                where ET is an epoch belonging to the confinement
-!                window, IVBEG and IVEND are the start and stop times,
-!                respectively of the current confinement window
-!                interval.  The ratio of the measure of the portion
-!                of CNFINE that precedes ET to the measure of CNFINE
-!                would be a logical candidate for the search's
-!                completion percentage; however the method of
-!                measurement is up to the user.
-!
-!                If the user has no progress reporting update routine,
-!                the SPICELIB routine GFREPU may be used. This is the
-!                default option.
-!
-!     UDREPF     the routine that finalizes a progress report. UDREPF
-!                has no arguments.
-!
-!                If the user has no progress reporting finalizing
-!                routine, the SPICELIB routine GFREPF may be used. This
-!                is the default option.
-!
-!     RPTPRE     is an array of strings containing the prefixes of
-!                the output messages reported by the progress reporter.
-!                The Ith element of RPTPRE is the prefix for the
-!                message corresponding to the Ith traversal of the
-!                confinement window executed by this routine; such
-!                traversals are called "passes." The number of passes
-!                executed depends on the relational operator RELATE.
-!                Searches for local extrema and unadjusted absolute
-!                extrema require one pass; searches for adjusted
-!                absolute extrema, equalities, and inequalities require
-!                two passes.
-!
-!                An example of the contents of RPTPRE for a distance
-!                equality search:
-!
-!                   RPTPRE(1) = 'Distance pass 1 of 2'
-!                   RPTPRE(2) = 'Distance pass 2 of 2'
-!
-!     RPTSUF     is an array of strings containing the suffixes of
-!                the output messages reported by the progress reporter.
-!                The Ith element of RPTSUF is the suffix for the
-!                message corresponding to the Ith pass.
-!
-!                An example of the contents of RPTSUF for a distance
-!                equality search:
-!
-!                   RPTSUF(1) = 'done.'
-!                   RPTSUF(2) = 'done.'
-!
-!                For this search, the complete progress report message
-!                for the Ith pass has the form
-!
-!                   'Distance pass I of 2 xxx.xx% done.'
-!
-!     BAIL       is a logical indicating whether or not interrupt
-!                signaling is enabled.
-!
-!     UDBAIL     the routine that checks to see whether an interrupt
-!                signal has been issued from, e.g. the keyboard. If
-!                this capability is not to be used, a dummy function,
-!                GFBAIL must be supplied.
-!
-!     RESULT     is an initialized SPICE window. RESULT is large
-!                enough to hold all of the intervals, within the
-!                confinement window, on which the specified condition
-!                is met.
-!
-! $ Detailed_Output
-!
-!     RESULT     is a SPICE window containing the time intervals within
-!                the confinement window, over which the specified
-!                condition is met.
-!
-!                RESULT is emptied before new values are assigned to
-!                it.
-!
-! $ Parameters
-!
-!     LBCELL     is the SPICELIB cell lower bound.
-!
-!     NWREQ      is the required number of workspace windows; the
-!                input argument NW must not be less than NWREQ.
-!
-! $ Exceptions
-!
-!     1)  A negative value for ADJUST causes the routine to signal
-!         the error SPICE(VALUEOUTOFRANGE). A non-zero value for ADJUST
-!         when RELATE has any value other than "ABSMIN" or "ABSMAX",
-!         causes the routine to signal the error SPICE(INVALIDVALUE).
-!
-!     2)  If an improper comparison operator is specified, the error
-!         SPICE(NOTRECOGNIZED) is signaled.
-!
-!     3)  If TOL is not greater than zero, the error
-!         SPICE(VALUEOUTOFRANGE) will be signaled by routines called
-!         from this routine.
-!
-!     4)  If the number of workspace windows is less than NWREQ, the
-!         error SPICE(TOOFEWWINDOWS) is signaled.
-!
-!     5)  If the window size MW is less than 2, the error
-!         SPICE(INVALIDDIMENSION) will be signaled.
-!
-!     6)  If the output SPICE window RESULT has insufficient capacity
-!         to contain the number of intervals on which the specified
-!         visibility condition is met, the error will be diagnosed
-!         by a routine in the call tree of this routine. If the result
-!         window has size less than 2, the error SPICE(WINDOWTOOSMALL)
-!         will be signaled by this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine determines time intervals when the value of some
-!     scalar quantity related to one or more objects and an observer
-!     satisfies a user specified constraint. It puts these times in a
-!     result window called RESULT. It does this by first finding
-!     windows when the quantity of interest is either
-!     monotonically increasing or decreasing. These windows are then
-!     manipulated to give the final result. Note that the determination
-!     of "=" involves finding intervals where the quantity is "less
-!     than" to a tolerance of TOL. This means that the end points of
-!     these intervals are within TOL of being equal to the value.
-!
-! $ Examples
-!
-!     See GFEVNT.
-!
-! $ Restrictions
-!
-!     The kernel files to be used by ZZGFRELX must be loaded (normally
-!     via the SPICELIB routine FURNSH) before ZZGFRELX is called.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     L.S. Elson     (JPL)
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0  03-OCT-2021 (NJB)
-!
-!        Variable CSTEP is now saved. Corrected typo in comment.
-!
-!-    SPICELIB Version 1.1.1  08-DEC-2010  (EDW)
-!
-!        Edit to replace term "schedule" with "window." Edit to
-!        Procedure line text.
-!
-!        Argument list changed, removing the argument for
-!        the reference value update routine, UDQREF. Setting and
-!        updating the reference value now occurs in this
-!        (ZZGFRELX) routine.
-!
-!        Edit to Detailed I/O description for UDREPI, UDREPU, UDREPF,
-!        and UDBAIL. The descriptions stated the wrong name for the
-!        default GF functions corresponding to these arguments.
-!
-!-    SPICELIB Version 1.1.0  16-FEB-2010  (EDW)
-!
-!        Modified version of ZZGFREL. This version calls ZZGFSOLVX.
-!
-!-    SPICELIB Version 1.0.0  21-FEB-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-! numeric scalar quantity satisfies a condition
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Workspace window indices:
-!
-
-
-
-
-
-!
-!     Number of supported comparison operators.
-!
-
-!     One-letter alias for LBCELL to make references to the workspace
-!     array tolerable:
-!
-
-!
-!     Context string length:
-!
-
-!
-!     Local variables
-!
-
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Below we initialize the list of comparison operator names.
-!
-
-!
-!     Set constant step parameter to .FALSE..
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due to the
+!!     volatile nature of this routine.
+!!
+!!     This routine determines time intervals when the value of some
+!!     geometric quantity related to one or more objects and an observer
+!!     satisfies a user specified constraint within time intervals
+!!     specified by the window CNFINE.
+!!
+!!     Sister routine to ZZGFREL. Copy any edits to ZZGFREL or ZZGFRELX
+!!     to the sister routine.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     UDSTEP     the routine that computes a time step in an attempt to
+!!                find a transition of the scalar quantity. In the
+!!                context of this routine's algorithm, a "transition"
+!!                occurs where the scalar quantity value changes from
+!!                "decreasing" to "not decreasing" or vice versa.
+!!
+!!                This routine relies on UDSTEP returning step sizes
+!!                small enough so that state transitions within the
+!!                confinement window are not overlooked.  There must
+!!                never be two roots A and B separated by less than
+!!                STEP, where STEP is the minimum step size returned by
+!!                UDSTEP for any value of ET in the interval [A, B].
+!!
+!!                The calling sequence for UDSTEP is:
+!!
+!!                   CALL UDSTEP ( ET, STEP )
+!!
+!!                where:
+!!
+!!                   ET      is the input start time from which the
+!!                           algorithm is to search forward for a state
+!!                           transition. ET is expressed as seconds past
+!!                           J2000 TDB. ET is a DOUBLE PRECISION number.
+!!
+!!                   STEP    is the output step size.  STEP indicates
+!!                           how far to advance ET so that ET and
+!!                           ET+STEP may bracket a state transition and
+!!                           definitely do not bracket more than one
+!!                           state transition.  STEP is a DOUBLE
+!!                           PRECISION number.  Units are TDB seconds.
+!!
+!!                If a constant step size is desired, the routine
+!!                GFSTEP may be used. This is the default option.
+!!
+!!     UDREFN     the routine that computes a refinement in the times
+!!                that bracket a transition point. In other words, once
+!!                a pair of times have been detected such that the system
+!!                is in different states at each of the two times, UDREFN
+!!                selects an intermediate time which should be closer to
+!!                the transition state than one of the two known times.
+!!                The calling sequence for UDREFN is:
+!!
+!!                   CALL UDREFN ( T1, T2, S1, S2, T )
+!!
+!!                where the inputs are:
+!!
+!!                   T1    a time when the system is in state S1.
+!!
+!!                   T2    a time when the system is in state S2. T2
+!!                         is assumed to be larger than T1.
+!!
+!!                   S1    a logical indicating the state of the system
+!!                         at time T1.
+!!
+!!                   S2    a logical indicating the state of the system
+!!                         at time T2.
+!!
+!!                UDREFN may use or ignore the S1 and S2 values.
+!!
+!!                The output is:
+!!
+!!                   T     a time to check for a state transition
+!!                         between T1 and T2.
+!!
+!!                If a simple bisection method is desired, the routine
+!!                GFREFN may be used. This is the default option.
+!!
+!!     UDQDEC     the routine that determines if the scalar quantity
+!!                calculated by UDFUNC is decreasing.
+!!
+!!                The calling sequence:
+!!
+!!                   CALL UDQDEC ( UDFUNC, ET, ISDECR )
+!!
+!!                where:
+!!
+!!                   ET       a double precision value representing
+!!                            ephemeris time, expressed as seconds past
+!!                            J2000 TDB, at which to determine the time
+!!                            derivative of UDFUNC.
+!!
+!!                   ISDECR   a logical return indicating whether
+!!                            or not the scalar value returned by UDFUNC
+!!                            is decreasing. ISDECR returns true if the
+!!                            time derivative of UDFUNC at ET is
+!!                            negative.
+!!
+!!     UDCOND     the routine that determines if UDFUNC satisfies
+!!                some constraint condition at epoch ET.
+!!
+!!                The calling sequence:
+!!
+!!                   CALL UDCOND ( UDFUNC, ET, IN_CON )
+!!
+!!                where:
+!!
+!!                   ET       a double precision value representing
+!!                            ephemeris time, expressed as seconds past
+!!                            J2000 TDB, at which to evaluate UDFUNC.
+!!
+!!                   IN_CON   a logical value indicating whether
+!!                            or not UDFUNC satisfies the constraint
+!!                            at ET (TRUE) or not (FALSE).
+!!
+!!     UDFUNC     the routine that returns the value of the scalar
+!!                quantity of interest at time ET. The calling sequence
+!!                for UDFUNC is:
+!!
+!!                   CALL UDFUNC ( ET, VALUE )
+!!
+!!                where:
+!!
+!!                   ET      a double precision value representing
+!!                           ephemeris time, expressed as seconds past
+!!                           J2000 TDB, at which to determine the scalar
+!!                           value.
+!!
+!!                   VALUE   the double precision value of the scalar
+!!                           quantity at ET.
+!!
+!!     RELATE     is a comparison operator, indicating the numeric
+!!                constraint of interest. Values are:
+!!
+!!                '>'   value of scalar quantity greater than REFVAL.
+!!
+!!                '='   value of scalar quantity equal to REFVAL.
+!!
+!!                '<'   value of scalar quantity less than REFVAL.
+!!
+!!                ABSMAX-the scalar quantity is at an absolute
+!!                maximum.
+!!
+!!                ABSMIN-the scalar quantity is at an absolute
+!!                minimum.
+!!
+!!                LOCMAX-the scalar quantity is at an local maximum.
+!!
+!!                LOCMIN-the scalar quantity is at an local minimum.
+!!
+!!     REFVAL     reference value for scalar quantity (in
+!!                radians, radians/sec, km, or km/sec as appropriate).
+!!
+!!     TOL        is a tolerance value used to determine convergence of
+!!                root-finding operations.  TOL is measured in seconds
+!!                and is greater than zero.
+!!
+!!     ADJUST     the amount by which the numerical quantity is
+!!                allowed to vary from an absolute extremum. If ADJUST
+!!                is non-zero, the resulting window contains
+!!                intervals when the scalar quantity has
+!!                values either between ABSMIN and ABSMIN + ADJUST
+!!                or between ABSMAX and ABSMAX - ADJUST. ADJUST must
+!!                not be negative.
+!!
+!!     CNFINE     is a SPICE window that confines the bounds of the
+!!                search. Note that like all windows (see windows.req)
+!!                CNFINE can contain multiple time intervals. See the
+!!                Examples section for information on how to create this
+!!                window.
+!!
+!!     MW         is the cell size of the windows in the workspace array
+!!                WORK.
+!!
+!!     NW         is the number of windows in the workspace array WORK.
+!!                NW must be at least as large as the parameter NWREQ.
+!!
+!!     WORK       is an array used to store workspace windows. This
+!!                array has dimensions WORK (-5 : MW, NW).
+!!
+!!     RPT        is a logical variable which controls whether the
+!!                progress reporter is on or off. The progress reporter
+!!                writes to the user's terminal.
+!!
+!!     UDREPI     the routine that initializes a progress report.
+!!                When progress reporting is enabled, UDREPI
+!!                is called at the start of a search.  The calling
+!!                sequence of UDREPI is:
+!!
+!!                   UDREPI ( CNFINE, RPTPRE, RPTSUF )
+!!
+!!                   DOUBLE PRECISION    CNFINE ( LBCELL : * )
+!!                   CHARACTER*(*)       RPTPRE
+!!                   CHARACTER*(*)       RPTSUF
+!!
+!!                where
+!!
+!!                   CNFINE
+!!
+!!                is the confinement window passed into ZZGFRELX, and
+!!
+!!                   RPTPRE
+!!                   RPTSUF
+!!
+!!                are prefix and suffix strings used in the progress
+!!                report:  these strings are intended to bracket a
+!!                representation of the fraction of work done.
+!!
+!!                If the user has no progress reporting initialization
+!!                routine, the SPICELIB routine GFREPI may be used. This
+!!                is the default option.
+!!
+!!     UDREPU     the routine that updates the progress report for a
+!!                search.  The calling sequence of UDREPU is:
+!!
+!!                   UDREPU (IVBEG, IVEND, ET )
+!!
+!!                   DOUBLE PRECISION      ET
+!!                   DOUBLE PRECISION      IVBEG
+!!                   DOUBLE PRECISION      IVEND
+!!
+!!                where ET is an epoch belonging to the confinement
+!!                window, IVBEG and IVEND are the start and stop times,
+!!                respectively of the current confinement window
+!!                interval.  The ratio of the measure of the portion
+!!                of CNFINE that precedes ET to the measure of CNFINE
+!!                would be a logical candidate for the search's
+!!                completion percentage; however the method of
+!!                measurement is up to the user.
+!!
+!!                If the user has no progress reporting update routine,
+!!                the SPICELIB routine GFREPU may be used. This is the
+!!                default option.
+!!
+!!     UDREPF     the routine that finalizes a progress report. UDREPF
+!!                has no arguments.
+!!
+!!                If the user has no progress reporting finalizing
+!!                routine, the SPICELIB routine GFREPF may be used. This
+!!                is the default option.
+!!
+!!     RPTPRE     is an array of strings containing the prefixes of
+!!                the output messages reported by the progress reporter.
+!!                The Ith element of RPTPRE is the prefix for the
+!!                message corresponding to the Ith traversal of the
+!!                confinement window executed by this routine; such
+!!                traversals are called "passes." The number of passes
+!!                executed depends on the relational operator RELATE.
+!!                Searches for local extrema and unadjusted absolute
+!!                extrema require one pass; searches for adjusted
+!!                absolute extrema, equalities, and inequalities require
+!!                two passes.
+!!
+!!                An example of the contents of RPTPRE for a distance
+!!                equality search:
+!!
+!!                   RPTPRE(1) = 'Distance pass 1 of 2'
+!!                   RPTPRE(2) = 'Distance pass 2 of 2'
+!!
+!!     RPTSUF     is an array of strings containing the suffixes of
+!!                the output messages reported by the progress reporter.
+!!                The Ith element of RPTSUF is the suffix for the
+!!                message corresponding to the Ith pass.
+!!
+!!                An example of the contents of RPTSUF for a distance
+!!                equality search:
+!!
+!!                   RPTSUF(1) = 'done.'
+!!                   RPTSUF(2) = 'done.'
+!!
+!!                For this search, the complete progress report message
+!!                for the Ith pass has the form
+!!
+!!                   'Distance pass I of 2 xxx.xx% done.'
+!!
+!!     BAIL       is a logical indicating whether or not interrupt
+!!                signaling is enabled.
+!!
+!!     UDBAIL     the routine that checks to see whether an interrupt
+!!                signal has been issued from, e.g. the keyboard. If
+!!                this capability is not to be used, a dummy function,
+!!                GFBAIL must be supplied.
+!!
+!!     RESULT     is an initialized SPICE window. RESULT is large
+!!                enough to hold all of the intervals, within the
+!!                confinement window, on which the specified condition
+!!                is met.
+!!
+!! ## Detailed Output
+!!
+!!     RESULT     is a SPICE window containing the time intervals within
+!!                the confinement window, over which the specified
+!!                condition is met.
+!!
+!!                RESULT is emptied before new values are assigned to
+!!                it.
+!!
+!! ## Parameters
+!!
+!!     LBCELL     is the SPICELIB cell lower bound.
+!!
+!!     NWREQ      is the required number of workspace windows; the
+!!                input argument NW must not be less than NWREQ.
+!!
+!! ## Exceptions
+!!
+!!     1)  A negative value for ADJUST causes the routine to signal
+!!         the error SPICE(VALUEOUTOFRANGE). A non-zero value for ADJUST
+!!         when RELATE has any value other than "ABSMIN" or "ABSMAX",
+!!         causes the routine to signal the error SPICE(INVALIDVALUE).
+!!
+!!     2)  If an improper comparison operator is specified, the error
+!!         SPICE(NOTRECOGNIZED) is signaled.
+!!
+!!     3)  If TOL is not greater than zero, the error
+!!         SPICE(VALUEOUTOFRANGE) will be signaled by routines called
+!!         from this routine.
+!!
+!!     4)  If the number of workspace windows is less than NWREQ, the
+!!         error SPICE(TOOFEWWINDOWS) is signaled.
+!!
+!!     5)  If the window size MW is less than 2, the error
+!!         SPICE(INVALIDDIMENSION) will be signaled.
+!!
+!!     6)  If the output SPICE window RESULT has insufficient capacity
+!!         to contain the number of intervals on which the specified
+!!         visibility condition is met, the error will be diagnosed
+!!         by a routine in the call tree of this routine. If the result
+!!         window has size less than 2, the error SPICE(WINDOWTOOSMALL)
+!!         will be signaled by this routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine determines time intervals when the value of some
+!!     scalar quantity related to one or more objects and an observer
+!!     satisfies a user specified constraint. It puts these times in a
+!!     result window called RESULT. It does this by first finding
+!!     windows when the quantity of interest is either
+!!     monotonically increasing or decreasing. These windows are then
+!!     manipulated to give the final result. Note that the determination
+!!     of "=" involves finding intervals where the quantity is "less
+!!     than" to a tolerance of TOL. This means that the end points of
+!!     these intervals are within TOL of being equal to the value.
+!!
+!! ## Examples
+!!
+!!     See GFEVNT.
+!!
+!! ## Restrictions
+!!
+!!     The kernel files to be used by ZZGFRELX must be loaded (normally
+!!     via the SPICELIB routine FURNSH) before ZZGFRELX is called.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     L.S. Elson     (JPL)
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.2.0  03-OCT-2021 (NJB)
+!!
+!!        Variable CSTEP is now saved. Corrected typo in comment.
+!!
+!!-    SPICELIB Version 1.1.1  08-DEC-2010  (EDW)
+!!
+!!        Edit to replace term "schedule" with "window." Edit to
+!!        Procedure line text.
+!!
+!!        Argument list changed, removing the argument for
+!!        the reference value update routine, UDQREF. Setting and
+!!        updating the reference value now occurs in this
+!!        (ZZGFRELX) routine.
+!!
+!!        Edit to Detailed I/O description for UDREPI, UDREPU, UDREPF,
+!!        and UDBAIL. The descriptions stated the wrong name for the
+!!        default GF functions corresponding to these arguments.
+!!
+!!-    SPICELIB Version 1.1.0  16-FEB-2010  (EDW)
+!!
+!!        Modified version of ZZGFREL. This version calls ZZGFSOLVX.
+!!
+!!-    SPICELIB Version 1.0.0  21-FEB-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
+!!
+!! ## Index Entries
+!!
+!! numeric scalar quantity satisfies a condition
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Workspace window indices:
+!!
+!!     Number of supported comparison operators.
+!!
+!!     One-letter alias for LBCELL to make references to the workspace
+!!     array tolerable:
+!!
+!!     Context string length:
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Below we initialize the list of comparison operator names.
+!!
+!!     Set constant step parameter to .FALSE..
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc, swapi
       use pepper_strings, only: ljust, ucase
+      use pepper_inc_gf
       implicit none
-      include               'gf.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: nwreq = 5
       integer(ip), parameter :: left = 1
@@ -23051,150 +22725,144 @@ contains
 !     Initial values
 
       module procedure zzgftswk
-
-! $ Abstract
-!
-!     Initialize the work progress utility. This is required prior to
-!     use of the routine that performs the actual reporting.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     UTILITY
-!     REPORT
-!     WORK
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      TOTAL
-!     DOUBLE PRECISION      WAIT
-!     INTEGER               TCHECK
-!     CHARACTER*(*)         BEGIN
-!     CHARACTER*(*)         END
-!
-! $ Detailed_Input
-!
-!     TOTAL      is a measure of the total amount of work to be done
-!                by the routine(s) that will be using this facility.
-!                It is expected (but not required) that TOTAL is a
-!                positive number.
-!
-!     WAIT       is the minimum duration between reports in seconds. If
-!                WAIT = 5 then a work progress report will be sent to
-!                the output device no more frequently than every 5
-!                seconds.  Since writing to the output device takes
-!                time, the smaller WAIT is, the greater the overhead
-!                taken up by the work reporter will be. (A value of 2
-!                or greater should not burden your application
-!                appreciably.)
-!
-!                Regardless of the value of WAIT, the number of calls
-!                to ZZGFWKIN between reports will not be less than that
-!                specified by the argument TCHECK. See the description
-!                below.
-!
-!     TCHECK     is an integer used to the tell the reporter how often
-!                to sample the system clock; TCHECK specifies the
-!                number of calls to ZZGFWKIN between system clock
-!                samples. If TCHECK = 7, then on every seventh call to
-!                ZZGFWKIN, the system clock will be sampled to
-!                determine if WAIT seconds have elapsed since the last
-!                report time.  Sampling the system clock takes time.
-!                Not a lot of time, but it does take time. If ZZGFWKIN
-!                is being called from a loop that does not take a lot
-!                of time for each pass, the sampling of the system
-!                clock can become a significant overhead cost in
-!                itself.  On the VAX the sampling of the system clock
-!                used here takes about 37 double precision multiplies.
-!                If thousands of multiplies take place between calls to
-!                ZZGFWKIN, the sampling time is insignificant.  On the
-!                other hand, if only a hundred or so multiplies occur
-!                between calls to ZZGFWKIN, the sampling of the system
-!                clock can become a significant fraction of your
-!                overhead.  TCHECK allows you to tailor the work
-!                reporter to your application.
-!
-!                If a non-positive value for TCHECK is entered, a value
-!                of 1 will be used instead of the input value.
-!
-
-!      BEGIN     Is the first part of the output message that will be
-!                constructed for shipment to the output device. This
-!                message will have the form:
-!
-!                BEGIN // xx.x% // END
-!
-!                where xx.x  is the percentage of the job completed when
-!                the output message is sent to the output device.
-!
-!      END       is the second part of the output message that will be
-!                constructed and sent to the output device (see above).
-!
-! $ Detailed_Output
-!
-!      None.
-!
-! $ Parameters
-!
-!      None.
-!
-! $ Exceptions
-!
-!     Standard SPICE error handling.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point is used to initialize parameters that will
-!     be used by ZZGFWKIN.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     See the header for this module
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     L.S. Elson     (JPL)
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0 05-NOV-2021 (NJB)
-!
-!        Changed name of argument FREQ to WAIT. Updated header to
-!        clarify roles of WAIT and TCHECK. Deleted description of
-!        UNIT from $Detailed_Input header section.
-!
-!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     GF low-level initialize progress report
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Initialize the work progress utility. This is required prior to
+!!     use of the routine that performs the actual reporting.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!     REPORT
+!!     WORK
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      TOTAL
+!!     DOUBLE PRECISION      WAIT
+!!     INTEGER               TCHECK
+!!     CHARACTER*(*)         BEGIN
+!!     CHARACTER*(*)         END
+!!
+!! ## Detailed Input
+!!
+!!     TOTAL      is a measure of the total amount of work to be done
+!!                by the routine(s) that will be using this facility.
+!!                It is expected (but not required) that TOTAL is a
+!!                positive number.
+!!
+!!     WAIT       is the minimum duration between reports in seconds. If
+!!                WAIT = 5 then a work progress report will be sent to
+!!                the output device no more frequently than every 5
+!!                seconds.  Since writing to the output device takes
+!!                time, the smaller WAIT is, the greater the overhead
+!!                taken up by the work reporter will be. (A value of 2
+!!                or greater should not burden your application
+!!                appreciably.)
+!!
+!!                Regardless of the value of WAIT, the number of calls
+!!                to ZZGFWKIN between reports will not be less than that
+!!                specified by the argument TCHECK. See the description
+!!                below.
+!!
+!!     TCHECK     is an integer used to the tell the reporter how often
+!!                to sample the system clock; TCHECK specifies the
+!!                number of calls to ZZGFWKIN between system clock
+!!                samples. If TCHECK = 7, then on every seventh call to
+!!                ZZGFWKIN, the system clock will be sampled to
+!!                determine if WAIT seconds have elapsed since the last
+!!                report time.  Sampling the system clock takes time.
+!!                Not a lot of time, but it does take time. If ZZGFWKIN
+!!                is being called from a loop that does not take a lot
+!!                of time for each pass, the sampling of the system
+!!                clock can become a significant overhead cost in
+!!                itself.  On the VAX the sampling of the system clock
+!!                used here takes about 37 double precision multiplies.
+!!                If thousands of multiplies take place between calls to
+!!                ZZGFWKIN, the sampling time is insignificant.  On the
+!!                other hand, if only a hundred or so multiplies occur
+!!                between calls to ZZGFWKIN, the sampling of the system
+!!                clock can become a significant fraction of your
+!!                overhead.  TCHECK allows you to tailor the work
+!!                reporter to your application.
+!!
+!!                If a non-positive value for TCHECK is entered, a value
+!!                of 1 will be used instead of the input value.
+!!
+!!      BEGIN     Is the first part of the output message that will be
+!!                constructed for shipment to the output device. This
+!!                message will have the form:
+!!
+!!                BEGIN // xx.x% // END
+!!
+!!                where xx.x  is the percentage of the job completed when
+!!                the output message is sent to the output device.
+!!
+!!      END       is the second part of the output message that will be
+!!                constructed and sent to the output device (see above).
+!!
+!! ## Detailed Output
+!!
+!!      None.
+!!
+!! ## Parameters
+!!
+!!      None.
+!!
+!! ## Exceptions
+!!
+!!     Standard SPICE error handling.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point is used to initialize parameters that will
+!!     be used by ZZGFWKIN.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     See the header for this module
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     L.S. Elson     (JPL)
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0 05-NOV-2021 (NJB)
+!!
+!!        Changed name of argument FREQ to WAIT. Updated header to
+!!        clarify roles of WAIT and TCHECK. Deleted description of
+!!        UNIT from $Detailed_Input header section.
+!!
+!!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     GF low-level initialize progress report
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       character(10)         prcent
       character(mxmsg)      messge
       real(wp)              cursec
@@ -23293,91 +22961,86 @@ contains
       end procedure zzgftswk
 
       module procedure zzgfwkin
-
-! $ Abstract
-!
-!     Let the work reporter know that an increment of work has just
-!     been completed.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     UTILITY
-!     REPORT
-!     WORK
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      INCR
-!
-! $ Detailed_Input
-!
-!     INCR       is some amount of work that has been completed since
-!                the last call to ZZGFWKIN.
-!
-! $ Detailed_Output
-!
-!      None.
-!
-! $ Parameters
-!
-!      None.
-!
-! $ Exceptions
-!
-!     Standard SPICE error handling.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point is used to report work that has been done since
-!     initialization was performed using ZZGFTSWK or since the last
-!     call to ZZGFWKIN.  The work reporter uses this information
-!     together with samples of the system clock to report how much of
-!     the total job has been completed.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     See the header for this module
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     L.S. Elson     (JPL)
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     ZZGF low-level progress report increment
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Let the work reporter know that an increment of work has just
+!!     been completed.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!     REPORT
+!!     WORK
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      INCR
+!!
+!! ## Detailed Input
+!!
+!!     INCR       is some amount of work that has been completed since
+!!                the last call to ZZGFWKIN.
+!!
+!! ## Detailed Output
+!!
+!!      None.
+!!
+!! ## Parameters
+!!
+!!      None.
+!!
+!! ## Exceptions
+!!
+!!     Standard SPICE error handling.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point is used to report work that has been done since
+!!     initialization was performed using ZZGFTSWK or since the last
+!!     call to ZZGFWKIN.  The work reporter uses this information
+!!     together with samples of the system clock to report how much of
+!!     the total job has been completed.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     See the header for this module
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     L.S. Elson     (JPL)
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     ZZGF low-level progress report increment
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: brcktd
       use pepper_strings, only: rtrim
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       character(10)         prcent
       character(mxmsg)      messge
       real(wp)              cursec
@@ -23454,153 +23117,148 @@ contains
       end procedure zzgfwkin
 
       module procedure zzgfwkad
-
-! $ Abstract
-!
-!     Adjust the frequency with which work progress is reported.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     UTILITY
-!     REPORT
-!     WORK
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      WAIT
-!     INTEGER               TCHECK
-!     CHARACTER*(*)         BEGIN
-!     CHARACTER*(*)         END
-!
-! $ Detailed_Input
-!
-!     WAIT       is the minimum duration between reports in seconds. If
-!                WAIT = 5 then a work progress report will be sent to
-!                the output device no more frequently than every 5
-!                seconds.  Since writing to the output device takes
-!                time, the smaller WAIT is, the greater the overhead
-!                taken up by the work reporter will be. (A value of 2
-!                or greater should not burden your application
-!                appreciably.)
-!
-!                Regardless of the value of WAIT, the number of calls
-!                to ZZGFWKIN between reports will not be less than that
-!                specified by the argument TCHECK. See the description
-!                below.
-!
-!     TCHECK     is an integer used to the tell the reporter how often
-!                to sample the system clock; TCHECK specifies the
-!                number of calls to ZZGFWKIN between system clock
-!                samples. If TCHECK = 7, then on every seventh call to
-!                ZZGFWKIN, the system clock will be sampled to
-!                determine if WAIT seconds have elapsed since the last
-!                report time.  Sampling the system clock takes time.
-!                Not a lot of time, but it does take time. If ZZGFWKIN
-!                is being called from a loop that does not take a lot
-!                of time for each pass, the sampling of the system
-!                clock can become a significant overhead cost in
-!                itself.  On the VAX the sampling of the system clock
-!                used here takes about 37 double precision multiplies.
-!                If thousands of multiplies take place between calls to
-!                ZZGFWKIN, the sampling time is insignificant.  On the
-!                other hand, if only a hundred or so multiplies occur
-!                between calls to ZZGFWKIN, the sampling of the system
-!                clock can become a significant fraction of your
-!                overhead.  TCHECK allows you to tailor the work
-!                reporter to your application.
-!
-!                If a non-positive value for TCHECK is entered, a value
-!                of 1 will be used instead of the input value.
-!
-!     BEGIN      Is the first part of the output message that will be
-!                constructed for shipment to the output device. This
-!                message will have the form:
-!
-!                BEGIN // xx.x% // END
-!
-!                where xx.x  is the percentage of the job completed when
-!                the output message is sent to the output device.
-!
-!     END        is the second part of the output message that will be
-!                constructed and sent to the output device (see above).
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1) If TCHECK is less than 1, the value 1 is stored.
-!
-!     2) If WAIT is less than 0.D0, the value 0.D0 is stored.
-!        If WAIT is greater than 3600, the value 3600 is stored.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point exists to modify the reporting frequency set
-!     up by an initial call to ZZGFTSWK.  In this way one can override
-!     how often reporting of work increments is performed, without
-!     causing the screen to be modified (which happens if a new
-!     call to  ZZGFTSWK is made.)
-!
-!     It exists primarily as a back door to existing code
-!     that calls ZZGFTSWK in a rigid way.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     See the header for this module.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!     L.S. Elson     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0 21-FEB-2021 (NJB)
-!
-!        Changed name of argument FREQ to WAIT. Updated header to
-!        clarify roles of WAIT and TCHECK. Corrected Exceptions
-!        section's description of handling of WAIT values less than
-!        zero.
-!
-!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     GF low-level progress report adjust frequency
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Adjust the frequency with which work progress is reported.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!     REPORT
+!!     WORK
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      WAIT
+!!     INTEGER               TCHECK
+!!     CHARACTER*(*)         BEGIN
+!!     CHARACTER*(*)         END
+!!
+!! ## Detailed Input
+!!
+!!     WAIT       is the minimum duration between reports in seconds. If
+!!                WAIT = 5 then a work progress report will be sent to
+!!                the output device no more frequently than every 5
+!!                seconds.  Since writing to the output device takes
+!!                time, the smaller WAIT is, the greater the overhead
+!!                taken up by the work reporter will be. (A value of 2
+!!                or greater should not burden your application
+!!                appreciably.)
+!!
+!!                Regardless of the value of WAIT, the number of calls
+!!                to ZZGFWKIN between reports will not be less than that
+!!                specified by the argument TCHECK. See the description
+!!                below.
+!!
+!!     TCHECK     is an integer used to the tell the reporter how often
+!!                to sample the system clock; TCHECK specifies the
+!!                number of calls to ZZGFWKIN between system clock
+!!                samples. If TCHECK = 7, then on every seventh call to
+!!                ZZGFWKIN, the system clock will be sampled to
+!!                determine if WAIT seconds have elapsed since the last
+!!                report time.  Sampling the system clock takes time.
+!!                Not a lot of time, but it does take time. If ZZGFWKIN
+!!                is being called from a loop that does not take a lot
+!!                of time for each pass, the sampling of the system
+!!                clock can become a significant overhead cost in
+!!                itself.  On the VAX the sampling of the system clock
+!!                used here takes about 37 double precision multiplies.
+!!                If thousands of multiplies take place between calls to
+!!                ZZGFWKIN, the sampling time is insignificant.  On the
+!!                other hand, if only a hundred or so multiplies occur
+!!                between calls to ZZGFWKIN, the sampling of the system
+!!                clock can become a significant fraction of your
+!!                overhead.  TCHECK allows you to tailor the work
+!!                reporter to your application.
+!!
+!!                If a non-positive value for TCHECK is entered, a value
+!!                of 1 will be used instead of the input value.
+!!
+!!     BEGIN      Is the first part of the output message that will be
+!!                constructed for shipment to the output device. This
+!!                message will have the form:
+!!
+!!                BEGIN // xx.x% // END
+!!
+!!                where xx.x  is the percentage of the job completed when
+!!                the output message is sent to the output device.
+!!
+!!     END        is the second part of the output message that will be
+!!                constructed and sent to the output device (see above).
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!!     1) If TCHECK is less than 1, the value 1 is stored.
+!!
+!!     2) If WAIT is less than 0.D0, the value 0.D0 is stored.
+!!        If WAIT is greater than 3600, the value 3600 is stored.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point exists to modify the reporting frequency set
+!!     up by an initial call to ZZGFTSWK.  In this way one can override
+!!     how often reporting of work increments is performed, without
+!!     causing the screen to be modified (which happens if a new
+!!     call to  ZZGFTSWK is made.)
+!!
+!!     It exists primarily as a back door to existing code
+!!     that calls ZZGFTSWK in a rigid way.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     See the header for this module.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!     L.S. Elson     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0 21-FEB-2021 (NJB)
+!!
+!!        Changed name of argument FREQ to WAIT. Updated header to
+!!        clarify roles of WAIT and TCHECK. Corrected Exceptions
+!!        section's description of handling of WAIT values less than
+!!        zero.
+!!
+!!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     GF low-level progress report adjust frequency
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       logical               return
       character(10)         prcent
       character(mxmsg)      messge
@@ -23625,96 +23283,90 @@ contains
       end procedure zzgfwkad
 
       module procedure zzgfwkun
-
-! $ Abstract
-!
-!     Set the output unit for the progress report.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     UTILITY
-!     REPORT
-!     WORK
-!
-! $ Declarations
-!
-!     INTEGER               UNIT
-!
-! $ Detailed_Input
-!
-!     UNIT           Logical unit of a text file open for write access.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     The file designated by UNIT should be a text file opened by the
-!     calling application.
-!
-! $ Particulars
-!
-!     This routine can be called before ZZGFTSWK to set the output
-!     logical unit to that of a text file.
-!
-!     This entry point exists to support testing of the higher-level
-!     GF progress reporting routines
-!
-!        GFREPI
-!        GFREPU
-!        GFREPF
-!
-!     This routine enables TSPICE to send the output report to
-!     a specified file.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     GF low-level progress report output select unit
-!
-!-&
-
-!
-!     On the first pass, obtain the logical unit for
-!     standard output.
-!
+!! ## Abstract
+!!
+!!     Set the output unit for the progress report.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!     REPORT
+!!     WORK
+!!
+!! ## Declarations
+!!
+!!     INTEGER               UNIT
+!!
+!! ## Detailed Input
+!!
+!!     UNIT           Logical unit of a text file open for write access.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     The file designated by UNIT should be a text file opened by the
+!!     calling application.
+!!
+!! ## Particulars
+!!
+!!     This routine can be called before ZZGFTSWK to set the output
+!!     logical unit to that of a text file.
+!!
+!!     This entry point exists to support testing of the higher-level
+!!     GF progress reporting routines
+!!
+!!        GFREPI
+!!        GFREPU
+!!        GFREPF
+!!
+!!     This routine enables TSPICE to send the output report to
+!!     a specified file.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     GF low-level progress report output select unit
+!!
+!!     On the first pass, obtain the logical unit for
+!!     standard output.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       logical               return
       character(10)         prcent
       character(mxmsg)      messge
@@ -23743,107 +23395,102 @@ contains
       end procedure zzgfwkun
 
       module procedure zzgfwkmo
-
-! $ Abstract
-!
-!     Return saved progress report parameters.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     UTILITY
-!     REPORT
-!     WORK
-!
-! $ Declarations
-!
-!     INTEGER               UNIT
-!     DOUBLE PRECISION      TOTAL
-!     DOUBLE PRECISION      WAIT
-!     INTEGER               TCHECK
-!     CHARACTER*(*)         BEGIN
-!     CHARACTER*(*)         END
-!     DOUBLE PRECISION      INCR
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     UNIT,
-!     TOTAL,
-!     WAIT,
-!     TCHECK,
-!     BEGIN,
-!     END,
-!     INCR           are the most recent values of these
-!                    variables passed in via calls to ZZGFTSWK,
-!                    ZZGFWKIN, or ZZGFWKAD.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point exists to support testing of the higher-level
-!     GF progress reporting routines
-!
-!        GFREPI
-!        GFREPU
-!        GFREPF
-!
-!     This routine enables TSPICE to determine the values passed
-!     in to entry points of this package by those routines.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0 21-FEB-2021 (NJB)
-!
-!        Changed name of argument FREQ to WAIT. Updated Brief_I/O
-!        description of this argument.
-!
-!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     GF low-level progress report monitor
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Return saved progress report parameters.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!     REPORT
+!!     WORK
+!!
+!! ## Declarations
+!!
+!!     INTEGER               UNIT
+!!     DOUBLE PRECISION      TOTAL
+!!     DOUBLE PRECISION      WAIT
+!!     INTEGER               TCHECK
+!!     CHARACTER*(*)         BEGIN
+!!     CHARACTER*(*)         END
+!!     DOUBLE PRECISION      INCR
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     UNIT,
+!!     TOTAL,
+!!     WAIT,
+!!     TCHECK,
+!!     BEGIN,
+!!     END,
+!!     INCR           are the most recent values of these
+!!                    variables passed in via calls to ZZGFTSWK,
+!!                    ZZGFWKIN, or ZZGFWKAD.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point exists to support testing of the higher-level
+!!     GF progress reporting routines
+!!
+!!        GFREPI
+!!        GFREPU
+!!        GFREPF
+!!
+!!     This routine enables TSPICE to determine the values passed
+!!     in to entry points of this package by those routines.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.0 21-FEB-2021 (NJB)
+!!
+!!        Changed name of argument FREQ to WAIT. Updated Brief_I/O
+!!        description of this argument.
+!!
+!!-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     GF low-level progress report monitor
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       logical               return
       character(10)         prcent
       character(mxmsg)      messge
@@ -24099,175 +23746,170 @@ contains
 !     Saved Variables
 
       module procedure zzgfrrin
-
-! $ Abstract
-!
-!     This is the initialization entry point used for describing
-!     the event that is to be solved for by ZZGFSOLV.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     RANGE RATE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!      CHARACTER*(*)         TARGET
-!      CHARACTER*(*)         ABCORR
-!      CHARACTER*(*)         OBSRVR
-!      DOUBLE PRECISION      DT
-!
-! $ Detailed_Input
-!
-!     TARGET   the string name of a target body.  Optionally, you may
-!              supply the integer ID code for the object as an
-!              integer string.  For example both 'MOON' and '301'
-!              are legitimate strings that indicate the moon is the
-!              target body.
-!
-!              The target and observer define a position vector
-!              that points from the observer to the target.
-!
-!     ABCORR   the string description of the aberration corrections to
-!              apply to the state evaluations to account for one-way
-!              light time and stellar aberration.
-!
-!              Any aberration correction accepted by the SPICE
-!              routine SPKEZR is accepted here. See the header
-!              of SPKEZR for a detailed description of the
-!              aberration correction options. For convenience,
-!              the options are listed below:
-!
-!                 'NONE'     Apply no correction. Returns the "true"
-!                            geometric state.
-!
-!                 'LT'       "Reception" case:  correct for
-!                            one-way light time using a Newtonian
-!                            formulation.
-!
-!                 'LT+S'     "Reception" case:  correct for
-!                            one-way light time and stellar
-!                            aberration using a Newtonian
-!                            formulation.
-!
-!                 'CN'       "Reception" case:  converged
-!                            Newtonian light time correction.
-!
-!                'CN+S'     "Reception" case:  converged
-!                            Newtonian light time and stellar
-!                            aberration corrections.
-!
-!                 'XLT'      "Transmission" case:  correct for
-!                            one-way light time using a Newtonian
-!                            formulation.
-!
-!                 'XLT+S'    "Transmission" case:  correct for
-!                            one-way light time and stellar
-!                            aberration using a Newtonian
-!                            formulation.
-!
-!                 'XCN'      "Transmission" case:  converged
-!                            Newtonian light time correction.
-!
-!                 'XCN+S'    "Transmission" case:  converged
-!                            Newtonian light time and stellar
-!                            aberration corrections.
-!
-!              The ABCORR string lacks sensitivity to case, leading
-!              and trailing blanks.
-!
-!     OBSRVR   the string name of an observing body.  Optionally, you
-!              may supply the ID code of the object as an integer
-!              string. For example, both 'EARTH' and '399' are
-!              legitimate strings to indicate the observer as Earth.
-!
-!     DT         a scalar double precision value representing half the
-!                interval in TDB seconds separating the evaluation
-!                epochs; the evaluations occur at epochs
-!                (ET + DT) and (ET - DT).
-!
-!                DT may be negative but must be non-zero.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) SPICE(IDCODENOTFOUND) signals if the object name for the
-!        target, TARGET, is not a recognized name.
-!
-!     2) SPICE(IDCODENOTFOUND) signals if the object name for the
-!        observer, OBSRVR, is not a recognized name.
-!
-!     3) SPICE(BODIESNOTDISTINCT) signals if the two objects
-!        associated with a range rate search are not distinct.
-!
-!     4) SPICE(INVALIDVALUE) signals for the delta, DT, equal to zero.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!     L.S. Elson     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 2.0.0 18-SEP-2012 (EDW)
-!
-!        Added proper Exceptions section.
-!
-!        Added error check on value of DT to ensure non-zero value.
-!
-!        REFVAL removed from routine argument list due to the use
-!        of ZZGFRELX to calculate the events.
-!
-!        Minor typo correction to header.
-!
-!-    SPICELIB version 1.0.0 09-OCT-2009 (LSE)(EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     range rate initialization routine.
-!
-!-&
-
+!! ## Abstract
+!!
+!!     This is the initialization entry point used for describing
+!!     the event that is to be solved for by ZZGFSOLV.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     RANGE RATE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!      CHARACTER*(*)         TARGET
+!!      CHARACTER*(*)         ABCORR
+!!      CHARACTER*(*)         OBSRVR
+!!      DOUBLE PRECISION      DT
+!!
+!! ## Detailed Input
+!!
+!!     TARGET   the string name of a target body.  Optionally, you may
+!!              supply the integer ID code for the object as an
+!!              integer string.  For example both 'MOON' and '301'
+!!              are legitimate strings that indicate the moon is the
+!!              target body.
+!!
+!!              The target and observer define a position vector
+!!              that points from the observer to the target.
+!!
+!!     ABCORR   the string description of the aberration corrections to
+!!              apply to the state evaluations to account for one-way
+!!              light time and stellar aberration.
+!!
+!!              Any aberration correction accepted by the SPICE
+!!              routine SPKEZR is accepted here. See the header
+!!              of SPKEZR for a detailed description of the
+!!              aberration correction options. For convenience,
+!!              the options are listed below:
+!!
+!!                 'NONE'     Apply no correction. Returns the "true"
+!!                            geometric state.
+!!
+!!                 'LT'       "Reception" case:  correct for
+!!                            one-way light time using a Newtonian
+!!                            formulation.
+!!
+!!                 'LT+S'     "Reception" case:  correct for
+!!                            one-way light time and stellar
+!!                            aberration using a Newtonian
+!!                            formulation.
+!!
+!!                 'CN'       "Reception" case:  converged
+!!                            Newtonian light time correction.
+!!
+!!                'CN+S'     "Reception" case:  converged
+!!                            Newtonian light time and stellar
+!!                            aberration corrections.
+!!
+!!                 'XLT'      "Transmission" case:  correct for
+!!                            one-way light time using a Newtonian
+!!                            formulation.
+!!
+!!                 'XLT+S'    "Transmission" case:  correct for
+!!                            one-way light time and stellar
+!!                            aberration using a Newtonian
+!!                            formulation.
+!!
+!!                 'XCN'      "Transmission" case:  converged
+!!                            Newtonian light time correction.
+!!
+!!                 'XCN+S'    "Transmission" case:  converged
+!!                            Newtonian light time and stellar
+!!                            aberration corrections.
+!!
+!!              The ABCORR string lacks sensitivity to case, leading
+!!              and trailing blanks.
+!!
+!!     OBSRVR   the string name of an observing body.  Optionally, you
+!!              may supply the ID code of the object as an integer
+!!              string. For example, both 'EARTH' and '399' are
+!!              legitimate strings to indicate the observer as Earth.
+!!
+!!     DT         a scalar double precision value representing half the
+!!                interval in TDB seconds separating the evaluation
+!!                epochs; the evaluations occur at epochs
+!!                (ET + DT) and (ET - DT).
+!!
+!!                DT may be negative but must be non-zero.
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) SPICE(IDCODENOTFOUND) signals if the object name for the
+!!        target, TARGET, is not a recognized name.
+!!
+!!     2) SPICE(IDCODENOTFOUND) signals if the object name for the
+!!        observer, OBSRVR, is not a recognized name.
+!!
+!!     3) SPICE(BODIESNOTDISTINCT) signals if the two objects
+!!        associated with a range rate search are not distinct.
+!!
+!!     4) SPICE(INVALIDVALUE) signals for the delta, DT, equal to zero.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!     L.S. Elson     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 2.0.0 18-SEP-2012 (EDW)
+!!
+!!        Added proper Exceptions section.
+!!
+!!        Added error check on value of DT to ensure non-zero value.
+!!
+!!        REFVAL removed from routine argument list due to the use
+!!        of ZZGFRELX to calculate the events.
+!!
+!!        Minor typo correction to header.
+!!
+!!-    SPICELIB version 1.0.0 09-OCT-2009 (LSE)(EDW)
+!!
+!! ## Index Entries
+!!
+!!     range rate initialization routine.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp)              lt
       real(wp)              drvel
       real(wp)              srhat  ( 6 )
@@ -24374,115 +24016,108 @@ contains
       end procedure zzgfrrin
 
       module subroutine zzgfrrdc ( ctx, udfunc, et, decres )
-
-! $ Abstract
-!
-!     Computes whether or not the range rate between the observer
-!     and the target is decreasing at time ET.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     RANGE RATE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     LOGICAL               DECRES
-!
-! $ Detailed_Input
-!
-!     ET         time in seconds past J2000 at which to calculate
-!                whether the range rate of the observer-target vector
-!                is decreasing.
-!
-! $ Detailed_Output
-!
-!     DECRES     is true if the range rate between the objects
-!                is decreasing, false otherwise.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     A function f(x) is strictly decreasing at x0 if and only if there
-!     exists some delta > 0 such that for all dx satisfying
-!
-!        0  <  dx  < delta
-!
-!     we have
-!
-!        f(x0)       <  f(x0 + dx)
-!
-!     and
-!
-!        f(x0 - dx)  <  f(x)
-!
-!     Note that a strictly decreasing function need not be
-!     differentiable in a neighborhood of x0; it can have jump
-!     discontinuities in any neighborhood of x0 and even at x0.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!     L.S. Elson     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 2.0.0 18-FEB-2011 (EDW)
-!
-!        Added UDFUNC to argument list for use of ZZGFRELX when
-!        calculating the events.
-!
-!        Minor typo correction to comments.
-!
-!-    SPICELIB version 1.0.0 09-OCT-2009 (LSE)(EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     when range rate is decreasing
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
-
+!! ## Abstract
+!!
+!!     Computes whether or not the range rate between the observer
+!!     and the target is decreasing at time ET.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     RANGE RATE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     LOGICAL               DECRES
+!!
+!! ## Detailed Input
+!!
+!!     ET         time in seconds past J2000 at which to calculate
+!!                whether the range rate of the observer-target vector
+!!                is decreasing.
+!!
+!! ## Detailed Output
+!!
+!!     DECRES     is true if the range rate between the objects
+!!                is decreasing, false otherwise.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     A function f(x) is strictly decreasing at x0 if and only if there
+!!     exists some delta > 0 such that for all dx satisfying
+!!
+!!        0  <  dx  < delta
+!!
+!!     we have
+!!
+!!        f(x0)       <  f(x0 + dx)
+!!
+!!     and
+!!
+!!        f(x0 - dx)  <  f(x)
+!!
+!!     Note that a strictly decreasing function need not be
+!!     differentiable in a neighborhood of x0; it can have jump
+!!     discontinuities in any neighborhood of x0 and even at x0.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!     L.S. Elson     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 2.0.0 18-FEB-2011 (EDW)
+!!
+!!        Added UDFUNC to argument list for use of ZZGFRELX when
+!!        calculating the events.
+!!
+!!        Minor typo correction to comments.
+!!
+!!-    SPICELIB version 1.0.0 09-OCT-2009 (LSE)(EDW)
+!!
+!! ## Index Entries
+!!
+!!     when range rate is decreasing
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: dvhat, vdot
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp)              lt
       real(wp)              drvel
       real(wp)              srhat  ( 6 )
@@ -24561,87 +24196,82 @@ contains
       end subroutine zzgfrrdc
 
       module procedure zzgfrrgq
-
-! $ Abstract
-!
-!     Determine the range rate between the centers of the two
-!     bodies.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     RANGE RATE
-!     EPHEMERIS
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-!
-!      DOUBLE PRECISION      ET
-!      DOUBLE PRECISION      RVL
-!
-! $ Detailed_Input
-!
-!     ET         time in ephemeris seconds past J2000 when the range
-!                rate between the two bodies is to be computed.
-!
-! $ Detailed_Output
-!
-!     RVL        is the range rate of SVTARG as seen from SVOBS at
-!                time ET.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber     (JPL)
-!     I.M. Underwood (JPL)
-!     L.S. Elson     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 1.0.0 09-JUN-2009 (LSE)(EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get range rate between two bodies
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Determine the range rate between the centers of the two
+!!     bodies.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     RANGE RATE
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!!      DOUBLE PRECISION      ET
+!!      DOUBLE PRECISION      RVL
+!!
+!! ## Detailed Input
+!!
+!!     ET         time in ephemeris seconds past J2000 when the range
+!!                rate between the two bodies is to be computed.
+!!
+!! ## Detailed Output
+!!
+!!     RVL        is the range rate of SVTARG as seen from SVOBS at
+!!                time ET.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     W.L. Taber     (JPL)
+!!     I.M. Underwood (JPL)
+!!     L.S. Elson     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 1.0.0 09-JUN-2009 (LSE)(EDW)
+!!
+!! ## Index Entries
+!!
+!!     get range rate between two bodies
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       logical               return
       real(wp)              lt
       real(wp)              drvel
@@ -24666,88 +24296,83 @@ contains
       end procedure zzgfrrgq
 
       module procedure zzgfrrx
-
-! $ Abstract
-!
-!     Retrieve values set in ZZGFRRIN.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-!
-!     None.
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     XTARG    SPICE ID value for the target body initialized
-!              via ZZGFRRIN.
-!
-!     XABCOR   String value for the aberration correction initialized
-!              via ZZGFRRIN.
-!
-!     XOBS     SPICE ID value for the observing body initialized
-!              via ZZGFRRIN.
-!
-!     XDT      Saved value for DT.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get saved range rate parameters
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Retrieve values set in ZZGFRRIN.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
+!!     None.
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     XTARG    SPICE ID value for the target body initialized
+!!              via ZZGFRRIN.
+!!
+!!     XABCOR   String value for the aberration correction initialized
+!!              via ZZGFRRIN.
+!!
+!!     XOBS     SPICE ID value for the observing body initialized
+!!              via ZZGFRRIN.
+!!
+!!     XDT      Saved value for DT.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     None.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     None.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
+!!
+!! ## Index Entries
+!!
+!!     get saved range rate parameters
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       logical               return
       real(wp)              lt
       real(wp)              drvel
@@ -24779,33 +24404,32 @@ contains
 
       module subroutine zzgfudb ( ctx, udfuns, udfunb, tol, udstep, udrefn, rpt, udrepi, udrepu, &
             udrepf, bail, udbail, cnfine, result )
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Routine to determine time intervals when a user defined boolean
+!!     function returns true. Report progress and handle interrupts
+!!     if so commanded.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     GF
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Routine to determine time intervals when a user defined boolean
-!     function returns true. Report progress and handle interrupts
-!     if so commanded.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     GF
-!     TIME
-!     WINDOWS
-!
-! $ Declarations
-
+      use pepper_inc_gf
       implicit none
 
-      include 'gf.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -25368,41 +24992,40 @@ contains
 !$Procedure GFOCLT ( GF, find occultation )
 
       module procedure gfoclt
+!! ## Abstract
+!!
+!!     Determine time intervals when an observer sees one target body
+!!     occulted by, or in transit across, another.
+!!
+!!     The surfaces of the target bodies may be represented by triaxial
+!!     ellipsoids or by topographic data provided by DSK files.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     GF
+!!     KERNEL
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EVENT
+!!     GEOMETRY
+!!     OCCULTATION
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine time intervals when an observer sees one target body
-!     occulted by, or in transit across, another.
-!
-!     The surfaces of the target bodies may be represented by triaxial
-!     ellipsoids or by topographic data provided by DSK files.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     GF
-!     KERNEL
-!     NAIF_IDS
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EVENT
-!     GEOMETRY
-!     OCCULTATION
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -27121,41 +26744,40 @@ contains
 !$Procedure GFRFOV ( GF, is ray in FOV? )
 
       module procedure gfrfov
+!! ## Abstract
+!!
+!!     Determine time intervals when a specified ray intersects the
+!!     space bounded by the field-of-view (FOV) of a specified
+!!     instrument.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     GF
+!!     KERNEL
+!!     NAIF_IDS
+!!     PCK
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EVENT
+!!     FOV
+!!     GEOMETRY
+!!     INSTRUMENT
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine time intervals when a specified ray intersects the
-!     space bounded by the field-of-view (FOV) of a specified
-!     instrument.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     GF
-!     KERNEL
-!     NAIF_IDS
-!     PCK
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EVENT
-!     FOV
-!     GEOMETRY
-!     INSTRUMENT
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -28498,147 +28120,141 @@ contains
 !     Local variables
 
       module procedure gfrepi
-
-! $ Abstract
-!
-!     Initialize a search progress report.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      WINDOW ( LBCELL : * )
-!     CHARACTER*(*)         BEGMSS
-!     CHARACTER*(*)         ENDMSS
-!
-! $ Detailed_Input
-!
-!     WINDOW   is the name of a constraint window. This is the window
-!              associated with some root finding activity. It is
-!              used to determine how much total time is being searched
-!              in order to find the events of interest.
-!
-!     BEGMSS   is the beginning of the progress report message written
-!              to standard output by the GF subsystem. This output
-!              message has the form
-!
-!                 BEGMSS(1:LASTNB(BEGMSS)) // ' xxx.xx% ' // ENDMSS
-!
-!              The total length of BEGMSS must be less than MXBEGM
-!              characters. All characters of BEGMSS must be printable.
-!
-!              For example, the progress report message created by the
-!              SPICELIB routine GFOCCE at the completion of a search is
-!
-!                 Occultation/transit search 100.00% done.
-!
-!              In this message, BEGMSS is
-!
-!                 'Occultation/transit search'
-!
-!     ENDMSS   is the last portion of the output message written to
-!              standard output by the GF subsystem.
-!
-!              The total length of ENDMSS must be less than MXENDM
-!              characters. All characters of ENDMSS must be printable.
-!
-!              In the progress report message created by GFOCCE at the
-!              completion of a search, ENDMSS is
-!
-!                 'done.'
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     LBCELL   is the SPICE cell lower bound.
-!
-!     MXBEGM,
-!     MXENDM   are, respectively, the maximum lengths of the progress
-!              report message prefix and suffix. See the INCLUDE file
-!              zzgf.inc for details.
-!
-! $ Exceptions
-!
-!     1)  If BEGMSS has length greater than MXBEGM characters, or if
-!         ENDMSS has length greater than MXENDM characters, the error
-!         SPICE(MESSAGETOOLONG) is signaled.
-!
-!     2)  If either BEGMSS or ENDMSS contains non-printing characters,
-!         the error SPICE(NOTPRINTABLECHARS) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point initializes the GF progress reporting system. It
-!     is called by the GF root finding utilities once at the start of
-!     each search pass. See the $Particulars section of the main
-!     subroutine header for further details of its function.
-!
-! $ Examples
-!
-!     See $Examples in GFRPRT.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     L.S. Elson         (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.2, 27-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Extended description of BEGMSS and ENDMSS arguments.
-!
-!-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
-!
-!        Corrected declaration of WINDOW in the $Declarations
-!        section. Added description of LBCELL to the $Declarations,
-!        $Brief_I/O, and $Parameters sections.
-!
-!-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     GF initialize a progress report
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Initialize a search progress report.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      WINDOW ( LBCELL : * )
+!!     CHARACTER*(*)         BEGMSS
+!!     CHARACTER*(*)         ENDMSS
+!!
+!! ## Detailed Input
+!!
+!!     WINDOW   is the name of a constraint window. This is the window
+!!              associated with some root finding activity. It is
+!!              used to determine how much total time is being searched
+!!              in order to find the events of interest.
+!!
+!!     BEGMSS   is the beginning of the progress report message written
+!!              to standard output by the GF subsystem. This output
+!!              message has the form
+!!
+!!                 BEGMSS(1:LASTNB(BEGMSS)) // ' xxx.xx% ' // ENDMSS
+!!
+!!              The total length of BEGMSS must be less than MXBEGM
+!!              characters. All characters of BEGMSS must be printable.
+!!
+!!              For example, the progress report message created by the
+!!              SPICELIB routine GFOCCE at the completion of a search is
+!!
+!!                 Occultation/transit search 100.00% done.
+!!
+!!              In this message, BEGMSS is
+!!
+!!                 'Occultation/transit search'
+!!
+!!     ENDMSS   is the last portion of the output message written to
+!!              standard output by the GF subsystem.
+!!
+!!              The total length of ENDMSS must be less than MXENDM
+!!              characters. All characters of ENDMSS must be printable.
+!!
+!!              In the progress report message created by GFOCCE at the
+!!              completion of a search, ENDMSS is
+!!
+!!                 'done.'
+!!
+!! ## Detailed Output
+!!
+!!     None.
+!!
+!! ## Parameters
+!!
+!!     LBCELL   is the SPICE cell lower bound.
+!!
+!!     MXBEGM,
+!!     MXENDM   are, respectively, the maximum lengths of the progress
+!!              report message prefix and suffix. See the INCLUDE file
+!!              zzgf.inc for details.
+!!
+!! ## Exceptions
+!!
+!!     1)  If BEGMSS has length greater than MXBEGM characters, or if
+!!         ENDMSS has length greater than MXENDM characters, the error
+!!         SPICE(MESSAGETOOLONG) is signaled.
+!!
+!!     2)  If either BEGMSS or ENDMSS contains non-printing characters,
+!!         the error SPICE(NOTPRINTABLECHARS) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point initializes the GF progress reporting system. It
+!!     is called by the GF root finding utilities once at the start of
+!!     each search pass. See the $Particulars section of the main
+!!     subroutine header for further details of its function.
+!!
+!! ## Examples
+!!
+!!     See $Examples in GFRPRT.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     L.S. Elson         (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.2, 27-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Extended description of BEGMSS and ENDMSS arguments.
+!!
+!!-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
+!!
+!!        Corrected declaration of WINDOW in the $Declarations
+!!        section. Added description of LBCELL to the $Declarations,
+!!        $Brief_I/O, and $Parameters sections.
+!!
+!!-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     GF initialize a progress report
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lastnb
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: fprint = 32
       integer(ip), parameter :: lprint = 126
@@ -28763,144 +28379,139 @@ contains
       end procedure gfrepi
 
       module procedure gfrepu
-
-! $ Abstract
-!
-!     Tell the progress reporting system how far a search has
-!     progressed.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      IVBEG
-!     DOUBLE PRECISION      IVEND
-!     DOUBLE PRECISION      TIME
-!
-! $ Detailed_Input
-!
-!     IVBEG,
-!     IVEND    are the bounds of an interval that is contained in some
-!              interval belonging to the confinement window. The
-!              confinement window is associated with some root finding
-!              activity. It is used to determine how much total time is
-!              being searched in order to find the events of interest.
-!
-!              In order for a meaningful progress report to be
-!              displayed, IVBEG and IVEND must satisfy the following
-!              constraints:
-!
-!                 - IVBEG must be less than or equal to IVEND.
-!
-!                 - The interval [ IVBEG, IVEND ] must be contained in
-!                   some interval of the confinement window. It can be
-!                   a proper subset of the containing interval; that
-!                   is, it can be smaller than the interval of the
-!                   confinement window that contains it.
-!
-!                 - Over a search pass, the sum of the differences
-!
-!                      IVEND - IVBEG
-!
-!                   for all calls to this routine made during the pass
-!                   must equal the measure of the confinement window.
-!
-!     TIME     is the current time reached in the search for an event.
-!              TIME must lie in the interval
-!
-!                 IVBEG : IVEND
-!
-!              inclusive. The input values of TIME for a given interval
-!              need not form an increasing sequence.
-!
-! $ Detailed_Output
-!
-!     None. This routine does perform console I/O when progress
-!     reporting is enabled.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If IVBEG and IVEND are in decreasing order, the error
-!         SPICE(BADENDPOINTS) is signaled.
-!
-!     2)  If TIME is not in the closed interval [IVBEG, IVEND], the
-!         error SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     3)  If an I/O error results from writing to standard output, the
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point is used to indicate the current progress of a
-!     search. Using information recorded through the initialization
-!     entry point of this routine, the progress reporting system
-!     determines how much work has been completed and whether or not to
-!     report it on the users screen.
-!
-! $ Examples
-!
-!     See $Examples in GFRPRT.
-!
-! $ Restrictions
-!
-!     1)  This routine has no way of enforcing that the input values of
-!         IVBEG and IVEND are compatible with the input window passed to
-!         GFREPI. Callers of this routine are responsible for ensuring
-!         that this requirement is obeyed.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     L.S. Elson         (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.2, 27-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
-!
-!        Added declarations of IVBEG and IVEND to the $Declarations
-!        section.
-!
-!-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     GF update a progress report
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Tell the progress reporting system how far a search has
+!!     progressed.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      IVBEG
+!!     DOUBLE PRECISION      IVEND
+!!     DOUBLE PRECISION      TIME
+!!
+!! ## Detailed Input
+!!
+!!     IVBEG,
+!!     IVEND    are the bounds of an interval that is contained in some
+!!              interval belonging to the confinement window. The
+!!              confinement window is associated with some root finding
+!!              activity. It is used to determine how much total time is
+!!              being searched in order to find the events of interest.
+!!
+!!              In order for a meaningful progress report to be
+!!              displayed, IVBEG and IVEND must satisfy the following
+!!              constraints:
+!!
+!!                 - IVBEG must be less than or equal to IVEND.
+!!
+!!                 - The interval [ IVBEG, IVEND ] must be contained in
+!!                   some interval of the confinement window. It can be
+!!                   a proper subset of the containing interval; that
+!!                   is, it can be smaller than the interval of the
+!!                   confinement window that contains it.
+!!
+!!                 - Over a search pass, the sum of the differences
+!!
+!!                      IVEND - IVBEG
+!!
+!!                   for all calls to this routine made during the pass
+!!                   must equal the measure of the confinement window.
+!!
+!!     TIME     is the current time reached in the search for an event.
+!!              TIME must lie in the interval
+!!
+!!                 IVBEG : IVEND
+!!
+!!              inclusive. The input values of TIME for a given interval
+!!              need not form an increasing sequence.
+!!
+!! ## Detailed Output
+!!
+!!     None. This routine does perform console I/O when progress
+!!     reporting is enabled.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If IVBEG and IVEND are in decreasing order, the error
+!!         SPICE(BADENDPOINTS) is signaled.
+!!
+!!     2)  If TIME is not in the closed interval [IVBEG, IVEND], the
+!!         error SPICE(VALUEOUTOFRANGE) is signaled.
+!!
+!!     3)  If an I/O error results from writing to standard output, the
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point is used to indicate the current progress of a
+!!     search. Using information recorded through the initialization
+!!     entry point of this routine, the progress reporting system
+!!     determines how much work has been completed and whether or not to
+!!     report it on the users screen.
+!!
+!! ## Examples
+!!
+!!     See $Examples in GFRPRT.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine has no way of enforcing that the input values of
+!!         IVBEG and IVEND are compatible with the input window passed to
+!!         GFREPI. Callers of this routine are responsible for ensuring
+!!         that this requirement is obeyed.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     L.S. Elson         (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.2, 27-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
+!!
+!!        Added declarations of IVBEG and IVEND to the $Declarations
+!!        section.
+!!
+!!-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     GF update a progress report
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: fprint = 32
       integer(ip), parameter :: lprint = 126
@@ -28998,91 +28609,86 @@ contains
       end procedure gfrepu
 
       module procedure gfrepf
-
-! $ Abstract
-!
-!     Finish a progress report.
-!
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-!
-!     None.
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     None. This routine does perform console I/O when progress
-!     reporting is enabled.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If an I/O error results from writing to standard output, the
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This entry point "finishes" a progress report, i.e. updates the
-!     report to indicate the underlying task is 100% complete.
-!
-! $ Examples
-!
-!     See $Examples in GFRPRT.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     L.S. Elson         (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 07-APR-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     GF finish a progress report
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Finish a progress report.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!!     None.
+!!
+!! ## Detailed Input
+!!
+!!     None.
+!!
+!! ## Detailed Output
+!!
+!!     None. This routine does perform console I/O when progress
+!!     reporting is enabled.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If an I/O error results from writing to standard output, the
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This entry point "finishes" a progress report, i.e. updates the
+!!     report to indicate the underlying task is 100% complete.
+!!
+!! ## Examples
+!!
+!!     See $Examples in GFRPRT.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     L.S. Elson         (JPL)
+!!     W.L. Taber         (JPL)
+!!     I.M. Underwood     (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 07-APR-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
+!!
+!! ## Index Entries
+!!
+!!     GF finish a progress report
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: fprint = 32
       integer(ip), parameter :: lprint = 126
@@ -29157,867 +28763,838 @@ contains
       end procedure gfrepf
 
       module procedure gftfov
-
-! $ Abstract
-!
-!     Determine time intervals when a specified ephemeris object
-!     intersects the space bounded by the field-of-view (FOV) of a
-!     specified instrument.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     GF
-!     KERNEL
-!     NAIF_IDS
-!     PCK
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EVENT
-!     FOV
-!     GEOMETRY
-!     INSTRUMENT
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
-
-
-
-
-! $ Detailed_Input
-!
-!     INST     indicates the name of an instrument, such as a
-!              spacecraft-mounted framing camera, the field of view
-!              (FOV) of which is to be used for a target intersection
-!              search: times when the specified target intersects the
-!              region of space corresponding to the FOV are sought.
-!
-!              The position of the instrument designated by INST is
-!              considered to coincide with that of the ephemeris
-!              object designated by the input argument OBSRVR (see
-!              description below).
-!
-!              INST must have a corresponding NAIF ID and a frame
-!              defined, as is normally done in a frame kernel. It
-!              must also have an associated reference frame and a FOV
-!              shape, boresight and boundary vertices (or reference
-!              vector and reference angles) defined, as is usually
-!              done in an instrument kernel.
-!
-!              See the header of the SPICELIB routine GETFOV for a
-!              description of the required parameters associated with
-!              an instrument.
-!
-!     TARGET   is the name of the target body, the appearances of
-!              which in the specified instrument's field of view are
-!              sought. The body must be an ephemeris object.
-!
-!              Optionally, you may supply the integer NAIF ID code
-!              for the body as a string. For example both 'MOON' and
-!              '301' are legitimate strings that designate the Moon.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string TARGET.
-!
-!     TSHAPE   is a string indicating the geometric model used to
-!              represent the shape of the target body. The supported
-!              options are:
-!
-!                 'ELLIPSOID'     Use a triaxial ellipsoid model,
-!                                 with radius values provided via the
-!                                 kernel pool. A kernel variable
-!                                 having a name of the form
-!
-!                                    BODYnnn_RADII
-!
-!                                 where nnn represents the NAIF
-!                                 integer code associated with the
-!                                 body, must be present in the kernel
-!                                 pool. This variable must be
-!                                 associated with three numeric
-!                                 values giving the lengths of the
-!                                 ellipsoid's X, Y, and Z semi-axes.
-!
-!                 'POINT'         Treat the body as a single point.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string TSHAPE.
-!
-!     TFRAME   is the name of the body-fixed, body-centered reference
-!              frame associated with the target body. Examples of
-!              such names are 'IAU_SATURN' (for Saturn) and 'ITRF93'
-!              (for the Earth).
-!
-!              If the target body is modeled as a point, TFRAME
-!              is ignored and should be left blank.
-!
-!              Case and leading or trailing blanks bracketing a
-!              non-blank frame name are not significant in the string
-!              TFRAME.
-!
-!     ABCORR   indicates the aberration corrections to be applied
-!              when computing the target's position and orientation.
-!
-!              For remote sensing applications, where the apparent
-!              position and orientation of the target seen by the
-!              observer are desired, normally either of the
-!              corrections
-!
-!                 'LT+S'
-!                 'CN+S'
-!
-!              should be used. These and the other supported options
-!              are described below.
-!
-!              Supported aberration correction options for
-!              observation (the case where radiation is received by
-!              observer at ET) are:
-!
-!                 'NONE'         No correction.
-!
-!                 'LT'           Light time only
-!
-!                 'LT+S'         Light time and stellar aberration.
-!
-!                 'CN'           Converged Newtonian (CN) light time.
-!
-!                 'CN+S'         CN light time and stellar aberration.
-!
-!              Supported aberration correction options for
-!              transmission (the case where radiation is emitted from
-!              observer at ET) are:
-!
-!                 'XLT'          Light time only.
-!
-!                 'XLT+S'        Light time and stellar aberration.
-!
-!                 'XCN'          Converged Newtonian (CN) light time.
-!
-!                 'XCN+S'        CN light time and stellar aberration.
-!
-!              For detailed information, see the GF Required Reading,
-!              gf.req.
-!
-!              Case, leading and trailing blanks are not significant
-!              in the string ABCORR.
-!
-!     OBSRVR   is the name of the body from which the target is
-!              observed. The instrument designated by INST is treated
-!              as if it were co-located with the observer.
-!
-!              Optionally, you may supply the integer NAIF ID code
-!              for the body as a string.
-!
-!              Case and leading or trailing blanks are not
-!              significant in the string OBSRVR.
-!
-!     STEP     is the step size to be used in the search. STEP must
-!              be shorter than any interval, within the confinement
-!              window, over which the specified condition is met. In
-!              other words, STEP must be shorter than the shortest
-!              visibility event that the user wishes to detect. STEP
-!              also must be shorter than the minimum duration
-!              separating any two visibility events. However, STEP
-!              must not be *too* short, or the search will take an
-!              unreasonable amount of time.
-!
-!              The choice of STEP affects the completeness but not
-!              the precision of solutions found by this routine; the
-!              precision is controlled by the convergence tolerance.
-!              See the discussion of the parameter CNVTOL for
-!              details.
-!
-!              STEP has units of seconds.
-!
-!     CNFINE   is a SPICE window that confines the time period over
-!              which the specified search is conducted. CNFINE may
-!              consist of a single interval or a collection of
-!              intervals.
-!
-!              The endpoints of the time intervals comprising CNFINE
-!              are interpreted as seconds past J2000 TDB.
-!
-!              See the $Examples section below for a code example
-!              that shows how to create a confinement window.
-!
-!              CNFINE must be initialized by the caller via the
-!              SPICELIB routine SSIZED.
-!
-!     RESULT   is a double precision SPICE window which will contain
-!              the search results. RESULT must be declared and
-!              initialized with sufficient size to capture the full
-!              set of time intervals within the search region on which
-!              the specified condition is satisfied.
-!
-!              RESULT must be initialized by the caller via the
-!              SPICELIB routine SSIZED.
-!
-!              If RESULT is non-empty on input, its contents will be
-!              discarded before GFTFOV conducts its search.
-!
-! $ Detailed_Output
-!
-!     RESULT   is a SPICE window representing the set of time intervals,
-!              within the confinement period, when the target body is
-!              visible; that is, when the target body intersects the
-!              space bounded by the specified instrument's field of
-!              view.
-!
-!              The endpoints of the time intervals comprising RESULT are
-!              interpreted as seconds past J2000 TDB.
-!
-!              If no times within the confinement window satisfy the
-!              search criteria, RESULT will be returned with a
-!              cardinality of zero.
-!
-! $ Parameters
-!
-!     LBCELL   is the lower bound for SPICE cell arrays.
-!
-!     CNVTOL   is the convergence tolerance used for finding
-!              endpoints of the intervals comprising the result
-!              window. CNVTOL is used to determine when binary
-!              searches for roots should terminate: when a root is
-!              bracketed within an interval of length CNVTOL, the
-!              root is considered to have been found.
-!
-!              The accuracy, as opposed to precision, of roots found
-!              by this routine depends on the accuracy of the input
-!              data. In most cases, the accuracy of solutions will be
-!              inferior to their precision.
-!
-!     MAXVRT   is the maximum number of vertices that may be used
-!              to define the boundary of the specified instrument's
-!              field of view.
-!
-!     MARGIN   is a small positive number used to constrain the
-!              orientation of the boundary vectors of polygonal
-!              FOVs. Such FOVs must satisfy the following constraints:
-!
-!                 1)  The boundary vectors must be contained within
-!                     a right circular cone of angular radius less
-!                     than than (pi/2) - MARGIN radians; in other
-!                     words, there must be a vector A such that all
-!                     boundary vectors have angular separation from
-!                     A of less than (pi/2)-MARGIN radians.
-!
-!                 2)  There must be a pair of boundary vectors U, V
-!                     such that all other boundary vectors lie in
-!                     the same half space bounded by the plane
-!                     containing U and V. Furthermore, all other
-!                     boundary vectors must have orthogonal
-!                     projections onto a specific plane normal to
-!                     this plane (the normal plane contains the angle
-!                     bisector defined by U and V) such that the
-!                     projections have angular separation of at least
-!                     2*MARGIN radians from the plane spanned by U
-!                     and V.
-!
-!               MARGIN is currently set to 1.D-12.
-!
-!     See INCLUDE file gf.inc for declarations and descriptions of
-!     parameters used throughout the GF system.
-!
-! $ Exceptions
-!
-!     1)  In order for this routine to produce correct results,
-!         the step size must be appropriate for the problem at hand.
-!         Step sizes that are too large may cause this routine to miss
-!         roots; step sizes that are too small may cause this routine
-!         to run unacceptably slowly and in some cases, find spurious
-!         roots.
-!
-!         This routine does not diagnose invalid step sizes, except that
-!         if the step size is non-positive, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  Due to numerical errors, in particular,
-!
-!            - Truncation error in time values
-!            - Finite tolerance value
-!            - Errors in computed geometric quantities
-!
-!         it is *normal* for the condition of interest to not always be
-!         satisfied near the endpoints of the intervals comprising the
-!         result window.
-!
-!         The result window may need to be contracted slightly by the
-!         caller to achieve desired results. The SPICE window routine
-!         WNCOND can be used to contract the result window.
-!
-!     3)  If the name of either the target or observer cannot be
-!         translated to a NAIF ID code, an error is signaled by
-!         a routine in the call tree of this routine.
-!
-!     4)  If the specified aberration correction is an unrecognized
-!         value, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     5)  If the radii of a target body modeled as an ellipsoid cannot
-!         be determined by searching the kernel pool for a kernel
-!         variable having a name of the form
-!
-!            'BODYnnn_RADII'
-!
-!         where nnn represents the NAIF integer code associated with
-!         the body, an error is signaled by a routine in the
-!         call tree of this routine.
-!
-!     6)  If the target body coincides with the observer body OBSRVR, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     7)  If the body model specifier TSHAPE is invalid, an error is
-!         signaled by either this routine or a routine in the call tree
-!         of this routine.
-!
-!     8)  If a target body-fixed reference frame associated with a
-!         non-point target is not recognized, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     9)  If a target body-fixed reference frame is not centered at the
-!         corresponding target body, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     10) If the instrument name INST does not have corresponding NAIF
-!         ID code, an error is signaled by a routine in the call
-!         tree of this routine.
-!
-!     11) If the FOV parameters of the instrument are not present in
-!         the kernel pool, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     12) If the FOV boundary has more than MAXVRT vertices, an error
-!         is signaled by a routine in the call tree of this
-!         routine.
-!
-!     13) If the instrument FOV is polygonal, and this routine cannot
-!         find a ray R emanating from the FOV vertex such that maximum
-!         angular separation of R and any FOV boundary vector is within
-!         the limit (pi/2)-MARGIN radians, an error is signaled
-!         by a routine in the call tree of this routine. If the FOV
-!         is any other shape, the same error check will be applied with
-!         the instrument boresight vector serving the role of R.
-!
-!     14) If the loaded kernels provide insufficient data to compute a
-!         requested state vector, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     15) If an error occurs while reading an SPK or other kernel file,
-!         the error is signaled by a routine in the call tree
-!         of this routine.
-!
-!     16) If the output SPICE window RESULT has size less than 2, the
-!         error SPICE(WINDOWTOOSMALL) is signaled.
-!
-!     17) If the output SPICE window RESULT has insufficient capacity
-!         to contain the number of intervals on which the specified
-!         visibility condition is met, an error is signaled
-!         by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     Appropriate SPICE kernels must be loaded by the calling program
-!     before this routine is called.
-!
-!     The following data are required:
-!
-!     -  SPK data: ephemeris data for target and observer that
-!        describes the ephemeris of these objects for the period
-!        defined by the confinement window, CNFINE must be
-!        loaded. If aberration corrections are used, the states of
-!        target and observer relative to the solar system barycenter
-!        must be calculable from the available ephemeris data.
-!        Typically ephemeris data are made available by loading one
-!        or more SPK files via FURNSH.
-!
-!     -  Frame data: if a frame definition is required to convert
-!        the observer and target states to the body-fixed frame of
-!        the target, that definition must be available in the kernel
-!        pool. Typically the definitions of frames not already
-!        built-in to SPICE are supplied by loading a frame kernel.
-!
-!        Data defining the reference frame associated with the
-!        instrument designated by INST must be available in the
-!        kernel pool. Additionally the name INST must be associated
-!        with an ID code. Normally these data are  made available by
-!        loading a frame kernel via FURNSH.
-!
-!     -  IK data: the kernel pool must contain data such that
-!        the SPICELIB routine GETFOV may be called to obtain
-!        parameters for INST. Normally such data are provided by
-!        an IK via FURNSH.
-!
-!     The following data may be required:
-!
-!     -  PCK data: bodies modeled as triaxial ellipsoids must have
-!        orientation data provided by variables in the kernel pool.
-!        Typically these data are made available by loading a text
-!        PCK file via FURNSH.
-!
-!        Bodies modeled as triaxial ellipsoids must have semi-axis
-!        lengths provided by variables in the kernel pool. Typically
-!        these data are made available by loading a text PCK file via
-!        FURNSH.
-!
-!     -  CK data: if the instrument frame is fixed to a spacecraft,
-!        at least one CK file will be needed to permit transformation
-!        of vectors between that frame and both J2000 and the target
-!        body-fixed frame.
-!
-!     -  SCLK data: if a CK file is needed, an associated SCLK
-!        kernel is required to enable conversion between encoded SCLK
-!        (used to time-tag CK data) and barycentric dynamical time
-!        (TDB).
-!
-!     Kernel data are normally loaded once per program run, NOT every
-!     time this routine is called.
-!
-! $ Particulars
-!
-!     This routine determines a set of one or more time intervals
-!     within the confinement window when any portion of a specified
-!     target body appears within the field of view of a specified
-!     instrument. We'll use the term "visibility event" to designate
-!     such an appearance. The set of time intervals resulting from the
-!     search is returned as a SPICE window.
-!
-!     This routine provides a simpler, but less flexible, interface
-!     than does the SPICELIB routine GFFOVE for conducting searches for
-!     visibility events. Applications that require support for progress
-!     reporting, interrupt handling, non-default step or refinement
-!     functions, or non-default convergence tolerance should call
-!     GFFOVE rather than this routine.
-!
-!     To treat the target as a ray rather than as an ephemeris object,
-!     use either the higher-level SPICELIB routine GFRFOV or GFFOVE.
-!     Those routines may be used to search for times when distant
-!     target objects such as stars are visible in an instrument FOV, as
-!     long the direction from the observer to the target can be modeled
-!     as a ray.
-!
-!     Below we discuss in greater detail aspects of this routine's
-!     solution process that are relevant to correct and efficient use
-!     of this routine in user applications.
-!
-!     The Search Process
-!     ==================
-!
-!     The search for visibility events is treated as a search for state
-!     transitions: times are sought when the state of the target body
-!     changes from "not visible" to "visible" or vice versa.
-!
-!     Step Size
-!     =========
-!
-!     Each interval of the confinement window is searched as follows:
-!     first, the input step size is used to determine the time
-!     separation at which the visibility state will be sampled.
-!     Starting at the left endpoint of an interval, samples will be
-!     taken at each step. If a state change is detected, a root has
-!     been bracketed; at that point, the "root"--the time at which the
-!     state change occurs---is found by a refinement process, for
-!     example, via binary search.
-!
-!     Note that the optimal choice of step size depends on the lengths
-!     of the intervals over which the visibility state is constant:
-!     the step size should be shorter than the shortest visibility event
-!     duration and the shortest period between visibility events, within
-!     the confinement window.
-!
-!     Having some knowledge of the relative geometry of the target and
-!     observer can be a valuable aid in picking a reasonable step size.
-!     In general, the user can compensate for lack of such knowledge by
-!     picking a very short step size; the cost is increased computation
-!     time.
-!
-!     Note that the step size is not related to the precision with which
-!     the endpoints of the intervals of the result window are computed.
-!     That precision level is controlled by the convergence tolerance.
-!
-!     Convergence Tolerance
-!     =====================
-!
-!     Once a root has been bracketed, a refinement process is used to
-!     narrow down the time interval within which the root must lie.
-!     This refinement process terminates when the location of the root
-!     has been determined to within an error margin called the
-!     "convergence tolerance." The default convergence tolerance
-!     used by this routine is set by the parameter CNVTOL (defined
-!     in gf.inc).
-!
-!     The value of CNVTOL is set to a "tight" value so that the
-!     tolerance doesn't become the limiting factor in the accuracy of
-!     solutions found by this routine. In general the accuracy of input
-!     data will be the limiting factor.
-!
-!     The user may change the convergence tolerance from the default
-!     CNVTOL value by calling the routine GFSTOL, e.g.
-!
-!        CALL GFSTOL( tolerance value )
-!
-!     Call GFSTOL prior to calling this routine. All subsequent
-!     searches will use the updated tolerance value.
-!
-!     Setting the tolerance tighter than CNVTOL is unlikely to be
-!     useful, since the results are unlikely to be more accurate.
-!     Making the tolerance looser will speed up searches somewhat,
-!     since a few convergence steps will be omitted. However, in most
-!     cases, the step size is likely to have a much greater effect
-!     on processing time than would the convergence tolerance.
-!
-!     The Confinement Window
-!     ======================
-!
-!     The simplest use of the confinement window is to specify a time
-!     interval within which a solution is sought. However, the
-!     confinement window can, in some cases, be used to make searches
-!     more efficient. Sometimes it's possible to do an efficient search
-!     to reduce the size of the time period over which a relatively
-!     slow search of interest must be performed. For an example, see
-!     the program CASCADE in the GF Example Programs chapter of the GF
-!     Required Reading, gf.req.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Search for times when Saturn's satellite Phoebe is within
-!        the FOV of the Cassini narrow angle camera (CASSINI_ISS_NAC).
-!        To simplify the problem, restrict the search to a short time
-!        period where continuous Cassini bus attitude data are
-!        available.
-!
-!        Use a step size of 10 seconds to reduce chances of missing
-!        short visibility events.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File name: gftfov_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                       Contents
-!              -----------------------------   ----------------------
-!              naif0012.tls                    Leapseconds
-!              pck00010.tpc                    Satellite orientation
-!                                              and radii
-!              041014R_SCPSE_01066_04199.bsp   CASSINI, planetary and
-!                                              Saturn satellite
-!                                              ephemeris
-!              cas_v40.tf                      Cassini FK
-!              04161_04164ra.bc                Cassini bus CK
-!              cas00071.tsc                    Cassini SCLK kernel
-!              cas_iss_v10.ti                  Cassini IK
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'naif0012.tls',
-!                                  'pck00010.tpc',
-!                                  '041014R_SCPSE_01066_04199.bsp',
-!                                  'cas_v40.tf',
-!                                  '04161_04164ra.bc',
-!                                  'cas00071.tsc',
-!                                  'cas_iss_v10.ti'            )
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM GFTFOV_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               WNCARD
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         META
-!              PARAMETER           ( META   = 'gftfov_ex1.tm' )
-!
-!              CHARACTER*(*)         TIMFMT
-!              PARAMETER           ( TIMFMT =
-!             .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
-!
-!              INTEGER               LBCELL
-!              PARAMETER           ( LBCELL = -5 )
-!
-!              INTEGER               MAXWIN
-!              PARAMETER           ( MAXWIN = 10000 )
-!
-!              INTEGER               CORLEN
-!              PARAMETER           ( CORLEN = 10 )
-!
-!              INTEGER               BDNMLN
-!              PARAMETER           ( BDNMLN = 36 )
-!
-!              INTEGER               FRNMLN
-!              PARAMETER           ( FRNMLN = 32 )
-!
-!              INTEGER               SHPLEN
-!              PARAMETER           ( SHPLEN = 25 )
-!
-!              INTEGER               TIMLEN
-!              PARAMETER           ( TIMLEN = 35 )
-!
-!              INTEGER               LNSIZE
-!              PARAMETER           ( LNSIZE = 80 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(CORLEN)    ABCORR
-!              CHARACTER*(BDNMLN)    INST
-!              CHARACTER*(LNSIZE)    LINE
-!              CHARACTER*(BDNMLN)    OBSRVR
-!              CHARACTER*(BDNMLN)    TARGET
-!              CHARACTER*(FRNMLN)    TFRAME
-!              CHARACTER*(TIMLEN)    TIMSTR ( 2 )
-!              CHARACTER*(SHPLEN)    TSHAPE
-!
-!              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-!              DOUBLE PRECISION      ENDPT  ( 2 )
-!              DOUBLE PRECISION      ET0
-!              DOUBLE PRECISION      ET1
-!              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-!              DOUBLE PRECISION      STEPSZ
-!
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               N
-!
-!        C
-!        C     Saved variables
-!        C
-!        C     The confinement and result windows CNFINE and RESULT are
-!        C     saved because this practice helps to prevent stack
-!        C     overflow.
-!        C
-!              SAVE                  CNFINE
-!              SAVE                  RESULT
-!
-!        C
-!        C     Load kernels.
-!        C
-!              CALL FURNSH ( META )
-!
-!        C
-!        C     Initialize windows.
-!        C
-!              CALL SSIZED ( 2,      CNFINE )
-!              CALL SSIZED ( MAXWIN, RESULT )
-!
-!        C
-!        C     Insert search time interval bounds into the
-!        C     confinement window.
-!        C
-!              CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
-!              CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
-!
-!              CALL WNINSD ( ET0, ET1, CNFINE )
-!
-!        C
-!        C     Initialize inputs for the search.
-!        C
-!              INST   = 'CASSINI_ISS_NAC'
-!              TARGET = 'PHOEBE'
-!              TSHAPE = 'ELLIPSOID'
-!              TFRAME = 'IAU_PHOEBE'
-!              ABCORR = 'LT+S'
-!              OBSRVR = 'CASSINI'
-!              STEPSZ = 10.D0
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Instrument: '//INST
-!              WRITE (*,*) 'Target:     '//TARGET
-!              WRITE (*,*) ' '
-!
-!        C
-!        C     Perform the search.
-!        C
-!              CALL GFTFOV ( INST,   TARGET, TSHAPE, TFRAME,
-!             .              ABCORR, OBSRVR, STEPSZ, CNFINE, RESULT )
-!
-!              N = WNCARD( RESULT )
-!
-!              IF ( N .EQ. 0 ) THEN
-!
-!                 WRITE (*,*) 'No FOV intersection found.'
-!
-!              ELSE
-!
-!                 WRITE (*, '(A)' ) '  Visibility start time (TDB)'
-!             .    //               '           Stop time (TDB)'
-!                 WRITE (*, '(A)' ) '  ---------------------------'
-!             .    //               '     ---------------------------'
-!
-!                 DO I = 1, N
-!
-!                    CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
-!
-!                    DO J = 1, 2
-!                       CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
-!                    END DO
-!
-!                    LINE( :3) = ' '
-!                    LINE(2: ) = TIMSTR(1)
-!                    LINE(34:) = TIMSTR(2)
-!
-!                    WRITE (*,*) LINE
-!
-!                 END DO
-!
-!              END IF
-!
-!              WRITE (*,*) ' '
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Instrument: CASSINI_ISS_NAC
-!         Target:     PHOEBE
-!
-!          Visibility start time (TDB)           Stop time (TDB)
-!          ---------------------------     ---------------------------
-!          2004-JUN-11 07:35:27.066980     2004-JUN-11 08:48:03.954696
-!          2004-JUN-11 09:02:56.580045     2004-JUN-11 09:35:04.038509
-!          2004-JUN-11 09:49:56.476397     2004-JUN-11 10:22:04.242879
-!          2004-JUN-11 10:36:56.283772     2004-JUN-11 11:09:04.397165
-!          2004-JUN-11 11:23:56.020645     2004-JUN-11 11:56:04.733535
-!
-! $ Restrictions
-!
-!     1)  The reference frame associated with INST must be
-!         centered at the observer or must be inertial. No check is done
-!         to ensure this.
-!
-!     2)  The kernel files to be used by GFTFOV must be loaded (normally
-!         via the SPICELIB routine FURNSH) before GFTFOV is called.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     L.S. Elson         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 06-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Modified code example's output to comply with maximum line
-!        length of header comments. Updated Example's kernels set to use
-!        PDS archived data. Added SAVE statements for CNFINE and RESULT
-!        variables in code example.
-!
-!        Updated description of RESULT argument in $Brief_I/O,
-!        $Detailed_Input and $Detailed_Output.
-!
-!-    SPICELIB Version 1.1.0, 28-FEB-2012 (EDW)
-!
-!        Implemented use of ZZHOLDD to allow user to alter convergence
-!        tolerance.
-!
-!        Removed the STEP > 0 error check. The GFSSTP call includes
-!        the check.
-!
-!-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB) (LSE) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     GF target in instrument FOV search
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     External routines
-!
-!     Interrupt handler:
-!
-
-!
-!     Routines to set step size, refine transition times
-!     and report work:
-!
-
-!
-!     Local parameters
-!
-!     Geometric quantity  bail switch:
-!
-
-!
-!     Progress report switch:
-!
-
-!
-!     Local variables
-!
-
-!
-!     Ray direction vector required by GFFOVE. This is
-!     an unused variable as far is this routine is concerned:
-!     the target is an ephemeris object. We initialize the
-!     ray to prevent portability problems.
-!
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Determine time intervals when a specified ephemeris object
+!!     intersects the space bounded by the field-of-view (FOV) of a
+!!     specified instrument.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     GF
+!!     KERNEL
+!!     NAIF_IDS
+!!     PCK
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EVENT
+!!     FOV
+!!     GEOMETRY
+!!     INSTRUMENT
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INST     indicates the name of an instrument, such as a
+!!              spacecraft-mounted framing camera, the field of view
+!!              (FOV) of which is to be used for a target intersection
+!!              search: times when the specified target intersects the
+!!              region of space corresponding to the FOV are sought.
+!!
+!!              The position of the instrument designated by INST is
+!!              considered to coincide with that of the ephemeris
+!!              object designated by the input argument OBSRVR (see
+!!              description below).
+!!
+!!              INST must have a corresponding NAIF ID and a frame
+!!              defined, as is normally done in a frame kernel. It
+!!              must also have an associated reference frame and a FOV
+!!              shape, boresight and boundary vertices (or reference
+!!              vector and reference angles) defined, as is usually
+!!              done in an instrument kernel.
+!!
+!!              See the header of the SPICELIB routine GETFOV for a
+!!              description of the required parameters associated with
+!!              an instrument.
+!!
+!!     TARGET   is the name of the target body, the appearances of
+!!              which in the specified instrument's field of view are
+!!              sought. The body must be an ephemeris object.
+!!
+!!              Optionally, you may supply the integer NAIF ID code
+!!              for the body as a string. For example both 'MOON' and
+!!              '301' are legitimate strings that designate the Moon.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string TARGET.
+!!
+!!     TSHAPE   is a string indicating the geometric model used to
+!!              represent the shape of the target body. The supported
+!!              options are:
+!!
+!!                 'ELLIPSOID'     Use a triaxial ellipsoid model,
+!!                                 with radius values provided via the
+!!                                 kernel pool. A kernel variable
+!!                                 having a name of the form
+!!
+!!                                    BODYnnn_RADII
+!!
+!!                                 where nnn represents the NAIF
+!!                                 integer code associated with the
+!!                                 body, must be present in the kernel
+!!                                 pool. This variable must be
+!!                                 associated with three numeric
+!!                                 values giving the lengths of the
+!!                                 ellipsoid's X, Y, and Z semi-axes.
+!!
+!!                 'POINT'         Treat the body as a single point.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string TSHAPE.
+!!
+!!     TFRAME   is the name of the body-fixed, body-centered reference
+!!              frame associated with the target body. Examples of
+!!              such names are 'IAU_SATURN' (for Saturn) and 'ITRF93'
+!!              (for the Earth).
+!!
+!!              If the target body is modeled as a point, TFRAME
+!!              is ignored and should be left blank.
+!!
+!!              Case and leading or trailing blanks bracketing a
+!!              non-blank frame name are not significant in the string
+!!              TFRAME.
+!!
+!!     ABCORR   indicates the aberration corrections to be applied
+!!              when computing the target's position and orientation.
+!!
+!!              For remote sensing applications, where the apparent
+!!              position and orientation of the target seen by the
+!!              observer are desired, normally either of the
+!!              corrections
+!!
+!!                 'LT+S'
+!!                 'CN+S'
+!!
+!!              should be used. These and the other supported options
+!!              are described below.
+!!
+!!              Supported aberration correction options for
+!!              observation (the case where radiation is received by
+!!              observer at ET) are:
+!!
+!!                 'NONE'         No correction.
+!!
+!!                 'LT'           Light time only
+!!
+!!                 'LT+S'         Light time and stellar aberration.
+!!
+!!                 'CN'           Converged Newtonian (CN) light time.
+!!
+!!                 'CN+S'         CN light time and stellar aberration.
+!!
+!!              Supported aberration correction options for
+!!              transmission (the case where radiation is emitted from
+!!              observer at ET) are:
+!!
+!!                 'XLT'          Light time only.
+!!
+!!                 'XLT+S'        Light time and stellar aberration.
+!!
+!!                 'XCN'          Converged Newtonian (CN) light time.
+!!
+!!                 'XCN+S'        CN light time and stellar aberration.
+!!
+!!              For detailed information, see the GF Required Reading,
+!!              gf.req.
+!!
+!!              Case, leading and trailing blanks are not significant
+!!              in the string ABCORR.
+!!
+!!     OBSRVR   is the name of the body from which the target is
+!!              observed. The instrument designated by INST is treated
+!!              as if it were co-located with the observer.
+!!
+!!              Optionally, you may supply the integer NAIF ID code
+!!              for the body as a string.
+!!
+!!              Case and leading or trailing blanks are not
+!!              significant in the string OBSRVR.
+!!
+!!     STEP     is the step size to be used in the search. STEP must
+!!              be shorter than any interval, within the confinement
+!!              window, over which the specified condition is met. In
+!!              other words, STEP must be shorter than the shortest
+!!              visibility event that the user wishes to detect. STEP
+!!              also must be shorter than the minimum duration
+!!              separating any two visibility events. However, STEP
+!!              must not be *too* short, or the search will take an
+!!              unreasonable amount of time.
+!!
+!!              The choice of STEP affects the completeness but not
+!!              the precision of solutions found by this routine; the
+!!              precision is controlled by the convergence tolerance.
+!!              See the discussion of the parameter CNVTOL for
+!!              details.
+!!
+!!              STEP has units of seconds.
+!!
+!!     CNFINE   is a SPICE window that confines the time period over
+!!              which the specified search is conducted. CNFINE may
+!!              consist of a single interval or a collection of
+!!              intervals.
+!!
+!!              The endpoints of the time intervals comprising CNFINE
+!!              are interpreted as seconds past J2000 TDB.
+!!
+!!              See the $Examples section below for a code example
+!!              that shows how to create a confinement window.
+!!
+!!              CNFINE must be initialized by the caller via the
+!!              SPICELIB routine SSIZED.
+!!
+!!     RESULT   is a double precision SPICE window which will contain
+!!              the search results. RESULT must be declared and
+!!              initialized with sufficient size to capture the full
+!!              set of time intervals within the search region on which
+!!              the specified condition is satisfied.
+!!
+!!              RESULT must be initialized by the caller via the
+!!              SPICELIB routine SSIZED.
+!!
+!!              If RESULT is non-empty on input, its contents will be
+!!              discarded before GFTFOV conducts its search.
+!!
+!! ## Detailed Output
+!!
+!!     RESULT   is a SPICE window representing the set of time intervals,
+!!              within the confinement period, when the target body is
+!!              visible; that is, when the target body intersects the
+!!              space bounded by the specified instrument's field of
+!!              view.
+!!
+!!              The endpoints of the time intervals comprising RESULT are
+!!              interpreted as seconds past J2000 TDB.
+!!
+!!              If no times within the confinement window satisfy the
+!!              search criteria, RESULT will be returned with a
+!!              cardinality of zero.
+!!
+!! ## Parameters
+!!
+!!     LBCELL   is the lower bound for SPICE cell arrays.
+!!
+!!     CNVTOL   is the convergence tolerance used for finding
+!!              endpoints of the intervals comprising the result
+!!              window. CNVTOL is used to determine when binary
+!!              searches for roots should terminate: when a root is
+!!              bracketed within an interval of length CNVTOL, the
+!!              root is considered to have been found.
+!!
+!!              The accuracy, as opposed to precision, of roots found
+!!              by this routine depends on the accuracy of the input
+!!              data. In most cases, the accuracy of solutions will be
+!!              inferior to their precision.
+!!
+!!     MAXVRT   is the maximum number of vertices that may be used
+!!              to define the boundary of the specified instrument's
+!!              field of view.
+!!
+!!     MARGIN   is a small positive number used to constrain the
+!!              orientation of the boundary vectors of polygonal
+!!              FOVs. Such FOVs must satisfy the following constraints:
+!!
+!!                 1)  The boundary vectors must be contained within
+!!                     a right circular cone of angular radius less
+!!                     than than (pi/2) - MARGIN radians; in other
+!!                     words, there must be a vector A such that all
+!!                     boundary vectors have angular separation from
+!!                     A of less than (pi/2)-MARGIN radians.
+!!
+!!                 2)  There must be a pair of boundary vectors U, V
+!!                     such that all other boundary vectors lie in
+!!                     the same half space bounded by the plane
+!!                     containing U and V. Furthermore, all other
+!!                     boundary vectors must have orthogonal
+!!                     projections onto a specific plane normal to
+!!                     this plane (the normal plane contains the angle
+!!                     bisector defined by U and V) such that the
+!!                     projections have angular separation of at least
+!!                     2*MARGIN radians from the plane spanned by U
+!!                     and V.
+!!
+!!               MARGIN is currently set to 1.D-12.
+!!
+!!     See INCLUDE file gf.inc for declarations and descriptions of
+!!     parameters used throughout the GF system.
+!!
+!! ## Exceptions
+!!
+!!     1)  In order for this routine to produce correct results,
+!!         the step size must be appropriate for the problem at hand.
+!!         Step sizes that are too large may cause this routine to miss
+!!         roots; step sizes that are too small may cause this routine
+!!         to run unacceptably slowly and in some cases, find spurious
+!!         roots.
+!!
+!!         This routine does not diagnose invalid step sizes, except that
+!!         if the step size is non-positive, an error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     2)  Due to numerical errors, in particular,
+!!
+!!            - Truncation error in time values
+!!            - Finite tolerance value
+!!            - Errors in computed geometric quantities
+!!
+!!         it is *normal* for the condition of interest to not always be
+!!         satisfied near the endpoints of the intervals comprising the
+!!         result window.
+!!
+!!         The result window may need to be contracted slightly by the
+!!         caller to achieve desired results. The SPICE window routine
+!!         WNCOND can be used to contract the result window.
+!!
+!!     3)  If the name of either the target or observer cannot be
+!!         translated to a NAIF ID code, an error is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!!     4)  If the specified aberration correction is an unrecognized
+!!         value, an error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!!     5)  If the radii of a target body modeled as an ellipsoid cannot
+!!         be determined by searching the kernel pool for a kernel
+!!         variable having a name of the form
+!!
+!!            'BODYnnn_RADII'
+!!
+!!         where nnn represents the NAIF integer code associated with
+!!         the body, an error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!!     6)  If the target body coincides with the observer body OBSRVR, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     7)  If the body model specifier TSHAPE is invalid, an error is
+!!         signaled by either this routine or a routine in the call tree
+!!         of this routine.
+!!
+!!     8)  If a target body-fixed reference frame associated with a
+!!         non-point target is not recognized, an error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     9)  If a target body-fixed reference frame is not centered at the
+!!         corresponding target body, an error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!!     10) If the instrument name INST does not have corresponding NAIF
+!!         ID code, an error is signaled by a routine in the call
+!!         tree of this routine.
+!!
+!!     11) If the FOV parameters of the instrument are not present in
+!!         the kernel pool, an error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!!     12) If the FOV boundary has more than MAXVRT vertices, an error
+!!         is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     13) If the instrument FOV is polygonal, and this routine cannot
+!!         find a ray R emanating from the FOV vertex such that maximum
+!!         angular separation of R and any FOV boundary vector is within
+!!         the limit (pi/2)-MARGIN radians, an error is signaled
+!!         by a routine in the call tree of this routine. If the FOV
+!!         is any other shape, the same error check will be applied with
+!!         the instrument boresight vector serving the role of R.
+!!
+!!     14) If the loaded kernels provide insufficient data to compute a
+!!         requested state vector, an error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     15) If an error occurs while reading an SPK or other kernel file,
+!!         the error is signaled by a routine in the call tree
+!!         of this routine.
+!!
+!!     16) If the output SPICE window RESULT has size less than 2, the
+!!         error SPICE(WINDOWTOOSMALL) is signaled.
+!!
+!!     17) If the output SPICE window RESULT has insufficient capacity
+!!         to contain the number of intervals on which the specified
+!!         visibility condition is met, an error is signaled
+!!         by a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     Appropriate SPICE kernels must be loaded by the calling program
+!!     before this routine is called.
+!!
+!!     The following data are required:
+!!
+!!     -  SPK data: ephemeris data for target and observer that
+!!        describes the ephemeris of these objects for the period
+!!        defined by the confinement window, CNFINE must be
+!!        loaded. If aberration corrections are used, the states of
+!!        target and observer relative to the solar system barycenter
+!!        must be calculable from the available ephemeris data.
+!!        Typically ephemeris data are made available by loading one
+!!        or more SPK files via FURNSH.
+!!
+!!     -  Frame data: if a frame definition is required to convert
+!!        the observer and target states to the body-fixed frame of
+!!        the target, that definition must be available in the kernel
+!!        pool. Typically the definitions of frames not already
+!!        built-in to SPICE are supplied by loading a frame kernel.
+!!
+!!        Data defining the reference frame associated with the
+!!        instrument designated by INST must be available in the
+!!        kernel pool. Additionally the name INST must be associated
+!!        with an ID code. Normally these data are  made available by
+!!        loading a frame kernel via FURNSH.
+!!
+!!     -  IK data: the kernel pool must contain data such that
+!!        the SPICELIB routine GETFOV may be called to obtain
+!!        parameters for INST. Normally such data are provided by
+!!        an IK via FURNSH.
+!!
+!!     The following data may be required:
+!!
+!!     -  PCK data: bodies modeled as triaxial ellipsoids must have
+!!        orientation data provided by variables in the kernel pool.
+!!        Typically these data are made available by loading a text
+!!        PCK file via FURNSH.
+!!
+!!        Bodies modeled as triaxial ellipsoids must have semi-axis
+!!        lengths provided by variables in the kernel pool. Typically
+!!        these data are made available by loading a text PCK file via
+!!        FURNSH.
+!!
+!!     -  CK data: if the instrument frame is fixed to a spacecraft,
+!!        at least one CK file will be needed to permit transformation
+!!        of vectors between that frame and both J2000 and the target
+!!        body-fixed frame.
+!!
+!!     -  SCLK data: if a CK file is needed, an associated SCLK
+!!        kernel is required to enable conversion between encoded SCLK
+!!        (used to time-tag CK data) and barycentric dynamical time
+!!        (TDB).
+!!
+!!     Kernel data are normally loaded once per program run, NOT every
+!!     time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     This routine determines a set of one or more time intervals
+!!     within the confinement window when any portion of a specified
+!!     target body appears within the field of view of a specified
+!!     instrument. We'll use the term "visibility event" to designate
+!!     such an appearance. The set of time intervals resulting from the
+!!     search is returned as a SPICE window.
+!!
+!!     This routine provides a simpler, but less flexible, interface
+!!     than does the SPICELIB routine GFFOVE for conducting searches for
+!!     visibility events. Applications that require support for progress
+!!     reporting, interrupt handling, non-default step or refinement
+!!     functions, or non-default convergence tolerance should call
+!!     GFFOVE rather than this routine.
+!!
+!!     To treat the target as a ray rather than as an ephemeris object,
+!!     use either the higher-level SPICELIB routine GFRFOV or GFFOVE.
+!!     Those routines may be used to search for times when distant
+!!     target objects such as stars are visible in an instrument FOV, as
+!!     long the direction from the observer to the target can be modeled
+!!     as a ray.
+!!
+!!     Below we discuss in greater detail aspects of this routine's
+!!     solution process that are relevant to correct and efficient use
+!!     of this routine in user applications.
+!!
+!!     The Search Process
+!!     ==================
+!!
+!!     The search for visibility events is treated as a search for state
+!!     transitions: times are sought when the state of the target body
+!!     changes from "not visible" to "visible" or vice versa.
+!!
+!!     Step Size
+!!     =========
+!!
+!!     Each interval of the confinement window is searched as follows:
+!!     first, the input step size is used to determine the time
+!!     separation at which the visibility state will be sampled.
+!!     Starting at the left endpoint of an interval, samples will be
+!!     taken at each step. If a state change is detected, a root has
+!!     been bracketed; at that point, the "root"--the time at which the
+!!     state change occurs---is found by a refinement process, for
+!!     example, via binary search.
+!!
+!!     Note that the optimal choice of step size depends on the lengths
+!!     of the intervals over which the visibility state is constant:
+!!     the step size should be shorter than the shortest visibility event
+!!     duration and the shortest period between visibility events, within
+!!     the confinement window.
+!!
+!!     Having some knowledge of the relative geometry of the target and
+!!     observer can be a valuable aid in picking a reasonable step size.
+!!     In general, the user can compensate for lack of such knowledge by
+!!     picking a very short step size; the cost is increased computation
+!!     time.
+!!
+!!     Note that the step size is not related to the precision with which
+!!     the endpoints of the intervals of the result window are computed.
+!!     That precision level is controlled by the convergence tolerance.
+!!
+!!     Convergence Tolerance
+!!     =====================
+!!
+!!     Once a root has been bracketed, a refinement process is used to
+!!     narrow down the time interval within which the root must lie.
+!!     This refinement process terminates when the location of the root
+!!     has been determined to within an error margin called the
+!!     "convergence tolerance." The default convergence tolerance
+!!     used by this routine is set by the parameter CNVTOL (defined
+!!     in gf.inc).
+!!
+!!     The value of CNVTOL is set to a "tight" value so that the
+!!     tolerance doesn't become the limiting factor in the accuracy of
+!!     solutions found by this routine. In general the accuracy of input
+!!     data will be the limiting factor.
+!!
+!!     The user may change the convergence tolerance from the default
+!!     CNVTOL value by calling the routine GFSTOL, e.g.
+!!
+!!        CALL GFSTOL( tolerance value )
+!!
+!!     Call GFSTOL prior to calling this routine. All subsequent
+!!     searches will use the updated tolerance value.
+!!
+!!     Setting the tolerance tighter than CNVTOL is unlikely to be
+!!     useful, since the results are unlikely to be more accurate.
+!!     Making the tolerance looser will speed up searches somewhat,
+!!     since a few convergence steps will be omitted. However, in most
+!!     cases, the step size is likely to have a much greater effect
+!!     on processing time than would the convergence tolerance.
+!!
+!!     The Confinement Window
+!!     ======================
+!!
+!!     The simplest use of the confinement window is to specify a time
+!!     interval within which a solution is sought. However, the
+!!     confinement window can, in some cases, be used to make searches
+!!     more efficient. Sometimes it's possible to do an efficient search
+!!     to reduce the size of the time period over which a relatively
+!!     slow search of interest must be performed. For an example, see
+!!     the program CASCADE in the GF Example Programs chapter of the GF
+!!     Required Reading, gf.req.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Search for times when Saturn's satellite Phoebe is within
+!!        the FOV of the Cassini narrow angle camera (CASSINI_ISS_NAC).
+!!        To simplify the problem, restrict the search to a short time
+!!        period where continuous Cassini bus attitude data are
+!!        available.
+!!
+!!        Use a step size of 10 seconds to reduce chances of missing
+!!        short visibility events.
+!!
+!!        Use the meta-kernel shown below to load the required SPICE
+!!        kernels.
+!!
+!!           KPL/MK
+!!
+!!           File name: gftfov_ex1.tm
+!!
+!!           This meta-kernel is intended to support operation of SPICE
+!!           example programs. The kernels shown here should not be
+!!           assumed to contain adequate or correct versions of data
+!!           required by SPICE-based user applications.
+!!
+!!           In order for an application to use this meta-kernel, the
+!!           kernels referenced here must be present in the user's
+!!           current working directory.
+!!
+!!           The names and contents of the kernels referenced
+!!           by this meta-kernel are as follows:
+!!
+!!              File name                       Contents
+!!              -----------------------------   ----------------------
+!!              naif0012.tls                    Leapseconds
+!!              pck00010.tpc                    Satellite orientation
+!!                                              and radii
+!!              041014R_SCPSE_01066_04199.bsp   CASSINI, planetary and
+!!                                              Saturn satellite
+!!                                              ephemeris
+!!              cas_v40.tf                      Cassini FK
+!!              04161_04164ra.bc                Cassini bus CK
+!!              cas00071.tsc                    Cassini SCLK kernel
+!!              cas_iss_v10.ti                  Cassini IK
+!!
+!!           \begindata
+!!
+!!              KERNELS_TO_LOAD = ( 'naif0012.tls',
+!!                                  'pck00010.tpc',
+!!                                  '041014R_SCPSE_01066_04199.bsp',
+!!                                  'cas_v40.tf',
+!!                                  '04161_04164ra.bc',
+!!                                  'cas00071.tsc',
+!!                                  'cas_iss_v10.ti'            )
+!!           \begintext
+!!
+!!           End of meta-kernel
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM GFTFOV_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              INTEGER               WNCARD
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         META
+!!              PARAMETER           ( META   = 'gftfov_ex1.tm' )
+!!
+!!              CHARACTER*(*)         TIMFMT
+!!              PARAMETER           ( TIMFMT =
+!!             .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
+!!
+!!              INTEGER               LBCELL
+!!              PARAMETER           ( LBCELL = -5 )
+!!
+!!              INTEGER               MAXWIN
+!!              PARAMETER           ( MAXWIN = 10000 )
+!!
+!!              INTEGER               CORLEN
+!!              PARAMETER           ( CORLEN = 10 )
+!!
+!!              INTEGER               BDNMLN
+!!              PARAMETER           ( BDNMLN = 36 )
+!!
+!!              INTEGER               FRNMLN
+!!              PARAMETER           ( FRNMLN = 32 )
+!!
+!!              INTEGER               SHPLEN
+!!              PARAMETER           ( SHPLEN = 25 )
+!!
+!!              INTEGER               TIMLEN
+!!              PARAMETER           ( TIMLEN = 35 )
+!!
+!!              INTEGER               LNSIZE
+!!              PARAMETER           ( LNSIZE = 80 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(CORLEN)    ABCORR
+!!              CHARACTER*(BDNMLN)    INST
+!!              CHARACTER*(LNSIZE)    LINE
+!!              CHARACTER*(BDNMLN)    OBSRVR
+!!              CHARACTER*(BDNMLN)    TARGET
+!!              CHARACTER*(FRNMLN)    TFRAME
+!!              CHARACTER*(TIMLEN)    TIMSTR ( 2 )
+!!              CHARACTER*(SHPLEN)    TSHAPE
+!!
+!!              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+!!              DOUBLE PRECISION      ENDPT  ( 2 )
+!!              DOUBLE PRECISION      ET0
+!!              DOUBLE PRECISION      ET1
+!!              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+!!              DOUBLE PRECISION      STEPSZ
+!!
+!!              INTEGER               I
+!!              INTEGER               J
+!!              INTEGER               N
+!!
+!!        C
+!!        C     Saved variables
+!!        C
+!!        C     The confinement and result windows CNFINE and RESULT are
+!!        C     saved because this practice helps to prevent stack
+!!        C     overflow.
+!!        C
+!!              SAVE                  CNFINE
+!!              SAVE                  RESULT
+!!
+!!        C
+!!        C     Load kernels.
+!!        C
+!!              CALL FURNSH ( META )
+!!
+!!        C
+!!        C     Initialize windows.
+!!        C
+!!              CALL SSIZED ( 2,      CNFINE )
+!!              CALL SSIZED ( MAXWIN, RESULT )
+!!
+!!        C
+!!        C     Insert search time interval bounds into the
+!!        C     confinement window.
+!!        C
+!!              CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
+!!              CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
+!!
+!!              CALL WNINSD ( ET0, ET1, CNFINE )
+!!
+!!        C
+!!        C     Initialize inputs for the search.
+!!        C
+!!              INST   = 'CASSINI_ISS_NAC'
+!!              TARGET = 'PHOEBE'
+!!              TSHAPE = 'ELLIPSOID'
+!!              TFRAME = 'IAU_PHOEBE'
+!!              ABCORR = 'LT+S'
+!!              OBSRVR = 'CASSINI'
+!!              STEPSZ = 10.D0
+!!
+!!              WRITE (*,*) ' '
+!!              WRITE (*,*) 'Instrument: '//INST
+!!              WRITE (*,*) 'Target:     '//TARGET
+!!              WRITE (*,*) ' '
+!!
+!!        C
+!!        C     Perform the search.
+!!        C
+!!              CALL GFTFOV ( INST,   TARGET, TSHAPE, TFRAME,
+!!             .              ABCORR, OBSRVR, STEPSZ, CNFINE, RESULT )
+!!
+!!              N = WNCARD( RESULT )
+!!
+!!              IF ( N .EQ. 0 ) THEN
+!!
+!!                 WRITE (*,*) 'No FOV intersection found.'
+!!
+!!              ELSE
+!!
+!!                 WRITE (*, '(A)' ) '  Visibility start time (TDB)'
+!!             .    //               '           Stop time (TDB)'
+!!                 WRITE (*, '(A)' ) '  ---------------------------'
+!!             .    //               '     ---------------------------'
+!!
+!!                 DO I = 1, N
+!!
+!!                    CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
+!!
+!!                    DO J = 1, 2
+!!                       CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
+!!                    END DO
+!!
+!!                    LINE( :3) = ' '
+!!                    LINE(2: ) = TIMSTR(1)
+!!                    LINE(34:) = TIMSTR(2)
+!!
+!!                    WRITE (*,*) LINE
+!!
+!!                 END DO
+!!
+!!              END IF
+!!
+!!              WRITE (*,*) ' '
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!         Instrument: CASSINI_ISS_NAC
+!!         Target:     PHOEBE
+!!
+!!          Visibility start time (TDB)           Stop time (TDB)
+!!          ---------------------------     ---------------------------
+!!          2004-JUN-11 07:35:27.066980     2004-JUN-11 08:48:03.954696
+!!          2004-JUN-11 09:02:56.580045     2004-JUN-11 09:35:04.038509
+!!          2004-JUN-11 09:49:56.476397     2004-JUN-11 10:22:04.242879
+!!          2004-JUN-11 10:36:56.283772     2004-JUN-11 11:09:04.397165
+!!          2004-JUN-11 11:23:56.020645     2004-JUN-11 11:56:04.733535
+!!
+!! ## Restrictions
+!!
+!!     1)  The reference frame associated with INST must be
+!!         centered at the observer or must be inertial. No check is done
+!!         to ensure this.
+!!
+!!     2)  The kernel files to be used by GFTFOV must be loaded (normally
+!!         via the SPICELIB routine FURNSH) before GFTFOV is called.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     L.S. Elson         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.1.1, 06-AUG-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Modified code example's output to comply with maximum line
+!!        length of header comments. Updated Example's kernels set to use
+!!        PDS archived data. Added SAVE statements for CNFINE and RESULT
+!!        variables in code example.
+!!
+!!        Updated description of RESULT argument in $Brief_I/O,
+!!        $Detailed_Input and $Detailed_Output.
+!!
+!!-    SPICELIB Version 1.1.0, 28-FEB-2012 (EDW)
+!!
+!!        Implemented use of ZZHOLDD to allow user to alter convergence
+!!        tolerance.
+!!
+!!        Removed the STEP > 0 error check. The GFSSTP call includes
+!!        the check.
+!!
+!!-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB) (LSE) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     GF target in instrument FOV search
+!!
+!!     SPICELIB functions
+!!
+!!     External routines
+!!
+!!     Interrupt handler:
+!!
+!!     Routines to set step size, refine transition times
+!!     and report work:
+!!
+!!     Local parameters
+!!
+!!     Geometric quantity  bail switch:
+!!
+!!     Progress report switch:
+!!
+!!     Local variables
+!!
+!!     Ray direction vector required by GFFOVE. This is
+!!     an unused variable as far is this routine is concerned:
+!!     the target is an ephemeris object. We initialize the
+!!     ray to prevent portability problems.
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       logical, parameter :: bail = .false.
       logical, parameter :: rpt = .false.
@@ -30096,33 +29673,32 @@ contains
 !$Procedure GFUDB ( GF, user defined boolean )
 
       module subroutine gfudb ( ctx, udfuns, udfunb, step, cnfine, result )
+!! ## Abstract
+!!
+!!     Perform a GF search on a user defined boolean quantity.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     EVENT
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
-
-! $ Abstract
-!
-!     Perform a GF search on a user defined boolean quantity.
-!
-! $ Required_Reading
-!
-!     GF
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     EVENT
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -31077,34 +30653,33 @@ contains
 !$Procedure GFUDS ( GF, user defined scalar )
 
       module subroutine gfuds ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+!! ## Abstract
+!!
+!!     Perform a GF search on a user defined scalar quantity.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     EVENT
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
-
-! $ Abstract
-!
-!     Perform a GF search on a user defined scalar quantity.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     EVENT
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -32451,375 +32026,370 @@ contains
 !     This routine should never be called.
 
       module procedure zzgfcoin
-
-! $ Abstract
-!
-!     Initialize a coordinate search.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     ROOT
-!
-! $ Declarations
-!
-!     CHARACTER*(*)         VECDEF
-!     CHARACTER*(*)         METHOD
-!     CHARACTER*(*)         TARGET
-!     CHARACTER*(*)         REF
-!     CHARACTER*(*)         ABCORR
-!     CHARACTER*(*)         OBSRVR
-!     CHARACTER*(*)         DREF
-!     DOUBLE PRECISION      DVEC
-!     CHARACTER*(*)         CRDSYS
-!     CHARACTER*(*)         CRDNAM
-!
-! $ Detailed_Input
-!
-!     VECDEF   every coordinate computed by this routine is a
-!              function of an underlying vector. VECDEF is a short
-!              string describing the means by which the vector of
-!              interest is defined. Only parameters from the Fortran
-!              INCLUDE file zzgf.inc should be used. Parameter names
-!              and meanings are:
-!
-!                 POSDEF               Vector is position of
-!                                      target relative to observer.
-!
-!                 SOBDEF               Vector is sub-observer
-!                                      point on target body. Vector
-!                                      points from target body
-!                                      center to sub-observer point.
-!                                      The target must be an extended
-!                                      body modeled as a triaxial
-!                                      ellipsoid.
-!
-!                 SINDEF               Vector is ray-surface intercept
-!                                      point on target body. Vector
-!                                      points from target body
-!                                      center to sub-observer point.
-!                                      The target must be an extended
-!                                      body modeled as a triaxial
-!                                      ellipsoid.
-!
-!              Case, leading and trailing blanks ARE significant
-!              in the string VECDEF.
-!
-!     METHOD   is a string specifying the computational method
-!              applicable to the vector of interest. When VECDEF
-!              is the parameter
-!
-!                 SOBDEF
-!
-!              METHOD should be set to one of the values accepted
-!              by the SPICELIB routine SUBPNT.
-!
-!              When VECDEF is the parameter
-!
-!                 SINDEF
-!
-!              METHOD should be set to one of the values accepted
-!              by the SPICELIB routine SINCPT.
-!
-!              METHOD is ignored if VECDEF is set to
-!
-!                 POSDEF
-!
-!              Case, leading and trailing blanks are not significant
-!              in the string METHOD.
-!
-!     TARGET   is the name of the target object.
-!
-!     REF      is the name of the reference frame relative to which
-!              the vector of interest is specified. The specified
-!              condition applies to the specified coordinate of
-!              of this vector in frame REF.
-!
-!              When geodetic coordinates are used, the reference
-!              ellipsoid is assumed to be that associated with
-!              the central body of the frame designated by REF.
-!              In this case, the central body of the frame must
-!              be an extended body.
-!
-!              Case, leading and trailing blanks are not significant
-!              in the string REF.
-!
-!     ABCORR   indicates the aberration corrections to be applied to
-!              the state of the target body to account for one-way
-!              light time and stellar aberration. The orientation
-!              of the target body will also be corrected for one-way
-!              light time when light time corrections are requested.
-!
-!              Supported aberration correction options for
-!              observation (case where radiation is received by
-!              observer at ET) are:
-!
-!                'NONE'          No correction.
-!                'LT'            Light time only.
-!                'LT+S'          Light time and stellar aberration.
-!                'CN'            Converged Newtonian (CN) light time.
-!                'CN+S'          CN light time and stellar aberration.
-!
-!              Supported aberration correction options for
-!              transmission (case where radiation is emitted from
-!              observer at ET) are:
-!
-!                'XLT'           Light time only.
-!                'XLT+S'         Light time and stellar aberration.
-!                'XCN'           Converged Newtonian (CN) light time.
-!                'XCN+S'         CN light time and stellar aberration.
-!
-!              For detailed information, see the geometry finder
-!              required reading, gf.req. Also see the header of
-!              SPKEZR, which contains a detailed discussion of
-!              aberration corrections.
-!
-!              Case, leading and trailing blanks are not significant
-!              in the string ABCORR.
-!
-!     OBSRVR   is the name of the observer.
-!
-!     DREF     is the name of the reference frame relative to which a
-!              ray's direction vector is expressed. This may be any
-!              frame supported by the SPICE system, including
-!              built-in frames (documented in the Frames Required
-!              Reading) and frames defined by a loaded frame kernel
-!              (FK). The string DREF is case-insensitive, and leading
-!              and trailing blanks in FIXREF are not significant.
-!
-!              When DREF designates a non-inertial frame, the
-!              orientation of the frame is evaluated at an epoch
-!              dependent on the frame's center and, if the center is
-!              not the observer, on the selected aberration
-!              correction. See the description of the direction
-!              vector DVEC for details.
-!
-!     DVEC     ray direction vector emanating from the observer. The
-!              intercept with the target body's surface of the ray
-!              defined by the observer and DVEC is sought.
-!
-!              DVEC is specified relative to the reference frame
-!              designated by DREF.
-!
-!              Non-inertial reference frames are treated as follows:
-!              if the center of the frame is at the observer's
-!              location, the frame is evaluated at ET. If the frame's
-!              center is located elsewhere, then letting LTCENT be
-!              the one-way light time between the observer and the
-!              central body associated with the frame, the
-!              orientation of the frame is evaluated at ET-LTCENT,
-!              ET+LTCENT, or ET depending on whether the requested
-!              aberration correction is, respectively, for received
-!              radiation, transmitted radiation, or is omitted.
-!              LTCENT is computed using the method indicated by
-!              ABCORR.
-!
-!     CRDSYS   is the name of the coordinate system to which the
-!              coordinate of interest belongs. Allowed values are
-!              those defined in the GF Fortran INCLUDE file
-!
-!                 zzgf.inc.
-!
-!              Note that when geodetic or planetographic coordinates
-!              are used, the reference ellipsoid is that associated
-!              with the central body of the reference frame
-!              designated by REF. The central body must be an
-!              extended body in this case.
-!
-!              Case, leading and trailing blanks are not significant
-!              in the string CRDSYS.
-!
-!     CRDNAM   is the name of the coordinate of interest: this is
-!              the coordinate to which the specified condition
-!              applies. The set of coordinate names is a function of
-!              the coordinate system. Allowed values are those
-!              defined in the GF Fortran INCLUDE file
-!
-!                 zzgf.inc.
-!
-!              Case, leading and trailing blanks are not significant
-!              in the string CRDNAM.
-!
-! $ Detailed_Output
-!
-!     None. This routine operates by side effects. See $Particulars
-!     for a description of the action of this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If either the observer or target names cannot be mapped
-!         to ID codes, the error SPICE(IDCODENOTFOUND) is signaled.
-!
-!     2)  If the observer and target have the same ID codes, the
-!         error SPICE(BODIESNOTDISTINCT) is signaled.
-!
-!     3)  If the vector definition VECDEF is not recognized,
-!         the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     4)  If the computation method METHOD is not recognized,
-!         the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     5)  If the aberration correction ABCORR is not recognized,
-!         the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     6)  If the coordinate system name CRDSYS is not recognized,
-!         the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     7)  If the coordinate name CRDNAM is not recognized,
-!         the error SPICE(NOTSUPPORTED) is signaled.
-!
-!     8)  If the frame REF is not recognized by the frames subsystem,
-!         the error SPICE(NOFRAME) is signaled.
-!
-!     9)  If VECDEF calls for a computation involving a target surface
-!         intercept point and the name and ID code of the frame DREF
-!         associated with the target body are not available from the
-!         frame subsystem, the error SPICE(NOFRAME) is signaled.
-!
-!     10) If VECDEF calls for a computation involving a target surface
-!         intercept point and the direction vector DVEC is the zero
-!         vector, the error SPICE(ZEROVECTOR) is signaled.
-!
-!     11) If VECDEF calls for a computation involving a target surface
-!         point and the radii defining the reference ellipsoid
-!         associated with the target body are not available in the
-!         kernel pool, an error is signaled by a routine in the
-!         call tree of this routine.
-!
-!     12) If VECDEF calls for a computation involving a target surface
-!         point and the frame REF is not centered on the target body,
-!         the error SPICE(INVALIDFRAME) is signaled.
-!
-!     13) If geodetic or planetographic coordinates are used and the
-!         radii defining the reference ellipsoid associated with the
-!         center of the frame REF are not available in the kernel pool,
-!         an error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     14) If geodetic or planetographic coordinates are used and the
-!         first equatorial radius of the reference ellipsoid associated
-!         with the center of the frame REF is zero, the error
-!         SPICE(DIVIDEBYZERO) is signaled.
-!
-!     15) If geodetic or planetographic coordinates are used and the
-!         equatorial radii of the reference ellipsoid associated
-!         with the center of the frame REF are unequal, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     16) If geodetic or planetographic coordinates are used and the
-!         reference ellipsoid associated with the center of the frame
-!         REF is degenerate (one or more radii are non-positive),
-!         the error SPICE(DEGENERATECASE) is signaled.
-!
-!     17) If a body RADII vector has other than exactly thee elements,
-!         an error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     18) If a body RADII vector has any element less-than or equal to
-!         zero, an error is signaled by a routine in the call tree of
-!         this routine.
-!
-! $ Files
-!
-!     See the discussion in the $Files section of the header of the
-!     umbrella subroutine ZZGFCOU.
-!
-! $ Particulars
-!
-!     This routine's main purpose is to support GFEVNT. Many of
-!     the geometric quantities supported by GFEVNT are simply
-!     coordinates of a vector in some reference frame.
-!
-!     The entry points that deal with sines and cosines of coordinates
-!     support solving problems involving constraints on
-!     longitude or right ascension. See ZZGFLONG for usage examples.
-!
-! $ Examples
-!
-!     See GFEVNT and ZZGFLONG.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-!     2)  ZZGFCOIN must be called prior to use of any of the other
-!         entry points.
-!
-!     3)  This routine has the following couplings with other
-!         SPICE routines:
-!
-!            - The set of allowed aberration corrections must
-!              be kept in sync with the set supported by the
-!              SPK API routines.
-!
-!            - The set of vector definitions must be kept in
-!              sync with the set supported by GFEVNT.
-!
-!            - The set of supported coordinate systems must be kept in
-!              sync with the set supported by zzgf.inc.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.1.0, 11-SEP-2021 (EDW) (JDR)
-!
-!        Body radii accessed from kernel pool using ZZGFTREB.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 3.0.0, 05-APR-2011 (EDW)
-!
-!        REFVAL removed from routine argument list due to use
-!        of ZZGFRELX to calculate the events.
-!
-!-    SPICELIB Version 2.0.0, 12-MAY-2009 (NJB)
-!
-!        Upgraded to support targets and observers having
-!        no names associated with their ID codes.
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     coordinate initialization routine
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Initialize a coordinate search.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!     CHARACTER*(*)         VECDEF
+!!     CHARACTER*(*)         METHOD
+!!     CHARACTER*(*)         TARGET
+!!     CHARACTER*(*)         REF
+!!     CHARACTER*(*)         ABCORR
+!!     CHARACTER*(*)         OBSRVR
+!!     CHARACTER*(*)         DREF
+!!     DOUBLE PRECISION      DVEC
+!!     CHARACTER*(*)         CRDSYS
+!!     CHARACTER*(*)         CRDNAM
+!!
+!! ## Detailed Input
+!!
+!!     VECDEF   every coordinate computed by this routine is a
+!!              function of an underlying vector. VECDEF is a short
+!!              string describing the means by which the vector of
+!!              interest is defined. Only parameters from the Fortran
+!!              INCLUDE file zzgf.inc should be used. Parameter names
+!!              and meanings are:
+!!
+!!                 POSDEF               Vector is position of
+!!                                      target relative to observer.
+!!
+!!                 SOBDEF               Vector is sub-observer
+!!                                      point on target body. Vector
+!!                                      points from target body
+!!                                      center to sub-observer point.
+!!                                      The target must be an extended
+!!                                      body modeled as a triaxial
+!!                                      ellipsoid.
+!!
+!!                 SINDEF               Vector is ray-surface intercept
+!!                                      point on target body. Vector
+!!                                      points from target body
+!!                                      center to sub-observer point.
+!!                                      The target must be an extended
+!!                                      body modeled as a triaxial
+!!                                      ellipsoid.
+!!
+!!              Case, leading and trailing blanks ARE significant
+!!              in the string VECDEF.
+!!
+!!     METHOD   is a string specifying the computational method
+!!              applicable to the vector of interest. When VECDEF
+!!              is the parameter
+!!
+!!                 SOBDEF
+!!
+!!              METHOD should be set to one of the values accepted
+!!              by the SPICELIB routine SUBPNT.
+!!
+!!              When VECDEF is the parameter
+!!
+!!                 SINDEF
+!!
+!!              METHOD should be set to one of the values accepted
+!!              by the SPICELIB routine SINCPT.
+!!
+!!              METHOD is ignored if VECDEF is set to
+!!
+!!                 POSDEF
+!!
+!!              Case, leading and trailing blanks are not significant
+!!              in the string METHOD.
+!!
+!!     TARGET   is the name of the target object.
+!!
+!!     REF      is the name of the reference frame relative to which
+!!              the vector of interest is specified. The specified
+!!              condition applies to the specified coordinate of
+!!              of this vector in frame REF.
+!!
+!!              When geodetic coordinates are used, the reference
+!!              ellipsoid is assumed to be that associated with
+!!              the central body of the frame designated by REF.
+!!              In this case, the central body of the frame must
+!!              be an extended body.
+!!
+!!              Case, leading and trailing blanks are not significant
+!!              in the string REF.
+!!
+!!     ABCORR   indicates the aberration corrections to be applied to
+!!              the state of the target body to account for one-way
+!!              light time and stellar aberration. The orientation
+!!              of the target body will also be corrected for one-way
+!!              light time when light time corrections are requested.
+!!
+!!              Supported aberration correction options for
+!!              observation (case where radiation is received by
+!!              observer at ET) are:
+!!
+!!                'NONE'          No correction.
+!!                'LT'            Light time only.
+!!                'LT+S'          Light time and stellar aberration.
+!!                'CN'            Converged Newtonian (CN) light time.
+!!                'CN+S'          CN light time and stellar aberration.
+!!
+!!              Supported aberration correction options for
+!!              transmission (case where radiation is emitted from
+!!              observer at ET) are:
+!!
+!!                'XLT'           Light time only.
+!!                'XLT+S'         Light time and stellar aberration.
+!!                'XCN'           Converged Newtonian (CN) light time.
+!!                'XCN+S'         CN light time and stellar aberration.
+!!
+!!              For detailed information, see the geometry finder
+!!              required reading, gf.req. Also see the header of
+!!              SPKEZR, which contains a detailed discussion of
+!!              aberration corrections.
+!!
+!!              Case, leading and trailing blanks are not significant
+!!              in the string ABCORR.
+!!
+!!     OBSRVR   is the name of the observer.
+!!
+!!     DREF     is the name of the reference frame relative to which a
+!!              ray's direction vector is expressed. This may be any
+!!              frame supported by the SPICE system, including
+!!              built-in frames (documented in the Frames Required
+!!              Reading) and frames defined by a loaded frame kernel
+!!              (FK). The string DREF is case-insensitive, and leading
+!!              and trailing blanks in FIXREF are not significant.
+!!
+!!              When DREF designates a non-inertial frame, the
+!!              orientation of the frame is evaluated at an epoch
+!!              dependent on the frame's center and, if the center is
+!!              not the observer, on the selected aberration
+!!              correction. See the description of the direction
+!!              vector DVEC for details.
+!!
+!!     DVEC     ray direction vector emanating from the observer. The
+!!              intercept with the target body's surface of the ray
+!!              defined by the observer and DVEC is sought.
+!!
+!!              DVEC is specified relative to the reference frame
+!!              designated by DREF.
+!!
+!!              Non-inertial reference frames are treated as follows:
+!!              if the center of the frame is at the observer's
+!!              location, the frame is evaluated at ET. If the frame's
+!!              center is located elsewhere, then letting LTCENT be
+!!              the one-way light time between the observer and the
+!!              central body associated with the frame, the
+!!              orientation of the frame is evaluated at ET-LTCENT,
+!!              ET+LTCENT, or ET depending on whether the requested
+!!              aberration correction is, respectively, for received
+!!              radiation, transmitted radiation, or is omitted.
+!!              LTCENT is computed using the method indicated by
+!!              ABCORR.
+!!
+!!     CRDSYS   is the name of the coordinate system to which the
+!!              coordinate of interest belongs. Allowed values are
+!!              those defined in the GF Fortran INCLUDE file
+!!
+!!                 zzgf.inc.
+!!
+!!              Note that when geodetic or planetographic coordinates
+!!              are used, the reference ellipsoid is that associated
+!!              with the central body of the reference frame
+!!              designated by REF. The central body must be an
+!!              extended body in this case.
+!!
+!!              Case, leading and trailing blanks are not significant
+!!              in the string CRDSYS.
+!!
+!!     CRDNAM   is the name of the coordinate of interest: this is
+!!              the coordinate to which the specified condition
+!!              applies. The set of coordinate names is a function of
+!!              the coordinate system. Allowed values are those
+!!              defined in the GF Fortran INCLUDE file
+!!
+!!                 zzgf.inc.
+!!
+!!              Case, leading and trailing blanks are not significant
+!!              in the string CRDNAM.
+!!
+!! ## Detailed Output
+!!
+!!     None. This routine operates by side effects. See $Particulars
+!!     for a description of the action of this routine.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If either the observer or target names cannot be mapped
+!!         to ID codes, the error SPICE(IDCODENOTFOUND) is signaled.
+!!
+!!     2)  If the observer and target have the same ID codes, the
+!!         error SPICE(BODIESNOTDISTINCT) is signaled.
+!!
+!!     3)  If the vector definition VECDEF is not recognized,
+!!         the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     4)  If the computation method METHOD is not recognized,
+!!         the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     5)  If the aberration correction ABCORR is not recognized,
+!!         the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     6)  If the coordinate system name CRDSYS is not recognized,
+!!         the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     7)  If the coordinate name CRDNAM is not recognized,
+!!         the error SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     8)  If the frame REF is not recognized by the frames subsystem,
+!!         the error SPICE(NOFRAME) is signaled.
+!!
+!!     9)  If VECDEF calls for a computation involving a target surface
+!!         intercept point and the name and ID code of the frame DREF
+!!         associated with the target body are not available from the
+!!         frame subsystem, the error SPICE(NOFRAME) is signaled.
+!!
+!!     10) If VECDEF calls for a computation involving a target surface
+!!         intercept point and the direction vector DVEC is the zero
+!!         vector, the error SPICE(ZEROVECTOR) is signaled.
+!!
+!!     11) If VECDEF calls for a computation involving a target surface
+!!         point and the radii defining the reference ellipsoid
+!!         associated with the target body are not available in the
+!!         kernel pool, an error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!!     12) If VECDEF calls for a computation involving a target surface
+!!         point and the frame REF is not centered on the target body,
+!!         the error SPICE(INVALIDFRAME) is signaled.
+!!
+!!     13) If geodetic or planetographic coordinates are used and the
+!!         radii defining the reference ellipsoid associated with the
+!!         center of the frame REF are not available in the kernel pool,
+!!         an error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     14) If geodetic or planetographic coordinates are used and the
+!!         first equatorial radius of the reference ellipsoid associated
+!!         with the center of the frame REF is zero, the error
+!!         SPICE(DIVIDEBYZERO) is signaled.
+!!
+!!     15) If geodetic or planetographic coordinates are used and the
+!!         equatorial radii of the reference ellipsoid associated
+!!         with the center of the frame REF are unequal, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     16) If geodetic or planetographic coordinates are used and the
+!!         reference ellipsoid associated with the center of the frame
+!!         REF is degenerate (one or more radii are non-positive),
+!!         the error SPICE(DEGENERATECASE) is signaled.
+!!
+!!     17) If a body RADII vector has other than exactly thee elements,
+!!         an error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     18) If a body RADII vector has any element less-than or equal to
+!!         zero, an error is signaled by a routine in the call tree of
+!!         this routine.
+!!
+!! ## Files
+!!
+!!     See the discussion in the $Files section of the header of the
+!!     umbrella subroutine ZZGFCOU.
+!!
+!! ## Particulars
+!!
+!!     This routine's main purpose is to support GFEVNT. Many of
+!!     the geometric quantities supported by GFEVNT are simply
+!!     coordinates of a vector in some reference frame.
+!!
+!!     The entry points that deal with sines and cosines of coordinates
+!!     support solving problems involving constraints on
+!!     longitude or right ascension. See ZZGFLONG for usage examples.
+!!
+!! ## Examples
+!!
+!!     See GFEVNT and ZZGFLONG.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!!     2)  ZZGFCOIN must be called prior to use of any of the other
+!!         entry points.
+!!
+!!     3)  This routine has the following couplings with other
+!!         SPICE routines:
+!!
+!!            - The set of allowed aberration corrections must
+!!              be kept in sync with the set supported by the
+!!              SPK API routines.
+!!
+!!            - The set of vector definitions must be kept in
+!!              sync with the set supported by GFEVNT.
+!!
+!!            - The set of supported coordinate systems must be kept in
+!!              sync with the set supported by zzgf.inc.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.1.0, 11-SEP-2021 (EDW) (JDR)
+!!
+!!        Body radii accessed from kernel pool using ZZGFTREB.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 3.0.0, 05-APR-2011 (EDW)
+!!
+!!        REFVAL removed from routine argument list due to use
+!!        of ZZGFRELX to calculate the events.
+!!
+!!-    SPICELIB Version 2.0.0, 12-MAY-2009 (NJB)
+!!
+!!        Upgraded to support targets and observers having
+!!        no names associated with their ID codes.
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     coordinate initialization routine
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_arrays, only: cleard, isrchc, moved
       use pepper_math, only: vzero
       use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       integer(ip), parameter :: abclen = 20
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
@@ -33275,108 +32845,102 @@ contains
       end procedure zzgfcoin
 
       module procedure zzgfcog
-
-! $ Abstract
-!
-!     Compute the coordinate defined by the last call to ZZGFCOIN is at
-!     the specified epoch.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     ROOT
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     DOUBLE PRECISION      CRDVAL
-!
-! $ Detailed_Input
-!
-!     ET       is the computation epoch, expressed as seconds
-!              past J2000 TDB.
-!
-! $ Detailed_Output
-!
-!     CRDVAL   is the coordinate defined by the previous call to
-!              ZZGFCOIN, evaluated at the epoch ET.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the coordinate cannot be computed at ET, the
-!         error SPICE(NOTCOMPUTABLE) is signaled.
-!
-!     2)  If an error occurs while this routine computes the coordinate
-!         defined by ZZGFCOIN, the error is signaled by a routine
-!         in the call tree of this routine.
-!
-! $ Files
-!
-!     See the $Files header section of the umbrella routine ZZGFCOU.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     See ZZGFLONG.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-!     2)  ZZGFCOIN must be called prior to use of any of the other
-!         entry points.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 11-SEP-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get coordinate
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Compute the coordinate defined by the last call to ZZGFCOIN is at
+!!     the specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     DOUBLE PRECISION      CRDVAL
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the computation epoch, expressed as seconds
+!!              past J2000 TDB.
+!!
+!! ## Detailed Output
+!!
+!!     CRDVAL   is the coordinate defined by the previous call to
+!!              ZZGFCOIN, evaluated at the epoch ET.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the coordinate cannot be computed at ET, the
+!!         error SPICE(NOTCOMPUTABLE) is signaled.
+!!
+!!     2)  If an error occurs while this routine computes the coordinate
+!!         defined by ZZGFCOIN, the error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the $Files header section of the umbrella routine ZZGFCOU.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     See ZZGFLONG.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!!     2)  ZZGFCOIN must be called prior to use of any of the other
+!!         entry points.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 11-SEP-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     get coordinate
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       integer(ip), parameter :: abclen = 20
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
@@ -33444,142 +33008,136 @@ contains
       end procedure zzgfcog
 
       module subroutine zzgfcodc ( ctx, udfunc, et, decres )
-
-! $ Abstract
-!
-!     Indicate whether the coordinate defined by the last call to
-!     ZZGFCOIN is decreasing at the specified epoch.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     ROOT
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     LOGICAL               DECRES
-!
-! $ Detailed_Input
-!
-!     ET       is the computation epoch, expressed as seconds
-!              past J2000 TDB.
-!
-! $ Detailed_Output
-!
-!     DECRES   is a logical flag indicating whether
-!              the coordinate defined by the previous call to
-!              ZZGFCOIN is strictly decreasing at the epoch ET.
-!              DECRES is .FALSE. if the coordinate
-!              is decreasing and .TRUE. otherwise.
-!
-!              In cases where the coordinate is undefined
-!              at ET, DECRES is set to .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  In cases where the any intermediate quantity required by
-!         this routine is undefined, DECRES is set to .FALSE. This
-!         situation occurs when the Jacobian of the coordinate system
-!         with respect to rectangular coordinates is undefined at ET.
-!
-!     2)  If an error occurs while this routine computes the coordinate
-!         defined by ZZGFCOIN, the error is signaled by a routine in the
-!         call tree of this routine.
-!
-!     3)  If an error occurs while this routine computes the derivative
-!         with respect to time of the coordinate defined by ZZGFCOIN,
-!         the error is signaled by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     See the $Files header section of the umbrella routine ZZGFCOU.
-!
-! $ Particulars
-!
-!     A function f(x) is strictly decreasing at x0 if and only if there
-!     exists some delta > 0 such that for all dx satisfying
-!
-!        0  <  dx  < delta
-!
-!     we have
-!
-!        f(x0)       <  f(x0 + dx)
-!
-!     and
-!
-!        f(x0 - dx)  <  f(x)
-!
-!     Note that a strictly decreasing function need not be
-!     differentiable in a neighborhood of x0; it can have jump
-!     discontinuities in any neighborhood of x0 and even at x0.
-!
-! $ Examples
-!
-!     See ZZGFLONG.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-!     2)  ZZGFCOIN must be called prior to use of any of the other
-!         entry points.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 05-APR-2011 (EDW)
-!
-!        Added UDFUNC to argument list for use of ZZGFRELX when
-!        calculating the events.
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     is coordinate decreasing
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Indicate whether the coordinate defined by the last call to
+!!     ZZGFCOIN is decreasing at the specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     LOGICAL               DECRES
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the computation epoch, expressed as seconds
+!!              past J2000 TDB.
+!!
+!! ## Detailed Output
+!!
+!!     DECRES   is a logical flag indicating whether
+!!              the coordinate defined by the previous call to
+!!              ZZGFCOIN is strictly decreasing at the epoch ET.
+!!              DECRES is .FALSE. if the coordinate
+!!              is decreasing and .TRUE. otherwise.
+!!
+!!              In cases where the coordinate is undefined
+!!              at ET, DECRES is set to .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  In cases where the any intermediate quantity required by
+!!         this routine is undefined, DECRES is set to .FALSE. This
+!!         situation occurs when the Jacobian of the coordinate system
+!!         with respect to rectangular coordinates is undefined at ET.
+!!
+!!     2)  If an error occurs while this routine computes the coordinate
+!!         defined by ZZGFCOIN, the error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!!     3)  If an error occurs while this routine computes the derivative
+!!         with respect to time of the coordinate defined by ZZGFCOIN,
+!!         the error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the $Files header section of the umbrella routine ZZGFCOU.
+!!
+!! ## Particulars
+!!
+!!     A function f(x) is strictly decreasing at x0 if and only if there
+!!     exists some delta > 0 such that for all dx satisfying
+!!
+!!        0  <  dx  < delta
+!!
+!!     we have
+!!
+!!        f(x0)       <  f(x0 + dx)
+!!
+!!     and
+!!
+!!        f(x0 - dx)  <  f(x)
+!!
+!!     Note that a strictly decreasing function need not be
+!!     differentiable in a neighborhood of x0; it can have jump
+!!     discontinuities in any neighborhood of x0 and even at x0.
+!!
+!! ## Examples
+!!
+!!     See ZZGFLONG.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!!     2)  ZZGFCOIN must be called prior to use of any of the other
+!!         entry points.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 05-APR-2011 (EDW)
+!!
+!!        Added UDFUNC to argument list for use of ZZGFRELX when
+!!        calculating the events.
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     is coordinate decreasing
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       integer(ip), parameter :: abclen = 20
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
@@ -33677,123 +33235,117 @@ contains
       end subroutine zzgfcodc
 
       module subroutine zzgfcoex ( ctx, udfunc, et, crdfnd )
-
-! $ Abstract
-!
-!     Indicate whether the state of coordinate defined by the last call
-!     to ZZGFCOIN is computable at the specified epoch.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     ROOT
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     LOGICAL               CRDFND
-!
-! $ Detailed_Input
-!
-!     ET       is the computation epoch, expressed as seconds
-!              past J2000 TDB.
-!
-! $ Detailed_Output
-!
-!     CRDFND   is a logical flag indicating whether the state of
-!              the coordinate defined by the previous call to
-!              ZZGFCOIN is computable at the epoch ET. DECRES is
-!              .TRUE. if the coordinate is computable and .FALSE.
-!              otherwise.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If an error occurs while this routine attempts to compute the
-!         coordinate defined by ZZGFCOIN, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See the $Files header section of the umbrella routine ZZGFCOU.
-!
-! $ Particulars
-!
-!     This routine is used by the GF system to compute a time window
-!     over which a specified coordinate state is computable.
-!
-!     Coordinates defined by surface intercepts may fail to be
-!     computable because either
-!
-!     -  the surface intercept does not exist
-!
-!     -  the velocity of the intercept is not computable
-!
-! $ Examples
-!
-!     See ZZGFCSLV.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-!     2)  ZZGFCOIN must be called prior to use of any of the other
-!         entry points.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 05-APR-2011 (EDW)
-!
-!        Added UDFUNC to argument list for use of ZZGFRELX when
-!        calculating the events.
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     does coordinate state exist
-!     is coordinate state computable
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Indicate whether the state of coordinate defined by the last call
+!!     to ZZGFCOIN is computable at the specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     LOGICAL               CRDFND
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the computation epoch, expressed as seconds
+!!              past J2000 TDB.
+!!
+!! ## Detailed Output
+!!
+!!     CRDFND   is a logical flag indicating whether the state of
+!!              the coordinate defined by the previous call to
+!!              ZZGFCOIN is computable at the epoch ET. DECRES is
+!!              .TRUE. if the coordinate is computable and .FALSE.
+!!              otherwise.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If an error occurs while this routine attempts to compute the
+!!         coordinate defined by ZZGFCOIN, the error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the $Files header section of the umbrella routine ZZGFCOU.
+!!
+!! ## Particulars
+!!
+!!     This routine is used by the GF system to compute a time window
+!!     over which a specified coordinate state is computable.
+!!
+!!     Coordinates defined by surface intercepts may fail to be
+!!     computable because either
+!!
+!!     -  the surface intercept does not exist
+!!
+!!     -  the velocity of the intercept is not computable
+!!
+!! ## Examples
+!!
+!!     See ZZGFCSLV.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!!     2)  ZZGFCOIN must be called prior to use of any of the other
+!!         entry points.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 05-APR-2011 (EDW)
+!!
+!!        Added UDFUNC to argument list for use of ZZGFRELX when
+!!        calculating the events.
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     does coordinate state exist
+!!     is coordinate state computable
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       integer(ip), parameter :: abclen = 20
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
@@ -33857,106 +33409,100 @@ contains
       end subroutine zzgfcoex
 
       module procedure zzgfcocg
-
-! $ Abstract
-!
-!     Compute the cosine of the coordinate defined by the last call to
-!     ZZGFCOIN is at the specified epoch.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     ROOT
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     DOUBLE PRECISION      CRDVAL
-!
-! $ Detailed_Input
-!
-!     ET       is the computation epoch, expressed as seconds
-!              past J2000 TDB.
-!
-! $ Detailed_Output
-!
-!     CRDVAL   is the cosine of the coordinate defined by the
-!              previous call to ZZGFCOIN, evaluated at the epoch
-!              ET.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If an error occurs while this routine computes the coordinate
-!         defined by ZZGFCOIN, the error is signaled by a routine in the
-!         call tree of this routine.
-!
-! $ Files
-!
-!     See the $Files header section of the umbrella routine ZZGFCOU.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     See ZZGFLONG.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-!     2)  ZZGFCOIN must be called prior to use of any of the other
-!         entry points.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 11-SEP-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get cosine of coordinate
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Compute the cosine of the coordinate defined by the last call to
+!!     ZZGFCOIN is at the specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     DOUBLE PRECISION      CRDVAL
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the computation epoch, expressed as seconds
+!!              past J2000 TDB.
+!!
+!! ## Detailed Output
+!!
+!!     CRDVAL   is the cosine of the coordinate defined by the
+!!              previous call to ZZGFCOIN, evaluated at the epoch
+!!              ET.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If an error occurs while this routine computes the coordinate
+!!         defined by ZZGFCOIN, the error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the $Files header section of the umbrella routine ZZGFCOU.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     See ZZGFLONG.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!!     2)  ZZGFCOIN must be called prior to use of any of the other
+!!         entry points.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 11-SEP-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     get cosine of coordinate
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       integer(ip), parameter :: abclen = 20
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
@@ -34026,103 +33572,98 @@ contains
       end procedure zzgfcocg
 
       module procedure zzgfcosg
-
-! $ Abstract
-!
-!     Compute the sine of the coordinate defined by the last call to
-!     ZZGFCOIN is at the specified epoch.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     ROOT
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     DOUBLE PRECISION      CRDVAL
-!
-! $ Detailed_Input
-!
-!     ET       is the computation epoch, expressed as seconds
-!              past J2000 TDB.
-!
-! $ Detailed_Output
-!
-!     CRDVAL   is the sine of the coordinate defined by the
-!              previous call to ZZGFCOIN, evaluated at the epoch
-!              ET.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If an error occurs while this routine computes the coordinate
-!         defined by ZZGFCOIN, the error is signaled by a routine in the
-!         call tree of this routine.
-!
-! $ Files
-!
-!     See the $Files header section of the umbrella routine ZZGFCOU.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     See ZZGFLONG.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-!     2)  ZZGFCOIN must be called prior to use of any of the other
-!         entry points.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 11-SEP-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get sine of coordinate
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Compute the sine of the coordinate defined by the last call to
+!!     ZZGFCOIN is at the specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     DOUBLE PRECISION      CRDVAL
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the computation epoch, expressed as seconds
+!!              past J2000 TDB.
+!!
+!! ## Detailed Output
+!!
+!!     CRDVAL   is the sine of the coordinate defined by the
+!!              previous call to ZZGFCOIN, evaluated at the epoch
+!!              ET.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If an error occurs while this routine computes the coordinate
+!!         defined by ZZGFCOIN, the error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!! ## Files
+!!
+!!     See the $Files header section of the umbrella routine ZZGFCOU.
+!!
+!! ## Particulars
+!!
+!!     None.
+!!
+!! ## Examples
+!!
+!!     See ZZGFLONG.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!!     2)  ZZGFCOIN must be called prior to use of any of the other
+!!         entry points.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 11-SEP-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     get sine of coordinate
+!!
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       integer(ip), parameter :: abclen = 20
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
@@ -34192,144 +33733,138 @@ contains
       end procedure zzgfcosg
 
       module subroutine zzgfcocd ( ctx, udfunc, et, decres )
-
-! $ Abstract
-!
-!     Indicate whether the cosine of the coordinate defined by the
-!     last call to ZZGFCOIN is decreasing at the specified epoch.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     ROOT
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     LOGICAL               DECRES
-!
-! $ Detailed_Input
-!
-!     ET       is the computation epoch, expressed as seconds
-!              past J2000 TDB.
-!
-! $ Detailed_Output
-!
-!     DECRES   is a logical flag indicating whether the cosine of
-!              the coordinate defined by the previous call to
-!              ZZGFCOIN is strictly decreasing at the epoch ET.
-!              DECRES is .FALSE. if the cosine of the coordinate
-!              is decreasing and .TRUE. otherwise.
-!
-!              In cases where the coordinate is undefined
-!              at ET, DECRES is set to .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  In cases where the any intermediate quantity required by
-!         this routine is undefined, DECRES is set to .FALSE. This
-!         situation occurs when the Jacobian of the coordinate system
-!         with respect to rectangular coordinates is undefined at ET.
-!
-!     2)  If an error occurs while this routine computes the coordinate
-!         defined by ZZGFCOIN, the error is signaled by a routine in the
-!         call tree of this routine.
-!
-!     3)  If an error occurs while this routine computes the derivative
-!         with respect to time of the coordinate defined by ZZGFCOIN,
-!         the error is signaled by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     See the $Files header section of the umbrella routine ZZGFCOU.
-!
-! $ Particulars
-!
-!     A function f(x) is strictly decreasing at x0 if and only if there
-!     exists some delta > 0 such that for all dx satisfying
-!
-!        0  <  dx  < delta
-!
-!     we have
-!
-!        f(x0)       <  f(x0 + dx)
-!
-!     and
-!
-!        f(x0 - dx)  <  f(x)
-!
-!     Note that a strictly decreasing function need not be
-!     differentiable in a neighborhood of x0; it can have jump
-!     discontinuities in any neighborhood of x0 and even at x0.
-!
-! $ Examples
-!
-!     See ZZGFLONG.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-!     2)  ZZGFCOIN must be called prior to use of any of the other
-!         entry points.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 05-APR-2011 (EDW)
-!
-!        Added UDFUNC to argument list for use of ZZGFRELX when
-!        calculating the events.
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     is cosine of coordinate decreasing
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Indicate whether the cosine of the coordinate defined by the
+!!     last call to ZZGFCOIN is decreasing at the specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     LOGICAL               DECRES
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the computation epoch, expressed as seconds
+!!              past J2000 TDB.
+!!
+!! ## Detailed Output
+!!
+!!     DECRES   is a logical flag indicating whether the cosine of
+!!              the coordinate defined by the previous call to
+!!              ZZGFCOIN is strictly decreasing at the epoch ET.
+!!              DECRES is .FALSE. if the cosine of the coordinate
+!!              is decreasing and .TRUE. otherwise.
+!!
+!!              In cases where the coordinate is undefined
+!!              at ET, DECRES is set to .FALSE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  In cases where the any intermediate quantity required by
+!!         this routine is undefined, DECRES is set to .FALSE. This
+!!         situation occurs when the Jacobian of the coordinate system
+!!         with respect to rectangular coordinates is undefined at ET.
+!!
+!!     2)  If an error occurs while this routine computes the coordinate
+!!         defined by ZZGFCOIN, the error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!!     3)  If an error occurs while this routine computes the derivative
+!!         with respect to time of the coordinate defined by ZZGFCOIN,
+!!         the error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the $Files header section of the umbrella routine ZZGFCOU.
+!!
+!! ## Particulars
+!!
+!!     A function f(x) is strictly decreasing at x0 if and only if there
+!!     exists some delta > 0 such that for all dx satisfying
+!!
+!!        0  <  dx  < delta
+!!
+!!     we have
+!!
+!!        f(x0)       <  f(x0 + dx)
+!!
+!!     and
+!!
+!!        f(x0 - dx)  <  f(x)
+!!
+!!     Note that a strictly decreasing function need not be
+!!     differentiable in a neighborhood of x0; it can have jump
+!!     discontinuities in any neighborhood of x0 and even at x0.
+!!
+!! ## Examples
+!!
+!!     See ZZGFLONG.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!!     2)  ZZGFCOIN must be called prior to use of any of the other
+!!         entry points.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 05-APR-2011 (EDW)
+!!
+!!        Added UDFUNC to argument list for use of ZZGFRELX when
+!!        calculating the events.
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     is cosine of coordinate decreasing
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       use pepper_math, only: reccyl, reclat, recrad, recsph
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       integer(ip), parameter :: abclen = 20
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
@@ -34485,142 +34020,135 @@ contains
       end subroutine zzgfcocd
 
       module subroutine zzgfcosd ( ctx, udfunc, et, decres )
-
-! $ Abstract
-!
-!     Indicate whether the sine of the coordinate defined by the
-!     last call to ZZGFCOIN is decreasing at the specified epoch.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     ROOT
-!
-! $ Declarations
-!
-!     DOUBLE PRECISION      ET
-!     LOGICAL               DECRES
-!
-! $ Detailed_Input
-!
-!     ET       is the computation epoch, expressed as seconds
-!              past J2000 TDB.
-!
-! $ Detailed_Output
-!
-!     DECRES   is a logical flag indicating whether the sine
-!              of the coordinate defined by the previous call to
-!              ZZGFCOIN is strictly decreasing at the epoch ET.
-!              DECRES is .FALSE. if the sine of the coordinate is
-!              decreasing and .TRUE. otherwise.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  In cases where the any intermediate quantity required by
-!         this routine is undefined, DECRES is set to .FALSE. This
-!         situation occurs when the Jacobian of the coordinate system
-!         with respect to rectangular coordinates is undefined at ET.
-!
-!     2)  If an error occurs while this routine computes the coordinate
-!         defined by ZZGFCOIN, the error is signaled by a routine in the
-!         call tree of this routine.
-!
-!     3)  If an error occurs while this routine computes the derivative
-!         with respect to time of the coordinate defined by ZZGFCOIN,
-!         the error is signaled by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     See the $Files header section of the umbrella routine ZZGFCOU.
-!
-! $ Particulars
-!
-!     A function f(x) is strictly decreasing at x0 if and only if there
-!     exists some delta > 0 such that for all dx satisfying
-!
-!        0  <  dx  < delta
-!
-!     we have
-!
-!        f(x0)       <  f(x0 + dx)
-!
-!     and
-!
-!        f(x0 - dx)  <  f(x)
-!
-!     Note that a strictly decreasing function need not be
-!     differentiable in a neighborhood of x0; it can have jump
-!     discontinuities in any neighborhood of x0 and even at x0.
-!
-! $ Examples
-!
-!     See ZZGFLONG.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice. These routines should be called only
-!         by SPICELIB routines.
-!
-!     2)  ZZGFCOIN must be called prior to use of any of the other
-!         entry points.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 05-APR-2011 (EDW)
-!
-!        Added UDFUNC to argument list for use of ZZGFRELX when
-!        calculating the events.
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     is sine of coordinate decreasing
-!
-!-&
-
-!
-!     Standard SPICE error handling.
-!
-
+!! ## Abstract
+!!
+!!     Indicate whether the sine of the coordinate defined by the
+!!     last call to ZZGFCOIN is decreasing at the specified epoch.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!!     DOUBLE PRECISION      ET
+!!     LOGICAL               DECRES
+!!
+!! ## Detailed Input
+!!
+!!     ET       is the computation epoch, expressed as seconds
+!!              past J2000 TDB.
+!!
+!! ## Detailed Output
+!!
+!!     DECRES   is a logical flag indicating whether the sine
+!!              of the coordinate defined by the previous call to
+!!              ZZGFCOIN is strictly decreasing at the epoch ET.
+!!              DECRES is .FALSE. if the sine of the coordinate is
+!!              decreasing and .TRUE. otherwise.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  In cases where the any intermediate quantity required by
+!!         this routine is undefined, DECRES is set to .FALSE. This
+!!         situation occurs when the Jacobian of the coordinate system
+!!         with respect to rectangular coordinates is undefined at ET.
+!!
+!!     2)  If an error occurs while this routine computes the coordinate
+!!         defined by ZZGFCOIN, the error is signaled by a routine in the
+!!         call tree of this routine.
+!!
+!!     3)  If an error occurs while this routine computes the derivative
+!!         with respect to time of the coordinate defined by ZZGFCOIN,
+!!         the error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     See the $Files header section of the umbrella routine ZZGFCOU.
+!!
+!! ## Particulars
+!!
+!!     A function f(x) is strictly decreasing at x0 if and only if there
+!!     exists some delta > 0 such that for all dx satisfying
+!!
+!!        0  <  dx  < delta
+!!
+!!     we have
+!!
+!!        f(x0)       <  f(x0 + dx)
+!!
+!!     and
+!!
+!!        f(x0 - dx)  <  f(x)
+!!
+!!     Note that a strictly decreasing function need not be
+!!     differentiable in a neighborhood of x0; it can have jump
+!!     discontinuities in any neighborhood of x0 and even at x0.
+!!
+!! ## Examples
+!!
+!!     See ZZGFLONG.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice. These routines should be called only
+!!         by SPICELIB routines.
+!!
+!!     2)  ZZGFCOIN must be called prior to use of any of the other
+!!         entry points.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 2.0.0, 05-APR-2011 (EDW)
+!!
+!!        Added UDFUNC to argument list for use of ZZGFRELX when
+!!        calculating the events.
+!!
+!!-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     is sine of coordinate decreasing
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       use pepper_math, only: reccyl, reclat, recrad, recsph
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       integer(ip), parameter :: abclen = 20
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
@@ -34777,858 +34305,809 @@ contains
       module subroutine zzgflong ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, &
             crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, &
             udrepf, bail, udbail, mw, nw, work, cnfine, result )
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine determines time windows when the longitude
-!     or right ascension of a specified vector satisfies a specified
-!     mathematical condition.
-!
-! $ Required_Reading
-!
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     GEOMETRY
-!     PRIVATE
-!     SEARCH
-!
-! $ Declarations
-
-
-
-
-
-! $ Detailed_Input
-!
-!     VECDEF     Every coordinate computed by this routine is a
-!                function of an underlying vector. VECDEF is a short
-!                string describing the means by which the vector of
-!                interest is defined. Only parameters from the Fortran
-!                INCLUDE file zzgf.inc should be used. Parameter names
-!                and meanings are:
-!
-!                   POSDEF               Vector is position of
-!                                        target relative to observer.
-!
-!                   SOBDEF               Vector is sub-observer
-!                                        point on target body.  Vector
-!                                        points from target body
-!                                        center to sub-observer point.
-!                                        The target must be an extended
-!                                        body modeled as a triaxial
-!                                        ellipsoid.
-!
-!                   SINDEF               Vector is ray-surface intercept
-!                                        point on target body. Vector
-!                                        points from target body
-!                                        center to sub-observer point.
-!                                        The target must be an extended
-!                                        body modeled as a triaxial
-!                                        ellipsoid.
-!
-!                Case, leading and trailing blanks ARE significant
-!                in the string VECDEF.
-!
-!     METHOD     is a string specifying the computational method
-!                applicable to the vector of interest. When VECDEF
-!                is the parameter
-!
-!                   SOBDEF
-!
-!                METHOD should be set to one of the values accepted
-!                by the SPICELIB routine SUBPNT.
-!
-!                When VECDEF is the parameter
-!
-!                   SINDEF
-!
-!                METHOD should be set to one of the values accepted
-!                by the SPICELIB routine SINCPT.
-!
-!                METHOD is ignored if VECDEF is set to
-!
-!                   POSDEF
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string METHOD.
-!
-!     TARGET     is the name of the target object.
-!
-!     REF        is the name of the reference frame relative to which
-!                the vector of interest is specified. The specified
-!                condition applies to the specified coordinate of
-!                of this vector in frame REF.
-!
-!                When geodetic coordinates are used, the reference
-!                ellipsoid is assumed to be that associated with
-!                the central body of the frame designated by REF.
-!                In this case, the central body of the frame must
-!                be an extended body.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string REF.
-!
-!     ABCORR     indicates the aberration corrections to be applied to
-!                the state of the target body to account for one-way
-!                light time and stellar aberration.  The orientation
-!                of the target body will also be corrected for one-way
-!                light time when light time corrections are requested.
-!
-!                Supported aberration correction options for
-!                observation (case where radiation is received by
-!                observer at ET) are:
-!
-!                  'NONE'          No correction.
-!                  'LT'            Light time only.
-!                  'LT+S'          Light time and stellar aberration.
-!                  'CN'            Converged Newtonian (CN) light time.
-!                  'CN+S'          CN light time and stellar aberration.
-!
-!                Supported aberration correction options for
-!                transmission (case where radiation is emitted from
-!                observer at ET) are:
-!
-!                  'XLT'           Light time only.
-!                  'XLT+S'         Light time and stellar aberration.
-!                  'XCN'           Converged Newtonian (CN) light time.
-!                  'XCN+S'         CN light time and stellar aberration.
-!
-!                For detailed information, see the geometry finder
-!                required reading, gf.req.  Also see the header of
-!                SPKEZR, which contains a detailed discussion of
-!                aberration corrections.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string ABCORR.
-!
-!     OBSRVR     is the name of the observer.
-!
-!     DREF       is the name of the reference frame relative to which a
-!                ray's direction vector is expressed. This may be any
-!                frame supported by the SPICE system, including
-!                built-in frames (documented in the Frames Required
-!                Reading) and frames defined by a loaded frame kernel
-!                (FK). The string DREF is case-insensitive, and leading
-!                and trailing blanks in DREF are not significant.
-!
-!                When DREF designates a non-inertial frame, the
-!                orientation of the frame is evaluated at an epoch
-!                dependent on the frame's center and, if the center is
-!                not the observer, on the selected aberration
-!                correction. See the description of the direction
-!                vector DVEC for details.
-!
-!     DVEC       Ray direction vector emanating from the observer. The
-!                intercept with the target body's surface of the ray
-!                defined by the observer and DVEC is sought.
-!
-!                DVEC is specified relative to the reference frame
-!                designated by DREF.
-!
-!                Non-inertial reference frames are treated as follows:
-!                if the center of the frame is at the observer's
-!                location, the frame is evaluated at ET. If the frame's
-!                center is located elsewhere, then letting LTCENT be
-!                the one-way light time between the observer and the
-!                central body associated with the frame, the
-!                orientation of the frame is evaluated at ET-LTCENT,
-!                ET+LTCENT, or ET depending on whether the requested
-!                aberration correction is, respectively, for received
-!                radiation, transmitted radiation, or is omitted.
-!                LTCENT is computed using the method indicated by
-!                ABCORR.
-!
-!     CRDSYS     is the name of the coordinate system to which the
-!                coordinate of interest belongs. Allowed values are
-!                those defined in the GF Fortran INCLUDE file
-!
-!                   zzgf.inc.
-!
-!                CRDSYS must refer to a system in which longitude
-!
-!                or right ascension is a coordinate. Note that when
-!                geodetic coordinates are used, the reference ellipsoid
-!                is that associated with the central body of the
-!                reference frame designated by REF. The central body
-!                must be an extended body in this case.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string CRDSYS.
-!
-!     CRDNAM     is the name of the coordinate of interest: this is
-!                the coordinate to which the specified condition
-!                applies. Supported coordinates are
-!
-!                   Planetocentric longitude
-!                   Right ascension
-!
-!                which are designated respectively by the parameters
-!
-!                   LONCRD
-!                   RACRD
-!
-!                See the INCLUDE file
-!
-!                   zzgf.inc
-!
-!                for the declarations of these parameters.
-!
-!                For the
-!
-!                   Latitudinal
-!                   Geodetic
-!                   Spherical
-!
-!                coordinate systems, longitude lies in the range
-!
-!                   ( -pi, pi ]
-!
-!                For the
-!
-!                   Cylindrical
-!                   Planetographic
-!
-!                coordinate systems, longitude lies in the range
-!
-!                   [ 0, 2*pi )
-!
-!                Right ascension lies in the range
-!
-!                   [ 0, 2*pi )
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string CRDNAM.
-!
-!     RELATE      is a relational operator used to define a constraint
-!                 on longitude or right ascension of the specified
-!                 vector. The result window found by this routine
-!                 indicates the time intervals where the constraint is
-!                 satisfied. Supported values of RELATE and
-!                 corresponding meanings are shown below:
-!
-!                    '>'      Longitude or RA is greater than the
-!                             reference value REFVAL.
-!
-!                    '='      Longitude or RA is equal to the reference
-!                             value REFVAL.
-!
-!                    '<'      Longitude or RA is less than the
-!                             reference value REFVAL.
-!
-!                   'ABSMAX'  Longitude or RA is at an absolute maximum.
-!
-!                   'ABSMIN'  Longitude or RA is at an absolute
-!                             minimum.
-!
-!                   'LOCMAX'  Longitude or RA is at a local maximum.
-!
-!                   'LOCMIN'  Longitude or RA is at a local minimum.
-!
-!                The caller may indicate that the region of interest
-!                is the set of time intervals where the quantity is
-!                within a specified tolerance of an absolute extremum.
-!                The argument ADJUST (described below) is used to
-!                specify this tolerance.
-!
-!                Local extrema are considered to exist only in the
-!                interiors of the intervals comprising the confinement
-!                window: a local extremum cannot exist at a boundary
-!                point of the confinement window.
-!
-!                Case is not significant in the string RELATE.
-!
-!     REFVAL     is the reference value used to define equality or
-!                inequality conditions.
-!
-!                REFVAL has units of radians.
-!
-!                When the coordinate of interest is longitude, REFVAL
-!                is interpreted as though it were translated, if
-!                necessary, by an integer multiple of 2*pi to place it
-!                in the standard range for longitude: (-pi, pi].
-!                Similarly, when the coordinate of interest is right
-!                ascension, REFVAL is interpreted as though it were
-!                translated, if necessary, by an integer multiple of
-!                2*pi into the range [0, 2*pi).
-!
-!                Example:  suppose REFVAL is set to -4.5. Then the
-!                          condition
-!
-!                   longitude equals REFVAL
-!
-!                is interpreted as
-!
-!                   longitude equals -0.5 * pi
-!
-!                so the solution window for this condition may well
-!                be non-empty.
-!
-!                REFVAL is ignored if RELATE is not an equality or
-!                inequality operator.
-!
-!     TOL        is a tolerance value used to determine convergence of
-!                root-finding operations. TOL is measured in TDB
-!                seconds and is greater than zero.
-!
-!     ADJUST     The amount by which the coordinate is allowed to vary
-!                from an absolute extremum. ADJUST is not used for
-!                equality or inequality conditions. ADJUST must not be
-!                negative.
-!
-!                If ADJUST is positive and a search for an absolute
-!                minimum is performed, the resulting schedule contains
-!                time intervals when the specified coordinate has
-!                values between
-!
-!                         ABSMIN
-!                   and   MIN ( ABSMIN + ADJUST, MX )
-!
-!                where MX is the maximum value of the coordinate's
-!                range.
-!
-!                If the search is for an absolute maximum, the
-!                corresponding range is  between
-!
-!                         MAX ( ABSMAX - ADJUST, MN )
-!                   and   ABSMAX
-!
-!                where MN is the minimum value of the coordinate's
-!                range.
-!
-!     UDSTEP     is a routine that computes a time step used to search
-!                for a transition of the state of the specified
-!                coordinate. In the context of this routine's
-!                algorithm, a "state transition" occurs where the
-!                coordinate's time derivative changes from negative to
-!                non-negative or vice versa.
-!
-!                This routine relies on UDSTEP returning step sizes
-!                small enough so that state transitions within the
-!                confinement window are not overlooked.  There must
-!                never be two roots A and B separated by less than
-!                STEP, where STEP is the minimum step size returned by
-!                UDSTEP for any value of ET in the interval [A, B].
-!
-!                The calling sequence for UDSTEP is:
-!
-!                   CALL UDSTEP ( ET, STEP )
-!
-!                where:
-!
-!                   ET      is the input start time from which the
-!                           algorithm is to search forward for a state
-!                           transition. ET is expressed as seconds past
-!                           J2000 TDB. ET is a DOUBLE PRECISION number.
-!
-!                   STEP    is the output step size. STEP indicates
-!                           how far to advance ET so that ET and
-!                           ET+STEP may bracket a state transition and
-!                           definitely do not bracket more than one
-!                           state transition. STEP is a DOUBLE
-!                           PRECISION number. Units are TDB seconds.
-!
-!                If a constant step size is desired, the routine GFSTEP
-!                may be used. GFSTEP returns the step size that was set
-!                via the most recent call to GFSSTP.
-!
-!     UDREFN     is the name of the externally specified routine that
-!                computes a refinement in the times that bracket a
-!                transition point. In other words, once a pair of
-!                times have been detected such that the system is in
-!                different states at each of the two times, UDREFN
-!                selects an intermediate time which should be closer to
-!                the transition state than one of the two known times.
-!                The calling sequence for UDREFN is:
-!
-!                   CALL UDREFN ( T1, T2, S1, S2, T )
-!
-!                where the inputs are:
-!
-!                   T1    is a time when the system is in state S1. T1
-!                         is a DOUBLE PRECISION number.
-!
-!                   T2    is a time when the system is in state S2. T2
-!                         is a DOUBLE PRECISION number and is assumed
-!                         to be larger than T1.
-!
-!                   S1    is the state of the system at time T1.
-!                         S1 is a LOGICAL value.
-!
-!                   S2    is the state of the system at time T2.
-!                         S2 is a LOGICAL value.
-!
-!                UDREFN may use or ignore the S1 and S2 values.
-!
-!                The output is:
-!
-!                   T     is next time to check for a state transition.
-!                         T is a DOUBLE PRECISION number between T1 and
-!                         T2.
-!
-!                If a simple bisection method is desired, the routine
-!                GFREFN may be used. This is the default option.
-!
-!     RPT        is a logical variable which controls whether the
-!                progress reporter is on or off; setting RPT
-!                to .TRUE. enables progress reporting.
-!
-!     UDREPI     is a user-defined subroutine that initializes a
-!                progress report. When progress reporting is
-!                enabled, UDREPI is called at the start of a search
-!                pass (see the implementation of ZZGFREL for details on
-!                search passes).  The calling sequence of UDREPI is
-!
-!                   UDREPI ( CNFINE, RPTPRE, RPTSUF )
-!
-!                   DOUBLE PRECISION    CNFINE ( LBCELL : * )
-!                   CHARACTER*(*)       RPTPRE
-!                   CHARACTER*(*)       RPTSUF
-!
-!                where
-!
-!                   CNFINE
-!
-!                is the confinement window passed into ZZGFREL, and
-!
-!                   RPTPRE
-!                   RPTSUF
-!
-!                are prefix and suffix strings used in the progress
-!                report:  these strings are intended to bracket a
-!                representation of the fraction of work done.
-!
-!                SPICELIB provides the default progress reporting
-!                initialization routine GFREPI. If GFREPI is used, then
-!                the progress reporting update and termination routines
-!                GFREPU and GFREPF must be used as well.
-!
-!     UDREPU     is a user-defined subroutine that updates the
-!                progress report for a search pass. The calling
-!                sequence of UDREPU is
-!
-!                   UDREPU (IVBEG, IVEND, ET )
-!
-!                   DOUBLE PRECISION      ET
-!                   DOUBLE PRECISION      IVBEG
-!                   DOUBLE PRECISION      IVEND
-!
-!                where ET is an epoch belonging to the confinement
-!                window, IVBEG and IVEND are the start and stop times,
-!                respectively of the current confinement window
-!                interval.  The ratio of the measure of the portion
-!                of CNFINE that precedes ET to the measure of CNFINE
-!                would be a logical candidate for the search's
-!                completion percentage; however the method of
-!                measurement is up to the user.
-!
-!     UDREPF     is a user-defined subroutine that finalizes a
-!                progress report. UDREPF has no arguments.
-!
-!     BAIL       is a logical flag indicating whether or not interrupt
-!                signal handling is enabled. Setting BAIL to .TRUE.
-!                enables interrupt signal handling: the GF system will
-!                then call UDBAIL to check for interrupt signals.
-!
-!     UDBAIL     is the name of a user defined logical function that
-!                checks to see whether an interrupt signal has been
-!                issued from, e.g. the keyboard. UDBAIL is used only
-!                when BAIL is set to .TRUE. If interrupt handling is
-!                not used, the SPICELIB function GFBAIL should be
-!                passed in as the actual bail-out function argument.
-!
-!     MW         is the cell size of the windows in the workspace array
-!                WORK.
-!
-!     NW         is the number of windows in the workspace array WORK.
-!                NW must be at least as large as the parameter NWMAX.
-!
-!     WORK       is an array used to store workspace windows. This
-!                array has dimensions ( LBCELL : MW, NW).
-!
-!                The windows contained WORK that used by this routine
-!                are initialized here to have size MW. The other
-!                elements of WORK are not modified.
-!
-!     CNFINE     is a SPICE window that confines the bounds of the
-!                search.
-!
-!                For coordinates defined by ray-target surface
-!                intercepts, the intercept and its time derivative are
-!                expected to be computable on the confinement window.
-!
-!     RESULT     is an initialized SPICE window. RESULT must be large
-!                enough to hold all of the intervals, within the
-!                confinement window, on which the specified condition
-!                is met.
-!
-!                RESULT must be initialized by the caller via the
-!                SPICELIB routine SSIZED.
-!
-! $ Detailed_Output
-!
-!     WORK       has undefined contents on output, with the exception
-!                of the windows occupying the range
-!
-!                   ( LBCELL : NW, EXWIDX : NWMAX )
-!
-!                which are not modified by this routine.
-!
-!     RESULT     is a SPICELIB window containing the intersection of
-!                the confinement window and the set of time intervals
-!                when the value of the specified coordinate satisfies
-!                constraints specified by RELATE and ADJUST.
-!
-!                For coordinates defined by ray-target surface
-!                intercepts, RESULT is further restricted to the window
-!                over which the intercept and its derivative with
-!                respect to time are computable. See the description of
-!                CNFINE above for details.
-!
-!                Due to computational accuracy limitations, the
-!                coordinate of interest *may not satisfy the
-!                specified condition* at all points belonging to
-!                RESULT.  For example, if the caller specifies
-!                a tolerance of 1.E-6 seconds and seeks the
-!                solution set for the condition
-!
-!                   The planetocentric longitude of the geometric
-!                   earth-sun vector in the J2000 frame is greater
-!                   than or equal to zero
-!
-!                the right endpoints of some intervals in RESULT may be
-!                times that map to negative longitude values very close
-!                to -pi radians.
-!
-!                The user (of SPICE API routines dependent on this
-!                routine) may wish to contract RESULT using WNCOND in
-!                order to guarantee that the specified condition
-!                is satisfied on RESULT. Selection of a suitable
-!                contraction value is dependent on the user's
-!                requirements and the specific problem to be solved.
-!
-! $ Parameters
-!
-!     LBCELL     is the SPICELIB cell lower bound.
-!
-! $ Exceptions
-!
-!     1)  In order for this routine to produce correct results,
-!         the external step size routine UDGSTP must return step sizes
-!         appropriate for the problem at hand.  Step sizes that
-!         are too large may cause this routine to miss roots;
-!         step sizes that are too small may cause this routine to
-!         run unacceptably slowly and in some cases, find spurious
-!         roots.
-!
-!         This routine does not diagnose invalid step sizes,
-!         except that if the step size is non-positive, the error
-!         SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     2)  In order for this routine to produce correct results,
-!         the convergence tolerance TOL must be appropriate for the
-!         problem at hand.  The error in any interval endpoint
-!         contained in RESULT should be expected to be no smaller
-!         than TOL; depending on the behavior of the coordinate
-!         and the condition, the error could be much larger.  For
-!         example, for some functions, finding correct, unique
-!         extrema is notoriously difficult.
-!
-!         The user should keep in mind that the minimum separation
-!         between successive values of ET is about 1.E-7 seconds
-!         for SPICE platforms and values of ET not extremely close to
-!         J2000.
-!
-!         This routine does not diagnose invalid tolerance values,
-!         except that if the tolerance is non-positive, the error
-!         SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     3)  A negative value for ADJUST causes the routine to signal
-!         the error SPICE(VALUEOUTOFRANGE). A non-zero value for ADJUST
-!         when RELATE has any value other than "ABSMIN" or "ABSMAX",
-!         causes the routine to signal the error SPICE(INVALIDVALUE).
-!
-!     4)  If the operator string RELATE doesn't contain a recognized
-!         value, the error SPICE(NOTRECOGNIZED) is signaled.
-!
-!     5)  If any error occurs while initializing the coordinate
-!         utility package, the error will be diagnosed by routines
-!         in the call tree of ZZGFCOIN.
-!
-!     6)  If any error occurs while performing computations
-!         to determine if a quantity of interest is decreasing
-!         at a specified time, the error will be diagnosed by
-!         routines in the call tree of this routine.
-!
-!     7)  If any error occurs while performing computations
-!         to determine if a quantity of interest is less than a
-!         specified reference value at a specified time, the error will
-!         be diagnosed by routines in the call tree of this routine.
-!
-!     8)  If an error (typically cell overflow) occurs while performing
-!         window arithmetic, the error will be diagnosed by
-!         routines in the call trees of window routines called by
-!         this routine.
-!
-!     9)  Due to numerical errors, in particular,
-!
-!            - Truncation error in time values
-!            - Finite tolerance value
-!            - Errors in computed geometric quantities
-!
-!         it is *normal* that the condition of interest is not
-!         satisfied on the entire result window.
-!
-!         The result window may need to be contracted slightly by the
-!         caller to achieve desired results, in particular to remove
-!         times where discontinuities of longitude or right ascension
-!         are crossed.
-!
-!     10) Most relational conditions involving longitude or
-!         right ascension make sense only when latitude or declination
-!         is bounded away from +/- pi/2 radians.  Users should
-!         select the confinement window accordingly.
-!
-!     11) The user must take care when searching for an extremum
-!         (ABSMAX, ABSMIN, LOCMAX, LOCMIN) of  LONGITUDE or
-!         RIGHT ASCENSION values. Since these quantities are cyclical,
-!         rather than monotonically increasing or decreasing, an
-!         extremum may be hard to interpret. In particular, if an
-!         extremum is found near the cycle boundary (- PI for
-!         longitude, 2 PI for RIGHT ASCENSION) it may not be
-!         numerically reasonable. For example, the search for times
-!         when a longitude coordinate is at its absolute maximum may
-!         result in a time when the longitude value is - PI, due to
-!         roundoff error.
-!
-! $ Files
-!
-!     This routine doesn't directly participate in SPICE kernel loading
-!     or unloading.  However, a variety of SPICE kernels must be loaded
-!     in order for this routine to work:
-!
-!        - Since all coordinate computations supported by this routine
-!          depend on observer-target vectors, at a minimum, SPK files
-!          providing ephemeris data enabling computation of these
-!          vectors are required.
-!
-!        - If non-inertial reference frames are used, then PCK
-!          files, frame kernels, C-kernels, and SCLK kernels may be
-!          needed.
-!
-!        - If the coordinate of interest is defined in terms of a target
-!          surface point, then (currently) a PCK providing radii for a
-!          triaxial shape model must be loaded.
-!
-!        - If geodetic coordinates are used, then a PCK providing radii
-!          for a triaxial shape model must be loaded.
-!
-!     See the Files section of GFEVNT's header for further information.
-!
-! $ Particulars
-!
-!     Since this is a private SPICELIB routine, the header comments
-!     make many references to the routine's implementation.  This
-!     is done to help the maintenance programmer understand the
-!     routine; however, these comments may themselves need to be
-!     updated if the GF subsystem implementation changes.
-!
-!     This routine determines time windows when the longitude or right
-!     ascension of a specified vector satisfies a specified
-!     mathematical condition.  This routine can (in some cases, by
-!     means of multiple calls) answer questions such as
-!
-!        When does the moon pass over the earth's prime meridian?
-!
-!        Given a time window when the geodetic latitude of the MGS
-!        spacecraft relative to the IAU_MARS frame is between -30 : +30
-!        degrees, when within this window is the planetographic
-!        longitude of the spacecraft between 15 and 16 degrees?
-!
-!     For brevity, throughout this routine, we'll refer to the vector
-!     whose longitude or right ascension is of interest as "the vector"
-!     or "the vector of interest." We'll also call the longitude or
-!     right ascension "the coordinate" or "the coordinate of interest."
-!
-!     A note concerning processing speed:  the algorithm used by this
-!     routine takes a "divide and conquer" approach that involves, in
-!     many cases, multiple calls to the low-level GF root finding
-!     routines.  So the user can expect most longitude or right
-!     ascension computations to be relatively slow.  Using a
-!     confinement window that is more easily computed, say one
-!     involving latitude constraints, can be very helpful.
-!
-! $ Examples
-!
-!     See usage in GFEVNT.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this routine may change
-!         without notice.  This routine should be called only by
-!         SPICELIB routines.
-!
-!     2)  Root-finding problems of the sort solved by this routine are,
-!         when a computer is involved, replete with mathematical
-!         complications. We've tried to cover all the angles in the
-!         Detailed_Input, Detailed_Output, and Exceptions header
-!         sections.  No doubt some issues remain unaddressed.  Correct
-!         usage of this routine depends in good measure on the user
-!         posing "reasonable" problems to solve.
-!
-!     3)  The kernel files to be used by ZZGFLONG must be loaded
-!         (normally via the SPICELIB routine FURNSH) before ZZGFLONG is
-!         called.
-!
-!     4)  This routine has the side effect of re-initializing the
-!         coordinate quantity utility package. Callers may themselves
-!         need to re-initialize the coordinate quantity utility package
-!         after calling this routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     E.D. Wright    (JPL)
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.1 03-OCT-2021 (NJB)
-!
-!        Corrected typo in comments.
-!
-!-    SPICELIB Version 2.1.0 04-APR-2011 (EDW)
-!
-!        Replaced use of routines ZZGFREL with ZZGFRELX. ZZGFCOIN
-!        argument list edited to remove the unneeded argument REFVAL.
-!
-!        The 2.1.0 changes should not affect the numerical results
-!        of GF coordinate computations.
-!
-!-    SPICELIB Version 2.0.0 12-MAY-2009 (NJB)
-!
-!        Upgraded to support targets and observers having
-!        no names associated with their ID codes.
-!
-!-    SPICELIB Version 1.0.0  23-FEB-2009 (NJB) (EDW)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-
-!
-!     Entry points in the coordinate utility package.
-!     We have the usual GF entry points for the coordinate, plus
-!     utilities for the cosine and sine of the coordinate.
-!
-!     Names and meanings:
-!
-!        ZZGFCODC      Is coordinate decreasing?
-!        ZZGFCOG       Get coordinate value.
-!        ZZGFCOCD      Is cosine of the coordinate decreasing?
-!        ZZGFCOCG      Get cosine of the coordinate value.
-!        ZZGFCOSD      Is sine of the coordinate decreasing?
-!        ZZGFCOSG      Get sine of the coordinate value.
-!
-
-!
-!    The routine to test UDFUNC < REFVAL.
-!
-
-!
-!     Local parameters
-!
-!     Margin for branch cut avoidance. Units are radians:
-!
-
-!
-!     Margin for local extrema search. Units are radians:
-!
-
-!
-!     Short alias for LBCELL:
-!
-
-
-!
-!     Number of supported comparison operators:
-!
-
-!
-!     Assorted string lengths:
-!
-!     Maximum body name length:
-!
-
-!
-!     NAMLEN is the maximum length of both a frame name and of
-!     any kernel pool variable name.
-!
-
-!
-!     OPLEN is the maximum string length for comparison operators.
-!     OPLEN may grow if new comparisons are added.
-!
-
-!
-!     FUNLEN is the length of the function name string.
-!
-
-!
-!     CRDLEN is the maximum length of a coordinate name.
-!
-
-!
-!     SYSLEN is the maximum length of a coordinate system name.
-!
-
-!
-!     RPTLEN is the maximum length of a progress reporter message.
-!
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine determines time windows when the longitude
+!!     or right ascension of a specified vector satisfies a specified
+!!     mathematical condition.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     GEOMETRY
+!!     PRIVATE
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     VECDEF     Every coordinate computed by this routine is a
+!!                function of an underlying vector. VECDEF is a short
+!!                string describing the means by which the vector of
+!!                interest is defined. Only parameters from the Fortran
+!!                INCLUDE file zzgf.inc should be used. Parameter names
+!!                and meanings are:
+!!
+!!                   POSDEF               Vector is position of
+!!                                        target relative to observer.
+!!
+!!                   SOBDEF               Vector is sub-observer
+!!                                        point on target body.  Vector
+!!                                        points from target body
+!!                                        center to sub-observer point.
+!!                                        The target must be an extended
+!!                                        body modeled as a triaxial
+!!                                        ellipsoid.
+!!
+!!                   SINDEF               Vector is ray-surface intercept
+!!                                        point on target body. Vector
+!!                                        points from target body
+!!                                        center to sub-observer point.
+!!                                        The target must be an extended
+!!                                        body modeled as a triaxial
+!!                                        ellipsoid.
+!!
+!!                Case, leading and trailing blanks ARE significant
+!!                in the string VECDEF.
+!!
+!!     METHOD     is a string specifying the computational method
+!!                applicable to the vector of interest. When VECDEF
+!!                is the parameter
+!!
+!!                   SOBDEF
+!!
+!!                METHOD should be set to one of the values accepted
+!!                by the SPICELIB routine SUBPNT.
+!!
+!!                When VECDEF is the parameter
+!!
+!!                   SINDEF
+!!
+!!                METHOD should be set to one of the values accepted
+!!                by the SPICELIB routine SINCPT.
+!!
+!!                METHOD is ignored if VECDEF is set to
+!!
+!!                   POSDEF
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string METHOD.
+!!
+!!     TARGET     is the name of the target object.
+!!
+!!     REF        is the name of the reference frame relative to which
+!!                the vector of interest is specified. The specified
+!!                condition applies to the specified coordinate of
+!!                of this vector in frame REF.
+!!
+!!                When geodetic coordinates are used, the reference
+!!                ellipsoid is assumed to be that associated with
+!!                the central body of the frame designated by REF.
+!!                In this case, the central body of the frame must
+!!                be an extended body.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string REF.
+!!
+!!     ABCORR     indicates the aberration corrections to be applied to
+!!                the state of the target body to account for one-way
+!!                light time and stellar aberration.  The orientation
+!!                of the target body will also be corrected for one-way
+!!                light time when light time corrections are requested.
+!!
+!!                Supported aberration correction options for
+!!                observation (case where radiation is received by
+!!                observer at ET) are:
+!!
+!!                  'NONE'          No correction.
+!!                  'LT'            Light time only.
+!!                  'LT+S'          Light time and stellar aberration.
+!!                  'CN'            Converged Newtonian (CN) light time.
+!!                  'CN+S'          CN light time and stellar aberration.
+!!
+!!                Supported aberration correction options for
+!!                transmission (case where radiation is emitted from
+!!                observer at ET) are:
+!!
+!!                  'XLT'           Light time only.
+!!                  'XLT+S'         Light time and stellar aberration.
+!!                  'XCN'           Converged Newtonian (CN) light time.
+!!                  'XCN+S'         CN light time and stellar aberration.
+!!
+!!                For detailed information, see the geometry finder
+!!                required reading, gf.req.  Also see the header of
+!!                SPKEZR, which contains a detailed discussion of
+!!                aberration corrections.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string ABCORR.
+!!
+!!     OBSRVR     is the name of the observer.
+!!
+!!     DREF       is the name of the reference frame relative to which a
+!!                ray's direction vector is expressed. This may be any
+!!                frame supported by the SPICE system, including
+!!                built-in frames (documented in the Frames Required
+!!                Reading) and frames defined by a loaded frame kernel
+!!                (FK). The string DREF is case-insensitive, and leading
+!!                and trailing blanks in DREF are not significant.
+!!
+!!                When DREF designates a non-inertial frame, the
+!!                orientation of the frame is evaluated at an epoch
+!!                dependent on the frame's center and, if the center is
+!!                not the observer, on the selected aberration
+!!                correction. See the description of the direction
+!!                vector DVEC for details.
+!!
+!!     DVEC       Ray direction vector emanating from the observer. The
+!!                intercept with the target body's surface of the ray
+!!                defined by the observer and DVEC is sought.
+!!
+!!                DVEC is specified relative to the reference frame
+!!                designated by DREF.
+!!
+!!                Non-inertial reference frames are treated as follows:
+!!                if the center of the frame is at the observer's
+!!                location, the frame is evaluated at ET. If the frame's
+!!                center is located elsewhere, then letting LTCENT be
+!!                the one-way light time between the observer and the
+!!                central body associated with the frame, the
+!!                orientation of the frame is evaluated at ET-LTCENT,
+!!                ET+LTCENT, or ET depending on whether the requested
+!!                aberration correction is, respectively, for received
+!!                radiation, transmitted radiation, or is omitted.
+!!                LTCENT is computed using the method indicated by
+!!                ABCORR.
+!!
+!!     CRDSYS     is the name of the coordinate system to which the
+!!                coordinate of interest belongs. Allowed values are
+!!                those defined in the GF Fortran INCLUDE file
+!!
+!!                   zzgf.inc.
+!!
+!!                CRDSYS must refer to a system in which longitude
+!!
+!!                or right ascension is a coordinate. Note that when
+!!                geodetic coordinates are used, the reference ellipsoid
+!!                is that associated with the central body of the
+!!                reference frame designated by REF. The central body
+!!                must be an extended body in this case.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string CRDSYS.
+!!
+!!     CRDNAM     is the name of the coordinate of interest: this is
+!!                the coordinate to which the specified condition
+!!                applies. Supported coordinates are
+!!
+!!                   Planetocentric longitude
+!!                   Right ascension
+!!
+!!                which are designated respectively by the parameters
+!!
+!!                   LONCRD
+!!                   RACRD
+!!
+!!                See the INCLUDE file
+!!
+!!                   zzgf.inc
+!!
+!!                for the declarations of these parameters.
+!!
+!!                For the
+!!
+!!                   Latitudinal
+!!                   Geodetic
+!!                   Spherical
+!!
+!!                coordinate systems, longitude lies in the range
+!!
+!!                   ( -pi, pi ]
+!!
+!!                For the
+!!
+!!                   Cylindrical
+!!                   Planetographic
+!!
+!!                coordinate systems, longitude lies in the range
+!!
+!!                   [ 0, 2*pi )
+!!
+!!                Right ascension lies in the range
+!!
+!!                   [ 0, 2*pi )
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string CRDNAM.
+!!
+!!     RELATE      is a relational operator used to define a constraint
+!!                 on longitude or right ascension of the specified
+!!                 vector. The result window found by this routine
+!!                 indicates the time intervals where the constraint is
+!!                 satisfied. Supported values of RELATE and
+!!                 corresponding meanings are shown below:
+!!
+!!                    '>'      Longitude or RA is greater than the
+!!                             reference value REFVAL.
+!!
+!!                    '='      Longitude or RA is equal to the reference
+!!                             value REFVAL.
+!!
+!!                    '<'      Longitude or RA is less than the
+!!                             reference value REFVAL.
+!!
+!!                   'ABSMAX'  Longitude or RA is at an absolute maximum.
+!!
+!!                   'ABSMIN'  Longitude or RA is at an absolute
+!!                             minimum.
+!!
+!!                   'LOCMAX'  Longitude or RA is at a local maximum.
+!!
+!!                   'LOCMIN'  Longitude or RA is at a local minimum.
+!!
+!!                The caller may indicate that the region of interest
+!!                is the set of time intervals where the quantity is
+!!                within a specified tolerance of an absolute extremum.
+!!                The argument ADJUST (described below) is used to
+!!                specify this tolerance.
+!!
+!!                Local extrema are considered to exist only in the
+!!                interiors of the intervals comprising the confinement
+!!                window: a local extremum cannot exist at a boundary
+!!                point of the confinement window.
+!!
+!!                Case is not significant in the string RELATE.
+!!
+!!     REFVAL     is the reference value used to define equality or
+!!                inequality conditions.
+!!
+!!                REFVAL has units of radians.
+!!
+!!                When the coordinate of interest is longitude, REFVAL
+!!                is interpreted as though it were translated, if
+!!                necessary, by an integer multiple of 2*pi to place it
+!!                in the standard range for longitude: (-pi, pi].
+!!                Similarly, when the coordinate of interest is right
+!!                ascension, REFVAL is interpreted as though it were
+!!                translated, if necessary, by an integer multiple of
+!!                2*pi into the range [0, 2*pi).
+!!
+!!                Example:  suppose REFVAL is set to -4.5. Then the
+!!                          condition
+!!
+!!                   longitude equals REFVAL
+!!
+!!                is interpreted as
+!!
+!!                   longitude equals -0.5 * pi
+!!
+!!                so the solution window for this condition may well
+!!                be non-empty.
+!!
+!!                REFVAL is ignored if RELATE is not an equality or
+!!                inequality operator.
+!!
+!!     TOL        is a tolerance value used to determine convergence of
+!!                root-finding operations. TOL is measured in TDB
+!!                seconds and is greater than zero.
+!!
+!!     ADJUST     The amount by which the coordinate is allowed to vary
+!!                from an absolute extremum. ADJUST is not used for
+!!                equality or inequality conditions. ADJUST must not be
+!!                negative.
+!!
+!!                If ADJUST is positive and a search for an absolute
+!!                minimum is performed, the resulting schedule contains
+!!                time intervals when the specified coordinate has
+!!                values between
+!!
+!!                         ABSMIN
+!!                   and   MIN ( ABSMIN + ADJUST, MX )
+!!
+!!                where MX is the maximum value of the coordinate's
+!!                range.
+!!
+!!                If the search is for an absolute maximum, the
+!!                corresponding range is  between
+!!
+!!                         MAX ( ABSMAX - ADJUST, MN )
+!!                   and   ABSMAX
+!!
+!!                where MN is the minimum value of the coordinate's
+!!                range.
+!!
+!!     UDSTEP     is a routine that computes a time step used to search
+!!                for a transition of the state of the specified
+!!                coordinate. In the context of this routine's
+!!                algorithm, a "state transition" occurs where the
+!!                coordinate's time derivative changes from negative to
+!!                non-negative or vice versa.
+!!
+!!                This routine relies on UDSTEP returning step sizes
+!!                small enough so that state transitions within the
+!!                confinement window are not overlooked.  There must
+!!                never be two roots A and B separated by less than
+!!                STEP, where STEP is the minimum step size returned by
+!!                UDSTEP for any value of ET in the interval [A, B].
+!!
+!!                The calling sequence for UDSTEP is:
+!!
+!!                   CALL UDSTEP ( ET, STEP )
+!!
+!!                where:
+!!
+!!                   ET      is the input start time from which the
+!!                           algorithm is to search forward for a state
+!!                           transition. ET is expressed as seconds past
+!!                           J2000 TDB. ET is a DOUBLE PRECISION number.
+!!
+!!                   STEP    is the output step size. STEP indicates
+!!                           how far to advance ET so that ET and
+!!                           ET+STEP may bracket a state transition and
+!!                           definitely do not bracket more than one
+!!                           state transition. STEP is a DOUBLE
+!!                           PRECISION number. Units are TDB seconds.
+!!
+!!                If a constant step size is desired, the routine GFSTEP
+!!                may be used. GFSTEP returns the step size that was set
+!!                via the most recent call to GFSSTP.
+!!
+!!     UDREFN     is the name of the externally specified routine that
+!!                computes a refinement in the times that bracket a
+!!                transition point. In other words, once a pair of
+!!                times have been detected such that the system is in
+!!                different states at each of the two times, UDREFN
+!!                selects an intermediate time which should be closer to
+!!                the transition state than one of the two known times.
+!!                The calling sequence for UDREFN is:
+!!
+!!                   CALL UDREFN ( T1, T2, S1, S2, T )
+!!
+!!                where the inputs are:
+!!
+!!                   T1    is a time when the system is in state S1. T1
+!!                         is a DOUBLE PRECISION number.
+!!
+!!                   T2    is a time when the system is in state S2. T2
+!!                         is a DOUBLE PRECISION number and is assumed
+!!                         to be larger than T1.
+!!
+!!                   S1    is the state of the system at time T1.
+!!                         S1 is a LOGICAL value.
+!!
+!!                   S2    is the state of the system at time T2.
+!!                         S2 is a LOGICAL value.
+!!
+!!                UDREFN may use or ignore the S1 and S2 values.
+!!
+!!                The output is:
+!!
+!!                   T     is next time to check for a state transition.
+!!                         T is a DOUBLE PRECISION number between T1 and
+!!                         T2.
+!!
+!!                If a simple bisection method is desired, the routine
+!!                GFREFN may be used. This is the default option.
+!!
+!!     RPT        is a logical variable which controls whether the
+!!                progress reporter is on or off; setting RPT
+!!                to .TRUE. enables progress reporting.
+!!
+!!     UDREPI     is a user-defined subroutine that initializes a
+!!                progress report. When progress reporting is
+!!                enabled, UDREPI is called at the start of a search
+!!                pass (see the implementation of ZZGFREL for details on
+!!                search passes).  The calling sequence of UDREPI is
+!!
+!!                   UDREPI ( CNFINE, RPTPRE, RPTSUF )
+!!
+!!                   DOUBLE PRECISION    CNFINE ( LBCELL : * )
+!!                   CHARACTER*(*)       RPTPRE
+!!                   CHARACTER*(*)       RPTSUF
+!!
+!!                where
+!!
+!!                   CNFINE
+!!
+!!                is the confinement window passed into ZZGFREL, and
+!!
+!!                   RPTPRE
+!!                   RPTSUF
+!!
+!!                are prefix and suffix strings used in the progress
+!!                report:  these strings are intended to bracket a
+!!                representation of the fraction of work done.
+!!
+!!                SPICELIB provides the default progress reporting
+!!                initialization routine GFREPI. If GFREPI is used, then
+!!                the progress reporting update and termination routines
+!!                GFREPU and GFREPF must be used as well.
+!!
+!!     UDREPU     is a user-defined subroutine that updates the
+!!                progress report for a search pass. The calling
+!!                sequence of UDREPU is
+!!
+!!                   UDREPU (IVBEG, IVEND, ET )
+!!
+!!                   DOUBLE PRECISION      ET
+!!                   DOUBLE PRECISION      IVBEG
+!!                   DOUBLE PRECISION      IVEND
+!!
+!!                where ET is an epoch belonging to the confinement
+!!                window, IVBEG and IVEND are the start and stop times,
+!!                respectively of the current confinement window
+!!                interval.  The ratio of the measure of the portion
+!!                of CNFINE that precedes ET to the measure of CNFINE
+!!                would be a logical candidate for the search's
+!!                completion percentage; however the method of
+!!                measurement is up to the user.
+!!
+!!     UDREPF     is a user-defined subroutine that finalizes a
+!!                progress report. UDREPF has no arguments.
+!!
+!!     BAIL       is a logical flag indicating whether or not interrupt
+!!                signal handling is enabled. Setting BAIL to .TRUE.
+!!                enables interrupt signal handling: the GF system will
+!!                then call UDBAIL to check for interrupt signals.
+!!
+!!     UDBAIL     is the name of a user defined logical function that
+!!                checks to see whether an interrupt signal has been
+!!                issued from, e.g. the keyboard. UDBAIL is used only
+!!                when BAIL is set to .TRUE. If interrupt handling is
+!!                not used, the SPICELIB function GFBAIL should be
+!!                passed in as the actual bail-out function argument.
+!!
+!!     MW         is the cell size of the windows in the workspace array
+!!                WORK.
+!!
+!!     NW         is the number of windows in the workspace array WORK.
+!!                NW must be at least as large as the parameter NWMAX.
+!!
+!!     WORK       is an array used to store workspace windows. This
+!!                array has dimensions ( LBCELL : MW, NW).
+!!
+!!                The windows contained WORK that used by this routine
+!!                are initialized here to have size MW. The other
+!!                elements of WORK are not modified.
+!!
+!!     CNFINE     is a SPICE window that confines the bounds of the
+!!                search.
+!!
+!!                For coordinates defined by ray-target surface
+!!                intercepts, the intercept and its time derivative are
+!!                expected to be computable on the confinement window.
+!!
+!!     RESULT     is an initialized SPICE window. RESULT must be large
+!!                enough to hold all of the intervals, within the
+!!                confinement window, on which the specified condition
+!!                is met.
+!!
+!!                RESULT must be initialized by the caller via the
+!!                SPICELIB routine SSIZED.
+!!
+!! ## Detailed Output
+!!
+!!     WORK       has undefined contents on output, with the exception
+!!                of the windows occupying the range
+!!
+!!                   ( LBCELL : NW, EXWIDX : NWMAX )
+!!
+!!                which are not modified by this routine.
+!!
+!!     RESULT     is a SPICELIB window containing the intersection of
+!!                the confinement window and the set of time intervals
+!!                when the value of the specified coordinate satisfies
+!!                constraints specified by RELATE and ADJUST.
+!!
+!!                For coordinates defined by ray-target surface
+!!                intercepts, RESULT is further restricted to the window
+!!                over which the intercept and its derivative with
+!!                respect to time are computable. See the description of
+!!                CNFINE above for details.
+!!
+!!                Due to computational accuracy limitations, the
+!!                coordinate of interest *may not satisfy the
+!!                specified condition* at all points belonging to
+!!                RESULT.  For example, if the caller specifies
+!!                a tolerance of 1.E-6 seconds and seeks the
+!!                solution set for the condition
+!!
+!!                   The planetocentric longitude of the geometric
+!!                   earth-sun vector in the J2000 frame is greater
+!!                   than or equal to zero
+!!
+!!                the right endpoints of some intervals in RESULT may be
+!!                times that map to negative longitude values very close
+!!                to -pi radians.
+!!
+!!                The user (of SPICE API routines dependent on this
+!!                routine) may wish to contract RESULT using WNCOND in
+!!                order to guarantee that the specified condition
+!!                is satisfied on RESULT. Selection of a suitable
+!!                contraction value is dependent on the user's
+!!                requirements and the specific problem to be solved.
+!!
+!! ## Parameters
+!!
+!!     LBCELL     is the SPICELIB cell lower bound.
+!!
+!! ## Exceptions
+!!
+!!     1)  In order for this routine to produce correct results,
+!!         the external step size routine UDGSTP must return step sizes
+!!         appropriate for the problem at hand.  Step sizes that
+!!         are too large may cause this routine to miss roots;
+!!         step sizes that are too small may cause this routine to
+!!         run unacceptably slowly and in some cases, find spurious
+!!         roots.
+!!
+!!         This routine does not diagnose invalid step sizes,
+!!         except that if the step size is non-positive, the error
+!!         SPICE(VALUEOUTOFRANGE) is signaled.
+!!
+!!     2)  In order for this routine to produce correct results,
+!!         the convergence tolerance TOL must be appropriate for the
+!!         problem at hand.  The error in any interval endpoint
+!!         contained in RESULT should be expected to be no smaller
+!!         than TOL; depending on the behavior of the coordinate
+!!         and the condition, the error could be much larger.  For
+!!         example, for some functions, finding correct, unique
+!!         extrema is notoriously difficult.
+!!
+!!         The user should keep in mind that the minimum separation
+!!         between successive values of ET is about 1.E-7 seconds
+!!         for SPICE platforms and values of ET not extremely close to
+!!         J2000.
+!!
+!!         This routine does not diagnose invalid tolerance values,
+!!         except that if the tolerance is non-positive, the error
+!!         SPICE(VALUEOUTOFRANGE) is signaled.
+!!
+!!     3)  A negative value for ADJUST causes the routine to signal
+!!         the error SPICE(VALUEOUTOFRANGE). A non-zero value for ADJUST
+!!         when RELATE has any value other than "ABSMIN" or "ABSMAX",
+!!         causes the routine to signal the error SPICE(INVALIDVALUE).
+!!
+!!     4)  If the operator string RELATE doesn't contain a recognized
+!!         value, the error SPICE(NOTRECOGNIZED) is signaled.
+!!
+!!     5)  If any error occurs while initializing the coordinate
+!!         utility package, the error will be diagnosed by routines
+!!         in the call tree of ZZGFCOIN.
+!!
+!!     6)  If any error occurs while performing computations
+!!         to determine if a quantity of interest is decreasing
+!!         at a specified time, the error will be diagnosed by
+!!         routines in the call tree of this routine.
+!!
+!!     7)  If any error occurs while performing computations
+!!         to determine if a quantity of interest is less than a
+!!         specified reference value at a specified time, the error will
+!!         be diagnosed by routines in the call tree of this routine.
+!!
+!!     8)  If an error (typically cell overflow) occurs while performing
+!!         window arithmetic, the error will be diagnosed by
+!!         routines in the call trees of window routines called by
+!!         this routine.
+!!
+!!     9)  Due to numerical errors, in particular,
+!!
+!!            - Truncation error in time values
+!!            - Finite tolerance value
+!!            - Errors in computed geometric quantities
+!!
+!!         it is *normal* that the condition of interest is not
+!!         satisfied on the entire result window.
+!!
+!!         The result window may need to be contracted slightly by the
+!!         caller to achieve desired results, in particular to remove
+!!         times where discontinuities of longitude or right ascension
+!!         are crossed.
+!!
+!!     10) Most relational conditions involving longitude or
+!!         right ascension make sense only when latitude or declination
+!!         is bounded away from +/- pi/2 radians.  Users should
+!!         select the confinement window accordingly.
+!!
+!!     11) The user must take care when searching for an extremum
+!!         (ABSMAX, ABSMIN, LOCMAX, LOCMIN) of  LONGITUDE or
+!!         RIGHT ASCENSION values. Since these quantities are cyclical,
+!!         rather than monotonically increasing or decreasing, an
+!!         extremum may be hard to interpret. In particular, if an
+!!         extremum is found near the cycle boundary (- PI for
+!!         longitude, 2 PI for RIGHT ASCENSION) it may not be
+!!         numerically reasonable. For example, the search for times
+!!         when a longitude coordinate is at its absolute maximum may
+!!         result in a time when the longitude value is - PI, due to
+!!         roundoff error.
+!!
+!! ## Files
+!!
+!!     This routine doesn't directly participate in SPICE kernel loading
+!!     or unloading.  However, a variety of SPICE kernels must be loaded
+!!     in order for this routine to work:
+!!
+!!        - Since all coordinate computations supported by this routine
+!!          depend on observer-target vectors, at a minimum, SPK files
+!!          providing ephemeris data enabling computation of these
+!!          vectors are required.
+!!
+!!        - If non-inertial reference frames are used, then PCK
+!!          files, frame kernels, C-kernels, and SCLK kernels may be
+!!          needed.
+!!
+!!        - If the coordinate of interest is defined in terms of a target
+!!          surface point, then (currently) a PCK providing radii for a
+!!          triaxial shape model must be loaded.
+!!
+!!        - If geodetic coordinates are used, then a PCK providing radii
+!!          for a triaxial shape model must be loaded.
+!!
+!!     See the Files section of GFEVNT's header for further information.
+!!
+!! ## Particulars
+!!
+!!     Since this is a private SPICELIB routine, the header comments
+!!     make many references to the routine's implementation.  This
+!!     is done to help the maintenance programmer understand the
+!!     routine; however, these comments may themselves need to be
+!!     updated if the GF subsystem implementation changes.
+!!
+!!     This routine determines time windows when the longitude or right
+!!     ascension of a specified vector satisfies a specified
+!!     mathematical condition.  This routine can (in some cases, by
+!!     means of multiple calls) answer questions such as
+!!
+!!        When does the moon pass over the earth's prime meridian?
+!!
+!!        Given a time window when the geodetic latitude of the MGS
+!!        spacecraft relative to the IAU_MARS frame is between -30 : +30
+!!        degrees, when within this window is the planetographic
+!!        longitude of the spacecraft between 15 and 16 degrees?
+!!
+!!     For brevity, throughout this routine, we'll refer to the vector
+!!     whose longitude or right ascension is of interest as "the vector"
+!!     or "the vector of interest." We'll also call the longitude or
+!!     right ascension "the coordinate" or "the coordinate of interest."
+!!
+!!     A note concerning processing speed:  the algorithm used by this
+!!     routine takes a "divide and conquer" approach that involves, in
+!!     many cases, multiple calls to the low-level GF root finding
+!!     routines.  So the user can expect most longitude or right
+!!     ascension computations to be relatively slow.  Using a
+!!     confinement window that is more easily computed, say one
+!!     involving latitude constraints, can be very helpful.
+!!
+!! ## Examples
+!!
+!!     See usage in GFEVNT.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this routine may change
+!!         without notice.  This routine should be called only by
+!!         SPICELIB routines.
+!!
+!!     2)  Root-finding problems of the sort solved by this routine are,
+!!         when a computer is involved, replete with mathematical
+!!         complications. We've tried to cover all the angles in the
+!!         Detailed_Input, Detailed_Output, and Exceptions header
+!!         sections.  No doubt some issues remain unaddressed.  Correct
+!!         usage of this routine depends in good measure on the user
+!!         posing "reasonable" problems to solve.
+!!
+!!     3)  The kernel files to be used by ZZGFLONG must be loaded
+!!         (normally via the SPICELIB routine FURNSH) before ZZGFLONG is
+!!         called.
+!!
+!!     4)  This routine has the side effect of re-initializing the
+!!         coordinate quantity utility package. Callers may themselves
+!!         need to re-initialize the coordinate quantity utility package
+!!         after calling this routine.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     E.D. Wright    (JPL)
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.1 03-OCT-2021 (NJB)
+!!
+!!        Corrected typo in comments.
+!!
+!!-    SPICELIB Version 2.1.0 04-APR-2011 (EDW)
+!!
+!!        Replaced use of routines ZZGFREL with ZZGFRELX. ZZGFCOIN
+!!        argument list edited to remove the unneeded argument REFVAL.
+!!
+!!        The 2.1.0 changes should not affect the numerical results
+!!        of GF coordinate computations.
+!!
+!!-    SPICELIB Version 2.0.0 12-MAY-2009 (NJB)
+!!
+!!        Upgraded to support targets and observers having
+!!        no names associated with their ID codes.
+!!
+!!-    SPICELIB Version 1.0.0  23-FEB-2009 (NJB) (EDW)
+!!
+!!     SPICELIB functions
+!!
+!!     Entry points in the coordinate utility package.
+!!     We have the usual GF entry points for the coordinate, plus
+!!     utilities for the cosine and sine of the coordinate.
+!!
+!!     Names and meanings:
+!!
+!!        ZZGFCODC      Is coordinate decreasing?
+!!        ZZGFCOG       Get coordinate value.
+!!        ZZGFCOCD      Is cosine of the coordinate decreasing?
+!!        ZZGFCOCG      Get cosine of the coordinate value.
+!!        ZZGFCOSD      Is sine of the coordinate decreasing?
+!!        ZZGFCOSG      Get sine of the coordinate value.
+!!
+!!    The routine to test UDFUNC < REFVAL.
+!!
+!!     Local parameters
+!!
+!!     Margin for branch cut avoidance. Units are radians:
+!!
+!!     Margin for local extrema search. Units are radians:
+!!
+!!     Short alias for LBCELL:
+!!
+!!     Number of supported comparison operators:
+!!
+!!     Assorted string lengths:
+!!
+!!     Maximum body name length:
+!!
+!!     NAMLEN is the maximum length of both a frame name and of
+!!     any kernel pool variable name.
+!!
+!!     OPLEN is the maximum string length for comparison operators.
+!!     OPLEN may grow if new comparisons are added.
+!!
+!!     FUNLEN is the length of the function name string.
+!!
+!!     CRDLEN is the maximum length of a coordinate name.
+!!
+!!     SYSLEN is the maximum length of a coordinate system name.
+!!
+!!     RPTLEN is the maximum length of a progress reporter message.
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
       use pepper_arrays, only: isrchc
       use pepper_math, only: smsgnd
       use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_inc_gf
+      use pepper_inc_zzgf
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
       integer(ip), parameter :: lbcell = -5
       real(wp), parameter :: bcamrg = 1.0e-11_wp
       real(wp), parameter :: lcxmrg = 1.0e-12_wp
@@ -37461,709 +36940,674 @@ contains
       module subroutine zzgfcslv ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, &
             crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, &
             udrepf, bail, udbail, mw, nw, work, cnfine, result )
-
-! $ Abstract
-!
-!     Perform a coordinate search.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     PRIVATE
-!     ROOT
-!
-! $ Declarations
-
-
-
-
-
-
-! $ Detailed_Input
-!
-!     VECDEF     Every coordinate computed by this routine is a
-!                function of an underlying vector. VECDEF is a short
-!                string describing the means by which the vector of
-!                interest is defined. Only parameters from the Fortran
-!                INCLUDE file zzgf.inc should be used. Parameter names
-!                and meanings are:
-!
-!                   POSDEF               Vector is position of
-!                                        target relative to observer.
-!
-!                   SOBDEF               Vector is sub-observer
-!                                        point on target body.  Vector
-!                                        points from target body
-!                                        center to sub-observer point.
-!                                        The target must be an extended
-!                                        body modeled as a triaxial
-!                                        ellipsoid.
-!
-!                   SINDEF               Vector is ray-surface intercept
-!                                        point on target body. Vector
-!                                        points from target body
-!                                        center to sub-observer point.
-!                                        The target must be an extended
-!                                        body modeled as a triaxial
-!                                        ellipsoid.
-!
-!                Case, leading and trailing blanks ARE significant
-!                in the string VECDEF.
-!
-!     METHOD     is a string specifying the computational method
-!                applicable to the vector of interest. When VECDEF
-!                is the parameter
-!
-!                   SOBDEF
-!
-!                METHOD should be set to one of the values accepted
-!                by the SPICELIB routine SUBPNT.
-!
-!                When VECDEF is the parameter
-!
-!                   SINDEF
-!
-!                METHOD should be set to one of the values accepted
-!                by the SPICELIB routine SINCPT.
-!
-!                METHOD is ignored if VECDEF is set to
-!
-!                   POSDEF
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string METHOD.
-!
-!     TARGET     is the name of the target object.
-!
-!     REF        is the name of the reference frame relative to which
-!                the vector of interest is specified. The specified
-!                condition applies to the specified coordinate of
-!                of this vector in frame REF.
-!
-!                When geodetic coordinates are used, the reference
-!                ellipsoid is assumed to be that associated with
-!                the central body of the frame designated by REF.
-!                In this case, the central body of the frame must
-!                be an extended body.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string REF.
-!
-!     ABCORR     indicates the aberration corrections to be applied to
-!                the state of the target body to account for one-way
-!                light time and stellar aberration.  The orientation
-!                of the target body will also be corrected for one-way
-!                light time when light time corrections are requested.
-!
-!                Supported aberration correction options for
-!                observation (case where radiation is received by
-!                observer at ET) are:
-!
-!                  'NONE'          No correction.
-!                  'LT'            Light time only.
-!                  'LT+S'          Light time and stellar aberration.
-!                  'CN'            Converged Newtonian (CN) light time.
-!                  'CN+S'          CN light time and stellar aberration.
-!
-!                Supported aberration correction options for
-!                transmission (case where radiation is emitted from
-!                observer at ET) are:
-!
-!                  'XLT'           Light time only.
-!                  'XLT+S'         Light time and stellar aberration.
-!                  'XCN'           Converged Newtonian (CN) light time.
-!                  'XCN+S'         CN light time and stellar aberration.
-!
-!                For detailed information, see the geometry finder
-!                required reading, gf.req.  Also see the header of
-!                SPKEZR, which contains a detailed discussion of
-!                aberration corrections.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string ABCORR.
-!
-!     OBSRVR     is the name of the observer.
-!
-!     DREF       is the name of the reference frame relative to which a
-!                ray's direction vector is expressed. This may be any
-!                frame supported by the SPICE system, including
-!                built-in frames (documented in the Frames Required
-!                Reading) and frames defined by a loaded frame kernel
-!                (FK). The string DREF is case-insensitive, and leading
-!                and trailing blanks in DREF are not significant.
-!
-!                When DREF designates a non-inertial frame, the
-!                orientation of the frame is evaluated at an epoch
-!                dependent on the frame's center and, if the center is
-!                not the observer, on the selected aberration
-!                correction. See the description of the direction
-!                vector DVEC for details.
-!
-!     DVEC       Ray direction vector emanating from the observer. The
-!                intercept with the target body's surface of the ray
-!                defined by the observer and DVEC is sought.
-!
-!                DVEC is specified relative to the reference frame
-!                designated by DREF.
-!
-!                Non-inertial reference frames are treated as follows:
-!                if the center of the frame is at the observer's
-!                location, the frame is evaluated at ET. If the frame's
-!                center is located elsewhere, then letting LTCENT be
-!                the one-way light time between the observer and the
-!                central body associated with the frame, the
-!                orientation of the frame is evaluated at ET-LTCENT,
-!                ET+LTCENT, or ET depending on whether the requested
-!                aberration correction is, respectively, for received
-!                radiation, transmitted radiation, or is omitted.
-!                LTCENT is computed using the method indicated by
-!                ABCORR.
-!
-!     CRDSYS     is the name of the coordinate system to which the
-!                coordinate of interest belongs. Allowed values are
-!                those defined in the GF Fortran INCLUDE file
-!
-!                   zzgf.inc.
-!
-!                Note that when geodetic coordinates are used, the
-!                reference ellipsoid is that associated with the
-!                central body of the reference frame designated by REF.
-!                The central body must be an extended body in this
-!                case.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string CRDSYS.
-!
-!     CRDNAM     is the name of the coordinate of interest:  this is
-!                the coordinate to which the specified condition
-!                applies.  The set of coordinate names is a function of
-!                the coordinate system. Allowed values are those
-!                defined in the GF Fortran INCLUDE file
-!
-!                   zzgf.inc.
-!
-!                Case, leading and trailing blanks are not significant
-!                in the string CRDNAM.
-!
-!     RELATE      is a relational operator used to define a constraint
-!                 on the specified coordinate. The result window found
-!                 by this routine indicates the time intervals where
-!                 the constraint is satisfied. Supported values of
-!                 RELATE and corresponding meanings are shown below:
-!
-!                    '>'      Coordinate is greater than the reference
-!                             value REFVAL.
-!
-!                    '='      Coordinate is equal to the reference
-!                             value REFVAL.
-!
-!                    '<'      Coordinate is less than the reference
-!                             value REFVAL.
-!
-!                   'ABSMAX'  Coordinate is at an absolute maximum.
-!
-!                   'ABSMIN'  Coordinate is at an absolute  minimum.
-!
-!                   'LOCMAX'  Coordinate is at a local maximum.
-!
-!                   'LOCMIN'  Coordinate is at a local minimum.
-!
-!                The caller may indicate that the region of interest
-!                is the set of time intervals where the coordinate is
-!                within a specified tolerance of an absolute extremum.
-!                The argument ADJUST (described below) is used to
-!                specify this tolerance.
-!
-!                Local extrema are considered to exist only in the
-!                interiors of the intervals comprising the confinement
-!                window:  a local extremum cannot exist at a boundary
-!                point of the confinement window.
-!
-!                Case is not significant in the string RELATE.
-!
-!     REFVAL     is the reference value used to define equality or
-!                inequality conditions.
-!
-!                If the coordinate has the dimension "length," then
-!                REFVAL has units of kilometers.
-!
-!                If the coordinate has the dimension "angle," then
-!                REFVAL has units of radians.
-!
-!                When the coordinate of interest is longitude, REFVAL
-!                is interpreted as though it were translated, if
-!                necessary, by an integer multiple of 2*pi to place it
-!                in the standard range for longitude: (-pi, pi].
-!                Similarly, when the coordinate of interest is right
-!                ascension, REFVAL is interpreted as though it were
-!                translated, if necessary, by an integer multiple of
-!                2*pi into the range [0, 2*pi).
-!
-!                Example:  suppose REFVAL is set to -4.5. Then the
-!                          condition
-!
-!                   longitude equals REFVAL
-!
-!                is interpreted as
-!
-!                   longitude equals -0.5 * pi
-!
-!                so the solution window for this condition may well
-!                be non-empty.
-!
-!                REFVAL is ignored if RELATE is not an equality or
-!                inequality operator.
-!
-!     TOL        is a tolerance value used to determine convergence of
-!                root-finding operations. TOL is measured in TDB
-!                seconds and is greater than zero.
-!
-!     ADJUST     The amount by which the coordinate is allowed to vary
-!                from an absolute extremum. ADJUST is not used for
-!                equality or inequality conditions. ADJUST must not be
-!                negative.
-!
-!                If ADJUST is positive and a search for an absolute
-!                minimum is performed, the resulting schedule contains
-!                time intervals when the specified coordinate has
-!                values between ABSMIN and ABSMIN + ADJUST.
-!
-!                If the search is for an absolute maximum, the
-!                corresponding range is  between ABSMAX - ADJUST and
-!                ABSMAX.
-!
-!     UDSTEP     is a routine that computes a time step used to search
-!                for a transition of the state of the specified
-!                coordinate. In the context of this routine's
-!                algorithm, a "state transition" occurs where the
-!                coordinate's time derivative changes from negative to
-!                non-negative or vice versa.
-!
-!                This routine relies on UDSTEP returning step sizes
-!                small enough so that state transitions within the
-!                confinement window are not overlooked.  There must
-!                never be two roots A and B separated by less than
-!                STEP, where STEP is the minimum step size returned by
-!                UDSTEP for any value of ET in the interval [A, B].
-!
-!                The calling sequence for UDSTEP is:
-!
-!                   CALL UDSTEP ( ET, STEP )
-!
-!                where:
-!
-!                   ET      is the input start time from which the
-!                           algorithm is to search forward for a state
-!                           transition. ET is expressed as seconds past
-!                           J2000 TDB. ET is a DOUBLE PRECISION number.
-!
-!                   STEP    is the output step size. STEP indicates
-!                           how far to advance ET so that ET and
-!                           ET+STEP may bracket a state transition and
-!                           definitely do not bracket more than one
-!                           state transition. STEP is a DOUBLE
-!                           PRECISION number. Units are TDB seconds.
-!
-!                If a constant step size is desired, the routine GFSTEP
-!                may be used. GFSTEP returns the step size that was set
-!                via the most recent call to GFSSTP.
-!
-!     UDREFN     is the name of the externally specified routine that
-!                computes a refinement in the times that bracket a
-!                transition point. In other words, once a pair of
-!                times have been detected such that the system is in
-!                different states at each of the two times, UDREFN
-!                selects an intermediate time which should be closer to
-!                the transition state than one of the two known times.
-!                The calling sequence for UDREFN is:
-!
-!                   CALL UDREFN ( T1, T2, S1, S2, T )
-!
-!                where the inputs are:
-!
-!                   T1    is a time when the system is in state S1. T1
-!                         is a DOUBLE PRECISION number.
-!
-!                   T2    is a time when the system is in state S2. T2
-!                         is a DOUBLE PRECISION number and is assumed
-!                         to be larger than T1.
-!
-!                   S1    is the state of the system at time T1.
-!                         S1 is a LOGICAL value.
-!
-!                   S2    is the state of the system at time T2.
-!                         S2 is a LOGICAL value.
-!
-!                UDREFN may use or ignore the S1 and S2 values.
-!
-!                The output is:
-!
-!                   T     is next time to check for a state transition.
-!                         T is a DOUBLE PRECISION number between T1 and
-!                         T2.
-!
-!                If a simple bisection method is desired, the routine
-!                GFREFN may be used. This is the default option.
-!
-!     RPT        is a logical variable which controls whether the
-!                progress reporter is on or off; setting RPT
-!                to .TRUE. enables progress reporting.
-!
-!     UDREPI     is a user-defined subroutine that initializes a
-!                progress report. When progress reporting is
-!                enabled, UDREPI is called at the start of a search
-!                pass (see the implementation of ZZGFREL for details on
-!                search passes).  The calling sequence of UDREPI is
-!
-!                   UDREPI ( CNFINE, RPTPRE, RPTSUF )
-!
-!                   DOUBLE PRECISION    CNFINE ( LBCELL : * )
-!                   CHARACTER*(*)       RPTPRE
-!                   CHARACTER*(*)       RPTSUF
-!
-!                where
-!
-!                   CNFINE
-!
-!                is the confinement window passed into ZZGFREL, and
-!
-!                   RPTPRE
-!                   RPTSUF
-!
-!                are prefix and suffix strings used in the progress
-!                report:  these strings are intended to bracket a
-!                representation of the fraction of work done.
-!
-!                SPICELIB provides the default progress reporting
-!                initialization routine GFREPI. If GFREPI is used, then
-!                the progress reporting update and termination routines
-!                GFREPU and GFREPF must be used as well.
-!
-!     UDREPU     is a user-defined subroutine that updates the
-!                progress report for a search pass. The calling
-!                sequence of UDREPU is
-!
-!                   UDREPU (IVBEG, IVEND, ET )
-!
-!                   DOUBLE PRECISION      ET
-!                   DOUBLE PRECISION      IVBEG
-!                   DOUBLE PRECISION      IVEND
-!
-!                where ET is an epoch belonging to the confinement
-!                window, IVBEG and IVEND are the start and stop times,
-!                respectively of the current confinement window
-!                interval.  The ratio of the measure of the portion
-!                of CNFINE that precedes ET to the measure of CNFINE
-!                would be a logical candidate for the search's
-!                completion percentage; however the method of
-!                measurement is up to the user.
-!
-!     UDREPF     is a user-defined subroutine that finalizes a
-!                progress report. UDREPF has no arguments.
-!
-!     BAIL       is a logical flag indicating whether or not interrupt
-!                signal handling is enabled. Setting BAIL to .TRUE.
-!                enables interrupt signal handling: the GF system will
-!                then call UDBAIL to check for interrupt signals.
-!
-!     UDBAIL     is the name of a user defined logical function that
-!                checks to see whether an interrupt signal has been
-!                issued from, e.g. the keyboard. UDBAIL is used only
-!                when BAIL is set to .TRUE. If interrupt handling is
-!                not used, the SPICELIB function GFBAIL should be
-!                passed in as the actual bail-out function argument.
-!
-!     MW         is the cell size of the windows in the workspace array
-!                WORK.
-!
-!     NW         is the number of windows in the workspace array WORK.
-!                NW must be at least as large as the parameter NWMAX.
-!
-!     WORK       is an array used to store workspace windows. This
-!                array has dimensions ( LBCELL : MW, NW).
-!
-!     CNFINE     is a SPICE window that confines the bounds of the
-!                search.
-!
-!                For coordinates defined by ray-target surface
-!                intercepts, the effective confinement window is
-!                obtained by searching for times within CNFINE when the
-!                specified intercept and its derivative with respect to
-!                time are computable. The window resulting from this
-!                search is then contracted by CNTRCT+TOL seconds at
-!                both left and right endpoints; this contracted window
-!                is called the "existence window," since the surface
-!                intercept and its time derivative are expected to be
-!                computable on this contracted window. The user must
-!                select CNFINE so that this requirement is met.
-!
-!     RESULT     is an initialized SPICE window. RESULT must be large
-!                enough to hold all of the intervals, within the
-!                confinement window, on which the specified condition
-!                is met.
-!
-!                RESULT must be initialized by the caller via the
-!                SPICELIB routine SSIZED.
-!
-! $ Detailed_Output
-!
-!     WORK       has undefined contents on output.
-!
-!     RESULT     is a SPICELIB window containing the intersection of
-!                the confinement window and the set of time intervals
-!                when the value of the specified coordinate satisfies
-!                constraints specified by RELATE and ADJUST.
-!
-!                For coordinates defined by ray-target surface
-!                intercepts, RESULT is further restricted to the window
-!                over which the intercept and its derivative with
-!                respect to time are computable. See the description of
-!                CNFINE above for details.
-!
-! $ Parameters
-!
-!     LBCELL     is the lower bound for SPICELIB cells.
-!
-!     CNTRCT     is the contraction magnitude used to prepare the
-!                "existence window" for use as a confinement window.
-!                The existence window is applicable only to coordinates
-!                of surface intercepts: it is the result of contracting
-!                the window over which the surface intercept and its
-!                time derivative are computable by CNTRCT+TOL. Units
-!                are TDB seconds.
-!
-! $ Exceptions
-!
-!     1)  If the workspace window count NW is less than NWMAX, the
-!         error SPICE(TOOFEWWINDOWS) is signaled.
-!
-!     2)  If the workspace window size MW is less than 2, the
-!         error SPICE(WINDOWSTOOSMALL) is signaled.
-!
-!     3)  If a workspace window or the result window is too small
-!         to accommodate the required number of intervals,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     4)  If either the observer or target names cannot be mapped
-!         to ID codes, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-!     5)  If the observer and target have the same ID codes, the
-!         error will be diagnosed by routines in the call tree of this
-!         routine.
-!
-!     6)  If the vector definition VECDEF is not recognized,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     7)  If the computation method METHOD is not recognized,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     8)  If the aberration correction ABCORR is not recognized,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     9)  If the coordinate system name CRDSYS is not recognized,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     10) If the coordinate name CRDNAM is not recognized,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     11) If the frame REF is not recognized by the frames subsystem,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     12) If VECDEF calls for a computation involving a target surface
-!         intercept point and the name and ID code of the frame DREF
-!         associated with the target body are not available from the
-!         frame subsystem, the error will be diagnosed by routines in
-!         the call tree of this routine.
-!
-!     13) If VECDEF calls for a computation involving a target surface
-!         intercept point and the direction vector DVEC is the zero
-!         vector, the error will be diagnosed by routines in the call
-!         tree of this routine.
-!
-!     14) If VECDEF calls for a computation involving a target surface
-!         point and the radii defining the reference ellipsoid
-!         associated with the target body are not available in the
-!         kernel pool, the error will be diagnosed by routines in the
-!         call tree of this routine.
-!
-!     15) If VECDEF calls for a computation involving a target surface
-!         point and the frame REF is not centered on the target body,
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     16) If geodetic or planetographic coordinates are used and the
-!         radii defining the reference ellipsoid associated with the
-!         center of the frame REF are not available in the kernel pool,
-!         the error will be diagnosed by routines in the call tree of
-!         this routine.
-!
-!     17) If geodetic or planetographic coordinates are used and the
-!         first equatorial radius of the reference ellipsoid associated
-!         with the center of the frame REF is zero, the error will be
-!         diagnosed by routines in the call tree of this routine.
-!
-!     18) If geodetic or planetographic coordinates are used and the
-!         equatorial radii of the reference ellipsoid associated
-!         with the center of the frame REF are unequal, the error
-!         SPICE(NOTSUPPORTED) is signaled.
-!
-!     19) If geodetic or planetographic coordinates are used and the
-!         reference ellipsoid associated with the center of the frame
-!         REF is degenerate (one or more radii are non-positive),
-!         the error will be diagnosed by routines in the call tree
-!         of this routine.
-!
-!     20) If ADJUST is negative, the error SPICE(VALUEOUTOFRANGE)
-!         is signaled.
-!
-!     21) If TOL is non-positive, the error SPICE(VALUEOUTOFRANGE)
-!         is signaled.
-!
-!     21) If RELATE is not a supported relational operator
-!         specification, the error SPICE(NOTRECOGNIZED) is signaled.
-!
-! $ Files
-!
-!     See the discussion in the Files section of the header of the
-!     umbrella subroutine ZZGFCOU.
-!
-! $ Particulars
-!
-!     This routine handles coordinate search set-up and execution
-!     activities for GFEVNT.
-!
-!     For a surface intercept coordinate search, this routine finds the
-!     "existence window," within the input confinement window, for the
-!     surface intercept and its time derivative. The existence window
-!     is contracted by CNTRCT seconds; this contracted window is then
-!     used as the confinement window for the search.
-!
-! $ Examples
-!
-!     See GFEVNT and ZZGFLONG.
-!
-! $ Restrictions
-!
-!     1)  The interface and functionality of this set of routines may
-!         change without notice.  These routines should be called only
-!         by SPICELIB routines.
-!
-!     2)  ZZGFCSLV must be called prior to use of any of the other
-!         entry points.
-!
-!     3)  This routine has the following couplings with other
-!         SPICE routines:
-!
-!            - The set of allowed aberration corrections must
-!              be kept in sync with the set supported by the
-!              SPK API routines.
-!
-!            - The set of vector definitions must be kept in
-!              sync with the set supported by GFEVNT.
-!
-!            - The set of supported coordinate systems must be kept in
-!              sync with the set supported by zzgf.inc.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 03-OCT-2021 (NJB)
-!
-!        Variable CNAMES is now saved. Corrected typos in comments.
-!
-!-    SPICELIB Version 1.2.0, 04-APR-2011 (EDW)
-!
-!        Replaced use of routines ZZGFREL with ZZGFRELX, and
-!        ZZGFSOLV with ZZGFSOLVX. ZZGFCOIN argument list edited
-!        to remove the unneeded argument REFVAL.
-!
-!        The code changes for ZZGFRELX use should not affect the
-!        numerical results of GF computations.
-!
-!-    SPICELIB Version 1.0.0 06-MAR-2009 (NJB) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     coordinate search
-!
-!-&
-
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-
-
-!
-!     Number of supported comparison operators:
-!
-
-!
-!     MAXOP is the maximum string length for comparison operators.
-!     MAXOP may grow if new comparisons are added.
-!
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-!     Below we initialize the list of comparison operator names.
-!
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Perform a coordinate search.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     PRIVATE
+!!     ROOT
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     VECDEF     Every coordinate computed by this routine is a
+!!                function of an underlying vector. VECDEF is a short
+!!                string describing the means by which the vector of
+!!                interest is defined. Only parameters from the Fortran
+!!                INCLUDE file zzgf.inc should be used. Parameter names
+!!                and meanings are:
+!!
+!!                   POSDEF               Vector is position of
+!!                                        target relative to observer.
+!!
+!!                   SOBDEF               Vector is sub-observer
+!!                                        point on target body.  Vector
+!!                                        points from target body
+!!                                        center to sub-observer point.
+!!                                        The target must be an extended
+!!                                        body modeled as a triaxial
+!!                                        ellipsoid.
+!!
+!!                   SINDEF               Vector is ray-surface intercept
+!!                                        point on target body. Vector
+!!                                        points from target body
+!!                                        center to sub-observer point.
+!!                                        The target must be an extended
+!!                                        body modeled as a triaxial
+!!                                        ellipsoid.
+!!
+!!                Case, leading and trailing blanks ARE significant
+!!                in the string VECDEF.
+!!
+!!     METHOD     is a string specifying the computational method
+!!                applicable to the vector of interest. When VECDEF
+!!                is the parameter
+!!
+!!                   SOBDEF
+!!
+!!                METHOD should be set to one of the values accepted
+!!                by the SPICELIB routine SUBPNT.
+!!
+!!                When VECDEF is the parameter
+!!
+!!                   SINDEF
+!!
+!!                METHOD should be set to one of the values accepted
+!!                by the SPICELIB routine SINCPT.
+!!
+!!                METHOD is ignored if VECDEF is set to
+!!
+!!                   POSDEF
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string METHOD.
+!!
+!!     TARGET     is the name of the target object.
+!!
+!!     REF        is the name of the reference frame relative to which
+!!                the vector of interest is specified. The specified
+!!                condition applies to the specified coordinate of
+!!                of this vector in frame REF.
+!!
+!!                When geodetic coordinates are used, the reference
+!!                ellipsoid is assumed to be that associated with
+!!                the central body of the frame designated by REF.
+!!                In this case, the central body of the frame must
+!!                be an extended body.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string REF.
+!!
+!!     ABCORR     indicates the aberration corrections to be applied to
+!!                the state of the target body to account for one-way
+!!                light time and stellar aberration.  The orientation
+!!                of the target body will also be corrected for one-way
+!!                light time when light time corrections are requested.
+!!
+!!                Supported aberration correction options for
+!!                observation (case where radiation is received by
+!!                observer at ET) are:
+!!
+!!                  'NONE'          No correction.
+!!                  'LT'            Light time only.
+!!                  'LT+S'          Light time and stellar aberration.
+!!                  'CN'            Converged Newtonian (CN) light time.
+!!                  'CN+S'          CN light time and stellar aberration.
+!!
+!!                Supported aberration correction options for
+!!                transmission (case where radiation is emitted from
+!!                observer at ET) are:
+!!
+!!                  'XLT'           Light time only.
+!!                  'XLT+S'         Light time and stellar aberration.
+!!                  'XCN'           Converged Newtonian (CN) light time.
+!!                  'XCN+S'         CN light time and stellar aberration.
+!!
+!!                For detailed information, see the geometry finder
+!!                required reading, gf.req.  Also see the header of
+!!                SPKEZR, which contains a detailed discussion of
+!!                aberration corrections.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string ABCORR.
+!!
+!!     OBSRVR     is the name of the observer.
+!!
+!!     DREF       is the name of the reference frame relative to which a
+!!                ray's direction vector is expressed. This may be any
+!!                frame supported by the SPICE system, including
+!!                built-in frames (documented in the Frames Required
+!!                Reading) and frames defined by a loaded frame kernel
+!!                (FK). The string DREF is case-insensitive, and leading
+!!                and trailing blanks in DREF are not significant.
+!!
+!!                When DREF designates a non-inertial frame, the
+!!                orientation of the frame is evaluated at an epoch
+!!                dependent on the frame's center and, if the center is
+!!                not the observer, on the selected aberration
+!!                correction. See the description of the direction
+!!                vector DVEC for details.
+!!
+!!     DVEC       Ray direction vector emanating from the observer. The
+!!                intercept with the target body's surface of the ray
+!!                defined by the observer and DVEC is sought.
+!!
+!!                DVEC is specified relative to the reference frame
+!!                designated by DREF.
+!!
+!!                Non-inertial reference frames are treated as follows:
+!!                if the center of the frame is at the observer's
+!!                location, the frame is evaluated at ET. If the frame's
+!!                center is located elsewhere, then letting LTCENT be
+!!                the one-way light time between the observer and the
+!!                central body associated with the frame, the
+!!                orientation of the frame is evaluated at ET-LTCENT,
+!!                ET+LTCENT, or ET depending on whether the requested
+!!                aberration correction is, respectively, for received
+!!                radiation, transmitted radiation, or is omitted.
+!!                LTCENT is computed using the method indicated by
+!!                ABCORR.
+!!
+!!     CRDSYS     is the name of the coordinate system to which the
+!!                coordinate of interest belongs. Allowed values are
+!!                those defined in the GF Fortran INCLUDE file
+!!
+!!                   zzgf.inc.
+!!
+!!                Note that when geodetic coordinates are used, the
+!!                reference ellipsoid is that associated with the
+!!                central body of the reference frame designated by REF.
+!!                The central body must be an extended body in this
+!!                case.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string CRDSYS.
+!!
+!!     CRDNAM     is the name of the coordinate of interest:  this is
+!!                the coordinate to which the specified condition
+!!                applies.  The set of coordinate names is a function of
+!!                the coordinate system. Allowed values are those
+!!                defined in the GF Fortran INCLUDE file
+!!
+!!                   zzgf.inc.
+!!
+!!                Case, leading and trailing blanks are not significant
+!!                in the string CRDNAM.
+!!
+!!     RELATE      is a relational operator used to define a constraint
+!!                 on the specified coordinate. The result window found
+!!                 by this routine indicates the time intervals where
+!!                 the constraint is satisfied. Supported values of
+!!                 RELATE and corresponding meanings are shown below:
+!!
+!!                    '>'      Coordinate is greater than the reference
+!!                             value REFVAL.
+!!
+!!                    '='      Coordinate is equal to the reference
+!!                             value REFVAL.
+!!
+!!                    '<'      Coordinate is less than the reference
+!!                             value REFVAL.
+!!
+!!                   'ABSMAX'  Coordinate is at an absolute maximum.
+!!
+!!                   'ABSMIN'  Coordinate is at an absolute  minimum.
+!!
+!!                   'LOCMAX'  Coordinate is at a local maximum.
+!!
+!!                   'LOCMIN'  Coordinate is at a local minimum.
+!!
+!!                The caller may indicate that the region of interest
+!!                is the set of time intervals where the coordinate is
+!!                within a specified tolerance of an absolute extremum.
+!!                The argument ADJUST (described below) is used to
+!!                specify this tolerance.
+!!
+!!                Local extrema are considered to exist only in the
+!!                interiors of the intervals comprising the confinement
+!!                window:  a local extremum cannot exist at a boundary
+!!                point of the confinement window.
+!!
+!!                Case is not significant in the string RELATE.
+!!
+!!     REFVAL     is the reference value used to define equality or
+!!                inequality conditions.
+!!
+!!                If the coordinate has the dimension "length," then
+!!                REFVAL has units of kilometers.
+!!
+!!                If the coordinate has the dimension "angle," then
+!!                REFVAL has units of radians.
+!!
+!!                When the coordinate of interest is longitude, REFVAL
+!!                is interpreted as though it were translated, if
+!!                necessary, by an integer multiple of 2*pi to place it
+!!                in the standard range for longitude: (-pi, pi].
+!!                Similarly, when the coordinate of interest is right
+!!                ascension, REFVAL is interpreted as though it were
+!!                translated, if necessary, by an integer multiple of
+!!                2*pi into the range [0, 2*pi).
+!!
+!!                Example:  suppose REFVAL is set to -4.5. Then the
+!!                          condition
+!!
+!!                   longitude equals REFVAL
+!!
+!!                is interpreted as
+!!
+!!                   longitude equals -0.5 * pi
+!!
+!!                so the solution window for this condition may well
+!!                be non-empty.
+!!
+!!                REFVAL is ignored if RELATE is not an equality or
+!!                inequality operator.
+!!
+!!     TOL        is a tolerance value used to determine convergence of
+!!                root-finding operations. TOL is measured in TDB
+!!                seconds and is greater than zero.
+!!
+!!     ADJUST     The amount by which the coordinate is allowed to vary
+!!                from an absolute extremum. ADJUST is not used for
+!!                equality or inequality conditions. ADJUST must not be
+!!                negative.
+!!
+!!                If ADJUST is positive and a search for an absolute
+!!                minimum is performed, the resulting schedule contains
+!!                time intervals when the specified coordinate has
+!!                values between ABSMIN and ABSMIN + ADJUST.
+!!
+!!                If the search is for an absolute maximum, the
+!!                corresponding range is  between ABSMAX - ADJUST and
+!!                ABSMAX.
+!!
+!!     UDSTEP     is a routine that computes a time step used to search
+!!                for a transition of the state of the specified
+!!                coordinate. In the context of this routine's
+!!                algorithm, a "state transition" occurs where the
+!!                coordinate's time derivative changes from negative to
+!!                non-negative or vice versa.
+!!
+!!                This routine relies on UDSTEP returning step sizes
+!!                small enough so that state transitions within the
+!!                confinement window are not overlooked.  There must
+!!                never be two roots A and B separated by less than
+!!                STEP, where STEP is the minimum step size returned by
+!!                UDSTEP for any value of ET in the interval [A, B].
+!!
+!!                The calling sequence for UDSTEP is:
+!!
+!!                   CALL UDSTEP ( ET, STEP )
+!!
+!!                where:
+!!
+!!                   ET      is the input start time from which the
+!!                           algorithm is to search forward for a state
+!!                           transition. ET is expressed as seconds past
+!!                           J2000 TDB. ET is a DOUBLE PRECISION number.
+!!
+!!                   STEP    is the output step size. STEP indicates
+!!                           how far to advance ET so that ET and
+!!                           ET+STEP may bracket a state transition and
+!!                           definitely do not bracket more than one
+!!                           state transition. STEP is a DOUBLE
+!!                           PRECISION number. Units are TDB seconds.
+!!
+!!                If a constant step size is desired, the routine GFSTEP
+!!                may be used. GFSTEP returns the step size that was set
+!!                via the most recent call to GFSSTP.
+!!
+!!     UDREFN     is the name of the externally specified routine that
+!!                computes a refinement in the times that bracket a
+!!                transition point. In other words, once a pair of
+!!                times have been detected such that the system is in
+!!                different states at each of the two times, UDREFN
+!!                selects an intermediate time which should be closer to
+!!                the transition state than one of the two known times.
+!!                The calling sequence for UDREFN is:
+!!
+!!                   CALL UDREFN ( T1, T2, S1, S2, T )
+!!
+!!                where the inputs are:
+!!
+!!                   T1    is a time when the system is in state S1. T1
+!!                         is a DOUBLE PRECISION number.
+!!
+!!                   T2    is a time when the system is in state S2. T2
+!!                         is a DOUBLE PRECISION number and is assumed
+!!                         to be larger than T1.
+!!
+!!                   S1    is the state of the system at time T1.
+!!                         S1 is a LOGICAL value.
+!!
+!!                   S2    is the state of the system at time T2.
+!!                         S2 is a LOGICAL value.
+!!
+!!                UDREFN may use or ignore the S1 and S2 values.
+!!
+!!                The output is:
+!!
+!!                   T     is next time to check for a state transition.
+!!                         T is a DOUBLE PRECISION number between T1 and
+!!                         T2.
+!!
+!!                If a simple bisection method is desired, the routine
+!!                GFREFN may be used. This is the default option.
+!!
+!!     RPT        is a logical variable which controls whether the
+!!                progress reporter is on or off; setting RPT
+!!                to .TRUE. enables progress reporting.
+!!
+!!     UDREPI     is a user-defined subroutine that initializes a
+!!                progress report. When progress reporting is
+!!                enabled, UDREPI is called at the start of a search
+!!                pass (see the implementation of ZZGFREL for details on
+!!                search passes).  The calling sequence of UDREPI is
+!!
+!!                   UDREPI ( CNFINE, RPTPRE, RPTSUF )
+!!
+!!                   DOUBLE PRECISION    CNFINE ( LBCELL : * )
+!!                   CHARACTER*(*)       RPTPRE
+!!                   CHARACTER*(*)       RPTSUF
+!!
+!!                where
+!!
+!!                   CNFINE
+!!
+!!                is the confinement window passed into ZZGFREL, and
+!!
+!!                   RPTPRE
+!!                   RPTSUF
+!!
+!!                are prefix and suffix strings used in the progress
+!!                report:  these strings are intended to bracket a
+!!                representation of the fraction of work done.
+!!
+!!                SPICELIB provides the default progress reporting
+!!                initialization routine GFREPI. If GFREPI is used, then
+!!                the progress reporting update and termination routines
+!!                GFREPU and GFREPF must be used as well.
+!!
+!!     UDREPU     is a user-defined subroutine that updates the
+!!                progress report for a search pass. The calling
+!!                sequence of UDREPU is
+!!
+!!                   UDREPU (IVBEG, IVEND, ET )
+!!
+!!                   DOUBLE PRECISION      ET
+!!                   DOUBLE PRECISION      IVBEG
+!!                   DOUBLE PRECISION      IVEND
+!!
+!!                where ET is an epoch belonging to the confinement
+!!                window, IVBEG and IVEND are the start and stop times,
+!!                respectively of the current confinement window
+!!                interval.  The ratio of the measure of the portion
+!!                of CNFINE that precedes ET to the measure of CNFINE
+!!                would be a logical candidate for the search's
+!!                completion percentage; however the method of
+!!                measurement is up to the user.
+!!
+!!     UDREPF     is a user-defined subroutine that finalizes a
+!!                progress report. UDREPF has no arguments.
+!!
+!!     BAIL       is a logical flag indicating whether or not interrupt
+!!                signal handling is enabled. Setting BAIL to .TRUE.
+!!                enables interrupt signal handling: the GF system will
+!!                then call UDBAIL to check for interrupt signals.
+!!
+!!     UDBAIL     is the name of a user defined logical function that
+!!                checks to see whether an interrupt signal has been
+!!                issued from, e.g. the keyboard. UDBAIL is used only
+!!                when BAIL is set to .TRUE. If interrupt handling is
+!!                not used, the SPICELIB function GFBAIL should be
+!!                passed in as the actual bail-out function argument.
+!!
+!!     MW         is the cell size of the windows in the workspace array
+!!                WORK.
+!!
+!!     NW         is the number of windows in the workspace array WORK.
+!!                NW must be at least as large as the parameter NWMAX.
+!!
+!!     WORK       is an array used to store workspace windows. This
+!!                array has dimensions ( LBCELL : MW, NW).
+!!
+!!     CNFINE     is a SPICE window that confines the bounds of the
+!!                search.
+!!
+!!                For coordinates defined by ray-target surface
+!!                intercepts, the effective confinement window is
+!!                obtained by searching for times within CNFINE when the
+!!                specified intercept and its derivative with respect to
+!!                time are computable. The window resulting from this
+!!                search is then contracted by CNTRCT+TOL seconds at
+!!                both left and right endpoints; this contracted window
+!!                is called the "existence window," since the surface
+!!                intercept and its time derivative are expected to be
+!!                computable on this contracted window. The user must
+!!                select CNFINE so that this requirement is met.
+!!
+!!     RESULT     is an initialized SPICE window. RESULT must be large
+!!                enough to hold all of the intervals, within the
+!!                confinement window, on which the specified condition
+!!                is met.
+!!
+!!                RESULT must be initialized by the caller via the
+!!                SPICELIB routine SSIZED.
+!!
+!! ## Detailed Output
+!!
+!!     WORK       has undefined contents on output.
+!!
+!!     RESULT     is a SPICELIB window containing the intersection of
+!!                the confinement window and the set of time intervals
+!!                when the value of the specified coordinate satisfies
+!!                constraints specified by RELATE and ADJUST.
+!!
+!!                For coordinates defined by ray-target surface
+!!                intercepts, RESULT is further restricted to the window
+!!                over which the intercept and its derivative with
+!!                respect to time are computable. See the description of
+!!                CNFINE above for details.
+!!
+!! ## Parameters
+!!
+!!     LBCELL     is the lower bound for SPICELIB cells.
+!!
+!!     CNTRCT     is the contraction magnitude used to prepare the
+!!                "existence window" for use as a confinement window.
+!!                The existence window is applicable only to coordinates
+!!                of surface intercepts: it is the result of contracting
+!!                the window over which the surface intercept and its
+!!                time derivative are computable by CNTRCT+TOL. Units
+!!                are TDB seconds.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the workspace window count NW is less than NWMAX, the
+!!         error SPICE(TOOFEWWINDOWS) is signaled.
+!!
+!!     2)  If the workspace window size MW is less than 2, the
+!!         error SPICE(WINDOWSTOOSMALL) is signaled.
+!!
+!!     3)  If a workspace window or the result window is too small
+!!         to accommodate the required number of intervals,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     4)  If either the observer or target names cannot be mapped
+!!         to ID codes, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!!     5)  If the observer and target have the same ID codes, the
+!!         error will be diagnosed by routines in the call tree of this
+!!         routine.
+!!
+!!     6)  If the vector definition VECDEF is not recognized,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     7)  If the computation method METHOD is not recognized,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     8)  If the aberration correction ABCORR is not recognized,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     9)  If the coordinate system name CRDSYS is not recognized,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     10) If the coordinate name CRDNAM is not recognized,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     11) If the frame REF is not recognized by the frames subsystem,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     12) If VECDEF calls for a computation involving a target surface
+!!         intercept point and the name and ID code of the frame DREF
+!!         associated with the target body are not available from the
+!!         frame subsystem, the error will be diagnosed by routines in
+!!         the call tree of this routine.
+!!
+!!     13) If VECDEF calls for a computation involving a target surface
+!!         intercept point and the direction vector DVEC is the zero
+!!         vector, the error will be diagnosed by routines in the call
+!!         tree of this routine.
+!!
+!!     14) If VECDEF calls for a computation involving a target surface
+!!         point and the radii defining the reference ellipsoid
+!!         associated with the target body are not available in the
+!!         kernel pool, the error will be diagnosed by routines in the
+!!         call tree of this routine.
+!!
+!!     15) If VECDEF calls for a computation involving a target surface
+!!         point and the frame REF is not centered on the target body,
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     16) If geodetic or planetographic coordinates are used and the
+!!         radii defining the reference ellipsoid associated with the
+!!         center of the frame REF are not available in the kernel pool,
+!!         the error will be diagnosed by routines in the call tree of
+!!         this routine.
+!!
+!!     17) If geodetic or planetographic coordinates are used and the
+!!         first equatorial radius of the reference ellipsoid associated
+!!         with the center of the frame REF is zero, the error will be
+!!         diagnosed by routines in the call tree of this routine.
+!!
+!!     18) If geodetic or planetographic coordinates are used and the
+!!         equatorial radii of the reference ellipsoid associated
+!!         with the center of the frame REF are unequal, the error
+!!         SPICE(NOTSUPPORTED) is signaled.
+!!
+!!     19) If geodetic or planetographic coordinates are used and the
+!!         reference ellipsoid associated with the center of the frame
+!!         REF is degenerate (one or more radii are non-positive),
+!!         the error will be diagnosed by routines in the call tree
+!!         of this routine.
+!!
+!!     20) If ADJUST is negative, the error SPICE(VALUEOUTOFRANGE)
+!!         is signaled.
+!!
+!!     21) If TOL is non-positive, the error SPICE(VALUEOUTOFRANGE)
+!!         is signaled.
+!!
+!!     21) If RELATE is not a supported relational operator
+!!         specification, the error SPICE(NOTRECOGNIZED) is signaled.
+!!
+!! ## Files
+!!
+!!     See the discussion in the Files section of the header of the
+!!     umbrella subroutine ZZGFCOU.
+!!
+!! ## Particulars
+!!
+!!     This routine handles coordinate search set-up and execution
+!!     activities for GFEVNT.
+!!
+!!     For a surface intercept coordinate search, this routine finds the
+!!     "existence window," within the input confinement window, for the
+!!     surface intercept and its time derivative. The existence window
+!!     is contracted by CNTRCT seconds; this contracted window is then
+!!     used as the confinement window for the search.
+!!
+!! ## Examples
+!!
+!!     See GFEVNT and ZZGFLONG.
+!!
+!! ## Restrictions
+!!
+!!     1)  The interface and functionality of this set of routines may
+!!         change without notice.  These routines should be called only
+!!         by SPICELIB routines.
+!!
+!!     2)  ZZGFCSLV must be called prior to use of any of the other
+!!         entry points.
+!!
+!!     3)  This routine has the following couplings with other
+!!         SPICE routines:
+!!
+!!            - The set of allowed aberration corrections must
+!!              be kept in sync with the set supported by the
+!!              SPK API routines.
+!!
+!!            - The set of vector definitions must be kept in
+!!              sync with the set supported by GFEVNT.
+!!
+!!            - The set of supported coordinate systems must be kept in
+!!              sync with the set supported by zzgf.inc.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     E.D. Wright    (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.3.0, 03-OCT-2021 (NJB)
+!!
+!!        Variable CNAMES is now saved. Corrected typos in comments.
+!!
+!!-    SPICELIB Version 1.2.0, 04-APR-2011 (EDW)
+!!
+!!        Replaced use of routines ZZGFREL with ZZGFRELX, and
+!!        ZZGFSOLV with ZZGFSOLVX. ZZGFCOIN argument list edited
+!!        to remove the unneeded argument REFVAL.
+!!
+!!        The code changes for ZZGFRELX use should not affect the
+!!        numerical results of GF computations.
+!!
+!!-    SPICELIB Version 1.0.0 06-MAR-2009 (NJB) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     coordinate search
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Number of supported comparison operators:
+!!
+!!     MAXOP is the maximum string length for comparison operators.
+!!     MAXOP may grow if new comparisons are added.
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Below we initialize the list of comparison operator names.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc
       use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_inc_gf
+      use pepper_inc_zzgf
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
       integer(ip), parameter :: lbcell = -5
       real(wp), parameter :: cntrct = 1.0_wp
       integer(ip), parameter :: lnsize = 80
@@ -38497,1596 +37941,1531 @@ contains
       module subroutine gfevnt ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, &
             qipars, qlpars, op, refval, tol, adjust, cnfine, rpt, udrepi, udrepu, udrepf, mw, nw, &
             work, bail, udbail, result )
-
-! $ Abstract
-!
-!     Determine time intervals when a specified geometric quantity
-!     satisfies a specified mathematical condition.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     TIME
-!     NAIF_IDS
-!     FRAMES
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     EVENT
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
-
-
-
-
-
-! $ Detailed_Input
-!
-!     UDSTEP   is the name of the user specified routine that computes a
-!              time step in an attempt to find a transition of the state
-!              of the specified coordinate. In the context of this
-!              routine's algorithm, a "state transition" occurs where
-!              the geometric state changes from being in the desired
-!              geometric condition event to not, or vice versa.
-!
-!              This routine relies on UDSTEP returning step sizes small
-!              enough so that state transitions within the confinement
-!              window are not overlooked. There must never be two roots
-!              A and B separated by less than STEP, where STEP is the
-!              minimum step size returned by UDSTEP for any value of ET
-!              in the interval [A, B].
-!
-!              The calling sequence for UDSTEP is:
-!
-!                 CALL UDSTEP ( ET, STEP )
-!
-!              where:
-!
-!                 ET      is the input start time from which the
-!                         algorithm is to search forward for a state
-!                         transition. ET is expressed as seconds past
-!                         J2000 TDB.
-!
-!                 STEP    is the output step size. STEP indicates how
-!                         far to advance ET so that ET and ET+STEP may
-!                         bracket a state transition and definitely do
-!                         not bracket more than one state transition.
-!                         Units are TDB seconds.
-!
-!              If a constant step size is desired, the SPICELIB routine
-!
-!                 GFSTEP
-!
-!              may be used as the step size function. This is the
-!              default option. If GFSTEP is used, the step size must be
-!              set by calling
-!
-!                 CALL GFSSTP ( STEP )
-!
-!              prior to calling this routine.
-!
-!     UDREFN   is the name of the user specified routine that computes a
-!              refinement in the times that bracket a transition point.
-!              In other words, once a pair of times have been detected
-!              such that the system is in different states at each of
-!              the two times, UDREFN selects an intermediate time which
-!              should be closer to the transition state than one of the
-!              two known times.
-!
-!              The calling sequence for UDREFN is:
-!
-!                 CALL UDREFN ( T1, T2, S1, S2, T )
-!
-!              where the inputs are:
-!
-!                 T1    is a time when the system is in state S1. T1 is
-!                       expressed as seconds past J2000 TDB.
-!
-!                 T2    is a time when the system is in state S2. T2 is
-!                       expressed as seconds past J2000 TDB. T2 is
-!                       assumed to be larger than T1.
-!
-!                 S1    is the state of the system at time T1. S1 is a
-!                       LOGICAL value.
-!
-!                 S2    is the state of the system at time T2. S2 is a
-!                       LOGICAL value.
-!
-!              UDREFN may use or ignore the S1 and S2 values.
-!
-!              The output is:
-!
-!                 T     is next time to check for a state transition.
-!                       T has value between T1 and T2. T is expressed
-!                       as seconds past J2000 TDB.
-!
-!              If a simple bisection method is desired, the SPICELIB
-!              routine
-!
-!                 GFREFN
-!
-!              may be used as the refinement function. This is the
-!              default option.
-!
-!     GQUANT   is a string containing the name of a geometric quantity.
-!              The times when this quantity satisfies a condition
-!              specified by the arguments OP and ADJUST (described
-!              below) are to be found.
-!
-!              Each quantity is specified by the quantity name given in
-!              argument GQUANT, and by a set of parameters specified by
-!              the arguments
-!
-!                 QNPARS
-!                 QPNAMS
-!                 QCPARS
-!                 QDPARS
-!                 QIPARS
-!                 QLPARS
-!
-!              For each quantity listed here, we also show how to set up
-!              these input arguments to define the quantity. See the
-!              detailed discussion of these arguments below for further
-!              information.
-!
-!              GQUANT may be any of the strings:
-!
-!                 'ANGULAR SEPARATION'
-!                 'COORDINATE'
-!                 'DISTANCE'
-!                 'ILLUMINATION ANGLE'
-!                 'PHASE ANGLE'
-!                 'RANGE RATE'
-!
-!              GQUANT strings are case insensitive. Values, meanings,
-!              and associated parameters are discussed below.
-!
-!              The aberration correction parameter indicates the
-!              aberration corrections to be applied to the state of the
-!              target body to account for one-way light time and stellar
-!              aberration. If relevant, it applies to the rotation of
-!              the target body as well.
-!
-!              Supported aberration correction options for observation
-!              (case where radiation is received by observer at ET) are:
-!
-!                 'NONE'          No correction.
-!                 'LT'            Light time only.
-!                 'LT+S'          Light time and stellar aberration.
-!                 'CN'            Converged Newtonian (CN) light time.
-!                 'CN+S'          CN light time and stellar aberration.
-!
-!              Supported aberration correction options for transmission
-!              (case where radiation is emitted from observer at ET)
-!              are:
-!
-!                 'XLT'           Light time only.
-!                 'XLT+S'         Light time and stellar aberration.
-!                 'XCN'           Converged Newtonian (CN) light time.
-!                 'XCN+S'         CN light time and stellar aberration.
-!
-!              For detailed information, see the geometry finder
-!              required reading, gf.req.
-!
-!              Case, leading and trailing blanks are not significant in
-!              aberration correction parameter strings.
-!
-!              ANGULAR SEPARATION
-!
-!                 is the apparent angular separation of two target
-!                 bodies as seen from an observing body.
-!
-!                 Quantity Parameters:
-!
-!                    QNPARS    = 8
-!                    QPNAMS(1) = 'TARGET1'
-!                    QPNAMS(2) = 'FRAME1'
-!                    QPNAMS(3) = 'SHAPE1'
-!                    QPNAMS(4) = 'TARGET2'
-!                    QPNAMS(5) = 'FRAME2'
-!                    QPNAMS(6) = 'SHAPE2'
-!                    QPNAMS(7) = 'OBSERVER'
-!                    QPNAMS(8) = 'ABCORR'
-!
-!                    QCPARS(1) = <name of first target>
-!                    QCPARS(2) = <name of body-fixed frame
-!                                          of first target>
-!                    QCPARS(3) = <shape of first target>
-!                    QCPARS(4) = <name of second target>
-!                    QCPARS(5) = <name of body-fixed frame
-!                                         of second target>
-!                    QCPARS(6) = <shape of second target>
-!                    QCPARS(7) = <name of observer>
-!                    QCPARS(8) = <aberration correction>
-!
-!                 The target shape model specifiers may be set to either
-!                 of the values
-!
-!                    'POINT'
-!                    'SPHERE'
-!
-!                 The shape models for the two bodies need not match.
-!
-!                 Spherical models have radii equal to the longest
-!                 equatorial radius of the PCK-based tri-axial
-!                 ellipsoids used to model the respective bodies. When
-!                 both target bodies are modeled as spheres, the angular
-!                 separation between the bodies is the angle between the
-!                 closest points on the limbs of the spheres, as viewed
-!                 from the vantage point of the observer. If the limbs
-!                 overlap, the angular separation is negative.
-!
-!                 (In this case, the angular separation is the angle
-!                 between the centers of the spheres minus the sum of
-!                 the apparent angular radii of the spheres.)
-!
-!              COORDINATE
-!
-!                 is a coordinate of a specified vector in a specified
-!                 reference frame and coordinate system. For example, a
-!                 coordinate can be the Z component of the earth-sun
-!                 vector in the J2000 reference frame, or the latitude
-!                 of the nearest point on Mars to an orbiting
-!                 spacecraft, expressed relative to the IAU_MARS
-!                 reference frame.
-!
-!                 The method by which the vector is defined is indicated
-!                 by the
-!
-!                    'VECTOR DEFINITION'
-!
-!                 parameter. Allowed values and meanings of this
-!                 parameter are:
-!
-!                    'POSITION'
-!
-!                       The vector is defined by the position of a
-!                       target relative to an observer.
-!
-!                    'SUB-OBSERVER POINT'
-!
-!                       The vector is the sub-observer point on a
-!                       specified target body.
-!
-!                    'SURFACE INTERCEPT POINT'
-!
-!                       The vector is defined as the intercept point of
-!                       a vector from the observer to the target body.
-!
-!                 Some vector definitions, such as the sub-observer
-!                 point, may be specified by a variety of methods, so a
-!                 parameter is provided to select the computation
-!                 method. The computation method parameter name is
-!
-!                    'METHOD'
-!
-!                 If the vector definition is
-!
-!                    'POSITION'
-!
-!                 the 'METHOD' parameter must be set to blank:
-!
-!                    ' '
-!
-!                 If the vector definition is
-!
-!                    'SUB-OBSERVER POINT'
-!
-!                 the 'METHOD' parameter must be set to either:
-!
-!                    'Near point: ellipsoid'
-!                    'Intercept: ellipsoid'
-!
-!                 If the vector definition is
-!
-!                    'SURFACE INTERCEPT POINT'
-!
-!                 the 'METHOD' parameter must be set to:
-!
-!                    'Ellipsoid'
-!
-!                       The intercept computation uses a triaxial
-!                       ellipsoid to model the surface of the target
-!                       body. The ellipsoid's radii must be available in
-!                       the kernel pool.
-!
-!                 The supported coordinate systems and coordinate names:
-!
-!                    Coordinate System  Coordinates        Range
-!                    -----------------  -----------------  ------------
-!
-!                    'RECTANGULAR'      'X'
-!                                       'Y'
-!                                       'Z'
-!
-!                    'LATITUDINAL'      'RADIUS'
-!                                       'LONGITUDE'        (-Pi,Pi]
-!                                       'LATITUDE'         [-Pi/2,Pi/2]
-!
-!                    'RA/DEC'           'RANGE'
-!                                       'RIGHT ASCENSION'  [0,2Pi)
-!                                       'DECLINATION'      [-Pi/2,Pi/2]
-!
-!                    'SPHERICAL'        'RADIUS'
-!                                       'COLATITUDE'       [0,Pi]
-!                                       'LONGITUDE'        (-Pi,Pi]
-!
-!                    'CYLINDRICAL'      'RADIUS'
-!                                       'LONGITUDE'        [0,2Pi)
-!                                       'Z'
-!
-!                    'GEODETIC'         'LONGITUDE'        (-Pi,Pi]
-!                                       'LATITUDE'         [-Pi/2,Pi/2]
-!                                       'ALTITUDE'
-!
-!                    'PLANETOGRAPHIC'   'LONGITUDE'        [0,2Pi)
-!                                       'LATITUDE'         [-Pi/2,Pi/2]
-!                                       'ALTITUDE'
-!
-!                 When geodetic coordinates are selected, the radii used
-!                 are those of the central body associated with the
-!                 reference frame. For example, if IAU_MARS is the
-!                 reference frame, then geodetic coordinates are
-!                 calculated using the radii of Mars taken from a SPICE
-!                 planetary constants kernel. One cannot ask for
-!                 geodetic coordinates for a frame which doesn't have an
-!                 extended body as its center.
-!
-!                 Reference frame names must be recognized by the SPICE
-!                 frame subsystem.
-!
-!                 Quantity Parameters:
-!
-!                    QNPARS     = 10
-!                    QPNAMS(1)  = 'TARGET'
-!                    QPNAMS(2)  = 'OBSERVER'
-!                    QPNAMS(3)  = 'ABCORR'
-!                    QPNAMS(4)  = 'COORDINATE SYSTEM'
-!                    QPNAMS(5)  = 'COORDINATE'
-!                    QPNAMS(6)  = 'REFERENCE FRAME'
-!                    QPNAMS(7)  = 'VECTOR DEFINITION'
-!                    QPNAMS(8)  = 'METHOD'
-!                    QPNAMS(9)  = 'DREF'
-!                    QPNAMS(10) = 'DVEC'
-!
-!                 Only 'SURFACE INTERCEPT POINT' searches make use of
-!                 the 'DREF' and 'DVEC' parameters.
-!
-!                    QCPARS(1) = <name of target>
-!                    QCPARS(2) = <name of observer>
-!                    QCPARS(3) = <aberration correction>
-!                    QCPARS(4) = <coordinate system name>
-!                    QCPARS(5) = <coordinate name>
-!                    QCPARS(6) = <target reference frame name>
-!                    QCPARS(7) = <vector definition>
-!                    QCPARS(8) = <computation method>
-!                    QCPARS(9) = <reference frame of DVEC pointing
-!                                        vector, defined in QDPARS>
-!
-!                    QDPARS(1) = <DVEC pointing vector x component
-!                                                      from observer>
-!                    QDPARS(2) = <DVEC pointing vector y component
-!                                                      from observer>
-!                    QDPARS(3) = <DVEC pointing vector z component
-!                                                      from observer>
-!
-!              DISTANCE
-!
-!                 is the apparent distance between a target body and an
-!                 observing body. Distances are always measured between
-!                 centers of mass.
-!
-!                 Quantity Parameters:
-!
-!                    QNPARS    = 3
-!                    QPNAMS(1) = 'TARGET'
-!                    QPNAMS(2) = 'OBSERVER'
-!                    QPNAMS(3) = 'ABCORR'
-!
-!                    QCPARS(1) = <name of target>
-!                    QCPARS(2) = <name of observer>
-!                    QCPARS(3) = <aberration correction>
-!
-!              ILLUMINATION ANGLE
-!
-!                 is any of the illumination angles
-!
-!                    emission
-!                    phase
-!                    solar incidence
-!
-!                 defined at a surface point on a target body. These
-!                 angles are defined as in the SPICELIB routine ILUMIN.
-!
-!                 Quantity Parameters:
-!
-!                    QNPARS    = 8
-!                    QPNAMS(1) = 'TARGET'
-!                    QPNAMS(2) = 'ILLUM'
-!                    QPNAMS(3) = 'OBSERVER'
-!                    QPNAMS(4) = 'ABCORR'
-!                    QPNAMS(5) = 'FRAME'
-!                    QPNAMS(6) = 'ANGTYP'
-!                    QPNAMS(7) = 'METHOD'
-!                    QPNAMS(8) = 'SPOINT'
-!
-!                    QCPARS(1) =  <name of target>
-!                    QCPARS(1) =  <name of illumination source>
-!                    QCPARS(3) =  <name of observer>
-!                    QCPARS(4) =  <aberration correction>
-!                    QCPARS(5) =  <target body-fixed frame>
-!                    QCPARS(6) =  <type of illumination angle>
-!                    QCPARS(7) =  <computation method>
-!
-!                 The surface point is specified using rectangular
-!                 coordinates in the specified body-fixed frame.
-!
-!                    QDPARS(1) =  <X coordinate of surface point>
-!                    QDPARS(2) =  <Y coordinate of surface point>
-!                    QDPARS(3) =  <Z coordinate of surface point>
-!
-!              PHASE ANGLE
-!
-!                 is the apparent phase angle between a target body
-!                 center and an illuminating body center as seen from an
-!                 observer.
-!
-!                 Quantity Parameters:
-!
-!                    QNPARS    = 4
-!                    QPNAMS(1) = 'TARGET'
-!                    QPNAMS(2) = 'OBSERVER'
-!                    QPNAMS(3) = 'ABCORR'
-!                    QPNAMS(4) = 'ILLUM'
-!
-!                    QCPARS(1) =  <name of target>
-!                    QCPARS(2) =  <name of observer>
-!                    QCPARS(3) =  <aberration correction>
-!                    QCPARS(4) =  <name of illuminating body>
-!
-!              RANGE RATE
-!
-!                 is the apparent range rate between a target body and
-!                 an observing body.
-!
-!                 Quantity Parameters:
-!
-!                    QNPARS    = 3
-!                    QPNAMS(1) = 'TARGET'
-!                    QPNAMS(2) = 'OBSERVER'
-!                    QPNAMS(3) = 'ABCORR'
-!
-!                    QCPARS(1) = <name of target>
-!                    QCPARS(2) = <name of observer>
-!                    QCPARS(3) = <aberration correction>
-!
-!     QNPARS   is the count of quantity parameter definition parameters.
-!              These parameters supply the quantity-specific information
-!              needed to fully define the quantity used in the search
-!              performed by this routine.
-!
-!     QPNAMS   is an array of names of quantity definition parameters.
-!              The names occupy elements 1:QNPARS of this array. The
-!              value associated with the Ith element of QPNAMS is
-!              located in element I of the parameter value argument
-!              having data type appropriate for the parameter:
-!
-!                 Data Type                      Argument
-!                 ---------                      --------
-!                 Character strings              QCPARS
-!                 Double precision numbers       QDPARS
-!                 Integers                       QIPARS
-!                 Logicals                       QLPARS
-!
-!              The order in which the parameter names are listed is
-!              unimportant, as long as the corresponding parameter
-!              values are listed in the same order.
-!
-!              The names in QPNAMS are case-insensitive.
-!
-!              See the description of the input argument GQUANT for a
-!              discussion of the parameter names and values associated
-!              with a given quantity.
-!
-!     QCPARS,
-!     QDPARS,
-!     QIPARS,
-!     QLPARS   are, respectively, parameter value arrays of types
-!
-!                  CHARACTER*(*)       QCPARS
-!                  DOUBLE PRECISION    QDPARS
-!                  INTEGER             QIPARS
-!                  LOGICAL             QLPARS
-!
-!              The value associated with the Ith name in the array
-!              QPNAMS resides in the Ith element of whichever of these
-!              arrays has the appropriate data type.
-!
-!              All of these arrays should be declared with dimension at
-!              least QNPARS.
-!
-!              The names in the array QCPARS are case-insensitive.
-!
-!              Note that there is no required order for QPNAMS/Q*PARS
-!              pairs.
-!
-!              See the description of the input argument GQUANT for a
-!              discussion of the parameter names and values associated
-!              with a given quantity.
-!
-!     OP       is a scalar string comparison operator indicating the
-!              numeric constraint of interest. Values are:
-!
-!                 '>'        value of geometric quantity greater than
-!                            some reference (REFVAL).
-!
-!                 '='        value of geometric quantity equal to some
-!                            reference (REFVAL).
-!
-!                 '<'        value of geometric quantity less than some
-!                            reference (REFVAL).
-!
-!                 'ABSMAX'   The geometric quantity is at an absolute
-!                            maximum.
-!
-!                 'ABSMIN'   The geometric quantity is at an absolute
-!                            minimum.
-!
-!                 'LOCMAX'   The geometric quantity is at a local
-!                            maximum.
-!
-!                 'LOCMIN'   The geometric quantity is at a local
-!                            minimum.
-!
-!              The caller may indicate that the region of interest is
-!              the set of time intervals where the quantity is within a
-!              specified distance of an absolute extremum. The argument
-!              ADJUST (described below) is used to specified this
-!              distance.
-!
-!              Local extrema are considered to exist only in the
-!              interiors of the intervals comprising the confinement
-!              window: a local extremum cannot exist at a boundary point
-!              of the confinement window.
-!
-!              Case is not significant in the string OP.
-!
-!     REFVAL   is the reference value used to define an equality or
-!              inequality to be satisfied by the geometric quantity. The
-!              units of REFVAL are radians, radians/sec, km, or km/sec
-!              as appropriate.
-!
-!     TOL      is a tolerance value used to determine convergence of
-!              root-finding operations. TOL is measured in ephemeris
-!              seconds and must be greater than zero.
-!
-!     ADJUST   is the amount by which the quantity is allowed to vary
-!              from an absolute extremum.
-!
-!              If the search is for an absolute minimum is performed,
-!              the resulting window contains time intervals when the
-!              geometric quantity GQUANT has values between ABSMIN and
-!              ABSMIN + ADJUST.
-!
-!              If the search is for an absolute maximum, the
-!              corresponding range is  between ABSMAX - ADJUST and
-!              ABSMAX.
-!
-!              ADJUST is not used for searches for local extrema,
-!              equality or inequality conditions and must have value
-!              zero for such searches. ADJUST must not be negative.
-!
-!     CNFINE   is a SPICE window that confines the time period over
-!              which the specified search is conducted. CNFINE may
-!              consist of a single interval or a collection of
-!              intervals.
-!
-!              In some cases the confinement window can be used to
-!              greatly reduce the time period that must be searched
-!              for the desired solution. See the $Particulars section
-!              below for further discussion.
-!
-!              See the $Examples section below for a code example
-!              that shows how to create a confinement window.
-!
-!              CNFINE must be initialized by the caller via the
-!              SPICELIB routine SSIZED.
-!
-!              In some cases the observer's state may be computed at
-!              times outside of CNFINE by as much as 2 seconds. See
-!              $Particulars for details.
-!
-!     RPT      is a logical variable which controls whether the progress
-!              reporter is enabled. When RPT is .TRUE., progress
-!              reporting is enabled and the routines UDREPI, UDREPU, and
-!              UDREPF (see descriptions below) are used to report
-!              progress.
-!
-!     UDREPI   is the name of the user specified routine that
-!              initializes a progress report. When progress reporting is
-!              enabled, UDREPI is called at the start of a search. The
-!              calling sequence of UDREPI is
-!
-!                 UDREPI ( CNFINE, SRCPRE, SRCSUF )
-!
-!                 DOUBLE PRECISION    CNFINE ( LBCELL : * )
-!                 CHARACTER*(*)       SRCPRE
-!                 CHARACTER*(*)       SRCSUF
-!
-!              where
-!
-!                 CNFINE
-!
-!              is a confinement window specifying the time period over
-!              which a search is conducted, and
-!
-!                 SRCPRE
-!                 SRCSUF
-!
-!              are prefix and suffix strings used in the progress
-!              report: these strings are intended to bracket a
-!              representation of the fraction of work done. For example,
-!              when the SPICELIB progress reporting functions are used,
-!              if SRCPRE and SRCSUF are, respectively,
-!
-!                 'Occultation/transit search'
-!                 'done.'
-!
-!              the progress report display at the end of the search will
-!              be:
-!
-!                 Occultation/transit search 100.00% done.
-!
-!              If the user doesn't wish to provide a custom set of
-!              progress reporting functions, the SPICELIB routine
-!
-!                 GFREPI
-!
-!              may be used.
-!
-!     UDREPU   is the name of the user specified routine that updates
-!              the progress report for a search. The calling sequence of
-!              UDREPU is
-!
-!                 UDREPU (IVBEG, IVEND, ET )
-!
-!                 DOUBLE PRECISION      ET
-!                 DOUBLE PRECISION      IVBEG
-!                 DOUBLE PRECISION      IVEND
-!
-!              where ET is an epoch belonging to the confinement window,
-!              IVBEG and IVEND are the start and stop times,
-!              respectively of the current confinement window interval.
-!              The ratio of the measure of the portion of CNFINE that
-!              precedes ET to the measure of CNFINE would be a logical
-!              candidate for the searches completion percentage; however
-!              the method of measurement is up to the user.
-!
-!              If the user doesn't wish to provide a custom set of
-!              progress reporting functions, the SPICELIB routine
-!
-!                 GFREPU
-!
-!              may be used.
-!
-!     UDREPF   is the name of the user specified routine that finalizes
-!              a progress report. UDREPF has no arguments.
-!
-!              If the user doesn't wish to provide a custom set of
-!              progress reporting functions, the SPICELIB routine
-!
-!                 GFREPF
-!
-!              may be used.
-!
-!     MW       is a parameter specifying the length of the SPICE
-!              windows in the workspace array WORK (see description
-!              below) used by this routine.
-!
-!              MW should be set to a number at least twice as large
-!              as the maximum number of intervals required by any
-!              workspace window. In many cases, it's not necessary to
-!              compute an accurate estimate of how many intervals are
-!              needed; rather, the user can pick a size considerably
-!              larger than what's really required.
-!
-!              However, since excessively large arrays can prevent
-!              applications from compiling, linking, or running
-!              properly, sometimes MW must be set according to
-!              the actual workspace requirement. A rule of thumb
-!              for the number of intervals NINTVLS needed is
-!
-!                 NINTVLS  =  2*N  +  ( M / STEP )
-!
-!              where
-!
-!                 N     is the number of intervals in the confinement
-!                       window
-!
-!                 M     is the measure of the confinement window, in
-!                       units of seconds
-!
-!                 STEP  is the search step size in seconds
-!
-!              MW should then be set to
-!
-!                 2 * NINTVLS
-!
-!     NW       is a parameter specifying the number of SPICE windows
-!              in the workspace array WORK (see description below)
-!              used by this routine. (The reason this dimension is
-!              an input argument is that this allows run-time
-!              error checking to be performed.)
-!
-!     BAIL     is a logical flag indicating whether or not interrupt
-!              signaling handling is enabled. When BAIL is set to
-!              .TRUE., the input function UDBAIL (see description below)
-!              is used to determine whether an interrupt has been
-!              issued.
-!
-!     UDBAIL   is the name of the user specified routine that indicates
-!              whether an interrupt signal has been issued (for example,
-!              from the keyboard). UDBAIL has no arguments and returns
-!              a LOGICAL value. The return value is .TRUE. if an
-!              interrupt has been issued; otherwise the value is .FALSE.
-!
-!              GFEVNT uses UDBAIL only when BAIL (see above) is set
-!              to .TRUE., indicating that interrupt handling is
-!              enabled. When interrupt handling is enabled, GFEVNT
-!              and routines in its call tree will call UDBAIL to
-!              determine whether to terminate processing and return
-!              immediately.
-!
-!              If interrupt handing is not enabled, a logical
-!              function must still be passed as an input argument.
-!              The SPICELIB function
-!
-!                 GFBAIL
-!
-!              may be used for this purpose.
-!
-!     RESULT   is a double precision SPICE window which will contain
-!              the search results. RESULT must be declared and
-!              initialized with sufficient size to capture the full
-!              set of time intervals within the search region on which
-!              the specified condition is satisfied.
-!
-!              RESULT must be initialized by the caller via the
-!              SPICELIB routine SSIZED.
-!
-!              If RESULT is non-empty on input, its contents will be
-!              discarded before GFEVNT conducts its search.
-!
-! $ Detailed_Output
-!
-!     WORK     is an array used to store workspace windows.
-!
-!              This array should be declared by the caller as shown:
-!
-!                 DOUBLE PRECISION     WORK ( LBCELL : MW,  NW )
-!
-!              WORK need not be initialized by the caller.
-!
-!              WORK is modified by this routine. The caller should
-!              re-initialize this array before attempting to use it for
-!              any other purpose.
-!
-!     RESULT   is a SPICE window representing the set of time intervals,
-!              within the confinement period, when the specified
-!              geometric event occurs.
-!
-!              The endpoints of the time intervals comprising RESULT
-!              are interpreted as seconds past J2000 TDB.
-!
-!              If the search is for local extrema, or for absolute
-!              extrema with ADJUST set to zero, then normally each
-!              interval of RESULT will be a singleton: the left and
-!              right endpoints of each interval will be identical.
-!
-!              If no times within the confinement window satisfy the
-!              search criteria, RESULT will be returned with a
-!              cardinality of zero.
-!
-! $ Parameters
-!
-!     LBCELL   is the SPICE cell lower bound.
-!
-!     MAXPAR   is the maximum number of parameters required to define
-!              any quantity. MAXPAR may grow if new quantities require
-!              more parameters. MAXPAR is currently set to 10.
-!
-!     CNVTOL   is the default convergence tolerance used by the
-!              high-level GF search API routines. This tolerance is
-!              used to terminate searches for binary state transitions:
-!              when the time at which a transition occurs is bracketed
-!              by two times that differ by no more than
-!              SPICE_GF_CNVTOL, the transition time is considered
-!              to have been found.
-!
-! $ Exceptions
-!
-!     1)  There are varying requirements on how distinct the three
-!         objects, QCPARS, must be. If the requirements are not met, an,
-!         an error is signaled by a routine in the call tree of this
-!         routine.
-!
-!         When GQUANT has value 'ANGULAR SEPARATION' then all three
-!         must be distinct.
-!
-!         When GQUANT has value of either
-!
-!            'DISTANCE'
-!            'COORDINATE'
-!            'RANGE RATE'
-!
-!         the QCPARS(1) and QCPARS(2) objects must be distinct.
-!
-!     2)  If any of the bodies involved do not have NAIF ID codes, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     3)  If the value of GQUANT is not recognized as a valid value,
-!         the error SPICE(NOTRECOGNIZED) is signaled.
-!
-!     4)  If the number of quantity definition parameters, QNPARS is
-!         greater than the maximum allowed value, MAXPAR, the error
-!         SPICE(INVALIDCOUNT) is signaled.
-!
-!     5)  If the proper required parameters are not supplied in QNPARS,
-!         the error SPICE(MISSINGVALUE) is signaled.
-!
-!     6)  If the comparison operator, OP, is not recognized, the error
-!         SPICE(NOTRECOGNIZED) is signaled.
-!
-!     7)  If the window size MW is less than 2, an error is signaled by
-!         a routine in the call tree of this routine.
-!
-!     8)  If the number of workspace windows NW is too small for the
-!         required search, an error is signaled by a routine in the call
-!         tree of this routine.
-!
-!     9)  If TOL is not greater than zero, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     10) If ADJUST is negative, an error is signaled by a routine in
-!         the call tree of this routine.
-!
-!     11) If ADJUST has a non-zero value when OP has any value other
-!         than 'ABSMIN' or 'ABSMAX', an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     12) The user must take care when searching for an extremum
-!         ('ABSMAX', 'ABSMIN', 'LOCMAX', 'LOCMIN') of an angular
-!         quantity. Problems are most common when using the 'COORDINATE'
-!         value of GQUANT with 'LONGITUDE' or 'RIGHT ASCENSION' values
-!         for the coordinate name. Since these quantities are cyclical,
-!         rather than monotonically increasing or decreasing, an
-!         extremum may be hard to interpret. In particular, if an
-!         extremum is found near the cycle boundary (-Pi for
-!         'LONGITUDE', 2*Pi for 'RIGHT ASCENSION') it may not be
-!         numerically reasonable. For example, the search for times when
-!         a longitude coordinate is at its absolute maximum may result
-!         in a time when the longitude value is -Pi, due to roundoff
-!         error.
-!
-!     13) If operation of this routine is interrupted, the output result
-!         window will be invalid.
-!
-! $ Files
-!
-!     Appropriate SPK and PCK kernels must be loaded by the
-!     calling program before this routine is called.
-!
-!     The following data are required:
-!
-!     -  SPK data: ephemeris data for target, source and observer that
-!        describes the ephemeris of these objects for the period
-!        defined by the confinement window, CNFINE must be
-!        loaded. If aberration corrections are used, the states of
-!        target and observer relative to the solar system barycenter
-!        must be calculable from the available ephemeris data.
-!        Typically ephemeris data are made available by loading one
-!        or more SPK files via FURNSH.
-!
-!     -  PCK data: bodies are assumed to be spherical and must have a
-!        radius loaded from the kernel pool. Typically this is done by
-!        loading a text PCK file via FURNSH. If the bodies are
-!        triaxial, the largest radius is chosen as that of the
-!        equivalent spherical body.
-!
-!     -  In some cases the observer's state may be computed at times
-!        outside of CNFINE by as much as 2 seconds; data required to
-!        compute this state must be provided by loaded kernels. See
-!        $Particulars for details.
-!
-!     In all cases, kernel data are normally loaded once per program
-!     run, NOT every time this routine is called.
-!
-! $ Particulars
-!
-!     This routine provides the SPICE GF subsystem's general interface
-!     to determines time intervals when the value of some
-!     geometric quantity related to one or more objects and an observer
-!     satisfies a user specified constraint. It puts these times in a
-!     result window called RESULT. It does this by first finding
-!     windows when the quantity of interest is either monotonically
-!     increasing or decreasing. These windows are then manipulated to
-!     give the final result.
-!
-!     Applications that require do not require support for progress
-!     reporting, interrupt handling, non-default step or refinement
-!     functions, or non-default convergence tolerance normally should
-!     call a high level geometry quantity routine rather than
-!     this routine.
-!
-!     The Search Process
-!     ==================
-!
-!     Regardless of the type of constraint selected by the caller, this
-!     routine starts the search for solutions by determining the time
-!     periods, within the confinement window, over which the specified
-!     geometric quantity function is monotone increasing and monotone
-!     decreasing. Each of these time periods is represented by a SPICE
-!     window. Having found these windows, all of the quantity
-!     function's local extrema within the confinement window are known.
-!     Absolute extrema then can be found very easily.
-!
-!     Within any interval of these "monotone" windows, there will be at
-!     most one solution of any equality constraint. Since the boundary
-!     of the solution set for any inequality constraint is contained in
-!     the union of
-!
-!     -  the set of points where an equality constraint is met
-!
-!     -  the boundary points of the confinement window
-!
-!     the solutions of both equality and inequality constraints can be
-!     found easily once the monotone windows have been found.
-!
-!     Step Size
-!     =========
-!
-!     The monotone windows (described above) are found using a two-step
-!     search process. Each interval of the confinement window is
-!     searched as follows: first, the input step size is used to
-!     determine the time separation at which the sign of the rate of
-!     change of quantity function will be sampled. Starting at
-!     the left endpoint of an interval, samples will be taken at each
-!     step. If a change of sign is found, a root has been bracketed; at
-!     that point, the time at which the time derivative of the quantity
-!     function is zero can be found by a refinement process, for
-!     example, using a binary search.
-!
-!     Note that the optimal choice of step size depends on the lengths
-!     of the intervals over which the quantity function is monotone:
-!     the step size should be shorter than the shortest of these
-!     intervals (within the confinement window).
-!
-!     The optimal step size is *not* necessarily related to the lengths
-!     of the intervals comprising the result window. For example, if
-!     the shortest monotone interval has length 10 days, and if the
-!     shortest result window interval has length 5 minutes, a step size
-!     of 9.9 days is still adequate to find all of the intervals in the
-!     result window. In situations like this, the technique of using
-!     monotone windows yields a dramatic efficiency improvement over a
-!     state-based search that simply tests at each step whether the
-!     specified constraint is satisfied. The latter type of search can
-!     miss solution intervals if the step size is longer than the
-!     shortest solution interval.
-!
-!     Having some knowledge of the relative geometry of the targets and
-!     observer can be a valuable aid in picking a reasonable step size.
-!     In general, the user can compensate for lack of such knowledge by
-!     picking a very short step size; the cost is increased computation
-!     time.
-!
-!     Note that the step size is not related to the precision with which
-!     the endpoints of the intervals of the result window are computed.
-!     That precision level is controlled by the convergence tolerance.
-!
-!     Convergence Tolerance
-!     =====================
-!
-!     Once a root has been bracketed, a refinement process is used to
-!     narrow down the time interval within which the root must lie.
-!     This refinement process terminates when the location of the root
-!     has been determined to within an error margin called the
-!     "convergence tolerance," passed to this routine as 'tol'.
-!
-!     The GF subsystem defines a parameter, CNVTOL (from gf.inc), as a
-!     default tolerance. This represents a "tight" tolerance value
-!     so that the tolerance doesn't become the limiting factor in the
-!     accuracy of solutions found by this routine. In general the
-!     accuracy of input data will be the limiting factor.
-!
-!     Making the tolerance tighter than CNVTOL is unlikely to
-!     be useful, since the results are unlikely to be more accurate.
-!     Making the tolerance looser will speed up searches somewhat,
-!     since a few convergence steps will be omitted. However, in most
-!     cases, the step size is likely to have a much greater affect
-!     on processing time than would the convergence tolerance.
-!
-!     The Confinement Window
-!     ======================
-!
-!     The simplest use of the confinement window is to specify a time
-!     interval within which a solution is sought. However, the
-!     confinement window can, in some cases, be used to make searches
-!     more efficient. Sometimes it's possible to do an efficient search
-!     to reduce the size of the time period over which a relatively
-!     slow search of interest must be performed.
-!
-!     Certain types of searches require the state of the observer,
-!     relative to the solar system barycenter, to be computed at times
-!     slightly outside the confinement window CNFINE. The time window
-!     that is actually used is the result of "expanding" CNFINE by a
-!     specified amount "T": each time interval of CNFINE is expanded by
-!     shifting the interval's left endpoint to the left and the right
-!     endpoint to the right by T seconds. Any overlapping intervals are
-!     merged. (The input argument CNFINE is not modified.)
-!
-!     The window expansions listed below are additive: if both
-!     conditions apply, the window expansion amount is the sum of the
-!     individual amounts.
-!
-!     -  If a search uses an equality constraint, the time window
-!        over which the state of the observer is computed is expanded
-!        by 1 second at both ends of all of the time intervals
-!        comprising the window over which the search is conducted.
-!
-!     -  If a search uses stellar aberration corrections, the time
-!        window over which the state of the observer is computed is
-!        expanded as described above.
-!
-!     When light time corrections are used, expansion of the search
-!     window also affects the set of times at which the light time-
-!     corrected state of the target is computed.
-!
-!     In addition to the possible 2 second expansion of the search
-!     window that occurs when both an equality constraint and stellar
-!     aberration corrections are used, round-off error should be taken
-!     into account when the need for data availability is analyzed.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Conduct a DISTANCE search using the default GF progress
-!        reporting capability.
-!
-!        The program will use console I/O to display a simple
-!        ASCII-based progress report.
-!
-!        The program will find local maximums of the distance from
-!        Earth to Moon with light time and stellar aberration
-!        corrections to model the apparent positions of the Moon.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File name: gfevnt_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                     Contents
-!              ---------                     --------
-!              de414.bsp                     Planetary ephemeris
-!              pck00008.tpc                  Planet orientation and
-!                                            radii
-!              naif0009.tls                  Leapseconds
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'de414.bsp',
-!                                  'pck00008.tpc',
-!                                  'naif0009.tls'  )
-!
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM GFEVNT_EX1
-!              IMPLICIT              NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      SPD
-!              INTEGER               WNCARD
-!
-!              INCLUDE               'gf.inc'
-!
-!        C
-!        C     Local variables and initial parameters.
-!        C
-!              INTEGER               LBCELL
-!              PARAMETER           ( LBCELL = -5 )
-!
-!              INTEGER               LNSIZE
-!              PARAMETER           ( LNSIZE = 80 )
-!
-!              INTEGER               MAXPAR
-!              PARAMETER           ( MAXPAR = 8 )
-!
-!              INTEGER               MAXVAL
-!              PARAMETER           ( MAXVAL = 20000 )
-!
-!              INTEGER               STRSIZ
-!              PARAMETER           ( STRSIZ = 40 )
-!
-!              INTEGER               I
-!
-!        C
-!        C     Confining window
-!        C
-!              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-!
-!        C
-!        C     Confining window beginning and ending time strings.
-!        C
-!              CHARACTER*(STRSIZ)    BEGSTR
-!              CHARACTER*(STRSIZ)    ENDSTR
-!
-!        C
-!        C     Confining window beginning and ending times
-!        C
-!              DOUBLE PRECISION      BEGTIM
-!              DOUBLE PRECISION      ENDTIM
-!
-!        C
-!        C     Result window beginning and ending times for intervals.
-!        C
-!              DOUBLE PRECISION      BEG
-!              DOUBLE PRECISION      END
-!
-!        C
-!        C     Geometric quantity results window, work window,
-!        C     bail switch and progress reporter switch.
-!        C
-!              DOUBLE PRECISION      RESULT ( LBCELL : MAXVAL )
-!              DOUBLE PRECISION      WORK   ( LBCELL : MAXVAL, NWDIST )
-!
-!              LOGICAL               BAIL
-!              LOGICAL               GFBAIL
-!              EXTERNAL              GFBAIL
-!              LOGICAL               RPT
-!
-!        C
-!        C     Step size.
-!        C
-!              DOUBLE PRECISION      STEP
-!
-!        C
-!        C     Geometric quantity name.
-!        C
-!              CHARACTER*(LNSIZE)    EVENT
-!
-!        C
-!        C     Relational string
-!        C
-!              CHARACTER*(STRSIZ)    RELATE
-!
-!        C
-!        C     Quantity definition parameter arrays:
-!        C
-!              INTEGER               QNPARS
-!              CHARACTER*(LNSIZE)    QPNAMS ( MAXPAR )
-!              CHARACTER*(LNSIZE)    QCPARS ( MAXPAR )
-!              DOUBLE PRECISION      QDPARS ( MAXPAR )
-!              INTEGER               QIPARS ( MAXPAR )
-!              LOGICAL               QLPARS ( MAXPAR )
-!
-!        C
-!        C     Routines to set step size, refine transition times
-!        C     and report work.
-!        C
-!              EXTERNAL              GFREFN
-!              EXTERNAL              GFREPI
-!              EXTERNAL              GFREPU
-!              EXTERNAL              GFREPF
-!              EXTERNAL              GFSTEP
-!
-!        C
-!        C     Reference and adjustment values.
-!        C
-!              DOUBLE PRECISION      REFVAL
-!              DOUBLE PRECISION      ADJUST
-!
-!              INTEGER               COUNT
-!
-!        C
-!        C     Saved variables
-!        C
-!        C     The confinement, workspace and result windows CNFINE,
-!        C     WORK and RESULT are saved because this practice helps to
-!        C     prevent stack overflow.
-!        C
-!              SAVE                  CNFINE
-!              SAVE                  RESULT
-!              SAVE                  WORK
-!
-!        C
-!        C     Load leapsecond and spk kernels. The name of the
-!        C     meta kernel file shown here is fictitious; you
-!        C     must supply the name of a file available
-!        C     on your own computer system.
-!
-!              CALL FURNSH ('gfevnt_ex1.tm')
-!
-!        C
-!        C     Set a beginning and end time for confining window.
-!        C
-!              BEGSTR = '2001 jan 01 00:00:00.000'
-!              ENDSTR = '2001 jun 30 00:00:00.000'
-!
-!              CALL STR2ET ( BEGSTR, BEGTIM )
-!              CALL STR2ET ( ENDSTR, ENDTIM )
-!
-!        C
-!        C     Set condition for extremum.
-!        C
-!              RELATE  =   'LOCMAX'
-!
-!        C
-!        C     Set reference value (if needed) and absolute extremum
-!        C     adjustment (if needed).
-!        C
-!              REFVAL   =    0.D0
-!              ADJUST   =    0.D0
-!
-!        C
-!        C     Set quantity.
-!        C
-!              EVENT    =   'DISTANCE'
-!
-!        C
-!        C     Turn on progress reporter and initialize the windows.
-!        C
-!              RPT    = .TRUE.
-!              BAIL   = .FALSE.
-!
-!              CALL SSIZED ( 2,      CNFINE )
-!              CALL SSIZED ( MAXVAL, RESULT )
-!
-!        C
-!        C     Add 2 points to the confinement interval window.
-!        C
-!              CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
-!
-!        C
-!        C     Define input quantities.
-!        C
-!              QPNAMS(1) = 'TARGET'
-!              QCPARS(1) = 'MOON'
-!
-!              QPNAMS(2) = 'OBSERVER'
-!              QCPARS(2) = 'EARTH'
-!
-!              QPNAMS(3) = 'ABCORR'
-!              QCPARS(3) = 'LT+S'
-!
-!              QNPARS    = 3
-!
-!        C
-!        C     Set the step size to 1 day and convert to seconds.
-!        C
-!              STEP = 1.D-3*SPD()
-!
-!              CALL GFSSTP ( STEP )
-!
-!        C
-!        C    Look for solutions.
-!        C
-!              CALL GFEVNT ( GFSTEP,     GFREFN,   EVENT,
-!             .              QNPARS,     QPNAMS,   QCPARS,
-!             .              QDPARS,     QIPARS,   QLPARS,
-!             .              RELATE,     REFVAL,   CNVTOL,
-!             .              ADJUST,     CNFINE,   RPT,
-!             .              GFREPI,     GFREPU,   GFREPF,
-!             .              MAXVAL,     NWDIST,   WORK,
-!             .              BAIL,       GFBAIL,   RESULT )
-!
-!        C
-!        C     Check the number of intervals in the result window.
-!        C
-!              COUNT = WNCARD(RESULT)
-!
-!              WRITE (*,*) 'Found ', COUNT, ' intervals in RESULT'
-!              WRITE (*,*) ' '
-!
-!        C
-!        C     List the beginning and ending points in each interval.
-!        C
-!              DO I = 1, COUNT
-!
-!                CALL WNFETD ( RESULT, I, BEG, END  )
-!
-!                CALL TIMOUT ( BEG,
-!             .                'YYYY-MON-DD HR:MN:SC.###### '
-!             .  //            '(TDB) ::TDB ::RND',  BEGSTR )
-!                CALL TIMOUT ( END,
-!             .                'YYYY-MON-DD HR:MN:SC.###### '
-!             . //             '(TDB) ::TDB ::RND',  ENDSTR )
-!
-!                WRITE (*,*) 'Interval ',  I
-!                WRITE (*,*) 'Beginning TDB ', BEGSTR
-!                WRITE (*,*) 'Ending TDB    ', ENDSTR
-!                WRITE (*,*) ' '
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Distance pass 1 of 1 100.00% done.
-!
-!         Found            6  intervals in RESULT
-!
-!         Interval            1
-!         Beginning TDB 2001-JAN-24 19:22:01.436672 (TDB)
-!         Ending TDB    2001-JAN-24 19:22:01.436672 (TDB)
-!
-!         Interval            2
-!         Beginning TDB 2001-FEB-20 21:52:07.914964 (TDB)
-!         Ending TDB    2001-FEB-20 21:52:07.914964 (TDB)
-!
-!         Interval            3
-!         Beginning TDB 2001-MAR-20 11:32:03.182345 (TDB)
-!         Ending TDB    2001-MAR-20 11:32:03.182345 (TDB)
-!
-!         Interval            4
-!         Beginning TDB 2001-APR-17 06:09:00.877038 (TDB)
-!         Ending TDB    2001-APR-17 06:09:00.877038 (TDB)
-!
-!         Interval            5
-!         Beginning TDB 2001-MAY-15 01:29:28.532819 (TDB)
-!         Ending TDB    2001-MAY-15 01:29:28.532819 (TDB)
-!
-!         Interval            6
-!         Beginning TDB 2001-JUN-11 19:44:10.855458 (TDB)
-!         Ending TDB    2001-JUN-11 19:44:10.855458 (TDB)
-!
-!        Note that the progress report has the format shown below:
-!
-!           Distance pass 1 of 1   6.02% done.
-!
-!        The completion percentage was updated approximately once per
-!        second.
-!
-!        When the program was interrupted at an arbitrary time,
-!        the output was:
-!
-!           Distance pass 1 of 1  13.63% done.
-!           Search was interrupted.
-!
-!        This message was written after an interrupt signal
-!        was trapped. By default, the program would have terminated
-!        before this message could be written.
-!
-! $ Restrictions
-!
-!     1)  The kernel files to be used by GFEVNT must be loaded (normally
-!         via the SPICELIB routine FURNSH) before GFEVNT is called.
-!
-!     2)  If using the default, constant step size routine, GFSTEP, the
-!         entry point GFSSTP must be called prior to calling this
-!         routine. The call syntax for GFSSTP:
-!
-!            CALL GFSSTP ( STEP )
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 27-OCT-2021 (JDR) (BVS) (NJB)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Updated description of WORK and RESULT arguments in $Brief_I/O,
-!        $Detailed_Input and $Detailed_Output.
-!
-!        Added SAVE statements for CNFINE, WORK and RESULT variables in
-!        code example.
-!
-!        Added SAVE statement for DREF.
-!
-!        Fixed typo in $Exceptions entry #5, which referred to a non
-!        existing input argument, replaced entry #7 by new entries #7
-!        and #8, replaced entry #10 by new entries #10 and #11, and
-!        added entry #13.
-!
-!        Added descriptions of MAXPAR and CNVTOL to the $Brief_I/O and
-!        $Parameters sections.
-!
-!        Moved declaration of MAXPAR into the $Declarations section.
-!
-!        Updated header to describe use of expanded confinement window.
-!
-!-    SPICELIB Version 2.0.0, 05-SEP-2012 (EDW) (NJB)
-!
-!        Edit to comments to correct search description.
-!
-!        Edit to $Index_Entries.
-!
-!        Added geometric quantities:
-!
-!           Phase Angle
-!           Illumination Angle
-!
-!        Code edits to implement use of ZZGFRELX in event calculations:
-!
-!           Range rate
-!           Separation angle
-!           Distance
-!           Coordinate
-!
-!        The code changes for ZZGFRELX use should not affect the
-!        numerical results of GF computations.
-!
-!-    SPICELIB Version 1.1.0, 09-OCT-2009 (NJB) (EDW)
-!
-!        Edits to argument descriptions.
-!
-!        Added geometric quantities:
-!
-!           Range Rate
-!
-!-    SPICELIB Version 1.0.0, 19-MAR-2009 (NJB) (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     GF mid-level geometric condition solver
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Angular separation routines.
-!
-
-!
-!     Distance routines.
-!
-
-!
-!     Range rate routines.
-!
-
-!
-!     Phase angle routines.
-!
-
-!
-!     Illumination angle routines.
-!
-
-!
-!     Event quantity codes:
-!
-
-
-
-
-
-
-
-
-!
-!     Number of supported quantities:
-!
-
-!
-!     Number of supported comparison operators:
-!
-
-!
-!     Assorted string lengths:
-!
-
-!
-!     MAXOP is the maximum string length for comparison operators.
-!     MAXOP may grow if new comparisons are added.
-!
-
-!
-!     MAXCLN is the maximum character string length of the quantity
-!     parameter names and character quantity parameters.
-!
-
-!
-!     Local variables
-!
-!     PEPPER: the parameter names of each quantity (a column per quantity,
-!     in the order of the quantity codes; SPICELIB set them with DATA).
-
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Below we initialize the list of quantity names. Restrict this list
-!     to those events supported with test families.
-!
-
-!
-!     Below we initialize the list of comparison operator names.
-!
-
-!
-!     Below we initialize the list of quantity parameter names.
-!     Each quantity has its own list of parameter names.
-!
-!     NOTE:  ALL of the initializers below must be updated when
-!     the parameter MAXPAR is increased.  The number blank string
-!     initial values must be increased so that the total number
-!     of values for each array is MAXPAR.
-!
-
-
-
-
-
-
-
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Determine time intervals when a specified geometric quantity
+!!     satisfies a specified mathematical condition.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     TIME
+!!     NAIF_IDS
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     EVENT
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     UDSTEP   is the name of the user specified routine that computes a
+!!              time step in an attempt to find a transition of the state
+!!              of the specified coordinate. In the context of this
+!!              routine's algorithm, a "state transition" occurs where
+!!              the geometric state changes from being in the desired
+!!              geometric condition event to not, or vice versa.
+!!
+!!              This routine relies on UDSTEP returning step sizes small
+!!              enough so that state transitions within the confinement
+!!              window are not overlooked. There must never be two roots
+!!              A and B separated by less than STEP, where STEP is the
+!!              minimum step size returned by UDSTEP for any value of ET
+!!              in the interval [A, B].
+!!
+!!              The calling sequence for UDSTEP is:
+!!
+!!                 CALL UDSTEP ( ET, STEP )
+!!
+!!              where:
+!!
+!!                 ET      is the input start time from which the
+!!                         algorithm is to search forward for a state
+!!                         transition. ET is expressed as seconds past
+!!                         J2000 TDB.
+!!
+!!                 STEP    is the output step size. STEP indicates how
+!!                         far to advance ET so that ET and ET+STEP may
+!!                         bracket a state transition and definitely do
+!!                         not bracket more than one state transition.
+!!                         Units are TDB seconds.
+!!
+!!              If a constant step size is desired, the SPICELIB routine
+!!
+!!                 GFSTEP
+!!
+!!              may be used as the step size function. This is the
+!!              default option. If GFSTEP is used, the step size must be
+!!              set by calling
+!!
+!!                 CALL GFSSTP ( STEP )
+!!
+!!              prior to calling this routine.
+!!
+!!     UDREFN   is the name of the user specified routine that computes a
+!!              refinement in the times that bracket a transition point.
+!!              In other words, once a pair of times have been detected
+!!              such that the system is in different states at each of
+!!              the two times, UDREFN selects an intermediate time which
+!!              should be closer to the transition state than one of the
+!!              two known times.
+!!
+!!              The calling sequence for UDREFN is:
+!!
+!!                 CALL UDREFN ( T1, T2, S1, S2, T )
+!!
+!!              where the inputs are:
+!!
+!!                 T1    is a time when the system is in state S1. T1 is
+!!                       expressed as seconds past J2000 TDB.
+!!
+!!                 T2    is a time when the system is in state S2. T2 is
+!!                       expressed as seconds past J2000 TDB. T2 is
+!!                       assumed to be larger than T1.
+!!
+!!                 S1    is the state of the system at time T1. S1 is a
+!!                       LOGICAL value.
+!!
+!!                 S2    is the state of the system at time T2. S2 is a
+!!                       LOGICAL value.
+!!
+!!              UDREFN may use or ignore the S1 and S2 values.
+!!
+!!              The output is:
+!!
+!!                 T     is next time to check for a state transition.
+!!                       T has value between T1 and T2. T is expressed
+!!                       as seconds past J2000 TDB.
+!!
+!!              If a simple bisection method is desired, the SPICELIB
+!!              routine
+!!
+!!                 GFREFN
+!!
+!!              may be used as the refinement function. This is the
+!!              default option.
+!!
+!!     GQUANT   is a string containing the name of a geometric quantity.
+!!              The times when this quantity satisfies a condition
+!!              specified by the arguments OP and ADJUST (described
+!!              below) are to be found.
+!!
+!!              Each quantity is specified by the quantity name given in
+!!              argument GQUANT, and by a set of parameters specified by
+!!              the arguments
+!!
+!!                 QNPARS
+!!                 QPNAMS
+!!                 QCPARS
+!!                 QDPARS
+!!                 QIPARS
+!!                 QLPARS
+!!
+!!              For each quantity listed here, we also show how to set up
+!!              these input arguments to define the quantity. See the
+!!              detailed discussion of these arguments below for further
+!!              information.
+!!
+!!              GQUANT may be any of the strings:
+!!
+!!                 'ANGULAR SEPARATION'
+!!                 'COORDINATE'
+!!                 'DISTANCE'
+!!                 'ILLUMINATION ANGLE'
+!!                 'PHASE ANGLE'
+!!                 'RANGE RATE'
+!!
+!!              GQUANT strings are case insensitive. Values, meanings,
+!!              and associated parameters are discussed below.
+!!
+!!              The aberration correction parameter indicates the
+!!              aberration corrections to be applied to the state of the
+!!              target body to account for one-way light time and stellar
+!!              aberration. If relevant, it applies to the rotation of
+!!              the target body as well.
+!!
+!!              Supported aberration correction options for observation
+!!              (case where radiation is received by observer at ET) are:
+!!
+!!                 'NONE'          No correction.
+!!                 'LT'            Light time only.
+!!                 'LT+S'          Light time and stellar aberration.
+!!                 'CN'            Converged Newtonian (CN) light time.
+!!                 'CN+S'          CN light time and stellar aberration.
+!!
+!!              Supported aberration correction options for transmission
+!!              (case where radiation is emitted from observer at ET)
+!!              are:
+!!
+!!                 'XLT'           Light time only.
+!!                 'XLT+S'         Light time and stellar aberration.
+!!                 'XCN'           Converged Newtonian (CN) light time.
+!!                 'XCN+S'         CN light time and stellar aberration.
+!!
+!!              For detailed information, see the geometry finder
+!!              required reading, gf.req.
+!!
+!!              Case, leading and trailing blanks are not significant in
+!!              aberration correction parameter strings.
+!!
+!!              ANGULAR SEPARATION
+!!
+!!                 is the apparent angular separation of two target
+!!                 bodies as seen from an observing body.
+!!
+!!                 Quantity Parameters:
+!!
+!!                    QNPARS    = 8
+!!                    QPNAMS(1) = 'TARGET1'
+!!                    QPNAMS(2) = 'FRAME1'
+!!                    QPNAMS(3) = 'SHAPE1'
+!!                    QPNAMS(4) = 'TARGET2'
+!!                    QPNAMS(5) = 'FRAME2'
+!!                    QPNAMS(6) = 'SHAPE2'
+!!                    QPNAMS(7) = 'OBSERVER'
+!!                    QPNAMS(8) = 'ABCORR'
+!!
+!!                    QCPARS(1) = <name of first target>
+!!                    QCPARS(2) = <name of body-fixed frame
+!!                                          of first target>
+!!                    QCPARS(3) = <shape of first target>
+!!                    QCPARS(4) = <name of second target>
+!!                    QCPARS(5) = <name of body-fixed frame
+!!                                         of second target>
+!!                    QCPARS(6) = <shape of second target>
+!!                    QCPARS(7) = <name of observer>
+!!                    QCPARS(8) = <aberration correction>
+!!
+!!                 The target shape model specifiers may be set to either
+!!                 of the values
+!!
+!!                    'POINT'
+!!                    'SPHERE'
+!!
+!!                 The shape models for the two bodies need not match.
+!!
+!!                 Spherical models have radii equal to the longest
+!!                 equatorial radius of the PCK-based tri-axial
+!!                 ellipsoids used to model the respective bodies. When
+!!                 both target bodies are modeled as spheres, the angular
+!!                 separation between the bodies is the angle between the
+!!                 closest points on the limbs of the spheres, as viewed
+!!                 from the vantage point of the observer. If the limbs
+!!                 overlap, the angular separation is negative.
+!!
+!!                 (In this case, the angular separation is the angle
+!!                 between the centers of the spheres minus the sum of
+!!                 the apparent angular radii of the spheres.)
+!!
+!!              COORDINATE
+!!
+!!                 is a coordinate of a specified vector in a specified
+!!                 reference frame and coordinate system. For example, a
+!!                 coordinate can be the Z component of the earth-sun
+!!                 vector in the J2000 reference frame, or the latitude
+!!                 of the nearest point on Mars to an orbiting
+!!                 spacecraft, expressed relative to the IAU_MARS
+!!                 reference frame.
+!!
+!!                 The method by which the vector is defined is indicated
+!!                 by the
+!!
+!!                    'VECTOR DEFINITION'
+!!
+!!                 parameter. Allowed values and meanings of this
+!!                 parameter are:
+!!
+!!                    'POSITION'
+!!
+!!                       The vector is defined by the position of a
+!!                       target relative to an observer.
+!!
+!!                    'SUB-OBSERVER POINT'
+!!
+!!                       The vector is the sub-observer point on a
+!!                       specified target body.
+!!
+!!                    'SURFACE INTERCEPT POINT'
+!!
+!!                       The vector is defined as the intercept point of
+!!                       a vector from the observer to the target body.
+!!
+!!                 Some vector definitions, such as the sub-observer
+!!                 point, may be specified by a variety of methods, so a
+!!                 parameter is provided to select the computation
+!!                 method. The computation method parameter name is
+!!
+!!                    'METHOD'
+!!
+!!                 If the vector definition is
+!!
+!!                    'POSITION'
+!!
+!!                 the 'METHOD' parameter must be set to blank:
+!!
+!!                    ' '
+!!
+!!                 If the vector definition is
+!!
+!!                    'SUB-OBSERVER POINT'
+!!
+!!                 the 'METHOD' parameter must be set to either:
+!!
+!!                    'Near point: ellipsoid'
+!!                    'Intercept: ellipsoid'
+!!
+!!                 If the vector definition is
+!!
+!!                    'SURFACE INTERCEPT POINT'
+!!
+!!                 the 'METHOD' parameter must be set to:
+!!
+!!                    'Ellipsoid'
+!!
+!!                       The intercept computation uses a triaxial
+!!                       ellipsoid to model the surface of the target
+!!                       body. The ellipsoid's radii must be available in
+!!                       the kernel pool.
+!!
+!!                 The supported coordinate systems and coordinate names:
+!!
+!!                    Coordinate System  Coordinates        Range
+!!                    -----------------  -----------------  ------------
+!!
+!!                    'RECTANGULAR'      'X'
+!!                                       'Y'
+!!                                       'Z'
+!!
+!!                    'LATITUDINAL'      'RADIUS'
+!!                                       'LONGITUDE'        (-Pi,Pi]
+!!                                       'LATITUDE'         [-Pi/2,Pi/2]
+!!
+!!                    'RA/DEC'           'RANGE'
+!!                                       'RIGHT ASCENSION'  [0,2Pi)
+!!                                       'DECLINATION'      [-Pi/2,Pi/2]
+!!
+!!                    'SPHERICAL'        'RADIUS'
+!!                                       'COLATITUDE'       [0,Pi]
+!!                                       'LONGITUDE'        (-Pi,Pi]
+!!
+!!                    'CYLINDRICAL'      'RADIUS'
+!!                                       'LONGITUDE'        [0,2Pi)
+!!                                       'Z'
+!!
+!!                    'GEODETIC'         'LONGITUDE'        (-Pi,Pi]
+!!                                       'LATITUDE'         [-Pi/2,Pi/2]
+!!                                       'ALTITUDE'
+!!
+!!                    'PLANETOGRAPHIC'   'LONGITUDE'        [0,2Pi)
+!!                                       'LATITUDE'         [-Pi/2,Pi/2]
+!!                                       'ALTITUDE'
+!!
+!!                 When geodetic coordinates are selected, the radii used
+!!                 are those of the central body associated with the
+!!                 reference frame. For example, if IAU_MARS is the
+!!                 reference frame, then geodetic coordinates are
+!!                 calculated using the radii of Mars taken from a SPICE
+!!                 planetary constants kernel. One cannot ask for
+!!                 geodetic coordinates for a frame which doesn't have an
+!!                 extended body as its center.
+!!
+!!                 Reference frame names must be recognized by the SPICE
+!!                 frame subsystem.
+!!
+!!                 Quantity Parameters:
+!!
+!!                    QNPARS     = 10
+!!                    QPNAMS(1)  = 'TARGET'
+!!                    QPNAMS(2)  = 'OBSERVER'
+!!                    QPNAMS(3)  = 'ABCORR'
+!!                    QPNAMS(4)  = 'COORDINATE SYSTEM'
+!!                    QPNAMS(5)  = 'COORDINATE'
+!!                    QPNAMS(6)  = 'REFERENCE FRAME'
+!!                    QPNAMS(7)  = 'VECTOR DEFINITION'
+!!                    QPNAMS(8)  = 'METHOD'
+!!                    QPNAMS(9)  = 'DREF'
+!!                    QPNAMS(10) = 'DVEC'
+!!
+!!                 Only 'SURFACE INTERCEPT POINT' searches make use of
+!!                 the 'DREF' and 'DVEC' parameters.
+!!
+!!                    QCPARS(1) = <name of target>
+!!                    QCPARS(2) = <name of observer>
+!!                    QCPARS(3) = <aberration correction>
+!!                    QCPARS(4) = <coordinate system name>
+!!                    QCPARS(5) = <coordinate name>
+!!                    QCPARS(6) = <target reference frame name>
+!!                    QCPARS(7) = <vector definition>
+!!                    QCPARS(8) = <computation method>
+!!                    QCPARS(9) = <reference frame of DVEC pointing
+!!                                        vector, defined in QDPARS>
+!!
+!!                    QDPARS(1) = <DVEC pointing vector x component
+!!                                                      from observer>
+!!                    QDPARS(2) = <DVEC pointing vector y component
+!!                                                      from observer>
+!!                    QDPARS(3) = <DVEC pointing vector z component
+!!                                                      from observer>
+!!
+!!              DISTANCE
+!!
+!!                 is the apparent distance between a target body and an
+!!                 observing body. Distances are always measured between
+!!                 centers of mass.
+!!
+!!                 Quantity Parameters:
+!!
+!!                    QNPARS    = 3
+!!                    QPNAMS(1) = 'TARGET'
+!!                    QPNAMS(2) = 'OBSERVER'
+!!                    QPNAMS(3) = 'ABCORR'
+!!
+!!                    QCPARS(1) = <name of target>
+!!                    QCPARS(2) = <name of observer>
+!!                    QCPARS(3) = <aberration correction>
+!!
+!!              ILLUMINATION ANGLE
+!!
+!!                 is any of the illumination angles
+!!
+!!                    emission
+!!                    phase
+!!                    solar incidence
+!!
+!!                 defined at a surface point on a target body. These
+!!                 angles are defined as in the SPICELIB routine ILUMIN.
+!!
+!!                 Quantity Parameters:
+!!
+!!                    QNPARS    = 8
+!!                    QPNAMS(1) = 'TARGET'
+!!                    QPNAMS(2) = 'ILLUM'
+!!                    QPNAMS(3) = 'OBSERVER'
+!!                    QPNAMS(4) = 'ABCORR'
+!!                    QPNAMS(5) = 'FRAME'
+!!                    QPNAMS(6) = 'ANGTYP'
+!!                    QPNAMS(7) = 'METHOD'
+!!                    QPNAMS(8) = 'SPOINT'
+!!
+!!                    QCPARS(1) =  <name of target>
+!!                    QCPARS(1) =  <name of illumination source>
+!!                    QCPARS(3) =  <name of observer>
+!!                    QCPARS(4) =  <aberration correction>
+!!                    QCPARS(5) =  <target body-fixed frame>
+!!                    QCPARS(6) =  <type of illumination angle>
+!!                    QCPARS(7) =  <computation method>
+!!
+!!                 The surface point is specified using rectangular
+!!                 coordinates in the specified body-fixed frame.
+!!
+!!                    QDPARS(1) =  <X coordinate of surface point>
+!!                    QDPARS(2) =  <Y coordinate of surface point>
+!!                    QDPARS(3) =  <Z coordinate of surface point>
+!!
+!!              PHASE ANGLE
+!!
+!!                 is the apparent phase angle between a target body
+!!                 center and an illuminating body center as seen from an
+!!                 observer.
+!!
+!!                 Quantity Parameters:
+!!
+!!                    QNPARS    = 4
+!!                    QPNAMS(1) = 'TARGET'
+!!                    QPNAMS(2) = 'OBSERVER'
+!!                    QPNAMS(3) = 'ABCORR'
+!!                    QPNAMS(4) = 'ILLUM'
+!!
+!!                    QCPARS(1) =  <name of target>
+!!                    QCPARS(2) =  <name of observer>
+!!                    QCPARS(3) =  <aberration correction>
+!!                    QCPARS(4) =  <name of illuminating body>
+!!
+!!              RANGE RATE
+!!
+!!                 is the apparent range rate between a target body and
+!!                 an observing body.
+!!
+!!                 Quantity Parameters:
+!!
+!!                    QNPARS    = 3
+!!                    QPNAMS(1) = 'TARGET'
+!!                    QPNAMS(2) = 'OBSERVER'
+!!                    QPNAMS(3) = 'ABCORR'
+!!
+!!                    QCPARS(1) = <name of target>
+!!                    QCPARS(2) = <name of observer>
+!!                    QCPARS(3) = <aberration correction>
+!!
+!!     QNPARS   is the count of quantity parameter definition parameters.
+!!              These parameters supply the quantity-specific information
+!!              needed to fully define the quantity used in the search
+!!              performed by this routine.
+!!
+!!     QPNAMS   is an array of names of quantity definition parameters.
+!!              The names occupy elements 1:QNPARS of this array. The
+!!              value associated with the Ith element of QPNAMS is
+!!              located in element I of the parameter value argument
+!!              having data type appropriate for the parameter:
+!!
+!!                 Data Type                      Argument
+!!                 ---------                      --------
+!!                 Character strings              QCPARS
+!!                 Double precision numbers       QDPARS
+!!                 Integers                       QIPARS
+!!                 Logicals                       QLPARS
+!!
+!!              The order in which the parameter names are listed is
+!!              unimportant, as long as the corresponding parameter
+!!              values are listed in the same order.
+!!
+!!              The names in QPNAMS are case-insensitive.
+!!
+!!              See the description of the input argument GQUANT for a
+!!              discussion of the parameter names and values associated
+!!              with a given quantity.
+!!
+!!     QCPARS,
+!!     QDPARS,
+!!     QIPARS,
+!!     QLPARS   are, respectively, parameter value arrays of types
+!!
+!!                  CHARACTER*(*)       QCPARS
+!!                  DOUBLE PRECISION    QDPARS
+!!                  INTEGER             QIPARS
+!!                  LOGICAL             QLPARS
+!!
+!!              The value associated with the Ith name in the array
+!!              QPNAMS resides in the Ith element of whichever of these
+!!              arrays has the appropriate data type.
+!!
+!!              All of these arrays should be declared with dimension at
+!!              least QNPARS.
+!!
+!!              The names in the array QCPARS are case-insensitive.
+!!
+!!              Note that there is no required order for QPNAMS/Q*PARS
+!!              pairs.
+!!
+!!              See the description of the input argument GQUANT for a
+!!              discussion of the parameter names and values associated
+!!              with a given quantity.
+!!
+!!     OP       is a scalar string comparison operator indicating the
+!!              numeric constraint of interest. Values are:
+!!
+!!                 '>'        value of geometric quantity greater than
+!!                            some reference (REFVAL).
+!!
+!!                 '='        value of geometric quantity equal to some
+!!                            reference (REFVAL).
+!!
+!!                 '<'        value of geometric quantity less than some
+!!                            reference (REFVAL).
+!!
+!!                 'ABSMAX'   The geometric quantity is at an absolute
+!!                            maximum.
+!!
+!!                 'ABSMIN'   The geometric quantity is at an absolute
+!!                            minimum.
+!!
+!!                 'LOCMAX'   The geometric quantity is at a local
+!!                            maximum.
+!!
+!!                 'LOCMIN'   The geometric quantity is at a local
+!!                            minimum.
+!!
+!!              The caller may indicate that the region of interest is
+!!              the set of time intervals where the quantity is within a
+!!              specified distance of an absolute extremum. The argument
+!!              ADJUST (described below) is used to specified this
+!!              distance.
+!!
+!!              Local extrema are considered to exist only in the
+!!              interiors of the intervals comprising the confinement
+!!              window: a local extremum cannot exist at a boundary point
+!!              of the confinement window.
+!!
+!!              Case is not significant in the string OP.
+!!
+!!     REFVAL   is the reference value used to define an equality or
+!!              inequality to be satisfied by the geometric quantity. The
+!!              units of REFVAL are radians, radians/sec, km, or km/sec
+!!              as appropriate.
+!!
+!!     TOL      is a tolerance value used to determine convergence of
+!!              root-finding operations. TOL is measured in ephemeris
+!!              seconds and must be greater than zero.
+!!
+!!     ADJUST   is the amount by which the quantity is allowed to vary
+!!              from an absolute extremum.
+!!
+!!              If the search is for an absolute minimum is performed,
+!!              the resulting window contains time intervals when the
+!!              geometric quantity GQUANT has values between ABSMIN and
+!!              ABSMIN + ADJUST.
+!!
+!!              If the search is for an absolute maximum, the
+!!              corresponding range is  between ABSMAX - ADJUST and
+!!              ABSMAX.
+!!
+!!              ADJUST is not used for searches for local extrema,
+!!              equality or inequality conditions and must have value
+!!              zero for such searches. ADJUST must not be negative.
+!!
+!!     CNFINE   is a SPICE window that confines the time period over
+!!              which the specified search is conducted. CNFINE may
+!!              consist of a single interval or a collection of
+!!              intervals.
+!!
+!!              In some cases the confinement window can be used to
+!!              greatly reduce the time period that must be searched
+!!              for the desired solution. See the $Particulars section
+!!              below for further discussion.
+!!
+!!              See the $Examples section below for a code example
+!!              that shows how to create a confinement window.
+!!
+!!              CNFINE must be initialized by the caller via the
+!!              SPICELIB routine SSIZED.
+!!
+!!              In some cases the observer's state may be computed at
+!!              times outside of CNFINE by as much as 2 seconds. See
+!!              $Particulars for details.
+!!
+!!     RPT      is a logical variable which controls whether the progress
+!!              reporter is enabled. When RPT is .TRUE., progress
+!!              reporting is enabled and the routines UDREPI, UDREPU, and
+!!              UDREPF (see descriptions below) are used to report
+!!              progress.
+!!
+!!     UDREPI   is the name of the user specified routine that
+!!              initializes a progress report. When progress reporting is
+!!              enabled, UDREPI is called at the start of a search. The
+!!              calling sequence of UDREPI is
+!!
+!!                 UDREPI ( CNFINE, SRCPRE, SRCSUF )
+!!
+!!                 DOUBLE PRECISION    CNFINE ( LBCELL : * )
+!!                 CHARACTER*(*)       SRCPRE
+!!                 CHARACTER*(*)       SRCSUF
+!!
+!!              where
+!!
+!!                 CNFINE
+!!
+!!              is a confinement window specifying the time period over
+!!              which a search is conducted, and
+!!
+!!                 SRCPRE
+!!                 SRCSUF
+!!
+!!              are prefix and suffix strings used in the progress
+!!              report: these strings are intended to bracket a
+!!              representation of the fraction of work done. For example,
+!!              when the SPICELIB progress reporting functions are used,
+!!              if SRCPRE and SRCSUF are, respectively,
+!!
+!!                 'Occultation/transit search'
+!!                 'done.'
+!!
+!!              the progress report display at the end of the search will
+!!              be:
+!!
+!!                 Occultation/transit search 100.00% done.
+!!
+!!              If the user doesn't wish to provide a custom set of
+!!              progress reporting functions, the SPICELIB routine
+!!
+!!                 GFREPI
+!!
+!!              may be used.
+!!
+!!     UDREPU   is the name of the user specified routine that updates
+!!              the progress report for a search. The calling sequence of
+!!              UDREPU is
+!!
+!!                 UDREPU (IVBEG, IVEND, ET )
+!!
+!!                 DOUBLE PRECISION      ET
+!!                 DOUBLE PRECISION      IVBEG
+!!                 DOUBLE PRECISION      IVEND
+!!
+!!              where ET is an epoch belonging to the confinement window,
+!!              IVBEG and IVEND are the start and stop times,
+!!              respectively of the current confinement window interval.
+!!              The ratio of the measure of the portion of CNFINE that
+!!              precedes ET to the measure of CNFINE would be a logical
+!!              candidate for the searches completion percentage; however
+!!              the method of measurement is up to the user.
+!!
+!!              If the user doesn't wish to provide a custom set of
+!!              progress reporting functions, the SPICELIB routine
+!!
+!!                 GFREPU
+!!
+!!              may be used.
+!!
+!!     UDREPF   is the name of the user specified routine that finalizes
+!!              a progress report. UDREPF has no arguments.
+!!
+!!              If the user doesn't wish to provide a custom set of
+!!              progress reporting functions, the SPICELIB routine
+!!
+!!                 GFREPF
+!!
+!!              may be used.
+!!
+!!     MW       is a parameter specifying the length of the SPICE
+!!              windows in the workspace array WORK (see description
+!!              below) used by this routine.
+!!
+!!              MW should be set to a number at least twice as large
+!!              as the maximum number of intervals required by any
+!!              workspace window. In many cases, it's not necessary to
+!!              compute an accurate estimate of how many intervals are
+!!              needed; rather, the user can pick a size considerably
+!!              larger than what's really required.
+!!
+!!              However, since excessively large arrays can prevent
+!!              applications from compiling, linking, or running
+!!              properly, sometimes MW must be set according to
+!!              the actual workspace requirement. A rule of thumb
+!!              for the number of intervals NINTVLS needed is
+!!
+!!                 NINTVLS  =  2*N  +  ( M / STEP )
+!!
+!!              where
+!!
+!!                 N     is the number of intervals in the confinement
+!!                       window
+!!
+!!                 M     is the measure of the confinement window, in
+!!                       units of seconds
+!!
+!!                 STEP  is the search step size in seconds
+!!
+!!              MW should then be set to
+!!
+!!                 2 * NINTVLS
+!!
+!!     NW       is a parameter specifying the number of SPICE windows
+!!              in the workspace array WORK (see description below)
+!!              used by this routine. (The reason this dimension is
+!!              an input argument is that this allows run-time
+!!              error checking to be performed.)
+!!
+!!     BAIL     is a logical flag indicating whether or not interrupt
+!!              signaling handling is enabled. When BAIL is set to
+!!              .TRUE., the input function UDBAIL (see description below)
+!!              is used to determine whether an interrupt has been
+!!              issued.
+!!
+!!     UDBAIL   is the name of the user specified routine that indicates
+!!              whether an interrupt signal has been issued (for example,
+!!              from the keyboard). UDBAIL has no arguments and returns
+!!              a LOGICAL value. The return value is .TRUE. if an
+!!              interrupt has been issued; otherwise the value is .FALSE.
+!!
+!!              GFEVNT uses UDBAIL only when BAIL (see above) is set
+!!              to .TRUE., indicating that interrupt handling is
+!!              enabled. When interrupt handling is enabled, GFEVNT
+!!              and routines in its call tree will call UDBAIL to
+!!              determine whether to terminate processing and return
+!!              immediately.
+!!
+!!              If interrupt handing is not enabled, a logical
+!!              function must still be passed as an input argument.
+!!              The SPICELIB function
+!!
+!!                 GFBAIL
+!!
+!!              may be used for this purpose.
+!!
+!!     RESULT   is a double precision SPICE window which will contain
+!!              the search results. RESULT must be declared and
+!!              initialized with sufficient size to capture the full
+!!              set of time intervals within the search region on which
+!!              the specified condition is satisfied.
+!!
+!!              RESULT must be initialized by the caller via the
+!!              SPICELIB routine SSIZED.
+!!
+!!              If RESULT is non-empty on input, its contents will be
+!!              discarded before GFEVNT conducts its search.
+!!
+!! ## Detailed Output
+!!
+!!     WORK     is an array used to store workspace windows.
+!!
+!!              This array should be declared by the caller as shown:
+!!
+!!                 DOUBLE PRECISION     WORK ( LBCELL : MW,  NW )
+!!
+!!              WORK need not be initialized by the caller.
+!!
+!!              WORK is modified by this routine. The caller should
+!!              re-initialize this array before attempting to use it for
+!!              any other purpose.
+!!
+!!     RESULT   is a SPICE window representing the set of time intervals,
+!!              within the confinement period, when the specified
+!!              geometric event occurs.
+!!
+!!              The endpoints of the time intervals comprising RESULT
+!!              are interpreted as seconds past J2000 TDB.
+!!
+!!              If the search is for local extrema, or for absolute
+!!              extrema with ADJUST set to zero, then normally each
+!!              interval of RESULT will be a singleton: the left and
+!!              right endpoints of each interval will be identical.
+!!
+!!              If no times within the confinement window satisfy the
+!!              search criteria, RESULT will be returned with a
+!!              cardinality of zero.
+!!
+!! ## Parameters
+!!
+!!     LBCELL   is the SPICE cell lower bound.
+!!
+!!     MAXPAR   is the maximum number of parameters required to define
+!!              any quantity. MAXPAR may grow if new quantities require
+!!              more parameters. MAXPAR is currently set to 10.
+!!
+!!     CNVTOL   is the default convergence tolerance used by the
+!!              high-level GF search API routines. This tolerance is
+!!              used to terminate searches for binary state transitions:
+!!              when the time at which a transition occurs is bracketed
+!!              by two times that differ by no more than
+!!              SPICE_GF_CNVTOL, the transition time is considered
+!!              to have been found.
+!!
+!! ## Exceptions
+!!
+!!     1)  There are varying requirements on how distinct the three
+!!         objects, QCPARS, must be. If the requirements are not met, an,
+!!         an error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!         When GQUANT has value 'ANGULAR SEPARATION' then all three
+!!         must be distinct.
+!!
+!!         When GQUANT has value of either
+!!
+!!            'DISTANCE'
+!!            'COORDINATE'
+!!            'RANGE RATE'
+!!
+!!         the QCPARS(1) and QCPARS(2) objects must be distinct.
+!!
+!!     2)  If any of the bodies involved do not have NAIF ID codes, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     3)  If the value of GQUANT is not recognized as a valid value,
+!!         the error SPICE(NOTRECOGNIZED) is signaled.
+!!
+!!     4)  If the number of quantity definition parameters, QNPARS is
+!!         greater than the maximum allowed value, MAXPAR, the error
+!!         SPICE(INVALIDCOUNT) is signaled.
+!!
+!!     5)  If the proper required parameters are not supplied in QNPARS,
+!!         the error SPICE(MISSINGVALUE) is signaled.
+!!
+!!     6)  If the comparison operator, OP, is not recognized, the error
+!!         SPICE(NOTRECOGNIZED) is signaled.
+!!
+!!     7)  If the window size MW is less than 2, an error is signaled by
+!!         a routine in the call tree of this routine.
+!!
+!!     8)  If the number of workspace windows NW is too small for the
+!!         required search, an error is signaled by a routine in the call
+!!         tree of this routine.
+!!
+!!     9)  If TOL is not greater than zero, an error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     10) If ADJUST is negative, an error is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     11) If ADJUST has a non-zero value when OP has any value other
+!!         than 'ABSMIN' or 'ABSMAX', an error is signaled by a routine
+!!         in the call tree of this routine.
+!!
+!!     12) The user must take care when searching for an extremum
+!!         ('ABSMAX', 'ABSMIN', 'LOCMAX', 'LOCMIN') of an angular
+!!         quantity. Problems are most common when using the 'COORDINATE'
+!!         value of GQUANT with 'LONGITUDE' or 'RIGHT ASCENSION' values
+!!         for the coordinate name. Since these quantities are cyclical,
+!!         rather than monotonically increasing or decreasing, an
+!!         extremum may be hard to interpret. In particular, if an
+!!         extremum is found near the cycle boundary (-Pi for
+!!         'LONGITUDE', 2*Pi for 'RIGHT ASCENSION') it may not be
+!!         numerically reasonable. For example, the search for times when
+!!         a longitude coordinate is at its absolute maximum may result
+!!         in a time when the longitude value is -Pi, due to roundoff
+!!         error.
+!!
+!!     13) If operation of this routine is interrupted, the output result
+!!         window will be invalid.
+!!
+!! ## Files
+!!
+!!     Appropriate SPK and PCK kernels must be loaded by the
+!!     calling program before this routine is called.
+!!
+!!     The following data are required:
+!!
+!!     -  SPK data: ephemeris data for target, source and observer that
+!!        describes the ephemeris of these objects for the period
+!!        defined by the confinement window, CNFINE must be
+!!        loaded. If aberration corrections are used, the states of
+!!        target and observer relative to the solar system barycenter
+!!        must be calculable from the available ephemeris data.
+!!        Typically ephemeris data are made available by loading one
+!!        or more SPK files via FURNSH.
+!!
+!!     -  PCK data: bodies are assumed to be spherical and must have a
+!!        radius loaded from the kernel pool. Typically this is done by
+!!        loading a text PCK file via FURNSH. If the bodies are
+!!        triaxial, the largest radius is chosen as that of the
+!!        equivalent spherical body.
+!!
+!!     -  In some cases the observer's state may be computed at times
+!!        outside of CNFINE by as much as 2 seconds; data required to
+!!        compute this state must be provided by loaded kernels. See
+!!        $Particulars for details.
+!!
+!!     In all cases, kernel data are normally loaded once per program
+!!     run, NOT every time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     This routine provides the SPICE GF subsystem's general interface
+!!     to determines time intervals when the value of some
+!!     geometric quantity related to one or more objects and an observer
+!!     satisfies a user specified constraint. It puts these times in a
+!!     result window called RESULT. It does this by first finding
+!!     windows when the quantity of interest is either monotonically
+!!     increasing or decreasing. These windows are then manipulated to
+!!     give the final result.
+!!
+!!     Applications that require do not require support for progress
+!!     reporting, interrupt handling, non-default step or refinement
+!!     functions, or non-default convergence tolerance normally should
+!!     call a high level geometry quantity routine rather than
+!!     this routine.
+!!
+!!     The Search Process
+!!     ==================
+!!
+!!     Regardless of the type of constraint selected by the caller, this
+!!     routine starts the search for solutions by determining the time
+!!     periods, within the confinement window, over which the specified
+!!     geometric quantity function is monotone increasing and monotone
+!!     decreasing. Each of these time periods is represented by a SPICE
+!!     window. Having found these windows, all of the quantity
+!!     function's local extrema within the confinement window are known.
+!!     Absolute extrema then can be found very easily.
+!!
+!!     Within any interval of these "monotone" windows, there will be at
+!!     most one solution of any equality constraint. Since the boundary
+!!     of the solution set for any inequality constraint is contained in
+!!     the union of
+!!
+!!     -  the set of points where an equality constraint is met
+!!
+!!     -  the boundary points of the confinement window
+!!
+!!     the solutions of both equality and inequality constraints can be
+!!     found easily once the monotone windows have been found.
+!!
+!!     Step Size
+!!     =========
+!!
+!!     The monotone windows (described above) are found using a two-step
+!!     search process. Each interval of the confinement window is
+!!     searched as follows: first, the input step size is used to
+!!     determine the time separation at which the sign of the rate of
+!!     change of quantity function will be sampled. Starting at
+!!     the left endpoint of an interval, samples will be taken at each
+!!     step. If a change of sign is found, a root has been bracketed; at
+!!     that point, the time at which the time derivative of the quantity
+!!     function is zero can be found by a refinement process, for
+!!     example, using a binary search.
+!!
+!!     Note that the optimal choice of step size depends on the lengths
+!!     of the intervals over which the quantity function is monotone:
+!!     the step size should be shorter than the shortest of these
+!!     intervals (within the confinement window).
+!!
+!!     The optimal step size is *not* necessarily related to the lengths
+!!     of the intervals comprising the result window. For example, if
+!!     the shortest monotone interval has length 10 days, and if the
+!!     shortest result window interval has length 5 minutes, a step size
+!!     of 9.9 days is still adequate to find all of the intervals in the
+!!     result window. In situations like this, the technique of using
+!!     monotone windows yields a dramatic efficiency improvement over a
+!!     state-based search that simply tests at each step whether the
+!!     specified constraint is satisfied. The latter type of search can
+!!     miss solution intervals if the step size is longer than the
+!!     shortest solution interval.
+!!
+!!     Having some knowledge of the relative geometry of the targets and
+!!     observer can be a valuable aid in picking a reasonable step size.
+!!     In general, the user can compensate for lack of such knowledge by
+!!     picking a very short step size; the cost is increased computation
+!!     time.
+!!
+!!     Note that the step size is not related to the precision with which
+!!     the endpoints of the intervals of the result window are computed.
+!!     That precision level is controlled by the convergence tolerance.
+!!
+!!     Convergence Tolerance
+!!     =====================
+!!
+!!     Once a root has been bracketed, a refinement process is used to
+!!     narrow down the time interval within which the root must lie.
+!!     This refinement process terminates when the location of the root
+!!     has been determined to within an error margin called the
+!!     "convergence tolerance," passed to this routine as 'tol'.
+!!
+!!     The GF subsystem defines a parameter, CNVTOL (from gf.inc), as a
+!!     default tolerance. This represents a "tight" tolerance value
+!!     so that the tolerance doesn't become the limiting factor in the
+!!     accuracy of solutions found by this routine. In general the
+!!     accuracy of input data will be the limiting factor.
+!!
+!!     Making the tolerance tighter than CNVTOL is unlikely to
+!!     be useful, since the results are unlikely to be more accurate.
+!!     Making the tolerance looser will speed up searches somewhat,
+!!     since a few convergence steps will be omitted. However, in most
+!!     cases, the step size is likely to have a much greater affect
+!!     on processing time than would the convergence tolerance.
+!!
+!!     The Confinement Window
+!!     ======================
+!!
+!!     The simplest use of the confinement window is to specify a time
+!!     interval within which a solution is sought. However, the
+!!     confinement window can, in some cases, be used to make searches
+!!     more efficient. Sometimes it's possible to do an efficient search
+!!     to reduce the size of the time period over which a relatively
+!!     slow search of interest must be performed.
+!!
+!!     Certain types of searches require the state of the observer,
+!!     relative to the solar system barycenter, to be computed at times
+!!     slightly outside the confinement window CNFINE. The time window
+!!     that is actually used is the result of "expanding" CNFINE by a
+!!     specified amount "T": each time interval of CNFINE is expanded by
+!!     shifting the interval's left endpoint to the left and the right
+!!     endpoint to the right by T seconds. Any overlapping intervals are
+!!     merged. (The input argument CNFINE is not modified.)
+!!
+!!     The window expansions listed below are additive: if both
+!!     conditions apply, the window expansion amount is the sum of the
+!!     individual amounts.
+!!
+!!     -  If a search uses an equality constraint, the time window
+!!        over which the state of the observer is computed is expanded
+!!        by 1 second at both ends of all of the time intervals
+!!        comprising the window over which the search is conducted.
+!!
+!!     -  If a search uses stellar aberration corrections, the time
+!!        window over which the state of the observer is computed is
+!!        expanded as described above.
+!!
+!!     When light time corrections are used, expansion of the search
+!!     window also affects the set of times at which the light time-
+!!     corrected state of the target is computed.
+!!
+!!     In addition to the possible 2 second expansion of the search
+!!     window that occurs when both an equality constraint and stellar
+!!     aberration corrections are used, round-off error should be taken
+!!     into account when the need for data availability is analyzed.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Conduct a DISTANCE search using the default GF progress
+!!        reporting capability.
+!!
+!!        The program will use console I/O to display a simple
+!!        ASCII-based progress report.
+!!
+!!        The program will find local maximums of the distance from
+!!        Earth to Moon with light time and stellar aberration
+!!        corrections to model the apparent positions of the Moon.
+!!
+!!        Use the meta-kernel shown below to load the required SPICE
+!!        kernels.
+!!
+!!           KPL/MK
+!!
+!!           File name: gfevnt_ex1.tm
+!!
+!!           This meta-kernel is intended to support operation of SPICE
+!!           example programs. The kernels shown here should not be
+!!           assumed to contain adequate or correct versions of data
+!!           required by SPICE-based user applications.
+!!
+!!           In order for an application to use this meta-kernel, the
+!!           kernels referenced here must be present in the user's
+!!           current working directory.
+!!
+!!           The names and contents of the kernels referenced
+!!           by this meta-kernel are as follows:
+!!
+!!              File name                     Contents
+!!              ---------                     --------
+!!              de414.bsp                     Planetary ephemeris
+!!              pck00008.tpc                  Planet orientation and
+!!                                            radii
+!!              naif0009.tls                  Leapseconds
+!!
+!!           \begindata
+!!
+!!              KERNELS_TO_LOAD = ( 'de414.bsp',
+!!                                  'pck00008.tpc',
+!!                                  'naif0009.tls'  )
+!!
+!!           \begintext
+!!
+!!           End of meta-kernel
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM GFEVNT_EX1
+!!              IMPLICIT              NONE
+!!
+!!        C
+!!        C     SPICELIB functions
+!!        C
+!!              DOUBLE PRECISION      SPD
+!!              INTEGER               WNCARD
+!!
+!!              INCLUDE               'gf.inc'
+!!
+!!        C
+!!        C     Local variables and initial parameters.
+!!        C
+!!              INTEGER               LBCELL
+!!              PARAMETER           ( LBCELL = -5 )
+!!
+!!              INTEGER               LNSIZE
+!!              PARAMETER           ( LNSIZE = 80 )
+!!
+!!              INTEGER               MAXPAR
+!!              PARAMETER           ( MAXPAR = 8 )
+!!
+!!              INTEGER               MAXVAL
+!!              PARAMETER           ( MAXVAL = 20000 )
+!!
+!!              INTEGER               STRSIZ
+!!              PARAMETER           ( STRSIZ = 40 )
+!!
+!!              INTEGER               I
+!!
+!!        C
+!!        C     Confining window
+!!        C
+!!              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+!!
+!!        C
+!!        C     Confining window beginning and ending time strings.
+!!        C
+!!              CHARACTER*(STRSIZ)    BEGSTR
+!!              CHARACTER*(STRSIZ)    ENDSTR
+!!
+!!        C
+!!        C     Confining window beginning and ending times
+!!        C
+!!              DOUBLE PRECISION      BEGTIM
+!!              DOUBLE PRECISION      ENDTIM
+!!
+!!        C
+!!        C     Result window beginning and ending times for intervals.
+!!        C
+!!              DOUBLE PRECISION      BEG
+!!              DOUBLE PRECISION      END
+!!
+!!        C
+!!        C     Geometric quantity results window, work window,
+!!        C     bail switch and progress reporter switch.
+!!        C
+!!              DOUBLE PRECISION      RESULT ( LBCELL : MAXVAL )
+!!              DOUBLE PRECISION      WORK   ( LBCELL : MAXVAL, NWDIST )
+!!
+!!              LOGICAL               BAIL
+!!              LOGICAL               GFBAIL
+!!              EXTERNAL              GFBAIL
+!!              LOGICAL               RPT
+!!
+!!        C
+!!        C     Step size.
+!!        C
+!!              DOUBLE PRECISION      STEP
+!!
+!!        C
+!!        C     Geometric quantity name.
+!!        C
+!!              CHARACTER*(LNSIZE)    EVENT
+!!
+!!        C
+!!        C     Relational string
+!!        C
+!!              CHARACTER*(STRSIZ)    RELATE
+!!
+!!        C
+!!        C     Quantity definition parameter arrays:
+!!        C
+!!              INTEGER               QNPARS
+!!              CHARACTER*(LNSIZE)    QPNAMS ( MAXPAR )
+!!              CHARACTER*(LNSIZE)    QCPARS ( MAXPAR )
+!!              DOUBLE PRECISION      QDPARS ( MAXPAR )
+!!              INTEGER               QIPARS ( MAXPAR )
+!!              LOGICAL               QLPARS ( MAXPAR )
+!!
+!!        C
+!!        C     Routines to set step size, refine transition times
+!!        C     and report work.
+!!        C
+!!              EXTERNAL              GFREFN
+!!              EXTERNAL              GFREPI
+!!              EXTERNAL              GFREPU
+!!              EXTERNAL              GFREPF
+!!              EXTERNAL              GFSTEP
+!!
+!!        C
+!!        C     Reference and adjustment values.
+!!        C
+!!              DOUBLE PRECISION      REFVAL
+!!              DOUBLE PRECISION      ADJUST
+!!
+!!              INTEGER               COUNT
+!!
+!!        C
+!!        C     Saved variables
+!!        C
+!!        C     The confinement, workspace and result windows CNFINE,
+!!        C     WORK and RESULT are saved because this practice helps to
+!!        C     prevent stack overflow.
+!!        C
+!!              SAVE                  CNFINE
+!!              SAVE                  RESULT
+!!              SAVE                  WORK
+!!
+!!        C
+!!        C     Load leapsecond and spk kernels. The name of the
+!!        C     meta kernel file shown here is fictitious; you
+!!        C     must supply the name of a file available
+!!        C     on your own computer system.
+!!
+!!              CALL FURNSH ('gfevnt_ex1.tm')
+!!
+!!        C
+!!        C     Set a beginning and end time for confining window.
+!!        C
+!!              BEGSTR = '2001 jan 01 00:00:00.000'
+!!              ENDSTR = '2001 jun 30 00:00:00.000'
+!!
+!!              CALL STR2ET ( BEGSTR, BEGTIM )
+!!              CALL STR2ET ( ENDSTR, ENDTIM )
+!!
+!!        C
+!!        C     Set condition for extremum.
+!!        C
+!!              RELATE  =   'LOCMAX'
+!!
+!!        C
+!!        C     Set reference value (if needed) and absolute extremum
+!!        C     adjustment (if needed).
+!!        C
+!!              REFVAL   =    0.D0
+!!              ADJUST   =    0.D0
+!!
+!!        C
+!!        C     Set quantity.
+!!        C
+!!              EVENT    =   'DISTANCE'
+!!
+!!        C
+!!        C     Turn on progress reporter and initialize the windows.
+!!        C
+!!              RPT    = .TRUE.
+!!              BAIL   = .FALSE.
+!!
+!!              CALL SSIZED ( 2,      CNFINE )
+!!              CALL SSIZED ( MAXVAL, RESULT )
+!!
+!!        C
+!!        C     Add 2 points to the confinement interval window.
+!!        C
+!!              CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
+!!
+!!        C
+!!        C     Define input quantities.
+!!        C
+!!              QPNAMS(1) = 'TARGET'
+!!              QCPARS(1) = 'MOON'
+!!
+!!              QPNAMS(2) = 'OBSERVER'
+!!              QCPARS(2) = 'EARTH'
+!!
+!!              QPNAMS(3) = 'ABCORR'
+!!              QCPARS(3) = 'LT+S'
+!!
+!!              QNPARS    = 3
+!!
+!!        C
+!!        C     Set the step size to 1 day and convert to seconds.
+!!        C
+!!              STEP = 1.D-3*SPD()
+!!
+!!              CALL GFSSTP ( STEP )
+!!
+!!        C
+!!        C    Look for solutions.
+!!        C
+!!              CALL GFEVNT ( GFSTEP,     GFREFN,   EVENT,
+!!             .              QNPARS,     QPNAMS,   QCPARS,
+!!             .              QDPARS,     QIPARS,   QLPARS,
+!!             .              RELATE,     REFVAL,   CNVTOL,
+!!             .              ADJUST,     CNFINE,   RPT,
+!!             .              GFREPI,     GFREPU,   GFREPF,
+!!             .              MAXVAL,     NWDIST,   WORK,
+!!             .              BAIL,       GFBAIL,   RESULT )
+!!
+!!        C
+!!        C     Check the number of intervals in the result window.
+!!        C
+!!              COUNT = WNCARD(RESULT)
+!!
+!!              WRITE (*,*) 'Found ', COUNT, ' intervals in RESULT'
+!!              WRITE (*,*) ' '
+!!
+!!        C
+!!        C     List the beginning and ending points in each interval.
+!!        C
+!!              DO I = 1, COUNT
+!!
+!!                CALL WNFETD ( RESULT, I, BEG, END  )
+!!
+!!                CALL TIMOUT ( BEG,
+!!             .                'YYYY-MON-DD HR:MN:SC.###### '
+!!             .  //            '(TDB) ::TDB ::RND',  BEGSTR )
+!!                CALL TIMOUT ( END,
+!!             .                'YYYY-MON-DD HR:MN:SC.###### '
+!!             . //             '(TDB) ::TDB ::RND',  ENDSTR )
+!!
+!!                WRITE (*,*) 'Interval ',  I
+!!                WRITE (*,*) 'Beginning TDB ', BEGSTR
+!!                WRITE (*,*) 'Ending TDB    ', ENDSTR
+!!                WRITE (*,*) ' '
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Distance pass 1 of 1 100.00% done.
+!!
+!!         Found            6  intervals in RESULT
+!!
+!!         Interval            1
+!!         Beginning TDB 2001-JAN-24 19:22:01.436672 (TDB)
+!!         Ending TDB    2001-JAN-24 19:22:01.436672 (TDB)
+!!
+!!         Interval            2
+!!         Beginning TDB 2001-FEB-20 21:52:07.914964 (TDB)
+!!         Ending TDB    2001-FEB-20 21:52:07.914964 (TDB)
+!!
+!!         Interval            3
+!!         Beginning TDB 2001-MAR-20 11:32:03.182345 (TDB)
+!!         Ending TDB    2001-MAR-20 11:32:03.182345 (TDB)
+!!
+!!         Interval            4
+!!         Beginning TDB 2001-APR-17 06:09:00.877038 (TDB)
+!!         Ending TDB    2001-APR-17 06:09:00.877038 (TDB)
+!!
+!!         Interval            5
+!!         Beginning TDB 2001-MAY-15 01:29:28.532819 (TDB)
+!!         Ending TDB    2001-MAY-15 01:29:28.532819 (TDB)
+!!
+!!         Interval            6
+!!         Beginning TDB 2001-JUN-11 19:44:10.855458 (TDB)
+!!         Ending TDB    2001-JUN-11 19:44:10.855458 (TDB)
+!!
+!!        Note that the progress report has the format shown below:
+!!
+!!           Distance pass 1 of 1   6.02% done.
+!!
+!!        The completion percentage was updated approximately once per
+!!        second.
+!!
+!!        When the program was interrupted at an arbitrary time,
+!!        the output was:
+!!
+!!           Distance pass 1 of 1  13.63% done.
+!!           Search was interrupted.
+!!
+!!        This message was written after an interrupt signal
+!!        was trapped. By default, the program would have terminated
+!!        before this message could be written.
+!!
+!! ## Restrictions
+!!
+!!     1)  The kernel files to be used by GFEVNT must be loaded (normally
+!!         via the SPICELIB routine FURNSH) before GFEVNT is called.
+!!
+!!     2)  If using the default, constant step size routine, GFSTEP, the
+!!         entry point GFSSTP must be called prior to calling this
+!!         routine. The call syntax for GFSSTP:
+!!
+!!            CALL GFSSTP ( STEP )
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.1.0, 27-OCT-2021 (JDR) (BVS) (NJB)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!        Updated description of WORK and RESULT arguments in $Brief_I/O,
+!!        $Detailed_Input and $Detailed_Output.
+!!
+!!        Added SAVE statements for CNFINE, WORK and RESULT variables in
+!!        code example.
+!!
+!!        Added SAVE statement for DREF.
+!!
+!!        Fixed typo in $Exceptions entry #5, which referred to a non
+!!        existing input argument, replaced entry #7 by new entries #7
+!!        and #8, replaced entry #10 by new entries #10 and #11, and
+!!        added entry #13.
+!!
+!!        Added descriptions of MAXPAR and CNVTOL to the $Brief_I/O and
+!!        $Parameters sections.
+!!
+!!        Moved declaration of MAXPAR into the $Declarations section.
+!!
+!!        Updated header to describe use of expanded confinement window.
+!!
+!!-    SPICELIB Version 2.0.0, 05-SEP-2012 (EDW) (NJB)
+!!
+!!        Edit to comments to correct search description.
+!!
+!!        Edit to $Index_Entries.
+!!
+!!        Added geometric quantities:
+!!
+!!           Phase Angle
+!!           Illumination Angle
+!!
+!!        Code edits to implement use of ZZGFRELX in event calculations:
+!!
+!!           Range rate
+!!           Separation angle
+!!           Distance
+!!           Coordinate
+!!
+!!        The code changes for ZZGFRELX use should not affect the
+!!        numerical results of GF computations.
+!!
+!!-    SPICELIB Version 1.1.0, 09-OCT-2009 (NJB) (EDW)
+!!
+!!        Edits to argument descriptions.
+!!
+!!        Added geometric quantities:
+!!
+!!           Range Rate
+!!
+!!-    SPICELIB Version 1.0.0, 19-MAR-2009 (NJB) (EDW)
+!!
+!! ## Index Entries
+!!
+!!     GF mid-level geometric condition solver
+!!
+!!     SPICELIB functions
+!!
+!!     Angular separation routines.
+!!
+!!     Distance routines.
+!!
+!!     Range rate routines.
+!!
+!!     Phase angle routines.
+!!
+!!     Illumination angle routines.
+!!
+!!     Event quantity codes:
+!!
+!!     Number of supported quantities:
+!!
+!!     Number of supported comparison operators:
+!!
+!!     Assorted string lengths:
+!!
+!!     MAXOP is the maximum string length for comparison operators.
+!!     MAXOP may grow if new comparisons are added.
+!!
+!!     MAXCLN is the maximum character string length of the quantity
+!!     parameter names and character quantity parameters.
+!!
+!!     Local variables
+!!
+!!     PEPPER: the parameter names of each quantity (a column per quantity,
+!!     in the order of the quantity codes; SPICELIB set them with DATA).
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Below we initialize the list of quantity names. Restrict this list
+!!     to those events supported with test families.
+!!
+!!     Below we initialize the list of comparison operator names.
+!!
+!!     Below we initialize the list of quantity parameter names.
+!!     Each quantity has its own list of parameter names.
+!!
+!!     NOTE:  ALL of the initializers below must be updated when
+!!     the parameter MAXPAR is increased.  The number blank string
+!!     initial values must be increased so that the total number
+!!     of values for each array is MAXPAR.
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc
       use pepper_math, only: vequ
       use pepper_strings, only: ljust, ucase
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include 'gf.inc'
-      include 'zzgf.inc'
-      include 'zzabcorr.inc'
       integer(ip), parameter :: maxpar = 10
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: sep = 1
@@ -40755,35 +40134,34 @@ contains
 !$Procedure GFDIST ( GF, distance search )
 
       module procedure gfdist
+!! ## Abstract
+!!
+!!     Determine time intervals over which a specified constraint on
+!!     observer-target distance is met.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     EVENT
+!!     GEOMETRY
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine time intervals over which a specified constraint on
-!     observer-target distance is met.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     EVENT
-!     GEOMETRY
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -42057,39 +41435,38 @@ contains
 !$Procedure GFILUM ( GF, illumination angle search )
 
       module procedure gfilum
+!! ## Abstract
+!!
+!!     Determine time intervals over which a specified constraint on
+!!     the observed phase, solar incidence, or emission angle at
+!!     a specified target body surface point is met.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     FRAMES
+!!     NAIF_IDS
+!!     PCK
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     ANGLE
+!!     EPHEMERIS
+!!     ILLUMINATION
+!!     LIGHTING
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Determine time intervals over which a specified constraint on
-!     the observed phase, solar incidence, or emission angle at
-!     a specified target body surface point is met.
-!
-! $ Required_Reading
-!
-!     GF
-!     FRAMES
-!     NAIF_IDS
-!     PCK
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     ANGLE
-!     EPHEMERIS
-!     ILLUMINATION
-!     LIGHTING
-!     SEARCH
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
       implicit none
 
-      include 'gf.inc'
-      include 'zzabcorr.inc'
-      include 'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -43410,37 +42787,36 @@ contains
 !$Procedure GFPA ( GF, phase angle search )
 
       module procedure gfpa
+!! ## Abstract
+!!
+!!     Determine time intervals for which a specified constraint
+!!     on the phase angle between an illumination source, a target,
+!!     and observer body centers is met.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     EVENT
+!!     GEOMETRY
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
-
-! $ Abstract
-!
-!     Determine time intervals for which a specified constraint
-!     on the phase angle between an illumination source, a target,
-!     and observer body centers is met.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     EVENT
-!     GEOMETRY
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -44470,37 +43846,36 @@ contains
 !$Procedure GFPOSC (GF, observer-target vector coordinate search )
 
       module procedure gfposc
+!! ## Abstract
+!!
+!!     Determine time intervals for which a coordinate of an
+!!     observer-target position vector satisfies a numerical constraint.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     CK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     COORDINATE
+!!     EVENT
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: even
-
-! $ Abstract
-!
-!     Determine time intervals for which a coordinate of an
-!     observer-target position vector satisfies a numerical constraint.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     CK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     COORDINATE
-!     EVENT
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -46405,37 +45780,36 @@ contains
 !$Procedure GFRR ( GF, range rate search )
 
       module procedure gfrr
+!! ## Abstract
+!!
+!!     Determine time intervals for which a specified constraint
+!!     on the observer-target range rate is met.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!     EVENT
+!!     GEOMETRY
+!!     SEARCH
+!!     WINDOW
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
-
-! $ Abstract
-!
-!     Determine time intervals for which a specified constraint
-!     on the observer-target range rate is met.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!     EVENT
-!     GEOMETRY
-!     SEARCH
-!     WINDOW
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -47466,37 +46840,36 @@ contains
 !$Procedure GFSEP (GF, angular separation search)
 
       module procedure gfsep
+!! ## Abstract
+!!
+!!     Determine time intervals when the angular separation between
+!!     the position vectors of two target bodies relative to an observer
+!!     satisfies a numerical relationship.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     NAIF_IDS
+!!     SPK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     ANGULAR SEPARATION
+!!     EVENT
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: even
-
-! $ Abstract
-!
-!     Determine time intervals when the angular separation between
-!     the position vectors of two target bodies relative to an observer
-!     satisfies a numerical relationship.
-!
-! $ Required_Reading
-!
-!     GF
-!     NAIF_IDS
-!     SPK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     ANGULAR SEPARATION
-!     EVENT
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzabcorr.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -48632,37 +48005,36 @@ contains
 !$Procedure GFSNTC (GF, surface intercept vector coordinate search)
 
       module procedure gfsntc
+!! ## Abstract
+!!
+!!     Determine time intervals for which a coordinate of a
+!!     surface intercept position vector satisfies a numerical
+!!     constraint.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     CK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     COORDINATE
+!!     EVENT
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: even
-
-! $ Abstract
-!
-!     Determine time intervals for which a coordinate of a
-!     surface intercept position vector satisfies a numerical
-!     constraint.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     CK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     COORDINATE
-!     EVENT
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 
@@ -50167,37 +49539,36 @@ contains
 !$Procedure GFSUBC (GF, subpoint vector coordinate search )
 
       module procedure gfsubc
+!! ## Abstract
+!!
+!!     Determine time intervals for which a coordinate of an
+!!     subpoint position vector satisfies a numerical constraint.
+!!
+!! ## Required Reading
+!!
+!!     GF
+!!     SPK
+!!     CK
+!!     TIME
+!!     WINDOWS
+!!
+!! ## Keywords
+!!
+!!     COORDINATE
+!!     EVENT
+!!     GEOMETRY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: even
-
-! $ Abstract
-!
-!     Determine time intervals for which a coordinate of an
-!     subpoint position vector satisfies a numerical constraint.
-!
-! $ Required_Reading
-!
-!     GF
-!     SPK
-!     CK
-!     TIME
-!     WINDOWS
-!
-! $ Keywords
-!
-!     COORDINATE
-!     EVENT
-!     GEOMETRY
-!     SEARCH
-!
-! $ Declarations
-
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
       implicit none
 
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
-      include               'zzholdd.inc'
 
       integer(ip), parameter :: lbcell = -5
 

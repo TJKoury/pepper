@@ -8,14 +8,14 @@
 module pepper_state_spkez
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'frmtyp.inc'
-   include               'zzabcorr.inc'
-   include               'zzctr.inc'
    integer(ip), parameter :: frnmln = 32
 
    public :: init_spkez_state

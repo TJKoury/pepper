@@ -1,4 +1,4 @@
-!> Deprecated: This routine has been superseded by the SPICELIB
+!> **Deprecated:** This routine has been superseded by the SPICELIB
 !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
 !> NAIF supports DPSPCE only for backward compatibility.
 !>

@@ -18,21 +18,20 @@ contains
 
        !> Return the explanation of a short error message.
        elemental subroutine expln ( msg, expl )
-
-! $ Abstract
-!
-!     Return the explanation of a short error message.
-!
-! $ Required_Reading
-!
-!     ERROR
-!
-! $ Keywords
-!
-!     ERROR
-!
-! $ Declarations
-
+!! ## Abstract
+!!
+!!     Return the explanation of a short error message.
+!!
+!! ## Required Reading
+!!
+!!     ERROR
+!!
+!! ## Keywords
+!!
+!!     ERROR
+!!
+!! ## Declarations
+!!
       implicit none
 
       character(*), intent(in) :: msg  !! A short error message.

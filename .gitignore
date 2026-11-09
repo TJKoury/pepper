@@ -9,3 +9,5 @@ pass[0-9][0-9][0-9][0-9].log
 
 # local Fortran formatter binary
 /fformat
+/doc
+

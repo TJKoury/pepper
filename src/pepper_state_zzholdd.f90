@@ -8,12 +8,12 @@
 module pepper_state_zzholdd
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzholdd
 
    implicit none
 
    private
 
-   include               'zzholdd.inc'
 
    public :: init_zzholdd_state
 

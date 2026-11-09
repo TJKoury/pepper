@@ -8,13 +8,13 @@
 module pepper_state_zzddhppf
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
+      use pepper_inc_zzftprms
 
    implicit none
 
    private
 
-   include              'zzddhman.inc'
-   include              'zzftprms.inc'
    integer(ip), parameter :: nullid = numbff+1
 
    public :: init_zzddhppf_state

@@ -922,8 +922,8 @@
       use pepper_instance, only: pepper_context, pepper_zzwninsd => zzwninsd
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
       implicit none
-      include                'errhnd.inc'
       integer(ip) lbcell
       parameter             ( lbcell = -5 )
       real(wp) :: left  !! Left, right endpoints of new interval.

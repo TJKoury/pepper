@@ -27,8 +27,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_zzholdd
       implicit none
-      include               'zzholdd.inc'
       real(wp) :: value  !! Double precision value returned or to store.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -44,9 +44,9 @@
       use pepper_instance, only: pepper_context, pepper_zzgfcoq => zzgfcoq
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
       character(*) :: vecdef  !! Vector definition.
       character(*) :: method  !! Computation method.
       integer(ip) :: trgid  !! Target ID code.
@@ -77,8 +77,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfcprx => zzgfcprx
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include 'zzgf.inc'
       real(wp) :: state  ( 6 )  !! A 6-dimensional Cartesian state vector.
       character(*) :: corsys  !! A coordinate system name parameter.
       real(wp) :: re  !! Ellipsoid equatorial radius.
@@ -137,10 +137,10 @@
       use pepper_instance, only: pepper_context, pepper_zzgffvin => zzgffvin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzocced
+      use pepper_inc_gf
       implicit none
-      include 'zzabcorr.inc'
-      include 'zzocced.inc'
-      include 'gf.inc'
       character(*) :: inst  !! Name of the instrument.
       character(*) :: tshape  !! Type of shape model used for target body.
       real(wp) :: raydir ( 3 )  !! Ray's direction vector.
@@ -160,10 +160,10 @@
       use pepper_instance, only: pepper_context, pepper_zzgffvst => zzgffvst
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzocced
+      use pepper_inc_gf
       implicit none
-      include 'zzabcorr.inc'
-      include 'zzocced.inc'
-      include 'gf.inc'
       real(wp) :: time  !! TDB epoch (in seconds past J2000)
       logical :: vistat  !! .TRUE. if the object is visible, .FALSE. otherwise.
       type(pepper_context), pointer :: ctx
@@ -178,8 +178,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfilin => zzgfilin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: method  !! Computation method.
       character(*) :: angtyp  !! Type of illumination angle.
       character(*) :: target  !! Target body name.
@@ -202,8 +202,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       logical :: decres  !! Flag indicating whether illumination angle is decreasing.
       procedure(legacy_gf_scalar) :: udfunc  !! Placeholder external routine argument.
@@ -223,8 +223,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfilgq => zzgfilgq
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       real(wp) :: angle  !! Illumination angle at time ET.
       type(pepper_context), pointer :: ctx
@@ -240,12 +240,12 @@
       use pepper_instance, only: pepper_context, pepper_zzgfocin => zzgfocin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdsk
+      use pepper_inc_zzocced
       implicit none
-      include 'dsk.inc'
-      include 'gf.inc'
-      include 'zzabcorr.inc'
-      include 'zzdsk.inc'
-      include 'zzocced.inc'
       character(*) :: occtyp  !! Type of occultation.
       character(*) :: front  !! Name of body occulting the other.
       character(*) :: fshape  !! Type of shape model used for front body.
@@ -267,12 +267,12 @@
       use pepper_instance, only: pepper_context, pepper_zzgfocst => zzgfocst
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdsk
+      use pepper_inc_zzocced
       implicit none
-      include 'dsk.inc'
-      include 'gf.inc'
-      include 'zzabcorr.inc'
-      include 'zzdsk.inc'
-      include 'zzocced.inc'
       real(wp) :: time  !! TDB epoch (in seconds past J2000)
       logical :: ocstat  !! .TRUE. if the object is occulted, .FALSE. otherwise.
       type(pepper_context), pointer :: ctx
@@ -310,8 +310,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfref => zzgfref
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_zzholdd
       implicit none
-      include 'zzholdd.inc'
       real(wp) :: refval  !! The value to set as the reference value.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -482,8 +482,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfspin => zzgfspin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: of    (2)  !! Body id's of the angular separation objects
       character(*) :: from  !! Observer name
       character(*) :: shape (2)  !! Array of shape IDs corresponding to OF
@@ -503,8 +503,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       logical :: decres  !! .TRUE. if angular separation is decreasing .FALSE. otherwise.
       procedure(legacy_gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -525,8 +525,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfspgq => zzgfspgq
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       real(wp) :: sep  !! Separation at time ET.
       type(pepper_context), pointer :: ctx
@@ -541,8 +541,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfspx => zzgfspx
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: xabcr  !! Saved value SVABCR.
       integer(ip) :: xbod  (2)  !! Saved values SVBOD1 and SVBOD2.
       character(*) :: yref  !! Saved value SVREF.
@@ -564,10 +564,10 @@
       use pepper_instance, only: pepper_context, pepper_zzgfssin => zzgfssin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       character(*) :: method  !! Computation method.
       integer(ip) :: trgid  !! Target ID code.
       real(wp) :: et  !! Computation epoch.
@@ -594,10 +594,10 @@
       use pepper_instance, only: pepper_context, pepper_zzgfssob => zzgfssob
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       character(*) :: method  !! Computation method.
       integer(ip) :: trgid  !! Target ID code.
       real(wp) :: et  !! Computation epoch.
@@ -621,8 +621,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_zzholdd
       implicit none
-      include               'zzholdd.inc'
       real(wp) :: et  !! Time in TDB seconds for which to evaluate UDFUNC.
       logical :: isless  !! Boolean indicating if the scalar value is less than reference value.
       procedure(legacy_gf_scalar) :: udfunc  !! Name of the routine that computes the scalar value of interest at ET.
@@ -664,8 +664,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_gf
       implicit none
-      include               'gf.inc'
       character(*) :: inst  !! Name or ID code string of the instrument.
       real(wp) :: raydir ( 3 )  !! Ray's direction vector.
       character(*) :: rframe  !! Reference frame of ray's direction vector.
@@ -686,8 +686,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_gf
       implicit none
-      include              'gf.inc'
       character(*) :: inst  !! Name or ID code string of the instrument.
       character(*) :: target  !! Name or ID code string of the target.
       character(*) :: tshape  !! Type of shape model used for the target.
@@ -715,8 +715,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_bail, bridge_gf_refine, bridge_gf_rep_final, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_step, current_gf_bail, current_gf_refine, current_gf_rep_final, current_gf_rep_init, current_gf_rep_update, current_gf_step, legacy_gf_bail, legacy_gf_refine, legacy_gf_rep_final, legacy_gf_rep_init, legacy_gf_rep_update, legacy_gf_step
+      use pepper_inc_gf
       implicit none
-      include 'gf.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: inst  !! Name of the instrument.
       character(*) :: tshape  !! Type of shape model used for target body.
@@ -779,9 +779,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_bail, bridge_gf_refine, bridge_gf_rep_final, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_step, current_gf_bail, current_gf_refine, current_gf_rep_final, current_gf_rep_init, current_gf_rep_update, current_gf_step, legacy_gf_bail, legacy_gf_refine, legacy_gf_rep_final, legacy_gf_rep_init, legacy_gf_rep_update, legacy_gf_step
+      use pepper_inc_gf
+      use pepper_inc_zzdsk
       implicit none
-      include 'gf.inc'
-      include 'zzdsk.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: occtyp  !! Type of occultation.
       character(*) :: front  !! Name of body occulting the other.
@@ -843,11 +843,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_occult
+      use pepper_inc_dsk
+      use pepper_inc_zzdsk
       implicit none
-      include 'gf.inc'
-      include 'occult.inc'
-      include 'dsk.inc'
-      include 'zzdsk.inc'
       character(*) :: targ1  !! Name or ID of first target.
       character(*) :: shape1  !! Type of shape model used for first target.
       character(*) :: frame1  !! Body-fixed, body-centered frame for first body.
@@ -871,9 +871,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       character(*) :: target  !! Target body name.
       character(*) :: illmn  !! Illuminating body name.
@@ -895,9 +895,9 @@
       use pepper_instance, only: pepper_context, pepper_zzgfcost => zzgfcost
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
       character(*) :: vecdef  !! Vector definition.
       character(*) :: method  !! Computation method.
       integer(ip) :: trgid  !! Target ID code.
@@ -923,8 +923,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfdiin => zzgfdiin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: target  !! Target body name.
       character(*) :: abcorr  !! Aberration correction specifier.
       character(*) :: obsrvr  !! Observer name.
@@ -942,8 +942,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       logical :: decres  !! Flag indicating whether distance is decreasing.
       procedure(legacy_gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -964,8 +964,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfdigq => zzgfdigq
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       real(wp) :: dist  !! Distance at time ET.
       type(pepper_context), pointer :: ctx
@@ -981,8 +981,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfpain => zzgfpain
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: target  !! Name of the target body.
       character(*) :: illmn  !! Name of the illuminating body.
       character(*) :: abcorr  !! Aberration correction flag.
@@ -1001,8 +1001,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       logical :: decres  !! .TRUE. if phase angle is decreasing, .FALSE. otherwise.
       procedure(legacy_gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -1023,8 +1023,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfpagq => zzgfpagq
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       real(wp) :: rvl  !! Phase angle at time ET.
       type(pepper_context), pointer :: ctx
@@ -1039,8 +1039,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfpax => zzgfpax
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: xtarg  !! Saved value for the target body.
       integer(ip) :: xillmn  !! Saved value for the illuminator body.
       character(*) :: xabcor  !! Saved value for the aberration correction.
@@ -1061,8 +1061,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_bail, bridge_gf_cond, bridge_gf_decr, bridge_gf_ref, bridge_gf_refine, bridge_gf_rep_final, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_scalar, bridge_gf_step, current_gf_bail, current_gf_cond, current_gf_decr, current_gf_ref, current_gf_refine, current_gf_rep_final, current_gf_rep_init, current_gf_rep_update, current_gf_scalar, current_gf_step, legacy_gf_bail, legacy_gf_cond, legacy_gf_decr, legacy_gf_ref, legacy_gf_refine, legacy_gf_rep_final, legacy_gf_rep_init, legacy_gf_rep_update, legacy_gf_scalar, legacy_gf_step
+      use pepper_inc_gf
       implicit none
-      include               'gf.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
       real(wp) :: refval  !! Value used as reference for geometric quantity condition.
@@ -1142,8 +1142,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_bail, bridge_gf_boolean, bridge_gf_decr_x, bridge_gf_refine, bridge_gf_rep_final, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_scalar, bridge_gf_step, current_gf_bail, current_gf_boolean, current_gf_decr_x, current_gf_refine, current_gf_rep_final, current_gf_rep_init, current_gf_rep_update, current_gf_scalar, current_gf_step, legacy_gf_bail, legacy_gf_boolean, legacy_gf_decr_x, legacy_gf_refine, legacy_gf_rep_final, legacy_gf_rep_init, legacy_gf_rep_update, legacy_gf_scalar, legacy_gf_step
+      use pepper_inc_gf
       implicit none
-      include               'gf.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the scalar quantity value and a number.
       real(wp) :: refval  !! Value used as reference for scalar quantity condition.
@@ -1216,8 +1216,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgftswk => zzgftswk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       real(wp) :: total  !! A measure of the total amount of work to be done.
       real(wp) :: wait  !! Minimum wait time between reports.
       integer(ip) :: tcheck  !! How often to sample the system clock.
@@ -1236,8 +1236,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfwkin => zzgfwkin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       real(wp) :: incr  !! An amount of work just completed.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1251,8 +1251,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfwkad => zzgfwkad
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       real(wp) :: wait  !! Minimum wait time between reports.
       integer(ip) :: tcheck  !! Number of calls between system time checks.
       character(*) :: begin  !! First part of the output message.
@@ -1269,8 +1269,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfwkun => zzgfwkun
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       integer(ip) :: unit  !! Output logical unit.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1284,8 +1284,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfwkmo => zzgfwkmo
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       integer(ip) :: unit  !! Output logical unit.
       real(wp) :: total  !! A measure of the total amount of work to be done.
       real(wp) :: wait  !! Minimum wait time between reports.
@@ -1306,8 +1306,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfrrin => zzgfrrin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: target  !! Name of the target body
       character(*) :: abcorr  !! Aberration correction flag
       character(*) :: obsrvr  !! Name of the observing body
@@ -1326,8 +1326,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       logical :: decres  !! true if range rate is decreasing, false otherwise.
       procedure(legacy_gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -1348,8 +1348,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfrrgq => zzgfrrgq
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Ephemeris seconds past J2000 TDB.
       real(wp) :: rvl  !! Range rate at time ET.
       type(pepper_context), pointer :: ctx
@@ -1364,8 +1364,8 @@
       use pepper_instance, only: pepper_context, pepper_zzgfrrx => zzgfrrx
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: xtarg  !! Saved value for the target body.
       character(*) :: xabcor  !! Saved value for the aberration correction.
       integer(ip) :: xobs  !! Saved value for the observing body.
@@ -1387,8 +1387,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_bail, bridge_gf_boolean, bridge_gf_refine, bridge_gf_rep_final, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_scalar, bridge_gf_step, current_gf_bail, current_gf_boolean, current_gf_refine, current_gf_rep_final, current_gf_rep_init, current_gf_rep_update, current_gf_scalar, current_gf_step, legacy_gf_bail, legacy_gf_boolean, legacy_gf_refine, legacy_gf_rep_final, legacy_gf_rep_init, legacy_gf_rep_update, legacy_gf_scalar, legacy_gf_step
+      use pepper_inc_gf
       implicit none
-      include 'gf.inc'
       integer(ip), parameter :: lbcell = -5
       real(wp) :: tol  !! Convergence tolerance in seconds.
       logical :: rpt  !! Progress report flag.
@@ -1450,9 +1450,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: occtyp  !! Type of occultation.
       character(*) :: front  !! Name of body occulting the other.
@@ -1481,9 +1481,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: inst  !! Name of the instrument.
       real(wp) :: raydir ( 3 )  !! Ray's direction vector.
@@ -1505,8 +1505,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       integer(ip), parameter :: lbcell = -5
       real(wp) :: window ( lbcell : * )  !! A window over which a job is to be performed.
       character(*) :: begmss  !! Beginning of the text portion of output message.
@@ -1524,8 +1524,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       real(wp) :: ivbeg  !! Start time of work interval.
       real(wp) :: ivend  !! End time of work interval.
       real(wp) :: time  !! Current time being examined in the search process
@@ -1541,8 +1541,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%gfrepf (  )
@@ -1557,9 +1557,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: inst  !! Name of the instrument.
       character(*) :: target  !! Name of the target body.
@@ -1583,10 +1583,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_boolean, bridge_gf_scalar, current_gf_boolean, current_gf_scalar, legacy_gf_boolean, legacy_gf_scalar
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       real(wp) :: step  !! Constant step size in seconds for finding geometric events.
       real(wp) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
@@ -1616,10 +1616,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_boolean, bridge_gf_decr_x, bridge_gf_scalar, current_gf_boolean, current_gf_decr_x, current_gf_scalar, legacy_gf_boolean, legacy_gf_decr_x, legacy_gf_scalar
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
       real(wp) :: refval  !! Value used as reference for scalar quantity condition.
@@ -1652,10 +1652,10 @@
       use pepper_instance, only: pepper_context, pepper_zzgfcoin => zzgfcoin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       character(*) :: vecdef  !! Vector definition.
       character(*) :: method  !! Computation method.
       character(*) :: target  !! Target name.
@@ -1679,10 +1679,10 @@
       use pepper_instance, only: pepper_context, pepper_zzgfcog => zzgfcog
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       real(wp) :: et  !! Computation epoch.
       real(wp) :: crdval  !! Coordinate at epoch.
       type(pepper_context), pointer :: ctx
@@ -1699,10 +1699,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       real(wp) :: et  !! Computation epoch.
       logical :: decres  !! Flag indicating if coordinate is decreasing.
       procedure(legacy_gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -1724,10 +1724,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       real(wp) :: et  !! Computation epoch.
       logical :: crdfnd  !! Flag indicating if coordinate state is computable.
       procedure(legacy_gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -1748,10 +1748,10 @@
       use pepper_instance, only: pepper_context, pepper_zzgfcocg => zzgfcocg
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       real(wp) :: et  !! Computation epoch.
       real(wp) :: crdval  !! Cosine of coordinate at epoch.
       type(pepper_context), pointer :: ctx
@@ -1767,10 +1767,10 @@
       use pepper_instance, only: pepper_context, pepper_zzgfcosg => zzgfcosg
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       real(wp) :: et  !! Computation epoch.
       real(wp) :: crdval  !! Sine of coordinate at epoch.
       type(pepper_context), pointer :: ctx
@@ -1787,10 +1787,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       real(wp) :: et  !! Computation epoch.
       logical :: decres  !! Flag indicating if cos of coordinate is decreasing.
       procedure(legacy_gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -1812,10 +1812,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_scalar, current_gf_scalar, legacy_gf_scalar
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       real(wp) :: et  !! Computation epoch.
       logical :: decres  !! Flag indicating if sine of coordinate is decreasing.
       procedure(legacy_gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -1838,9 +1838,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_bail, bridge_gf_refine, bridge_gf_rep_final, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_step, current_gf_bail, current_gf_refine, current_gf_rep_final, current_gf_rep_init, current_gf_rep_update, current_gf_step, legacy_gf_bail, legacy_gf_refine, legacy_gf_rep_final, legacy_gf_rep_init, legacy_gf_rep_update, legacy_gf_step
+      use pepper_inc_gf
+      use pepper_inc_zzgf
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: vecdef  !! Vector definition.
       character(*) :: method  !! Computation method.
@@ -1906,9 +1906,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_bail, bridge_gf_refine, bridge_gf_rep_final, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_step, current_gf_bail, current_gf_refine, current_gf_rep_final, current_gf_rep_init, current_gf_rep_update, current_gf_step, legacy_gf_bail, legacy_gf_refine, legacy_gf_rep_final, legacy_gf_rep_init, legacy_gf_rep_update, legacy_gf_step
+      use pepper_inc_gf
+      use pepper_inc_zzgf
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: vecdef  !! Vector definition.
       character(*) :: method  !! Computation method.
@@ -1975,10 +1975,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_gf_bail, bridge_gf_refine, bridge_gf_rep_final, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_step, current_gf_bail, current_gf_refine, current_gf_rep_final, current_gf_rep_init, current_gf_rep_update, current_gf_step, legacy_gf_bail, legacy_gf_refine, legacy_gf_rep_final, legacy_gf_rep_init, legacy_gf_rep_update, legacy_gf_step
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include 'gf.inc'
-      include 'zzgf.inc'
-      include 'zzabcorr.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: gquant  !! Type of geometric quantity.
       integer(ip) :: qnpars  !! Number of quantity definition parameters.
@@ -2043,9 +2043,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: target  !! Name of the target body.
       character(*) :: abcorr  !! Aberration correction flag.
@@ -2076,10 +2076,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
       implicit none
-      include 'gf.inc'
-      include 'zzabcorr.inc'
-      include 'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: method  !! Computation method.
       character(*) :: angtyp  !! Type of illumination angle.
@@ -2115,9 +2115,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: target  !! Name of the target body.
       character(*) :: illmn  !! Name of the illuminating body.
@@ -2148,11 +2148,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: target  !! Name of the target body.
       character(*) :: frame  !! Name of the reference frame for coordinate calculations.
@@ -2184,10 +2184,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: target  !! Name of the target body.
       character(*) :: abcorr  !! Aberration correction flag.
@@ -2220,10 +2220,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzabcorr.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: targ1  !! Name of first body.
       character(*) :: shape1  !! Name of shape model describing the first body.
@@ -2261,10 +2261,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: target  !! Name of the target body.
       character(*) :: fixref  !! Body fixed frame associated with TARGET.
@@ -2301,11 +2301,11 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
-      include               'zzholdd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: target  !! Name of the target body.
       character(*) :: fixref  !! Body fixed frame associated with TARGET.
@@ -2331,10 +2331,10 @@
       !> Umbrella of the ZZGFFVU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgffvu ( inst, tshape, raydir, target, tframe, abcorr, obsrvr, time, vistat )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzocced
+      use pepper_inc_gf
       implicit none
-      include 'zzabcorr.inc'
-      include 'zzocced.inc'
-      include 'gf.inc'
       character(*) :: inst
       character(*) :: tshape
       real(wp) :: raydir ( 3 )
@@ -2351,8 +2351,8 @@
       !> Umbrella of the ZZGFILU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgfilu ( method, angtyp, target, illum, fixref, abcorr, obsrvr, spoint, et, udfunc, decres, angle )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: method
       character(*) :: angtyp
       character(*) :: target
@@ -2371,12 +2371,12 @@
       !> Umbrella of the ZZGFOCU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgfocu ( occtyp, front, fshape, fframe, back, bshape, bframe, obsrvr, abcorr, time, ocstat )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdsk
+      use pepper_inc_zzocced
       implicit none
-      include 'dsk.inc'
-      include 'gf.inc'
-      include 'zzabcorr.inc'
-      include 'zzdsk.inc'
-      include 'zzocced.inc'
       character(*) :: occtyp
       character(*) :: front
       character(*) :: fshape
@@ -2395,8 +2395,8 @@
       !> Umbrella of the ZZGFSPU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgfspu ( of, from, shape, frame, et, udfunc, abcorr, decres, sep, xabcr, xbod, yref, xref, xobs, xrad, xshp )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: of    (2)
       character(*) :: from
       character(*) :: shape (2)
@@ -2419,8 +2419,8 @@
       !> Umbrella of the ZZGFDIU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgfdiu ( target, abcorr, obsrvr, udfunc, et, decres, dist )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: target
       character(*) :: abcorr
       character(*) :: obsrvr
@@ -2434,8 +2434,8 @@
       !> Umbrella of the ZZGFPAU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgfpau ( target, illmn, abcorr, obsrvr, udfunc, et, decres, rvl, xtarg, xillmn, xabcor, xobs, xablk )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: target
       character(*) :: illmn
       character(*) :: abcorr
@@ -2455,8 +2455,8 @@
       !> Umbrella of the ZZGFRPWK routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgfrpwk ( unit, total, wait, tcheck, begin, end, incr )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       integer(ip) :: unit
       real(wp) :: total
       real(wp) :: wait
@@ -2471,8 +2471,8 @@
       !> Umbrella of the ZZGFRRU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgfrru ( target, abcorr, obsrvr, dt, udfunc, et, decres, rvl, xtarg, xabcor, xobs, xdt )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: target
       character(*) :: abcorr
       character(*) :: obsrvr
@@ -2491,8 +2491,8 @@
       !> Umbrella of the GFRPRT routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine gfrprt ( window, begmss, endmss, ivbeg, ivend, time )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzgf
       implicit none
-      include               'zzgf.inc'
       integer(ip), parameter :: lbcell = -5
       real(wp) :: window ( lbcell : * )
       character(*) :: begmss
@@ -2507,10 +2507,10 @@
       !> Umbrella of the ZZGFCOU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgfcou ( vecdef, method, target, et, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, decres, crdval, crdfnd, udfunc )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
       implicit none
-      include               'gf.inc'
-      include               'zzgf.inc'
-      include               'zzabcorr.inc'
       character(*) :: vecdef
       character(*) :: method
       character(*) :: target

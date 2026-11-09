@@ -68,8 +68,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ckparam
       implicit none
-      include               'ckparam.inc'
       integer(ip) :: handle  !! The handle of the file containing the segment.
       real(wp) :: descr   ( * )  !! The segment descriptor.
       integer(ip) :: recno  !! The number of the pointing record to be returned.
@@ -88,8 +88,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ck05
       implicit none
-      include 'ck05.inc'
       integer(ip) :: handle  !! The handle of the file containing the segment.
       real(wp) :: descr   ( * )  !! The segment descriptor.
       integer(ip) :: recno  !! The number of the pointing instance to be returned.
@@ -107,8 +107,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ck06
       implicit none
-      include 'ck06.inc'
       integer(ip) :: handle  !! The handle of the file containing the segment.
       real(wp) :: descr  ( * )  !! The segment descriptor.
       integer(ip) :: msno  !! Index of the mini-segment containing the record.
@@ -337,9 +337,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
+      use pepper_inc_ckparam
       implicit none
-      include               'sgparam.inc'
-      include               'ckparam.inc'
       integer(ip) :: handle  !! The handle of an DAF file open for writing.
       character(*) :: segid  !! The string to use for segment identifier.
       integer(ip) :: inst  !! The NAIF ID code for the SC or instrument.
@@ -376,8 +376,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ck05
       implicit none
-      include 'ck05.inc'
       integer(ip) :: handle  !! Handle of an CK file open for writing.
       integer(ip) :: subtyp  !! CK type 5 subtype code.
       integer(ip) :: degree  !! Degree of interpolating polynomials.
@@ -408,9 +408,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ck06
+      use pepper_inc_ckparam
       implicit none
-      include 'ck06.inc'
-      include 'ckparam.inc'
       integer(ip) :: handle  !! Handle of a CK file open for writing.
       integer(ip) :: inst  !! NAIF instrument ID code.
       character(*) :: ref  !! Reference frame name.
@@ -576,8 +576,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk20
       implicit none
-      include 'spk20.inc'
       integer(ip) :: handle  !! Handle of PCK file open for writing.
       integer(ip) :: clssid  !! NAIF PCK frame class ID.
       character(*) :: frame  !! Reference frame name.
@@ -776,8 +776,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk02
       implicit none
-      include 'spk02.inc'
       integer(ip) :: handle  !! Handle of SPK file open for writing.
       integer(ip) :: body  !! NAIF code for ephemeris object.
       integer(ip) :: center  !! NAIF code for the center of motion of the body.
@@ -804,8 +804,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk03
       implicit none
-      include 'spk03.inc'
       integer(ip) :: handle  !! Handle of SPK file open for writing.
       integer(ip) :: body  !! NAIF code for ephemeris object.
       integer(ip) :: center  !! NAIF code for the center of motion of the body.
@@ -859,8 +859,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk08
       implicit none
-      include 'spk08.inc'
       integer(ip) :: handle  !! Handle of an SPK file open for writing.
       integer(ip) :: body  !! NAIF code for an ephemeris object.
       integer(ip) :: center  !! NAIF code for center of motion of BODY.
@@ -913,8 +913,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
-      include              'sgparam.inc'
       integer(ip) :: handle  !! The handle of a DAF file open for writing.
       integer(ip) :: body  !! The NAIF ID code for the body of the segment.
       integer(ip) :: center  !! The center of motion for BODY.
@@ -940,8 +940,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk12
       implicit none
-      include 'spk12.inc'
       integer(ip) :: handle  !! Handle of an SPK file open for writing.
       integer(ip) :: body  !! NAIF code for an ephemeris object.
       integer(ip) :: center  !! NAIF code for center of motion of BODY.
@@ -1051,8 +1051,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk18
       implicit none
-      include 'spk18.inc'
       integer(ip) :: handle  !! Handle of an SPK file open for writing.
       integer(ip) :: subtyp  !! SPK type 18 subtype code.
       integer(ip) :: body  !! NAIF code for an ephemeris object.
@@ -1080,9 +1080,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
       implicit none
-      include 'spk19.inc'
-      include 'spkrec.inc'
       integer(ip) :: handle  !! Handle of an SPK file open for writing.
       integer(ip) :: body  !! NAIF ID code for an ephemeris object.
       integer(ip) :: center  !! NAIF ID code for center of motion of BODY.
@@ -1113,8 +1113,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk20
       implicit none
-      include 'spk20.inc'
       integer(ip) :: handle  !! Handle of SPK file open for writing.
       integer(ip) :: body  !! NAIF code for ephemeris object.
       integer(ip) :: center  !! NAIF code for the center of motion of the body.
@@ -1144,8 +1144,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk21
       implicit none
-      include 'spk21.inc'
       integer(ip) :: handle  !! Handle of an SPK file open for writing.
       integer(ip) :: body  !! NAIF code for an ephemeris object.
       integer(ip) :: center  !! NAIF code for center of motion of BODY.
@@ -1208,8 +1208,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ckparam
       implicit none
-      include               'ckparam.inc'
       integer(ip) :: handle  !! The handle of an DAF file opened for writing.
       integer(ip) :: npkts  !! Number of data packets to write to a segment.
       integer(ip) :: pktsiz( * )  !! The numbers of values in the data packets
@@ -1230,8 +1230,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
-      include 'sgparam.inc'
       integer(ip) :: handle  !! The handle of a DAF file open for writing.
       character(*) :: segid  !! The string to use for segment identifier.
       integer(ip) :: body  !! The NAIF ID code for the body of the segment.

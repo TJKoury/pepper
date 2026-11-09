@@ -8,15 +8,15 @@
 module pepper_state_dskx02
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
+      use pepper_inc_dsktol
 
    implicit none
 
    private
 
-   include              'dla.inc'
-   include              'dskdsc.inc'
-   include              'dsk02.inc'
-   include              'dsktol.inc'
    integer(ip), parameter :: nvxlst = 50000
    integer(ip), parameter :: maxpl = maxplt/125
    integer(ip), parameter :: bufsiz = 200

@@ -46,9 +46,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekcdsc => zzekcdsc
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
       integer(ip) :: handle  !! Handle attached to an EK file.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       character(*) :: column  !! Name of column.
@@ -65,9 +65,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekcnam => zzekcnam
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
       integer(ip) :: handle  !! EK file handle.
       integer(ip) :: coldsc ( cdscsz )  !! Column descriptor.
       character(*) :: column  !! Column name.
@@ -85,7 +85,7 @@
       use pepper_instance, only: pepper_context, pepper_zzekgei => zzekgei
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekdatpag.inc'
+      use pepper_inc_ekdatpag
       integer(ip) :: handle  !! EK file handle.
       integer(ip) :: addrss  !! DAS character address to read encoded value from.
       integer(ip) :: ival  !! Decoded integer value.
@@ -101,7 +101,7 @@
       use pepper_instance, only: pepper_context, pepper_zzekgrs => zzekgrs
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekrecptr.inc'
+      use pepper_inc_ekrecptr
       integer(ip) :: handle  !! File handle.
       integer(ip) :: recptr  !! Record pointer.
       integer(ip) :: status  !! Status of specified EK record.
@@ -173,10 +173,10 @@
       use pepper_instance, only: pepper_context, pepper_zzekpdec => zzekpdec
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ektype
       implicit none
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ektype.inc'
       character(*) :: decl  !! String containing column declaration.
       integer(ip) :: pardsc ( * )  !! Partial column descriptor.
       type(pepper_context), pointer :: ctx
@@ -192,9 +192,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgch => zzekpgch
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekpage.inc'
-      include 'ekarch.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekpage
+      use pepper_inc_ekarch
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Handle attached to EK file.
       character(*) :: access  !! Access type.
       type(pepper_context), pointer :: ctx
@@ -211,9 +211,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekqini => zzekqini
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekquery.inc'
-      include 'ekqlimit.inc'
-      include 'ekbool.inc'
+      use pepper_inc_ekquery
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: isize  !! Size of integer component of encoded query.
       integer(ip) :: dsize  !! Size of d.p. component of encoded query.
@@ -233,13 +233,13 @@
       use pepper_instance, only: pepper_context, pepper_zzekrbck => zzekrbck
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekglimit.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekglimit
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       character(*) :: action  !! Action necessitating backup.
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
@@ -259,7 +259,7 @@
       use pepper_instance, only: pepper_context, pepper_zzekreqi => zzekreqi
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekquery.inc'
+      use pepper_inc_ekquery
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: eqryi ( lbcell : * )  !! Integer component of query.
       character(*) :: name  !! Name of scalar item to read.
@@ -376,9 +376,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekscan => zzekscan
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekkeyw.inc'
-      include 'ektokn.inc'
-      include 'ekqlimit.inc'
+      use pepper_inc_ekkeyw
+      use pepper_inc_ektokn
+      use pepper_inc_ekqlimit
       character(*) :: query  !! Query specifying events to be found.
       integer(ip) :: maxntk  !! Maximum number of tokens to return.
       integer(ip) :: maxnum  !! Maximum number of numeric tokens allowed.
@@ -407,7 +407,7 @@
       use pepper_instance, only: pepper_context, pepper_zzeksei => zzeksei
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekdatpag.inc'
+      use pepper_inc_ekdatpag
       integer(ip) :: handle  !! EK file handle.
       integer(ip) :: addrss  !! DAS character address.
       integer(ip) :: ival  !! Integer value to write.
@@ -424,8 +424,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekstyp => zzekstyp
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekcoldsc.inc'
-      include 'ekglimit.inc'
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekglimit
       integer(ip) :: ncols  !! Number of columns in the segment.
       integer(ip) :: cdscrs ( cdscsz, * )  !! Descriptors of columns.
       type(pepper_context), pointer :: ctx
@@ -440,12 +440,12 @@
       use pepper_instance, only: pepper_context, pepper_zzeksz04 => zzeksz04
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip) :: recptr  !! Record pointer.
@@ -462,12 +462,12 @@
       use pepper_instance, only: pepper_context, pepper_zzeksz05 => zzeksz05
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip) :: recptr  !! Record pointer.
@@ -486,8 +486,8 @@
       use pepper_instance, only: pepper_context, pepper_zzektcnv => zzektcnv
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ektype
       implicit none
-      include 'ektype.inc'
       character(*) :: timstr  !! Time string.
       real(wp) :: et  !! Ephemeris time in seconds past J2000, TDB.
       logical :: error  !! Error flag.
@@ -507,8 +507,8 @@
       use pepper_instance, only: pepper_context, pepper_zzektloc => zzektloc
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektokn.inc'
-      include 'ekkeyw.inc'
+      use pepper_inc_ektokn
+      use pepper_inc_ekkeyw
       integer(ip) :: tokid  !! Token ID.
       integer(ip) :: kwcode  !! Keyword code.
       integer(ip) :: ntoken  !! Number of tokens in query.
@@ -530,7 +530,7 @@
       use pepper_instance, only: pepper_context, pepper_zzekweqi => zzekweqi
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekquery.inc'
+      use pepper_inc_ekquery
       integer(ip), parameter :: lbcell = -5
       character(*) :: name  !! Name of scalar item to write.
       integer(ip) :: value  !! Value to write.
@@ -577,8 +577,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekgrcp => zzekgrcp
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'eksegdsc.inc'
-      include 'ekrecptr.inc'
+      use pepper_inc_eksegdsc
+      use pepper_inc_ekrecptr
       integer(ip) :: handle  !! File handle.
       integer(ip) :: recptr  !! Record pointer.
       integer(ip) :: ptr  !! Pointer to companion of specified EK record.
@@ -597,9 +597,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekinqc => zzekinqc
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekquery.inc'
-      include 'ektype.inc'
-      include 'ekbool.inc'
+      use pepper_inc_ekquery
+      use pepper_inc_ektype
+      use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
       character(*) :: value  !! Character value.
       integer(ip) :: length  !! Length of item to insert.
@@ -623,9 +623,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekinqn => zzekinqn
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekquery.inc'
-      include 'ektype.inc'
-      include 'ekbool.inc'
+      use pepper_inc_ekquery
+      use pepper_inc_ektype
+      use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
       real(wp) :: value  !! Numeric value.
       integer(ip) :: type  !! Data type.  May be INT, DP, or TIME.
@@ -648,8 +648,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekjsqz => zzekjsqz
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekjrs.inc'
-      include 'ekqlimit.inc'
+      use pepper_inc_ekjrs
+      use pepper_inc_ekqlimit
       integer(ip) :: jrsbas  !! Scratch area base address of join row set.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -665,9 +665,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgin => zzekpgin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! DAS file handle.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -683,9 +683,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgan => zzekpgan
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       integer(ip) :: type  !! Data type of page to allocate.
       integer(ip) :: p  !! Page number.
@@ -704,9 +704,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgal => zzekpgal
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       integer(ip) :: type  !! Data type of page to allocate.
       integer(ip) :: p  !! Page number.
@@ -725,9 +725,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgfr => zzekpgfr
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       integer(ip) :: type  !! Data type of page to allocate.
       integer(ip) :: p  !! Page number.
@@ -745,9 +745,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgrc => zzekpgrc
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       integer(ip) :: p  !! Page number.
       character(*) :: pagec  !! Character page.
@@ -765,9 +765,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgrd => zzekpgrd
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       integer(ip) :: p  !! Page number.
       real(wp) :: paged ( * )  !! Double precision page.
@@ -785,9 +785,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgri => zzekpgri
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       integer(ip) :: p  !! Page number.
       integer(ip) :: pagei ( * )  !! Integer page.
@@ -805,9 +805,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgwc => zzekpgwc
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       integer(ip) :: p  !! Page number.
       character(*) :: pagec  !! Character page.
@@ -825,9 +825,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgwd => zzekpgwd
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       integer(ip) :: p  !! Page number.
       real(wp) :: paged ( * )  !! Double precision page.
@@ -845,9 +845,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgwi => zzekpgwi
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       integer(ip) :: p  !! Page number.
       integer(ip) :: pagei ( * )  !! Integer page.
@@ -865,9 +865,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgbs => zzekpgbs
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: type  !! Data type of page.
       integer(ip) :: p  !! Page number.
       integer(ip) :: base  !! DAS base address of page.
@@ -885,9 +885,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgpg => zzekpgpg
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: type  !! Data type of address.
       integer(ip) :: addrss  !! DAS address to be mapped.
       integer(ip) :: p  !! Page number.
@@ -906,9 +906,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekpgst => zzekpgst
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! Paged EK file handle.
       character(*) :: stat  !! Name of requested statistic.
       integer(ip) :: value  !! Value of requested statistic.
@@ -926,8 +926,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekqcnj => zzekqcnj
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekquery.inc'
-      include 'ekbool.inc'
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: eqryi ( lbcell : * )  !! Integer component of query.
       integer(ip) :: n  !! Index within FROM clause of table name to read.
@@ -952,11 +952,11 @@
       use pepper_instance, only: pepper_context, pepper_zzekqcon => zzekqcon
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
+      use pepper_inc_ekopcd
+      use pepper_inc_ektype
       implicit none
-      include 'ekquery.inc'
-      include 'ekbool.inc'
-      include 'ekopcd.inc'
-      include 'ektype.inc'
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: eqryi ( lbcell : * )  !! Integer component of query.
       character(*) :: eqryc  !! Character component of query.
@@ -992,8 +992,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekqord => zzekqord
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekquery.inc'
-      include 'ekbool.inc'
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: eqryi ( lbcell : * )  !! Integer component of query.
       character(*) :: eqryc  !! Character component of query.
@@ -1018,8 +1018,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekqsel => zzekqsel
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekquery.inc'
-      include 'ekbool.inc'
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: eqryi ( lbcell : * )  !! Integer component of query.
       character(*) :: eqryc  !! Character component of query.
@@ -1044,8 +1044,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekqtab => zzekqtab
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekquery.inc'
-      include 'ekbool.inc'
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
       integer(ip) :: eqryi ( lbcell : * )  !! Integer component of query.
       character(*) :: eqryc  !! Character component of query.
@@ -1067,15 +1067,15 @@
       use pepper_instance, only: pepper_context, pepper_zzekrd09 => zzekrd09
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas09
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
-      include 'ekbool.inc'
-      include 'ekclas09.inc'
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekpage.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
       integer(ip) :: handle  !! Handle attached to EK file.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -1095,7 +1095,7 @@
       use pepper_instance, only: pepper_context, pepper_zzeksrcp => zzeksrcp
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekrecptr.inc'
+      use pepper_inc_ekrecptr
       integer(ip) :: handle  !! File handle.
       integer(ip) :: recptr  !! Record pointer.
       integer(ip) :: recno  !! Record number of companion of specified EK record.
@@ -1111,7 +1111,7 @@
       use pepper_instance, only: pepper_context, pepper_zzeksrs => zzeksrs
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekrecptr.inc'
+      use pepper_inc_ekrecptr
       integer(ip) :: handle  !! File handle.
       integer(ip) :: recptr  !! Record pointer.
       integer(ip) :: status  !! Status of specified EK record.
@@ -1127,12 +1127,12 @@
       use pepper_instance, only: pepper_context, pepper_zzeksz06 => zzeksz06
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip) :: recptr  !! Record pointer.
@@ -1181,9 +1181,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekgfwd => zzekgfwd
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekdatpag.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: type  !! Data type of page.
       integer(ip) :: p  !! Page number.
@@ -1200,9 +1200,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekglnk => zzekglnk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekdatpag.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: type  !! Data type of page.
       integer(ip) :: p  !! Page number.
@@ -1219,12 +1219,12 @@
       use pepper_instance, only: pepper_context, pepper_zzeknrml => zzeknrml
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekkeyw.inc'
-      include 'ekopcd.inc'
-      include 'ekqlimit.inc'
-      include 'ekquery.inc'
-      include 'ektokn.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekkeyw
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektokn
+      use pepper_inc_ektype
       integer(ip), parameter :: lbcell = -5
       character(*) :: query  !! Input EK query.
       integer(ip) :: ntoken  !! Number of tokens in query.
@@ -1253,9 +1253,9 @@
       use pepper_instance, only: pepper_context, pepper_zzeksfwd => zzeksfwd
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekdatpag.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: type  !! Data type of page.
       integer(ip) :: p  !! Page number.
@@ -1272,9 +1272,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekslnk => zzekslnk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      include 'ekdatpag.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: type  !! Data type of page.
       integer(ip) :: p  !! Page number.
@@ -1292,9 +1292,9 @@
       use pepper_instance, only: pepper_context, pepper_zzektr13 => zzektr13
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       type(pepper_context), pointer :: ctx
@@ -1310,9 +1310,9 @@
       use pepper_instance, only: pepper_context, pepper_zzektr31 => zzektr31
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       type(pepper_context), pointer :: ctx
@@ -1327,7 +1327,7 @@
       use pepper_instance, only: pepper_context, pepper_zzektrbs => zzektrbs
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektype.inc'
+      use pepper_inc_ektype
       integer(ip) :: node  !! Node number.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1341,10 +1341,10 @@
       use pepper_instance, only: pepper_context, pepper_zzektrfr => zzektrfr
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
       implicit none
-      include 'ekpage.inc'
-      include 'ektree.inc'
-      include 'ektype.inc'
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       type(pepper_context), pointer :: ctx
@@ -1359,9 +1359,9 @@
       use pepper_instance, only: pepper_context, pepper_zzektrit => zzektrit
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekpage.inc'
-      include 'ektree.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       type(pepper_context), pointer :: ctx
@@ -1377,9 +1377,9 @@
       use pepper_instance, only: pepper_context, pepper_zzektrlk => zzektrlk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekpage.inc'
-      include 'ektree.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: key  !! Key corresponding to value.
@@ -1402,9 +1402,9 @@
       use pepper_instance, only: pepper_context, pepper_zzektrpi => zzektrpi
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekpage.inc'
-      include 'ektree.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: key  !! Key belonging to node of interest.
@@ -1431,8 +1431,8 @@
       use pepper_instance, only: pepper_context, pepper_zzektrrk => zzektrrk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
-      include 'ekpage.inc'
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: left  !! Left node of pair to participate in rotation.
@@ -1454,8 +1454,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekweed => zzekweed
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekjrs.inc'
-      include 'ekqlimit.inc'
+      use pepper_inc_ekjrs
+      use pepper_inc_ekqlimit
       integer(ip) :: njrs  !! Number of join row sets in union.
       integer(ip) :: bases ( * )  !! Scratch area base addresses of join row sets.
       integer(ip) :: nrows  !! Total number of row vectors in join row set union.
@@ -1471,9 +1471,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ektype
+      use pepper_inc_ekfilpar
       implicit none
-      include 'ektype.inc'
-      include 'ekfilpar.inc'
       character(*) :: fname  !! Name of EK file.
       character(*) :: ifname  !! Internal file name.
       integer(ip) :: ncomch  !! The number of characters to reserve for comments.
@@ -1491,9 +1491,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ektype
+      use pepper_inc_ekfilpar
       implicit none
-      include 'ektype.inc'
-      include 'ekfilpar.inc'
       integer(ip) :: handle  !! File handle attached to new EK file.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1507,7 +1507,7 @@
       use pepper_instance, only: pepper_context, pepper_zzekcix1 => zzekcix1
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekcoldsc.inc'
+      use pepper_inc_ekcoldsc
       integer(ip) :: handle  !! File handle.
       integer(ip) :: coldsc ( cdscsz )  !! Column descriptor.
       type(pepper_context), pointer :: ctx
@@ -1526,14 +1526,14 @@
       use pepper_instance, only: pepper_context, pepper_zzekpars => zzekpars
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ektokn
+      use pepper_inc_ekkeyw
+      use pepper_inc_ekbool
+      use pepper_inc_ektype
+      use pepper_inc_ekopcd
+      use pepper_inc_ekquery
+      use pepper_inc_ekqlimit
       implicit none
-      include 'ektokn.inc'
-      include 'ekkeyw.inc'
-      include 'ekbool.inc'
-      include 'ektype.inc'
-      include 'ekopcd.inc'
-      include 'ekquery.inc'
-      include 'ekqlimit.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: query  !! Query in string form.
       integer(ip) :: ntoken  !! Number of tokens in query.
@@ -1564,9 +1564,9 @@
       use pepper_instance, only: pepper_context, pepper_zzektr23 => zzektr23
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: left  !! Left sibling node.
@@ -1590,9 +1590,9 @@
       use pepper_instance, only: pepper_context, pepper_zzektr32 => zzektr32
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: left  !! Left sibling node.
@@ -1629,7 +1629,7 @@
       use pepper_instance, only: pepper_context, pepper_zzektrnk => zzektrnk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
+      use pepper_inc_ektree
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: node  !! Node of interest.
@@ -1646,7 +1646,7 @@
       use pepper_instance, only: pepper_context, pepper_zzektrsb => zzektrsb
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
+      use pepper_inc_ektree
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: key  !! Key of interest.
@@ -1666,7 +1666,7 @@
       use pepper_instance, only: pepper_context, pepper_zzektrsz => zzektrsz
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
+      use pepper_inc_ektree
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       type(pepper_context), pointer :: ctx
@@ -1682,8 +1682,8 @@
       use pepper_instance, only: pepper_context, pepper_zzektrud => zzektrud
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekpage.inc'
-      include 'ektree.inc'
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: key  !! Key to delete.
@@ -1702,9 +1702,9 @@
       use pepper_instance, only: pepper_context, pepper_zzektrui => zzektrui
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekpage.inc'
-      include 'ektree.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: key  !! Key to insert.
@@ -1722,8 +1722,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ekfilpar
       implicit none
-      include 'ekfilpar.inc'
       integer(ip) :: handle  !! EK file handle.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1737,9 +1737,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekixlk => zzekixlk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekpage.inc'
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
       integer(ip) :: handle  !! File handle.
       integer(ip) :: coldsc ( cdscsz )  !! Column descriptor.
       integer(ip) :: key  !! Key.
@@ -1757,9 +1757,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekrplk => zzekrplk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekdatpag.inc'
-      include 'ekpage.inc'
-      include 'eksegdsc.inc'
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip) :: n  !! Ordinal position of record.
@@ -1777,10 +1777,10 @@
       use pepper_instance, only: pepper_context, pepper_zzektr1s => zzektr1s
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
       implicit none
-      include 'ekpage.inc'
-      include 'ektree.inc'
-      include 'ektype.inc'
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: size  !! Size of tree.
@@ -1798,7 +1798,7 @@
       use pepper_instance, only: pepper_context, pepper_zzektrbn => zzektrbn
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include  'ektree.inc'
+      use pepper_inc_ektree
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: left  !! Left node of pair to be balanced.
@@ -1819,7 +1819,7 @@
       use pepper_instance, only: pepper_context, pepper_zzektrki => zzektrki
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
+      use pepper_inc_ektree
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: nodkey  !! Key identifying node containing key of interest.
@@ -1838,7 +1838,7 @@
       use pepper_instance, only: pepper_context, pepper_zzektrls => zzektrls
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ektree.inc'
+      use pepper_inc_ektree
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Tree root.
       integer(ip) :: ival  !! Value to search for.
@@ -1856,7 +1856,7 @@
       use pepper_instance, only: pepper_context, pepper_zzekmloc => zzekmloc
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekfilpar.inc'
+      use pepper_inc_ekfilpar
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segno  !! Segment number.
       integer(ip) :: page  !! Integer metadata start page number.
@@ -1873,8 +1873,8 @@
       use pepper_instance, only: pepper_context, pepper_zzektrdl => zzektrdl
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekpage.inc'
-      include 'ektree.inc'
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: key  !! Key at which to delete value.
@@ -1890,8 +1890,8 @@
       use pepper_instance, only: pepper_context, pepper_zzektrin => zzektrin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekpage.inc'
-      include 'ektree.inc'
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
       integer(ip) :: handle  !! File handle.
       integer(ip) :: tree  !! Root of tree.
       integer(ip) :: key  !! Key at which to insert value.
@@ -1908,9 +1908,9 @@
       use pepper_instance, only: pepper_context, pepper_zzekdps => zzekdps
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekdatpag.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip) :: type  !! Data type of page.
@@ -1927,12 +1927,12 @@
       use pepper_instance, only: pepper_context, pepper_zzekff01 => zzekff01
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekdatpag.inc'
-      include 'ekglimit.inc'
-      include 'ekpage.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekglimit
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segno  !! Segment number.
       integer(ip) :: rcptrs ( * )  !! Record pointers.
@@ -1948,7 +1948,7 @@
       use pepper_instance, only: pepper_context, pepper_zzeksdsc => zzeksdsc
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'eksegdsc.inc'
+      use pepper_inc_eksegdsc
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segno  !! Segment number.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
@@ -1966,10 +1966,10 @@
       use pepper_instance, only: pepper_context, pepper_zzeksinf => zzeksinf
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekcnamsz.inc'
-      include 'ekcoldsc.inc'
-      include 'eksegdsc.inc'
-      include 'ektnamsz.inc'
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
       integer(ip) :: handle  !! Handle of EK.
       integer(ip) :: segno  !! Number of segment to be summarized.
       character(*) :: tabnam  !! Name of table containing segment.
@@ -2005,8 +2005,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_eksegdsc
       implicit none
-      include 'eksegdsc.inc'
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segno  !! Segment number.
       integer(ip) :: rcptrs ( * )  !! Record pointers.
@@ -2025,12 +2025,12 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekglimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       implicit none
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekglimit.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
       integer(ip) :: handle  !! Handle of EK.
       integer(ip) :: segno  !! Number of segment to be summarized.
       character(*) :: tabnam  !! Name of table containing segment.
@@ -2055,8 +2055,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekacps => zzekacps
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip) :: type  !! Data type of page.
@@ -2075,8 +2075,8 @@
       use pepper_instance, only: pepper_context, pepper_zzekaps => zzekaps
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip) :: type  !! Data type of page.
@@ -2096,17 +2096,17 @@
       use pepper_instance, only: pepper_context, pepper_zzekbs01 => zzekbs01
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekcnamsz.inc'
-      include 'ekdatpag.inc'
-      include 'ekfilpar.inc'
-      include 'ekglimit.inc'
-      include 'ekpage.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektnamsz.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekfilpar
+      use pepper_inc_ekglimit
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       character(*) :: tabnam  !! Table name.
       integer(ip) :: ncols  !! Number of columns in the segment.
@@ -2126,17 +2126,17 @@
       use pepper_instance, only: pepper_context, pepper_zzekbs02 => zzekbs02
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekbool.inc'
-      include 'ekcoldsc.inc'
-      include 'ekcnamsz.inc'
-      include 'ekdatpag.inc'
-      include 'ekfilpar.inc'
-      include 'ekglimit.inc'
-      include 'ekpage.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektnamsz.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekfilpar
+      use pepper_inc_ekglimit
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       character(*) :: tabnam  !! Table name.
       integer(ip) :: ncols  !! Number of columns in the segment.
@@ -2155,11 +2155,11 @@
       use pepper_instance, only: pepper_context, pepper_zzekde04 => zzekde04
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'ekcoldsc.inc'
-      include 'ekdatpag.inc'
-      include 'ekrecptr.inc'
-      include 'eksegdsc.inc'
-      include 'ektype.inc'
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -2178,7 +2178,7 @@
       use pepper_instance, only: pepper_context, pepper_zzekrp2n => zzekrp2n
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
-      include 'eksegdsc.inc'
+      use pepper_inc_eksegdsc
       integer(ip) :: handle  !! File handle.
       integer(ip) :: segno  !! Segment number.
       integer(ip) :: recptr  !! Record pointer.
@@ -2203,10 +2203,10 @@
       !> Umbrella of the ZZEKPAGE routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzekpage ( handle, type, addrss, stat, p, pagec, paged, pagei, base, value )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
       implicit none
-      include 'ekarch.inc'
-      include 'ekpage.inc'
-      include 'ektype.inc'
       integer(ip) :: handle
       integer(ip) :: type
       integer(ip) :: addrss

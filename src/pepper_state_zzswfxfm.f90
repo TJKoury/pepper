@@ -8,14 +8,14 @@
 module pepper_state_zzswfxfm
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzswtchf
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include              'frmtyp.inc'
-   include              'zzswtchf.inc'
-   include              'zzctr.inc'
 
    public :: init_zzswfxfm_state
 

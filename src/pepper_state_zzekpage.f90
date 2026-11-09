@@ -8,14 +8,14 @@
 module pepper_state_zzekpage
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
 
    implicit none
 
    private
 
-   include 'ekarch.inc'
-   include 'ekpage.inc'
-   include 'ektype.inc'
 
    public :: init_zzekpage_state
 

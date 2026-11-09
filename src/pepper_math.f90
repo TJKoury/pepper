@@ -34,24 +34,23 @@ contains
       !>
       !> The function is .TRUE. whenever |X - Y| <= TOL.
       elemental logical function approx ( x, y, tol )
+!! ## Abstract
+!!
+!!     Return .TRUE. if two double precision numbers are equal to
+!!     within some tolerance.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COMPARE
+!!     NUMBERS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return .TRUE. if two double precision numbers are equal to
-!     within some tolerance.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COMPARE
-!     NUMBERS
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: x  !! Double precision numbers.
@@ -153,24 +152,23 @@ contains
       !> Construct a rotation matrix that rotates vectors by a specified
       !> angle about a specified axis.
       pure subroutine axisar ( axis, angle, r )
+!! ## Abstract
+!!
+!!     Construct a rotation matrix that rotates vectors by a specified
+!!     angle about a specified axis.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!     ROTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Construct a rotation matrix that rotates vectors by a specified
-!     angle about a specified axis.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     MATRIX
-!     ROTATION
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: axis  ( 3 )  !! Rotation axis.
@@ -509,24 +507,23 @@ contains
       !> Convert from range, azimuth and elevation of a point to
       !> rectangular coordinates.
       pure subroutine azlrec ( range, az, el, azccw, elplsz, rectan )
+!! ## Abstract
+!!
+!!     Convert from range, azimuth and elevation of a point to
+!!     rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from range, azimuth and elevation of a point to
-!     rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: range  !! Distance of the point from the origin.
@@ -1142,27 +1139,26 @@ contains
       !>
       !> The function returns the bracketed number.
       elemental real(wp) function brcktd ( number, end1, end2 )
+!! ## Abstract
+!!
+!!     Bracket a double precision number. That is, given a number and an
+!!     acceptable interval, make sure that the number is contained in the
+!!     interval. (If the number is already in the interval, leave it
+!!     alone. If not, set it to the nearest endpoint of the interval.)
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERVALS
+!!     NUMBERS
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Bracket a double precision number. That is, given a number and an
-!     acceptable interval, make sure that the number is contained in the
-!     interval. (If the number is already in the interval, leave it
-!     alone. If not, set it to the nearest endpoint of the interval.)
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERVALS
-!     NUMBERS
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: number  !! Number to be bracketed.
@@ -1430,27 +1426,26 @@ contains
       !>
       !> The function returns the bracketed number.
       elemental integer(ip)  function brckti ( number, end1, end2 )
+!! ## Abstract
+!!
+!!     Bracket an integer number. That is, given a number and an
+!!     acceptable interval, make sure that the number is contained in the
+!!     interval. (If the number is already in the interval, leave it
+!!     alone. If not, set it to the nearest endpoint of the interval.)
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERVALS
+!!     NUMBERS
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Bracket an integer number. That is, given a number and an
-!     acceptable interval, make sure that the number is contained in the
-!     interval. (If the number is already in the interval, leave it
-!     alone. If not, set it to the nearest endpoint of the interval.)
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERVALS
-!     NUMBERS
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: number  !! Number to be bracketed.
@@ -1711,26 +1706,25 @@ contains
       !> derivatives, evaluated at the input X, using the coefficients of
       !> the Chebyshev expansion of the polynomial.
       pure subroutine chbder ( cp, degp, x2s, x, nderiv, partdp, dpdxs )
+!! ## Abstract
+!!
+!!     Return the value of a polynomial and its first NDERIV
+!!     derivatives, evaluated at the input X, using the coefficients of
+!!     the Chebyshev expansion of the polynomial.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERPOLATION
+!!     MATH
+!!     POLYNOMIAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the value of a polynomial and its first NDERIV
-!     derivatives, evaluated at the input X, using the coefficients of
-!     the Chebyshev expansion of the polynomial.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERPOLATION
-!     MATH
-!     POLYNOMIAL
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: cp     (      * )  !! DEGP+1 Chebyshev polynomial coefficients.
@@ -2136,26 +2130,25 @@ contains
       !> the input X, using the coefficients of the Chebyshev expansion of
       !> the polynomial.
       pure subroutine chbint ( cp, degp, x2s, x, p, dpdx )
+!! ## Abstract
+!!
+!!     Return the value of a polynomial and its derivative, evaluated at
+!!     the input X, using the coefficients of the Chebyshev expansion of
+!!     the polynomial.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERPOLATION
+!!     MATH
+!!     POLYNOMIAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the value of a polynomial and its derivative, evaluated at
-!     the input X, using the coefficients of the Chebyshev expansion of
-!     the polynomial.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERPOLATION
-!     MATH
-!     POLYNOMIAL
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: cp  ( * )  !! DEGP+1 Chebyshev polynomial coefficients.
@@ -2470,25 +2463,24 @@ contains
       !> Return the value of a polynomial evaluated at the input X using
       !> the coefficients for the Chebyshev expansion of the polynomial.
       pure subroutine chbval ( cp, degp, x2s, x, p )
+!! ## Abstract
+!!
+!!     Return the value of a polynomial evaluated at the input X using
+!!     the coefficients for the Chebyshev expansion of the polynomial.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERPOLATION
+!!     MATH
+!!     POLYNOMIAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the value of a polynomial evaluated at the input X using
-!     the coefficients for the Chebyshev expansion of the polynomial.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERPOLATION
-!     MATH
-!     POLYNOMIAL
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: cp  ( * )  !! DEGP+1 Chebyshev polynomial coefficients.
@@ -2759,23 +2751,22 @@ contains
 
       !> Convert from cylindrical to latitudinal coordinates.
       elemental subroutine cyllat ( r, clon, z,  radius, lon, lat )
+!! ## Abstract
+!!
+!!     Convert from cylindrical to latitudinal coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from cylindrical to latitudinal coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: r  !! Distance of point from Z axis.
@@ -3177,23 +3168,22 @@ contains
 
       !> Convert from cylindrical to rectangular coordinates.
       pure subroutine cylrec ( r, clon, z,  rectan )
+!! ## Abstract
+!!
+!!     Convert from cylindrical to rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from cylindrical to rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: r  !! Distance of a point from Z axis.
@@ -3533,23 +3523,22 @@ contains
 
       !> Convert from cylindrical to spherical coordinates.
       elemental subroutine cylsph ( r, clon, z,  radius, colat, slon )
+!! ## Abstract
+!!
+!!     Convert from cylindrical to spherical coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from cylindrical to spherical coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: r  !! Distance of point from Z axis.
@@ -3956,23 +3945,22 @@ contains
       !>
       !> The function returns the cube root of the input value.
       elemental real(wp) function  dcbrt ( x )
+!! ## Abstract
+!!
+!!     Return the cube root of a double precision number.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     ROOT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return the cube root of a double precision number.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     ROOT
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: x  !! Number whose cube root is desired.
@@ -4068,23 +4056,22 @@ contains
       !> The function returns the value of the determinant found by direct
       !> application of the definition of the determinant.
       pure real(wp) function  det ( m1 )
+!! ## Abstract
+!!
+!!     Compute the determinant of a double precision 3x3 matrix.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the determinant of a double precision 3x3 matrix.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: m1 ( 3,3 )  !! Matrix whose determinant is to be found.
@@ -4223,25 +4210,24 @@ contains
       !> Compute the Jacobian matrix of the transformation from
       !> cylindrical to rectangular coordinates.
       pure subroutine drdcyl ( r, clon, z, jacobi )
+!! ## Abstract
+!!
+!!     Compute the Jacobian matrix of the transformation from
+!!     cylindrical to rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATES
+!!     DERIVATIVES
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the Jacobian matrix of the transformation from
-!     cylindrical to rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATES
-!     DERIVATIVES
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: r  !! Distance of a point from the origin.
@@ -4591,25 +4577,24 @@ contains
       !> Compute the Jacobian matrix of the transformation from
       !> latitudinal to rectangular coordinates.
       pure subroutine drdlat ( r, lon, lat, jacobi )
+!! ## Abstract
+!!
+!!     Compute the Jacobian matrix of the transformation from
+!!     latitudinal to rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATES
+!!     DERIVATIVES
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the Jacobian matrix of the transformation from
-!     latitudinal to rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATES
-!     DERIVATIVES
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: r  !! Distance of a point from the origin.
@@ -4963,25 +4948,24 @@ contains
       !> Compute the Jacobian matrix of the transformation from spherical
       !> to rectangular coordinates.
       pure subroutine drdsph ( r, colat, slon, jacobi )
+!! ## Abstract
+!!
+!!     Compute the Jacobian matrix of the transformation from spherical
+!!     to rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COORDINATES
+!!     DERIVATIVES
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the Jacobian matrix of the transformation from spherical
-!     to rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COORDINATES
-!     DERIVATIVES
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: r  !! Distance of a point from the origin.
@@ -5345,25 +5329,24 @@ contains
       !> Compute the unit vector parallel to the cross product of
       !> two 3-dimensional vectors and the derivative of this unit vector.
       pure subroutine ducrss ( s1, s2, sout )
+!! ## Abstract
+!!
+!!     Compute the unit vector parallel to the cross product of
+!!     two 3-dimensional vectors and the derivative of this unit vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     DERIVATIVE
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Compute the unit vector parallel to the cross product of
-!     two 3-dimensional vectors and the derivative of this unit vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     DERIVATIVE
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: s1   ( 6 )  !! Left hand state for cross product and derivative.
@@ -5687,24 +5670,23 @@ contains
       !> Compute the cross product of two 3-dimensional vectors
       !> and the derivative of this cross product.
       pure subroutine dvcrss ( s1, s2, sout )
+!! ## Abstract
+!!
+!!     Compute the cross product of two 3-dimensional vectors
+!!     and the derivative of this cross product.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     DERIVATIVE
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the cross product of two 3-dimensional vectors
-!     and the derivative of this cross product.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     DERIVATIVE
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: s1   ( 6 )  !! Left hand state for cross product and derivative.
@@ -6065,24 +6047,23 @@ contains
       !>
       !> The function returns the derivative of the dot product <S1,S2>
       pure real(wp) function dvdot ( s1, s2 )
+!! ## Abstract
+!!
+!!     Compute the derivative of the dot product of two double
+!!     precision position vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     DERIVATIVE
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the derivative of the dot product of two double
-!     precision position vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     DERIVATIVE
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: s1 ( 6 )  !! First state vector in the dot product.
@@ -6247,25 +6228,24 @@ contains
       !> Find the unit vector corresponding to a state vector and the
       !> derivative of the unit vector.
       pure subroutine dvhat ( s1, sout )
+!! ## Abstract
+!!
+!!     Find the unit vector corresponding to a state vector and the
+!!     derivative of the unit vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     DERIVATIVE
+!!     MATH
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the unit vector corresponding to a state vector and the
-!     derivative of the unit vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     DERIVATIVE
-!     MATH
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: s1   ( 6 )  !! State to be normalized.
@@ -6528,24 +6508,23 @@ contains
        !> The function returns the derivative of the norm of the position
        !> component of the input STATE vector.
        pure real(wp) function dvnorm( state )
+!! ## Abstract
+!!
+!!     Calculate the derivative of the norm of a 3-vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     DERIVATIVE
+!!     MATH
+!!     VECTOR
+!!
+!! ## Declarations
+!!
        use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Calculate the derivative of the norm of a 3-vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     DERIVATIVE
-!     MATH
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: state ( 6 )  !! A 6-vector composed of three coordinates and their
@@ -6784,25 +6763,24 @@ contains
       !> vectors. The selected generating vectors are semi-axes of the
       !> ellipse.
       pure subroutine el2cgv ( ellips, center, smajor, sminor )
+!! ## Abstract
+!!
+!!     Convert a SPICE ellipse to a center vector and two generating
+!!     vectors. The selected generating vectors are semi-axes of the
+!!     ellipse.
+!!
+!! ## Required Reading
+!!
+!!     ELLIPSES
+!!
+!! ## Keywords
+!!
+!!     ELLIPSE
+!!     GEOMETRY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Convert a SPICE ellipse to a center vector and two generating
-!     vectors. The selected generating vectors are semi-axes of the
-!     ellipse.
-!
-! $ Required_Reading
-!
-!     ELLIPSES
-!
-! $ Keywords
-!
-!     ELLIPSE
-!     GEOMETRY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: ubel = 9
@@ -7099,22 +7077,21 @@ contains
       !>
       !> The function returns .TRUE. if IVAL is even, otherwise .FALSE.
       elemental logical function even ( ival )
+!! ## Abstract
+!!
+!!     Determine whether an integer is even.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     NUMBERS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether an integer is even.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     NUMBERS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ival  !! The integer in question.
@@ -7224,24 +7201,23 @@ contains
       !> The function returns VALUE whenever |NUMBER - VALUE| < TOL.
       !> -
       elemental real(wp) function exact ( number, value, tol )
+!! ## Abstract
+!!
+!!     Round an input double precision number to a specified exact value
+!!     if the number and the value are equal to within some tolerance.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     COMPARE
+!!     NUMBERS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Round an input double precision number to a specified exact value
-!     if the number and the value are equal to within some tolerance.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     COMPARE
-!     NUMBERS
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: number  !! Double precision number.
@@ -7342,25 +7318,24 @@ contains
       !> 3-dimensional input vector, where the X-axis of the resulting
       !> frame is parallel to the original input vector.
       pure subroutine frame ( x, y, z )
+!! ## Abstract
+!!
+!!     Build a right handed orthonormal frame (x,y,z) from a
+!!     3-dimensional input vector, where the X-axis of the resulting
+!!     frame is parallel to the original input vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     AXES
+!!     FRAME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Build a right handed orthonormal frame (x,y,z) from a
-!     3-dimensional input vector, where the X-axis of the resulting
-!     frame is parallel to the original input vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     AXES
-!     FRAME
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(inout) :: x ( 3 )  !! Input vector. A parallel unit vector on output.
@@ -7609,23 +7584,22 @@ contains
       !>
       !> The function returns the greatest common divisor of A and B.
       elemental integer(ip) function gcd ( a, b )
+!! ## Abstract
+!!
+!!     Return the greatest common divisor of two integers.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     NUMBERS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the greatest common divisor of two integers.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     NUMBERS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: a  !! Any integer
@@ -7764,22 +7738,21 @@ contains
 
       !> Return the 3x3 identity matrix.
       pure subroutine ident ( matrix )
+!! ## Abstract
+!!
+!!     Return the 3x3 identity matrix.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return the 3x3 identity matrix.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(out) :: matrix ( 3, 3 )  !! The 3x3 identity matrix.
@@ -7964,25 +7937,24 @@ contains
       !> point where the scale factor such that SCALE*V lies in the
       !> plane spanned by E1, E2, and E3.
       pure subroutine insang ( v, e1, e2, e3, found, scale )
+!! ## Abstract
+!!
+!!     Determine if a given vector lies inside the solid tetrahedral
+!!     angle determined by 3 vectors. If it does, return the
+!!     point where the scale factor such that SCALE*V lies in the
+!!     plane spanned by E1, E2, and E3.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Determine if a given vector lies inside the solid tetrahedral
-!     angle determined by 3 vectors. If it does, return the
-!     point where the scale factor such that SCALE*V lies in the
-!     plane spanned by E1, E2, and E3.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v     ( 3 )  !! Vector to test for "betweenness"
@@ -8298,24 +8270,23 @@ contains
 
       !> Generate the inverse of a 3x3 matrix.
       pure subroutine invert ( m, mout )
+!! ## Abstract
+!!
+!!     Generate the inverse of a 3x3 matrix.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_arrays, only: filld
-
-! $ Abstract
-!
-!     Generate the inverse of a 3x3 matrix.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: m    ( 3,3 )  !! Matrix to be inverted.
@@ -8546,23 +8517,22 @@ contains
 
       !> Convert from latitudinal coordinates to cylindrical coordinates.
       elemental subroutine latcyl ( radius, lon, lat, r, clon, z )
+!! ## Abstract
+!!
+!!     Convert from latitudinal coordinates to cylindrical coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from latitudinal coordinates to cylindrical coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: radius  !! Distance of a point from the origin.
@@ -9014,23 +8984,22 @@ contains
 
       !> Convert from latitudinal coordinates to rectangular coordinates.
       pure subroutine latrec ( radius, lon, lat, rectan )
+!! ## Abstract
+!!
+!!     Convert from latitudinal coordinates to rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from latitudinal coordinates to rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: radius  !! Distance of a point from the origin.
@@ -9404,24 +9373,23 @@ contains
 
       !> Convert from latitudinal coordinates to spherical coordinates.
       elemental subroutine latsph ( radius, lon, lat,  rho, colat, slon )
+!! ## Abstract
+!!
+!!     Convert from latitudinal coordinates to spherical coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi
-
-! $ Abstract
-!
-!     Convert from latitudinal coordinates to spherical coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: radius  !! Distance of a point from the origin.
@@ -9829,24 +9797,23 @@ contains
 
       !> Set one double precision 3x3 matrix equal to another.
       pure subroutine mequ ( m1, mout )
+!! ## Abstract
+!!
+!!     Set one double precision 3x3 matrix equal to another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Set one double precision 3x3 matrix equal to another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: m1   ( 3, 3 )  !! Input matrix.
@@ -9978,25 +9945,24 @@ contains
       !> Set one double precision matrix of arbitrary size equal to
       !> another.
       pure subroutine mequg ( m1, nr, nc, mout )
+!! ## Abstract
+!!
+!!     Set one double precision matrix of arbitrary size equal to
+!!     another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Set one double precision matrix of arbitrary size equal to
-!     another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: nr  !! Row dimension of M1 (and also MOUT).
@@ -10099,23 +10065,22 @@ contains
 
       !> Multiply the transpose of a 3x3 matrix and a 3x3 matrix.
       pure subroutine mtxm ( m1, m2, mout )
+!! ## Abstract
+!!
+!!     Multiply the transpose of a 3x3 matrix and a 3x3 matrix.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Multiply the transpose of a 3x3 matrix and a 3x3 matrix.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
@@ -10299,24 +10264,23 @@ contains
       !> both of arbitrary size. (The dimensions of the matrices must be
       !> compatible with this multiplication.)
       pure subroutine mtxmg ( m1, m2, nc1, nr1r2, nc2, mout )
+!! ## Abstract
+!!
+!!     Multiply the transpose of a matrix with another matrix,
+!!     both of arbitrary size. (The dimensions of the matrices must be
+!!     compatible with this multiplication.)
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply the transpose of a matrix with another matrix,
-!     both of arbitrary size. (The dimensions of the matrices must be
-!     compatible with this multiplication.)
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: nc1  !! Column dimension of M1 and row dimension of MOUT.
@@ -10522,24 +10486,23 @@ contains
       !> Multiply the transpose of a 3x3 matrix on the left with a vector
       !> on the right.
       pure subroutine mtxv ( m, vin, vout )
+!! ## Abstract
+!!
+!!     Multiply the transpose of a 3x3 matrix on the left with a vector
+!!     on the right.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply the transpose of a 3x3 matrix on the left with a vector
-!     on the right.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: m      ( 3,3 )  !! 3X3 double precision matrix.
@@ -10734,24 +10697,23 @@ contains
       !> Multiply the transpose of a matrix and a vector of
       !> arbitrary size.
       pure subroutine mtxvg ( m1, v2, nc1, nr1r2, vout )
+!! ## Abstract
+!!
+!!     Multiply the transpose of a matrix and a vector of
+!!     arbitrary size.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply the transpose of a matrix and a vector of
-!     arbitrary size.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: nc1  !! Column dimension of M1 and length of VOUT.
@@ -10934,23 +10896,22 @@ contains
 
       !> Multiply two 3x3 matrices.
       pure subroutine mxm ( m1, m2, mout )
+!! ## Abstract
+!!
+!!     Multiply two 3x3 matrices.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Multiply two 3x3 matrices.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
@@ -11152,22 +11113,21 @@ contains
 
       !> Multiply two double precision matrices of arbitrary size.
       pure subroutine mxmg ( m1, m2, nr1, nc1r2, nc2, mout )
+!! ## Abstract
+!!
+!!     Multiply two double precision matrices of arbitrary size.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply two double precision matrices of arbitrary size.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: nr1  !! Row dimension of M1 (and also MOUT).
@@ -11359,23 +11319,22 @@ contains
 
       !> Multiply a 3x3 matrix and the transpose of another 3x3 matrix.
       pure subroutine mxmt ( m1, m2, mout )
+!! ## Abstract
+!!
+!!     Multiply a 3x3 matrix and the transpose of another 3x3 matrix.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Multiply a 3x3 matrix and the transpose of another 3x3 matrix.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
@@ -11591,23 +11550,22 @@ contains
       !> Multiply a matrix and the transpose of a matrix, both of
       !> arbitrary size.
       pure subroutine mxmtg ( m1, m2, nr1, nc1c2, nr2, mout )
+!! ## Abstract
+!!
+!!     Multiply a matrix and the transpose of a matrix, both of
+!!     arbitrary size.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply a matrix and the transpose of a matrix, both of
-!     arbitrary size.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: nr1  !! Row dimension of M1 and row dimension of MOUT.
@@ -11816,24 +11774,23 @@ contains
       !> Multiply a 3x3 double precision matrix with a 3-dimensional
       !> double precision vector.
       pure subroutine mxv ( m, vin, vout )
+!! ## Abstract
+!!
+!!     Multiply a 3x3 double precision matrix with a 3-dimensional
+!!     double precision vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply a 3x3 double precision matrix with a 3-dimensional
-!     double precision vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: m      ( 3, 3 )  !! 3x3 double precision matrix.
@@ -12002,23 +11959,22 @@ contains
 
       !> Multiply a matrix and a vector of arbitrary size.
       pure subroutine mxvg ( m1, v2, nr1, nc1r2, vout )
+!! ## Abstract
+!!
+!!     Multiply a matrix and a vector of arbitrary size.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply a matrix and a vector of arbitrary size.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: nr1  !! Row dimension of M1 and length of VOUT.
@@ -12188,22 +12144,21 @@ contains
       !>
       !> The function returns .TRUE. if IVAL is odd, otherwise .FALSE.
       elemental logical function  odd ( ival )
+!! ## Abstract
+!!
+!!     Determine whether an integer is odd.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     NUMBERS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether an integer is odd.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     NUMBERS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ival  !! The integer in question.
@@ -12318,23 +12273,22 @@ contains
       !> The function returns .TRUE. when the double precision numbers X
       !> and Y have opposite signs.
       elemental logical function opsgnd  ( x, y )
+!! ## Abstract
+!!
+!!     Return .TRUE. if two given double precision numbers have opposite
+!!     signs.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     NUMBERS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return .TRUE. if two given double precision numbers have opposite
-!     signs.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     NUMBERS
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: x  !! A double precision number
@@ -12449,22 +12403,21 @@ contains
       !> The function returns .TRUE. when the integer numbers X and Y have
       !> opposite signs.
       elemental logical function opsgni  ( x, y )
+!! ## Abstract
+!!
+!!     Return .TRUE. if two given integer numbers have opposite signs.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     NUMBERS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return .TRUE. if two given integer numbers have opposite signs.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     NUMBERS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: x  !! An integer.
@@ -12584,25 +12537,24 @@ contains
       !>
       !> UBPL       P   SPICE plane upper bound.
       pure subroutine pl2nvc ( plane, normal, konst )
+!! ## Abstract
+!!
+!!     Return a unit normal vector and constant that define a specified
+!!     plane.
+!!
+!! ## Required Reading
+!!
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     PLANE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return a unit normal vector and constant that define a specified
-!     plane.
-!
-! $ Required_Reading
-!
-!     PLANES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     PLANE
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           ubpl
@@ -12955,25 +12907,24 @@ contains
       !> Return a unit normal vector and point that define a specified
       !> plane.
       pure subroutine pl2nvp ( plane, normal, point )
+!! ## Abstract
+!!
+!!     Return a unit normal vector and point that define a specified
+!!     plane.
+!!
+!! ## Required Reading
+!!
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     PLANE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return a unit normal vector and point that define a specified
-!     plane.
-!
-! $ Required_Reading
-!
-!     PLANES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     PLANE
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           ubpl
@@ -13116,25 +13067,24 @@ contains
       !> Return a point and two orthogonal spanning vectors that generate
       !> a specified plane.
       pure subroutine pl2psv ( plane, point, span1, span2 )
+!! ## Abstract
+!!
+!!     Return a point and two orthogonal spanning vectors that generate
+!!     a specified plane.
+!!
+!! ## Required Reading
+!!
+!!     PLANES
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     PLANE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return a point and two orthogonal spanning vectors that generate
-!     a specified plane.
-!
-! $ Required_Reading
-!
-!     PLANES
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     PLANE
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           ubpl
@@ -13377,26 +13327,25 @@ contains
       !> plate is co-planar with, and has the same orientation as, the
       !> original. The centroids of the two plates coincide.
       pure subroutine pltexp ( iverts, delta, overts )
+!! ## Abstract
+!!
+!!     Expand a triangular plate by a specified amount. The expanded
+!!     plate is co-planar with, and has the same orientation as, the
+!!     original. The centroids of the two plates coincide.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     GEOMETRY
+!!     MATH
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Expand a triangular plate by a specified amount. The expanded
-!     plate is co-planar with, and has the same orientation as, the
-!     original. The centroids of the two plates coincide.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     MATH
-!     TOPOGRAPHY
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: iverts ( 3, 3 )  !! Vertices of the plate to be expanded.
@@ -13628,25 +13577,24 @@ contains
       !> Compute an outward normal vector of a triangular plate.
       !> The vector does not necessarily have unit length.
       pure subroutine pltnrm ( v1, v2, v3, normal )
+!! ## Abstract
+!!
+!!     Compute an outward normal vector of a triangular plate.
+!!     The vector does not necessarily have unit length.
+!!
+!! ## Required Reading
+!!
+!!     DSK
+!!
+!! ## Keywords
+!!
+!!     DSK
+!!     FILES
+!!     TOPOGRAPHY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute an outward normal vector of a triangular plate.
-!     The vector does not necessarily have unit length.
-!
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     DSK
-!     FILES
-!     TOPOGRAPHY
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1     ( 3 )  !! Vertices of a plate.
@@ -13787,25 +13735,24 @@ contains
       !> Compute the value of a polynomial and its first
       !> NDERIV derivatives at the value T.
       pure subroutine polyds ( coeffs, deg, nderiv, t, p )
+!! ## Abstract
+!!
+!!     Compute the value of a polynomial and its first
+!!     NDERIV derivatives at the value T.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     INTERPOLATION
+!!     MATH
+!!     POLYNOMIAL
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the value of a polynomial and its first
-!     NDERIV derivatives at the value T.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     INTERPOLATION
-!     MATH
-!     POLYNOMIAL
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: coeffs ( 0:* )  !! Coefficients of the polynomial to be evaluated.
@@ -14137,25 +14084,24 @@ contains
       !> Find the rotation matrix corresponding to a specified unit
       !> quaternion.
       pure subroutine q2m ( q, r )
+!! ## Abstract
+!!
+!!     Find the rotation matrix corresponding to a specified unit
+!!     quaternion.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     MATRIX
+!!     ROTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Find the rotation matrix corresponding to a specified unit
-!     quaternion.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     MATH
-!     MATRIX
-!     ROTATION
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: q ( 0 : 3 )  !! A unit quaternion.
@@ -14723,25 +14669,24 @@ contains
       !> Derive angular velocity from a unit quaternion and its derivative
       !> with respect to time.
       pure subroutine qdq2av ( q, dq, av )
+!! ## Abstract
+!!
+!!     Derive angular velocity from a unit quaternion and its derivative
+!!     with respect to time.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     POINTING
+!!     ROTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Derive angular velocity from a unit quaternion and its derivative
-!     with respect to time.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     MATH
-!     POINTING
-!     ROTATION
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: q    ( 0 : 3 )  !! Unit SPICE quaternion.
@@ -15429,24 +15374,23 @@ contains
 
       !> Multiply two quaternions.
       pure subroutine qxq ( q1, q2, qout )
+!! ## Abstract
+!!
+!!     Multiply two quaternions.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     POINTING
+!!     ROTATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Multiply two quaternions.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     MATH
-!     POINTING
-!     ROTATION
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: q1   ( 0 : 3 )  !! First SPICE quaternion factor.
@@ -15992,24 +15936,23 @@ contains
       !> Convert from range, right ascension, and declination to
       !> rectangular coordinates.
       pure subroutine radrec ( range, ra, dec, rectan )
+!! ## Abstract
+!!
+!!     Convert from range, right ascension, and declination to
+!!     rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from range, right ascension, and declination to
-!     rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: range  !! Distance of a point from the origin.
@@ -16360,23 +16303,22 @@ contains
       !> Determine a state transformation matrix from a rotation matrix
       !> and the angular velocity of the rotation.
       pure subroutine rav2xf ( rot, av, xform )
+!! ## Abstract
+!!
+!!     Determine a state transformation matrix from a rotation matrix
+!!     and the angular velocity of the rotation.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine a state transformation matrix from a rotation matrix
-!     and the angular velocity of the rotation.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: rot    ( 3, 3 )  !! Rotation matrix.
@@ -16758,25 +16700,24 @@ contains
       !> Convert rectangular coordinates of a point to range, azimuth and
       !> elevation.
       pure subroutine recazl ( rectan, azccw, elplsz, range, az, el )
+!! ## Abstract
+!!
+!!     Convert rectangular coordinates of a point to range, azimuth and
+!!     elevation.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
-
-! $ Abstract
-!
-!     Convert rectangular coordinates of a point to range, azimuth and
-!     elevation.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
@@ -17344,24 +17285,23 @@ contains
 
       !> Convert from rectangular to cylindrical coordinates.
       pure subroutine reccyl ( rectan, r, clon, z )
+!! ## Abstract
+!!
+!!     Convert from rectangular to cylindrical coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
-
-! $ Abstract
-!
-!     Convert from rectangular to cylindrical coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: rectan(3)  !! Rectangular coordinates of a point.
@@ -17725,23 +17665,22 @@ contains
 
       !> Convert from rectangular coordinates to latitudinal coordinates.
       pure subroutine reclat ( rectan, radius, lon, lat )
+!! ## Abstract
+!!
+!!     Convert from rectangular coordinates to latitudinal coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from rectangular coordinates to latitudinal coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of the point.
@@ -18126,25 +18065,24 @@ contains
       !> Convert rectangular coordinates to range, right ascension,
       !> and declination.
       pure subroutine recrad ( rectan, range, ra, dec )
+!! ## Abstract
+!!
+!!     Convert rectangular coordinates to range, right ascension,
+!!     and declination.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
-
-! $ Abstract
-!
-!     Convert rectangular coordinates to range, right ascension,
-!     and declination.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
@@ -18304,23 +18242,22 @@ contains
 
       !> Convert from rectangular coordinates to spherical coordinates.
       pure subroutine recsph ( rectan, r, colat, slon  )
+!! ## Abstract
+!!
+!!     Convert from rectangular coordinates to spherical coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from rectangular coordinates to spherical coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
@@ -18695,25 +18632,24 @@ contains
       !> going from left to right in the usual printed presentation
       !> of a matrix.
       pure subroutine sharpr ( rot )
+!! ## Abstract
+!!
+!!     Adjust the columns of a matrix that is "nearly" a rotation
+!!     so that they are numerically unit length and orthogonal,
+!!     going from left to right in the usual printed presentation
+!!     of a matrix.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Adjust the columns of a matrix that is "nearly" a rotation
-!     so that they are numerically unit length and orthogonal,
-!     going from left to right in the usual printed presentation
-!     of a matrix.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(inout) :: rot ( 3, 3 )  !! The rotation matrix to be sharpened.
@@ -18833,23 +18769,22 @@ contains
       !> The function returns .TRUE. if the input arguments have the same
       !> sign.
       elemental logical function smsgnd ( x, y )
+!! ## Abstract
+!!
+!!     Return .TRUE. if two given double precision numbers have the same
+!!     sign.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     NUMBERS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return .TRUE. if two given double precision numbers have the same
-!     sign.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     NUMBERS
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: x  !! A double precision number
@@ -18961,22 +18896,21 @@ contains
       !> The function returns .TRUE. if the input arguments have the same
       !> sign.
       elemental logical function smsgni ( x, y )
+!! ## Abstract
+!!
+!!     Return .TRUE. if two given integer numbers have the same sign.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     NUMBERS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return .TRUE. if two given integer numbers have the same sign.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     NUMBERS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: x  !! An integer.
@@ -19085,23 +19019,22 @@ contains
 
       !> Convert from spherical coordinates to cylindrical coordinates.
       elemental subroutine sphcyl ( radius, colat, slon, r, clon, z )
+!! ## Abstract
+!!
+!!     Convert from spherical coordinates to cylindrical coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from spherical coordinates to cylindrical coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: radius  !! Distance of point from origin.
@@ -19546,24 +19479,23 @@ contains
 
       !> Convert from spherical coordinates to latitudinal coordinates.
       elemental subroutine sphlat ( r, colat, slon, radius, lon, lat )
+!! ## Abstract
+!!
+!!     Convert from spherical coordinates to latitudinal coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi
-
-! $ Abstract
-!
-!     Convert from spherical coordinates to latitudinal coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: r  !! Distance of the point from the origin.
@@ -19969,23 +19901,22 @@ contains
 
       !> Convert from spherical coordinates to rectangular coordinates.
       pure subroutine sphrec ( r, colat, slon, rectan  )
+!! ## Abstract
+!!
+!!     Convert from spherical coordinates to rectangular coordinates.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     COORDINATES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Convert from spherical coordinates to rectangular coordinates.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CONVERSION
-!     COORDINATES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: r  !! Distance of a point from the origin.
@@ -20357,22 +20288,21 @@ contains
       !>
       !> The function returns the trace of MATRIX.
       pure real(wp) function  trace ( matrix )
+!! ## Abstract
+!!
+!!     Return the trace of a 3x3 matrix.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return the trace of a 3x3 matrix.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: matrix ( 3, 3 )  !! 3x3 matrix of double precision numbers.
@@ -20525,22 +20455,21 @@ contains
       !> The function returns the trace of the square matrix of arbitrary
       !> dimension MATRIX.
       pure real(wp) function  traceg ( matrix, ndim )
+!! ## Abstract
+!!
+!!     Return the trace of a square matrix of arbitrary dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the trace of a square matrix of arbitrary dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of the matrix.
@@ -20712,22 +20641,21 @@ contains
 
       !> Compute the normalized cross product of two 3-vectors.
       pure subroutine ucrss ( v1, v2, vout )
+!! ## Abstract
+!!
+!!     Compute the normalized cross product of two 3-vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the normalized cross product of two 3-vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1   ( 3 )  !! Left vector for cross product.
@@ -20971,22 +20899,21 @@ contains
 
       !> Normalize a double precision 3-vector and return its magnitude.
       pure subroutine unorm ( v1, vout, vmag )
+!! ## Abstract
+!!
+!!     Normalize a double precision 3-vector and return its magnitude.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Normalize a double precision 3-vector and return its magnitude.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1   ( 3 )  !! Vector to be normalized.
@@ -21169,23 +21096,22 @@ contains
       !> Normalize a double precision vector of arbitrary dimension and
       !> return its magnitude.
       pure subroutine unormg ( v1, ndim, vout, vmag )
+!! ## Abstract
+!!
+!!     Normalize a double precision vector of arbitrary dimension and
+!!     return its magnitude.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Normalize a double precision vector of arbitrary dimension and
-!     return its magnitude.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of V1 (and also VOUT).
@@ -21382,22 +21308,21 @@ contains
 
       !> Add two double precision 3-dimensional vectors.
       pure subroutine vadd ( v1, v2, vout )
+!! ## Abstract
+!!
+!!     Add two double precision 3-dimensional vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Add two double precision 3-dimensional vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1   ( 3 )  !! First vector to be added.
@@ -21560,22 +21485,21 @@ contains
 
       !> Add two vectors of arbitrary dimension.
       pure subroutine vaddg ( v1, v2, ndim, vout )
+!! ## Abstract
+!!
+!!     Add two vectors of arbitrary dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Add two vectors of arbitrary dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of V1, V2, and VOUT.
@@ -21758,22 +21682,21 @@ contains
 
       !> Compute the cross product of two 3-dimensional vectors.
       pure subroutine vcrss ( v1, v2, vout )
+!! ## Abstract
+!!
+!!     Compute the cross product of two 3-dimensional vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the cross product of two 3-dimensional vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1   ( 3 )  !! Left hand vector for cross product.
@@ -21965,22 +21888,21 @@ contains
       !>
       !> The function returns the distance between V1 and V2.
       pure real(wp) function  vdist ( v1, v2 )
+!! ## Abstract
+!!
+!!     Return the distance between two three-dimensional vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return the distance between two three-dimensional vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1 ( 3 )  !! Two 3-vectors.
@@ -22127,22 +22049,21 @@ contains
       !>
       !> The function returns the distance between V1 and V2.
       pure real(wp) function vdistg ( v1, v2, ndim )
+!! ## Abstract
+!!
+!!     Return the distance between two vectors of arbitrary dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the distance between two vectors of arbitrary dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1   ( * )  !! Two vectors of arbitrary dimension.
@@ -22316,23 +22237,22 @@ contains
       !>
       !> The function returns the value of the dot product of V1 and V2.
       pure real(wp) function vdot ( v1, v2 )
+!! ## Abstract
+!!
+!!     Compute the dot product of two double precision, 3-dimensional
+!!     vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the dot product of two double precision, 3-dimensional
-!     vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1 ( 3 )  !! First vector in the dot product.
@@ -22513,22 +22433,21 @@ contains
       !>
       !> The function returns the value of the dot product of V1 and V2.
       pure real(wp) function vdotg ( v1, v2, ndim )
+!! ## Abstract
+!!
+!!     Compute the dot product of two vectors of arbitrary dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the dot product of two vectors of arbitrary dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1  ( * )  !! First vector in the dot product.
@@ -22724,24 +22643,23 @@ contains
       !> Make one double precision 3-dimensional vector equal to
       !> another.
       pure subroutine vequ ( vin, vout )
+!! ## Abstract
+!!
+!!     Make one double precision 3-dimensional vector equal to
+!!     another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Make one double precision 3-dimensional vector equal to
-!     another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: vin   ( 3 )  !! Double precision 3-dimensional vector.
@@ -22892,24 +22810,23 @@ contains
       !> Make one double precision vector of arbitrary dimension equal
       !> to another.
       pure subroutine vequg ( vin, ndim, vout )
+!! ## Abstract
+!!
+!!     Make one double precision vector of arbitrary dimension equal
+!!     to another.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Make one double precision vector of arbitrary dimension equal
-!     to another.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of VIN (and also VOUT).
@@ -23072,23 +22989,22 @@ contains
       !> Find the unit vector along a double precision 3-dimensional
       !> vector.
       pure subroutine vhat ( v1, vout )
+!! ## Abstract
+!!
+!!     Find the unit vector along a double precision 3-dimensional
+!!     vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Find the unit vector along a double precision 3-dimensional
-!     vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1   ( 3 )  !! Vector to be normalized.
@@ -23270,23 +23186,22 @@ contains
       !> Find the unit vector along a double precision vector of
       !> arbitrary dimension.
       pure subroutine vhatg ( v1, ndim, vout )
+!! ## Abstract
+!!
+!!     Find the unit vector along a double precision vector of
+!!     arbitrary dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Find the unit vector along a double precision vector of
-!     arbitrary dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of V1 (and also VOUT).
@@ -23481,22 +23396,21 @@ contains
 
       !> Scale a three-dimensional vector to unit length.
       pure subroutine vhatip ( v )
+!! ## Abstract
+!!
+!!     Scale a three-dimensional vector to unit length.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Scale a three-dimensional vector to unit length.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(inout) :: v ( 3 )  !! Vector to be normalized/unit vector.
@@ -23633,23 +23547,22 @@ contains
       !> Compute a vector linear combination of two double precision,
       !> 3-dimensional vectors.
       pure subroutine vlcom ( a, v1, b, v2, sum )
+!! ## Abstract
+!!
+!!     Compute a vector linear combination of two double precision,
+!!     3-dimensional vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute a vector linear combination of two double precision,
-!     3-dimensional vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: a  !! Coefficient of V1.
@@ -23894,23 +23807,22 @@ contains
       !> Compute the vector linear combination of three double precision
       !> 3-dimensional vectors.
       pure subroutine vlcom3 ( a, v1, b, v2, c, v3, sum )
+!! ## Abstract
+!!
+!!     Compute the vector linear combination of three double precision
+!!     3-dimensional vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the vector linear combination of three double precision
-!     3-dimensional vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: a  !! Coefficient of V1.
@@ -24127,23 +24039,22 @@ contains
       !> Compute a vector linear combination of two double precision
       !> vectors of arbitrary dimension.
       pure subroutine vlcomg ( n, a, v1, b, v2, sum )
+!! ## Abstract
+!!
+!!     Compute a vector linear combination of two double precision
+!!     vectors of arbitrary dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute a vector linear combination of two double precision
-!     vectors of arbitrary dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: n  !! Dimension of vector space.
@@ -24324,22 +24235,21 @@ contains
 
       !> Negate a double precision vector of arbitrary dimension.
       pure subroutine vminug ( vin, ndim, vout )
+!! ## Abstract
+!!
+!!     Negate a double precision vector of arbitrary dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Negate a double precision vector of arbitrary dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of VIN (and also VOUT).
@@ -24505,22 +24415,21 @@ contains
 
       !> Negate a double precision 3-dimensional vector.
       pure subroutine vminus ( v1, vout )
+!! ## Abstract
+!!
+!!     Negate a double precision 3-dimensional vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Negate a double precision 3-dimensional vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1   ( 3 )  !! Vector to be negated.
@@ -24678,23 +24587,22 @@ contains
       !>
       !> The function returns the magnitude of V1.
       pure real(wp) function vnorm ( v1 )
+!! ## Abstract
+!!
+!!     Compute the magnitude of a double precision 3-dimensional
+!!     vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the magnitude of a double precision 3-dimensional
-!     vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1 ( 3 )  !! Vector whose magnitude is to be found.
@@ -24869,23 +24777,22 @@ contains
       !>
       !> The function returns the magnitude of V1.
       pure real(wp) function vnormg ( v1, ndim )
+!! ## Abstract
+!!
+!!     Compute the magnitude of a double precision vector of arbitrary
+!!     dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the magnitude of a double precision vector of arbitrary
-!     dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of V1.
@@ -25073,22 +24980,21 @@ contains
 
       !> Pack three scalar components into a vector.
       pure subroutine vpack ( x, y, z, v )
+!! ## Abstract
+!!
+!!     Pack three scalar components into a vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Pack three scalar components into a vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: x  !! Scalar components of a vector.
@@ -25251,23 +25157,22 @@ contains
       !> Find the component of a vector that is perpendicular to a second
       !> vector. All vectors are 3-dimensional.
       pure subroutine vperp ( a, b, p )
+!! ## Abstract
+!!
+!!     Find the component of a vector that is perpendicular to a second
+!!     vector. All vectors are 3-dimensional.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Find the component of a vector that is perpendicular to a second
-!     vector. All vectors are 3-dimensional.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: a ( 3 )  !! The vector whose orthogonal component is sought.
@@ -25435,23 +25340,22 @@ contains
       !> Compute the projection of one 3-dimensional vector onto another
       !> 3-dimensional vector.
       pure subroutine vproj ( a, b, p )
+!! ## Abstract
+!!
+!!     Compute the projection of one 3-dimensional vector onto another
+!!     3-dimensional vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the projection of one 3-dimensional vector onto another
-!     3-dimensional vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: a ( 3 )  !! The vector to be projected.
@@ -25692,23 +25596,22 @@ contains
       !> Compute the projection of one vector onto another vector. All
       !> vectors are of arbitrary dimension.
       pure subroutine vprojg ( a, b, ndim, p )
+!! ## Abstract
+!!
+!!     Compute the projection of one vector onto another vector. All
+!!     vectors are of arbitrary dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the projection of one vector onto another vector. All
-!     vectors are of arbitrary dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of A, B, and P.
@@ -25933,23 +25836,22 @@ contains
       !> The function returns the relative difference between two
       !> 3-dimensional vectors.
       pure real(wp) function vrel ( v1, v2  )
+!! ## Abstract
+!!
+!!     Return the relative difference between two 3-dimensional vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Return the relative difference between two 3-dimensional vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1 ( 3 )  !! Input vectors.
@@ -26139,24 +26041,23 @@ contains
       !> The function returns the relative difference between two vectors
       !> of general dimension.
       pure real(wp) function vrelg ( v1, v2, ndim )
+!! ## Abstract
+!!
+!!     Return the relative difference between two vectors of general
+!!     dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return the relative difference between two vectors of general
-!     dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1 ( * )  !! Input vectors.
@@ -26371,25 +26272,24 @@ contains
       !> Rotate a vector about a specified axis vector by a specified
       !> angle and return the rotated vector.
       pure subroutine vrotv ( v, axis, theta, r )
+!! ## Abstract
+!!
+!!     Rotate a vector about a specified axis vector by a specified
+!!     angle and return the rotated vector.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     ROTATION
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_arrays, only: moved
-
-! $ Abstract
-!
-!     Rotate a vector about a specified axis vector by a specified
-!     angle and return the rotated vector.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     ROTATION
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v    ( 3 )  !! Vector to be rotated.
@@ -26580,22 +26480,21 @@ contains
 
       !> Multiply a scalar and a double precision 3-dimensional vector.
       pure subroutine vscl ( s, v1, vout )
+!! ## Abstract
+!!
+!!     Multiply a scalar and a double precision 3-dimensional vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Multiply a scalar and a double precision 3-dimensional vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: s  !! Scalar to multiply a vector.
@@ -26765,23 +26664,22 @@ contains
       !> Multiply a scalar and a double precision vector of arbitrary
       !> dimension.
       pure subroutine vsclg ( s, v1, ndim, vout )
+!! ## Abstract
+!!
+!!     Multiply a scalar and a double precision vector of arbitrary
+!!     dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply a scalar and a double precision vector of arbitrary
-!     dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of V1 (and also VOUT).
@@ -26959,23 +26857,22 @@ contains
       !> Multiply a scalar and a 3-dimensional double precision vector,
       !> replacing the input vector with the result.
       pure subroutine vsclip ( s, v )
+!! ## Abstract
+!!
+!!     Multiply a scalar and a 3-dimensional double precision vector,
+!!     replacing the input vector with the result.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Multiply a scalar and a 3-dimensional double precision vector,
-!     replacing the input vector with the result.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: s  !! Scalar by which to multiply a vector.
@@ -27083,26 +26980,25 @@ contains
       !> The function returns the angle between V1 and V2 expressed in
       !> radians.
       pure real(wp) function vsep ( v1, v2 )
+!! ## Abstract
+!!
+!!     Find the separation angle in radians between two double
+!!     precision, 3-dimensional vectors. This angle is defined as zero
+!!     if either vector is zero.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ANGLE
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_constants, only: pi
-
-! $ Abstract
-!
-!     Find the separation angle in radians between two double
-!     precision, 3-dimensional vectors. This angle is defined as zero
-!     if either vector is zero.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ANGLE
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1 ( 3 )  !! First vector.
@@ -27368,26 +27264,25 @@ contains
       !> The function returns the angle between V1 and V2 expressed in
       !> radians.
       pure real(wp) function vsepg ( v1, v2, ndim )
+!! ## Abstract
+!!
+!!     Find the separation angle in radians between two double precision
+!!     vectors of arbitrary dimension. This angle is defined as zero if
+!!     either vector is zero.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ANGLE
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
-
-! $ Abstract
-!
-!     Find the separation angle in radians between two double precision
-!     vectors of arbitrary dimension. This angle is defined as zero if
-!     either vector is zero.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ANGLE
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1 ( * )  !! First vector.
@@ -27674,23 +27569,22 @@ contains
       !> Compute the difference between two double precision 3-dimensional
       !> vectors.
       pure subroutine vsub ( v1, v2, vout )
+!! ## Abstract
+!!
+!!     Compute the difference between two double precision 3-dimensional
+!!     vectors.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Compute the difference between two double precision 3-dimensional
-!     vectors.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1   ( 3 )  !! First vector (minuend).
@@ -27876,23 +27770,22 @@ contains
       !> Compute the difference between two double precision vectors of
       !> arbitrary dimension.
       pure subroutine vsubg ( v1, v2, ndim, vout )
+!! ## Abstract
+!!
+!!     Compute the difference between two double precision vectors of
+!!     arbitrary dimension.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Compute the difference between two double precision vectors of
-!     arbitrary dimension.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ndim  !! Dimension of V1, V2, and VOUT.
@@ -28093,24 +27986,23 @@ contains
       !> The function returns the result of multiplying the transpose of
       !> V1 by MATRIX by V2.
       pure real(wp) function vtmv ( v1, matrix, v2 )
+!! ## Abstract
+!!
+!!     Multiply the transpose of a 3-dimensional column vector,
+!!     a 3x3 matrix, and a 3-dimensional column vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply the transpose of a 3-dimensional column vector,
-!     a 3x3 matrix, and a 3-dimensional column vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v1     (   3 )  !! 3-dimensional double precision column vector.
@@ -28315,24 +28207,23 @@ contains
       !>
       !> The function returns the result of (V1**T * MATRIX * V2 ).
       pure real(wp) function vtmvg ( v1, matrix, v2, nrow, ncol )
+!! ## Abstract
+!!
+!!     Multiply the transpose of a n-dimensional column vector,
+!!     a nxm matrix, and a m-dimensional column vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Multiply the transpose of a n-dimensional column vector,
-!     a nxm matrix, and a m-dimensional column vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: nrow  !! Number of rows in MATRIX (number of rows in V1.)
@@ -28475,22 +28366,21 @@ contains
 
       !> Unpack three scalar components from a vector.
       pure subroutine vupack ( v, x, y, z )
+!! ## Abstract
+!!
+!!     Unpack three scalar components from a vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Unpack three scalar components from a vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v ( 3 )  !! Input 3-dimensional vector.
@@ -28708,23 +28598,22 @@ contains
       !> The function returns the value .TRUE. if and only if V is the
       !> zero vector.
       pure logical function vzero ( v )
+!! ## Abstract
+!!
+!!     Indicate whether a 3-vector is the zero vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Indicate whether a 3-vector is the zero vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v ( 3 )  !! Vector to be tested.
@@ -28854,23 +28743,22 @@ contains
       !> The function returns the value .TRUE. if and only if V is the
       !> zero vector.
       pure logical function vzerog ( v, ndim )
+!! ## Abstract
+!!
+!!     Indicate whether an n-dimensional vector is the zero vector.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATH
+!!     VECTOR
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Indicate whether an n-dimensional vector is the zero vector.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATH
-!     VECTOR
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: v    ( * )  !! Vector to be tested.
@@ -29148,23 +29036,22 @@ contains
       !> Determine the rotation matrix and angular velocity of the
       !> rotation from a state transformation matrix.
       pure subroutine xf2rav ( xform, rot, av )
+!! ## Abstract
+!!
+!!     Determine the rotation matrix and angular velocity of the
+!!     rotation from a state transformation matrix.
+!!
+!! ## Required Reading
+!!
+!!     ROTATION
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Determine the rotation matrix and angular velocity of the
-!     rotation from a state transformation matrix.
-!
-! $ Required_Reading
-!
-!     ROTATION
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: xform  ( 6, 6 )  !! is a state transformation matrix.
@@ -29460,22 +29347,21 @@ contains
 
       !> Transpose a 3x3 matrix.
       pure subroutine xpose ( m1, mout )
+!! ## Abstract
+!!
+!!     Transpose a 3x3 matrix.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
-
-! $ Abstract
-!
-!     Transpose a 3x3 matrix.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 matrix to be transposed.
@@ -29658,23 +29544,22 @@ contains
       !> Transpose a matrix of arbitrary size (the matrix
       !> need not be square).
       pure subroutine xposeg ( matrix, nrow, ncol, xposem )
+!! ## Abstract
+!!
+!!     Transpose a matrix of arbitrary size (the matrix
+!!     need not be square).
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Transpose a matrix of arbitrary size (the matrix
-!     need not be square).
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: matrix ( 0:* )  !! Matrix to be transposed.
@@ -29947,22 +29832,21 @@ contains
 
       !> Transpose a matrix of arbitrary size and shape in place.
       pure subroutine xpsgip ( nrow, ncol, matrix )
+!! ## Abstract
+!!
+!!     Transpose a matrix of arbitrary size and shape in place.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     MATRIX
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Transpose a matrix of arbitrary size and shape in place.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     MATRIX
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: nrow  !! Number of rows of input matrix.
@@ -30202,27 +30086,26 @@ contains
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       pure subroutine zzmsxf ( matrix, n, output )
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine multiplies together a sequence of state
+!!     transformation matrices.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine multiplies together a sequence of state
-!     transformation matrices.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE
-!
-! $ Declarations
-
       implicit none
       real(wp), intent(in) :: matrix ( 6, 6, * )  !! A sequence of state transformation matrices
       integer(ip), intent(in) :: n  !! The number of state transformation matrices
@@ -30583,27 +30466,26 @@ contains
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       pure subroutine zzrxr ( matrix, n, output )
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     This routine multiplies together a sequence of state
+!!     transformation matrices.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This routine multiplies together a sequence of state
-!     transformation matrices.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PRIVATE
-!
-! $ Declarations
-
       implicit none
       real(wp), intent(in) :: matrix ( 3, 3, * )  !! A sequence of state transformation matrices
       integer(ip), intent(in) :: n  !! The number of 3x3  matrices

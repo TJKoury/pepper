@@ -7,14 +7,14 @@
 module pepper_state_stcc01
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ektnamsz
+      use pepper_inc_ekglimit
 
    implicit none
 
    private
 
-   include 'ekcnamsz.inc'
-   include 'ektnamsz.inc'
-   include 'ekglimit.inc'
 
    public :: init_stcc01_state
 

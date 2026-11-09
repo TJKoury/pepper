@@ -740,6 +740,8 @@ module pepper_instance
    contains
       procedure, non_overridable :: instance
       procedure, non_overridable :: is_legacy
+      !> Close the context's file units when it goes away.
+      final :: ctx_final
       procedure, non_overridable :: failed => ctx_failed
       procedure, non_overridable :: sigerr => ctx_sigerr
       procedure, non_overridable :: setmsg => ctx_setmsg
@@ -2409,8 +2411,8 @@ module pepper_instance
 
       !> Insert an interval into a double precision window.
       module subroutine zzwninsd ( ctx, left, right, context, window )
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include                'errhnd.inc'
          integer(ip) lbcell
          parameter             ( lbcell = -5 )
          real(wp), intent(in) :: left  !! Left, right endpoints of new interval.
@@ -3644,8 +3646,8 @@ module pepper_instance
       !>
       !> CTRSIZ     P   Counter array size.
       module subroutine zzctruin ( ctx, oldctr )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include                'zzctr.inc'
          integer(ip), intent(out) :: oldctr ( ctrsiz )  !! Counter array to be set to initial user
                                                         !! values.
       end subroutine zzctruin
@@ -3655,8 +3657,8 @@ module pepper_instance
       !>
       !> CTRSIZ     P   Counter array size.
       module subroutine zzctrsin ( ctx, oldctr )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include                'zzctr.inc'
          integer(ip), intent(out) :: oldctr ( ctrsiz )  !! Counter array to be set to initial
                                                         !! subsystem values
       end subroutine zzctrsin
@@ -3665,8 +3667,8 @@ module pepper_instance
       !>
       !> CTRSIZ     P   Counter array size.
       module subroutine zzctrinc ( ctx, oldctr )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include                'zzctr.inc'
          integer(ip), intent(inout) :: oldctr ( ctrsiz )  !! Counter array to be incremented.
       end subroutine zzctrinc
 
@@ -3674,8 +3676,8 @@ module pepper_instance
       !>
       !> CTRSIZ     P   Counter array size.
       module subroutine zzctrchk ( ctx, newctr, oldctr, update )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include                'zzctr.inc'
          integer(ip), intent(in) :: newctr ( ctrsiz )  !! New counter value.
          integer(ip), intent(inout) :: oldctr ( ctrsiz )  !! Old counter value.
          logical, intent(out) :: update  !! Update flag.
@@ -3989,8 +3991,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzpini ( ctx, first, maxvar, maxval, maxlin, begdat, begtxt, nmpool, dppool, chpool, namlst, datlst, maxagt, mxnote, wtvars, wtptrs, wtpool, wtagnt, agents, active, notify, subctr )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          integer(ip) :: lbcell
          parameter ( lbcell = -5 )
          integer(ip) :: lbpool
@@ -4153,22 +4155,22 @@ module pepper_instance
       !>
       !> None.
       module subroutine clpool ( ctx )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
       end subroutine clpool
 
       !> Load the variables contained in a NAIF ASCII kernel file into the
       !> kernel pool.
       module subroutine ldpool ( ctx, fname )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: fname  !! Name of the text kernel file.
       end subroutine ldpool
 
       !> Return the value of a kernel variable from the kernel pool.
       module subroutine rtpool ( ctx, name, n, values, found )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
          integer(ip), intent(out) :: n  !! Number of values associated with NAME.
          real(wp), intent(out) :: values    ( * )  !! Values associated with NAME.
@@ -4178,8 +4180,8 @@ module pepper_instance
       !> Confirm the existence of a numeric kernel variable in the kernel
       !> pool.
       module subroutine expool ( ctx, name, found )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! Name of a numeric kernel variable.
          logical, intent(out) :: found  !! .TRUE. when the variable is in the pool.
       end subroutine expool
@@ -4189,8 +4191,8 @@ module pepper_instance
       !> constitute a text kernel from which the current state of the
       !> kernel pool can be restored.
       module subroutine wrpool ( ctx, unit )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          integer(ip), intent(in) :: unit  !! Logical unit to which the variables in the pool will be
                                           !! written.
       end subroutine wrpool
@@ -4198,8 +4200,8 @@ module pepper_instance
       !> Add a name to the list of agents to notify whenever a member of
       !> a list of kernel variables is updated.
       module subroutine swpool ( ctx, agent, nnames, names )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: names     ( * )  !! Variable names whose update causes the
                                                       !! notice.
          integer(ip), intent(in) :: nnames  !! The number of variables to associate with AGENT.
@@ -4209,8 +4211,8 @@ module pepper_instance
       !> Indicate whether or not any watched kernel variables that have a
       !> specified agent on their notification list have been updated.
       module subroutine cvpool ( ctx, agent, update )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: agent  !! Name of the agent to check for notices.
          logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated.
       end subroutine cvpool
@@ -4218,8 +4220,8 @@ module pepper_instance
       !> Return the character value of a kernel variable from the
       !> kernel pool.
       module subroutine gcpool ( ctx, name, start, room, n, cvals, found )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
          integer(ip), intent(out) :: n  !! Number of values returned for NAME.
          logical, intent(out) :: found  !! .TRUE. if variable is in pool.
@@ -4230,8 +4232,8 @@ module pepper_instance
 
       !> Return the d.p. value of a kernel variable from the kernel pool.
       module subroutine gdpool ( ctx, name, start, room, n, values, found )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
          integer(ip), intent(out) :: n  !! Number of values returned for NAME.
          real(wp), intent(out) :: values    ( * )  !! Values associated with NAME.
@@ -4243,8 +4245,8 @@ module pepper_instance
       !> Return the integer value of a kernel variable from the
       !> kernel pool.
       module subroutine gipool ( ctx, name, start, room, n, ivals, found )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
          integer(ip), intent(out) :: n  !! Number of values returned for NAME.
          logical, intent(out) :: found  !! .TRUE. if variable is in pool.
@@ -4255,8 +4257,8 @@ module pepper_instance
 
       !> Return the data about a kernel pool variable.
       module subroutine dtpool ( ctx, name, found, n, type )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
          integer(ip), intent(out) :: n  !! Number of values returned for NAME.
          logical, intent(out) :: found  !! .TRUE. if variable is in pool.
@@ -4266,8 +4268,8 @@ module pepper_instance
       !> Provide toolkit programmers a method for programmatically
       !> inserting character data into the kernel pool.
       module subroutine pcpool ( ctx, name, n, cvals )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! The kernel pool name to associate with CVALS.
          integer(ip), intent(in) :: n  !! The number of values to insert.
          character(*), intent(in) :: cvals     ( * )  !! An array of strings to insert into the
@@ -4277,8 +4279,8 @@ module pepper_instance
       !> Provide toolkit programmers a method for programmatically
       !> inserting double precision data into the kernel pool.
       module subroutine pdpool ( ctx, name, n, values )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! The kernel pool name to associate with VALUES.
          integer(ip), intent(in) :: n  !! The number of values to insert.
          real(wp), intent(in) :: values    ( * )  !! An array of values to insert into the kernel
@@ -4288,8 +4290,8 @@ module pepper_instance
       !> Provide toolkit programmers a method for programmatically
       !> inserting integer data into the kernel pool.
       module subroutine pipool ( ctx, name, n, ivals )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! The kernel pool name to associate with IVALS.
          integer(ip), intent(in) :: n  !! The number of values to insert.
          integer(ip), intent(in) :: ivals     ( * )  !! An array of integers to insert into the
@@ -4299,16 +4301,16 @@ module pepper_instance
       !> Load the variables contained in an internal buffer into the
       !> kernel pool.
       module subroutine lmpool ( ctx, cvals, n )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          integer(ip), intent(in) :: n  !! The number of entries in CVALS.
          character(*), intent(in) :: cvals     ( * )  !! An array that contains a SPICE text kernel
       end subroutine lmpool
 
       !> Return the kernel pool size limitations.
       module subroutine szpool ( ctx, name, n, found )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! Name of the parameter to be returned.
          integer(ip), intent(out) :: n  !! Value of parameter specified by NAME.
          logical, intent(out) :: found  !! .TRUE. if NAME is recognized.
@@ -4316,15 +4318,15 @@ module pepper_instance
 
       !> Delete a variable from the kernel pool.
       module subroutine dvpool ( ctx, name )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! Name of the variable to be deleted.
       end subroutine dvpool
 
       !> Return names of kernel variables matching a specified template.
       module subroutine gnpool ( ctx, name, start, room, n, cvals, found )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: name  !! Template that names should match.
          integer(ip), intent(out) :: n  !! Number of values returned for NAME.
          logical, intent(out) :: found  !! .TRUE. if there is at least one match.
@@ -4337,8 +4339,8 @@ module pepper_instance
       !> Delete a name from the list of agents to notify whenever a member
       !> of a list of kernel variables is updated.
       module subroutine dwpool ( ctx, agent )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: agent  !! The name of an agent to be notified after updates.
       end subroutine dwpool
 
@@ -4346,8 +4348,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzvupool ( ctx, uwvars, uwptrs, uwpool, uwagnt )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          integer(ip) :: lbcell
          parameter ( lbcell = -5 )
          character(*), intent(inout) :: uwvars    ( lbcell : * )  !! Watched kernel variable set.
@@ -4364,8 +4366,8 @@ module pepper_instance
       !>
       !> CTRSIZ     P   Dimension of the counter array
       module subroutine zzpctrck ( ctx, usrctr, update )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          logical, intent(out) :: update  !! Flag indicating if input counter was updated
          integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter tracked by the
                                                              !! caller
@@ -4386,8 +4388,8 @@ module pepper_instance
       !>
       !> NPERM      P   Number of name/ID mappings.
       module subroutine zzidmap ( ctx, bltcod, bltnam )
+      use pepper_inc_zzbodtrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzbodtrn.inc'
          integer(ip), intent(out) :: bltcod(nperm)  !! List of default integer ID codes.
          character(maxl), intent(out) :: bltnam(nperm)  !! List of default names.
       end subroutine zzidmap
@@ -4552,8 +4554,8 @@ module pepper_instance
       !> LBPOOL     P   Lower bound of hash pool arrays
       !> MAXL       P   Maximum length of body name strings
       module subroutine zzbodini ( ctx, names, nornam, codes, nvals, maxval, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
+      use pepper_inc_zzbodtrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzbodtrn.inc'
          integer(ip), parameter :: lbpool = -5
          character(maxl), intent(in) :: names  (          * )  !! Array of names
          character(maxl), intent(in) :: nornam (          * )  !! Array of normalized names
@@ -4584,8 +4586,8 @@ module pepper_instance
       !> MAXL       P   Maximum length of body name strings.
       !> NROOM      P   Maximum length of kernel pool data vectors.
       module subroutine zzbodker ( ctx, names, nornam, codes, nvals, extker, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
+      use pepper_inc_zzbodtrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzbodtrn.inc'
          integer(ip), parameter :: lbpool = -5
          character(maxl), intent(out) :: names  (          nroom )  !! Array of kernel pool assigned
                                                                     !! names.
@@ -4616,8 +4618,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzbodget ( ctx, room, names, nornam, codes, nvals )
+      use pepper_inc_zzbodtrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzbodtrn.inc'
          integer(ip), intent(in) :: room  !! Space available in NAMES, NORNAM, and CODES.
          character(*), intent(out) :: names  ( * )  !! Array of built-in body names.
          character(*), intent(out) :: nornam ( * )  !! Array of normalized built-in body names.
@@ -4629,8 +4631,8 @@ module pepper_instance
       !> some output device. Thw routine generates 2 lists: one
       !> sorted by ID number, one sorted by name.
       module subroutine zzbodlst ( ctx, device, reqst )
+      use pepper_inc_zzbodtrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzbodtrn.inc'
          character(*), intent(in) :: device  !! Device name to receive the output.
          character(*), intent(in) :: reqst  !! Data list name to output.
       end subroutine zzbodlst
@@ -4641,9 +4643,9 @@ module pepper_instance
       !>
       !> MAXL       P   Max name length.
       module subroutine zzbodn2c ( ctx, name, code, found )
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzbodtrn.inc'
-         include               'zzctr.inc'
          character(*), intent(in) :: name  !! Body name to be translated.
          integer(ip), intent(out) :: code  !! Integer code for that body.
          logical, intent(out) :: found  !! True if translated, otherwise false.
@@ -4655,9 +4657,9 @@ module pepper_instance
       !>
       !> MAXL       P   Max name length.
       module subroutine zzbodc2n ( ctx, code, name, found )
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzbodtrn.inc'
-         include               'zzctr.inc'
          character(*), intent(out) :: name  !! Common name for the body identified by CODE.
          integer(ip), intent(in) :: code  !! Integer code to be translated.
          logical, intent(out) :: found  !! True if translated, otherwise false.
@@ -4670,9 +4672,9 @@ module pepper_instance
       !> MAXL       P   Max name length and max number of digits in code.
       !> MAXP       P   Maximum number of name/code pair definitions.
       module subroutine zzboddef ( ctx, name, code )
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzbodtrn.inc'
-         include               'zzctr.inc'
          character(*), intent(in) :: name  !! Common name of some body.
          integer(ip), intent(in) :: code  !! Integer code for that body.
       end subroutine zzboddef
@@ -4683,9 +4685,9 @@ module pepper_instance
       !>
       !> None.
       module subroutine zzbodkik ( ctx )
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzbodtrn.inc'
-         include               'zzctr.inc'
       end subroutine zzbodkik
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -4694,9 +4696,9 @@ module pepper_instance
       !>
       !> None.
       module subroutine zzbodrst ( ctx )
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzbodtrn.inc'
-         include               'zzctr.inc'
       end subroutine zzbodrst
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -4705,9 +4707,9 @@ module pepper_instance
       !>
       !> CTRSIZ     P   Dimension of the counter array
       module subroutine zzbctrck ( ctx, usrctr, update )
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzbodtrn.inc'
-         include               'zzctr.inc'
          integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! ZZBODTRN state counter tracked by
                                                              !! the caller
          logical, intent(out) :: update  !! Flag indicating if input counter was updated
@@ -4780,8 +4782,8 @@ module pepper_instance
       !>
       !> CTRSIZ     P   Counter array size.
       module subroutine zzbods2c ( ctx, usrctr, savnam, savcde, savfnd, name, code, found )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! ZZBODTRN state counter saved by the
                                                              !! caller.
          character(*), intent(inout) :: savnam  !! Body name saved by the caller.
@@ -4796,8 +4798,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzbodvcd ( ctx, bodyid, item, maxn, varctr, n, values )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzctr.inc'
          integer(ip), intent(in) :: bodyid  !! Body ID code.
          character(*), intent(in) :: item  !! Item for which values are desired.
          integer(ip), intent(in) :: maxn  !! Maximum number of values that may be returned.
@@ -4806,7 +4808,7 @@ module pepper_instance
          real(wp), intent(inout) :: values ( * )  !! Array of double precision values.
       end subroutine zzbodvcd
 
-      !> Deprecated: This routine has been superseded by BODVCD and
+      !> **Deprecated:** This routine has been superseded by BODVCD and
       !> BODVRD. This routine is supported for purposes of backward
       !> compatibility only.
       module subroutine bodvar ( ctx, body, item, dim, values )
@@ -4833,8 +4835,8 @@ module pepper_instance
       !> Fetch from the kernel pool the double precision values
       !> of an item associated with a body.
       module subroutine bodvrd ( ctx, bodynm, item, maxn, dim, values )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: bodynm  !! Body name.
          character(*), intent(in) :: item  !! Item for which values are desired. ('RADII',
                                            !! 'NUT_PREC_ANGLES', etc. )
@@ -4865,15 +4867,15 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzpltchk ( ctx, ok )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          logical, intent(out) :: ok  !! Logical indicating the runtime environment is ok.
       end subroutine zzpltchk
 
       !> Retrieve the components of the FTP validation string.
       module subroutine zzftpstr ( ctx, tstcom, lend, rend, delim )
+      use pepper_inc_zzftprms
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzftprms.inc'
          character(*), intent(out) :: tstcom  !! The FTP test component string.
          character(*), intent(out) :: lend  !! String that brackets TSTCOM on the left in a file.
          character(*), intent(out) :: rend  !! String that brackets TSTCOM on the right in a file.
@@ -4883,8 +4885,8 @@ module pepper_instance
       !> Check a character string that may contain the FTP validation
       !> string for FTP based errors.
       module subroutine zzftpchk ( ctx, string, ftperr )
+      use pepper_inc_zzftprms
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzftprms.inc'
          character(*), intent(in) :: string  !! String that may contain the FTP validation string.
          logical, intent(out) :: ftperr  !! Logical indicating if FTP corruption occurred.
       end subroutine zzftpchk
@@ -4905,8 +4907,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhini ( ctx, natbff, supbff, numsup, stramh, strarc, strbff )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(out) :: natbff  !! Native binary file format.
          integer(ip), intent(out) :: supbff ( * )  !! List of supported binary file formats for
                                                    !! reading.
@@ -4920,8 +4922,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzgetbff ( ctx, bffid )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(out) :: bffid  !! Binary file format code for this system.
       end subroutine zzgetbff
 
@@ -4929,8 +4931,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhgsd ( ctx, class, id, label )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: class  !! String indicating the class of label requested.
          integer(ip), intent(in) :: id  !! Integer ID desired for the decoding.
          character(*), intent(out) :: label  !! Corresponding label for the CLASS/ID pair.
@@ -4943,8 +4945,8 @@ module pepper_instance
       !> The function returns a unique enough DP number computed
       !> using the contents of the file attached to the UNIT.
       module real(wp) function zzddhmnm ( ctx, unit )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: unit  !! Logical unit attached to a file.
       end function zzddhmnm
 
@@ -4952,9 +4954,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhppf ( ctx, unit, arch, bff )
+      use pepper_inc_zzddhman
+      use pepper_inc_zzftprms
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
-         include              'zzftprms.inc'
          integer(ip), intent(in) :: unit  !! Logical unit attached to the binary file.
          integer(ip), intent(in) :: arch  !! Integer code indicating the file architecture.
          integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
@@ -4973,8 +4975,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzxlatei ( ctx, inbff, input, space, output )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: inbff  !! Binary file format code for integers in INPUT.
          character(*), intent(in) :: input  !! String containing integers read as characters.
          integer(ip), intent(in) :: space  !! Number of integers that can be placed in OUTPUT.
@@ -4985,8 +4987,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhivf ( ctx, nsum, bff, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: nsum  !! String storing the 8 bytes of the FDREC NSUM DP.
          integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
          logical, intent(out) :: found  !! Logical indicating that BFF was determined.
@@ -4996,8 +4998,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhf2h ( ctx, fname, ftabs, ftamh, ftarc, ftbff, fthan, ftnam, ftrtm, ftmnm, nft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: fname  !! Name of the file to convert to a handle.
          integer(ip), intent(in) :: ftabs ( * )  !! File table.
          integer(ip), intent(in) :: ftamh ( * )  !! File table.
@@ -5034,8 +5036,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(inout) :: utcst  ( * )  !! Unit table.
          integer(ip), intent(inout) :: uthan  ( * )  !! Unit table.
          logical, intent(inout) :: utlck  ( * )  !! Unit table.
@@ -5048,8 +5050,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhrmu ( ctx, uindex, nft, utcst, uthan, utlck, utlun, nut )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzddhman.inc'
          integer(ip), intent(in) :: uindex  !! Row index to remove from the unit table.
          integer(ip), intent(in) :: nft  !! Number of entries in the file table.
          integer(ip), intent(inout) :: utcst ( * )  !! Unit table.
@@ -5074,8 +5076,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhnfc ( ctx, natbff )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzddhman.inc'
          integer(ip), intent(out) :: natbff  !! Native binary file format code.
       end subroutine zzddhnfc
 
@@ -5083,8 +5085,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhopn ( ctx, fname, method, arch, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: arch  !! Expected architecture of the file to load.
          character(*), intent(in) :: fname  !! Name of file to be loaded.
          character(*), intent(in) :: method  !! Access method used to load the file.
@@ -5095,8 +5097,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhcls ( ctx, handle, arch, kill )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: arch  !! Expected architecture of the handle to close.
          integer(ip), intent(in) :: handle  !! File handle associated with the file to close.
          logical, intent(in) :: kill  !! Logical indicating whether to delete the file.
@@ -5106,8 +5108,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhhlu ( ctx, handle, arch, lock, unit )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          logical, intent(in) :: lock  !! Logical indicating to lock UNIT to HANDLE.
          character(*), intent(in) :: arch  !! Expected file architecture.
          integer(ip), intent(in) :: handle  !! Handle associated with the file of interest.
@@ -5118,8 +5120,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhunl ( ctx, handle, arch )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: arch  !! Expected architecture of the handle to unlock.
          integer(ip), intent(in) :: handle  !! File handle assigned to the file to unlock.
       end subroutine zzddhunl
@@ -5128,8 +5130,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhnfo ( ctx, handle, fname, intarc, intbff, intamh, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(out) :: fname  !! Name of the file associated with HANDLE.
          integer(ip), intent(in) :: handle  !! File handle assigned to file of interest.
          integer(ip), intent(out) :: intamh  !! Integer code for FNAME's access method.
@@ -5142,8 +5144,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhisn ( ctx, handle, native, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! File handle assigned to file to determine format.
          logical, intent(out) :: native  !! Indicates if the file format is native.
          logical, intent(out) :: found  !! Indicates if HANDLE is currently attached to file.
@@ -5153,8 +5155,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhfnh ( ctx, fname, handle, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: fname  !! Name of a file previously loaded with ZZDDHOPN.
          integer(ip), intent(out) :: handle  !! Corresponding file handle.
          logical, intent(out) :: found  !! Logical indicating whether HANDLE was located.
@@ -5164,8 +5166,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzddhluh ( ctx, unit, handle, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(out) :: handle  !! Corresponding handle.
          integer(ip), intent(in) :: unit  !! Logical unit connected to a file.
          logical, intent(out) :: found  !! Logical indicating the handle was located.
@@ -5262,8 +5264,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdafgfr ( ctx, handle, idword, nd, ni, ifname, fward, bward, free, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of the DAF.
          character(*), intent(out) :: idword  !! DAF ID Word that indicates file type.
          integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
@@ -5277,8 +5279,8 @@ module pepper_instance
 
       !> Write the file record to a new DAF file.
       module subroutine zzdafnfr ( ctx, lun, idword, nd, ni, ifname, fward, bward, free, format )
+      use pepper_inc_zzftprms
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzftprms.inc'
          integer(ip), intent(in) :: lun  !! Logical unit number of an open DAF file.
          character(*), intent(in) :: idword  !! DAF ID word.
          integer(ip), intent(in) :: nd  !! Number of double precision components in a summary.
@@ -5294,8 +5296,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdafgdr ( ctx, handle, recno, dprec, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of the DAF.
          integer(ip), intent(in) :: recno  !! Record number.
          real(wp), intent(out) :: dprec  ( * )  !! Contents of the record.
@@ -5306,8 +5308,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdafgsr ( ctx, handle, recno, nd, ni, dprec, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of the DAF.
          integer(ip), intent(in) :: recno  !! Record number.
          integer(ip), intent(in) :: nd  !! Number of double precision components in a summary.
@@ -5318,24 +5320,24 @@ module pepper_instance
 
       !> Open a DAF for subsequent read requests.
       module subroutine dafopr ( ctx, fname, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: fname  !! Name of DAF to be opened.
          integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       end subroutine dafopr
 
       !> Open a DAF for subsequent write requests.
       module subroutine dafopw ( ctx, fname, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: fname  !! Name of DAF to be opened.
          integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       end subroutine dafopw
 
       !> Open a new DAF for subsequent write requests.
       module subroutine dafonw ( ctx, fname, ftype, nd, ni, ifname, resv, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: fname  !! Name of DAF to be opened.
          character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DAF file.
          integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
@@ -5345,12 +5347,12 @@ module pepper_instance
          integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       end subroutine dafonw
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine DAFONW. NAIF supports this routine only to provide
       !> backward compatibility.
       module subroutine dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: fname  !! Name of DAF to be opened.
          integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
          integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
@@ -5361,15 +5363,15 @@ module pepper_instance
 
       !> Close the DAF associated with a given handle.
       module subroutine dafcls ( ctx, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of DAF to be closed.
       end subroutine dafcls
 
       !> Return the summary format associated with a handle.
       module subroutine dafhsf ( ctx, handle, nd, ni )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
          integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
          integer(ip), intent(in) :: handle  !! Handle of a DAF file.
@@ -5377,32 +5379,32 @@ module pepper_instance
 
       !> Return the logical unit associated with a handle.
       module subroutine dafhlu ( ctx, handle, unit )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of a DAF file.
          integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       end subroutine dafhlu
 
       !> Return the handle associated with a logical unit.
       module subroutine dafluh ( ctx, unit, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(out) :: handle  !! Corresponding DAF file handle.
          integer(ip), intent(in) :: unit  !! Logical unit connected to a DAF.
       end subroutine dafluh
 
       !> Return the name of the file associated with a handle.
       module subroutine dafhfn ( ctx, handle, fname )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(out) :: fname  !! Corresponding file name.
          integer(ip), intent(in) :: handle  !! Handle of a DAF file.
       end subroutine dafhfn
 
       !> Return handle associated with a file name.
       module subroutine daffnh ( ctx, fname, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: fname  !! Name of a DAF file.
          integer(ip), intent(out) :: handle  !! Corresponding DAF file handle.
       end subroutine daffnh
@@ -5410,8 +5412,8 @@ module pepper_instance
       !> Return a SPICE set containing the handles of all currently
       !> open DAFS.
       module subroutine dafhof ( ctx, fhset )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(inout) :: fhset ( lbcell : * )  !! A set containing handles of
                                                              !! currently
@@ -5421,8 +5423,8 @@ module pepper_instance
       !> Signal an error if a DAF file handle does not designate a DAF
       !> that is open for a specified type of access.
       module subroutine dafsih ( ctx, handle, access )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! HANDLE to be validated.
          character(*), intent(in) :: access  !! String indicating access type.
       end subroutine dafsih
@@ -5492,7 +5494,7 @@ module pepper_instance
 
       !> Read a portion of the contents of a double precision record in a
       !> DAF file.
-      !> Obsolete: This routine has been superseded by DAFGDR, and it is
+      !> **Obsolete:** This routine has been superseded by DAFGDR, and it is
       !> supported for purposes of backwards compatibility only.
       module subroutine dafrdr ( ctx, handle, recno, begin, end, data, found )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5534,15 +5536,15 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzxlated ( ctx, inbff, input, space, output )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: inbff  !! Binary file format of d.p. values in INPUT.
          character(*), intent(in) :: input  !! String containing d.p. values read as characters.
          integer(ip), intent(in) :: space  !! Number of d.p. values that can be placed in OUTPUT.
          real(wp), intent(out) :: output ( * )  !! Translated d.p. values.
       end subroutine zzxlated
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routines DAFGDA and DAFGSR. This routine is supported for purposes
       !> of backward compatibility only.
       module subroutine dafrda ( ctx, handle, begin, end, data )
@@ -5657,8 +5659,8 @@ module pepper_instance
 
       !> Begin a new array in a DAF.
       module subroutine dafbna ( ctx, handle, sum, name )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of DAF.
          real(wp), intent(in) :: sum      ( * )  !! Summary of new array.
          character(*), intent(in) :: name  !! Name of new array.
@@ -5667,8 +5669,8 @@ module pepper_instance
       !> Add one or more double precision words of data to the newest
       !> array in the current DAF.
       module subroutine dafada ( ctx, data, n )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          real(wp), intent(in) :: data     ( * )  !! Elements of the new array.
          integer(ip), intent(in) :: n  !! Number of elements in DATA.
       end subroutine dafada
@@ -5677,94 +5679,94 @@ module pepper_instance
       !>
       !> None.
       module subroutine dafena ( ctx )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
       end subroutine dafena
 
       !> Select a DAF that already has a new array in progress as the
       !> one to continue adding data to.
       module subroutine dafcad ( ctx, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of DAF to continue adding data to.
       end subroutine dafcad
 
       !> Begin a forward search for arrays in a DAF.
       module subroutine dafbfs ( ctx, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of file to be searched.
       end subroutine dafbfs
 
       !> Find the next (forward) array in the current DAF.
       module subroutine daffna ( ctx, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          logical, intent(out) :: found  !! .TRUE. if an array was found.
       end subroutine daffna
 
       !> Begin a backward search for arrays in a DAF.
       module subroutine dafbbs ( ctx, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of DAF to be searched.
       end subroutine dafbbs
 
       !> Find the previous (backward) array in the current DAF.
       module subroutine daffpa ( ctx, found )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          logical, intent(out) :: found  !! .TRUE. if an array was found.
       end subroutine daffpa
 
       !> Return (get) the summary for the current array in the current
       !> DAF.
       module subroutine dafgs ( ctx, sum )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          real(wp), intent(out) :: sum    ( * )  !! Summary for current array.
       end subroutine dafgs
 
       !> Return (get) the name for the current array in the current DAF.
       module subroutine dafgn ( ctx, name )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(out) :: name  !! Name of current array.
       end subroutine dafgn
 
       !> Return (get) the handle of the DAF currently being searched.
       module subroutine dafgh ( ctx, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(out) :: handle  !! Handle for current DAF.
       end subroutine dafgh
 
       !> Change the summary for the current array in the current DAF.
       module subroutine dafrs ( ctx, sum )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          real(wp), intent(in) :: sum    ( * )  !! New summary for current array.
       end subroutine dafrs
 
       !> Replace the name for the current array in the current DAF.
       module subroutine dafrn ( ctx, name )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: name  !! New name for current array.
       end subroutine dafrn
 
       !> Write a new summary for the current array in the current DAF.
       module subroutine dafws ( ctx, sum )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          real(wp), intent(in) :: sum    ( * )  !! New summary for current array in the current DAF.
       end subroutine dafws
 
       !> Select a DAF that already has a search in progress as the
       !> one to continue searching.
       module subroutine dafcs ( ctx, handle )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! Handle of DAF to continue searching.
       end subroutine dafcs
 
@@ -5776,7 +5778,7 @@ module pepper_instance
          integer(ip), intent(in) :: xfrlun  !! Logical unit of a previously opened file.
       end subroutine dafbt
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine DAFTB. NAIF supports this routine only to provide backward
       !> compatibility.
       module subroutine dafa2b ( ctx, ascii, binary, resv )
@@ -5786,7 +5788,7 @@ module pepper_instance
          integer(ip), intent(in) :: resv  !! Number of records to reserve.
       end subroutine dafa2b
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine DAFBT. NAIF supports this routine only to provide backward
       !> compatibility.
       module subroutine dafb2a ( ctx, binary, ascii )
@@ -5795,7 +5797,7 @@ module pepper_instance
          character(*), intent(in) :: ascii  !! Name of an ASCII (text) DAF to be created.
       end subroutine dafb2a
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine DAFBT. NAIF supports this routine only to provide backward
       !> compatibility.
       module subroutine dafb2t ( ctx, binary, text )
@@ -5804,7 +5806,7 @@ module pepper_instance
          integer(ip), intent(in) :: text  !! Logical unit connected to text file.
       end subroutine dafb2t
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine DAFTB. NAIF supports this routine only to provide backward
       !> compatibility.
       !>
@@ -5888,8 +5890,8 @@ module pepper_instance
       !>
       !> NWD        P   Number of DP numbers in a single DAS DP record.
       module subroutine zzdasgrd ( ctx, handle, recno, record )
+      use pepper_inc_das
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
          integer(ip), intent(in) :: handle  !! Handle of DAS file.
          integer(ip), intent(in) :: recno  !! Record number.
          real(wp), intent(out) :: record ( nwd )  !! Double precision data read from record.
@@ -5901,8 +5903,8 @@ module pepper_instance
       !>
       !> NWI        P   Number of integers in a single DAS integer record.
       module subroutine zzdasgri ( ctx, handle, recno, record )
+      use pepper_inc_das
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
          integer(ip), intent(in) :: handle  !! Handle of DAS file.
          integer(ip), intent(in) :: recno  !! Record number.
          integer(ip), intent(out) :: record ( nwi )  !! Integer data read from record.
@@ -5910,8 +5912,8 @@ module pepper_instance
 
       !> Write the file record to a new DAS file.
       module subroutine zzdasnfr ( ctx, lun, idword, ifname, nresvr, nresvc, ncomr, ncomc, format )
+      use pepper_inc_zzftprms
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzftprms.inc'
          integer(ip), intent(in) :: lun  !! Logical unit number of an open DAS file.
          character(*), intent(in) :: idword  !! DAS File ID word.
          character(*), intent(in) :: ifname  !! DAS internal file name.
@@ -5924,8 +5926,8 @@ module pepper_instance
 
       !> Return the contents of the file record of a specified DAS file.
       module subroutine zzdasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzddhman.inc'
          integer(ip), intent(in) :: handle  !! DAS file handle.
          character(*), intent(out) :: idword  !! ID word.
          character(*), intent(out) :: ifname  !! DAS internal file name.
@@ -5937,27 +5939,27 @@ module pepper_instance
 
       !> Open a DAS file for reading.
       module subroutine dasopr ( ctx, fname, handle )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
          integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       end subroutine dasopr
 
       !> Open a DAS file for writing.
       module subroutine dasopw ( ctx, fname, handle )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
          integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       end subroutine dasopw
 
       !> Open a new DAS file and set the file type.
       module subroutine dasonw ( ctx, fname, ftype, ifname, ncomr, handle )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
          character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DAS file.
          character(*), intent(in) :: ifname  !! Internal file name.
@@ -5965,12 +5967,12 @@ module pepper_instance
          integer(ip), intent(in) :: ncomr  !! Number of comment records to allocate.
       end subroutine dasonw
 
-      !> Obsolete: This routine has been superseded by DASONW, and it is
+      !> **Obsolete:** This routine has been superseded by DASONW, and it is
       !> supported for purposes of backward compatibility only.
       module subroutine dasopn ( ctx, fname, ifname, handle )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
          character(*), intent(in) :: ifname  !! Internal file name.
          integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
@@ -5978,26 +5980,26 @@ module pepper_instance
 
       !> Open a scratch DAS file for writing.
       module subroutine dasops ( ctx, handle )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          integer(ip), intent(out) :: handle  !! Handle assigned to a scratch DAS file.
       end subroutine dasops
 
       !> Close the DAS file associated with a given handle, without
       !> flushing buffered data or segregating the file.
       module subroutine dasllc ( ctx, handle )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          integer(ip), intent(in) :: handle  !! Handle of a DAS file to be closed.
       end subroutine dasllc
 
       !> Return a file summary for a specified DAS file.
       module subroutine dashfs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          integer(ip), intent(in) :: handle  !! Handle of a DAS file.
          integer(ip), intent(out) :: free  !! Number of first free record.
          integer(ip), intent(out) :: lastla ( 3 )  !! Array of last logical addresses for each data
@@ -6014,9 +6016,9 @@ module pepper_instance
 
       !> Update the file summary in a specified DAS file.
       module subroutine dasufs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
          integer(ip), intent(in) :: free  !! Number of first free record.
          integer(ip), intent(in) :: lastla ( 3 )  !! Array of last logical addresses for each data
@@ -6035,36 +6037,36 @@ module pepper_instance
       !> is "locked" to the handle by the DAF/DAS handle manager
       !> subsystem.
       module subroutine dashlu ( ctx, handle, unit )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          integer(ip), intent(in) :: handle  !! Handle of a DAS file.
          integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       end subroutine dashlu
 
       !> Return the handle associated with a logical unit.
       module subroutine dasluh ( ctx, unit, handle )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          integer(ip), intent(out) :: handle  !! Corresponding handle.
          integer(ip), intent(in) :: unit  !! Logical unit connected to a DAS file.
       end subroutine dasluh
 
       !> Return the name of the DAS file associated with a handle.
       module subroutine dashfn ( ctx, handle, fname )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          character(*), intent(out) :: fname  !! Corresponding file name.
          integer(ip), intent(in) :: handle  !! Handle of a DAS file.
       end subroutine dashfn
 
       !> Return handle associated with a file name.
       module subroutine dasfnh ( ctx, fname, handle )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          character(*), intent(in) :: fname  !! Name of a DAS file.
          integer(ip), intent(out) :: handle  !! Corresponding handle.
       end subroutine dasfnh
@@ -6072,9 +6074,9 @@ module pepper_instance
       !> Return a SPICE set containing the handles of all currently
       !> open DAS files.
       module subroutine dashof ( ctx, fhset )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(inout) :: fhset  ( lbcell : * )  !! A set containing handles of
                                                               !! currently
@@ -6084,18 +6086,18 @@ module pepper_instance
       !> Signal an error if a DAS file file handle does not designate a
       !> DAS file that is open for a specified type of access.
       module subroutine dassih ( ctx, handle, access )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          integer(ip), intent(in) :: handle  !! HANDLE to be validated.
          character(*), intent(in) :: access  !! String indicating access type.
       end subroutine dassih
 
       !> Return the allowed access method for a specified DAS file.
       module subroutine dasham ( ctx, handle, access )
+      use pepper_inc_das
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
-         include 'errhnd.inc'
          integer(ip), intent(in) :: handle  !! HANDLE of a DAS file.
          character(*), intent(out) :: access  !! String indicating allowed access method.
       end subroutine dasham
@@ -6399,8 +6401,8 @@ module pepper_instance
       !>
       !> FTSIZE     P   Maximum number of simultaneously open DAS files.
       module subroutine dascls ( ctx, handle )
+      use pepper_inc_das
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
          integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
       end subroutine dascls
 
@@ -6461,8 +6463,8 @@ module pepper_instance
 
       !> Extract comments from the comment area of a binary DAS file.
       module subroutine dasec ( ctx, handle, bufsiz, n, buffer, done )
+      use pepper_inc_das
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'das.inc'
          integer(ip), intent(in) :: handle  !! Handle of binary DAS file open with read access.
          integer(ip), intent(in) :: bufsiz  !! Maximum size, in lines, of BUFFER.
          integer(ip), intent(out) :: n  !! Number of comments extracted from the DAS file.
@@ -6538,8 +6540,8 @@ module pepper_instance
 
       !> Determine the architecture and type of SPICE kernels.
       module subroutine getfat ( ctx, file, arch, kertyp )
+      use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzddhman.inc'
          character(*), intent(in) :: file  !! The name of a file to be examined.
          character(*), intent(out) :: arch  !! The architecture of the kernel file.
          character(*), intent(out) :: kertyp  !! The type of the kernel file.
@@ -6586,8 +6588,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzvrtplt ( ctx, nv, np, plates, cellsz, maxlst, cells, vrtptr, nlist, pltlst )
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'dsk02.inc'
          integer(ip), intent(in) :: nv  !! Number of vertices.
          integer(ip), intent(in) :: np  !! Number of plates.
          integer(ip), intent(in) :: plates ( 3, * )  !! Plate array.
@@ -6701,8 +6703,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzmkspin ( ctx, np, plates, vrtces, voxscl, cgscal, maxptr, mxcell, maxvxl, cells, nvox, voxsiz, voxori, nvxtot, nvxptr, vxptr, nvxlst, vxlist, extent, cgrptr )
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'dsk02.inc'
          integer(ip), intent(in) :: np  !! Number of plates.
          integer(ip), intent(in) :: plates ( 3, * )  !! Array of plates.
          real(wp), intent(in) :: vrtces ( 3, * )  !! Array of vertices.
@@ -6727,8 +6729,8 @@ module pepper_instance
 
       !> Open a new DLA file and set the file type.
       module subroutine dlaopn ( ctx, fname, ftype, ifname, ncomch, handle )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          character(*), intent(in) :: fname  !! Name of a DLA file to be opened.
          character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DLA file.
          character(*), intent(in) :: ifname  !! Internal file name.
@@ -6738,22 +6740,22 @@ module pepper_instance
 
       !> Begin a new segment in a DLA file.
       module subroutine dlabns ( ctx, handle )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          integer(ip), intent(in) :: handle  !! Handle of open DLA file.
       end subroutine dlabns
 
       !> End a new segment in a DLA file.
       module subroutine dlaens ( ctx, handle )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          integer(ip), intent(in) :: handle  !! Handle of open DLA file.
       end subroutine dlaens
 
       !> Begin a forward segment search in a DLA file.
       module subroutine dlabfs ( ctx, handle, dladsc, found )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          integer(ip), intent(in) :: handle  !! Handle of open DLA file.
          integer(ip), intent(out) :: dladsc  ( * )  !! Descriptor of first segment in DLA file.
          logical, intent(out) :: found  !! Flag indicating whether a segment was found.
@@ -6761,8 +6763,8 @@ module pepper_instance
 
       !> Begin a backward segment search in a DLA file.
       module subroutine dlabbs ( ctx, handle, dladsc, found )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          integer(ip), intent(in) :: handle  !! Handle of open DLA file.
          integer(ip), intent(out) :: dladsc  ( * )  !! Descriptor of last segment in DLA file.
          logical, intent(out) :: found  !! Flag indicating whether a segment was found.
@@ -6770,8 +6772,8 @@ module pepper_instance
 
       !> Find the segment following a specified segment in a DLA file.
       module subroutine dlafns ( ctx, handle, dladsc, nxtdsc, found )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          integer(ip), intent(in) :: handle  !! Handle of open DLA file.
          integer(ip), intent(in) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
          integer(ip), intent(out) :: nxtdsc ( * )  !! Descriptor of next segment in DLA file.
@@ -6780,8 +6782,8 @@ module pepper_instance
 
       !> Find the segment preceding a specified segment in a DLA file.
       module subroutine dlafps ( ctx, handle, dladsc, prvdsc, found )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          integer(ip), intent(in) :: handle  !! Handle of open DLA file.
          integer(ip), intent(in) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
          integer(ip), intent(out) :: prvdsc ( * )  !! Descriptor of previous segment in DLA file.
@@ -6795,8 +6797,8 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the DLA segments
       !> match.
       module logical function dlassg ( ctx, han1, han2, dsc1, dsc2 )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          integer(ip), intent(in) :: han1  !! Handle of an open DLA file.
          integer(ip), intent(in) :: han2  !! Handle of a second open DLA file.
          integer(ip), intent(in) :: dsc1 ( dladsz )  !! DLA descriptor of a segment in the first
@@ -6807,8 +6809,8 @@ module pepper_instance
 
       !> Open a new DSK file for subsequent write operations.
       module subroutine dskopn ( ctx, fname, ifname, ncomch, handle )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          character(*), intent(in) :: fname  !! Name of a DSK file to be opened.
          character(*), intent(in) :: ifname  !! Internal file name.
          integer(ip), intent(in) :: ncomch  !! Number of comment characters to allocate.
@@ -6817,8 +6819,8 @@ module pepper_instance
 
       !> Close a DSK file.
       module subroutine dskcls ( ctx, handle, optmiz )
+      use pepper_inc_dla
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
          integer(ip), intent(in) :: handle  !! Handle assigned to the opened DSK file.
          logical, intent(in) :: optmiz  !! Flag indicating whether to segregate the DSK.
       end subroutine dskcls
@@ -6826,16 +6828,16 @@ module pepper_instance
       !> Retrieve the value of a specified DSK tolerance or margin
       !> parameter.
       module subroutine dskgtl ( ctx, keywrd, dpval )
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
          integer(ip), intent(in) :: keywrd  !! Code specifying parameter to retrieve.
          real(wp), intent(out) :: dpval  !! Value of parameter.
       end subroutine dskgtl
 
       !> Set the value of a specified DSK tolerance or margin parameter.
       module subroutine dskstl ( ctx, keywrd, dpval )
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
          integer(ip), intent(in) :: keywrd  !! Code specifying parameter to modify.
          real(wp), intent(in) :: dpval  !! New value of parameter.
       end subroutine dskstl
@@ -6843,9 +6845,9 @@ module pepper_instance
       !> Return the DSK descriptor from a DSK segment identified
       !> by a DAS handle and DLA descriptor.
       module subroutine dskgd ( ctx, handle, dladsc, dskdsc )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: handle  !! Handle of a DSK file.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA segment descriptor.
          real(wp), intent(out) :: dskdsc ( * )  !! DSK segment descriptor.
@@ -6853,10 +6855,10 @@ module pepper_instance
 
       !> Return bookkeeping data from a DSK type 2 segment.
       module subroutine dskb02 ( ctx, handle, dladsc, nv, np, nvxtot, vtxbds, voxsiz, voxori, vgrext, cgscal, vtxnpl, voxnpt, voxnpl )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
          integer(ip), intent(in) :: handle  !! DSK file handle.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
          integer(ip), intent(out) :: nv  !! Number of vertices in model.
@@ -6874,10 +6876,10 @@ module pepper_instance
 
       !> Fetch double precision data from a type 2 DSK segment.
       module subroutine dskd02 ( ctx, handle, dladsc, item, start, room, n, values )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
          integer(ip), intent(in) :: handle  !! DSK file handle.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
          integer(ip), intent(in) :: item  !! Keyword identifying item to fetch.
@@ -6889,10 +6891,10 @@ module pepper_instance
 
       !> Fetch integer data from a type 2 DSK segment.
       module subroutine dski02 ( ctx, handle, dladsc, item, start, room, n, values )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
          integer(ip), intent(in) :: handle  !! DSK file handle.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
          integer(ip), intent(in) :: item  !! Keyword identifying item to fetch.
@@ -6905,10 +6907,10 @@ module pepper_instance
       !> Compute the unit normal vector for a specified plate from a type
       !> 2 DSK segment.
       module subroutine dskn02 ( ctx, handle, dladsc, plid, normal )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
          integer(ip), intent(in) :: handle  !! DSK file handle.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
          integer(ip), intent(in) :: plid  !! Plate ID.
@@ -6917,10 +6919,10 @@ module pepper_instance
 
       !> Fetch triangular plates from a type 2 DSK segment.
       module subroutine dskp02 ( ctx, handle, dladsc, start, room, n, plates )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
          integer(ip), intent(in) :: handle  !! DSK file handle.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
          integer(ip), intent(in) :: start  !! Start index.
@@ -6931,10 +6933,10 @@ module pepper_instance
 
       !> Fetch vertices from a type 2 DSK segment.
       module subroutine dskv02 ( ctx, handle, dladsc, start, room, n, vrtces )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
          integer(ip), intent(in) :: handle  !! DSK file handle.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
          integer(ip), intent(in) :: start  !! Start index.
@@ -6946,10 +6948,10 @@ module pepper_instance
       !> Return plate model size parameters---plate count and
       !> vertex count---for a type 2 DSK segment.
       module subroutine dskz02 ( ctx, handle, dladsc, nv, np )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
          integer(ip), intent(in) :: handle  !! DSK file handle.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
          integer(ip), intent(out) :: nv  !! Number of vertices.
@@ -6965,9 +6967,9 @@ module pepper_instance
       !> IXIFIX     P   Size of fixed-size portion of integer index
       !> component.
       module subroutine dskmi2 ( ctx, nv, vrtces, np, plates, finscl, corscl, worksz, voxpsz, voxlsz, makvtl, spxisz, work, spaixd, spaixi )
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
          integer(ip), intent(in) :: nv  !! Number of vertices.
          real(wp), intent(in) :: vrtces ( 3, * )  !! Vertices.
          integer(ip), intent(in) :: np  !! Number of plates.
@@ -6987,8 +6989,8 @@ module pepper_instance
       !> Determine range bounds for a set of triangular plates to
       !> be stored in a type 2 DSK segment.
       module subroutine dskrb2 ( ctx, nv, vrtces, np, plates, corsys, corpar, mncor3, mxcor3 )
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: nv  !! Number of vertices.
          real(wp), intent(in) :: vrtces ( 3, * )  !! Vertices.
          integer(ip), intent(in) :: np  !! Number of plates.
@@ -7002,9 +7004,9 @@ module pepper_instance
       !> Find the set of body ID codes of all objects for which
       !> topographic data are provided in a specified DSK file.
       module subroutine dskobj ( ctx, dskfnm, bodids )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: dskfnm  !! Name of DSK file.
          integer(ip), intent(inout) :: bodids ( lbcell : * )  !! Set of ID codes of objects in DSK
@@ -7014,9 +7016,9 @@ module pepper_instance
       !> Find the set of surface ID codes for all surfaces associated with
       !> a given body in a specified DSK file.
       module subroutine dsksrf ( ctx, dskfnm, bodyid, srfids )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: dskfnm  !! Name of DSK file.
          integer(ip), intent(in) :: bodyid  !! Integer body ID code.
@@ -7145,10 +7147,10 @@ module pepper_instance
       !>
       !> FTSIZE     P   Maximum number of loaded DSK files.
       module subroutine zzdsklsf ( ctx, fname, handle )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'zzctr.inc'
          character(*), intent(in) :: fname  !! Name of the DSK file to be loaded.
          integer(ip), intent(out) :: handle  !! Loaded file's handle.
       end subroutine zzdsklsf
@@ -7156,20 +7158,20 @@ module pepper_instance
       !> Unload a DSK shape file so that it will no longer be searched
       !> by the readers.
       module subroutine zzdskusf ( ctx, handle )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'zzctr.inc'
          integer(ip), intent(in) :: handle  !! Handle of DSK file to be unloaded
       end subroutine zzdskusf
 
       !> Initiate search through loaded files to find segments
       !> satisfying search criteria.
       module subroutine zzdskbss ( ctx, bodyid )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'zzctr.inc'
          integer(ip), intent(in) :: bodyid  !! ID code of body.
       end subroutine zzdskbss
 
@@ -7178,10 +7180,10 @@ module pepper_instance
       !> Buffer segment descriptors, identifiers, and handles in the
       !> process to minimize file reads.
       module subroutine zzdsksns ( ctx, cmpfun, handle, dladsc, dskdsc, found )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'zzctr.inc'
          integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
          procedure(zzdsk_compare) :: cmpfun  !! Comparison function.
          integer(ip), intent(out) :: dladsc ( * )  !! DLA descriptor of the applicable segment.
@@ -7193,10 +7195,10 @@ module pepper_instance
       !> operations have occurred since the local state counter had
       !> a particular, caller-supplied value.
       module subroutine zzdskchk ( ctx, usrctr, update )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'zzctr.inc'
          integer(ip), intent(inout) :: usrctr ( * )  !! User counter.
          logical, intent(out) :: update  !! Update flag.
       end subroutine zzdskchk
@@ -7401,8 +7403,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzcvpool ( ctx, agent, usrctr, update )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: agent  !! Name of the agent to check for notices
          integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter tracked by the caller
          logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated
@@ -7512,8 +7514,8 @@ module pepper_instance
       !>
       !> MXCOMP     P    maximum number of components allowed for TVEC.
       module subroutine ttrans ( ctx, from, to, tvec )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          integer(ip), parameter :: mxcomp = 10
          character(*), intent(in) :: from  !! description of a time vector.
          character(*), intent(in) :: to  !! description of a time vector.
@@ -7535,8 +7537,8 @@ module pepper_instance
       !> The function returns the d.p. in OUTSYS that is equivalent to the
       !> EPOCH on the INSYS time scale.
       module real(wp) function unitim ( ctx, epoch, insys, outsys )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          real(wp), intent(in) :: epoch  !! An epoch.
          character(*), intent(in) :: insys  !! The time scale associated with the input EPOCH.
          character(*), intent(in) :: outsys  !! The time scale associated with the function value.
@@ -7555,18 +7557,18 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzprscor ( ctx, abcorr, attblk )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: abcorr  !! Aberration correction string.
          logical, intent(out) :: attblk ( * )  !! Aberration correction attribute block.
-         include 'zzabcorr.inc'
       end subroutine zzprscor
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzvalcor ( ctx, abcorr, attblk )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          character(*), intent(in) :: abcorr  !! Aberration correction string.
          logical, intent(out) :: attblk ( * )  !! Aberration correction attribute block.
       end subroutine zzvalcor
@@ -7575,12 +7577,12 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzcorepc ( ctx, abcorr, et, lt, etcorr )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: abcorr  !! Aberration correction string.
          real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
          real(wp), intent(in) :: lt  !! Light time.
          real(wp), intent(out) :: etcorr  !! Light time-corrected epoch.
-         include 'zzabcorr.inc'
       end subroutine zzcorepc
 
    end interface
@@ -7596,8 +7598,8 @@ module pepper_instance
       !> NDELIM     P   Maximum number of delimiter codes.
       !> MXTSYS     P   Maximum number of supported parallel time systems.
       module subroutine scli01 ( ctx, name, sc, maxnv, n, ival )
+      use pepper_inc_sclk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'sclk.inc'
          character(*), intent(in) :: name  !! Name of kernel data item, NAIF spacecraft ID code.
          integer(ip), intent(in) :: sc  !! Name of kernel data item, NAIF spacecraft ID code.
          integer(ip), intent(in) :: maxnv  !! Maximum number of integer values to return.
@@ -7609,8 +7611,8 @@ module pepper_instance
       !>
       !> MXCOEF     P   Maximum number of coefficient sets in SCLK kernel.
       module subroutine scld01 ( ctx, name, sc, maxnv, n, dval )
+      use pepper_inc_sclk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'sclk.inc'
          character(*), intent(in) :: name  !! Name of kernel data item, NAIF spacecraft ID code.
          integer(ip), intent(in) :: sc  !! Name of kernel data item, NAIF spacecraft ID code.
          integer(ip), intent(in) :: maxnv  !! Maximum number of d.p. values to return.
@@ -7622,8 +7624,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+      use pepper_inc_zzsc01
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzsc01.inc'
          integer(ip), intent(out) :: hdsclk ( * )  !! Array of heads of hash collision lists.
          integer(ip), intent(out) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
          integer(ip), intent(out) :: clklst ( * )  !! Array of SCLK codes.
@@ -7636,9 +7638,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzscad01 ( ctx, sc, hdsclk, scpool, clklst, dpfree, dpbuff, ifree, intbuf, scbase, sclkat )
+      use pepper_inc_errhnd
+      use pepper_inc_zzsc01
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'errhnd.inc'
-         include 'zzsc01.inc'
          integer(ip), intent(in) :: sc  !! SCLK ID code.
          integer(ip), intent(inout) :: hdsclk ( * )  !! Array of heads of hash collision lists.
          integer(ip), intent(inout) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
@@ -7655,9 +7657,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzscup01 ( ctx, sc, polctr, hdsclk, scpool, clklst, dpfree, dpbuff, ifree, intbuf, scbase, prvsc, nfield, delcde, timsys, ncoeff, npart, cofbas, strbas, endbas, modbas, offbas )
+      use pepper_inc_zzsc01
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzsc01.inc'
-         include 'zzctr.inc'
          integer(ip), intent(in) :: sc  !! SCLK ID code.
          integer(ip), intent(inout) :: polctr ( ctrsiz )  !! Kernel pool update counter.
          integer(ip), intent(inout) :: hdsclk ( * )  !! Array of heads of hash collision lists.
@@ -7695,9 +7697,9 @@ module pepper_instance
       !> Convert a character representation of a type 1 spacecraft clock
       !> count to ticks.
       module subroutine sctk01 ( ctx, sc, clkstr, ticks )
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
-         include               'zzsc01.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
          character(*), intent(in) :: clkstr  !! Character representation of a clock count.
          real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock count.
@@ -7706,9 +7708,9 @@ module pepper_instance
       !> Convert a number of ticks to an equivalent type 1 spacecraft clock
       !> string.
       module subroutine scfm01 ( ctx, sc, ticks, clkstr )
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
-         include               'zzsc01.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
          character(*), intent(out) :: clkstr  !! Character string representation of the clock count.
          real(wp), intent(in) :: ticks  !! Number of ticks represented by a clock count.
@@ -7717,9 +7719,9 @@ module pepper_instance
       !> Convert encoded type 1 spacecraft clock (`ticks') to ephemeris
       !> seconds past J2000 (ET).
       module subroutine scte01 ( ctx, sc, sclkdp, et )
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
-         include               'zzsc01.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
          real(wp), intent(in) :: sclkdp  !! Type 1 SCLK, encoded as ticks since clock start.
          real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000. (PEPPER: an output; SPICELIB's table said I)
@@ -7728,9 +7730,9 @@ module pepper_instance
       !> Convert ephemeris seconds past J2000 (ET) to discrete encoded
       !> type 1 spacecraft clock (`ticks').
       module subroutine scet01 ( ctx, sc, et, sclkdp )
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
-         include               'zzsc01.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
          real(wp), intent(out) :: sclkdp  !! Type 1 SCLK, encoded as ticks since clock start.
          real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
@@ -7740,9 +7742,9 @@ module pepper_instance
       !> type 1 spacecraft clock (`ticks').  The output value need not be
       !> integral.
       module subroutine scec01 ( ctx, sc, et, sclkdp )
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
-         include               'zzsc01.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
          real(wp), intent(out) :: sclkdp  !! Type 1 SCLK, encoded as continuous ticks since clock start.
          real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
@@ -7751,18 +7753,18 @@ module pepper_instance
       !> Return the type of a specified clock. The clock need not be
       !> type 1.
       module subroutine scty01 ( ctx, sc, clktyp )
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
-         include               'zzsc01.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft clock ID code.
          integer(ip), intent(out) :: clktyp  !! NAIF spacecraft clock type.
       end subroutine scty01
 
       !> Return partition data for a specified type 1 clock.
       module subroutine scpr01 ( ctx, sc, npartn, parbeg, parend )
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
-         include               'zzsc01.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft clock ID code.
          integer(ip), intent(out) :: npartn  !! Number of partitions.
          real(wp), intent(out) :: parbeg ( * )  !! Partition begin times.
@@ -7871,8 +7873,8 @@ module pepper_instance
       !> Compute the matrix needed to rotate vectors between two
       !> standard inertial reference frames.
       module subroutine irfrot ( ctx, refa, refb, rotab )
+      use pepper_inc_ninert
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
          integer(ip), intent(in) :: refa  !! Indices of target reference frames (A,B).
          integer(ip), intent(in) :: refb  !! Indices of target reference frames (A,B).
          real(wp), intent(out) :: rotab    ( 3,3 )  !! Rotation from frame A to frame B.
@@ -7881,8 +7883,8 @@ module pepper_instance
       !> Return the index of one of the standard inertial reference
       !> frames supported by IRFROT.
       module subroutine irfnum ( ctx, name, index )
+      use pepper_inc_ninert
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
          character(*), intent(in) :: name  !! Name of standard inertial reference frame.
          integer(ip), intent(out) :: index  !! Index of frame.
       end subroutine irfnum
@@ -7890,8 +7892,8 @@ module pepper_instance
       !> Return the name of one of the standard inertial reference
       !> frames supported by IRFROT.
       module subroutine irfnam ( ctx, index, name )
+      use pepper_inc_ninert
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
          character(*), intent(out) :: name  !! Name of frame.
          integer(ip), intent(in) :: index  !! Index of standard inertial reference frame.
       end subroutine irfnam
@@ -7899,8 +7901,8 @@ module pepper_instance
       !> Specify a standard inertial reference frame as the default
       !> frame for a program.
       module subroutine irfdef ( ctx, index )
+      use pepper_inc_ninert
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
          integer(ip), intent(in) :: index  !! Index of default frame.
       end subroutine irfdef
 
@@ -8028,8 +8030,8 @@ module pepper_instance
       !> segment. Return the C-matrix and angular velocity vector
       !> associated with the time CLKOUT.
       module subroutine cke04 ( ctx, needav, record, cmat, av, clkout )
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ckparam.inc'
          logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
          real(wp), intent(in) :: record ( * )  !! Data type 4 pointing record.
          real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix.
@@ -8039,9 +8041,9 @@ module pepper_instance
 
       !> Evaluate a single data record from a type 5 CK segment.
       module subroutine cke05 ( ctx, needav, record, cmat, av, clkout )
+      use pepper_inc_ck05
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ck05.inc'
-         include 'ckparam.inc'
          logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
          real(wp), intent(inout) :: record   ( * )  !! Data type 5 record.
          real(wp), intent(out) :: cmat     ( 3, 3 )  !! C-matrix.
@@ -8087,9 +8089,9 @@ module pepper_instance
       !> Read a single CK data record from a segment of type 05
       !> (MEX/Rosetta Attitude file interpolation).
       module subroutine ckr05 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
+      use pepper_inc_ck05
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ck05.inc'
-         include 'ckparam.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
          real(wp), intent(in) :: sclkdp  !! Pointing request time.
@@ -8102,9 +8104,9 @@ module pepper_instance
       !> Read a single CK data record from a segment of type 6
       !> (ESOC/DDID Piecewise Interpolation).
       module subroutine ckr06 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
+      use pepper_inc_ckparam
+      use pepper_inc_ck06
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ckparam.inc'
-         include 'ck06.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
          real(wp), intent(in) :: sclkdp  !! Pointing request time.
@@ -8136,12 +8138,12 @@ module pepper_instance
 
       !> Obtain the value of a specified generic segment meta data item.
       module subroutine sgmeta ( ctx, handle, descr, mnemon, value )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAF open for reading.
          real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
          integer(ip), intent(in) :: mnemon  !! An integer mnemonic for the desired meta data.
          integer(ip), intent(out) :: value  !! The value of the meta data item requested.
-         include 'sgparam.inc'
       end subroutine sgmeta
 
       !> Evaluate a single SPK data record from a segment of type 1
@@ -8175,8 +8177,8 @@ module pepper_instance
       !> (equally spaced discrete states, interpolated by Lagrange
       !> polynomials).
       module subroutine spke08 ( ctx, et, record, state )
+      use pepper_inc_spkrec
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spkrec.inc'
          real(wp), intent(in) :: et  !! Target epoch.
          real(wp), intent(in) :: record ( * )  !! Data record.
          real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
@@ -8185,8 +8187,8 @@ module pepper_instance
       !> Evaluate a single SPK data record from a segment of type 9
       !> (discrete states, evaluated by Lagrange interpolation).
       module subroutine spke09 ( ctx, et, record, state )
+      use pepper_inc_spkrec
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spkrec.inc'
          real(wp), intent(in) :: et  !! Target epoch.
          real(wp), intent(inout) :: record ( * )  !! Data record.
          real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
@@ -8233,9 +8235,9 @@ module pepper_instance
       !>
       !> MAXREC     P   Maximum size of SPK record.
       module subroutine spke18 ( ctx, et, record, state )
+      use pepper_inc_spk18
+      use pepper_inc_spkrec
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk18.inc'
-         include 'spkrec.inc'
          real(wp), intent(in) :: et  !! Epoch for which a state is desired.
          real(wp), intent(inout) :: record   ( * )  !! Record from a type 18 SPK segment valid for ET. (PEPPER: its packets are transposed in place.)
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
@@ -8245,9 +8247,9 @@ module pepper_instance
       !>
       !> MAXREC     P   Maximum size of SPK record.
       module subroutine spke19 ( ctx, et, record, state )
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk19.inc'
-         include 'spkrec.inc'
          real(wp), intent(in) :: et  !! Epoch for which a state is desired.
          real(wp), intent(inout) :: record   ( * )  !! Record from a type 19 SPK segment valid for ET. (PEPPER: its packets are transposed in place.)
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
@@ -8268,8 +8270,8 @@ module pepper_instance
       !> MAXTRM     P   Maximum number of terms per difference table
       !> component.
       module subroutine spke21 ( ctx, et, record, state )
+      use pepper_inc_spk21
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk21.inc'
          real(wp), intent(in) :: et  !! Evaluation epoch.
          real(wp), intent(in) :: record   ( * )  !! Data record.
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
@@ -8360,8 +8362,8 @@ module pepper_instance
       !> Read a single SPK data record from a segment of type 18
       !> (MEX/Rosetta Orbit file interpolation).
       module subroutine spkr18 ( ctx, handle, descr, et, record )
+      use pepper_inc_spk18
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk18.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
          real(wp), intent(in) :: et  !! Target epoch.
@@ -8371,9 +8373,9 @@ module pepper_instance
       !> Read a single SPK data record from a segment of type 19
       !> (ESOC/DDID Piecewise Interpolation).
       module subroutine spkr19 ( ctx, handle, descr, et, record )
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk19.inc'
-         include 'spkrec.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
          real(wp), intent(in) :: et  !! Target epoch.
@@ -8393,8 +8395,8 @@ module pepper_instance
       !> Read a single SPK data record from a segment of type 21
       !> (Extended Difference Lines).
       module subroutine spkr21 ( ctx, handle, descr, et, record )
+      use pepper_inc_spk21
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk21.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
          real(wp), intent(in) :: et  !! Evaluation epoch.
@@ -8538,8 +8540,8 @@ module pepper_instance
       !>
       !> See Detailed_input and Detailed_Output.
       module subroutine zzdsin ( ctx, geophs, cosim, emsq, argpo, s1, s2, s3, s4, s5, sinim, ss1, ss2, ss3, ss4, ss5, sz1, sz3, sz11, sz13, sz21, sz23, sz31, sz33, t, tc, gsto, mo, mdot, no, nodeo, nodedot, xpidot, z1, z3, z11, z13, z21, z23, z31, z33, ecco, eccsq, eccm, argpm, inclm, mm, xn, nodem, irez, atime, d2201, d2211, d3210, d3222, d4410, d4422, d5220, d5232, d5421, d5433, dedt, didt, dmdt, dndt, dnodt, domdt, del1, del2, del3, xfact, xlamo, xli, xni )
+      use pepper_inc_zzsgp4
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzsgp4.inc'
          real(wp), intent(inout) :: argpm  !! Mean argument of perigee
          real(wp), intent(in) :: argpo  !! Argument of Perigee
          real(wp), intent(out) :: atime  !! Internal SGD4 parameter.
@@ -8670,8 +8672,8 @@ module pepper_instance
       !>
       !> See Detailed_input and Detailed_Output.
       module subroutine zzdspr ( ctx, opmode, e3, ee2, peo, pgho, pho, pinco, plo, se2, se3, sgh2, sgh3, sgh4, sh2, sh3, si2, si3, sl2, sl3, sl4, t, xgh2, xgh3, xgh4, xh2, xh3, xi2, xi3, xl2, xl3, xl4, zmol, zmos, inclo, doinit, eccp, inclp, nodep, argpp, mp )
+      use pepper_inc_zzsgp4
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzsgp4.inc'
          integer(ip), intent(in) :: opmode  !! Flag indicating which technique to use to calculate sidereal time.
          real(wp), intent(in) :: e3  !! Internal SGD4 parameter.
          real(wp), intent(in) :: ee2  !! Internal SGD4 parameter.
@@ -8720,8 +8722,8 @@ module pepper_instance
       !>
       !> See Detailed_input and Detailed_Output.
       module subroutine zzinil ( ctx, geophs, opmode, ecco, epoch, inclo, no, ainv, ao, con41, con42, cosio, cosio2, eccsq, omeosq, posq, rp, rteosq, sinio, gsto )
+      use pepper_inc_zzsgp4
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzsgp4.inc'
          real(wp), intent(in) :: geophs    ( 8 )
          integer(ip), intent(in) :: opmode  !! Flag indicating which technique to use to calculate sidereal time.
          real(wp), intent(in) :: ecco  !! Eccentricity.
@@ -8745,9 +8747,9 @@ module pepper_instance
 
       !> Evaluate a single data record from a type 6 CK segment.
       module subroutine cke06 ( ctx, needav, record, cmat, av, clkout )
+      use pepper_inc_ck06
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ck06.inc'
-         include 'ckparam.inc'
          logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
          real(wp), intent(inout) :: record   ( * )  !! Data type 6 record.
          real(wp), intent(out) :: cmat     ( 3, 3 )  !! C-matrix.
@@ -8759,8 +8761,8 @@ module pepper_instance
       !> the spacecraft or spacecraft clock associated with a C-Kernel ID
       !> code.
       module subroutine ckmeta ( ctx, ckid, meta, idcode )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          integer(ip), intent(in) :: ckid  !! The ID code for some C kernel object.
          character(*), intent(in) :: meta  !! The kind of meta data requested 'SPK' or 'SCLK'
          integer(ip), intent(out) :: idcode  !! The requested SCLK or spacecraft ID code.
@@ -8770,8 +8772,8 @@ module pepper_instance
       !> The segment is identified by a CK file handle and segment
       !> descriptor.
       module subroutine cknr04 ( ctx, handle, descr, nrec )
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ckparam.inc'
          integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
          real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 4 segment.
          integer(ip), intent(out) :: nrec  !! The number of pointing records in the segment.
@@ -8810,19 +8812,20 @@ module pepper_instance
       !> double precision numbers from FIRST to LAST. The segment is
       !> identified by a DAF file handle and segment descriptor.
       module subroutine sgfcon ( ctx, handle, descr, first, last, values )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAF open for reading.
          real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
          integer(ip), intent(in) :: first  !! The index of the first constant value to fetch.
          integer(ip), intent(in) :: last  !! The index of the last constant value to fetch.
          real(wp), intent(out) :: values ( * )  !! The constant values that were requested.
-         include 'sgparam.inc'
       end subroutine sgfcon
 
       !> Fetch the data packets indexed from FIRST to LAST from the
       !> packet partition of a generic segment. The segment is
       !> identified by a DAF file handle and segment descriptor.
       module subroutine sgfpkt ( ctx, handle, descr, first, last, values, ends )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! The file handle attached to an open DAF.
          real(wp), intent(in) :: descr   ( * )  !! The descriptor associated with a generic segment.
@@ -8830,13 +8833,13 @@ module pepper_instance
          integer(ip), intent(in) :: last  !! The index of the last data packet to fetch.
          real(wp), intent(out) :: values  ( * )  !! The data packets that have been fetched.
          integer(ip), intent(out) :: ends    ( * )  !! An array of pointers to the ends of the packets.
-         include 'sgparam.inc'
       end subroutine sgfpkt
 
       !> Find the reference value associated with the value X and its
       !> index in a generic segment. The segment is identified by a DAF
       !> file handle and segment descriptor.
       module subroutine sgfrvi ( ctx, handle, descr, x, value, indx, found )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! The handle of a DAF open for reading.
          real(wp), intent(in) :: descr ( * )  !! The descriptor for a DAF generic segment.
@@ -8844,7 +8847,6 @@ module pepper_instance
          real(wp), intent(out) :: value  !! The reference value associated with X.
          integer(ip), intent(out) :: indx  !! The index of VALUE within the reference values.
          logical, intent(out) :: found  !! A flag indicating whether values for X were found.
-         include 'sgparam.inc'
       end subroutine sgfrvi
 
       !> Read a single data record from a type 12 SPK segment.
@@ -8867,8 +8869,8 @@ module pepper_instance
 
       !> Read a single data record from a type 4 CK segment.
       module subroutine ckr04 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ckparam.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          real(wp), intent(in) :: descr  ( * )  !! Segment descriptor.
          real(wp), intent(in) :: sclkdp  !! Pointing request time.
@@ -8918,8 +8920,8 @@ module pepper_instance
       !> Read a single SPK data record from a segment of type 10
       !> (NORAD two line element sets).
       module subroutine spkr10 ( ctx, handle, descr, et, record )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'sgparam.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
          real(wp), intent(in) :: et  !! Target epoch.
@@ -8937,8 +8939,8 @@ module pepper_instance
 
       !> Evaluate pointing data from a segment for a given time.
       module subroutine ckpfs ( ctx, handle, descr, sclkdp, tol, needav, cmat, av, clkout, found )
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ckparam.inc'
          integer(ip), intent(in) :: handle  !! CK file handle.
          real(wp), intent(in) :: descr  ( *    )  !! Segment descriptor.
          real(wp), intent(in) :: sclkdp  !! Spacecraft clock time.
@@ -8964,8 +8966,8 @@ module pepper_instance
 
       !> This subroutine initializes variables for SGP4.
       module subroutine xxsgp4i ( ctx, geophs, elems, opmode )
+      use pepper_inc_zzsgp4
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzsgp4.inc'
          real(wp), intent(in) :: geophs    ( 8 )  !! Geophysical constants.
          real(wp), intent(in) :: elems     ( 10 )  !! Two-line element data.
          integer(ip), intent(in) :: opmode  !! Flag to indicate operation mode for GMST.
@@ -8978,8 +8980,8 @@ module pepper_instance
       !> Vallado paper [4] describing the history and development of
       !> the code.
       module subroutine xxsgp4e ( ctx, t, state )
+      use pepper_inc_zzsgp4
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzsgp4.inc'
          real(wp), intent(in) :: t  !! Time to evaluate state in minutes from epoch.
          real(wp), intent(out) :: state     ( 6 )  !! Evaluated state.
       end subroutine xxsgp4e
@@ -8996,9 +8998,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynbid ( ctx, frname, frcode, item, idcode )
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzbodtrn.inc'
-         include 'zzdyn.inc'
          character(*), intent(in) :: frname  !! Frame name.
          integer(ip), intent(in) :: frcode  !! Frame ID code.
          character(*), intent(in) :: item  !! Item associated with frame definition.
@@ -9009,8 +9011,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynvai ( ctx, frname, frcode, item, maxn, n, values )
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzdyn.inc'
          character(*), intent(in) :: frname  !! Frame name.
          integer(ip), intent(in) :: frcode  !! Frame ID code.
          character(*), intent(in) :: item  !! Item associated with frame definition.
@@ -9023,8 +9025,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynoac ( ctx, frname, frcode, item, maxn, n, values, found )
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzdyn.inc'
          character(*), intent(in) :: frname  !! Frame name.
          integer(ip), intent(in) :: frcode  !! Frame ID code.
          character(*), intent(in) :: item  !! Item associated with frame definition.
@@ -9038,9 +9040,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynoad ( ctx, frname, frcode, item, maxn, n, values, found )
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzbodtrn.inc'
-         include 'zzdyn.inc'
          character(*), intent(in) :: frname  !! Frame name.
          integer(ip), intent(in) :: frcode  !! Frame ID code.
          character(*), intent(in) :: item  !! Item associated with frame definition.
@@ -9054,8 +9056,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynvac ( ctx, frname, frcode, item, maxn, n, values )
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzdyn.inc'
          character(*), intent(in) :: frname  !! Frame name.
          integer(ip), intent(in) :: frcode  !! Frame ID code.
          character(*), intent(in) :: item  !! Item associated with frame definition.
@@ -9068,8 +9070,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynvad ( ctx, frname, frcode, item, maxn, n, values )
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzdyn.inc'
          character(*), intent(in) :: frname  !! Frame name.
          integer(ip), intent(in) :: frcode  !! Frame ID code.
          character(*), intent(in) :: item  !! Item associated with frame definition.
@@ -9084,8 +9086,8 @@ module pepper_instance
       !>
       !> LBSNGL     P   Lower bound of singly linked list pool.
       module subroutine zzswfcln ( ctx, hdfram, frpool, basbeg, framat )
+      use pepper_inc_zzswtchf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzswtchf.inc'
          integer(ip), intent(out) :: hdfram ( * )  !! Array of hash collision list head nodes.
          integer(ip), intent(out) :: frpool ( lbsngl : * )  !! Hash collision list pool.
          integer(ip), intent(out) :: basbeg ( * )  !! Start indices of base lists of switch frames.
@@ -9098,8 +9100,8 @@ module pepper_instance
       !>
       !> LBSNGL     P   Lower bound of singly linked list pool.
       module subroutine zzswfini ( ctx, hdfram, frpool, fidlst, basbeg, free, prvat, prvfrm, samfrm )
+      use pepper_inc_zzswtchf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzswtchf.inc'
          integer(ip), intent(out) :: hdfram ( * )  !! Array of hash collision list head nodes.
          integer(ip), intent(out) :: frpool ( lbsngl : * )  !! Hash collision list pool.
          integer(ip), intent(out) :: fidlst ( * )  !! Frame IDs corresponding to list nodes.
@@ -9122,10 +9124,10 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzfdat ( ctx, ncount, maxbfr, name, idcode, center, type, typid, centrd, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
+      use pepper_inc_frmtyp
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'frmtyp.inc'
-         include              'ninert.inc'
-         include              'nninrt.inc'
          integer(ip), parameter :: lbpool = -5
          integer(ip), intent(in) :: ncount  !! Input checking variable.
          integer(ip), intent(in) :: maxbfr  !! build-in frame hash size.
@@ -9147,11 +9149,11 @@ module pepper_instance
 
       !> Look up the frame ID code associated with a string.
       module subroutine namfrm ( ctx, frname, frcode )
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
-         include              'nninrt.inc'
-         include              'frmtyp.inc'
-         include              'zzctr.inc'
          character(*), intent(in) :: frname  !! The name of some reference frame
          integer(ip), intent(out) :: frcode  !! The SPICE ID code of the frame.
       end subroutine namfrm
@@ -9159,11 +9161,11 @@ module pepper_instance
       !> Retrieve the name of a reference frame associated with a SPICE ID
       !> code.
       module subroutine frmnam ( ctx, frcode, frname )
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
-         include              'nninrt.inc'
-         include              'frmtyp.inc'
-         include              'zzctr.inc'
          character(*), intent(out) :: frname  !! the name associated with the reference frame.
          integer(ip), intent(in) :: frcode  !! an integer code for a reference frame
       end subroutine frmnam
@@ -9171,11 +9173,11 @@ module pepper_instance
       !> Retrieve the minimal attributes associated with a frame
       !> needed for converting transformations to and from it.
       module subroutine frinfo ( ctx, frcode, cent, frclss, clssid, found )
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
-         include              'nninrt.inc'
-         include              'frmtyp.inc'
-         include              'zzctr.inc'
          integer(ip), intent(in) :: frcode  !! the ID code for some frame
          integer(ip), intent(out) :: cent  !! the center of the frame
          integer(ip), intent(out) :: frclss  !! the class (type) of the frame
@@ -9185,11 +9187,11 @@ module pepper_instance
 
       !> Retrieve frame ID code and name to associate with a frame center.
       module subroutine cidfrm ( ctx, cent, frcode, frname, found )
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
-         include              'nninrt.inc'
-         include              'frmtyp.inc'
-         include              'zzctr.inc'
          character(*), intent(out) :: frname  !! the name of the frame with ID FRCODE
          integer(ip), intent(out) :: frcode  !! the ID code of the frame associated with CENT
          integer(ip), intent(in) :: cent  !! an object to associate a frame with.
@@ -9198,11 +9200,11 @@ module pepper_instance
 
       !> Retrieve frame ID code and name to associate with an object.
       module subroutine cnmfrm ( ctx, cname, frcode, frname, found )
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
-         include              'nninrt.inc'
-         include              'frmtyp.inc'
-         include              'zzctr.inc'
          character(*), intent(in) :: cname  !! name of the object to find a frame for
          character(*), intent(out) :: frname  !! the name of the frame with ID FRCODE
          integer(ip), intent(out) :: frcode  !! the ID code of the frame associated with CNAME
@@ -9212,11 +9214,11 @@ module pepper_instance
       !> Return the frame name, frame ID, and center associated with
       !> a given frame class and class ID.
       module subroutine ccifrm ( ctx, frclss, clssid, frcode, frname, cent, found )
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ninert.inc'
-         include              'nninrt.inc'
-         include              'frmtyp.inc'
-         include              'zzctr.inc'
          character(*), intent(out) :: frname  !! Name of the frame identified by FRCLSS, CLSSID.
          integer(ip), intent(out) :: frcode  !! ID code of the frame identified by FRCLSS, CLSSID.
          integer(ip), intent(out) :: cent  !! Center of the frame identified by FRCLSS, CLSSID.
@@ -9237,8 +9239,8 @@ module pepper_instance
       !> The function returns the spacecraft clock type associated with
       !> the spacecraft specified by SC.
       module integer(ip) function sctype ( ctx, sc )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
       end function sctype
 
@@ -9246,10 +9248,10 @@ module pepper_instance
       !> coordinates to states in body-equator-and-prime-meridian
       !> coordinates.
       module subroutine tisbod ( ctx, ref, body, et, tsipm )
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'errhnd.inc'
-         include               'frmtyp.inc'
-         include               'zzctr.inc'
          character(*), intent(in) :: ref  !! ID of inertial reference frame to transform from
          integer(ip), intent(in) :: body  !! ID code of body
          real(wp), intent(in) :: et  !! Epoch of transformation
@@ -9270,8 +9272,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynfid ( ctx, frname, frcode, item, idcode )
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzdyn.inc'
          character(*), intent(in) :: frname  !! Frame name.
          integer(ip), intent(in) :: frcode  !! Frame ID code.
          character(*), intent(in) :: item  !! Item associated with frame definition.
@@ -9284,8 +9286,8 @@ module pepper_instance
       !>
       !> CTRSIZ     P   Counter array size.
       module subroutine zznamfrm ( ctx, usrctr, savnam, savcde, frname, frcode )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter saved by the caller.
          character(*), intent(inout) :: savnam  !! Frame name saved by the caller.
          integer(ip), intent(inout) :: savcde  !! Frame ID code saved by the caller.
@@ -9297,8 +9299,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zznofcon ( ctx, et, frame1, endp1, frame2, endp2, errmsg )
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'frmtyp.inc'
          real(wp), intent(in) :: et  !! Epoch.
          integer(ip), intent(in) :: frame1  !! "From" frame ID code.
          integer(ip), intent(in) :: endp1  !! "From" path endpoint frame ID code.
@@ -9311,8 +9313,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzswffet ( ctx, framid, hdfram, frpool, fidlst, basbeg, free, bascnt, usetim, binary, clsses, clsids, baslst, starts, stops, framat )
+      use pepper_inc_zzswtchf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzswtchf.inc'
          integer(ip), intent(in) :: framid  !! The frame ID of a switch frame.
          integer(ip), intent(inout) :: hdfram ( * )  !! Array of hash collision list head nodes.
          integer(ip), intent(inout) :: frpool ( lbsngl : * )  !! Hash collision list pool.
@@ -9352,8 +9354,8 @@ module pepper_instance
       !> (NORAD two-line element sets.). This evaluator uses algorithms
       !> as described in Vallado 2006 [4].
       module subroutine spke10 ( ctx, et, record, state )
+      use pepper_inc_zzsgp4
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzsgp4.inc'
          real(wp), intent(in) :: et  !! Target epoch.
          real(wp), intent(in) :: record   ( * )  !! Data record.
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
@@ -9402,8 +9404,8 @@ module pepper_instance
       !>
       !> MAXREC     P   Maximum length of records returned by SPKRnn.
       module subroutine spkpvn ( ctx, handle, descr, et, ref, state, center )
+      use pepper_inc_spkrec
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spkrec.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
          real(wp), intent(in) :: et  !! Target epoch.
@@ -9416,10 +9418,10 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzswfxfm ( ctx, infrm, et, ndim, xform, outfrm, found )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzswtchf
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'frmtyp.inc'
-         include              'zzswtchf.inc'
-         include              'zzctr.inc'
          integer(ip), intent(in) :: infrm  !! Frame ID code of switch frame.
          real(wp), intent(in) :: et  !! Time, expressed as seconds past J2000 TDB.
          integer(ip), intent(in) :: ndim  !! Dimension: 3 or 6.
@@ -9442,8 +9444,8 @@ module pepper_instance
       !> Find the transformation from a user specified frame to
       !> another frame at a user specified epoch.
       module subroutine zzfrmgt1 ( ctx, infrm, et, xform, outfrm, found )
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
          real(wp), intent(out) :: xform ( 6, 6 )  !! A state transformation matrix.
@@ -9454,8 +9456,8 @@ module pepper_instance
       !> Find the rotation from a user specified frame to another frame at
       !> a user specified epoch.
       module subroutine zzrotgt1 ( ctx, infrm, et, rotate, outfrm, found )
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
          real(wp), intent(out) :: rotate ( 3, 3 )  !! A rotation matrix.
@@ -9466,9 +9468,9 @@ module pepper_instance
       !> Return the state transformation matrix from one
       !> frame to another.
       module subroutine zzfrmch1 ( ctx, frame1, frame2, et, xform )
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'errhnd.inc'
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
          integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
          real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
@@ -9478,9 +9480,9 @@ module pepper_instance
       !> Return the transformation matrix from one
       !> frame to another.
       module subroutine zzrefch1 ( ctx, frame1, frame2, et, rotate )
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'errhnd.inc'
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
          integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
          real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
@@ -9491,9 +9493,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkgo1 ( ctx, targ, et, ref, obs, state, lt )
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ninert.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Target epoch.
          character(*), intent(in) :: ref  !! Target reference frame.
@@ -9506,9 +9508,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkgp1 ( ctx, targ, et, ref, obs, pos, lt )
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ninert.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Target epoch.
          character(*), intent(in) :: ref  !! Target reference frame.
@@ -9521,8 +9523,8 @@ module pepper_instance
       !> relative to an observer, optionally corrected for light time,
       !> expressed relative to an inertial reference frame.
       module subroutine zzspklt1 ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -9563,8 +9565,8 @@ module pepper_instance
       !> for light time and stellar aberration. All input and output
       !> vectors are expressed relative to an inertial reference frame.
       module subroutine zzspkas1 ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -9580,9 +9582,9 @@ module pepper_instance
       !> body, optionally corrected for light time (planetary aberration)
       !> and stellar aberration.
       module subroutine zzspkzp1 ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'frmtyp.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body NAIF ID code.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output position vector.
@@ -9597,8 +9599,8 @@ module pepper_instance
       !> and stellar aberration, expressed relative to an inertial
       !> reference frame.
       module subroutine zzspkac1 ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -9613,10 +9615,10 @@ module pepper_instance
       !> relative to an observing body, optionally corrected for light
       !> time (planetary aberration) and stellar aberration.
       module subroutine zzspkez1 ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'frmtyp.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output state vector.
@@ -9630,10 +9632,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynfr0 ( ctx, infram, center, et, xform, basfrm )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'frmtyp.inc'
-         include 'zzabcorr.inc'
-         include 'zzdyn.inc'
          integer(ip), intent(in) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
          integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
@@ -9644,8 +9646,8 @@ module pepper_instance
       !> Find the transformation from a user specified frame to
       !> another frame at a user specified epoch.
       module subroutine zzfrmgt0 ( ctx, infrm, et, xform, outfrm, found )
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
          real(wp), intent(out) :: xform ( 6, 6 )  !! A state transformation matrix.
@@ -9656,9 +9658,9 @@ module pepper_instance
       !> Return the state transformation matrix from one
       !> frame to another.
       module subroutine zzfrmch0 ( ctx, frame1, frame2, et, xform )
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'errhnd.inc'
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
          integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
          real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
@@ -9669,9 +9671,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkgo0 ( ctx, targ, et, ref, obs, state, lt )
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ninert.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Target epoch.
          character(*), intent(in) :: ref  !! Target reference frame.
@@ -9684,8 +9686,8 @@ module pepper_instance
       !> relative to an observer, optionally corrected for light time,
       !> expressed relative to an inertial reference frame.
       module subroutine zzspklt0 ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -9713,8 +9715,8 @@ module pepper_instance
       !> for light time and stellar aberration. All input and output
       !> vectors are expressed relative to an inertial reference frame.
       module subroutine zzspkas0 ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -9731,8 +9733,8 @@ module pepper_instance
       !> and stellar aberration, expressed relative to an inertial
       !> reference frame.
       module subroutine zzspkac0 ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -9747,10 +9749,10 @@ module pepper_instance
       !> relative to an observing body, optionally corrected for light
       !> time (planetary aberration) and stellar aberration.
       module subroutine zzspkez0 ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'frmtyp.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output state vector.
@@ -9764,10 +9766,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynrt0 ( ctx, infram, center, et, rotate, basfrm )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'frmtyp.inc'
-         include 'zzabcorr.inc'
-         include 'zzdyn.inc'
          integer(ip), intent(in) :: infram  !! Class ID code for a SPICE dynamic reference frame.
          integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
@@ -9778,8 +9780,8 @@ module pepper_instance
       !> Find the rotation from a user specified frame to another frame at
       !> a user specified epoch.
       module subroutine zzrotgt0 ( ctx, infrm, et, rotate, outfrm, found )
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
          real(wp), intent(out) :: rotate ( 3, 3 )  !! A rotation matrix.
@@ -9790,9 +9792,9 @@ module pepper_instance
       !> Return the transformation matrix from one
       !> frame to another.
       module subroutine zzrefch0 ( ctx, frame1, frame2, et, rotate )
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'errhnd.inc'
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
          integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
          real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
@@ -9803,9 +9805,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkgp0 ( ctx, targ, et, ref, obs, pos, lt )
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ninert.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Target epoch.
          character(*), intent(in) :: ref  !! Target reference frame.
@@ -9831,9 +9833,9 @@ module pepper_instance
       !> body, optionally corrected for light time (planetary aberration)
       !> and stellar aberration.
       module subroutine zzspkzp0 ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'frmtyp.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body NAIF ID code.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output position vector.
@@ -9847,10 +9849,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynfrm ( ctx, infram, center, et, xform, basfrm )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'frmtyp.inc'
-         include 'zzabcorr.inc'
-         include 'zzdyn.inc'
          integer(ip), intent(in) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
          integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
@@ -9862,10 +9864,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzdynrot ( ctx, infram, center, et, rotate, basfrm )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'frmtyp.inc'
-         include 'zzabcorr.inc'
-         include 'zzdyn.inc'
          integer(ip), intent(in) :: infram  !! Class ID code for a SPICE dynamic reference frame.
          integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
@@ -9881,8 +9883,8 @@ module pepper_instance
       !> Find the transformation from a user specified frame to
       !> another frame at a user specified epoch.
       module subroutine frmget ( ctx, infrm, et, xform, outfrm, found )
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
          real(wp), intent(out) :: xform ( 6, 6 )  !! A state transformation matrix.
@@ -9893,8 +9895,8 @@ module pepper_instance
       !> Find the rotation from a user specified frame to another frame at
       !> a user specified epoch.
       module subroutine rotget ( ctx, infrm, et, rotate, outfrm, found )
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
          real(wp), intent(out) :: rotate ( 3, 3 )  !! A rotation matrix.
@@ -9905,9 +9907,9 @@ module pepper_instance
       !> Return the state transformation matrix from one
       !> frame to another.
       module subroutine frmchg ( ctx, frame1, frame2, et, xform )
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'errhnd.inc'
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
          integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
          real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
@@ -9917,9 +9919,9 @@ module pepper_instance
       !> Return the transformation matrix from one
       !> frame to another.
       module subroutine refchg ( ctx, frame1, frame2, et, rotate )
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'errhnd.inc'
-         include              'frmtyp.inc'
          integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
          integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
          real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
@@ -9929,8 +9931,8 @@ module pepper_instance
       !> Return the matrix that transforms position vectors from one
       !> specified frame to another at a specified epoch.
       module subroutine pxform ( ctx, from, to, et, rotate )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: from  !! Name of the frame to transform from.
          character(*), intent(in) :: to  !! Name of the frame to transform to.
          real(wp), intent(in) :: et  !! Epoch of the rotation matrix.
@@ -9940,8 +9942,8 @@ module pepper_instance
       !> Return the state transformation matrix from one frame to
       !> another at a specified epoch.
       module subroutine sxform ( ctx, from, to, et, xform )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: from  !! Name of the frame to transform from.
          character(*), intent(in) :: to  !! Name of the frame to transform to.
          real(wp), intent(in) :: et  !! Epoch of the state transformation matrix.
@@ -10055,9 +10057,9 @@ module pepper_instance
       !>
       !> MXPART     P   Maximum number of partitions.
       module subroutine scpart ( ctx, sc, nparts, pstart, pstop )
+      use pepper_inc_sclk
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'sclk.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
          integer(ip), intent(out) :: nparts  !! The number of spacecraft clock partitions.
          real(wp), intent(out) :: pstart  ( * )  !! Array of partition start times.
@@ -10086,8 +10088,8 @@ module pepper_instance
       !>
       !> MXPART     P   Maximum number of spacecraft clock partitions.
       module subroutine scdecd ( ctx, sc, sclkdp, sclkch )
+      use pepper_inc_sclk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'sclk.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
          real(wp), intent(in) :: sclkdp  !! Encoded representation of a spacecraft clock count.
          character(*), intent(out) :: sclkch  !! Character representation of a clock count.
@@ -10098,8 +10100,8 @@ module pepper_instance
       !>
       !> MXPART     P   Maximum number of spacecraft clock partitions.
       module subroutine scencd ( ctx, sc, sclkch, sclkdp )
+      use pepper_inc_sclk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'sclk.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
          character(*), intent(in) :: sclkch  !! Character representation of a spacecraft clock.
          real(wp), intent(out) :: sclkdp  !! Encoded representation of the clock count.
@@ -10141,9 +10143,9 @@ module pepper_instance
 
       !> Get pointing (attitude) for a specified spacecraft clock time.
       module subroutine ckgp ( ctx, inst, sclkdp, tol, ref, cmat, clkout, found )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'frmtyp.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
          real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
          real(wp), intent(in) :: tol  !! Time tolerance.
@@ -10156,9 +10158,9 @@ module pepper_instance
       !> Get pointing (attitude) and angular velocity for a specified
       !> spacecraft clock time.
       module subroutine ckgpav ( ctx, inst, sclkdp, tol, ref, cmat, av, clkout, found )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'frmtyp.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
          real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
          real(wp), intent(in) :: tol  !! Time tolerance.
@@ -10220,8 +10222,8 @@ module pepper_instance
       !>
       !> CK4RSZ     P   C-kernel Type 04 Maximum Record Size
       module subroutine zzckcv04 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ckparam.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
          integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
@@ -10236,8 +10238,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzckcv05 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
+      use pepper_inc_ck05
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ck05.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
          integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
@@ -10253,8 +10255,8 @@ module pepper_instance
       !> routines.Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzckcv06 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
+      use pepper_inc_ck06
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'ck06.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access.
          integer(ip), intent(in) :: arrbeg  !! Beginning DAF address.
@@ -10345,10 +10347,10 @@ module pepper_instance
       !> MAXVOX     P   Maximum DSK type 2 voxel count.
       !> MAXVRT     P   Maximum DSK type 2 vertex count.
       module subroutine dskw02 ( ctx, handle, center, surfid, dclass, frame, corsys, corpar, mncor1, mxcor1, mncor2, mxcor2, mncor3, mxcor3, first, last, nv, vrtces, np, plates, spaixd, spaixi )
+      use pepper_inc_dskdsc
+      use pepper_inc_dsktol
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'dskdsc.inc'
-         include  'dsktol.inc'
-         include  'dsk02.inc'
          integer(ip), intent(in) :: handle  !! Handle assigned to the opened DSK file.
          integer(ip), intent(in) :: center  !! Central body ID code.
          integer(ip), intent(in) :: surfid  !! Surface ID code.
@@ -10385,18 +10387,19 @@ module pepper_instance
       !> segment is identified by a DAF file handle and segment
       !> descriptor.
       module subroutine sgfref ( ctx, handle, descr, first, last, values )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAF open for reading.
          real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
          integer(ip), intent(in) :: first  !! The index of the first reference value to fetch.
          integer(ip), intent(in) :: last  !! The index of the last reference value to fetch.
          real(wp), intent(out) :: values ( * )  !! The reference values that were requested.
-         include 'sgparam.inc'
       end subroutine sgfref
 
       !> Begin writing a generic segment that will contain fixed size data
       !> packets.
       module subroutine sgbwfs ( ctx, handle, descr, segid, nconst, const, pktsiz, idxtyp )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
          real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment.
@@ -10405,12 +10408,12 @@ module pepper_instance
          real(wp), intent(in) :: const  ( * )  !! Array of constant values for a generic segment.
          integer(ip), intent(in) :: pktsiz ( * )  !! Size of the data packets.
          integer(ip), intent(in) :: idxtyp  !! Index type for the reference values.
-         include 'sgparam.inc'
       end subroutine sgbwfs
 
       !> Begin writing a generic segment that will contain variable size
       !> data packets.
       module subroutine sgbwvs ( ctx, handle, descr, segid, nconst, const, idxtyp )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
          real(wp), intent(in) :: descr  ( * )  !! Descriptor for a segment.
@@ -10418,25 +10421,25 @@ module pepper_instance
          integer(ip), intent(in) :: nconst  !! Number of constant values in a segment.
          real(wp), intent(in) :: const  ( * )  !! Array of constant values for a segment.
          integer(ip), intent(in) :: idxtyp  !! Index type for the reference values.
-         include 'sgparam.inc'
       end subroutine sgbwvs
 
       !> Write one or more fixed size data packets to the generic segment
       !> currently being written to the DAF file associated with HANDLE.
       module subroutine sgwfpk ( ctx, handle, npkts, pktdat, nrefs, refdat )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
          integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
          real(wp), intent(in) :: pktdat ( * )  !! Array of packet data.
          integer(ip), intent(in) :: nrefs  !! Number of reference values.
          real(wp), intent(in) :: refdat ( * )  !! Reference data.
-         include 'sgparam.inc'
       end subroutine sgwfpk
 
       !> Write one or more variable size data packets to the generic
       !> segment currently being written to the DAF file associated with
       !> HANDLE.
       module subroutine sgwvpk ( ctx, handle, npkts, pktsiz, pktdat, nrefs, refdat )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
          integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
@@ -10444,14 +10447,13 @@ module pepper_instance
          real(wp), intent(in) :: pktdat ( * )  !! Array of packet data.
          integer(ip), intent(in) :: nrefs  !! Number of reference values.
          real(wp), intent(in) :: refdat ( * )  !! Reference data.
-         include 'sgparam.inc'
       end subroutine sgwvpk
 
       !> End the generic segment in the DAF file associated with HANDLE.
       module subroutine sgwes ( ctx, handle )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
-         include 'sgparam.inc'
       end subroutine sgwes
 
       !> Find the coverage window for a specified ephemeris object in a
@@ -10467,9 +10469,9 @@ module pepper_instance
       !> Compute the geometric state (position and velocity) of a target
       !> body relative to an observing body.
       module subroutine spkgeo ( ctx, targ, et, ref, obs, state, lt )
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ninert.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Target epoch.
          character(*), intent(in) :: ref  !! Target reference frame.
@@ -10481,9 +10483,9 @@ module pepper_instance
       !> Compute the geometric position of a target body relative to an
       !> observing body.
       module subroutine spkgps ( ctx, targ, et, ref, obs, pos, lt )
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ninert.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Target epoch.
          character(*), intent(in) :: ref  !! Target reference frame.
@@ -10604,8 +10606,8 @@ module pepper_instance
       !> Extract a subset of the data in an SPK segment of type 18
       !> into a new segment.
       module subroutine spks18 ( ctx, handle, baddr, eaddr, begin, end )
+      use pepper_inc_spk18
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk18.inc'
          integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
          integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
          integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
@@ -10616,8 +10618,8 @@ module pepper_instance
       !> Extract a subset of the data in an SPK segment of type 19
       !> into a new segment.
       module subroutine spks19 ( ctx, handle, baddr, eaddr, begin, end )
+      use pepper_inc_spk19
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk19.inc'
          integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
          integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
          integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
@@ -10639,8 +10641,8 @@ module pepper_instance
       !> Extract a subset of the data in a SPK segment of type 21
       !> into a new segment.
       module subroutine spks21 ( ctx, handle, baddr, eaddr, begin, end )
+      use pepper_inc_spk21
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk21.inc'
          integer(ip), intent(in) :: handle  !! Handle of source segment.
          integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
          integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
@@ -10706,8 +10708,8 @@ module pepper_instance
       !> Begin a type 14 SPK segment in the SPK file associated with
       !> HANDLE.
       module subroutine spk14b ( ctx, handle, segid, body, center, frame, first, last, chbdeg )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'sgparam.inc'
          integer(ip), intent(in) :: handle  !! The handle of an SPK file open for writing.
          character(*), intent(in) :: segid  !! The string to use for segment identifier.
          integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
@@ -10742,8 +10744,8 @@ module pepper_instance
       !> relative to an observer, optionally corrected for light time,
       !> expressed relative to an inertial reference frame.
       module subroutine spkltc ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -10757,8 +10759,8 @@ module pepper_instance
       !> Extract a subset of the data in a type 10 SPK segment into a new
       !> type 10 segment.
       module subroutine spks10 ( ctx, srchan, srcdsc, dsthan, dstdsc, dstsid )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'sgparam.inc'
          integer(ip), intent(in) :: srchan  !! Handle of the SPK file with the source segment.
          real(wp), intent(in) :: srcdsc(*)  !! Descriptor for the source segment.
          integer(ip), intent(in) :: dsthan  !! Handle of the SPK file for the destination segment.
@@ -10798,7 +10800,7 @@ module pepper_instance
          real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       end subroutine spkssb
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine SPKAPS. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine spkapp ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
@@ -10819,8 +10821,8 @@ module pepper_instance
       !> and stellar aberration. All input and output vectors are
       !> expressed relative to an inertial reference frame.
       module subroutine spkaps ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -10836,9 +10838,9 @@ module pepper_instance
       !> body, optionally corrected for light time (planetary aberration)
       !> and stellar aberration.
       module subroutine spkezp ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'frmtyp.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body NAIF ID code.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output position vector.
@@ -10863,9 +10865,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkflt ( ctx, trgsub, et, ref, abcorr, stobs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
@@ -10880,8 +10882,8 @@ module pepper_instance
       !> and stellar aberration, expressed relative to an inertial
       !> reference frame.
       module subroutine spkacs ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -10896,8 +10898,8 @@ module pepper_instance
       !> body, optionally corrected for light time (planetary aberration)
       !> and stellar aberration.
       module subroutine spkpos ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: targ  !! Target body name.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output position vector.
@@ -10923,9 +10925,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkfao ( ctx, targ, et, ref, abcorr, obssub, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzspk_state) :: obssub  !! routine returning the observer's state (relative to the SSB)
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
@@ -10939,9 +10941,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkfap ( ctx, trgsub, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
@@ -10956,10 +10958,10 @@ module pepper_instance
       !> relative to an observing body, optionally corrected for light
       !> time (planetary aberration) and stellar aberration.
       module subroutine spkez ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'frmtyp.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output state vector.
@@ -10973,9 +10975,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkfat ( ctx, trgsub, et, ref, abcorr, obs, starg, lt, dlt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Inertial reference frame of output state.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
@@ -10989,10 +10991,10 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzspkfzo ( ctx, targ, et, ref, abcorr, obssub, starg, lt )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzspk_state) :: obssub  !! routine returning the observer's state (relative to the SSB)
-         include              'frmtyp.inc'
-         include              'zzabcorr.inc'
          integer(ip), intent(in) :: targ  !! Target body.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output state vector.
@@ -11006,9 +11008,9 @@ module pepper_instance
       !> frame. The observer's state is provided by the calling program
       !> rather than by loaded SPK files.
       module subroutine spkcvo ( ctx, target, et, outref, refloc, abcorr, obssta, obsepc, obsctr, obsref, state, lt )
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
          character(*), intent(in) :: target  !! Name of target ephemeris object.
          real(wp), intent(in) :: et  !! Observation epoch.
          character(*), intent(in) :: outref  !! Reference frame of output state.
@@ -11026,8 +11028,8 @@ module pepper_instance
       !> relative to an observing body, optionally corrected for light
       !> time (planetary aberration) and stellar aberration.
       module subroutine spkezr ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: targ  !! Target body name.
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output state vector.
@@ -11041,10 +11043,10 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkfzt ( ctx, trgsub, et, ref, abcorr, obs, starg, lt )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
-         include              'frmtyp.inc'
-         include              'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Observer epoch.
          character(*), intent(in) :: ref  !! Reference frame of output state vector.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
@@ -11058,8 +11060,8 @@ module pepper_instance
       !> frame. The observer's position is provided by the calling program
       !> rather than by loaded SPK files.
       module subroutine spkcpo ( ctx, target, et, outref, refloc, abcorr, obspos, obsctr, obsref, state, lt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzabcorr.inc'
          character(*), intent(in) :: target  !! Name of target ephemeris object.
          real(wp), intent(in) :: et  !! Observation epoch.
          character(*), intent(in) :: outref  !! Reference frame of output state.
@@ -11077,9 +11079,9 @@ module pepper_instance
       !> target's state is provided by the calling program rather than by
       !> loaded SPK files.
       module subroutine spkcvt ( ctx, trgsta, trgepc, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
          real(wp), intent(in) :: trgsta ( 6 )  !! Target state relative to center of motion.
          real(wp), intent(in) :: trgepc  !! Epoch of target state.
          character(*), intent(in) :: trgctr  !! Center of motion of target.
@@ -11098,8 +11100,8 @@ module pepper_instance
       !> target's position is provided by the calling program rather than
       !> by loaded SPK files.
       module subroutine spkcpt ( ctx, trgpos, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzabcorr.inc'
          real(wp), intent(in) :: trgpos ( 3 )  !! Target position relative to center of motion.
          character(*), intent(in) :: trgctr  !! Center of motion of target.
          character(*), intent(in) :: trgref  !! Frame of target position.
@@ -11745,8 +11747,8 @@ module pepper_instance
       !> The segment is identified by a CK file handle and segment
       !> descriptor.
       module subroutine ckgr04 ( ctx, handle, descr, recno, record )
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ckparam.inc'
          integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
          real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
          integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
@@ -11757,8 +11759,8 @@ module pepper_instance
       !> The segment is identified by a CK file handle and segment
       !> descriptor.
       module subroutine ckgr05 ( ctx, handle, descr, recno, record )
+      use pepper_inc_ck05
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ck05.inc'
          integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
          real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
          integer(ip), intent(in) :: recno  !! The number of the pointing instance to be returned.
@@ -11768,8 +11770,8 @@ module pepper_instance
       !> Return a specified pointing record from a type 6 CK segment, given
       !> the CK file's handle and the segment's descriptor.
       module subroutine ckgr06 ( ctx, handle, descr, msno, recno, record )
+      use pepper_inc_ck06
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ck06.inc'
          integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
          real(wp), intent(in) :: descr  ( * )  !! The segment descriptor.
          integer(ip), intent(in) :: msno  !! Index of the mini-segment containing the record.
@@ -11905,9 +11907,9 @@ module pepper_instance
       !> Begin a type CK04 segment in the DAF file associated with
       !> HANDLE. See also CKW04A and CKW04E.
       module subroutine ckw04b ( ctx, handle, begtim, inst, ref, avflag, segid )
+      use pepper_inc_sgparam
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'sgparam.inc'
-         include               'ckparam.inc'
          integer(ip), intent(in) :: handle  !! The handle of an DAF file open for writing.
          character(*), intent(in) :: segid  !! The string to use for segment identifier.
          integer(ip), intent(in) :: inst  !! The NAIF ID code for the SC or instrument.
@@ -11928,8 +11930,8 @@ module pepper_instance
       !>
       !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine ckw05 ( ctx, handle, subtyp, degree, begtim, endtim, inst, ref, avflag, segid, n, sclkdp, packts, rate, nints, starts )
+      use pepper_inc_ck05
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ck05.inc'
          integer(ip), intent(in) :: handle  !! Handle of an CK file open for writing.
          integer(ip), intent(in) :: subtyp  !! CK type 5 subtype code.
          integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
@@ -11951,9 +11953,9 @@ module pepper_instance
       !>
       !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine ckw06 ( ctx, handle, inst, ref, avflag, first, last, segid, nmini, npkts, subtps, degres, packts, rates, sclkdp, ivlbds, sellst )
+      use pepper_inc_ck06
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ck06.inc'
-         include 'ckparam.inc'
          integer(ip), intent(in) :: handle  !! Handle of a CK file open for writing.
          integer(ip), intent(in) :: inst  !! NAIF instrument ID code.
          character(*), intent(in) :: ref  !! Reference frame name.
@@ -12052,8 +12054,8 @@ module pepper_instance
       !> MAXDEG     P   Maximum allowed degree of Chebyshev expansions.
       !> TOLSCL     P   Tolerance scale factor for coverage bound checking.
       module subroutine pckw20 ( ctx, handle, clssid, frame, first, last, segid, intlen, n, polydg, cdata, ascale, tscale, initjd, initfr )
+      use pepper_inc_spk20
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk20.inc'
          integer(ip), intent(in) :: handle  !! Handle of PCK file open for writing.
          integer(ip), intent(in) :: clssid  !! NAIF PCK frame class ID.
          character(*), intent(in) :: frame  !! Reference frame name.
@@ -12164,8 +12166,8 @@ module pepper_instance
       !> MAXDEG     P   Maximum degree of Chebyshev expansions.
       !> TOLSCL     P   Scale factor used to compute time bound tolerance.
       module subroutine spkw02 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
+      use pepper_inc_spk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk02.inc'
          integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
          integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
          integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
@@ -12185,8 +12187,8 @@ module pepper_instance
       !> MAXDEG     P   Maximum degree of Chebyshev expansions.
       !> TOLSCL     P   Scale factor used to compute time bound tolerance.
       module subroutine spkw03 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
+      use pepper_inc_spk03
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk03.inc'
          integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
          integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
          integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
@@ -12225,8 +12227,8 @@ module pepper_instance
       !> TOLSCL     P   Scale factor used to compute time bound tolerance.
       !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine spkw08 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
+      use pepper_inc_spk08
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk08.inc'
          integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
          integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
          integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
@@ -12262,8 +12264,8 @@ module pepper_instance
       !> Write an SPK type 10 segment to the file specified by
       !> the input HANDLE.
       module subroutine spkw10 ( ctx, handle, body, center, frame, first, last, segid, consts, n, elems, epochs )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'sgparam.inc'
          integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
          integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
          integer(ip), intent(in) :: center  !! The center of motion for BODY.
@@ -12282,8 +12284,8 @@ module pepper_instance
       !> MAXDEG     P   Maximum degree of interpolating polynomials.
       !> TOLSCL     P   Scale factor used to compute time bound tolerance.
       module subroutine spkw12 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
+      use pepper_inc_spk12
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk12.inc'
          integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
          integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
          integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
@@ -12358,8 +12360,8 @@ module pepper_instance
       !>
       !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine spkw18 ( ctx, handle, subtyp, body, center, frame, first, last, segid, degree, n, packts, epochs )
+      use pepper_inc_spk18
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk18.inc'
          integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
          integer(ip), intent(in) :: subtyp  !! SPK type 18 subtype code.
          integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
@@ -12378,9 +12380,9 @@ module pepper_instance
       !>
       !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine spkw19 ( ctx, handle, body, center, frame, first, last, segid, nintvl, npkts, subtps, degres, packts, epochs, ivlbds, sellst )
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk19.inc'
-         include 'spkrec.inc'
          integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
          integer(ip), intent(in) :: body  !! NAIF ID code for an ephemeris object.
          integer(ip), intent(in) :: center  !! NAIF ID code for center of motion of BODY.
@@ -12400,8 +12402,8 @@ module pepper_instance
 
       !> Write a type 20 segment to an SPK file.
       module subroutine spkw20 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, dscale, tscale, initjd, initfr )
+      use pepper_inc_spk20
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk20.inc'
          integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
          integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
          integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
@@ -12424,8 +12426,8 @@ module pepper_instance
       !> MAXTRM     P   Maximum number of terms per difference table
       !> component.
       module subroutine spkw21 ( ctx, handle, body, center, frame, first, last, segid, n, dlsize, dlines, epochs )
+      use pepper_inc_spk21
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'spk21.inc'
          integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
          integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
          integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
@@ -12464,8 +12466,8 @@ module pepper_instance
       !> Add data to a type 4 CK segment currently being written to
       !> the file associated with HANDLE. See also CKW04B and CKW04E.
       module subroutine ckw04a ( ctx, handle, npkts, pktsiz, pktdat, sclkdp )
+      use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'ckparam.inc'
          integer(ip), intent(in) :: handle  !! The handle of an DAF file opened for writing.
          integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
          integer(ip), intent(inout) :: pktsiz( * )  !! The numbers of values in the data packets (PEPPER: changed in place)
@@ -12476,8 +12478,8 @@ module pepper_instance
       !> Begin a type 03 PCK segment in the binary PCK file associated with
       !> HANDLE. See also PCK03A and PCK03E.
       module subroutine pck03b ( ctx, handle, segid, body, frame, first, last, chbdeg )
+      use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'sgparam.inc'
          integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
          character(*), intent(in) :: segid  !! The string to use for segment identifier.
          integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
@@ -12600,10 +12602,10 @@ module pepper_instance
       !> Return a set containing the frame IDs of all built-in frames of a
       !> specified class.
       module subroutine bltfrm ( ctx, frmcls, idset )
+      use pepper_inc_frmtyp
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'frmtyp.inc'
-         include 'ninert.inc'
-         include 'nninrt.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: frmcls  !! Frame class.
          integer(ip), intent(inout) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
@@ -12686,7 +12688,7 @@ module pepper_instance
          real(wp), intent(out) :: values ( * )  !! The double precision values for the numbers.
       end subroutine dxtrct
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
       !> NAIF supports EV2LIN only for backward compatibility.
       !>
@@ -12703,8 +12705,8 @@ module pepper_instance
       !> spacecraft. This evaluator uses algorithms as described
       !> in Vallado 2006 [4].
       module subroutine evsgp4 ( ctx, et, geophs, elems, state )
+      use pepper_inc_zzsgp4
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzsgp4.inc'
          real(wp), intent(in) :: et  !! Epoch in seconds past ephemeris epoch J2000.
          real(wp), intent(in) :: geophs (  8 )  !! Geophysical constants
          real(wp), intent(in) :: elems  ( 10 )  !! Two-line element data
@@ -12785,12 +12787,12 @@ module pepper_instance
          real(wp), intent(out) :: f  !! Hyperbolic eccentric anomaly.
       end subroutine hyptof
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine ILUMIN. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine illum ( ctx, target, et, abcorr, obsrvr, spoint, phase, solar, emissn )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000.
          character(*), intent(in) :: abcorr  !! Desired aberration correction.
@@ -12810,7 +12812,7 @@ module pepper_instance
          real(wp), intent(out) :: rotab ( 3, 3 )  !! REFA-to-REFB transformation matrix.
       end subroutine irftrn
 
-      !> Deprecated: This routine is deprecated because all high-level
+      !> **Deprecated:** This routine is deprecated because all high-level
       !> time conversion routines (STR2ET, UTC2ET, TPARSE) were updated
       !> to accept ISO formatted times on input.  This routine is
       !> supported for purposes of backward compatibility only.
@@ -12833,10 +12835,10 @@ module pepper_instance
       !> Return a SPICE set containing the frame IDs of all reference
       !> frames of a given class having specifications in the kernel pool.
       module subroutine kplfrm ( ctx, frmcls, idset )
+      use pepper_inc_frmtyp
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'frmtyp.inc'
-         include 'ninert.inc'
-         include 'nninrt.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: frmcls  !! Frame class.
          integer(ip), intent(inout) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
@@ -12858,8 +12860,8 @@ module pepper_instance
       !> The function returns the value of L_s for the specified body
       !> at the specified time.
       module real(wp) function lspcn ( ctx, body, et, abcorr )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: body  !! Name of central body.
          real(wp), intent(in) :: et  !! Epoch in seconds past J2000 TDB.
          character(*), intent(in) :: abcorr  !! Aberration correction.
@@ -13012,8 +13014,8 @@ module pepper_instance
       !> specified frame at a specified epoch to another specified
       !> frame at another specified epoch.
       module subroutine pxfrm2 ( ctx, from, to, etfrom, etto, rotate )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: from  !! Name of the frame to transform from.
          character(*), intent(in) :: to  !! Name of the frame to transform to.
          real(wp), intent(in) :: etfrom  !! Evaluation time of FROM frame.
@@ -13070,8 +13072,8 @@ module pepper_instance
       !> DELIMS     P   The accepted delimiters of an SCLK string.
       !> DPLEN      P   Maximum width of a clock field.
       module subroutine scps01 ( ctx, sc, clkstr, error, msg, ticks )
+      use pepper_inc_sclk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'sclk.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
          character(*), intent(in) :: clkstr  !! Character representation of a clock count.
          logical, intent(out) :: error  !! Parsing error flag.
@@ -13113,8 +13115,8 @@ module pepper_instance
       !> Return the state (position and velocity) of a target body
       !> relative to some center of motion in a specified frame.
       module subroutine spkpv ( ctx, handle, descr, et, ref, state, center )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
          real(wp), intent(in) :: et  !! Target epoch.
@@ -13224,8 +13226,8 @@ module pepper_instance
       !> the latitude of the chord's endpoints. The coordinate system is
       !> "latitudinal," aka planetocentric.
       module subroutine zzchrlat ( ctx, midlat, dlon, eptlat )
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
          real(wp), intent(in) :: midlat  !! is the latitude of the midpoint of a chord of a latitude circle.
          real(wp), intent(in) :: dlon  !! is the longitude extent of the chord.
          real(wp), intent(out) :: eptlat  !! is the latitude of the endpoints of the chord.
@@ -13265,11 +13267,11 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzdskbbl ( ctx, bodyid )
+      use pepper_inc_zzctr
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzctr.inc'
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
          integer(ip), intent(in) :: bodyid  !! Body ID code.
       end subroutine zzdskbbl
 
@@ -13277,9 +13279,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzdsksbi ( ctx, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: maxbod  !! Maximum size of body table.
          integer(ip), intent(in) :: stsize  !! Maximum size of segment table.
          integer(ip), intent(inout) :: btbody ( * )  !! Body table's body ID array.
@@ -13299,9 +13301,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzdsksbr ( ctx, needed, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: needed  !! Number of segment table entries needed.
          integer(ip), intent(in) :: maxbod  !! Maximum size of body table.
          integer(ip), intent(in) :: stsize  !! Maximum size of segment table.
@@ -13324,9 +13326,9 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdsksbd ( ctx, bodyid )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
       end function zzdsksbd
 
@@ -13337,9 +13339,9 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via ZZDSKSBD.
       module logical function zzdskbdc ( ctx, handle, dladsc, dskdsc )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -13351,9 +13353,9 @@ module pepper_instance
       !>
       !> The function returns .FALSE. for all segments.
       module logical function zzdsknot ( ctx, handle, dladsc, dskdsc )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -13365,9 +13367,9 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdsksit ( ctx, bodyid, nsurf, srflst, et )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: nsurf  !! Surface ID count.
          integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
@@ -13381,9 +13383,9 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via ZZDSKSIT.
       module logical function zzdskcit ( ctx, handle, dladsc, dskdsc )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -13395,9 +13397,9 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdskusc ( ctx, bodyid, et, cor1, cor2 )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
          real(wp), intent(in) :: cor1  !! First coordinate.
          real(wp), intent(in) :: cor2  !! Second coordinate.
@@ -13411,9 +13413,9 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via ZZDSKUSC.
       module logical function zzdskumc ( ctx, handle, dladsc, dskdsc )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -13425,9 +13427,9 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdskmsc ( ctx, bodyid, surfid, framid, corsys, corpar, et, cor1, cor2 )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: surfid  !! ID code of target surface.
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
          integer(ip), intent(in) :: corsys  !! Coordinate system code.
@@ -13445,9 +13447,9 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via ZZDSKMSC.
       module logical function zzdskmmc ( ctx, handle, dladsc, dskdsc )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -13459,9 +13461,9 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdsksrc ( ctx, surfid, bodyid, dclass, et, framid, pos )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: surfid  !! ID code of target surface.
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
          integer(ip), intent(in) :: dclass  !! Data class of segment.
@@ -13477,9 +13479,9 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via ZZDSKSRC.
       module logical function zzdskmrc ( ctx, handle, dladsc, dskdsc )
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
@@ -13491,8 +13493,8 @@ module pepper_instance
       !>
       !> The function returns the maximum radius of the segment.
       module real(wp) function zzdsksgr ( ctx, dskdsc )
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dskdsc.inc'
          real(wp), intent(in) :: dskdsc ( * )  !! is a DSK descriptor.
       end function zzdsksgr
 
@@ -13576,8 +13578,8 @@ module pepper_instance
       !> Constants assignments equivalent to 21 July 2006 "getgravconst"
       !> by David Vallado, AIAA-2006-6753.
       module subroutine zzgrav ( ctx, grav )
+      use pepper_inc_zzsgp4
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzsgp4.inc'
          real(wp), intent(out) :: grav( ngravs, ngravc )  !! Array of geophysical constants.
       end subroutine zzgrav
 
@@ -13585,8 +13587,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzholdd ( ctx, op, id, ok, value )
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzholdd.inc'
          integer(ip), intent(in) :: op  !! Key for operation to execute.
          integer(ip), intent(in) :: id  !! The ID for the item to apply OP.
          logical, intent(out) :: ok  !! Boolean indicating success of get operation.
@@ -13765,12 +13767,12 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsfxcor ( ctx, udnear, udmaxr, udrayx, trgcde, et, abcorr, uselt, usecn, usestl, xmit, fixref, obscde, dfrcde, dclass, dcentr, dvec, spoint, trgepc, srfvec, found )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzsfx_near) :: udnear  !! the zzsfx_near routine
          procedure(zzsfx_maxrad) :: udmaxr  !! the zzsfx_maxrad routine
          procedure(zzsfx_rayx) :: udrayx  !! the zzsfx_rayx routine
-         include 'frmtyp.inc'
-         include 'zzabcorr.inc'
          integer(ip), intent(in) :: trgcde  !! Target body ID code.
          real(wp), intent(in) :: et  !! Epoch at observer.
          character(*), intent(in) :: abcorr  !! Aberration correction string.
@@ -13808,8 +13810,8 @@ module pepper_instance
       !> Check/initialize the quantities describing an angular separation
       !> between two spherical or point objects.
       module subroutine zzspin ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, obsrvr, abcorr, bods, frames, mxrad, obs )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          character(*), intent(in) :: targ1  !! Name for first target
          character(*), intent(in) :: shape1  !! Shape corresponding to TARG1
          character(*), intent(in) :: frame1  !! Body fixed frame for TARG1
@@ -13824,7 +13826,7 @@ module pepper_instance
          integer(ip), intent(out) :: obs  !! Body/SPK IDs of OBSRVR
       end subroutine zzspin
 
-      !> Deprecated: This routine has been superseded by SPKAPS. This
+      !> **Deprecated:** This routine has been superseded by SPKAPS. This
       !> routine is supported for purposes of backward compatibility only.
       module subroutine zzspkap0 ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13837,7 +13839,7 @@ module pepper_instance
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine zzspkap0
 
-      !> Deprecated: This routine has been superseded by SPKAPS. This
+      !> **Deprecated:** This routine has been superseded by SPKAPS. This
       !> routine is supported for purposes of backward compatibility only.
       module subroutine zzspkap1 ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13857,9 +13859,9 @@ module pepper_instance
       !> LBSNGL     P   Lower bound of hash pool arrays
       !> SFNMLN     P   Maximum length of surface name strings
       module subroutine zzsrfini ( ctx, nornam, codes, bodies, nvals, maxval, snmhls, snmpol, snmidx, sidhls, sidpol, sididx )
+      use pepper_inc_srftrn
+      use pepper_inc_zzsrftrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'srftrn.inc'
-         include              'zzsrftrn.inc'
          character(*), intent(in) :: nornam (          * )  !! Array of normalized surface names
          integer(ip), intent(in) :: codes  (          * )  !! Array of surface ID codes for NAMES/NORNAM
          integer(ip), intent(in) :: bodies (          * )  !! Array of body ID codes
@@ -13936,8 +13938,8 @@ module pepper_instance
       !> Compute the Jacobian matrix of the transformation from
       !> rectangular to planetographic coordinates.
       module subroutine dpgrdr ( ctx, body, x, y, z, re, f, jacobi )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: body  !! Body with which coordinate system is associated.
          real(wp), intent(in) :: x  !! X-coordinate of point.
          real(wp), intent(in) :: y  !! Y-coordinate of point.
@@ -13950,8 +13952,8 @@ module pepper_instance
       !> Compute the Jacobian matrix of the transformation from
       !> planetographic to rectangular coordinates.
       module subroutine drdpgr ( ctx, body, lon, lat, alt, re, f, jacobi )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: body  !! Name of body with which coordinates are associated.
          real(wp), intent(in) :: lon  !! Planetographic longitude of a point (radians).
          real(wp), intent(in) :: lat  !! Planetographic latitude of a point (radians).
@@ -13976,8 +13978,8 @@ module pepper_instance
       !> a specified target body, where the target shape is modeled as an
       !> ellipsoid.
       module subroutine edterm ( ctx, trmtyp, source, target, et, fixref, abcorr, obsrvr, npts, trgepc, obspos, trmpts )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: trmtyp  !! Terminator type.
          character(*), intent(in) :: source  !! Light source.
          character(*), intent(in) :: target  !! Target body.
@@ -14004,8 +14006,8 @@ module pepper_instance
       !> Return the field-of-view (FOV) parameters for a specified
       !> instrument. The instrument is specified by name.
       module subroutine getfvn ( ctx, inst, room, shape, frame, bsight, n, bounds )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'zzctr.inc'
          character(*), intent(in) :: inst  !! Name of an instrument.
          integer(ip), intent(in) :: room  !! Maximum number of vectors that can be returned.
          character(*), intent(out) :: shape  !! Instrument FOV shape.
@@ -14030,8 +14032,8 @@ module pepper_instance
       !> epoch. In additional to the classical elements, return the true
       !> anomaly, semi-major axis, and period, if applicable.
       module subroutine oscltx ( ctx, state, et, mu, elts )
+      use pepper_inc_oscltx
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'oscltx.inc'
          real(wp), intent(in) :: state  ( 6 )  !! State of body at epoch of elements.
          real(wp), intent(in) :: et  !! Epoch of elements.
          real(wp), intent(in) :: mu  !! Gravitational parameter (GM) of primary body.
@@ -14040,8 +14042,8 @@ module pepper_instance
 
       !> Convert planetographic coordinates to rectangular coordinates.
       module subroutine pgrrec ( ctx, body, lon, lat, alt, re, f, rectan )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: body  !! Body with which coordinate system is associated.
          real(wp), intent(in) :: lon  !! Planetographic longitude of a point (radians).
          real(wp), intent(in) :: lat  !! Planetographic latitude of a point (radians).
@@ -14053,8 +14055,8 @@ module pepper_instance
 
       !> Convert rectangular coordinates to planetographic coordinates.
       module subroutine recpgr ( ctx, body, rectan, re, f, lon, lat, alt )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: body  !! Body with which coordinate system is associated.
          real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
          real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
@@ -14079,8 +14081,8 @@ module pepper_instance
       !>
       !> MXPART     P   Maximum number of spacecraft clock partitions.
       module subroutine scpars ( ctx, sc, sclkch, error, msg, sclkdp )
+      use pepper_inc_sclk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'sclk.inc'
          integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
          character(*), intent(in) :: sclkch  !! Character representation of a spacecraft clock.
          logical, intent(out) :: error  !! Flag to indicate if string parsed correctly.
@@ -14088,12 +14090,12 @@ module pepper_instance
          real(wp), intent(out) :: sclkdp  !! Encoded representation of the clock count.
       end subroutine scpars
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine SUBPNT. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine subpt ( ctx, method, target, et, abcorr, obsrvr, spoint, alt )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -14103,12 +14105,12 @@ module pepper_instance
          real(wp), intent(out) :: alt  !! Altitude of the observer above the target body.
       end subroutine subpt
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine SUBSLR. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine subsol ( ctx, method, target, et, abcorr, obsrvr, spoint )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -14143,9 +14145,9 @@ module pepper_instance
       !> TARG1 and TARG2, as seen from an observer OBSRVR, possibly
       !> corrected for aberration corrections.
       module real(wp) function trgsep ( ctx, et, targ1, shape1, frame1, targ2, shape2, frame2, obsrvr, abcorr )
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
-         include 'zzdyn.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          character(*), intent(in) :: targ1  !! First target body name.
          character(*), intent(in) :: shape1  !! First target body shape.
@@ -14214,12 +14216,12 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzdsksph ( ctx, bodyid, nsurf, srflst, minrad, maxrad )
+      use pepper_inc_errhnd
+      use pepper_inc_dla
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'errhnd.inc'
-         include 'dla.inc'
-         include 'dsk.inc'
-         include 'dskdsc.inc'
-         include 'zzctr.inc'
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
          integer(ip), intent(in) :: nsurf  !! Number of IDs in surface list.
          integer(ip), intent(in) :: srflst ( * )  !! List of surface IDs.
@@ -14251,8 +14253,8 @@ module pepper_instance
       !> LATIDX     P   Latitude index. Also used for exclusion.
       !> RADIDX     P   Radius index. Also used for exclusion.
       module subroutine zzinlat0 ( ctx, r, lon, lat, bounds, exclud, inside )
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
          real(wp), intent(in) :: r  !! Radius of point.
          real(wp), intent(in) :: lon  !! Planetocentric longitude of point.
          real(wp), intent(in) :: lat  !! Planetocentric latitude of point.
@@ -14333,9 +14335,9 @@ module pepper_instance
       !>
       !> ANGMRG     P   Angular margin.
       module subroutine zzpdtbox ( ctx, bounds, corpar, center, lr, lt, lz, radius )
+      use pepper_inc_dskdsc
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dskdsc.inc'
-         include 'dsktol.inc'
          real(wp), intent(in) :: bounds ( 2, 3 )  !! Array of coordinate bounds for segment.
          real(wp), intent(in) :: corpar ( * )  !! Array containing coordinate parameters.
          real(wp), intent(out) :: center ( 3 )  !! Center of bounding box.
@@ -14365,9 +14367,9 @@ module pepper_instance
       !> LBSNGL     P   Lower bound of hash pool arrays
       !> SFNMLN     P   Maximum length of surface name strings
       module subroutine zzsrfker ( ctx, kernam, nornam, kersid, kerbid, extker, nkvar, snmhls, snmpol, snmidx, sidhls, sidpol, sididx )
+      use pepper_inc_srftrn
+      use pepper_inc_zzsrftrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'srftrn.inc'
-         include              'zzsrftrn.inc'
          character(sfnmln), intent(out) :: kernam (          * )  !! Array of surface names from kernel pool.
          character(sfnmln), intent(out) :: nornam (          * )  !! Array of normalized surface names.
          integer(ip), intent(out) :: kersid (          * )  !! Array of surface ID codes from kernel pool.
@@ -14393,7 +14395,7 @@ module pepper_instance
          real(wp), intent(out) :: ellips ( ubel )  !! The SPICE ellipse defined by the input vectors.
       end subroutine cgv2el
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
       !> NAIF supports DPSPCE only for backward compatibility.
       module subroutine dpspce ( ctx, et, geophs, elems, state )
@@ -14459,8 +14461,8 @@ module pepper_instance
 
       !> Transform a state between coordinate systems.
       module subroutine xfmsta ( ctx, istate, icosys, ocosys, body, ostate )
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzctr.inc'
          real(wp), intent(in) :: istate(6)  !! Input state.
          character(*), intent(in) :: icosys  !! Current (input) coordinate system.
          character(*), intent(in) :: ocosys  !! Desired (output) coordinate system.
@@ -14472,8 +14474,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzilusta ( ctx, method, target, illum, et, fixref, abcorr, obsrvr, spoint, normal, phssta, incsta, emista )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body associated with surface point.
          character(*), intent(in) :: illum  !! Name of illumination source.
@@ -14500,8 +14502,8 @@ module pepper_instance
       !> LATIDX     P   Latitude index. Also used for exclusion.
       !> RADIDX     P   Radius index. Also used for exclusion.
       module subroutine zzinlat ( ctx, p, bounds, margin, exclud, inside )
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
          real(wp), intent(in) :: p      ( 3 )  !! Input point.
          real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
          real(wp), intent(in) :: margin  !! Margin used for inclusion testing.
@@ -14520,8 +14522,8 @@ module pepper_instance
       !> LATIDX     P   Latitude index. Also used for exclusion.
       !> ALTIDX     P   Altitude index. Also used for exclusion.
       module subroutine zzinpdt0 ( ctx, p, lon, bounds, corpar, exclud, inside )
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
          real(wp), intent(in) :: p      ( 3 )  !! Cartesian coordinates of point.
          real(wp), intent(in) :: lon  !! Planetocentric longitude of point.
          real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
@@ -14547,8 +14549,8 @@ module pepper_instance
       !> The outputs are the box's center and radius. The center
       !> is relative to the segment's frame center.
       module subroutine zzsegbox ( ctx, dskdsc, boxctr, maxr )
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dskdsc.inc'
          real(wp), intent(in) :: dskdsc ( * )  !! DSK segment descriptor.
          real(wp), intent(out) :: boxctr ( 3 )  !! Center of bounding box.
          real(wp), intent(out) :: maxr  !! Radius of box.
@@ -14558,10 +14560,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsrfn2c ( ctx, srfnam, bodyid, surfid, found )
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
+      use pepper_inc_zzsrftrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'srftrn.inc'
-         include 'zzctr.inc'
-         include 'zzsrftrn.inc'
          integer(ip), intent(in) :: bodyid  !! Body ID code.
          character(*), intent(in) :: srfnam  !! Surface name.
          integer(ip), intent(out) :: surfid  !! Surface ID code.
@@ -14572,10 +14574,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsrfc2n ( ctx, surfid, bodyid, srfnam, found )
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
+      use pepper_inc_zzsrftrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'srftrn.inc'
-         include 'zzctr.inc'
-         include 'zzsrftrn.inc'
          integer(ip), intent(in) :: bodyid  !! Body ID code.
          character(*), intent(out) :: srfnam  !! Surface name.
          integer(ip), intent(in) :: surfid  !! Surface ID code.
@@ -14586,10 +14588,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsrftrk ( ctx, usrctr, update )
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
+      use pepper_inc_zzsrftrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'srftrn.inc'
-         include 'zzctr.inc'
-         include 'zzsrftrn.inc'
          integer(ip), intent(inout) :: usrctr ( 2 )  !! User counter.
          logical, intent(out) :: update  !! Update flag.
       end subroutine zzsrftrk
@@ -14669,9 +14671,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzdsksba ( ctx, bodyid, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
          integer(ip), intent(in) :: bodyid  !! Body ID code.
          integer(ip), intent(in) :: maxbod  !! Maximum size of body table.
          integer(ip), intent(in) :: stsize  !! Maximum size of segment table.
@@ -14695,8 +14697,8 @@ module pepper_instance
       !> UBPL       P   Upper bound of SPICELIB plane array.
       !> MAXFOV     P   Maximum number of boundary vectors.
       module subroutine zzelvupy ( ctx, ellips, vertex, axis, n, bounds, found )
+      use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'errhnd.inc'
          integer(ip), parameter :: ubel = 9
          real(wp), intent(in) :: ellips ( ubel )  !! A SPICELIB ellipse.
          real(wp), intent(in) :: vertex ( 3 )  !! Vertex of a pyramid.
@@ -14717,8 +14719,8 @@ module pepper_instance
       !> ALTIDX     P   Altitude index. Also used for exclusion.
       !> LATMRG     P   High/low latitude margin.
       module subroutine zzinpdt ( ctx, p, bounds, corpar, margin, exclud, inside )
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
          real(wp), intent(in) :: p      ( 3 )  !! Input point.
          real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
          real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
@@ -14735,8 +14737,8 @@ module pepper_instance
       !> LATIDX     P   Latitude index.
       !> RADIDX     P   Radius index.
       module subroutine zzrytlat ( ctx, vertex, raydir, bounds, margin, nxpts, xpt )
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
          real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
          real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
          real(wp), intent(in) :: bounds ( 2, 3 )  !! Bounds of latitudinal volume element.
@@ -14777,9 +14779,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzinvelt ( ctx, p, corsys, corpar, bounds, margin, exclud, inside )
+      use pepper_inc_dsktol
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
-         include 'dskdsc.inc'
          real(wp), intent(in) :: p      ( 3 )  !! Input point.
          integer(ip), intent(in) :: corsys  !! Coordinate system code.
          real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
@@ -14816,8 +14818,8 @@ module pepper_instance
       !> LATIDX     P   Latitude index.
       !> ALTIDX     P   Altitude index.
       module subroutine zzrytpdt ( ctx, vertex, raydir, bounds, corpar, margin, nxpts, xpt )
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
          real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
          real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
          real(wp), intent(in) :: bounds ( 2, 3 )  !! Bounds of planetodetic volume element.
@@ -14833,11 +14835,11 @@ module pepper_instance
       !>
       !> XFRACT     P   Plate expansion fraction.
       module subroutine dskx02 ( ctx, handle, dladsc, vertex, raydir, plid, xpt, found )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'dla.inc'
-         include              'dskdsc.inc'
-         include              'dsk02.inc'
-         include              'dsktol.inc'
          integer(ip), intent(in) :: handle  !! Handle of DSK kernel containing plate model.
          integer(ip), intent(in) :: dladsc   ( * )  !! DLA descriptor of plate model segment.
          real(wp), intent(in) :: vertex   ( 3 )  !! Ray's vertex in the  body fixed frame.
@@ -14847,13 +14849,13 @@ module pepper_instance
          logical, intent(out) :: found  !! Flag indicating whether intercept exists.
       end subroutine dskx02
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine SINCPT. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine srfxpt ( ctx, method, target, et, abcorr, obsrvr, dref, dvec, spoint, dist, trgepc, obspos, found )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'frmtyp.inc'
-         include               'zzctr.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -14873,10 +14875,10 @@ module pepper_instance
       !> to the target's surface. Also compute the point on the target's
       !> surface nearest to the tangent point.
       module subroutine tangpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, dref, dvec, tanpt, alt, range, srfpt, trgepc, srfvec )
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'frmtyp.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -14909,8 +14911,8 @@ module pepper_instance
       !>
       !> See Detailed_Output for the list of codes and meanings.
       module integer(ip) function zzocced ( ctx, viewpt, centr1, semax1, centr2, semax2 )
+      use pepper_inc_zzocced
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzocced.inc'
          real(wp), intent(in) :: viewpt ( 3 )  !! Observation location.
          real(wp), intent(in) :: centr1 ( 3 )  !! Center of first ellipsoid.
          real(wp), intent(in) :: semax1 ( 3, 3 )  !! Semi-major axis matrix for first ellipsoid.
@@ -14925,11 +14927,11 @@ module pepper_instance
       !> PTMEMM     P   Default margin for point-plate distance.
       !> XFRACT     P   Default plate expansion fraction.
       module subroutine zzptpl02 ( ctx, handle, dladsc, dskdsc, point, plid, plate, verts, found )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsk02
+      use pepper_inc_dsktol
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsk02.inc'
-         include 'dsktol.inc'
          integer(ip), intent(in) :: handle  !! DSK file handle.
          integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment.
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment.
@@ -14944,8 +14946,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzrytelt ( ctx, vertex, raydir, dskdsc, margin, nxpts, xpt )
+      use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dskdsc.inc'
          real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
          real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
          real(wp), intent(in) :: dskdsc ( dskdsz )  !! DSK descriptor of segment.
@@ -14958,11 +14960,11 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzdskbun ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, point, normal )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsktol
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsktol.inc'
-         include 'zzctr.inc'
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
          integer(ip), intent(in) :: nsurf  !! Number of IDs in surface list.
          integer(ip), intent(in) :: srflst ( * )  !! List of surface IDs.
@@ -15002,11 +15004,11 @@ module pepper_instance
       !>
       !> SGREED     P   Default segment boundary margin.
       module subroutine zzdskbux ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, vertex, raydir, xpt, segidx, dc, ic, found )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_dsktol
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'dsktol.inc'
-         include 'zzctr.inc'
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
          integer(ip), intent(in) :: nsurf  !! Number of IDs in surface list.
          integer(ip), intent(in) :: srflst ( * )  !! List of surface IDs.
@@ -15032,10 +15034,10 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsbfxr ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, found )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'zzctr.inc'
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
          integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
          integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
@@ -15051,10 +15053,10 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsbfxri ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, handle, dladsc, dskdsc, dc, ic, found )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'zzctr.inc'
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
          integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
          integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
@@ -15075,10 +15077,10 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsbfnrm ( ctx, bodyid, nsurf, srflst, et, fixfid, point, normal )
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dla.inc'
-         include 'dskdsc.inc'
-         include 'zzctr.inc'
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
          integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
          integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
@@ -15097,12 +15099,12 @@ module pepper_instance
       !> DCSIZE     P   Required size of DC array.
       !> ICSIZE     P   Required size of IC array.
       module subroutine dskxsi ( ctx, pri, target, nsurf, srflst, et, fixref, vertex, raydir, maxd, maxi, xpt, handle, dladsc, dskdsc, dc, ic, found )
+      use pepper_inc_dsk
+      use pepper_inc_dsktol
+      use pepper_inc_dsksrc
+      use pepper_inc_srftrn
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dsktol.inc'
-         include 'dsksrc.inc'
-         include 'srftrn.inc'
-         include 'zzctr.inc'
          logical, intent(in) :: pri  !! Data prioritization flag.
          character(*), intent(in) :: target  !! Target body name.
          integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
@@ -15125,9 +15127,9 @@ module pepper_instance
       !> Compute ray-surface intercepts for a set of rays, using data
       !> provided by multiple loaded DSK segments.
       module subroutine dskxv ( ctx, pri, target, nsurf, srflst, et, fixref, nrays, vtxarr, dirarr, xptarr, fndarr )
+      use pepper_inc_dsktol
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsktol.inc'
-         include 'zzctr.inc'
          logical, intent(in) :: pri  !! Data prioritization flag.
          character(*), intent(in) :: target  !! Target body name.
          integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
@@ -15144,12 +15146,12 @@ module pepper_instance
       !> Find the illumination angles (phase, incidence, and
       !> emission) at a specified surface point of a target body.
       module subroutine illumg ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'dsk.inc'
-         include               'gf.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
-         include               'zzdsk.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          character(*), intent(in) :: ilusrc  !! Name of illumination source.
@@ -15170,12 +15172,12 @@ module pepper_instance
       !>
       !> PTMEMM     P   Default point-surface membership margin.
       module subroutine srfnrm ( ctx, method, target, et, fixref, npts, srfpts, normls )
+      use pepper_inc_dsk
+      use pepper_inc_dsktol
+      use pepper_inc_gf
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'dsktol.inc'
-         include 'gf.inc'
-         include 'zzctr.inc'
-         include 'zzdsk.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in TDB seconds past J2000 TDB.
@@ -15189,8 +15191,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsuelin ( ctx, trgcde )
+      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
          integer(ip), intent(in) :: trgcde  !! Target body ID code.
       end subroutine zzsuelin
 
@@ -15200,8 +15202,8 @@ module pepper_instance
       !>
       !> MAXSRF     P   Maximum size of surface ID list.
       module subroutine zzsudski ( ctx, trgcde, nsurf, srflst, fixfid )
+      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
          integer(ip), intent(in) :: trgcde  !! Target body ID code.
          integer(ip), intent(in) :: nsurf  !! Number of surface IDs in surface list.
          integer(ip), intent(in) :: srflst ( * )  !! Surface list.
@@ -15212,8 +15214,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzraysfx ( ctx, vertex, raydir, et, spoint, found )
+      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
          real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
          real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
          real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
@@ -15225,8 +15227,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzmaxrad ( ctx, maxrad )
+      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
          real(wp), intent(out) :: maxrad  !! Radius of outer bounding sphere for target body.
       end subroutine zzmaxrad
 
@@ -15234,8 +15236,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzminrad ( ctx, minrad )
+      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
          real(wp), intent(out) :: minrad  !! Radius of inner bounding sphere for target body.
       end subroutine zzminrad
 
@@ -15243,8 +15245,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzraynp ( ctx, vertex, raydir, et, pnear, dist )
+      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
          real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
          real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
          real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
@@ -15258,12 +15260,12 @@ module pepper_instance
       !> the observer's position and whether the surface point is
       !> illuminated.
       module subroutine illumf ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn, visibl, lit )
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'dsk.inc'
-         include               'gf.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
-         include               'zzdsk.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          character(*), intent(in) :: ilusrc  !! Name of illumination source.
@@ -15302,11 +15304,11 @@ module pepper_instance
       !> Map array of planetocentric longitude/latitude coordinate pairs
       !> to surface points on a specified target body.
       module subroutine latsrf ( ctx, method, target, et, fixref, npts, lonlat, srfpts )
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'gf.inc'
-         include 'zzctr.inc'
-         include 'zzdsk.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in TDB seconds past J2000 TDB.
@@ -15321,13 +15323,13 @@ module pepper_instance
       !> a specified epoch, optionally corrected for light time and
       !> stellar aberration.
       module subroutine sincpt ( ctx, method, target, et, fixref, abcorr, obsrvr, dref, dvec, spoint, trgepc, srfvec, found )
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'dsk.inc'
-         include               'frmtyp.inc'
-         include               'gf.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
-         include               'zzdsk.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -15346,13 +15348,13 @@ module pepper_instance
       !> a target body at a specified epoch, optionally corrected for
       !> light time and stellar aberration.
       module subroutine subpnt ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'dsk.inc'
-         include               'frmtyp.inc'
-         include               'gf.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
-         include               'zzdsk.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -15368,13 +15370,13 @@ module pepper_instance
       !> a target body at a specified epoch, optionally corrected for
       !> light time and stellar aberration.
       module subroutine subslr ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'dsk.inc'
-         include               'frmtyp.inc'
-         include               'gf.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
-         include               'zzdsk.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -15396,8 +15398,8 @@ module pepper_instance
       !> UMBRAL     P   Umbral terminator code.
       !> PNMBRL     P   Penumbral terminator code.
       module subroutine zztanini ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis )
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzdsk.inc'
          integer(ip), intent(in) :: curve  !! Type of curve: limb or terminator type.
          real(wp), intent(in) :: srcrad  !! Radius of illumination source.
          integer(ip), intent(in) :: shape  !! Target shape.
@@ -15414,8 +15416,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zztansta ( ctx, angle, ocultd, point )
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzdsk.inc'
          real(wp), intent(in) :: angle  !! Angle of ray.
          logical, intent(out) :: ocultd  !! Occultation state flag. True if ray is occulted.
          real(wp), intent(out) :: point  ( 3 )  !! Tangent point on target.
@@ -15431,8 +15433,8 @@ module pepper_instance
       !> UMBRAL     P   Umbral terminator code.
       !> PNMBRL     P   Penumbral terminator code.
       module subroutine zztangnt ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis, schstp, soltol, result, points )
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzdsk.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: curve  !! Type of curve: limb or terminator type.
          real(wp), intent(in) :: srcrad  !! Radius of illumination source.
@@ -15455,13 +15457,13 @@ module pepper_instance
       !> The caller specifies half-planes bounded by the observer-target
       !> center vector in which to search for limb points.
       module subroutine limbpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, tangts )
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'dsk.inc'
-         include               'frmtyp.inc'
-         include               'gf.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
-         include               'zzdsk.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Name of target body.
          real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
@@ -15485,13 +15487,13 @@ module pepper_instance
       !> half-planes, bounded by the illumination source center-target
       !> center vector, in which to search for terminator points.
       module subroutine termpt ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, trmvcs )
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'dsk.inc'
-         include               'frmtyp.inc'
-         include               'gf.inc'
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
-         include               'zzdsk.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: ilusrc  !! Illumination source.
          character(*), intent(in) :: target  !! Name of target body.
@@ -15539,8 +15541,8 @@ module pepper_instance
       !> ZZPUT      P   ZZHOLDD stores a DP value.
       !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
       module subroutine gfstol ( ctx, value )
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzholdd.inc'
          real(wp), intent(in) :: value  !! Double precision value returned or to store.
       end subroutine gfstol
 
@@ -15548,9 +15550,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzgfcoq ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dvec, crdsys, ctrid, re, f, crdnam, value, found )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
          character(*), intent(in) :: vecdef  !! Vector definition.
          character(*), intent(in) :: method  !! Computation method.
          integer(ip), intent(in) :: trgid  !! Target ID code.
@@ -15573,8 +15575,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzgfcprx ( ctx, state, corsys, re, f, sense, cdsign )
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzgf.inc'
          real(wp), intent(in) :: state  ( 6 )  !! A 6-dimensional Cartesian state vector.
          character(*), intent(in) :: corsys  !! A coordinate system name parameter.
          real(wp), intent(in) :: re  !! Ellipsoid equatorial radius.
@@ -15609,10 +15611,10 @@ module pepper_instance
       !> Perform initialization functions for visibility state
       !> determination.
       module subroutine zzgffvin ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr )
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzocced
+      use pepper_inc_gf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
-         include 'zzocced.inc'
-         include 'gf.inc'
          character(*), intent(in) :: inst  !! Name of the instrument.
          character(*), intent(in) :: tshape  !! Type of shape model used for target body.
          real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
@@ -15624,18 +15626,18 @@ module pepper_instance
 
       !> Indicate whether the target is currently in the instrument FOV.
       module subroutine zzgffvst ( ctx, time, vistat )
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzocced
+      use pepper_inc_gf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
-         include 'zzocced.inc'
-         include 'gf.inc'
          real(wp), intent(in) :: time  !! TDB epoch (in seconds past J2000)
          logical, intent(out) :: vistat  !! .TRUE. if the object is visible, .FALSE. otherwise.
       end subroutine zzgffvst
 
       !> Initialize the GF illumination angle constraint search utilities.
       module subroutine zzgfilin ( ctx, method, angtyp, target, illum, fixref, abcorr, obsrvr, spoint )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: angtyp  !! Type of illumination angle.
          character(*), intent(in) :: target  !! Target body name.
@@ -15649,8 +15651,8 @@ module pepper_instance
       !> Indicate whether a specified illumination angle is decreasing at
       !> a specified time.
       module subroutine zzgfildc ( ctx, udfunc, et, decres )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          logical, intent(out) :: decres  !! Flag indicating whether illumination angle is decreasing.
          procedure(gf_scalar) :: udfunc  !! Placeholder external routine argument.
@@ -15658,8 +15660,8 @@ module pepper_instance
 
       !> Return the specified illumination angle at a specified epoch.
       module subroutine zzgfilgq ( ctx, et, angle )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          real(wp), intent(out) :: angle  !! Illumination angle at time ET.
       end subroutine zzgfilgq
@@ -15667,12 +15669,12 @@ module pepper_instance
       !> Perform initialization functions for occultation state
       !> determination.
       module subroutine zzgfocin ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, obsrvr, abcorr )
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdsk
+      use pepper_inc_zzocced
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'gf.inc'
-         include 'zzabcorr.inc'
-         include 'zzdsk.inc'
-         include 'zzocced.inc'
          character(*), intent(in) :: occtyp  !! Type of occultation.
          character(*), intent(in) :: front  !! Name of body occulting the other.
          character(*), intent(in) :: fshape  !! Type of shape model used for front body.
@@ -15686,12 +15688,12 @@ module pepper_instance
 
       !> See if the object is currently occulted.
       module subroutine zzgfocst ( ctx, time, ocstat )
+      use pepper_inc_dsk
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdsk
+      use pepper_inc_zzocced
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'dsk.inc'
-         include 'gf.inc'
-         include 'zzabcorr.inc'
-         include 'zzdsk.inc'
-         include 'zzocced.inc'
          real(wp), intent(in) :: time  !! TDB epoch (in seconds past J2000)
          logical, intent(out) :: ocstat  !! .TRUE. if the object is occulted, .FALSE. otherwise.
       end subroutine zzgfocst
@@ -15717,8 +15719,8 @@ module pepper_instance
       !> GF_REF     P   ZZHOLDD acts on the reference value
       !> for a GF search.
       module subroutine zzgfref ( ctx, refval )
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzholdd.inc'
          real(wp), intent(in) :: refval  !! The value to set as the reference value.
       end subroutine zzgfref
 
@@ -15796,8 +15798,8 @@ module pepper_instance
       !> This routine initializes variables that describe an angular
       !> separation event of interest for solution by ZZGFSOLV.
       module subroutine zzgfspin ( ctx, of, from, shape, frame, abcorr )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          character(*), intent(in) :: of    (2)  !! Body id's of the angular separation objects
          character(*), intent(in) :: from  !! Observer name
          character(*), intent(inout) :: shape (2)  !! Array of shape IDs corresponding to OF (PEPPER: normalized in place, as by SPICELIB)
@@ -15808,8 +15810,8 @@ module pepper_instance
       !> Computes whether or not the angular separation between SVBOD1 and
       !> SVBOD2 is decreasing at time ET.
       module subroutine zzgfspdc ( ctx, udfunc, et, decres )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          logical, intent(out) :: decres  !! .TRUE. if angular separation is decreasing .FALSE. otherwise.
          procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -15818,16 +15820,16 @@ module pepper_instance
       !> Determine the angular separation between the limbs of the two
       !> bodies.
       module subroutine zzgfspgq ( ctx, et, sep )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          real(wp), intent(out) :: sep  !! Separation at time ET.
       end subroutine zzgfspgq
 
       !> Retrieve values set in ZZGFSPIN.
       module subroutine zzgfspx ( ctx, xabcr, xbod, yref, xref, xobs, xrad, xshp )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          character(*), intent(out) :: xabcr  !! Saved value SVABCR.
          integer(ip), intent(out) :: xbod  (2)  !! Saved values SVBOD1 and SVBOD2.
          character(*), intent(out) :: yref  !! Saved value SVREF.
@@ -15841,10 +15843,10 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzgfssin ( ctx, method, trgid, et, fixref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          character(*), intent(in) :: method  !! Computation method.
          integer(ip), intent(in) :: trgid  !! Target ID code.
          real(wp), intent(in) :: et  !! Computation epoch.
@@ -15863,10 +15865,10 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzgfssob ( ctx, method, trgid, et, fixref, abcorr, obsid, radii, state )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          character(*), intent(in) :: method  !! Computation method.
          integer(ip), intent(in) :: trgid  !! Target ID code.
          real(wp), intent(in) :: et  !! Computation epoch.
@@ -15885,8 +15887,8 @@ module pepper_instance
       !> GF_REF     P   ZZHOLDD acts on the reference value
       !> for a GF search.
       module subroutine zzgfudlt ( ctx, udfunc, et, isless )
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzholdd.inc'
          real(wp), intent(in) :: et  !! Time in TDB seconds for which to evaluate UDFUNC.
          logical, intent(out) :: isless  !! Boolean indicating if the scalar value is less than reference value.
          procedure(gf_scalar) :: udfunc  !! Name of the routine that computes the scalar value of interest at ET.
@@ -15907,8 +15909,8 @@ module pepper_instance
       !> Determine if a specified ray is within the field-of-view (FOV) of
       !> a specified instrument at a given time.
       module subroutine fovray ( ctx, inst, raydir, rframe, abcorr, obsrvr, et, visibl )
+      use pepper_inc_gf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
          character(*), intent(in) :: inst  !! Name or ID code string of the instrument.
          real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
          character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
@@ -15921,8 +15923,8 @@ module pepper_instance
       !> Determine if a specified ephemeris object is within the
       !> field-of-view (FOV) of a specified instrument at a given time.
       module subroutine fovtrg ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, et, visibl )
+      use pepper_inc_gf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include              'gf.inc'
          character(*), intent(in) :: inst  !! Name or ID code string of the instrument.
          character(*), intent(in) :: target  !! Name or ID code string of the target.
          character(*), intent(in) :: tshape  !! Type of shape model used for the target.
@@ -15941,8 +15943,8 @@ module pepper_instance
       !> LBCELL     P   SPICE Cell lower bound.
       !> MAXVRT     P   Maximum number of FOV boundary vertices.
       module subroutine gffove ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
+      use pepper_inc_gf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'gf.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: inst  !! Name of the instrument.
          character(*), intent(in) :: tshape  !! Type of shape model used for target body.
@@ -15970,9 +15972,9 @@ module pepper_instance
       !>
       !> LBCELL     P   SPICE Cell lower bound.
       module subroutine gfocce ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'gf.inc'
-         include 'zzdsk.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: occtyp  !! Type of occultation.
          character(*), intent(in) :: front  !! Name of body occulting the other.
@@ -16000,11 +16002,11 @@ module pepper_instance
       !> occulted, etc.) of one target relative to another target as seen
       !> by an observer at a given time.
       module subroutine occult ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, et, ocltid )
+      use pepper_inc_gf
+      use pepper_inc_occult
+      use pepper_inc_dsk
+      use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'gf.inc'
-         include 'occult.inc'
-         include 'dsk.inc'
-         include 'zzdsk.inc'
          character(*), intent(in) :: targ1  !! Name or ID of first target.
          character(*), intent(in) :: shape1  !! Type of shape model used for first target.
          character(*), intent(in) :: frame1  !! Body-fixed, body-centered frame for first body.
@@ -16022,9 +16024,9 @@ module pepper_instance
       !>
       !> The function returns the value of phase angle.
       module real(wp) function phaseq ( ctx, et, target, illmn, obsrvr, abcorr )
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzabcorr.inc'
-         include               'zzctr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          character(*), intent(in) :: target  !! Target body name.
          character(*), intent(in) :: illmn  !! Illuminating body name.
@@ -16036,9 +16038,9 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzgfcost ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
          character(*), intent(in) :: vecdef  !! Vector definition.
          character(*), intent(in) :: method  !! Computation method.
          integer(ip), intent(in) :: trgid  !! Target ID code.
@@ -16056,8 +16058,8 @@ module pepper_instance
 
       !> Initialize the GF distance constraint search utilities.
       module subroutine zzgfdiin ( ctx, target, abcorr, obsrvr )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          character(*), intent(in) :: target  !! Target body name.
          character(*), intent(in) :: abcorr  !! Aberration correction specifier.
          character(*), intent(in) :: obsrvr  !! Observer name.
@@ -16066,8 +16068,8 @@ module pepper_instance
       !> Indicate whether the observer-target distance is decreasing at a
       !> specified time.
       module subroutine zzgfdidc ( ctx, udfunc, et, decres )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          logical, intent(out) :: decres  !! Flag indicating whether distance is decreasing.
          procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -16076,8 +16078,8 @@ module pepper_instance
       !> Return the distance between the target and observer
       !> at a specified epoch.
       module subroutine zzgfdigq ( ctx, et, dist )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          real(wp), intent(out) :: dist  !! Distance at time ET.
       end subroutine zzgfdigq
@@ -16085,8 +16087,8 @@ module pepper_instance
       !> This is the initialization entry point used for describing
       !> the event that is to be solved for by ZZGFSOLV.
       module subroutine zzgfpain ( ctx, target, illmn, abcorr, obsrvr )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: illmn  !! Name of the illuminating body.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
@@ -16096,8 +16098,8 @@ module pepper_instance
       !> Computes whether or not the phase angle between the observer
       !> and the target is decreasing at time ET.
       module subroutine zzgfpadc ( ctx, udfunc, et, decres )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          logical, intent(out) :: decres  !! .TRUE. if phase angle is decreasing, .FALSE. otherwise.
          procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -16106,16 +16108,16 @@ module pepper_instance
       !> Determine the phase angle between the centers of the two
       !> bodies.
       module subroutine zzgfpagq ( ctx, et, rvl )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          real(wp), intent(out) :: rvl  !! Phase angle at time ET.
       end subroutine zzgfpagq
 
       !> Retrieve values set in ZZGFPAIN.
       module subroutine zzgfpax ( ctx, xtarg, xillmn, xabcor, xobs, xablk )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(out) :: xtarg  !! Saved value for the target body.
          integer(ip), intent(out) :: xillmn  !! Saved value for the illuminator body.
          character(*), intent(out) :: xabcor  !! Saved value for the aberration correction.
@@ -16130,8 +16132,8 @@ module pepper_instance
       !> LBCELL     P   SPICELIB cell lower bound.
       !> NWREQ      P   Minimum number of workspace windows.
       module subroutine zzgfrel ( ctx, udstep, udrefn, udqdec, udcond, udfunc, udqref, relate, refval, tol, adjust, cnfine, mw, nw, work, rpt, udrepi, udrepu, udrepf, rptpre, rptsuf, bail, udbail, result )
+      use pepper_inc_gf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
          real(wp), intent(in) :: refval  !! Value used as reference for geometric quantity condition.
@@ -16165,8 +16167,8 @@ module pepper_instance
       !> LBCELL     P   SPICELIB cell lower bound.
       !> NWREQ      P   Minimum number of workspace windows.
       module subroutine zzgfrelx ( ctx, udstep, udrefn, udqdec, udcond, udfunc, relate, refval, tol, adjust, cnfine, mw, nw, work, rpt, udrepi, udrepu, udrepf, rptpre, rptsuf, bail, udbail, result )
+      use pepper_inc_gf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the scalar quantity value and a number.
          real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
@@ -16195,8 +16197,8 @@ module pepper_instance
       !> Initialize the work progress utility. This is required prior to
       !> use of the routine that performs the actual reporting.
       module subroutine zzgftswk ( ctx, total, wait, tcheck, begin, end )
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzgf.inc'
          real(wp), intent(in) :: total  !! A measure of the total amount of work to be done.
          real(wp), intent(in) :: wait  !! Minimum wait time between reports.
          integer(ip), intent(in) :: tcheck  !! How often to sample the system clock.
@@ -16207,15 +16209,15 @@ module pepper_instance
       !> Let the work reporter know that an increment of work has just
       !> been completed.
       module subroutine zzgfwkin ( ctx, incr )
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzgf.inc'
          real(wp), intent(in) :: incr  !! An amount of work just completed.
       end subroutine zzgfwkin
 
       !> Adjust the frequency with which work progress is reported.
       module subroutine zzgfwkad ( ctx, wait, tcheck, begin, end )
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzgf.inc'
          real(wp), intent(in) :: wait  !! Minimum wait time between reports.
          integer(ip), intent(in) :: tcheck  !! Number of calls between system time checks.
          character(*), intent(in) :: begin  !! First part of the output message.
@@ -16224,15 +16226,15 @@ module pepper_instance
 
       !> Set the output unit for the progress report.
       module subroutine zzgfwkun ( ctx, unit )
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzgf.inc'
          integer(ip), intent(in) :: unit  !! Output logical unit.
       end subroutine zzgfwkun
 
       !> Return saved progress report parameters.
       module subroutine zzgfwkmo ( ctx, unit, total, wait, tcheck, begin, end, incr )
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzgf.inc'
          integer(ip), intent(out) :: unit  !! Output logical unit.
          real(wp), intent(out) :: total  !! A measure of the total amount of work to be done.
          real(wp), intent(out) :: wait  !! Minimum wait time between reports.
@@ -16245,8 +16247,8 @@ module pepper_instance
       !> This is the initialization entry point used for describing
       !> the event that is to be solved for by ZZGFSOLV.
       module subroutine zzgfrrin ( ctx, target, abcorr, obsrvr, dt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          character(*), intent(in) :: target  !! Name of the target body
          character(*), intent(in) :: abcorr  !! Aberration correction flag
          character(*), intent(in) :: obsrvr  !! Name of the observing body
@@ -16256,8 +16258,8 @@ module pepper_instance
       !> Computes whether or not the range rate between the observer
       !> and the target is decreasing at time ET.
       module subroutine zzgfrrdc ( ctx, udfunc, et, decres )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          logical, intent(out) :: decres  !! true if range rate is decreasing, false otherwise.
          procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -16266,16 +16268,16 @@ module pepper_instance
       !> Determine the range rate between the centers of the two
       !> bodies.
       module subroutine zzgfrrgq ( ctx, et, rvl )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          real(wp), intent(out) :: rvl  !! Range rate at time ET.
       end subroutine zzgfrrgq
 
       !> Retrieve values set in ZZGFRRIN.
       module subroutine zzgfrrx ( ctx, xtarg, xabcor, xobs, xdt )
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'zzabcorr.inc'
          integer(ip), intent(out) :: xtarg  !! Saved value for the target body.
          character(*), intent(out) :: xabcor  !! Saved value for the aberration correction.
          integer(ip), intent(out) :: xobs  !! Saved value for the observing body.
@@ -16286,8 +16288,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzgfudb ( ctx, udfuns, udfunb, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
+      use pepper_inc_gf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'gf.inc'
          integer(ip), parameter :: lbcell = -5
          real(wp), intent(in) :: tol  !! Convergence tolerance in seconds.
          logical, intent(in) :: rpt  !! Progress report flag.
@@ -16312,9 +16314,9 @@ module pepper_instance
       !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
       !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
       module subroutine gfoclt ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: occtyp  !! Type of occultation.
          character(*), intent(in) :: front  !! Name of body occulting the other.
@@ -16341,9 +16343,9 @@ module pepper_instance
       !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
       !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
       module subroutine gfrfov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: inst  !! Name of the instrument.
          real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
@@ -16361,8 +16363,8 @@ module pepper_instance
       !> MXBEGM     P   Maximum progress report message prefix length.
       !> MXENDM     P   Maximum progress report message suffix length.
       module subroutine gfrepi ( ctx, window, begmss, endmss )
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzgf.inc'
          integer(ip), parameter :: lbcell = -5
          real(wp), intent(in) :: window ( lbcell : * )  !! A window over which a job is to be performed.
          character(*), intent(in) :: begmss  !! Beginning of the text portion of output message.
@@ -16372,8 +16374,8 @@ module pepper_instance
       !> Tell the progress reporting system how far a search has
       !> progressed.
       module subroutine gfrepu ( ctx, ivbeg, ivend, time )
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzgf.inc'
          real(wp), intent(in) :: ivbeg  !! Start time of work interval.
          real(wp), intent(in) :: ivend  !! End time of work interval.
          real(wp), intent(in) :: time  !! Current time being examined in the search process
@@ -16383,8 +16385,8 @@ module pepper_instance
       !>
       !> None.
       module subroutine gfrepf ( ctx )
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'zzgf.inc'
       end subroutine gfrepf
 
       !> Determine time intervals when a specified ephemeris object
@@ -16396,9 +16398,9 @@ module pepper_instance
       !> CNVTOL     P   Convergence tolerance.
       !> MAXVRT     P   Maximum number of FOV boundary vertices.
       module subroutine gftfov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: inst  !! Name of the instrument.
          character(*), intent(in) :: target  !! Name of the target body.
@@ -16416,10 +16418,10 @@ module pepper_instance
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Convergence tolerance.
       module subroutine gfudb ( ctx, udfuns, udfunb, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
          real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
@@ -16433,10 +16435,10 @@ module pepper_instance
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Convergence tolerance.
       module subroutine gfuds ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
          real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
@@ -16453,10 +16455,10 @@ module pepper_instance
 
       !> Initialize a coordinate search.
       module subroutine zzgfcoin ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          character(*), intent(in) :: vecdef  !! Vector definition.
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: target  !! Target name.
@@ -16472,10 +16474,10 @@ module pepper_instance
       !> Compute the coordinate defined by the last call to ZZGFCOIN is at
       !> the specified epoch.
       module subroutine zzgfcog ( ctx, et, crdval )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Computation epoch.
          real(wp), intent(out) :: crdval  !! Coordinate at epoch.
       end subroutine zzgfcog
@@ -16483,10 +16485,10 @@ module pepper_instance
       !> Indicate whether the coordinate defined by the last call to
       !> ZZGFCOIN is decreasing at the specified epoch.
       module subroutine zzgfcodc ( ctx, udfunc, et, decres )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Computation epoch.
          logical, intent(out) :: decres  !! Flag indicating if coordinate is decreasing.
          procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -16495,10 +16497,10 @@ module pepper_instance
       !> Indicate whether the state of coordinate defined by the last call
       !> to ZZGFCOIN is computable at the specified epoch.
       module subroutine zzgfcoex ( ctx, udfunc, et, crdfnd )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Computation epoch.
          logical, intent(out) :: crdfnd  !! Flag indicating if coordinate state is computable.
          procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -16507,10 +16509,10 @@ module pepper_instance
       !> Compute the cosine of the coordinate defined by the last call to
       !> ZZGFCOIN is at the specified epoch.
       module subroutine zzgfcocg ( ctx, et, crdval )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Computation epoch.
          real(wp), intent(out) :: crdval  !! Cosine of coordinate at epoch.
       end subroutine zzgfcocg
@@ -16518,10 +16520,10 @@ module pepper_instance
       !> Compute the sine of the coordinate defined by the last call to
       !> ZZGFCOIN is at the specified epoch.
       module subroutine zzgfcosg ( ctx, et, crdval )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Computation epoch.
          real(wp), intent(out) :: crdval  !! Sine of coordinate at epoch.
       end subroutine zzgfcosg
@@ -16529,10 +16531,10 @@ module pepper_instance
       !> Indicate whether the cosine of the coordinate defined by the
       !> last call to ZZGFCOIN is decreasing at the specified epoch.
       module subroutine zzgfcocd ( ctx, udfunc, et, decres )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Computation epoch.
          logical, intent(out) :: decres  !! Flag indicating if cos of coordinate is decreasing.
          procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -16541,10 +16543,10 @@ module pepper_instance
       !> Indicate whether the sine of the coordinate defined by the
       !> last call to ZZGFCOIN is decreasing at the specified epoch.
       module subroutine zzgfcosd ( ctx, udfunc, et, decres )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
          real(wp), intent(in) :: et  !! Computation epoch.
          logical, intent(out) :: decres  !! Flag indicating if sine of coordinate is decreasing.
          procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
@@ -16556,9 +16558,9 @@ module pepper_instance
       !>
       !> LBCELL     P   Cell lower bound.
       module subroutine zzgflong ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, mw, nw, work, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: vecdef  !! Vector definition.
          character(*), intent(in) :: method  !! Computation method.
@@ -16594,9 +16596,9 @@ module pepper_instance
       !> LBCELL     P   Cell lower bound.
       !> CNTRCT     P   Existence window contraction magnitude.
       module subroutine zzgfcslv ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, mw, nw, work, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: vecdef  !! Vector definition.
          character(*), intent(in) :: method  !! Computation method.
@@ -16634,10 +16636,10 @@ module pepper_instance
       !> any quantity.
       !> CNVTOL     P   Default convergence tolerance.
       module subroutine gfevnt ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, qipars, qlpars, op, refval, tol, adjust, cnfine, rpt, udrepi, udrepu, udrepf, mw, nw, work, bail, udbail, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'gf.inc'
-         include 'zzgf.inc'
-         include 'zzabcorr.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: gquant  !! Type of geometric quantity.
          integer(ip), intent(in) :: qnpars  !! Number of quantity definition parameters.
@@ -16672,9 +16674,9 @@ module pepper_instance
       !> CNVTOL     P   Convergence tolerance.
       !> NWDIST     P   Number of workspace windows for distance search.
       module subroutine gfdist ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
@@ -16698,10 +16700,10 @@ module pepper_instance
       !> CNVTOL     P   Convergence tolerance.
       !> NWILUM     P   Number of workspace windows for angle search.
       module subroutine gfilum ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'gf.inc'
-         include 'zzabcorr.inc'
-         include 'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: angtyp  !! Type of illumination angle.
@@ -16729,9 +16731,9 @@ module pepper_instance
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Default convergence tolerance.
       module subroutine gfpa ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: illmn  !! Name of the illuminating body.
@@ -16754,11 +16756,11 @@ module pepper_instance
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Convergence tolerance.
       module subroutine gfposc ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: frame  !! Name of the reference frame for coordinate calculations.
@@ -16783,10 +16785,10 @@ module pepper_instance
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Convergence tolerance.
       module subroutine gfrr ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
@@ -16811,10 +16813,10 @@ module pepper_instance
       !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
       !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
       module subroutine gfsep ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzabcorr.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: targ1  !! Name of first body.
          character(*), intent(in) :: shape1  !! Name of shape model describing the first body.
@@ -16844,10 +16846,10 @@ module pepper_instance
       !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
       !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
       module subroutine gfsntc ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
@@ -16875,11 +16877,11 @@ module pepper_instance
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Convergence tolerance.
       module subroutine gfsubc ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include               'gf.inc'
-         include               'zzgf.inc'
-         include               'zzabcorr.inc'
-         include               'zzholdd.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
@@ -16938,10 +16940,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekcdsc ( ctx, handle, segdsc, column, coldsc )
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to an EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          character(*), intent(in) :: column  !! Name of column.
@@ -16950,10 +16952,10 @@ module pepper_instance
 
       !> Look up the name of a column, given the column's descriptor.
       module subroutine zzekcnam ( ctx, handle, coldsc, column )
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
          character(*), intent(out) :: column  !! Column name.
@@ -16963,8 +16965,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekgei ( ctx, handle, addrss, ival )
+      use pepper_inc_ekdatpag
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(in) :: addrss  !! DAS character address to read encoded value from.
          integer(ip), intent(out) :: ival  !! Decoded integer value.
@@ -16972,8 +16974,8 @@ module pepper_instance
 
       !> Return the status of a specified EK record.
       module subroutine zzekgrs ( ctx, handle, recptr, status )
+      use pepper_inc_ekrecptr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekrecptr.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: recptr  !! Record pointer.
          integer(ip), intent(out) :: status  !! Status of specified EK record.
@@ -17016,10 +17018,10 @@ module pepper_instance
 
       !> Parse a declaration of a new EK column.
       module subroutine zzekpdec ( ctx, decl, pardsc )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ektype.inc'
          character(*), intent(in) :: decl  !! String containing column declaration.
          integer(ip), intent(out) :: pardsc ( * )  !! Partial column descriptor.
       end subroutine zzekpdec
@@ -17027,10 +17029,10 @@ module pepper_instance
       !> Check that an EK is valid for a specified type of access by the
       !> paging system.
       module subroutine zzekpgch ( ctx, handle, access )
+      use pepper_inc_ekpage
+      use pepper_inc_ekarch
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ekarch.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          character(*), intent(in) :: access  !! Access type.
       end subroutine zzekpgch
@@ -17039,10 +17041,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekqini ( ctx, isize, dsize, eqryi, eqryc, eqryd )
+      use pepper_inc_ekquery
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekbool
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
-         include 'ekqlimit.inc'
-         include 'ekbool.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: isize  !! Size of integer component of encoded query.
          integer(ip), intent(in) :: dsize  !! Size of d.p. component of encoded query.
@@ -17054,14 +17056,14 @@ module pepper_instance
       !> Back up a modified EK record belonging to a shadowed EK.
       !> This is a stub routine.
       module subroutine zzekrbck ( ctx, action, handle, segdsc, coldsc, recno )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekglimit
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekglimit.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          character(*), intent(in) :: action  !! Action necessitating backup.
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
@@ -17073,8 +17075,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekreqi ( ctx, eqryi, name, value )
+      use pepper_inc_ekquery
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
          character(*), intent(in) :: name  !! Name of scalar item to read.
@@ -17136,10 +17138,10 @@ module pepper_instance
 
       !> Scan tokens in an EK query.
       module subroutine zzekscan ( ctx, query, maxntk, maxnum, ntoken, tokens, lxbegs, lxends, values, numvls, chrbuf, chbegs, chends, scnerr, errmsg )
+      use pepper_inc_ekkeyw
+      use pepper_inc_ektokn
+      use pepper_inc_ekqlimit
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekkeyw.inc'
-         include 'ektokn.inc'
-         include 'ekqlimit.inc'
          character(*), intent(in) :: query  !! Query specifying events to be found.
          integer(ip), intent(in) :: maxntk  !! Maximum number of tokens to return.
          integer(ip), intent(in) :: maxnum  !! Maximum number of numeric tokens allowed.
@@ -17160,8 +17162,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzeksei ( ctx, handle, addrss, ival )
+      use pepper_inc_ekdatpag
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(in) :: addrss  !! DAS character address.
          integer(ip), intent(in) :: ival  !! Integer value to write.
@@ -17173,9 +17175,9 @@ module pepper_instance
       !> The function returns the type of segment that is compatible with
       !> the input column descriptors.
       module integer(ip) function zzekstyp ( ctx, ncols, cdscrs )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekglimit
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekglimit.inc'
          integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
          integer(ip), intent(in) :: cdscrs ( cdscsz, * )  !! Descriptors of columns.
       end function zzekstyp
@@ -17185,13 +17187,13 @@ module pepper_instance
       !> The function returns the number of elements in the specified
       !> column entry.
       module integer(ip) function zzeksz04 ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: recptr  !! Record pointer.
@@ -17203,13 +17205,13 @@ module pepper_instance
       !> The function returns the number of elements in the specified
       !> column entry.
       module integer(ip) function zzeksz05 ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: recptr  !! Record pointer.
@@ -17220,8 +17222,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzektcnv ( ctx, timstr, et, error, errmsg )
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektype.inc'
          character(*), intent(in) :: timstr  !! Time string.
          real(wp), intent(out) :: et  !! Ephemeris time in seconds past J2000, TDB.
          logical, intent(out) :: error  !! Error flag.
@@ -17232,9 +17234,9 @@ module pepper_instance
       !> EK query.  The input may actually be any subset of token codes
       !> and corresponding keyword codes from a tokenized query.
       module subroutine zzektloc ( ctx, tokid, kwcode, ntoken, tokens, values, loc, found )
+      use pepper_inc_ektokn
+      use pepper_inc_ekkeyw
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektokn.inc'
-         include 'ekkeyw.inc'
          integer(ip), intent(in) :: tokid  !! Token ID.
          integer(ip), intent(in) :: kwcode  !! Keyword code.
          integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
@@ -17248,8 +17250,8 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekweqi ( ctx, name, value, eqryi )
+      use pepper_inc_ekquery
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: name  !! Name of scalar item to write.
          integer(ip), intent(in) :: value  !! Value to write.
@@ -17272,9 +17274,9 @@ module pepper_instance
 
       !> Get the companion pointer of a specified EK record.
       module subroutine zzekgrcp ( ctx, handle, recptr, ptr )
+      use pepper_inc_eksegdsc
+      use pepper_inc_ekrecptr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'eksegdsc.inc'
-         include 'ekrecptr.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: recptr  !! Record pointer.
          integer(ip), intent(out) :: ptr  !! Pointer to companion of specified EK record.
@@ -17284,10 +17286,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekinqc ( ctx, value, length, lexbeg, lexend, eqryi, eqryc, descr )
+      use pepper_inc_ekquery
+      use pepper_inc_ektype
+      use pepper_inc_ekbool
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
-         include 'ektype.inc'
-         include 'ekbool.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: value  !! Character value.
          integer(ip), intent(in) :: length  !! Length of item to insert.
@@ -17302,10 +17304,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekinqn ( ctx, value, type, lexbeg, lexend, eqryi, eqryd, descr )
+      use pepper_inc_ekquery
+      use pepper_inc_ektype
+      use pepper_inc_ekbool
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
-         include 'ektype.inc'
-         include 'ekbool.inc'
          integer(ip), parameter :: lbcell = -5
          real(wp), intent(in) :: value  !! Numeric value.
          integer(ip), intent(in) :: type  !! Data type.  May be INT, DP, or TIME.
@@ -17320,9 +17322,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekjsqz ( ctx, jrsbas )
+      use pepper_inc_ekjrs
+      use pepper_inc_ekqlimit
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekjrs.inc'
-         include 'ekqlimit.inc'
          integer(ip), intent(in) :: jrsbas  !! Scratch area base address of join row set.
       end subroutine zzekjsqz
 
@@ -17330,10 +17332,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgin ( ctx, handle )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! DAS file handle.
       end subroutine zzekpgin
 
@@ -17341,10 +17343,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgan ( ctx, handle, type, p, base )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          integer(ip), intent(in) :: type  !! Data type of page to allocate.
          integer(ip), intent(out) :: p  !! Page number.
@@ -17355,10 +17357,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgal ( ctx, handle, type, p, base )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          integer(ip), intent(in) :: type  !! Data type of page to allocate.
          integer(ip), intent(out) :: p  !! Page number.
@@ -17369,10 +17371,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgfr ( ctx, handle, type, p )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          integer(ip), intent(in) :: type  !! Data type of page to allocate.
          integer(ip), intent(in) :: p  !! Page number.
@@ -17382,10 +17384,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgrc ( ctx, handle, p, pagec )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          integer(ip), intent(in) :: p  !! Page number.
          character(*), intent(out) :: pagec  !! Character page.
@@ -17395,10 +17397,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgrd ( ctx, handle, p, paged )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          integer(ip), intent(in) :: p  !! Page number.
          real(wp), intent(out) :: paged ( * )  !! Double precision page.
@@ -17408,10 +17410,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgri ( ctx, handle, p, pagei )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          integer(ip), intent(in) :: p  !! Page number.
          integer(ip), intent(out) :: pagei ( * )  !! Integer page.
@@ -17421,10 +17423,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgwc ( ctx, handle, p, pagec )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          integer(ip), intent(in) :: p  !! Page number.
          character(*), intent(in) :: pagec  !! Character page.
@@ -17434,10 +17436,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgwd ( ctx, handle, p, paged )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          integer(ip), intent(in) :: p  !! Page number.
          real(wp), intent(in) :: paged ( * )  !! Double precision page.
@@ -17447,10 +17449,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgwi ( ctx, handle, p, pagei )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          integer(ip), intent(in) :: p  !! Page number.
          integer(ip), intent(in) :: pagei ( * )  !! Integer page.
@@ -17460,10 +17462,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgbs ( ctx, type, p, base )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: type  !! Data type of page.
          integer(ip), intent(in) :: p  !! Page number.
          integer(ip), intent(out) :: base  !! DAS base address of page.
@@ -17473,10 +17475,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgpg ( ctx, type, addrss, p, base )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: type  !! Data type of address.
          integer(ip), intent(in) :: addrss  !! DAS address to be mapped.
          integer(ip), intent(out) :: p  !! Page number.
@@ -17487,10 +17489,10 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpgst ( ctx, handle, stat, value )
+      use pepper_inc_ekarch
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekarch.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Paged EK file handle.
          character(*), intent(in) :: stat  !! Name of requested statistic.
          integer(ip), intent(out) :: value  !! Value of requested statistic.
@@ -17500,9 +17502,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekqcnj ( ctx, eqryi, n, size )
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
-         include 'ekbool.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
          integer(ip), intent(in) :: n  !! Index within FROM clause of table name to read.
@@ -17513,11 +17515,11 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekqcon ( ctx, eqryi, eqryc, eqryd, n, cnstyp, ltname, ltidx, lcname, lcidx, opcode, rtname, rtidx, rcname, rcidx, dtype, cbeg, cend, dval, ival )
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
+      use pepper_inc_ekopcd
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
-         include 'ekbool.inc'
-         include 'ekopcd.inc'
-         include 'ektype.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
          character(*), intent(in) :: eqryc  !! Character component of query.
@@ -17544,9 +17546,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekqord ( ctx, eqryi, eqryc, n, table, tabidx, column, colidx, sense )
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
-         include 'ekbool.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
          character(*), intent(in) :: eqryc  !! Character component of query.
@@ -17562,9 +17564,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekqsel ( ctx, eqryi, eqryc, n, lxbeg, lxend, table, tabidx, column, colidx )
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
-         include 'ekbool.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
          character(*), intent(in) :: eqryc  !! Character component of query.
@@ -17581,9 +17583,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekqtab ( ctx, eqryi, eqryc, n, table, alias )
+      use pepper_inc_ekquery
+      use pepper_inc_ekbool
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
-         include 'ekbool.inc'
          integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
          character(*), intent(in) :: eqryc  !! Character component of query.
@@ -17596,15 +17598,15 @@ module pepper_instance
       !> Class 9 columns contain fixed record count, fixed-length,
       !> scalar character values.
       module subroutine zzekrd09 ( ctx, handle, segdsc, coldsc, recno, cvlen, cval, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas09
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekclas09.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekpage.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -17616,8 +17618,8 @@ module pepper_instance
 
       !> Set the companion pointer of a specified EK record.
       module subroutine zzeksrcp ( ctx, handle, recptr, recno )
+      use pepper_inc_ekrecptr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekrecptr.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: recptr  !! Record pointer.
          integer(ip), intent(in) :: recno  !! Record number of companion of specified EK record.
@@ -17625,8 +17627,8 @@ module pepper_instance
 
       !> Set the status of a specified EK record.
       module subroutine zzeksrs ( ctx, handle, recptr, status )
+      use pepper_inc_ekrecptr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekrecptr.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: recptr  !! Record pointer.
          integer(ip), intent(in) :: status  !! Status of specified EK record.
@@ -17637,13 +17639,13 @@ module pepper_instance
       !> The function returns the number of elements in the specified
       !> column entry.
       module integer(ip) function zzeksz06 ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: recptr  !! Record pointer.
@@ -17670,10 +17672,10 @@ module pepper_instance
 
       !> Return the forward data pointer for a specified EK data page.
       module subroutine zzekgfwd ( ctx, handle, type, p, fward )
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: type  !! Data type of page.
          integer(ip), intent(in) :: p  !! Page number.
@@ -17682,10 +17684,10 @@ module pepper_instance
 
       !> Return the link count for a specified EK data page.
       module subroutine zzekglnk ( ctx, handle, type, p, nlinks )
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: type  !! Data type of page.
          integer(ip), intent(in) :: p  !! Page number.
@@ -17694,13 +17696,13 @@ module pepper_instance
 
       !> Convert the WHERE clause of an EK query to a normalized form.
       module subroutine zzeknrml ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
+      use pepper_inc_ekkeyw
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektokn
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekkeyw.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'ektokn.inc'
-         include 'ektype.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Input EK query.
          integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
@@ -17721,10 +17723,10 @@ module pepper_instance
 
       !> Set the forward data pointer for a specified EK data page.
       module subroutine zzeksfwd ( ctx, handle, type, p, fward )
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: type  !! Data type of page.
          integer(ip), intent(in) :: p  !! Page number.
@@ -17733,10 +17735,10 @@ module pepper_instance
 
       !> Set the link count for a specified EK data page.
       module subroutine zzekslnk ( ctx, handle, type, p, nlinks )
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: type  !! Data type of page.
          integer(ip), intent(in) :: p  !! Page number.
@@ -17746,10 +17748,10 @@ module pepper_instance
       !> Execute a 1-3 split:  split the root node to create two new
       !> children, leaving a single key in the root.
       module subroutine zzektr13 ( ctx, handle, tree )
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
       end subroutine zzektr13
@@ -17757,10 +17759,10 @@ module pepper_instance
       !> Execute a 3-1 merge:  move the contents of two children into
       !> the root node and delete the children.
       module subroutine zzektr31 ( ctx, handle, tree )
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
       end subroutine zzektr31
@@ -17770,27 +17772,27 @@ module pepper_instance
       !> The function returns the DAS integer base address of the
       !> specified node.
       module integer(ip) function zzektrbs ( ctx, node )
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektype.inc'
          integer(ip), intent(in) :: node  !! Node number.
       end function zzektrbs
 
       !> Free a tree:  deallocate all pages belonging to the tree.
       module subroutine zzektrfr ( ctx, handle, tree )
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ektree.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
       end subroutine zzektrfr
 
       !> Initialize an EK tree, returning the root of the tree.
       module subroutine zzektrit ( ctx, handle, tree )
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ektree.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(out) :: tree  !! Root of tree.
       end subroutine zzektrit
@@ -17798,10 +17800,10 @@ module pepper_instance
       !> Locate a specified key.  Return metadata describing the node
       !> containing the key.
       module subroutine zzektrlk ( ctx, handle, tree, key, idx, node, noffst, level, value )
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ektree.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: key  !! Key corresponding to value.
@@ -17815,10 +17817,10 @@ module pepper_instance
       !> Given a key, return general information pertaining to the key's
       !> parent node.
       module subroutine zzektrpi ( ctx, handle, tree, key, parent, pkey, poffst, lpidx, lpkey, lsib, rpidx, rpkey, rsib )
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ektree.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: key  !! Key belonging to node of interest.
@@ -17836,9 +17838,9 @@ module pepper_instance
       !> Rotate a specified number of keys from one node, through
       !> the parent, into a neighboring sibling node.
       module subroutine zzektrrk ( ctx, handle, tree, left, right, parent, pkidx, nrot )
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
-         include 'ekpage.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: left  !! Left node of pair to participate in rotation.
@@ -17852,9 +17854,9 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekweed ( ctx, njrs, bases, nrows )
+      use pepper_inc_ekjrs
+      use pepper_inc_ekqlimit
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekjrs.inc'
-         include 'ekqlimit.inc'
          integer(ip), intent(inout) :: njrs  !! Number of join row sets in union.
          integer(ip), intent(inout) :: bases ( * )  !! Scratch area base addresses of join row sets.
          integer(ip), intent(out) :: nrows  !! Total number of row vectors in join row set union.
@@ -17862,9 +17864,9 @@ module pepper_instance
 
       !> Open a new E-kernel file and prepare the file for writing.
       module subroutine ekopn ( ctx, fname, ifname, ncomch, handle )
+      use pepper_inc_ektype
+      use pepper_inc_ekfilpar
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektype.inc'
-         include 'ekfilpar.inc'
          character(*), intent(in) :: fname  !! Name of EK file.
          character(*), intent(in) :: ifname  !! Internal file name.
          integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
@@ -17874,16 +17876,16 @@ module pepper_instance
       !> Open a scratch (temporary) E-kernel file and prepare the file
       !> for writing.
       module subroutine ekops ( ctx, handle )
+      use pepper_inc_ektype
+      use pepper_inc_ekfilpar
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektype.inc'
-         include 'ekfilpar.inc'
          integer(ip), intent(out) :: handle  !! File handle attached to new EK file.
       end subroutine ekops
 
       !> Create a new type 1 index for a specified EK column.
       module subroutine zzekcix1 ( ctx, handle, coldsc )
+      use pepper_inc_ekcoldsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: coldsc ( cdscsz )  !! Column descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
       end subroutine zzekcix1
@@ -17891,14 +17893,14 @@ module pepper_instance
       !> Parse an EK query that has been scanned and tokenized.
       !> Represent the result as an encoded EK query.
       module subroutine zzekpars ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
+      use pepper_inc_ektokn
+      use pepper_inc_ekkeyw
+      use pepper_inc_ekbool
+      use pepper_inc_ektype
+      use pepper_inc_ekopcd
+      use pepper_inc_ekquery
+      use pepper_inc_ekqlimit
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektokn.inc'
-         include 'ekkeyw.inc'
-         include 'ekbool.inc'
-         include 'ektype.inc'
-         include 'ekopcd.inc'
-         include 'ekquery.inc'
-         include 'ekqlimit.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Query in string form.
          integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
@@ -17920,10 +17922,10 @@ module pepper_instance
       !> Execute a 2-3 split:  split two sibling nodes into three nodes,
       !> each one approximately 2/3 full.
       module subroutine zzektr23 ( ctx, handle, tree, left, right, parent, pkidx, overfl )
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: left  !! Left sibling node.
@@ -17938,10 +17940,10 @@ module pepper_instance
       !> has an underflow of one key, into two nodes, each one
       !> approximately full.
       module subroutine zzektr32 ( ctx, handle, tree, left, middle, right, parent, lpkidx, undrfl )
+      use pepper_inc_ektree
+      use pepper_inc_ekpage
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
-         include 'ekpage.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: left  !! Left sibling node.
@@ -17966,8 +17968,8 @@ module pepper_instance
       !> The function returns the total number of keys in the specified
       !> node of an EK tree.
       module integer(ip) function zzektrnk ( ctx, handle, tree, node )
+      use pepper_inc_ektree
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: node  !! Node of interest.
@@ -17976,8 +17978,8 @@ module pepper_instance
       !> Identify the immediate siblings of a node:  return a key in each
       !> sibling and the siblings' node numbers.
       module subroutine zzektrsb ( ctx, handle, tree, key, lsib, lkey, rsib, rkey )
+      use pepper_inc_ektree
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: key  !! Key of interest.
@@ -17992,8 +17994,8 @@ module pepper_instance
       !> The function returns the total number of keys in the specified
       !> EK tree.
       module integer(ip) function zzektrsz ( ctx, handle, tree )
+      use pepper_inc_ektree
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
       end function zzektrsz
@@ -18001,9 +18003,9 @@ module pepper_instance
       !> Delete a value from a tree at a specified location without
       !> balancing the tree.
       module subroutine zzektrud ( ctx, handle, tree, key, trgkey, undrfl )
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ektree.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: key  !! Key to delete.
@@ -18014,10 +18016,10 @@ module pepper_instance
       !> Insert a value into a tree at a specified location without
       !> balancing the tree.
       module subroutine zzektrui ( ctx, handle, tree, key, value, overfl )
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ektree.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: key  !! Key to insert.
@@ -18030,17 +18032,17 @@ module pepper_instance
       !> The function returns the number of segments in the specified
       !> E-kernel.
       module integer(ip) function eknseg ( ctx, handle )
+      use pepper_inc_ekfilpar
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekfilpar.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
       end function eknseg
 
       !> Look up a specified record pointer from an EK index.
       module subroutine zzekixlk ( ctx, handle, coldsc, key, recptr )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekpage.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
          integer(ip), intent(in) :: key  !! Key.
@@ -18050,10 +18052,10 @@ module pepper_instance
       !> Look up the record pointer of an EK record having a specified
       !> ordinal position in a specified EK segment.
       module subroutine zzekrplk ( ctx, handle, segdsc, n, recptr )
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
-         include 'ekpage.inc'
-         include 'eksegdsc.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: n  !! Ordinal position of record.
@@ -18063,10 +18065,10 @@ module pepper_instance
       !> One-shot tree load:  insert an entire array into an empty
       !> tree.
       module subroutine zzektr1s ( ctx, handle, tree, size, values )
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ektree.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: size  !! Size of tree.
@@ -18076,8 +18078,8 @@ module pepper_instance
       !> Solve overflow in a node by balancing the node
       !> with one of its sibling nodes.
       module subroutine zzektrbn ( ctx, handle, tree, left, right, parent, pkidx )
+      use pepper_inc_ektree
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ektree.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: left  !! Left node of pair to be balanced.
@@ -18090,8 +18092,8 @@ module pepper_instance
       !> index in a specified node.  The node of interest is identified
       !> by a key in the node.
       module subroutine zzektrki ( ctx, handle, tree, nodkey, n, key )
+      use pepper_inc_ektree
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: nodkey  !! Key identifying node containing key of interest.
@@ -18105,8 +18107,8 @@ module pepper_instance
       !> The function returns the lowest index at which the input value
       !> is found, or zero if the value is not found.
       module integer(ip) function zzektrls ( ctx, handle, tree, ival )
+      use pepper_inc_ektree
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ektree.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Tree root.
          integer(ip), intent(in) :: ival  !! Value to search for.
@@ -18116,8 +18118,8 @@ module pepper_instance
       !> number and DAS integer base address of the first integer
       !> page of the metadata are returned.
       module subroutine zzekmloc ( ctx, handle, segno, page, base )
+      use pepper_inc_ekfilpar
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekfilpar.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
          integer(ip), intent(out) :: page  !! Integer metadata start page number.
@@ -18126,9 +18128,9 @@ module pepper_instance
 
       !> Delete a value from an EK tree at a specified location.
       module subroutine zzektrdl ( ctx, handle, tree, key )
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ektree.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: key  !! Key at which to delete value.
@@ -18136,9 +18138,9 @@ module pepper_instance
 
       !> Insert a value into an EK tree at a specified location.
       module subroutine zzektrin ( ctx, handle, tree, key, value )
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekpage.inc'
-         include 'ektree.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: tree  !! Root of tree.
          integer(ip), intent(in) :: key  !! Key at which to insert value.
@@ -18147,10 +18149,10 @@ module pepper_instance
 
       !> Delete a specified data page for a specified EK segment.
       module subroutine zzekdps ( ctx, handle, segdsc, type, p )
+      use pepper_inc_ekdatpag
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: type  !! Data type of page.
@@ -18159,13 +18161,13 @@ module pepper_instance
 
       !> Complete a fast load operation on a new type 1 E-kernel segment.
       module subroutine zzekff01 ( ctx, handle, segno, rcptrs )
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekglimit
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
-         include 'ekglimit.inc'
-         include 'ekpage.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
          integer(ip), intent(inout) :: rcptrs ( * )  !! Record pointers.
@@ -18173,8 +18175,8 @@ module pepper_instance
 
       !> Look up the descriptor of a specified EK segment.
       module subroutine zzeksdsc ( ctx, handle, segno, segdsc )
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'eksegdsc.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
          integer(ip), intent(out) :: segdsc ( sdscsz )  !! Segment descriptor.
@@ -18183,11 +18185,11 @@ module pepper_instance
       !> Return general segment information for a specified segment in a
       !> specified EK.
       module subroutine zzeksinf ( ctx, handle, segno, tabnam, segdsc, cnames, cdscrs )
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektnamsz.inc'
          integer(ip), intent(in) :: handle  !! Handle of EK.
          integer(ip), intent(in) :: segno  !! Number of segment to be summarized.
          character(*), intent(out) :: tabnam  !! Name of table containing segment.
@@ -18208,8 +18210,8 @@ module pepper_instance
 
       !> Complete a fast write operation on a new E-kernel segment.
       module subroutine ekffld ( ctx, handle, segno, rcptrs )
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'eksegdsc.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
          integer(ip), intent(inout) :: rcptrs ( * )  !! Record pointers. (PEPPER: changed by the routine, an input in SPICELIB's table)
@@ -18218,12 +18220,12 @@ module pepper_instance
       !> Return summary information for a specified segment in a
       !> specified EK.
       module subroutine ekssum ( ctx, handle, segno, tabnam, nrows, ncols, cnames, dtypes, sizes, strlns, indexd, nullok )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekglimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekglimit.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle of EK.
          integer(ip), intent(in) :: segno  !! Number of segment to be summarized.
          character(*), intent(out) :: tabnam  !! Name of table containing segment.
@@ -18240,9 +18242,9 @@ module pepper_instance
       !> Allocate a series of contiguous data pages for a specified EK
       !> segment.
       module subroutine zzekacps ( ctx, handle, segdsc, type, n, p, base )
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: type  !! Data type of page.
@@ -18253,9 +18255,9 @@ module pepper_instance
 
       !> Allocate a data page for a specified EK segment.
       module subroutine zzekaps ( ctx, handle, segdsc, type, new, p, base )
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: type  !! Data type of page.
@@ -18266,18 +18268,18 @@ module pepper_instance
 
       !> Start a new type 1 segment in an E-kernel.
       module subroutine zzekbs01 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekfilpar
+      use pepper_inc_ekglimit
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekcnamsz.inc'
-         include 'ekdatpag.inc'
-         include 'ekfilpar.inc'
-         include 'ekglimit.inc'
-         include 'ekpage.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektnamsz.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          character(*), intent(in) :: tabnam  !! Table name.
          integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
@@ -18288,18 +18290,18 @@ module pepper_instance
 
       !> Start a new type 2 segment in an E-kernel.
       module subroutine zzekbs02 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekfilpar
+      use pepper_inc_ekglimit
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekcnamsz.inc'
-         include 'ekdatpag.inc'
-         include 'ekfilpar.inc'
-         include 'ekglimit.inc'
-         include 'ekpage.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektnamsz.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          character(*), intent(in) :: tabnam  !! Table name.
          integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
@@ -18310,12 +18312,12 @@ module pepper_instance
 
       !> Delete a specified class 4 column entry from an EK record.
       module subroutine zzekde04 ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18329,8 +18331,8 @@ module pepper_instance
       !> The function returns the number of the record having the
       !> specified record pointer.
       module integer(ip) function zzekrp2n ( ctx, handle, segno, recptr )
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'eksegdsc.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
          integer(ip), intent(in) :: recptr  !! Record pointer.
@@ -18356,18 +18358,18 @@ module pepper_instance
 
       !> Start a new segment in an E-kernel.
       module subroutine ekbseg ( ctx, handle, tabnam, ncols, cnames, decls, segno )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekfilpar
+      use pepper_inc_ekglimit
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekcnamsz.inc'
-         include 'ekdatpag.inc'
-         include 'ekfilpar.inc'
-         include 'ekglimit.inc'
-         include 'ekpage.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektnamsz.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          character(*), intent(in) :: tabnam  !! Table name.
          integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
@@ -18379,13 +18381,13 @@ module pepper_instance
       !> Add a new, empty record to a specified E-kernel segment at
       !> a specified index.
       module subroutine ekinsr ( ctx, handle, segno, recno )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekpage.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
          integer(ip), intent(in) :: recno  !! Record number.
@@ -18394,10 +18396,10 @@ module pepper_instance
       !> Check whether a file is a type 1 star catalog and return the
       !> catalog's table name if it is.
       module subroutine stcc01 ( ctx, catfnm, tabnam, istyp1, errmsg )
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ektnamsz
+      use pepper_inc_ekglimit
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcnamsz.inc'
-         include 'ektnamsz.inc'
-         include 'ekglimit.inc'
          character(*), intent(in) :: catfnm  !! Catalog file name.
          character(*), intent(out) :: tabnam  !! Catalog table name.
          logical, intent(out) :: istyp1  !! .TRUE. when file is type 1 star catalog.
@@ -18406,15 +18408,15 @@ module pepper_instance
 
       !> Add an entire class 1 column to an EK segment.
       module subroutine zzekac01 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, rcptrs, wkindx )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekcoldsc.inc'
-         include  'ekcnamsz.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'ekrecptr.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18426,15 +18428,15 @@ module pepper_instance
 
       !> Add an entire class 2 column to an EK segment.
       module subroutine zzekac02 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, rcptrs, wkindx )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'ekrecptr.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18446,15 +18448,15 @@ module pepper_instance
 
       !> Add an entire class 3 column to an EK segment.
       module subroutine zzekac03 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, rcptrs, wkindx )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'ekrecptr.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18466,15 +18468,15 @@ module pepper_instance
 
       !> Add an entire class 4 column to an EK segment.
       module subroutine zzekac04 ( ctx, handle, segdsc, coldsc, ivals, entszs, nlflgs )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekcoldsc.inc'
-         include  'ekcnamsz.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'ekrecptr.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18485,15 +18487,15 @@ module pepper_instance
 
       !> Add an entire class 5 column to an EK segment.
       module subroutine zzekac05 ( ctx, handle, segdsc, coldsc, dvals, entszs, nlflgs )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekcoldsc.inc'
-         include  'ekcnamsz.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'ekrecptr.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18504,15 +18506,15 @@ module pepper_instance
 
       !> Add an entire class 6 column to an EK segment.
       module subroutine zzekac06 ( ctx, handle, segdsc, coldsc, cvals, entszs, nlflgs )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekcoldsc.inc'
-         include  'ekcnamsz.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'ekrecptr.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18524,13 +18526,13 @@ module pepper_instance
       !> Add a column entry to a specified record in a class 4 column.
       !> The entries of class 4 columns are arrays of integer values.
       module subroutine zzekad04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18543,13 +18545,13 @@ module pepper_instance
       !> Add a column entry to a specified record in a class 5 column.
       !> The entries of class 5 columns are arrays of d.p. values.
       module subroutine zzekad05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18563,13 +18565,13 @@ module pepper_instance
       !> The entries of class 6 columns are arrays of character string
       !> values.
       module subroutine zzekad06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18581,13 +18583,13 @@ module pepper_instance
 
       !> Delete a specified class 5 column entry from an EK record.
       module subroutine zzekde05 ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18596,13 +18598,13 @@ module pepper_instance
 
       !> Delete a specified class 6 column entry from an EK record.
       module subroutine zzekde06 ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18614,10 +18616,10 @@ module pepper_instance
       !> The function returns the number of elements in the specified
       !> column entry.
       module integer(ip) function zzekesiz ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekcnamsz.inc'
-         include 'eksegdsc.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: recptr  !! Record pointer.
@@ -18626,11 +18628,11 @@ module pepper_instance
 
       !> Return the data pointer for a specified EK column entry.
       module subroutine zzekgcdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ekrecptr
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ekrecptr.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18640,11 +18642,11 @@ module pepper_instance
 
       !> Initialize a new type 1 EK segment to allow fast loading.
       module subroutine zzekif01 ( ctx, handle, segno, rcptrs )
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
          integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
@@ -18652,14 +18654,14 @@ module pepper_instance
 
       !> Initialize a new type 2 EK segment to allow fast loading.
       module subroutine zzekif02 ( ctx, handle, segno )
+      use pepper_inc_ekclas07
+      use pepper_inc_ekclas08
+      use pepper_inc_ekclas09
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekclas07.inc'
-         include 'ekclas08.inc'
-         include 'ekclas09.inc'
-         include 'ekcoldsc.inc'
-         include 'ekpage.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
       end subroutine zzekif02
@@ -18667,13 +18669,13 @@ module pepper_instance
       !> Read a column entry from a specified record in a class 1 column.
       !> Class 1 columns contain scalar integer values.
       module subroutine zzekrd01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18685,13 +18687,13 @@ module pepper_instance
       !> Read a column entry from a specified record in a class 2 column.
       !> Class 2 columns contain scalar double precision values.
       module subroutine zzekrd02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18703,14 +18705,14 @@ module pepper_instance
       !> Read a column entry from a specified record in a class 3 column.
       !> Class 3 columns contain scalar character values.
       module subroutine zzekrd03 ( ctx, handle, segdsc, coldsc, recptr, cvlen, cval, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekcnamsz.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18724,13 +18726,13 @@ module pepper_instance
       !> record in a class 4 column.  Class 4 columns have integer arrays
       !> as column entries.
       module subroutine zzekrd04 ( ctx, handle, segdsc, coldsc, recptr, beg, end, ivals, isnull, found )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18746,12 +18748,12 @@ module pepper_instance
       !> record in a class 5 column.  Class 5 columns have d.p. arrays
       !> as column entries.
       module subroutine zzekrd05 ( ctx, handle, segdsc, coldsc, recptr, beg, end, dvals, isnull, found )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18767,14 +18769,14 @@ module pepper_instance
       !> record in a class 6 column.  Class 6 columns have character arrays
       !> as column entries.
       module subroutine zzekrd06 ( ctx, handle, segdsc, coldsc, recptr, beg, end, cvals, isnull, found )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18789,14 +18791,14 @@ module pepper_instance
       !> Read a column entry from a specified record in a class 7 column.
       !> Class 7 columns contain fixed-count, scalar integer values.
       module subroutine zzekrd07 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas07
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekclas07.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekpage.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18809,14 +18811,14 @@ module pepper_instance
       !> Class 8 columns contain fixed-count, scalar, double precision
       !> values.
       module subroutine zzekrd08 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas08
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekclas08.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekpage.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18827,10 +18829,10 @@ module pepper_instance
 
       !> Set the data pointer for a specified EK column entry.
       module subroutine zzekscdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ekrecptr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ekrecptr.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -18840,11 +18842,11 @@ module pepper_instance
 
       !> Write a character array out to a contiguous set of EK pages.
       module subroutine zzekwpac ( ctx, handle, segdsc, nvals, l, cvals, p, base )
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
          integer(ip), intent(in) :: nvals  !! Number of values to write.
@@ -18856,11 +18858,11 @@ module pepper_instance
 
       !> Write an integer array out to a contiguous set of EK pages.
       module subroutine zzekwpai ( ctx, handle, segdsc, nvals, ivals, p, base )
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
          integer(ip), intent(in) :: nvals  !! Number of values to write.
@@ -18871,12 +18873,12 @@ module pepper_instance
 
       !> Write a logical array out to a contiguous set of EK pages.
       module subroutine zzekwpal ( ctx, handle, segdsc, nvals, lvals, p, base )
+      use pepper_inc_ekbool
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
          integer(ip), intent(in) :: nvals  !! Number of values to write.
@@ -18888,12 +18890,12 @@ module pepper_instance
       !> Append a new, empty record at the end of a specified E-kernel
       !> segment.
       module subroutine ekappr ( ctx, handle, segno, recno )
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekdatpag.inc'
-         include 'ekpage.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
          integer(ip), intent(out) :: recno  !! Number of appended record.
@@ -18901,9 +18903,9 @@ module pepper_instance
 
       !> Initialize a new E-kernel segment to allow fast writing.
       module subroutine ekifld ( ctx, handle, tabnam, ncols, nrows, cnames, decls, segno, rcptrs )
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          character(*), intent(in) :: tabnam  !! Table name.
          integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
@@ -18916,10 +18918,10 @@ module pepper_instance
 
       !> Read data from a character column in a specified EK record.
       module subroutine ekrcec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: recno  !! Record from which data is to be read.
@@ -18932,10 +18934,10 @@ module pepper_instance
       !> Read data from a double precision column in a specified EK
       !> record.
       module subroutine ekrced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: recno  !! Record from which data is to be read.
@@ -18947,10 +18949,10 @@ module pepper_instance
 
       !> Read data from an integer column in a specified EK record.
       module subroutine ekrcei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: recno  !! Record from which data is to be read.
@@ -18962,15 +18964,15 @@ module pepper_instance
 
       !> Add an entire class 7 column to an EK segment.
       module subroutine zzekac07 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, wkindx )
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas07
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekclas07.inc'
-         include  'ekcoldsc.inc'
-         include  'ekcnamsz.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -18981,15 +18983,15 @@ module pepper_instance
 
       !> Add an entire class 8 column to an EK segment.
       module subroutine zzekac08 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, wkindx )
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas08
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekclas08.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -19000,15 +19002,15 @@ module pepper_instance
 
       !> Add an entire class 9 column to an EK segment.
       module subroutine zzekac09 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, wkindx )
+      use pepper_inc_ekbool
+      use pepper_inc_ekclas09
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekpage
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekbool.inc'
-         include  'ekclas09.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekdatpag.inc'
-         include  'ekpage.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
          integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -19020,11 +19022,11 @@ module pepper_instance
       !> Read scalar data from a character column in a specified EK
       !> record.
       module subroutine zzekrsc ( ctx, handle, segdsc, coldsc, recptr, eltidx, cvlen, cval, isnull, found )
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19039,11 +19041,11 @@ module pepper_instance
       !> Read scalar data from a double precision column in a specified EK
       !> record.
       module subroutine zzekrsd ( ctx, handle, segdsc, coldsc, recptr, eltidx, dval, isnull, found )
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19056,11 +19058,11 @@ module pepper_instance
 
       !> Read scalar data from an integer column in a specified EK record.
       module subroutine zzekrsi ( ctx, handle, segdsc, coldsc, recptr, eltidx, ival, isnull, found )
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19073,10 +19075,10 @@ module pepper_instance
 
       !> Update a specified class 4 column entry in an EK record.
       module subroutine zzekue04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19088,10 +19090,10 @@ module pepper_instance
 
       !> Update a specified class 5 column entry in an EK record.
       module subroutine zzekue05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19103,13 +19105,13 @@ module pepper_instance
 
       !> Update a specified class 6 column entry in an EK record.
       module subroutine zzekue06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19121,10 +19123,10 @@ module pepper_instance
 
       !> Add an entire character column to an EK segment.
       module subroutine ekaclc ( ctx, handle, segno, column, cvals, entszs, nlflgs, rcptrs, wkindx )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekcoldsc.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(in) :: segno  !! Number of segment to add column to.
          character(*), intent(in) :: column  !! Column name.
@@ -19137,10 +19139,10 @@ module pepper_instance
 
       !> Add an entire double precision column to an EK segment.
       module subroutine ekacld ( ctx, handle, segno, column, dvals, entszs, nlflgs, rcptrs, wkindx )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekcoldsc.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(in) :: segno  !! Number of segment to add column to.
          character(*), intent(in) :: column  !! Column name.
@@ -19153,10 +19155,10 @@ module pepper_instance
 
       !> Add an entire integer column to an EK segment.
       module subroutine ekacli ( ctx, handle, segno, column, ivals, entszs, nlflgs, rcptrs, wkindx )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekcoldsc.inc'
-         include  'eksegdsc.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(in) :: segno  !! Number of segment to add column to.
          character(*), intent(in) :: column  !! Column name.
@@ -19174,12 +19176,12 @@ module pepper_instance
       !> satisfied by the input arguments.  Possible values are LT, EQ,
       !> and GT.
       module integer(ip) function zzekecmp ( ctx, hans, sgdscs, cldscs, rows, elts )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: hans   ( * )  !! EK handles.
          integer(ip), intent(in) :: sgdscs ( sdscsz, * )  !! Segment descriptors.
          integer(ip), intent(in) :: cldscs ( cdscsz, * )  !! Column descriptors.
@@ -19193,13 +19195,13 @@ module pepper_instance
       !> entry and input value of the corresponding data type satisfy the
       !> relation specified by the input argument OP.
       module logical function zzekscmp ( ctx, op, handle, segdsc, coldsc, row, eltidx, dtype, cval, dval, ival, null )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
+      use pepper_inc_ekwild
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
-         include 'ekwild.inc'
          integer(ip), intent(in) :: op  !! Relational operator code.
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
@@ -19217,11 +19219,11 @@ module pepper_instance
       !> for a specified character EK column having a type 1 index, using
       !> dictionary ordering on character data values and record pointers.
       module subroutine zzekerc1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19236,11 +19238,11 @@ module pepper_instance
       !> for a specified d.p. EK column having a type 1 index, using
       !> dictionary ordering on d.p. data values and record pointers.
       module subroutine zzekerd1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19255,11 +19257,11 @@ module pepper_instance
       !> for a specified integer EK column having a type 1 index, using
       !> dictionary ordering on integer data values and record pointers.
       module subroutine zzekeri1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19273,13 +19275,13 @@ module pepper_instance
       !> Find the last column value less than or equal to a specified key,
       !> for a specified, indexed character EK column.
       module subroutine zzekllec ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19291,13 +19293,13 @@ module pepper_instance
       !> Find the last column value less than or equal to a specified key,
       !> for a specified, indexed double precision EK column.
       module subroutine zzeklled ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19309,13 +19311,13 @@ module pepper_instance
       !> Find the last column value less than or equal to a specified key,
       !> for a specified, indexed integer EK column.
       module subroutine zzekllei ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19327,13 +19329,13 @@ module pepper_instance
       !> Find the last column value less than a specified key,
       !> for a specified, indexed character EK column.
       module subroutine zzeklltc ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19345,13 +19347,13 @@ module pepper_instance
       !> Find the last column value less than a specified key,
       !> for a specified, indexed double precision EK column.
       module subroutine zzeklltd ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19363,13 +19365,13 @@ module pepper_instance
       !> Find the last column value less than a specified key,
       !> for a specified, indexed integer EK column.
       module subroutine zzekllti ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19384,12 +19386,12 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the two rows
       !> satisfy the order relation specified by the input arguments.
       module logical function zzekrcmp ( ctx, op, ncols, han1, sgdsc1, cdlst1, row1, elts1, han2, sgdsc2, cdlst2, row2, elts2 )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: op  !! Code for relational operator.
          integer(ip), intent(in) :: ncols  !! Number of columns used to define order relation.
          integer(ip), intent(in) :: han1  !! Handle of EK containing first row to compare.
@@ -19412,13 +19414,13 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified
       !> EK row satisfies the input constraints.
       module logical function zzekrmch ( ctx, ncnstr, active, handle, segdsc, cdscrs, row, elts, ops, vtypes, chrbuf, cbegs, cends, dvals, ivals )
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ektype
+      use pepper_inc_ekopcd
+      use pepper_inc_ekwild
+      use pepper_inc_ekqlimit
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ektype.inc'
-         include 'ekopcd.inc'
-         include 'ekwild.inc'
-         include 'ekqlimit.inc'
          integer(ip), intent(in) :: ncnstr  !! Number of constraints present in query.
          logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
          integer(ip), intent(in) :: handle  !! Handle of EK file containing row.
@@ -19441,13 +19443,13 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the two rows
       !> satisfy the order relation specified by the input arguments.
       module logical function zzekvcmp ( ctx, op, ncols, tabs, cols, elts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, sgvec1, rwvec1, sgvec2, rwvec2 )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), parameter :: lbpool = -5
          integer(ip), intent(in) :: op  !! Code for relational operator.
          integer(ip), intent(in) :: ncols  !! Number of columns used to define order relation.
@@ -19472,14 +19474,14 @@ module pepper_instance
       !> The function returns .TRUE. if and only if all of the relational
       !> constraints specified by the input arguments are satisfied.
       module logical function zzekvmch ( ctx, ncnstr, active, lhans, lsdscs, lcdscs, lrows, lelts, ops, rhans, rsdscs, rcdscs, rrows, relts )
+      use pepper_inc_ekbool
+      use pepper_inc_ekopcd
+      use pepper_inc_ektype
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ekwild
+      use pepper_inc_ekqlimit
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekopcd.inc'
-         include 'ektype.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ekwild.inc'
-         include 'ekqlimit.inc'
          integer(ip), intent(in) :: ncnstr  !! Number of join constraints.
          logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
          integer(ip), intent(in) :: lhans  ( * )  !! Handles of EKs for columns on LHS's of constraints.
@@ -19504,11 +19506,11 @@ module pepper_instance
       !> that points to an array element that is less than or equal to
       !> the input value of the same data type as the column.
       module integer(ip) function zzekille ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! HANDLE of EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Descriptor of column to be searched.
@@ -19528,11 +19530,11 @@ module pepper_instance
       !> that points to an array element that is less than the input
       !> value of the same data type as the column.
       module integer(ip) function zzekillt ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! HANDLE of EK file.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Descriptor of column to be searched.
@@ -19546,15 +19548,15 @@ module pepper_instance
       !> Sort the row vectors of a join row set union, given an order
       !> relation defined by a set of qualified order-by columns.
       module subroutine zzekjsrt ( ctx, njrs, ubases, norder, otabs, ocols, oelts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, ordbas )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekjrs.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), parameter :: lbpool = -5
          integer(ip), intent(in) :: njrs  !! Number of join row sets in union.
          integer(ip), intent(in) :: ubases ( * )  !! Base addresses of join row sets of union.
@@ -19575,12 +19577,12 @@ module pepper_instance
       !> for a specified, indexed character EK column, using dictionary
       !> ordering on character data values and record pointers.
       module subroutine zzeklerc ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19595,12 +19597,12 @@ module pepper_instance
       !> for a specified, indexed d.p. EK column, using dictionary
       !> ordering on d.p. data values and record pointers.
       module subroutine zzeklerd ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19615,12 +19617,12 @@ module pepper_instance
       !> for a specified, indexed integer EK column, using dictionary
       !> ordering on integer data values and record pointers.
       module subroutine zzekleri ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19634,11 +19636,11 @@ module pepper_instance
       !> Find the ordinal position of a specified record in a specified,
       !> indexed EK column.
       module subroutine zzekfrx ( ctx, handle, segdsc, coldsc, recptr, pos )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekqlimit.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19650,13 +19652,13 @@ module pepper_instance
       !> character key.  The key and record pointer determine the insertion
       !> point via dictionary ordering on (value, record pointer) pairs.
       module subroutine zzekiic1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19669,13 +19671,13 @@ module pepper_instance
       !> d.p. key.  The key and record pointer determine the insertion
       !> point via dictionary ordering on (value, record pointer) pairs.
       module subroutine zzekiid1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19688,13 +19690,13 @@ module pepper_instance
       !> integer key.  The key and record pointer determine the insertion
       !> point via dictionary ordering on (value, record pointer) pairs.
       module subroutine zzekiii1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19707,13 +19709,13 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekjprp ( ctx, segvec, jbase1, nt1, rb1, nr1, jbase2, nt2, rb2, nr2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekjrs.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'eksegdsc.inc'
          integer(ip), parameter :: lbpool = -5
          integer(ip), intent(in) :: segvec ( * )  !! Composite segment vector for joined table.
          integer(ip), intent(in) :: jbase1  !! Scratch area base address of first join row set.
@@ -19744,13 +19746,13 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekjnxt ( ctx, found, rowvec )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekjrs.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'eksegdsc.inc'
          logical, intent(out) :: found  !! Flag indicating whether a row vector was found.
          integer(ip), intent(out) :: rowvec ( * )  !! Row vector matching join constraints.
       end subroutine zzekjnxt
@@ -19761,13 +19763,13 @@ module pepper_instance
       !> MAXCON     P   Maximum number of constraints allowed in query.
       !> CDSCSZ     P   Column descriptor size.
       module subroutine zzekkey ( ctx, handle, segdsc, nrows, ncnstr, clidxs, dsclst, ops, dtypes, chrbuf, cbegs, cends, dvals, ivals, active, key, keydsc, begidx, endidx, found )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle of EK file containing segment.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: nrows  !! Number of rows in segment.
@@ -19792,13 +19794,13 @@ module pepper_instance
       !> Add a column entry to a class 1 column in a specified EK record.
       !> Class 1 columns contain scalar, integer values.
       module subroutine zzekad01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -19810,13 +19812,13 @@ module pepper_instance
       !> Add a column entry to a specified record in a class 2 column.
       !> Class 2 columns contain scalar double precision values.
       module subroutine zzekad02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -19828,13 +19830,13 @@ module pepper_instance
       !> Add a column entry to a class 3 column in a specified EK record.
       !> Class 3 columns contain scalar, character values.
       module subroutine zzekad03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
@@ -19846,11 +19848,11 @@ module pepper_instance
       !> Update an EK column index to reflect deletion of a record
       !> specified by a record pointer.
       module subroutine zzekixdl ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -19862,11 +19864,11 @@ module pepper_instance
       !>
       !> CDSCSZ     P   Size of column descriptor.
       module subroutine zzekjoin ( ctx, jbase1, jbase2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs, jbase3, nrows )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekqlimit
+      use pepper_inc_eksegdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'ekjrs.inc'
-         include 'ekqlimit.inc'
-         include 'eksegdsc.inc'
          integer(ip), parameter :: lbpool = -5
          integer(ip), intent(in) :: jbase1  !! Scratch area base address of first join row set.
          integer(ip), intent(in) :: jbase2  !! Scratch area base address of second join row set.
@@ -19890,10 +19892,10 @@ module pepper_instance
 
       !> Add data to a character column in a specified EK record.
       module subroutine ekacec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(in) :: segno  !! Index of segment containing record.
          integer(ip), intent(in) :: recno  !! Record to which data is to be added.
@@ -19905,10 +19907,10 @@ module pepper_instance
 
       !> Add data to an double precision column in a specified EK record.
       module subroutine ekaced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: recno  !! Record to which data is to be added.
@@ -19920,10 +19922,10 @@ module pepper_instance
 
       !> Add data to an integer column in a specified EK record.
       module subroutine ekacei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! EK file handle.
          integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: recno  !! Record to which data is to be added.
@@ -19935,18 +19937,18 @@ module pepper_instance
 
       !> Load an EK file, making it accessible to the EK readers.
       module subroutine eklef ( ctx, fname, handle )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          character(*), intent(in) :: fname  !! Name of EK file to load.
          integer(ip), intent(out) :: handle  !! File handle of loaded EK file.
       end subroutine eklef
@@ -19955,52 +19957,52 @@ module pepper_instance
       !> EK reader routines, and clearing space in order to allow other
       !> EK files to be loaded.
       module subroutine ekuef ( ctx, handle )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle of EK file.
       end subroutine ekuef
 
       !> Return the number of loaded EK tables.
       module subroutine ekntab ( ctx, n )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          integer(ip), intent(out) :: n  !! Number of loaded tables.
       end subroutine ekntab
 
       !> Return the name of a specified, loaded table.
       module subroutine ektnam ( ctx, n, table )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: n  !! Index of table.
          character(*), intent(out) :: table  !! Name of table.
       end subroutine ektnam
@@ -20008,18 +20010,18 @@ module pepper_instance
       !> Return the number of distinct columns in a specified, currently
       !> loaded table.
       module subroutine ekccnt ( ctx, table, ccount )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          character(*), intent(in) :: table  !! Name of table.
          integer(ip), intent(out) :: ccount  !! Count of distinct, currently loaded columns.
       end subroutine ekccnt
@@ -20027,18 +20029,18 @@ module pepper_instance
       !> Return attribute information about a column belonging to a loaded
       !> EK table, specifying the column by table and index.
       module subroutine ekcii ( ctx, table, cindex, column, attdsc )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: cindex  !! Index of column whose attributes are to be found.
          character(*), intent(out) :: column  !! Name of column.
          character(*), intent(in) :: table  !! Name of table containing column.
@@ -20047,18 +20049,18 @@ module pepper_instance
 
       !> Search for EK events matching a specified set of constraints.
       module subroutine eksrch ( ctx, eqryi, eqryc, eqryd, nmrows, semerr, errmsg )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: eqryc  !! Character component of encoded query.
          real(wp), intent(in) :: eqryd  ( * )  !! D.p. component of encoded query.
@@ -20071,18 +20073,18 @@ module pepper_instance
       !> Return the number of elements in a specified column entry in
       !> the current row.
       module subroutine eknelt ( ctx, selidx, row, nelt )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: row  !! Row containing element.
          integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
          integer(ip), intent(out) :: nelt  !! Number of elements in entry in current row.
@@ -20091,18 +20093,18 @@ module pepper_instance
       !> Return an element of an entry in a column of character
       !> type in a specified row.
       module subroutine ekgc ( ctx, selidx, row, elment, cdata, null, found )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
          integer(ip), intent(in) :: row  !! Row to fetch from.
          integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
@@ -20114,18 +20116,18 @@ module pepper_instance
       !> Return an element of an entry in a column of double precision
       !> or `time' type in a specified row.
       module subroutine ekgd ( ctx, selidx, row, elment, ddata, null, found )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
          integer(ip), intent(in) :: row  !! Row to fetch from.
          integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
@@ -20137,18 +20139,18 @@ module pepper_instance
       !> Return an element of an entry in a column of integer
       !> type in a specified row.
       module subroutine ekgi ( ctx, selidx, row, elment, idata, null, found )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include  'ekattdsc.inc'
-         include  'ekbool.inc'
-         include  'ekcnamsz.inc'
-         include  'ekcoldsc.inc'
-         include  'ekjrs.inc'
-         include  'ekopcd.inc'
-         include  'ekqlimit.inc'
-         include  'ekquery.inc'
-         include  'eksegdsc.inc'
-         include  'ektnamsz.inc'
-         include  'ektype.inc'
          integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
          integer(ip), intent(in) :: row  !! Row to fetch from.
          integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
@@ -20159,13 +20161,13 @@ module pepper_instance
 
       !> Delete a specified class 1 column entry from an EK record.
       module subroutine zzekde01 ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -20174,13 +20176,13 @@ module pepper_instance
 
       !> Delete a specified class 2 column entry from an EK record.
       module subroutine zzekde02 ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -20189,13 +20191,13 @@ module pepper_instance
 
       !> Delete a specified class 3 column entry from an EK record.
       module subroutine zzekde03 ( ctx, handle, segdsc, coldsc, recptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -20204,13 +20206,13 @@ module pepper_instance
 
       !> Update a specified class 1 column entry in an EK record.
       module subroutine zzekue01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -20221,13 +20223,13 @@ module pepper_instance
 
       !> Update a specified class 2 column entry in an EK record.
       module subroutine zzekue02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -20238,12 +20240,12 @@ module pepper_instance
 
       !> Delete a specified record from a specified E-kernel segment.
       module subroutine ekdelr ( ctx, handle, segno, recno )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekcnamsz.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(in) :: segno  !! Segment number.
          integer(ip), intent(inout) :: recno  !! Record number. (PEPPER: changed by the routine, an input in SPICELIB's table)
@@ -20251,10 +20253,10 @@ module pepper_instance
 
       !> Update a double precision column entry in a specified EK record.
       module subroutine ekuced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
@@ -20266,10 +20268,10 @@ module pepper_instance
 
       !> Update an integer column entry in a specified EK record.
       module subroutine ekucei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
@@ -20305,12 +20307,12 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekcchk ( ctx, query, eqryi, eqryc, ntab, tablst, alslst, base, error, errmsg, errptr )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekattdsc.inc'
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Original query string.
          integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
@@ -20328,14 +20330,14 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzekpcol ( ctx, qcol, eqryi, eqryc, table, alias, tabidx, column, colidx, error, errmsg )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektokn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekattdsc.inc'
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'ektnamsz.inc'
-         include 'ektokn.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: qcol  !! Column name, possibly qualified.
          integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
@@ -20353,14 +20355,14 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzeksemc ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekopcd
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekattdsc.inc'
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekopcd.inc'
-         include 'ekquery.inc'
-         include 'ektnamsz.inc'
-         include 'ektype.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Original query.
          integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
@@ -20374,15 +20376,15 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzektres ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekattdsc.inc'
-         include 'ekbool.inc'
-         include 'ekcnamsz.inc'
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'ektnamsz.inc'
-         include 'ektype.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Original query string.
          integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer component of query.
@@ -20395,13 +20397,13 @@ module pepper_instance
 
       !> Update a specified class 3 column entry in an EK record.
       module subroutine zzekue03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekcoldsc.inc'
-         include 'ekdatpag.inc'
-         include 'ekrecptr.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! File handle.
          integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
@@ -20412,10 +20414,10 @@ module pepper_instance
 
       !> Update a character column entry in a specified EK record.
       module subroutine ekucec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekcoldsc.inc'
-         include 'eksegdsc.inc'
-         include 'ektype.inc'
          integer(ip), intent(in) :: handle  !! Handle attached to EK file.
          integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
          integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
@@ -20429,11 +20431,11 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzeknres ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
+      use pepper_inc_ekbool
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekbool.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'ektnamsz.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Original query string.
          integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
@@ -20445,12 +20447,12 @@ module pepper_instance
 
       !> Find E-kernel data that satisfy a set of constraints.
       module subroutine ekfind ( ctx, query, nmrows, error, errmsg )
+      use pepper_inc_ekquery
+      use pepper_inc_ekqlimit
+      use pepper_inc_ektype
+      use pepper_inc_ekopcd
+      use pepper_inc_ekcnamsz
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekquery.inc'
-         include 'ekqlimit.inc'
-         include 'ektype.inc'
-         include 'ekopcd.inc'
-         include 'ekcnamsz.inc'
          character(*), intent(in) :: query  !! Query specifying data to be found.
          integer(ip), intent(out) :: nmrows  !! Number of matching rows.
          logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
@@ -20459,11 +20461,11 @@ module pepper_instance
 
       !> Convert an EK query to encoded form.
       module subroutine zzekencd ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekopcd.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'ektype.inc'
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Query specifying events to be found.
          integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer component of encoded query.
@@ -20477,13 +20479,13 @@ module pepper_instance
       !> Parse the SELECT clause of an EK query, returning full particulars
       !> concerning each selected item.
       module subroutine ekpsel ( ctx, query, n, xbegs, xends, xtypes, xclass, tabs, cols, error, errmsg )
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         include 'ekattdsc.inc'
-         include 'ekcnamsz.inc'
-         include 'ekqlimit.inc'
-         include 'ekquery.inc'
-         include 'ektnamsz.inc'
-         include 'ektype.inc'
          character(*), intent(in) :: query  !! EK query.
          integer(ip), intent(out) :: n  !! Number of items in SELECT clause of QUERY.
          integer(ip), intent(out) :: xbegs  ( * )  !! Begin positions of expressions in SELECT clause.
@@ -20962,6 +20964,30 @@ contains
          u%closegen = ctx%spice%close_generation
       end associate
    end subroutine units_check
+
+   !> Finalization of a context: close the units it opened (each context
+   !> opens its own units for the instance's files; see units_check). A
+   !> context must not be copied while it has open units: the copy's
+   !> finalization would close them too.
+   subroutine ctx_final(this)
+      type(pepper_context), intent(inout) :: this  !! the context
+      integer(ip) :: k
+      integer :: ios
+      logical :: opened
+      if (.not. allocated(this%zzddhman_units)) return
+      associate (u => this%zzddhman_units)
+         do k = 1, u%nut
+            ! (units from NEWUNIT= are negative; -1 marks a free entry)
+            if (u%utlun(k) /= -1 .and. u%utlun(k) /= 0) then
+               inquire (unit=u%utlun(k), opened=opened, iostat=ios)
+               if (ios == 0 .and. opened) close (unit=u%utlun(k), iostat=ios)
+            end if
+            u%utlun(k) = -1
+            u%uthan(k) = 0
+         end do
+         u%nut = 0
+      end associate
+   end subroutine ctx_final
 
    !> Clear the error status and the messages.
    subroutine ctx_reset(this)

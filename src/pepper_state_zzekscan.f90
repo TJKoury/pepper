@@ -6,14 +6,14 @@
 module pepper_state_zzekscan
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekkeyw
+      use pepper_inc_ektokn
+      use pepper_inc_ekqlimit
 
    implicit none
 
    private
 
-   include 'ekkeyw.inc'
-   include 'ektokn.inc'
-   include 'ekqlimit.inc'
    integer(ip), parameter :: lnsize = 80
    integer(ip), parameter :: lbcell = -5
    integer(ip), parameter :: mxspec = 512

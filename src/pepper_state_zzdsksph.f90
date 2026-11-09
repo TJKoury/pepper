@@ -8,16 +8,16 @@
 module pepper_state_zzdsksph
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_dla
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include 'errhnd.inc'
-   include 'dla.inc'
-   include 'dsk.inc'
-   include 'dskdsc.inc'
-   include 'zzctr.inc'
 
    public :: init_zzdsksph_state
 

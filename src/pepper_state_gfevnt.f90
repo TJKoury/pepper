@@ -7,14 +7,14 @@
 module pepper_state_gfevnt
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
 
    implicit none
 
    private
 
-   include 'gf.inc'
-   include 'zzgf.inc'
-   include 'zzabcorr.inc'
    integer(ip), parameter :: nq = 8
    integer(ip), parameter :: nc = 7
    integer(ip), parameter :: maxcln = 80

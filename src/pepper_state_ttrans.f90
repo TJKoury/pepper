@@ -7,12 +7,12 @@
 module pepper_state_ttrans
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzctr.inc'
    integer(ip), parameter :: maxlp = 140
    integer(ip), parameter :: maxvar = 1
    integer(ip), parameter :: daysec = 1

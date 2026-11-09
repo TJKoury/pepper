@@ -1,4 +1,4 @@
-!> Deprecated: This routine has been superseded by the SPICELIB
+!> **Deprecated:** This routine has been superseded by the SPICELIB
 !> routine SINCPT. This routine is supported for purposes of
 !> backward compatibility only.
 !>
@@ -8,13 +8,13 @@
 module pepper_state_srfxpt
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include              'frmtyp.inc'
-   include               'zzctr.inc'
    integer(ip), parameter :: maxl = 36
    integer(ip), parameter :: frnmln = 32
 

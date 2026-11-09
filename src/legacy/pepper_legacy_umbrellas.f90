@@ -7,8 +7,8 @@
       !> Umbrella of the ZZDDHMAN routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzddhman ( lock, arch, fname, method, handle, unit, intamh, intarc, intbff, native, found, kill )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       logical :: lock
       character(*) :: arch
       character(*) :: fname
@@ -28,8 +28,8 @@
       !> Umbrella of the DAFAH routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine dafah ( fname, ftype, nd, ni, ifname, resv, handle, unit, fhset, access )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: fname
       character(*) :: ftype
@@ -48,8 +48,8 @@
       !> Umbrella of the DAFFA routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine daffa ( handle, sum, name, found )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip) :: handle
       real(wp) :: sum    ( * )
       character(*) :: name
@@ -61,8 +61,8 @@
       !> Umbrella of the DAFANA routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine dafana ( handle, sum, name, data, n )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
       implicit none
-      include              'zzddhman.inc'
       integer(ip) :: handle
       real(wp) :: sum      ( * )
       character(*) :: name
@@ -92,9 +92,9 @@
       !> Umbrella of the DASFM routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine dasfm ( fname, ftype, ifname, handle, unit, free, lastla, lastrc, lastwd, nresvr, nresvc, ncomr, ncomc, fhset, access )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_das
+      use pepper_inc_errhnd
       implicit none
-      include 'das.inc'
-      include 'errhnd.inc'
       integer(ip), parameter :: lbcell = -5
       character(*) :: fname
       character(*) :: ftype
@@ -173,8 +173,8 @@
       !> Umbrella of the ZZBODBLT routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzbodblt ( room, names, nornam, codes, nvals, device, reqst )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzbodtrn
       implicit none
-      include              'zzbodtrn.inc'
       integer(ip) :: room
       character(*) :: names  ( * )
       character(*) :: nornam ( * )
@@ -189,9 +189,9 @@
       !> Umbrella of the ZZBODTRN routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzbodtrn ( name, code, found, usrctr, update )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzbodtrn
+      use pepper_inc_zzctr
       implicit none
-      include               'zzbodtrn.inc'
-      include               'zzctr.inc'
       character(*) :: name
       integer(ip) :: code
       logical :: found
@@ -204,8 +204,8 @@
       !> Umbrella of the ZZCTR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzctr ( newctr, oldctr, update )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include                'zzctr.inc'
       integer(ip) :: newctr ( ctrsiz )
       integer(ip) :: oldctr ( ctrsiz )
       logical :: update
@@ -256,8 +256,8 @@
       !> Umbrella of the POOL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine pool ( fname, unit, name, names, nnames, agent, n, values, found, update, start, room, cvals, ivals, type, uwvars, uwptrs, uwpool, uwagnt, usrctr )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip) :: lbcell
       parameter ( lbcell = -5 )
       character(*) :: fname

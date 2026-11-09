@@ -8,12 +8,12 @@
 module pepper_state_pxfrm2
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzctr.inc'
    integer(ip), parameter :: frnmln = 32
 
    public :: init_pxfrm2_state

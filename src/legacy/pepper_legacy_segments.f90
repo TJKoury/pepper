@@ -206,10 +206,10 @@
       use pepper_instance, only: pepper_context, pepper_zzdsklsf => zzdsklsf
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       character(*) :: fname  !! Name of the DSK file to be loaded.
       integer(ip) :: handle  !! Loaded file's handle.
       type(pepper_context), pointer :: ctx
@@ -225,10 +225,10 @@
       use pepper_instance, only: pepper_context, pepper_zzdskusf => zzdskusf
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       integer(ip) :: handle  !! Handle of DSK file to be unloaded
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -243,10 +243,10 @@
       use pepper_instance, only: pepper_context, pepper_zzdskbss => zzdskbss
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       integer(ip) :: bodyid  !! ID code of body.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -264,10 +264,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_legacy_callbacks, only: bridge_zzdsk_compare, current_zzdsk_compare, legacy_zzdsk_compare
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       integer(ip) :: handle  !! Handle of file containing the applicable segment.
       procedure(legacy_zzdsk_compare) :: cmpfun  !! Comparison function.
       integer(ip) :: dladsc ( * )  !! DLA descriptor of the applicable segment.
@@ -291,10 +291,10 @@
       use pepper_instance, only: pepper_context, pepper_zzdskchk => zzdskchk
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       integer(ip) :: usrctr ( * )  !! User counter.
       logical :: update  !! Update flag.
       type(pepper_context), pointer :: ctx
@@ -352,10 +352,10 @@
       !> Umbrella of the ZZDSKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzdskbsr ( fname, bodyid, handle, cmpfun, usrctr, update, dladsc, dskdsc, found )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_dla
+      use pepper_inc_dskdsc
+      use pepper_inc_zzctr
       implicit none
-      include 'dla.inc'
-      include 'dskdsc.inc'
-      include 'zzctr.inc'
       character(*) :: fname
       integer(ip) :: bodyid
       integer(ip) :: handle

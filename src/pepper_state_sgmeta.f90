@@ -6,12 +6,12 @@
 module pepper_state_sgmeta
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
 
    implicit none
 
    private
 
-   include 'sgparam.inc'
 
    public :: init_sgmeta_state
 

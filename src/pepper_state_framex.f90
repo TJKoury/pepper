@@ -8,15 +8,15 @@
 module pepper_state_framex
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include              'ninert.inc'
-   include              'nninrt.inc'
-   include              'frmtyp.inc'
-   include              'zzctr.inc'
    integer(ip), parameter :: non = nninrt
    integer(ip), parameter :: ncount = ninert + non
    integer(ip), parameter :: room = 8

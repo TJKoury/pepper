@@ -6,14 +6,14 @@
 module pepper_state_zzekpdec
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ektype
 
    implicit none
 
    private
 
-   include 'ekbool.inc'
-   include 'ekcoldsc.inc'
-   include 'ektype.inc'
    integer(ip), parameter :: nattr = 5
    integer(ip), parameter :: toklen = 32
    integer(ip), parameter :: nrkey = 1

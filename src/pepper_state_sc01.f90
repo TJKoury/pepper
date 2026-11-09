@@ -7,13 +7,13 @@
 module pepper_state_sc01
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
+      use pepper_inc_zzsc01
 
    implicit none
 
    private
 
-   include               'zzctr.inc'
-   include               'zzsc01.inc'
    integer(ip), parameter :: errlen = 240
    integer(ip), parameter :: initsc = 0
    integer(ip), parameter :: kvnmln = 32

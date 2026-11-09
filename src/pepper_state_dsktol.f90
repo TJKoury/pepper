@@ -7,12 +7,12 @@
 module pepper_state_dsktol
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
 
    implicit none
 
    private
 
-   include 'dsktol.inc'
    integer(ip), parameter :: ndspar = 6
 
    public :: init_dsktol_state

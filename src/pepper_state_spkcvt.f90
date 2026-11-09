@@ -9,13 +9,13 @@
 module pepper_state_spkcvt
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzabcorr.inc'
-   include               'zzctr.inc'
    integer(ip), parameter :: nevflg = 3
    integer(ip), parameter :: evlfln = 25
    integer(ip), parameter :: maxl = 36

@@ -14,9 +14,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_legacy_callbacks, only: legacy_zzspk_state, current_zzspk_state, bridge_zzspk_state
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
       procedure(legacy_zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
       character(*) :: abcorr  !! Aberration correction flag.
@@ -44,9 +44,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_legacy_callbacks, only: legacy_zzspk_state, current_zzspk_state, bridge_zzspk_state
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
       procedure(legacy_zzspk_state) :: obssub  !! routine returning the observer's state (relative to the SSB)
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -74,9 +74,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_legacy_callbacks, only: legacy_zzspk_state, current_zzspk_state, bridge_zzspk_state
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
       procedure(legacy_zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
       character(*) :: abcorr  !! Aberration correction flag.
@@ -105,9 +105,9 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_legacy_callbacks, only: legacy_zzspk_state, current_zzspk_state, bridge_zzspk_state
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
       procedure(legacy_zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
-      include 'zzabcorr.inc'
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
       character(*) :: abcorr  !! Aberration correction flag.
@@ -135,10 +135,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_legacy_callbacks, only: legacy_zzspk_state, current_zzspk_state, bridge_zzspk_state
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
       implicit none
       procedure(legacy_zzspk_state) :: obssub  !! routine returning the observer's state (relative to the SSB)
-      include              'frmtyp.inc'
-      include              'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output state vector.
@@ -165,10 +165,10 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_legacy_callbacks, only: legacy_zzspk_state, current_zzspk_state, bridge_zzspk_state
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
       implicit none
       procedure(legacy_zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
-      include              'frmtyp.inc'
-      include              'zzabcorr.inc'
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output state vector.
       character(*) :: abcorr  !! Aberration correction flag.

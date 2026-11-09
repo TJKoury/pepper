@@ -8,12 +8,12 @@
 module pepper_state_zzbodblt
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzbodtrn
 
    implicit none
 
    private
 
-   include              'zzbodtrn.inc'
 
    public :: init_zzbodblt_state
 

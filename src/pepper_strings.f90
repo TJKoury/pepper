@@ -26,24 +26,23 @@ contains
       !> Remove from a character string all characters which fall
       !> between specified starting and ending characters, inclusive.
       elemental subroutine astrip ( instr, asciib, asciie, outstr )
+!! ## Abstract
+!!
+!!     Remove from a character string all characters which fall
+!!     between specified starting and ending characters, inclusive.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Remove from a character string all characters which fall
-!     between specified starting and ending characters, inclusive.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: instr  !! Input string.
@@ -251,25 +250,24 @@ contains
       !> The function returns .TRUE. if the string represents a decimal
       !> number. Otherwise, it returns .FALSE.
       elemental logical function bedec  ( string )
+!! ## Abstract
+!!
+!!     Determine whether a string represents a decimal number.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALPHANUMERIC
+!!     NUMBERS
+!!     SCANNING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether a string represents a decimal number.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALPHANUMERIC
-!     NUMBERS
-!     SCANNING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Character string.
@@ -519,25 +517,24 @@ contains
       !> The function returns .TRUE. if the string represents an integer.
       !> Otherwise, it returns .FALSE.
       elemental logical function beint  ( string )
+!! ## Abstract
+!!
+!!     Determine whether a string represents an integer.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALPHANUMERIC
+!!     NUMBERS
+!!     SCANNING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether a string represents an integer.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALPHANUMERIC
-!     NUMBERS
-!     SCANNING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Character string.
@@ -731,25 +728,24 @@ contains
       !> The function returns .TRUE. if the string is a number.
       !> Otherwise, it returns .FALSE.
       elemental logical function benum  ( string )
+!! ## Abstract
+!!
+!!     Determine whether a string represents a number.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALPHANUMERIC
+!!     NUMBERS
+!!     SCANNING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether a string represents a number.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALPHANUMERIC
-!     NUMBERS
-!     SCANNING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Character string.
@@ -925,25 +921,24 @@ contains
       !> The function returns .TRUE. if the string represents an unsigned
       !> integer. Otherwise, it returns .FALSE.
       elemental logical function beuns  ( string )
+!! ## Abstract
+!!
+!!     Determine whether a string represents an unsigned integer.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALPHANUMERIC
+!!     NUMBERS
+!!     SCANNING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether a string represents an unsigned integer.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALPHANUMERIC
-!     NUMBERS
-!     SCANNING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Character string.
@@ -1127,26 +1122,25 @@ contains
       !> more than N consecutive occurrences of a specified
       !> character.
       elemental subroutine cmprss ( delim, n, input, output )
+!! ## Abstract
+!!
+!!     Compress a character string by removing occurrences of
+!!     more than N consecutive occurrences of a specified
+!!     character.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Compress a character string by removing occurrences of
-!     more than N consecutive occurrences of a specified
-!     character.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(1), intent(in) :: delim  !! Delimiter to be compressed.
@@ -1326,26 +1320,25 @@ contains
       !> The function returns the index of the first character of STR
       !> at or following index START that is in the collection CHARS.
       elemental integer(ip) function cpos ( str, chars, start )
+!! ## Abstract
+!!
+!!     Find the first occurrence in a string of a character belonging
+!!     to a collection of characters, starting at a specified location,
+!!     searching forward.
+!!
+!! ## Required Reading
+!!
+!!     SCANNING
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the first occurrence in a string of a character belonging
-!     to a collection of characters, starting at a specified location,
-!     searching forward.
-!
-! $ Required_Reading
-!
-!     SCANNING
-!
-! $ Keywords
-!
-!     CHARACTER
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str  !! Any character string.
@@ -1529,26 +1522,25 @@ contains
       !> The function returns the index of the last character of STR
       !> at or before index START that is in the collection CHARS.
       elemental integer(ip) function cposr ( str, chars, start )
+!! ## Abstract
+!!
+!!     Find the first occurrence in a string of a character belonging
+!!     to a collection of characters, starting at a specified location,
+!!     searching in reverse.
+!!
+!! ## Required Reading
+!!
+!!     SCANNING
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the first occurrence in a string of a character belonging
-!     to a collection of characters, starting at a specified location,
-!     searching in reverse.
-!
-! $ Required_Reading
-!
-!     SCANNING
-!
-! $ Keywords
-!
-!     CHARACTER
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str  !! Any character string.
@@ -1737,29 +1729,28 @@ contains
       !>
       !> The function returns .TRUE. if A and B are equivalent.
       elemental logical function eqstr ( a, b )
+!! ## Abstract
+!!
+!!     Determine whether two strings are equivalent.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALPHANUMERIC
+!!     ASCII
+!!     CHARACTER
+!!     COMPARE
+!!     PARSING
+!!     SEARCH
+!!     STRING
+!!     TEXT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether two strings are equivalent.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALPHANUMERIC
-!     ASCII
-!     CHARACTER
-!     COMPARE
-!     PARSING
-!     SEARCH
-!     STRING
-!     TEXT
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: a  !! Arbitrary character strings.
@@ -2195,25 +2186,24 @@ contains
       !> The function returns the index of the first array entry equivalent
       !> to VALUE, or zero if none is found.
       pure integer(ip) function esrchc ( value, ndim, array )
+!! ## Abstract
+!!
+!!     Search for a given value within a character string array.
+!!     Return the index of the first equivalent array entry, or zero
+!!     if no equivalent element is found.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Search for a given value within a character string array.
-!     Return the index of the first equivalent array entry, or zero
-!     if no equivalent element is found.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: value  !! Key value to be found in ARRAY.
@@ -2344,25 +2334,24 @@ contains
       !> Find the beginning and end of the first word starting at
       !> or after a specified character.
       elemental subroutine fndnwd ( string, start, b, e )
+!! ## Abstract
+!!
+!!     Find the beginning and end of the first word starting at
+!!     or after a specified character.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PARSING
+!!     SEARCH
+!!     WORD
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the beginning and end of the first word starting at
-!     or after a specified character.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PARSING
-!     SEARCH
-!     WORD
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! A string to examine for words.
@@ -2567,25 +2556,24 @@ contains
       !> The function returns the index of the first non-blank character in
       !> STRING.
       elemental integer(ip) function frstnb ( string )
+!! ## Abstract
+!!
+!!     Return the index of the first non-blank character in
+!!     a character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the index of the first non-blank character in
-!     a character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Input character string.
@@ -2711,26 +2699,25 @@ contains
       !> The function returns the index of first non-printable character in
       !> STRING.
       elemental integer(ip) function frstnp ( string )
+!! ## Abstract
+!!
+!!     Return the index of the first non-printable character in a
+!!     character string. ASCII characters 32-126 are considered
+!!     printable by this routine. (Blanks are considered printable.)
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the index of the first non-printable character in a
-!     character string. ASCII characters 32-126 are considered
-!     printable by this routine. (Blanks are considered printable.)
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Input character string.
@@ -2890,26 +2877,25 @@ contains
       !> The function returns the index of the first non-blank printable
       !> character in STRING.
       elemental integer(ip) function frstpc ( string )
+!! ## Abstract
+!!
+!!     Return the index of the first printable character in a character
+!!     string. ASCII characters 33-126 are printable. (Blanks are not
+!!     considered printable.)
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the index of the first printable character in a character
-!     string. ASCII characters 33-126 are printable. (Blanks are not
-!     considered printable.)
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Input character string.
@@ -3049,27 +3035,26 @@ contains
       !> beginning of the first subsequent recognized terminator of a list.
       pure subroutine kxtrct ( keywd,  terms, nterms, &
                           wordsq, found, substr  )
+!! ## Abstract
+!!
+!!     Locate a keyword in a string and extract the substring from
+!!     the beginning of the first word following the keyword to the
+!!     beginning of the first subsequent recognized terminator of a list.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PARSING
+!!     PARSING
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchc
-
-! $ Abstract
-!
-!     Locate a keyword in a string and extract the substring from
-!     the beginning of the first word following the keyword to the
-!     beginning of the first subsequent recognized terminator of a list.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PARSING
-!     PARSING
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: keywd  !! Word that marks the beginning of text of interest.
@@ -3370,25 +3355,24 @@ contains
       !> The function returns the index of the last non-blank character in
       !> STRING.
       elemental integer(ip) function  lastnb ( string )
+!! ## Abstract
+!!
+!!     Return the index of the last non-blank character in
+!!     a character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the index of the last non-blank character in
-!     a character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Input character string.
@@ -3518,26 +3502,25 @@ contains
       !> The function returns the index of the last non-blank printable
       !> character in STRING.
       elemental integer(ip) function  lastpc ( string )
+!! ## Abstract
+!!
+!!     Return the index of the last printable character in a character
+!!     string. ASCII characters 33-126 are printable. (Blanks are not
+!!     considered printable.)
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     SEARCH
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the index of the last printable character in a character
-!     string. ASCII characters 33-126 are printable. (Blanks are not
-!     considered printable.)
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     SEARCH
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Input character string.
@@ -3674,24 +3657,23 @@ contains
 
       !> Build a list of items delimited by a character.
       pure subroutine lbuild ( items, n, delim, list )
+!! ## Abstract
+!!
+!!     Build a list of items delimited by a character.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     LIST
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Build a list of items delimited by a character.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     LIST
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: items ( * )  !! Items in the list.
@@ -3888,23 +3870,22 @@ contains
 
       !> Convert the characters in a string to lowercase.
       elemental subroutine lcase ( in, out )
+!! ## Abstract
+!!
+!!     Convert the characters in a string to lowercase.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Convert the characters in a string to lowercase.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: in  !! Input string.
@@ -4037,24 +4018,23 @@ contains
 
       !> Left-justify, uppercase, and space-compress a character string.
       elemental subroutine ljucrs ( n, input, output )
+!! ## Abstract
+!!
+!!     Left-justify, uppercase, and space-compress a character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Left-justify, uppercase, and space-compress a character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: n  !! Maximum consecutive occurrences of space.
@@ -4245,24 +4225,23 @@ contains
 
       !> Left-justify a character string.
       elemental subroutine ljust ( input, output )
+!! ## Abstract
+!!
+!!     Left-justify a character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Left-justify a character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: input  !! Input character string.
@@ -4429,25 +4408,24 @@ contains
 
       !> Parse a list of items delimited by a single character.
       pure subroutine lparse ( list, delim, nmax, n, items )
+!! ## Abstract
+!!
+!!     Parse a list of items delimited by a single character.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     LIST
+!!     PARSING
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Parse a list of items delimited by a single character.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     LIST
-!     PARSING
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: list  !! List of items delimited by DELIM.
@@ -4894,25 +4872,24 @@ contains
 
       !> Parse a list of items separated by multiple delimiters.
       pure subroutine lparsm ( list, delims, nmax, n, items )
+!! ## Abstract
+!!
+!!     Parse a list of items separated by multiple delimiters.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     LIST
+!!     PARSING
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Parse a list of items separated by multiple delimiters.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     LIST
-!     PARSING
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: list  !! List of items delimited by DELIMS.
@@ -5377,24 +5354,23 @@ contains
       !> The function returns the maximum of 1 and the location of the
       !> first non-blank character in STRING.
       elemental integer(ip) function ltrim ( string )
+!! ## Abstract
+!!
+!!     Return the maximum of 1 and the location of the first non-blank
+!!     character in the string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the maximum of 1 and the location of the first non-blank
-!     character in the string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! String to be trimmed.
@@ -5506,26 +5482,25 @@ contains
 
       !> Scan (lex) a quoted string.
       elemental subroutine lxqstr ( string, qchar, first, last, nchar )
+!! ## Abstract
+!!
+!!     Scan (lex) a quoted string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     PARSING
+!!     SCANNING
+!!     STRING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Scan (lex) a quoted string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     PARSING
-!     SCANNING
-!     STRING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! String to be scanned.
@@ -5830,24 +5805,23 @@ contains
       !> The function returns .TRUE. if STRING matches TEMPL and otherwise
       !> returns .FALSE.
       elemental logical function matchw ( string, templ, wstr, wchr )
+!! ## Abstract
+!!
+!!     Determine whether a string is matched by a template containing
+!!     wild cards.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     COMPARE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether a string is matched by a template containing
-!     wild cards.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     COMPARE
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! String to be tested.
@@ -6326,26 +6300,25 @@ contains
       !>
       !> The function returns the non-blank length of STRING.
       elemental integer(ip) function  nblen ( string )
+!! ## Abstract
+!!
+!!     Return the non-blank length of a character string. (That is,
+!!     the index of the last non-blank character when the string is
+!!     left-justified.)
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the non-blank length of a character string. (That is,
-!     the index of the last non-blank character when the string is
-!     left-justified.)
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Input character string.
@@ -6447,24 +6420,23 @@ contains
       !> The function returns the index of the rightmost non-blank
       !> character in the entire array of strings ARRAY.
       pure integer(ip) function nbwid ( array, nelt )
+!! ## Abstract
+!!
+!!     Determine the non-blank width of a character array---that is,
+!!     the largest value of LASTNB for any element in the array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine the non-blank width of a character array---that is,
-!     the largest value of LASTNB for any element in the array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     CHARACTER
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: array   ( * )  !! Input array.
@@ -6626,26 +6598,25 @@ contains
       !> The function returns the index of the first character of STR
       !> at or following index START that is not in the collection CHARS.
       elemental integer(ip) function ncpos ( str, chars, start )
+!! ## Abstract
+!!
+!!     Find the first occurrence in a string of a character NOT belonging
+!!     to a collection of characters, starting at a specified location,
+!!     searching forwards.
+!!
+!! ## Required Reading
+!!
+!!     SCANNING
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the first occurrence in a string of a character NOT belonging
-!     to a collection of characters, starting at a specified location,
-!     searching forwards.
-!
-! $ Required_Reading
-!
-!     SCANNING
-!
-! $ Keywords
-!
-!     CHARACTER
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str  !! Any character string.
@@ -6819,26 +6790,25 @@ contains
       !> The function returns the index of the last character of STR
       !> at or before index START that is not in the collection CHARS.
       elemental integer(ip) function ncposr ( str, chars, start )
+!! ## Abstract
+!!
+!!     Find the first occurrence in a string of a character NOT
+!!     belonging to a collection of characters, starting at a
+!!     specified location, searching in reverse.
+!!
+!! ## Required Reading
+!!
+!!     SCANNING
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the first occurrence in a string of a character NOT
-!     belonging to a collection of characters, starting at a
-!     specified location, searching in reverse.
-!
-! $ Required_Reading
-!
-!     SCANNING
-!
-! $ Keywords
-!
-!     CHARACTER
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str  !! Any character string.
@@ -7007,25 +6977,24 @@ contains
       !> Return the next word in a given character string, and
       !> left justify the rest of the string.
       elemental subroutine nextwd ( string, next, rest )
+!! ## Abstract
+!!
+!!     Return the next word in a given character string, and
+!!     left justify the rest of the string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     PARSING
+!!     WORD
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the next word in a given character string, and
-!     left justify the rest of the string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     PARSING
-!     WORD
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Input character string.
@@ -7304,26 +7273,25 @@ contains
       !> Return the Nth word in a character string, and its location
       !> in the string.
       elemental subroutine nthwd ( string, nth, word, loc )
+!! ## Abstract
+!!
+!!     Return the Nth word in a character string, and its location
+!!     in the string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     PARSING
+!!     SEARCH
+!!     WORD
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the Nth word in a character string, and its location
-!     in the string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     PARSING
-!     SEARCH
-!     WORD
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Input character string.
@@ -7623,26 +7591,25 @@ contains
       !> Parse a quoted string token.
       elemental subroutine parsqs ( string, qchar, value, length, error, errmsg, &
                           ptr                                          )
+!! ## Abstract
+!!
+!!     Parse a quoted string token.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     PARSING
+!!     SCANNING
+!!     STRING
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Parse a quoted string token.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     PARSING
-!     SCANNING
-!     STRING
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Quoted string to be parsed.
@@ -8030,23 +7997,22 @@ contains
       !> The function returns the index of the rightmost printable
       !> character in the entire array of strings ARRAY.
       pure integer(ip) function pcwid ( array, nelt )
+!! ## Abstract
+!!
+!!     Determine the printable width of a character array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine the printable width of a character array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     CHARACTER
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: array   ( * )  !! Input array.
@@ -8214,25 +8180,24 @@ contains
       !>
       !> The function returns the index of SUBSTR in STR following START
       elemental integer(ip) function pos ( str, substr, start )
+!! ## Abstract
+!!
+!!     Find the first occurrence in a string of a substring, starting at
+!!     a specified location, searching forward.
+!!
+!! ## Required Reading
+!!
+!!     SCANNING
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the first occurrence in a string of a substring, starting at
-!     a specified location, searching forward.
-!
-! $ Required_Reading
-!
-!     SCANNING
-!
-! $ Keywords
-!
-!     CHARACTER
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str  !! A character string
@@ -8411,25 +8376,24 @@ contains
       !>
       !> The function returns the index of SUBSTR in STR preceding START
       elemental integer(ip) function posr ( str, substr, start )
+!! ## Abstract
+!!
+!!     Find the first occurrence in a string of a substring, starting at
+!!     a specified location, searching in reverse.
+!!
+!! ## Required Reading
+!!
+!!     SCANNING
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the first occurrence in a string of a substring, starting at
-!     a specified location, searching in reverse.
-!
-! $ Required_Reading
-!
-!     SCANNING
-!
-! $ Keywords
-!
-!     CHARACTER
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str  !! A character string
@@ -8610,24 +8574,23 @@ contains
 
       !> Add a prefix to a character string.
       elemental subroutine prefix ( pref, spaces, string )
+!! ## Abstract
+!!
+!!     Add a prefix to a character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Add a prefix to a character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: pref  !! Prefix.
@@ -8800,24 +8763,23 @@ contains
       !> Enclose (quote) the non-blank part of a character string
       !> between delimiting symbols.
       elemental subroutine quote ( in, left, right, out )
+!! ## Abstract
+!!
+!!     Enclose (quote) the non-blank part of a character string
+!!     between delimiting symbols.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     PARSING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Enclose (quote) the non-blank part of a character string
-!     between delimiting symbols.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     PARSING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: in  !! Input string.
@@ -8945,24 +8907,23 @@ contains
       !> Replace all occurrences of a single character with a second
       !> character.
       elemental subroutine replch ( instr, old, new, outstr )
+!! ## Abstract
+!!
+!!     Replace all occurrences of a single character with a second
+!!     character.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Replace all occurrences of a single character with a second
-!     character.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: instr  !! Input string.
@@ -9090,23 +9051,22 @@ contains
 
       !> Replace the Nth word in a string with a new word.
       elemental subroutine replwd ( instr, nth, new, outstr )
+!! ## Abstract
+!!
+!!     Replace the Nth word in a string with a new word.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     WORD
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Replace the Nth word in a string with a new word.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     WORD
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: instr  !! Input string.
@@ -9371,24 +9331,23 @@ contains
 
       !> Replace a marker with a character string.
       elemental subroutine repmc ( in, marker, value, out )
+!! ## Abstract
+!!
+!!     Replace a marker with a character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     CONVERSION
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Replace a marker with a character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     CONVERSION
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: in  !! Input string.
@@ -9669,24 +9628,23 @@ contains
 
       !> Right justify a character string.
       elemental subroutine rjust ( input, output )
+!! ## Abstract
+!!
+!!     Right justify a character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Right justify a character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: input  !! Input character string.
@@ -9849,24 +9807,23 @@ contains
       !> The function returns the maximum of 1 and the location of the
       !> last non-blank character in STRING.
       elemental integer(ip) function rtrim ( string )
+!! ## Abstract
+!!
+!!     Return the maximum of 1 and the location of the last non-blank
+!!     character in the string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the maximum of 1 and the location of the last non-blank
-!     character in the string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! String to be trimmed.
@@ -9983,23 +9940,22 @@ contains
       !> The function returns .TRUE. if the two characters are the
       !> same.
       elemental logical function samch ( str1, l1, str2, l2 )
+!! ## Abstract
+!!
+!!     Determine if two characters from different strings are the
+!!     same.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine if two characters from different strings are the
-!     same.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str1  !! A character string
@@ -10149,22 +10105,21 @@ contains
       !>
       !> The function returns .TRUE. if the substrings are identical
       elemental logical function samsub ( str1, b1, e1,  str2, b2, e2 )
+!! ## Abstract
+!!
+!!     Determine whether or not two substrings are the same
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether or not two substrings are the same
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str1  !! A string
@@ -10343,25 +10298,24 @@ contains
       !> Reject those tokens descriptors whose identities are among those
       !> of a specific collection.
       pure subroutine scanrj ( ids, n, ntokns, ident, beg, end )
+!! ## Abstract
+!!
+!!     Reject those tokens descriptors whose identities are among those
+!!     of a specific collection.
+!!
+!! ## Required Reading
+!!
+!!     SCANNING
+!!
+!! ## Keywords
+!!
+!!     SEARCH
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchi
-
-! $ Abstract
-!
-!     Reject those tokens descriptors whose identities are among those
-!     of a specific collection.
-!
-! $ Required_Reading
-!
-!     SCANNING
-!
-! $ Keywords
-!
-!     SEARCH
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: ids  ( * )  !! value of id's of tokens that should be dumped.
@@ -10525,25 +10479,24 @@ contains
       !> Characters moved past the beginning of the input string are
       !> lost. Vacant spaces are filled with a specified character.
       elemental subroutine shiftl ( in, nshift, fillc, out )
+!! ## Abstract
+!!
+!!     Shift the contents of a character string to the left.
+!!     Characters moved past the beginning of the input string are
+!!     lost. Vacant spaces are filled with a specified character.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Shift the contents of a character string to the left.
-!     Characters moved past the beginning of the input string are
-!     lost. Vacant spaces are filled with a specified character.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: in  !! Input string.
@@ -10742,25 +10695,24 @@ contains
       !> Characters moved past the end of the input string are
       !> lost. Vacant spaces are filled with a specified character.
       elemental subroutine shiftr ( in, nshift, fillc, out )
+!! ## Abstract
+!!
+!!     Shift the contents of a character string to the right.
+!!     Characters moved past the end of the input string are
+!!     lost. Vacant spaces are filled with a specified character.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Shift the contents of a character string to the right.
-!     Characters moved past the end of the input string are
-!     lost. Vacant spaces are filled with a specified character.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: in  !! Input string.
@@ -10956,23 +10908,22 @@ contains
 
       !> Retain only the significant digits in a numeric string.
       elemental subroutine sigdgt ( in, out )
+!! ## Abstract
+!!
+!!     Retain only the significant digits in a numeric string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     PARSING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Retain only the significant digits in a numeric string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     PARSING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: in  !! Input numeric string.
@@ -11292,24 +11243,23 @@ contains
 
       !> Add a suffix to a character string.
       elemental subroutine suffix ( suff, spaces, string )
+!! ## Abstract
+!!
+!!     Add a suffix to a character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Add a suffix to a character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: suff  !! Suffix.
@@ -11448,23 +11398,22 @@ contains
 
       !> Convert the characters in a string to uppercase.
       elemental subroutine ucase ( in, out )
+!! ## Abstract
+!!
+!!     Convert the characters in a string to uppercase.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASCII
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Convert the characters in a string to uppercase.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASCII
-!     CHARACTER
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: in  !! Input string.
@@ -11599,23 +11548,22 @@ contains
       !> The function returns the number of words in the input string
       !> STRING.
       elemental integer(ip) function wdcnt ( string )
+!! ## Abstract
+!!
+!!     Return the number of words in a string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     STRING
+!!     WORD
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the number of words in a string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     STRING
-!     WORD
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Input character string.
@@ -11812,25 +11760,24 @@ contains
       !>
       !> The function returns the location of WORD within STRING.
       elemental integer(ip) function wdindx ( string, word )
+!! ## Abstract
+!!
+!!     Find the index of a word within a string. If the word does not
+!!     exist as a word within the string, the value zero is returned.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PARSING
+!!     SEARCH
+!!     WORD
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the index of a word within a string. If the word does not
-!     exist as a word within the string, the value zero is returned.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PARSING
-!     SEARCH
-!     WORD
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! String of characters, potentially containing words
@@ -12059,29 +12006,28 @@ contains
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       elemental subroutine zzinssub ( in, sub, loc, out )
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Insert a substring into a character string at a specified
+!!     location.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Insert a substring into a character string at a specified
-!     location.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       character(*), intent(in) :: in  !! Input string.
       character(*), intent(in) :: sub  !! Substring to be inserted.
       integer(ip), intent(in) :: loc  !! Position at which substring is to be inserted.
@@ -12339,29 +12285,28 @@ contains
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       elemental subroutine zzrepsub ( in, left, right, string, out )
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Replace the substring (LEFT:RIGHT) with a string of any length.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ASSIGNMENT
+!!     CHARACTER
+!!     STRING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: sumai
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Replace the substring (LEFT:RIGHT) with a string of any length.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ASSIGNMENT
-!     CHARACTER
-!     STRING
-!
-! $ Declarations
-
       implicit none
       character(*), intent(in) :: in  !! Input string.
       integer(ip), intent(in) :: left  !! Ends of substring to be replaced.
@@ -12610,23 +12555,22 @@ contains
 
       !> Convert an integer to an equivalent character string.
       elemental subroutine intstr ( number, string )
+!! ## Abstract
+!!
+!!     Convert an integer to an equivalent character string.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALPHANUMERIC
+!!     CONVERSION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Convert an integer to an equivalent character string.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALPHANUMERIC
-!     CONVERSION
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), intent(in) :: number  !! Integer to be converted.
@@ -12857,25 +12801,24 @@ contains
       !> Take a double precision number and convert it to
       !> an equivalent character string representation (base 10).
       elemental subroutine dpstr ( x, sigdig, string )
+!! ## Abstract
+!!
+!!     Take a double precision number and convert it to
+!!     an equivalent character string representation (base 10).
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     CONVERSION
+!!     PARSING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Take a double precision number and convert it to
-!     an equivalent character string representation (base 10).
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     CONVERSION
-!     PARSING
-!
-! $ Declarations
-
       implicit none
 
       real(wp), intent(in) :: x  !! A double precision number
@@ -13335,23 +13278,22 @@ contains
       !>
       !> The function returns .TRUE. if the characters are equivalent
       elemental logical function eqchr ( a, b )
+!! ## Abstract
+!!
+!!     Return .TRUE. if two given characters are equivalent when the
+!!     case of the characters is ignored.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return .TRUE. if two given characters are equivalent when the
-!     case of the characters is ignored.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!
-! $ Declarations
-
       implicit none
 
       character(1), intent(in) :: a  !! one of the characters to check
@@ -13524,140 +13466,135 @@ contains
       !>
       !> The function returns .TRUE. if the characters are not equivalent
       elemental logical function nechr ( a, b )
-
-! $ Abstract
-!
-!     Return .TRUE. if two given characters are not equivalent if the
-!     case of the characters is ignored.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!
-! $ Declarations
-!
-!     IMPLICIT NONE
-!
-!     CHARACTER*(1)         A
-!     CHARACTER*(1)         B
-!
-! $ Detailed_Input
-!
-!     A,
-!     B        are two characters that are to be compared to see
-!              if they are different letters. Letters that have
-!              the same value when converted to uppercase are
-!              considered to be equivalent.
-!
-! $ Detailed_Output
-!
-!     The function returns the value .FALSE. if the two input characters
-!     are the same or can be made the same by converting both to
-!     upper or lower case. Otherwise it returns .TRUE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine simply determines the truth value of .NOT. EQCHR.
-!     See the entry point EQCHR for a discussion of that function.
-!
-! $ Examples
-!
-!     Suppose you want to determine whether or not two strings
-!     are the same up to differences in case. The following
-!     code fragment shows how you can use this routine to check
-!     for the equivalence of character strings.
-!
-!        MORE  = .TRUE.
-!        SAME  = .TRUE.
-!        L1    =  LEN(STR1)
-!        L2    =  LEN(STR2)
-!        CHECK = MIN ( L1, L2 )
-!
-!        DO WHILE ( SAME .AND. MORE )
-!
-!           IF ( NECHR(STR1(I:I),STR2(I:I) ) THEN
-!              SAME = .FALSE.
-!           END IF
-!
-!           I    = I + 1
-!           MORE = I .LT. CHECK
-!
-!        END DO
-!
-!        IF ( .NOT. SAME ) THEN
-!
-!           There's nothing to do, we already know the strings
-!           are not the same.
-!
-!        ELSE IF ( L1 .LT. L2 ) THEN
-!
-!           The only way the strings can be regarded as being equal
-!           is if the extra unchecked characters in STR2 are all blank.
-!
-!           SAME = STR2(I:) .EQ. ' '
-!
-!        ELSE
-!
-!           Same test as previous one but with STR1 this time.
-!
-!           SAME = STR1(I:) .EQ. ' '
-!
-!        END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 17-SEP-1998 (EDW)
-!
-!        Replace the UVALUE data statement with a loop to fill
-!        UVALUE. The Absoft Mac compiler failed to compile the
-!        data statement correctly, and so this function failed
-!        to work properly in all situations on the Mac. The
-!        corrects the problem and functions on all platforms.
-!
-!-    SPICELIB Version 1.0.0, 16-MAY-1995 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Check two characters for case insensitive not equal
-!
-!-&
-
+!! ## Abstract
+!!
+!!     Return .TRUE. if two given characters are not equivalent if the
+!!     case of the characters is ignored.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!
+!! ## Declarations
+!!
+!!     IMPLICIT NONE
+!!
+!!     CHARACTER*(1)         A
+!!     CHARACTER*(1)         B
+!!
+!! ## Detailed Input
+!!
+!!     A,
+!!     B        are two characters that are to be compared to see
+!!              if they are different letters. Letters that have
+!!              the same value when converted to uppercase are
+!!              considered to be equivalent.
+!!
+!! ## Detailed Output
+!!
+!!     The function returns the value .FALSE. if the two input characters
+!!     are the same or can be made the same by converting both to
+!!     upper or lower case. Otherwise it returns .TRUE.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     Error free.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine simply determines the truth value of .NOT. EQCHR.
+!!     See the entry point EQCHR for a discussion of that function.
+!!
+!! ## Examples
+!!
+!!     Suppose you want to determine whether or not two strings
+!!     are the same up to differences in case. The following
+!!     code fragment shows how you can use this routine to check
+!!     for the equivalence of character strings.
+!!
+!!        MORE  = .TRUE.
+!!        SAME  = .TRUE.
+!!        L1    =  LEN(STR1)
+!!        L2    =  LEN(STR2)
+!!        CHECK = MIN ( L1, L2 )
+!!
+!!        DO WHILE ( SAME .AND. MORE )
+!!
+!!           IF ( NECHR(STR1(I:I),STR2(I:I) ) THEN
+!!              SAME = .FALSE.
+!!           END IF
+!!
+!!           I    = I + 1
+!!           MORE = I .LT. CHECK
+!!
+!!        END DO
+!!
+!!        IF ( .NOT. SAME ) THEN
+!!
+!!           There's nothing to do, we already know the strings
+!!           are not the same.
+!!
+!!        ELSE IF ( L1 .LT. L2 ) THEN
+!!
+!!           The only way the strings can be regarded as being equal
+!!           is if the extra unchecked characters in STR2 are all blank.
+!!
+!!           SAME = STR2(I:) .EQ. ' '
+!!
+!!        ELSE
+!!
+!!           Same test as previous one but with STR1 this time.
+!!
+!!           SAME = STR1(I:) .EQ. ' '
+!!
+!!        END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 1.0.0, 17-SEP-1998 (EDW)
+!!
+!!        Replace the UVALUE data statement with a loop to fill
+!!        UVALUE. The Absoft Mac compiler failed to compile the
+!!        data statement correctly, and so this function failed
+!!        to work properly in all situations on the Mac. The
+!!        corrects the problem and functions on all platforms.
+!!
+!!-    SPICELIB Version 1.0.0, 16-MAY-1995 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Check two characters for case insensitive not equal
+!!
       use pepper_kinds, only: ip
       implicit none
       character(1), intent(in) :: a  !! one of the characters to check
@@ -13691,23 +13628,22 @@ contains
       !> The function returns .TRUE. if the two characters are the
       !> same up to case.
       elemental logical function samchi ( str1, l1, str2, l2 )
+!! ## Abstract
+!!
+!!     Determine if two characters from different strings are the
+!!     same when the case of the characters is ignored.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine if two characters from different strings are the
-!     same when the case of the characters is ignored.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str1  !! A character string
@@ -13864,23 +13800,22 @@ contains
       !> The function returns .TRUE. if the substrings are identical
       !> up to case.
       elemental logical function samsbi ( str1, b1, e1,  str2, b2, e2 )
+!! ## Abstract
+!!
+!!     Determine whether or not two substrings are the same up to
+!!     case.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether or not two substrings are the same up to
-!     case.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: str1  !! A string
@@ -14074,24 +14009,23 @@ contains
       !> The function returns .TRUE. if STRING matches TEMPL and otherwise
       !> returns .FALSE.
       elemental logical function  matchi ( string, templ, wstr, wchr )
+!! ## Abstract
+!!
+!!     Determine whether a string is matched by a template containing
+!!     wild cards. This routine is case-insensitive.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     CHARACTER
+!!     COMPARE
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Determine whether a string is matched by a template containing
-!     wild cards. This routine is case-insensitive.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     CHARACTER
-!     COMPARE
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! String to be tested.
@@ -14536,26 +14470,25 @@ contains
       !> Parse a character string that represents a number and return
       !> a double precision value.
       elemental subroutine nparsd ( string, x, error, ptr )
+!! ## Abstract
+!!
+!!     Parse a character string that represents a number and return
+!!     a double precision value.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALPHANUMERIC
+!!     CONVERSION
+!!     PARSING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, pi
-
-! $ Abstract
-!
-!     Parse a character string that represents a number and return
-!     a double precision value.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALPHANUMERIC
-!     CONVERSION
-!     PARSING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Character string representing a numeric value.
@@ -15585,26 +15518,25 @@ contains
       !> Parse a character string that represents a number and return
       !> the FORTRAN-truncated integer value.
       elemental subroutine nparsi (  string,  n, error, pnter)
+!! ## Abstract
+!!
+!!     Parse a character string that represents a number and return
+!!     the FORTRAN-truncated integer value.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ALPHANUMERIC
+!!     CONVERSION
+!!     PARSING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax, intmin
-
-! $ Abstract
-!
-!     Parse a character string that represents a number and return
-!     the FORTRAN-truncated integer value.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ALPHANUMERIC
-!     CONVERSION
-!     PARSING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! Character string representing a numeric value.
@@ -15838,23 +15770,22 @@ contains
       !> Scan a string from a specified starting position for the
       !> end of an unsigned integer.
       elemental subroutine lx4uns ( string, first, last, nchar )
+!! ## Abstract
+!!
+!!     Scan a string from a specified starting position for the
+!!     end of an unsigned integer.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     PARSING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Scan a string from a specified starting position for the
-!     end of an unsigned integer.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     PARSING
-!
-! $ Declarations
-
       implicit none
 
       character(*), intent(in) :: string  !! any character string

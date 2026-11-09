@@ -8,13 +8,13 @@
 module pepper_state_gftfov
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
 
    implicit none
 
    private
 
-   include               'gf.inc'
-   include               'zzholdd.inc'
 
    public :: init_gftfov_state
 

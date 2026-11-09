@@ -50,9 +50,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
+      use pepper_inc_zzctr
       implicit none
-      include               'sclk.inc'
-      include               'zzctr.inc'
       integer(ip) :: sc  !! NAIF spacecraft identification code.
       integer(ip) :: nparts  !! The number of spacecraft clock partitions.
       real(wp) :: pstart  ( * )  !! Array of partition start times.
@@ -103,8 +103,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
       implicit none
-      include               'sclk.inc'
       integer(ip) :: sc  !! NAIF spacecraft identification code.
       real(wp) :: sclkdp  !! Encoded representation of a spacecraft clock count.
       character(*) :: sclkch  !! Character representation of a clock count.
@@ -121,8 +121,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
       implicit none
-      include               'sclk.inc'
       integer(ip) :: sc  !! NAIF spacecraft identification code.
       character(*) :: sclkch  !! Character representation of a spacecraft clock.
       real(wp) :: sclkdp  !! Encoded representation of the clock count.

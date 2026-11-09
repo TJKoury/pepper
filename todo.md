@@ -10,6 +10,17 @@ todo notes
 * remove superfluous 'return' statements at the end of procedures.
 * initialize all type components to defaults values (0, .false., '', etc.)
 
+* I don't this these are real constraints:
+
+    #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
+        parameter            ( filen = 128 )
+    #else
+        parameter            ( filen = 255 )
+    #endif
+
+    note: integer(ip), parameter :: filen = 255
+    is in lots of other places with no platform checks.
+
 * note: I think there are aliasing bugs with ifx with character strings.
 * need to test with ifx in the CI.
 

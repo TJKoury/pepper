@@ -6,12 +6,12 @@
 module pepper_state_zzsgp4
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzsgp4
 
    implicit none
 
    private
 
-   include 'zzsgp4.inc'
 
    public :: init_zzsgp4_state
 

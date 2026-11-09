@@ -14,24 +14,23 @@ contains
 !$Procedure SYDELC ( Delete a symbol from the symbol table )
 
       module procedure sydelc
+!! ## Abstract
+!!
+!!     Delete a symbol from a character symbol table. The symbol and its
+!!     associated values are deleted.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, sumai
-
-! $ Abstract
-!
-!     Delete a symbol from a character symbol table. The symbol and its
-!     associated values are deleted.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -200,24 +199,23 @@ contains
 !$Procedure SYDELD ( Delete a symbol from a symbol table )
 
       module procedure sydeld
+!! ## Abstract
+!!
+!!     Delete a symbol from a double precision symbol table. The symbol
+!!     and its associated values are deleted.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, sumai
-
-! $ Abstract
-!
-!     Delete a symbol from a double precision symbol table. The symbol
-!     and its associated values are deleted.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -385,24 +383,23 @@ contains
 !$Procedure SYDELI ( Delete a symbol from a symbol table )
 
       module procedure sydeli
+!! ## Abstract
+!!
+!!     Delete a symbol from an integer symbol table. The symbol
+!!     and its associated values are deleted.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, sumai
-
-! $ Abstract
-!
-!     Delete a symbol from an integer symbol table. The symbol
-!     and its associated values are deleted.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -571,25 +568,24 @@ contains
 !$Procedure SYDIMC ( Return the dimension of a symbol )
 
       module procedure sydimc
+!! ## Abstract
+!!
+!!     Return the dimension of a particular symbol in a character symbol
+!!     table. If the symbol is not found, the function returns the value
+!!     zero.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
-
-! $ Abstract
-!
-!     Return the dimension of a particular symbol in a character symbol
-!     table. If the symbol is not found, the function returns the value
-!     zero.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -748,25 +744,24 @@ contains
 !$Procedure SYDIMD ( Return the dimension of a symbol )
 
       module procedure sydimd
+!! ## Abstract
+!!
+!!     Return the dimension of a particular symbol in a double precision
+!!     symbol table. If the symbol is not found, the function returns the
+!!     value zero.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
-
-! $ Abstract
-!
-!     Return the dimension of a particular symbol in a double precision
-!     symbol table. If the symbol is not found, the function returns the
-!     value zero.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -927,25 +922,24 @@ contains
 !$Procedure SYDIMI ( Return the dimension of a symbol )
 
       module procedure sydimi
+!! ## Abstract
+!!
+!!     Return the dimension of a particular symbol in an integer symbol
+!!     table. If the symbol is not found, the function returns the
+!!     value zero.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
-
-! $ Abstract
-!
-!     Return the dimension of a particular symbol in an integer symbol
-!     table. If the symbol is not found, the function returns the
-!     value zero.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -1111,25 +1105,24 @@ contains
 !$Procedure SYDUPC ( Create a duplicate of a symbol )
 
       module procedure sydupc
+!! ## Abstract
+!!
+!!     Create a duplicate of a symbol within a character symbol table.
+!!     If a symbol with the new name already exists, its components
+!!     are replaced.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Create a duplicate of a symbol within a character symbol table.
-!     If a symbol with the new name already exists, its components
-!     are replaced.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -1416,25 +1409,24 @@ contains
 !$Procedure SYDUPD ( Create a duplicate of a symbol )
 
       module procedure sydupd
+!! ## Abstract
+!!
+!!     Create a duplicate of a symbol within a double precision symbol
+!!     table. If a symbol with the new name already exists, its
+!!     components are replaced.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Create a duplicate of a symbol within a double precision symbol
-!     table. If a symbol with the new name already exists, its
-!     components are replaced.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -1723,25 +1715,24 @@ contains
 !$Procedure SYDUPI ( Create a duplicate of a symbol )
 
       module procedure sydupi
+!! ## Abstract
+!!
+!!     Create a duplicate of a symbol within an integer symbol table.
+!!     If a symbol with the new name already exists, its components
+!!     are replaced.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Create a duplicate of a symbol within an integer symbol table.
-!     If a symbol with the new name already exists, its components
-!     are replaced.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -2030,22 +2021,21 @@ contains
 !$Procedure SYFETC ( Fetch the Nth symbol in the table )
 
       module procedure syfetc
+!! ## Abstract
+!!
+!!     Fetch the Nth symbol in a character symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Fetch the Nth symbol in a character symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -2206,22 +2196,21 @@ contains
 !$Procedure SYFETD ( Fetch the Nth symbol in the table )
 
       module procedure syfetd
+!! ## Abstract
+!!
+!!     Fetch the Nth symbol in a double precision symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Fetch the Nth symbol in a double precision symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -2381,22 +2370,21 @@ contains
 !$Procedure SYFETI ( Fetch the Nth symbol in the table )
 
       module procedure syfeti
+!! ## Abstract
+!!
+!!     Fetch the Nth symbol in an integer symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Fetch the Nth symbol in an integer symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -2558,24 +2546,23 @@ contains
 !$Procedure SYGETC ( Return all components for a symbol )
 
       module procedure sygetc
+!! ## Abstract
+!!
+!!     Return the dimension and associated values for a particular
+!!     symbol.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, movec, sumai
-
-! $ Abstract
-!
-!     Return the dimension and associated values for a particular
-!     symbol.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -2769,24 +2756,23 @@ contains
 !$Procedure SYGETD ( Return all components for a symbol )
 
       module procedure sygetd
+!! ## Abstract
+!!
+!!     Return the dimension and associated values for a particular
+!!     symbol.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, moved, sumai
-
-! $ Abstract
-!
-!     Return the dimension and associated values for a particular
-!     symbol.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -2983,24 +2969,23 @@ contains
 !$Procedure SYGETI ( Return all components for a symbol )
 
       module procedure sygeti
+!! ## Abstract
+!!
+!!     Return the dimension and associated values for a particular
+!!     symbol.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, movei, sumai
-
-! $ Abstract
-!
-!     Return the dimension and associated values for a particular
-!     symbol.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3197,24 +3182,23 @@ contains
 !$Procedure SYNTHC ( Return Nth value associated with the symbol )
 
       module procedure synthc
+!! ## Abstract
+!!
+!!     Return the Nth value associated with a particular symbol in a
+!!     character symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, sumai
-
-! $ Abstract
-!
-!     Return the Nth value associated with a particular symbol in a
-!     character symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3397,24 +3381,23 @@ contains
 !$Procedure SYNTHD ( Return the Nth component of a symbol )
 
       module procedure synthd
+!! ## Abstract
+!!
+!!     Return the Nth component of a particular symbol in a double
+!!     precision symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, sumai
-
-! $ Abstract
-!
-!     Return the Nth component of a particular symbol in a double
-!     precision symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3599,24 +3582,23 @@ contains
 !$Procedure SYNTHI ( Return the Nth component of a symbol )
 
       module procedure synthi
+!! ## Abstract
+!!
+!!     Return the Nth component of a particular symbol in an integer
+!!     symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, sumai
-
-! $ Abstract
-!
-!     Return the Nth component of a particular symbol in an integer
-!     symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3800,25 +3782,24 @@ contains
 !$Procedure SYORDC ( Order the components of a single symbol )
 
       module procedure syordc
+!! ## Abstract
+!!
+!!     Order the components of a single symbol in a character symbol
+!!     table. The components are ordered according to the ASCII collating
+!!     sequence.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, shellc, sumai
-
-! $ Abstract
-!
-!     Order the components of a single symbol in a character symbol
-!     table. The components are ordered according to the ASCII collating
-!     sequence.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3973,24 +3954,23 @@ contains
 !$Procedure SYORDD ( Order the components of a single symbol )
 
       module procedure syordd
+!! ## Abstract
+!!
+!!     Order the components of a single symbol in a double precision
+!!     symbol table. The components are sorted in increasing order.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, shelld, sumai
-
-! $ Abstract
-!
-!     Order the components of a single symbol in a double precision
-!     symbol table. The components are sorted in increasing order.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -4151,24 +4131,23 @@ contains
 !$Procedure SYORDI ( Order the components of a single symbol )
 
       module procedure syordi
+!! ## Abstract
+!!
+!!     Order the components of a single symbol in an integer symbol
+!!     table. The components are sorted in increasing order.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, shelli, sumai
-
-! $ Abstract
-!
-!     Order the components of a single symbol in an integer symbol
-!     table. The components are sorted in increasing order.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -4331,25 +4310,24 @@ contains
 !$Procedure SYPOPC ( Pop a value from a particular symbol )
 
       module procedure sypopc
+!! ## Abstract
+!!
+!!     Pop a value associated with a particular symbol in a character
+!!     symbol table. The first value associated with the symbol is
+!!     removed, and subsequent values are moved forward.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, sumai
-
-! $ Abstract
-!
-!     Pop a value associated with a particular symbol in a character
-!     symbol table. The first value associated with the symbol is
-!     removed, and subsequent values are moved forward.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -4558,25 +4536,24 @@ contains
 !$Procedure SYPOPD ( Pop a value from a particular symbol )
 
       module procedure sypopd
+!! ## Abstract
+!!
+!!     Pop a value associated with a particular symbol in a double
+!!     precision symbol table. The first value associated with the
+!!     symbol is removed, and subsequent values are moved forward.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, sumai
-
-! $ Abstract
-!
-!     Pop a value associated with a particular symbol in a double
-!     precision symbol table. The first value associated with the
-!     symbol is removed, and subsequent values are moved forward.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -4793,25 +4770,24 @@ contains
 !$Procedure SYPOPI ( Pop a value from a particular symbol )
 
       module procedure sypopi
+!! ## Abstract
+!!
+!!     Pop a value associated with a particular symbol in an integer
+!!     symbol table. The first value associated with the symbol is
+!!     removed, and subsequent values are moved forward.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, sumai
-
-! $ Abstract
-!
-!     Pop a value associated with a particular symbol in an integer
-!     symbol table. The first value associated with the symbol is
-!     removed, and subsequent values are moved forward.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -5027,25 +5003,24 @@ contains
 !$Procedure SYPUTC ( Set the values associated with a symbol )
 
       module procedure syputc
+!! ## Abstract
+!!
+!!     Set the values of a particular symbol in a character symbol table.
+!!     If the symbol already exists, the previous values associated with
+!!     it are removed, otherwise a new symbol is created.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Set the values of a particular symbol in a character symbol table.
-!     If the symbol already exists, the previous values associated with
-!     it are removed, otherwise a new symbol is created.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -5323,25 +5298,24 @@ contains
 !$Procedure SYPUTD ( Set the values associated with a symbol )
 
       module procedure syputd
+!! ## Abstract
+!!
+!!     Set the values of a particular symbol in a double precision
+!!     symbol table. If the symbol already exists, the previous values
+!!     associated with it are removed, otherwise a new symbol is created.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Set the values of a particular symbol in a double precision
-!     symbol table. If the symbol already exists, the previous values
-!     associated with it are removed, otherwise a new symbol is created.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -5637,25 +5611,24 @@ contains
 !$Procedure SYPUTI ( Set the values associated with a symbol )
 
       module procedure syputi
+!! ## Abstract
+!!
+!!     Set the values of a particular symbol in an integer symbol table.
+!!     If the symbol already exists, the previous values associated with
+!!     it are removed, otherwise a new symbol is created.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Set the values of a particular symbol in an integer symbol table.
-!     If the symbol already exists, the previous values associated with
-!     it are removed, otherwise a new symbol is created.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -5944,24 +5917,23 @@ contains
 !$Procedure SYSELC ( Select a subset of the values of a symbol )
 
       module procedure syselc
+!! ## Abstract
+!!
+!!     Select a subset of the values associated with a particular
+!!     symbol in a character symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, movec, sumai
-
-! $ Abstract
-!
-!     Select a subset of the values associated with a particular
-!     symbol in a character symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -6187,24 +6159,23 @@ contains
 !$Procedure SYSELD ( Select a subset of the values of a symbol )
 
       module procedure syseld
+!! ## Abstract
+!!
+!!     Select a subset of the values associated with a particular
+!!     symbol in a double precision symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, moved, sumai
-
-! $ Abstract
-!
-!     Select a subset of the values associated with a particular
-!     symbol in a double precision symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -6429,24 +6400,23 @@ contains
 !$Procedure SYSELI ( Select a subset of the values of a symbol )
 
       module procedure syseli
+!! ## Abstract
+!!
+!!     Select a subset of the values associated with a particular
+!!     symbol in an integer symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, movei, sumai
-
-! $ Abstract
-!
-!     Select a subset of the values associated with a particular
-!     symbol in an integer symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -6674,25 +6644,24 @@ contains
 !$Procedure SYSETC ( Set the value associated with a symbol )
 
       module procedure sysetc
+!! ## Abstract
+!!
+!!     Set the value of a particular symbol in a character symbol table.
+!!     If the symbol already exists, the previous values associated with
+!!     it are removed, otherwise a new symbol is created.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Set the value of a particular symbol in a character symbol table.
-!     If the symbol already exists, the previous values associated with
-!     it are removed, otherwise a new symbol is created.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -6940,25 +6909,24 @@ contains
 !$Procedure SYSETD ( Set the value associated with a symbol )
 
       module procedure sysetd
+!! ## Abstract
+!!
+!!     Set the value of a particular symbol in a double precision symbol
+!!     table. If the symbol already exists, the previous values
+!!     associated with it are removed, otherwise a new symbol is created.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Set the value of a particular symbol in a double precision symbol
-!     table. If the symbol already exists, the previous values
-!     associated with it are removed, otherwise a new symbol is created.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -7202,25 +7170,24 @@ contains
 !$Procedure SYSETI ( Set the value associated with a symbol )
 
       module procedure syseti
+!! ## Abstract
+!!
+!!     Set the value of a particular symbol in an integer symbol table.
+!!     If the symbol already exists, the previous values associated with
+!!     it are removed, otherwise a new symbol is created.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Set the value of a particular symbol in an integer symbol table.
-!     If the symbol already exists, the previous values associated with
-!     it are removed, otherwise a new symbol is created.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -7466,24 +7433,23 @@ contains
 !$Procedure SYTRNC (Transpose two values associated with a symbol)
 
       module procedure sytrnc
+!! ## Abstract
+!!
+!!     Transpose two values associated with a particular symbol in a
+!!     character symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, sumai, swapc
-
-! $ Abstract
-!
-!     Transpose two values associated with a particular symbol in a
-!     character symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -7700,24 +7666,23 @@ contains
 !$Procedure SYTRND (Transpose two values associated with a symbol)
 
       module procedure sytrnd
+!! ## Abstract
+!!
+!!     Transpose two values associated with a particular symbol in a
+!!     double precision symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, sumai, swapd
-
-! $ Abstract
-!
-!     Transpose two values associated with a particular symbol in a
-!     double precision symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -7941,24 +7906,23 @@ contains
 !$Procedure SYTRNI (Transpose two values associated with a symbol)
 
       module procedure sytrni
+!! ## Abstract
+!!
+!!     Transpose two values associated with a particular symbol in an
+!!     integer symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, sumai, swapi
-
-! $ Abstract
-!
-!     Transpose two values associated with a particular symbol in an
-!     integer symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8179,25 +8143,24 @@ contains
 !$Procedure SYENQC ( Enqueue a value onto a symbol )
 
       module procedure syenqc
+!! ## Abstract
+!!
+!!     Enqueue a value onto a particular symbol in a character
+!!     symbol table. If the symbol is not in the table, a new one
+!!     is created.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Enqueue a value onto a particular symbol in a character
-!     symbol table. If the symbol is not in the table, a new one
-!     is created.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8402,25 +8365,24 @@ contains
 !$Procedure SYENQD ( Enqueue a value onto a symbol )
 
       module procedure syenqd
+!! ## Abstract
+!!
+!!     Enqueue a value onto a particular symbol in a double precision
+!!     symbol table. If the symbol is not in the table, a new one
+!!     is created.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Enqueue a value onto a particular symbol in a double precision
-!     symbol table. If the symbol is not in the table, a new one
-!     is created.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8630,25 +8592,24 @@ contains
 !$Procedure SYENQI ( Enqueue a value onto a symbol )
 
       module procedure syenqi
+!! ## Abstract
+!!
+!!     Enqueue a value onto a particular symbol in an integer
+!!     symbol table. If the symbol is not in the table, a new one
+!!     is created.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Enqueue a value onto a particular symbol in an integer
-!     symbol table. If the symbol is not in the table, a new one
-!     is created.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8853,25 +8814,24 @@ contains
 !$Procedure SYPSHC ( Push a value onto a particular symbol )
 
       module procedure sypshc
+!! ## Abstract
+!!
+!!     Push a value onto a particular symbol in a character symbol table.
+!!     The previous value(s) associated with the symbol is extended at
+!!     the front. A new symbol is created if necessary.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Push a value onto a particular symbol in a character symbol table.
-!     The previous value(s) associated with the symbol is extended at
-!     the front. A new symbol is created if necessary.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9073,25 +9033,24 @@ contains
 !$Procedure SYPSHD ( Push a value onto a particular symbol )
 
       module procedure sypshd
+!! ## Abstract
+!!
+!!     Push a value onto a particular symbol in a double precision
+!!     symbol table. The previous value(s) associated with the symbol
+!!     is extended at the front. A new symbol is created if necessary.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Push a value onto a particular symbol in a double precision
-!     symbol table. The previous value(s) associated with the symbol
-!     is extended at the front. A new symbol is created if necessary.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9297,25 +9256,24 @@ contains
 !$Procedure SYPSHI ( Push a value onto a particular symbol )
 
       module procedure sypshi
+!! ## Abstract
+!!
+!!     Push a value onto a particular symbol in an integer symbol table.
+!!     The previous value(s) associated with the symbol is extended at
+!!     the front. A new symbol is created if necessary.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec, sumai
-
-! $ Abstract
-!
-!     Push a value onto a particular symbol in an integer symbol table.
-!     The previous value(s) associated with the symbol is extended at
-!     the front. A new symbol is created if necessary.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9518,23 +9476,22 @@ contains
 !$Procedure SYRENC ( Rename an existing symbol )
 
       module procedure syrenc
+!! ## Abstract
+!!
+!!     Rename an existing symbol in a character symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, lstlec, sumai
-
-! $ Abstract
-!
-!     Rename an existing symbol in a character symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9770,23 +9727,22 @@ contains
 !$Procedure SYREND ( Rename an existing symbol )
 
       module procedure syrend
+!! ## Abstract
+!!
+!!     Rename an existing symbol in a double precision symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, lstlec, sumai
-
-! $ Abstract
-!
-!     Rename an existing symbol in a double precision symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -10020,23 +9976,22 @@ contains
 !$Procedure SYRENI ( Rename an existing symbol )
 
       module procedure syreni
+!! ## Abstract
+!!
+!!     Rename an existing symbol in an integer symbol table.
+!!
+!! ## Required Reading
+!!
+!!     SYMBOLS
+!!
+!! ## Keywords
+!!
+!!     SYMBOLS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, lstlec, sumai
-
-! $ Abstract
-!
-!     Rename an existing symbol in an integer symbol table.
-!
-! $ Required_Reading
-!
-!     SYMBOLS
-!
-! $ Keywords
-!
-!     SYMBOLS
-!
-! $ Declarations
-
       implicit none
 
       integer(ip), parameter :: lbcell = -5

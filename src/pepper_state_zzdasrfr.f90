@@ -6,12 +6,12 @@
 module pepper_state_zzdasrfr
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzddhman
 
    implicit none
 
    private
 
-   include 'zzddhman.inc'
 
    public :: init_zzdasrfr_state
 

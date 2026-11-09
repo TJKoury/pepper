@@ -22,6 +22,7 @@ program test_daf
 
    call delete_file()
    call write_daf()
+   call test_units_closed()
    call a%dafopr(file, handle)
    call check(.not. a%failed(), 'dafopr')
    call test_interleaved_searches()
@@ -129,6 +130,27 @@ contains
    end subroutine test_interleaved_searches
 
    !> Both contexts read the data of the third array (each with its own unit).
+   !> A context that read a file closes its unit when it goes away: c reads
+   !> through a unit of its own, a closes the file, and once c is gone the file
+   !> is not connected to any unit.
+   subroutine test_units_closed()
+      integer(ip) :: h
+      real(wp) :: sum(nd + (ni + 1)/2)
+      logical :: found, opened
+      call a%dafopr(file, h)
+      block
+         type(pepper_context) :: c
+         c = spice%new_context()
+         call c%dafbfs(h)
+         call c%daffna(found)
+         call c%dafgs(sum)
+         call check(.not. c%failed() .and. found, 'c reads the DAF')
+      end block
+      call a%dafcls(h)
+      inquire (file=file, opened=opened)
+      call check(.not. opened, 'no unit is connected to the file after c is gone')
+   end subroutine test_units_closed
+
    subroutine test_read_data()
       real(wp) :: sum(nd + (ni + 1)/2), dc(nd), data(5)
       integer(ip) :: ic(ni), i

@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 """
+HISTORICAL: this tool did the original import of NAIF's sources (2026-11). The
+layout has changed since: src/spicelib is gone (the routines are modules in src/,
+the remaining legacy ones in src/legacy/spicelib/, the include files modules in
+src/inc/), and tspice is the package tspice/ (tspice/src, tspice/app).
+
 Convert fixed-form Fortran sources to free form, in place.
 
     *.f   -> *.f90

@@ -7,12 +7,12 @@
 module pepper_state_zzspin
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
 
    implicit none
 
    private
 
-   include 'zzabcorr.inc'
    integer(ip), parameter :: spshpn = 2
 
    public :: init_zzspin_state

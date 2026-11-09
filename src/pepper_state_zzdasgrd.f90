@@ -8,12 +8,12 @@
 module pepper_state_zzdasgrd
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_das
 
    implicit none
 
    private
 
-   include 'das.inc'
 
    public :: init_zzdasgrd_state
 

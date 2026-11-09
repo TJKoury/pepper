@@ -8,18 +8,18 @@
 module pepper_state_zzeksemc
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekopcd
+      use pepper_inc_ekquery
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
 
    implicit none
 
    private
 
-   include 'ekattdsc.inc'
-   include 'ekbool.inc'
-   include 'ekcnamsz.inc'
-   include 'ekopcd.inc'
-   include 'ekquery.inc'
-   include 'ektnamsz.inc'
-   include 'ektype.inc'
    integer(ip), parameter :: short = 32
 
    public :: init_zzeksemc_state

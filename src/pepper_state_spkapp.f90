@@ -1,4 +1,4 @@
-!> Deprecated: This routine has been superseded by the SPICELIB
+!> **Deprecated:** This routine has been superseded by the SPICELIB
 !> routine SPKAPS. This routine is supported for purposes of
 !> backward compatibility only.
 !>

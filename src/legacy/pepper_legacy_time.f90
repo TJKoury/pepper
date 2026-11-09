@@ -72,8 +72,8 @@
       use pepper_instance, only: pepper_context, pepper_zzcvpool => zzcvpool
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: agent  !! Name of the agent to check for notices
       integer(ip) :: usrctr    ( ctrsiz )  !! POOL state counter tracked by the caller
       logical :: update  !! .TRUE. if variables for AGENT have been updated
@@ -257,8 +257,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       integer(ip), parameter :: mxcomp = 10
       character(*) :: from  !! description of a time vector.
       character(*) :: to  !! description of a time vector.
@@ -293,8 +293,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       real(wp) :: epoch  !! An epoch.
       character(*) :: insys  !! The time scale associated with the input EPOCH.
       character(*) :: outsys  !! The time scale associated with the function value.
@@ -329,10 +329,10 @@
       use pepper_instance, only: pepper_context, pepper_zzprscor => zzprscor
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzabcorr
       implicit none
       character(*) :: abcorr  !! Aberration correction string.
       logical :: attblk ( * )  !! Aberration correction attribute block.
-      include 'zzabcorr.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call pepper_zzprscor ( ctx, abcorr, attblk )
@@ -346,8 +346,8 @@
       subroutine zzvalcor ( abcorr, attblk )
       use pepper_instance, only: pepper_context, pepper_zzvalcor => zzvalcor
       use pepper_legacy_context, only: legacy_context
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       character(*) :: abcorr  !! Aberration correction string.
       logical :: attblk ( * )  !! Aberration correction attribute block.
       type(pepper_context), pointer :: ctx
@@ -364,12 +364,12 @@
       use pepper_instance, only: pepper_context, pepper_zzcorepc => zzcorepc
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_zzabcorr
       implicit none
       character(*) :: abcorr  !! Aberration correction string.
       real(wp) :: et  !! Ephemeris time, seconds past J2000.
       real(wp) :: lt  !! Light time.
       real(wp) :: etcorr  !! Light time-corrected epoch.
-      include 'zzabcorr.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call pepper_zzcorepc ( ctx, abcorr, et, lt, etcorr )

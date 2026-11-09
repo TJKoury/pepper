@@ -15,25 +15,24 @@ contains
 !$Procedure CYACIP ( Cycle the elements of a character array )
 
       module procedure cyacip
+!! ## Abstract
+!!
+!!     Cycle the elements of a character array forward or backward
+!!     in place.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       use pepper_strings, only: nbwid
-
-! $ Abstract
-!
-!     Cycle the elements of a character array forward or backward
-!     in place.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -281,24 +280,23 @@ contains
 !$Procedure CYADIP ( Cycle the elements of a DP array, in place )
 
       module procedure cyadip
+!! ## Abstract
+!!
+!!     Cycle the elements of a double precision array forward
+!!     or backward in place.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: gcd
-
-! $ Abstract
-!
-!     Cycle the elements of a double precision array forward
-!     or backward in place.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -505,24 +503,23 @@ contains
 !$Procedure CYAIIP ( Cycle the elements of an integer array, in place )
 
       module procedure cyaiip
+!! ## Abstract
+!!
+!!     Cycle the elements of an integer array forward or backward
+!!     in place.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
-
-! $ Abstract
-!
-!     Cycle the elements of an integer array forward or backward
-!     in place.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -729,25 +726,24 @@ contains
 !$Procedure CYCLAC ( Cycle the elements of a character array )
 
       module procedure cyclac
+!! ## Abstract
+!!
+!!     Cycle the elements of a character array forward or backward.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: movec
       use pepper_math, only: gcd
       use pepper_strings, only: nbwid
-
-! $ Abstract
-!
-!     Cycle the elements of a character array forward or backward.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1033,25 +1029,24 @@ contains
 !$Procedure CYCLAD ( Cycle the elements of a DP array )
 
       module procedure cyclad
+!! ## Abstract
+!!
+!!     Cycle the elements of a double precision array forward
+!!     or backward.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       use pepper_math, only: gcd
-
-! $ Abstract
-!
-!     Cycle the elements of a double precision array forward
-!     or backward.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1286,24 +1281,23 @@ contains
 !$Procedure CYCLAI ( Cycle the elements of an integer array )
 
       module procedure cyclai
+!! ## Abstract
+!!
+!!     Cycle the elements of an integer array forward or backward.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: movei
       use pepper_math, only: gcd
-
-! $ Abstract
-!
-!     Cycle the elements of an integer array forward or backward.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1538,24 +1532,23 @@ contains
 !$Procedure INSLAC ( Insert at location in a character array )
 
       module procedure inslac
+!! ## Abstract
+!!
+!!     Insert one or more elements into a character array at the
+!!     indicated location.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Insert one or more elements into a character array at the
-!     indicated location.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -1771,24 +1764,23 @@ contains
 !$Procedure INSLAD (Insert at location in double precision array)
 
       module procedure inslad
+!! ## Abstract
+!!
+!!     Insert one or more elements into a double precision array at
+!!     the indicated location.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Insert one or more elements into a double precision array at
-!     the indicated location.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -2002,24 +1994,23 @@ contains
 !$Procedure INSLAI (Insert at location in an integer array)
 
       module procedure inslai
+!! ## Abstract
+!!
+!!     Insert one or more elements into an integer array at
+!!     the indicated location.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Insert one or more elements into an integer array at
-!     the indicated location.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -2233,24 +2224,23 @@ contains
 !$Procedure REMLAC ( Remove elements from a character array )
 
       module procedure remlac
+!! ## Abstract
+!!
+!!     Remove one or more elements from a character array at the
+!!     indicated location.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Remove one or more elements from a character array at the
-!     indicated location.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -2454,24 +2444,23 @@ contains
 !$Procedure REMLAD (Remove elements from a double precision array)
 
       module procedure remlad
+!! ## Abstract
+!!
+!!     Remove one or more elements from a double precision array at the
+!!     indicated location.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Remove one or more elements from a double precision array at the
-!     indicated location.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -2676,24 +2665,23 @@ contains
 !$Procedure REMLAI ( Remove elements from an integer array )
 
       module procedure remlai
+!! ## Abstract
+!!
+!!     Remove one or more elements from an integer array at the
+!!     indicated location.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Remove one or more elements from an integer array at the
-!     indicated location.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -2898,24 +2886,23 @@ contains
 !$Procedure SWAPAC ( Swap array, character )
 
       module procedure swapac
+!! ## Abstract
+!!
+!!     Swap (exchange) two non-intersecting groups of contiguous
+!!     elements of a character array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapc
-
-! $ Abstract
-!
-!     Swap (exchange) two non-intersecting groups of contiguous
-!     elements of a character array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -3319,24 +3306,23 @@ contains
 !$Procedure SWAPAD ( Swap elements within a DP array )
 
       module procedure swapad
+!! ## Abstract
+!!
+!!     Swap (exchange) two non-intersecting groups of contiguous
+!!     elements of a double precision array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapd
-
-! $ Abstract
-!
-!     Swap (exchange) two non-intersecting groups of contiguous
-!     elements of a double precision array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -3742,24 +3728,23 @@ contains
 !$Procedure SWAPAI ( Swap elements within an integer array )
 
       module procedure swapai
+!! ## Abstract
+!!
+!!     Swap (exchange) two non-intersecting groups of contiguous
+!!     elements of an integer array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapi
-
-! $ Abstract
-!
-!     Swap (exchange) two non-intersecting groups of contiguous
-!     elements of an integer array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -4164,26 +4149,25 @@ contains
 !$Procedure PACKAC ( Pack a character array )
 
       module procedure packac
+!! ## Abstract
+!!
+!!     Pack the contents of a CHARACTER array. That is, take
+!!     a set of arbitrarily spaced elements from an input array,
+!!     and make them adjacent elements in an output array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Pack the contents of a CHARACTER array. That is, take
-!     a set of arbitrarily spaced elements from an input array,
-!     and make them adjacent elements in an output array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -4376,26 +4360,25 @@ contains
 !$Procedure PACKAD ( Pack a double precision array )
 
       module procedure packad
+!! ## Abstract
+!!
+!!     Pack the contents of a double precision array. That is,
+!!     take a set of arbitrarily spaced elements from an input
+!!     array, and make them adjacent elements in an output array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Pack the contents of a double precision array. That is,
-!     take a set of arbitrarily spaced elements from an input
-!     array, and make them adjacent elements in an output array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -4588,26 +4571,25 @@ contains
 !$Procedure PACKAI ( Pack an integer array )
 
       module procedure packai
+!! ## Abstract
+!!
+!!     Pack the contents of an integer array. That is,
+!!     take a set of arbitrarily spaced elements from an input
+!!     array, and make them adjacent elements in an output array.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     ARRAY
+!!     ASSIGNMENT
+!!     UTILITY
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Pack the contents of an integer array. That is,
-!     take a set of arbitrarily spaced elements from an input
-!     array, and make them adjacent elements in an output array.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ARRAY
-!     ASSIGNMENT
-!     UTILITY
-!
-! $ Declarations
-
       implicit none
 
 ! $ Detailed_Input
@@ -4800,22 +4782,21 @@ contains
 !$Procedure LNKAN  ( LNK, allocate node )
 
       module procedure lnkan
+!! ## Abstract
+!!
+!!     Allocate a node in a doubly linked list pool.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Allocate a node in a doubly linked list pool.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -5040,22 +5021,21 @@ contains
 !$Procedure LNKFSL ( LNK, free sublist of a list  )
 
       module procedure lnkfsl
+!! ## Abstract
+!!
+!!     Free a specified sublist in a list.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Free a specified sublist in a list.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -5431,22 +5411,21 @@ contains
 !$Procedure LNKHL ( LNK, head of list )
 
       module procedure lnkhl
+!! ## Abstract
+!!
+!!     Return the head node of the list containing a specified node.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the head node of the list containing a specified node.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -5681,23 +5660,22 @@ contains
 !$Procedure LNKILA ( LNK, insert list after node )
 
       module procedure lnkila
+!! ## Abstract
+!!
+!!     Insert the list containing a specified node into a another list,
+!!     following a specified node.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Insert the list containing a specified node into a another list,
-!     following a specified node.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -6002,23 +5980,22 @@ contains
 !$Procedure LNKILB ( LNK, insert list before node )
 
       module procedure lnkilb
+!! ## Abstract
+!!
+!!     Insert the list containing a specified node into a another list,
+!!     preceding a specified node.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Insert the list containing a specified node into a another list,
-!     preceding a specified node.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -6326,22 +6303,21 @@ contains
 !$Procedure LNKINI ( LNK, initialize )
 
       module procedure lnkini
+!! ## Abstract
+!!
+!!     Initialize a doubly linked list pool.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Initialize a doubly linked list pool.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -6563,22 +6539,21 @@ contains
 !$Procedure LNKNFN ( LNK, number of free nodes )
 
       module procedure lnknfn
+!! ## Abstract
+!!
+!!     Return the number of free nodes in a doubly linked list pool.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the number of free nodes in a doubly linked list pool.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -6737,23 +6712,22 @@ contains
 !$Procedure LNKNXT ( LNK, next node )
 
       module procedure lnknxt
+!! ## Abstract
+!!
+!!     Find the node following a specified node in a doubly linked list
+!!     pool.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the node following a specified node in a doubly linked list
-!     pool.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -6980,23 +6954,22 @@ contains
 !$Procedure LNKPRV ( LNK, previous node )
 
       module procedure lnkprv
+!! ## Abstract
+!!
+!!     Find the node preceding a specified node in a doubly linked list
+!!     pool.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Find the node preceding a specified node in a doubly linked list
-!     pool.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -7225,22 +7198,21 @@ contains
 !$Procedure LNKSIZ ( LNK, size )
 
       module procedure lnksiz
+!! ## Abstract
+!!
+!!     Return the size of a doubly linked list pool.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the size of a doubly linked list pool.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -7393,22 +7365,21 @@ contains
 !$Procedure LNKTL ( LNK, tail of list )
 
       module procedure lnktl
+!! ## Abstract
+!!
+!!     Return the tail node of the list containing a specified node.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the tail node of the list containing a specified node.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool
@@ -7657,22 +7628,21 @@ contains
 !$Procedure LNKXSL ( LNK, extract sublist from list  )
 
       module procedure lnkxsl
+!! ## Abstract
+!!
+!!     Extract a specified sublist from a list.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     LIST
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Extract a specified sublist from a list.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     LIST
-!
-! $ Declarations
-
       implicit none
 
       integer(ip)           lbpool

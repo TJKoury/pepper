@@ -6,13 +6,13 @@
 module pepper_state_zzgfcslv
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
 
    implicit none
 
    private
 
-   include               'gf.inc'
-   include               'zzgf.inc'
    integer(ip), parameter :: mxpass = 3
    integer(ip), parameter :: nc = 7
    integer(ip), parameter :: maxop = 6

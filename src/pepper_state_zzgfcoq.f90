@@ -8,13 +8,13 @@
 module pepper_state_zzgfcoq
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
+      use pepper_inc_zzgf
 
    implicit none
 
    private
 
-   include               'gf.inc'
-   include               'zzgf.inc'
    integer(ip), parameter :: bdnmln = 36
    integer(ip), parameter :: crdlen = 32
    integer(ip), parameter :: nsys = 7

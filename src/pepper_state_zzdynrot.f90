@@ -8,14 +8,14 @@
 module pepper_state_zzdynrot
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
 
    implicit none
 
    private
 
-   include 'frmtyp.inc'
-   include 'zzabcorr.inc'
-   include 'zzdyn.inc'
 
    public :: init_zzdynrot_state
 

@@ -76,8 +76,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ckparam
       implicit none
-      include               'ckparam.inc'
       logical :: needav  !! .TRUE. if angular velocity is requested.
       real(wp) :: record ( * )  !! Data type 4 pointing record.
       real(wp) :: cmat   ( 3, 3 )  !! C-matrix.
@@ -95,9 +95,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ck05
+      use pepper_inc_ckparam
       implicit none
-      include 'ck05.inc'
-      include 'ckparam.inc'
       logical :: needav  !! .TRUE. if angular velocity is requested.
       real(wp) :: record   ( * )  !! Data type 5 record.
       real(wp) :: cmat     ( 3, 3 )  !! C-matrix.
@@ -176,9 +176,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ck05
+      use pepper_inc_ckparam
       implicit none
-      include 'ck05.inc'
-      include 'ckparam.inc'
       integer(ip) :: handle  !! File handle.
       real(wp) :: descr    ( 5 )  !! Segment descriptor.
       real(wp) :: sclkdp  !! Pointing request time.
@@ -199,9 +199,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ckparam
+      use pepper_inc_ck06
       implicit none
-      include 'ckparam.inc'
-      include 'ck06.inc'
       integer(ip) :: handle  !! File handle.
       real(wp) :: descr    ( 5 )  !! Segment descriptor.
       real(wp) :: sclkdp  !! Pointing request time.
@@ -257,12 +257,12 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! Handle of a DAF open for reading.
       real(wp) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
       integer(ip) :: mnemon  !! An integer mnemonic for the desired meta data.
       integer(ip) :: value  !! The value of the meta data item requested.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgmeta ( handle, descr, mnemon, value )
@@ -327,8 +327,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spkrec
       implicit none
-      include 'spkrec.inc'
       real(wp) :: et  !! Target epoch.
       real(wp) :: record ( * )  !! Data record.
       real(wp) :: state  ( 6 )  !! State (position and velocity).
@@ -345,8 +345,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spkrec
       implicit none
-      include 'spkrec.inc'
       real(wp) :: et  !! Target epoch.
       real(wp) :: record ( * )  !! Data record.
       real(wp) :: state  ( 6 )  !! State (position and velocity).
@@ -427,9 +427,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk18
+      use pepper_inc_spkrec
       implicit none
-      include 'spk18.inc'
-      include 'spkrec.inc'
       real(wp) :: et  !! Epoch for which a state is desired.
       real(wp) :: record   ( * )  !! Record from a type 18 SPK segment valid for ET.
       real(wp) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
@@ -445,9 +445,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
       implicit none
-      include 'spk19.inc'
-      include 'spkrec.inc'
       real(wp) :: et  !! Epoch for which a state is desired.
       real(wp) :: record   ( * )  !! Record from a type 19 SPK segment valid for ET.
       real(wp) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
@@ -481,8 +481,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk21
       implicit none
-      include 'spk21.inc'
       real(wp) :: et  !! Evaluation epoch.
       real(wp) :: record   ( * )  !! Data record.
       real(wp) :: state    ( 6 )  !! State (position and velocity).
@@ -645,8 +645,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk18
       implicit none
-      include 'spk18.inc'
       integer(ip) :: handle  !! File handle.
       real(wp) :: descr    ( 5 )  !! Segment descriptor.
       real(wp) :: et  !! Target epoch.
@@ -664,9 +664,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk19
+      use pepper_inc_spkrec
       implicit none
-      include 'spk19.inc'
-      include 'spkrec.inc'
       integer(ip) :: handle  !! File handle.
       real(wp) :: descr    ( 5 )  !! Segment descriptor.
       real(wp) :: et  !! Target epoch.
@@ -702,8 +702,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk21
       implicit none
-      include 'spk21.inc'
       integer(ip) :: handle  !! File handle.
       real(wp) :: descr    ( 5 )  !! Segment descriptor.
       real(wp) :: et  !! Evaluation epoch.
@@ -905,8 +905,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdsin => zzdsin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       real(wp) :: argpm  !! Mean argument of perigee
       real(wp) :: argpo  !! Argument of Perigee
       real(wp) :: atime  !! Internal SGD4 parameter.
@@ -1062,8 +1062,8 @@
       use pepper_instance, only: pepper_context, pepper_zzdspr => zzdspr
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       integer(ip) :: opmode  !! Flag indicating which technique to use to calculate sidereal time.
       real(wp) :: e3  !! Internal SGD4 parameter.
       real(wp) :: ee2  !! Internal SGD4 parameter.
@@ -1122,8 +1122,8 @@
       use pepper_instance, only: pepper_context, pepper_zzinil => zzinil
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       real(wp) :: geophs    ( 8 )
       integer(ip) :: opmode  !! Flag indicating which technique to use to calculate sidereal time.
       real(wp) :: ecco  !! Eccentricity.
@@ -1155,9 +1155,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_ck06
+      use pepper_inc_ckparam
       implicit none
-      include 'ck06.inc'
-      include 'ckparam.inc'
       logical :: needav  !! .TRUE. if angular velocity is requested.
       real(wp) :: record   ( * )  !! Data type 6 record.
       real(wp) :: cmat     ( 3, 3 )  !! C-matrix.
@@ -1177,8 +1177,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       integer(ip) :: ckid  !! The ID code for some C kernel object.
       character(*) :: meta  !! The kind of meta data requested 'SPK' or 'SCLK'
       integer(ip) :: idcode  !! The requested SCLK or spacecraft ID code.
@@ -1196,8 +1196,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ckparam
       implicit none
-      include               'ckparam.inc'
       integer(ip) :: handle  !! The handle of the file containing the segment.
       real(wp) :: descr   ( * )  !! The descriptor of the type 4 segment.
       integer(ip) :: nrec  !! The number of pointing records in the segment.
@@ -1268,13 +1268,13 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! Handle of a DAF open for reading.
       real(wp) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
       integer(ip) :: first  !! The index of the first constant value to fetch.
       integer(ip) :: last  !! The index of the last constant value to fetch.
       real(wp) :: values ( * )  !! The constant values that were requested.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgfcon ( handle, descr, first, last, values )
@@ -1289,6 +1289,7 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! The file handle attached to an open DAF.
       real(wp) :: descr   ( * )  !! The descriptor associated with a generic segment.
@@ -1296,7 +1297,6 @@
       integer(ip) :: last  !! The index of the last data packet to fetch.
       real(wp) :: values  ( * )  !! The data packets that have been fetched.
       integer(ip) :: ends    ( * )  !! An array of pointers to the ends of the packets.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgfpkt ( handle, descr, first, last, values, ends )
@@ -1312,6 +1312,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! The handle of a DAF open for reading.
       real(wp) :: descr ( * )  !! The descriptor for a DAF generic segment.
@@ -1319,7 +1320,6 @@
       real(wp) :: value  !! The reference value associated with X.
       integer(ip) :: indx  !! The index of VALUE within the reference values.
       logical :: found  !! A flag indicating whether values for X were found.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgfrvi ( handle, descr, x, value, indx, found )
@@ -1367,8 +1367,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ckparam
       implicit none
-      include               'ckparam.inc'
       integer(ip) :: handle  !! File handle.
       real(wp) :: descr  ( * )  !! Segment descriptor.
       real(wp) :: sclkdp  !! Pointing request time.
@@ -1458,8 +1458,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
-      include               'sgparam.inc'
       integer(ip) :: handle  !! File handle.
       real(wp) :: descr    ( 5 )  !! Segment descriptor.
       real(wp) :: et  !! Target epoch.
@@ -1494,8 +1494,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ckparam
       implicit none
-      include               'ckparam.inc'
       integer(ip) :: handle  !! CK file handle.
       real(wp) :: descr  ( *    )  !! Segment descriptor.
       real(wp) :: sclkdp  !! Spacecraft clock time.
@@ -1537,8 +1537,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       real(wp) :: geophs    ( 8 )  !! Geophysical constants.
       real(wp) :: elems     ( 10 )  !! Two-line element data.
       integer(ip) :: opmode  !! Flag to indicate operation mode for GMST.
@@ -1559,8 +1559,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       real(wp) :: t  !! Time to evaluate state in minutes from epoch.
       real(wp) :: state     ( 6 )  !! Evaluated state.
       type(pepper_context), pointer :: ctx
@@ -1571,8 +1571,8 @@
       !> Umbrella of the ZZSGP4 routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzsgp4 ( geophs, elems, opmode, t, state )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       real(wp) :: geophs    ( 8 )
       real(wp) :: elems     ( 10 )
       integer(ip) :: opmode

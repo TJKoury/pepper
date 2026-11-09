@@ -8,14 +8,14 @@
 module pepper_state_zzgffvu
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzocced
+      use pepper_inc_gf
 
    implicit none
 
    private
 
-   include 'zzabcorr.inc'
-   include 'zzocced.inc'
-   include 'gf.inc'
    integer(ip), parameter :: ubpl = 4
    integer(ip), parameter :: bdnmln = 36
    integer(ip), parameter :: frnmln = 32

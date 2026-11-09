@@ -14,25 +14,24 @@ contains
 !$Procedure SCTYPE ( SCLK type )
 
       module procedure sctype
+!! ## Abstract
+!!
+!!     Return the spacecraft clock type for a specified spacecraft.
+!!
+!! ## Required Reading
+!!
+!!     SCLK
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     Return the spacecraft clock type for a specified spacecraft.
-!
-! $ Required_Reading
-!
-!     SCLK
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
+      use pepper_inc_zzctr
       implicit none
 
-      include               'zzctr.inc'
 
 
 ! $ Detailed_Input
@@ -197,863 +196,819 @@ contains
       end procedure sctype
 
       module procedure tisbod
-
-! $ Abstract
-!
-!     Return a 6x6 matrix that transforms states in inertial
-!     coordinates to states in body-equator-and-prime-meridian
-!     coordinates.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!     PCK
-!     NAIF_IDS
-!     ROTATION
-!     TIME
-!
-! $ Keywords
-!
-!     ROTATION
-!     TRANSFORMATION
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     REF      is the NAIF name for an inertial reference frame.
-!              Acceptable names include:
-!
-!                 Name       Description
-!                 --------   --------------------------------
-!                 'J2000'    Earth mean equator, dynamical
-!                            equinox of J2000
-!
-!                 'B1950'    Earth mean equator, dynamical
-!                            equinox of B1950
-!
-!                 'FK4'      Fundamental Catalog (4)
-!
-!                 'DE-118'   JPL Developmental Ephemeris (118)
-!
-!                 'DE-96'    JPL Developmental Ephemeris ( 96)
-!
-!                 'DE-102'   JPL Developmental Ephemeris (102)
-!
-!                 'DE-108'   JPL Developmental Ephemeris (108)
-!
-!                 'DE-111'   JPL Developmental Ephemeris (111)
-!
-!                 'DE-114'   JPL Developmental Ephemeris (114)
-!
-!                 'DE-122'   JPL Developmental Ephemeris (122)
-!
-!                 'DE-125'   JPL Developmental Ephemeris (125)
-!
-!                 'DE-130'   JPL Developmental Ephemeris (130)
-!
-!                 'GALACTIC' Galactic System II
-!
-!                 'DE-200'   JPL Developmental Ephemeris (200)
-!
-!                 'DE-202'   JPL Developmental Ephemeris (202)
-!
-!              See the Frames Required Reading frames.req for a full
-!              list of inertial reference frame names built into
-!              SPICE.
-!
-!              The output TSIPM will give the transformation
-!              from this frame to the bodyfixed frame specified by
-!              BODY at the epoch specified by ET.
-!
-!     BODY     is the integer ID code of the body for which the
-!              state transformation matrix is requested. Bodies
-!              are numbered according to the standard NAIF numbering
-!              scheme. The numbering scheme is explained in the NAIF
-!              IDs Required Reading naif_ids.req.
-!
-!     ET       is the epoch at which the state transformation
-!              matrix is requested. (This is typically the
-!              epoch of observation minus the one-way light time
-!              from the observer to the body at the epoch of
-!              observation.)
-!
-! $ Detailed_Output
-!
-!     TSIPM    is a 6x6 transformation matrix. It is used to
-!              transform states from inertial coordinates to body
-!              fixed (also called equator and prime meridian ---
-!              PM) coordinates.
-!
-!              Given a state S in the inertial reference frame
-!              specified by REF, the corresponding bodyfixed state
-!              is given by the matrix vector product:
-!
-!                 TSIPM * S
-!
-!              The X axis of the PM system is directed  to the
-!              intersection of the equator and prime meridian.
-!              The Z axis points along  the spin axis and points
-!              towards the same side of the invariable plane of
-!              the solar system as does earth's north pole.
-!
-!              NOTE: The inverse of TSIPM is NOT its transpose.
-!              The matrix, TSIPM, has a structure as shown below:
-!
-!                 .-            -.
-!                 |       :      |
-!                 |   R   :  0   |
-!                 | ......:......|
-!                 |       :      |
-!                 | dR/dt :  R   |
-!                 |       :      |
-!                 `-            -'
-!
-!              where R is a time varying rotation matrix and dR/dt is
-!              its derivative. The inverse of this matrix is:
-!
-!                 .-              -.
-!                 |     T  :       |
-!                 |    R   :  0    |
-!                 | .......:.......|
-!                 |        :       |
-!                 |      T :   T   |
-!                 | dR/dt  :  R    |
-!                 |        :       |
-!                 `-              -'
-!
-!              The SPICELIB routine INVSTM is available for producing
-!              this inverse.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If data required to define the body-fixed frame associated
-!         with BODY are not found in the binary PCK system or the kernel
-!         pool, the error SPICE(FRAMEDATANOTFOUND) is signaled. In
-!         the case of IAU style body-fixed frames, the absence of
-!         prime meridian polynomial data (which are required) is used
-!         as an indicator of missing data.
-!
-!     2)  If the test for exception (1) passes, but in fact requested
-!         data are not available in the kernel pool, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-!     3)  If the kernel pool does not contain all of the data required
-!         to define the number of nutation precession angles
-!         corresponding to the available nutation precession
-!         coefficients, the error SPICE(INSUFFICIENTANGLES) is
-!         signaled.
-!
-!     4)  If the reference frame REF is not recognized, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-!     5)  If the specified body code BODY is not recognized, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-!     6)  If, for a given body, both forms of the kernel variable names
-!
-!            BODY<body ID>_CONSTANTS_JED_EPOCH
-!            BODY<body ID>_CONSTS_JED_EPOCH
-!
-!         are found in the kernel pool, the error
-!         SPICE(COMPETINGEPOCHSPEC) is signaled. This is done
-!         regardless of whether the values assigned to the kernel
-!         variable names match.
-!
-!     7)  If, for a given body, both forms of the kernel variable names
-!
-!            BODY<body ID>_CONSTANTS_REF_FRAME
-!            BODY<body ID>_CONSTS_REF_FRAME
-!
-!         are found in the kernel pool, the error
-!         SPICE(COMPETINGFRAMESPEC) is signaled. This is done
-!         regardless of whether the values assigned to the kernel
-!         variable names match.
-!
-!     8)  If the central body associated with the input BODY, whether
-!         a system barycenter or BODY itself, has associated phase
-!         angles (aka nutation precession angles), and the kernel
-!         variable BODY<body ID>_MAX_PHASE_DEGREE for the central
-!         body is present but has a value outside the range 1:3,
-!         the error SPICE(DEGREEOUTOFRANGE) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Note: NAIF recommends the use of SPKEZR with the appropriate
-!     frames kernels when possible over TISBOD.
-!
-!     The matrix for transforming inertial states to bodyfixed
-!     states is the 6x6 matrix shown below as a block structured
-!     matrix.
-!
-!        .-            -.
-!        |       :      |
-!        | TIPM  :  0   |
-!        | ......:......|
-!        |       :      |
-!        | DTIPM : TIPM |
-!        |       :      |
-!        `-            -'
-!
-!     This can also be expressed in terms of Euler angles
-!     PHI, DELTA and W. The transformation from inertial to
-!     bodyfixed coordinates is represented in the SPICE kernel
-!     pool as:
-!
-!        TIPM   = [W]  [DELTA]  [PHI]
-!                    3        1      3
-!     Thus
-!
-!        DTIPM  = d[W] /dt [DELTA]  [PHI]
-!                     3           1      3
-!
-!               + [W]  d[DELTA] /dt  [PHI]
-!                    3             1      3
-!
-!               + [W]  [DELTA]  d[PHI] /dt
-!                    3        1           3
-!
-!     If a binary PCK file record can be used for the time and
-!     body requested, it will be used. The most recently loaded
-!     binary PCK file has first priority, followed by previously
-!     loaded binary PCK files in backward time order. If no
-!     binary PCK file has been loaded, the text P_constants
-!     kernel file is used.
-!
-!     If there is only text PCK kernel information, it is
-!     expressed in terms of RA, DEC and W, where
-!
-!        RA  = PHI - HALFPI
-!        DEC = HALFPI - DELTA
-!        W   = W
-!
-!     The angles RA, DEC, and W are defined as follows in the
-!     text PCK file:
-!
-!                                      2    .-----
-!                      RA1*t      RA2*t      \
-!        RA  = RA0  + -------  + -------   +  )  a(i) * sin( theta(i) )
-!                        T          2        /
-!                                  T        '-----
-!                                              i
-!
-!                                       2   .-----
-!                      DEC1*t     DEC2*t     \
-!        DEC = DEC0 + -------- + --------  +  )  d(i) * cos( theta(i) )
-!                        T           2       /
-!                                   T       '-----
-!                                              i
-!
-!                                     2     .-----
-!                       W1*t      W2*t       \
-!        W   = W0   +  ------  + -------   +  )  w(i) * sin( theta(i) )
-!                        d          2        /
-!                                  d        '-----
-!                                              i
-!
-!     where `d' is in seconds/day; T in seconds/Julian century;
-!     a(i), d(i), and w(i) arrays apply to satellites only; and
-!     theta(i), defined as
-!
-!                                THETA1(i)*t
-!        theta(i) = THETA0(i) + -------------
-!                                     T
-!
-!     are specific to each planet.
-!
-!     These angles ---typically nodal rates--- vary in number and
-!     definition from one planetary system to the next.
-!
-!     Thus
-!
-!                                   .-----
-!                 RA1     2*RA2*t    \   a(i)*THETA1(i)*cos(theta(i))
-!     dRA/dt   = ----- + --------- +  ) ------------------------------
-!                  T          2      /                 T
-!                            T      '-----
-!                                      i
-!
-!                                     .-----
-!                 DEC1     2*DEC2*t    \   d(i)*THETA1(i)*sin(theta(i))
-!      dDEC/dt = ------ + ---------- -  ) ------------------------------
-!                   T          2       /                 T
-!                             T       '-----
-!                                        i
-!
-!                                 .-----
-!                 W1     2*W2*t    \   w(i)*THETA1(i)*cos(theta(i))
-!      dW/dt   = ---- + -------- +  ) ------------------------------
-!                 d         2      /                 T
-!                          d      '-----
-!                                    i
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Calculate the matrix to transform a state vector from the
-!        J2000 frame to the Saturn fixed frame at a specified
-!        time, and use it to compute the geometric position and
-!        velocity of Titan in Saturn's body-fixed frame.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File name: tisbod_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                     Contents
-!              ---------                     --------
-!              sat375.bsp                    Saturn satellite ephemeris
-!              pck00010.tpc                  Planet orientation and
-!                                            radii
-!              naif0012.tls                  Leapseconds
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'sat375.bsp',
-!                                  'pck00010.tpc',
-!                                  'naif0012.tls'  )
-!
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM TISBOD_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local variables
-!        C
-!              DOUBLE PRECISION      ET
-!              DOUBLE PRECISION      LT
-!              DOUBLE PRECISION      STATE  ( 6    )
-!              DOUBLE PRECISION      SATVEC ( 6    )
-!              DOUBLE PRECISION      TSIPM  ( 6, 6 )
-!
-!              INTEGER               I
-!              INTEGER               SATID
-!
-!        C
-!        C     Load the kernels.
-!        C
-!              CALL FURNSH ( 'tisbod_ex1.tm' )
-!
-!        C
-!        C     The body ID for Saturn.
-!        C
-!              SATID = 699
-!
-!        C
-!        C     Retrieve the transformation matrix at some time.
-!        C
-!              CALL STR2ET ( 'Jan 1 2005',   ET        )
-!              CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
-!
-!        C
-!        C     Retrieve the state of Titan as seen from Saturn
-!        C     in the J2000 frame at ET.
-!        C
-!              CALL SPKEZR ( 'TITAN',  ET,    'J2000', 'NONE',
-!             .              'SATURN', STATE, LT              )
-!
-!              WRITE(*,'(A)') 'Titan as seen from Saturn '
-!             .            // '(J2000 frame):'
-!              WRITE(*,'(A,3F13.3)') '   position   (km):',
-!             .               ( STATE(I), I=1,3 )
-!              WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
-!             .               ( STATE(I), I=4,6 )
-!
-!        C
-!        C     Rotate the 6-vector STATE into the
-!        C     Saturn body-fixed reference frame.
-!        C
-!              CALL MXVG ( TSIPM, STATE, 6, 6, SATVEC )
-!
-!              WRITE(*,'(A)') 'Titan as seen from Saturn '
-!             .            // '(IAU_SATURN frame):'
-!              WRITE(*,'(A,3F13.3)') '   position   (km):',
-!             .               ( SATVEC(I), I=1,3 )
-!              WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
-!             .               ( SATVEC(I), I=4,6 )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Titan as seen from Saturn (J2000 frame):
-!           position   (km):  1071928.661  -505781.970   -60383.976
-!           velocity (km/s):        2.404        5.176       -0.560
-!        Titan as seen from Saturn (IAU_SATURN frame):
-!           position   (km):   401063.338 -1116965.364    -5408.806
-!           velocity (km/s):     -177.547      -63.745        0.028
-!
-!        Note that the complete example could be replaced by a single
-!        SPKEZR call:
-!
-!           CALL SPKEZR ( 'TITAN',  ET,    'IAU_SATURN', 'NONE',
-!          .              'SATURN', STATE, LT                   )
-!
-!     2) Use TISBOD is used to compute the angular velocity vector (with
-!        respect to the J2000 inertial frame) of the specified body at
-!        given time.
-!
-!        Use the meta-kernel from Example 1 above.
-!
-!        Example code begins here.
-!
-!              PROGRAM TISBOD_EX2
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local variables
-!        C
-!              DOUBLE PRECISION      AV     ( 3    )
-!              DOUBLE PRECISION      ET
-!              DOUBLE PRECISION      DTIPM  ( 3, 3 )
-!              DOUBLE PRECISION      OMEGA  ( 3, 3 )
-!              DOUBLE PRECISION      ROT    ( 3, 3 )
-!              DOUBLE PRECISION      TIPM   ( 3, 3 )
-!              DOUBLE PRECISION      TSIPM  ( 6, 6 )
-!              DOUBLE PRECISION      V      ( 3    )
-!
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               SATID
-!
-!        C
-!        C     Load the kernels.
-!        C
-!              CALL FURNSH ( 'tisbod_ex1.tm' )
-!
-!        C
-!        C     The body ID for Saturn.
-!        C
-!              SATID = 699
-!
-!        C
-!        C     First get the state transformation matrix.
-!        C
-!              CALL STR2ET ( 'Jan 1 2005',   ET        )
-!              CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
-!
-!        C
-!        C     This matrix has the form:
-!        C
-!        C          .-            -.
-!        C          |       :      |
-!        C          | TIPM  :  0   |
-!        C          | ......:......|
-!        C          |       :      |
-!        C          | DTIPM : TIPM |
-!        C          |       :      |
-!        C          `-            -'
-!        C
-!        C     We extract TIPM and DTIPM
-!        C
-!              DO  I = 1,3
-!                 DO  J = 1,3
-!
-!                    TIPM  ( I, J ) = TSIPM ( I,   J )
-!                    DTIPM ( I, J ) = TSIPM ( I+3, J )
-!
-!                 END DO
-!              END DO
-!
-!        C
-!        C     The transpose of TIPM and DTIPM, (TPMI and DTPMI), gives
-!        C     the transformation from bodyfixed coordinates to inertial
-!        C     coordinates.
-!        C
-!        C     Here is a fact about the relationship between angular
-!        C     velocity associated with a time varying rotation matrix
-!        C     that gives the orientation of a body with respect to
-!        C     an inertial frame.
-!        C
-!        C        The angular velocity vector can be read from the off
-!        C        diagonal components of the matrix product:
-!        C
-!        C                                t
-!        C        OMEGA =     DTPMI * TPMI
-!        C
-!        C                         t
-!        C              =     DTIPM * TIPM
-!        C
-!        C        the components of the angular velocity V will appear
-!        C        in this matrix as:
-!        C
-!        C            .-                   -.
-!        C            |                     |
-!        C            |   0    -V(3)  V(2)  |
-!        C            |                     |
-!        C            |  V(3)    0   -V(1)  |
-!        C            |                     |
-!        C            | -V(2)   V(1)   0    |
-!        C            |                     |
-!        C            `-                   -'
-!        C
-!        C
-!              CALL MTXM ( DTIPM, TIPM, OMEGA )
-!
-!              V(1) = OMEGA (3,2)
-!              V(2) = OMEGA (1,3)
-!              V(3) = OMEGA (2,1)
-!
-!        C
-!        C     Display the results.
-!        C
-!              WRITE(*,'(A)') 'Angular velocity (km/s):'
-!              WRITE(*,'(3F16.9)') V
-!
-!        C
-!        C     It is possible to compute the angular velocity using
-!        C     a single call to XF2RAV.
-!        C
-!              CALL XF2RAV ( TSIPM, ROT, AV )
-!
-!              WRITE(*,'(A)') 'Angular velocity using XF2RAV (km/s):'
-!              WRITE(*,'(3F16.9)') AV
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Angular velocity (km/s):
-!             0.000014001     0.000011995     0.000162744
-!        Angular velocity using XF2RAV (km/s):
-!             0.000014001     0.000011995     0.000162744
-!
-! $ Restrictions
-!
-!     1)  The kernel pool must be loaded with the appropriate
-!         coefficients (from a text or binary PCK file) prior to calling
-!         this routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     K.S. Zukor         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 4.5.1, 16-DEC-2021 (NJB) (JDR)
-!
-!        The routine was updated to support user-defined maximum phase
-!        angle degrees. The additional text kernel kernel variable name
-!        BODYnnn_MAX_PHASE_DEGREE must be used when the phase angle
-!        polynomials have degree higher than 1. The maximum allowed
-!        degree is 3.
-!
-!        The kernel variable names
-!
-!           BODY#_CONSTS_REF_FRAME
-!           BODY#_CONSTS_JED_EPOCH
-!
-!        are now recognized.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example.
-!
-!        Added note to $Particulars section.
-!
-!-    SPICELIB Version 4.5.0, 26-JUL-2016 (BVS)
-!
-!        The routine was updated to be more efficient by using a hash
-!        and buffers so save text PCK data instead of doing kernel POOL
-!        look-ups over an over again. The routine now checks the POOL
-!        state counter and dumps all buffered data if it changes.
-!
-!        BUG FIX: changed available room in the BODVCD call
-!        fetching 'NUT_PREC_ANGLES' from MAXANG to MAXANG*2.
-!
-!-    SPICELIB Version 4.4.0, 01-FEB-2008 (NJB)
-!
-!        The routine was updated to improve the error messages created
-!        when required PCK data are not found. Now in most cases the
-!        messages are created locally rather than by the kernel pool
-!        access routines. In particular missing binary PCK data will
-!        be indicated with a reasonable error message.
-!
-!-    SPICELIB Version 4.3.0, 13-DEC-2005 (NJB)
-!
-!        Bug fix: previous update introduced bug in state
-!        transformation when REF was unequal to PCK native frame.
-!
-!-    SPICELIB Version 4.2.0, 23-OCT-2005 (NJB)
-!
-!        Re-wrote portions of algorithm to simplify source code.
-!        Updated to remove non-standard use of duplicate arguments
-!        in MXM and VADDG calls.
-!
-!        Replaced calls to ZZBODVCD with calls to BODVCD.
-!
-!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added.
-!
-!-    SPICELIB Version 4.0.0, 12-FEB-2004 (NJB)
-!
-!        Code has been updated to support satellite ID codes in the
-!        range 10000 to 99999 and to allow nutation precession angles
-!        to be associated with any object.
-!
-!        Implementation changes were made to improve robustness
-!        of the code.
-!
-!-    SPICELIB Version 3.3.0, 29-MAR-1995 (WLT)
-!
-!        Properly initialized the variable NPAIRS.
-!
-!-    SPICELIB Version 3.2.0, 22-MAR-1995 (KSZ)
-!
-!        Changed to call PCKMAT rather than PCKEUL.
-!
-!-    SPICELIB Version 3.1.0, 18-OCT-1994 (KSZ)
-!
-!        Fixed bug which incorrectly modded DW by two pi.
-!
-!-    SPICELIB Version 3.0.0, 10-MAR-1994 (KSZ)
-!
-!        Changed to look for binary PCK file, and used this
-!        to find Euler angles, if such data has been loaded.
-!
-!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB)
-!
-!        Updated to handle P_constants referenced to different epochs
-!        and inertial reference frames.
-!
-!        $Required_Reading and $Literature_References sections were
-!        updated.
-!
-!-    SPICELIB Version 1.0.0, 05-NOV-1990 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     transformation from inertial state to bodyfixed
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 4.5.0, 26-JUL-2016 (BVS)
-!
-!        The routine was updated to be more efficient by using a hash
-!        and buffers so save text PCK data instead of doing kernel POOL
-!        look-ups over an over again. The routine now checks the POOL
-!        state counter and dumps all buffered data if it changes.
-!
-!-    SPICELIB Version 4.2.0, 23-OCT-2005 (NJB)
-!
-!        Re-wrote portions of algorithm to simplify source code.
-!        The routine now takes advantage of EUL2XF, which wasn't
-!        available when the first version of this routine was written.
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in MXM and VADDG calls.
-!
-!        Replaced calls to ZZBODVCD with calls to BODVCD.
-!
-!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
-!
-!        Tests of routine FAILED() were added. The new checks
-!        are intended to prevent arithmetic operations from
-!        being performed with uninitialized or invalid data.
-!
-!-     SPICELIB Version 4.0.0, 27-JAN-2004 (NJB)
-!
-!         Code has been updated to support satellite ID codes in the
-!         range 10000 to 99999 and to allow nutation precession angles
-!         to be associated with any object.
-!
-!         Calls to deprecated kernel pool access routine RTPOOL
-!         were replaced by calls to GDPOOL.
-!
-!         Calls to BODVAR have been replaced with calls to
-!         ZZBODVCD.
-!
-!-     SPICELIB Version 3.3.0, 29-MAR-1995 (WLT)
-!
-!        The variable NPAIRS is now initialized
-!        at the same point as NA, NTHETA, ND, and NW to be
-!        zero. This prevents the routine from performing
-!        needless calculations for planets and avoids possible
-!        floating point exceptions.
-!
-!-     SPICELIB Version 3.2.0, 22-MAR-1995 (KSZ)
-!
-!        TISBOD now gets the TSIPM matrix from PCKMAT.
-!        Reference frame calculation moved to end.
-!
-!-     SPICELIB Version 3.0.1, 07-OCT-1994 (KSZ)
-!
-!        TISBOD bug which mistakenly moded DW by 2PI
-!        was removed.
-!
-!-     SPICELIB Version 3.0.0, 10-MAR-1994 (KSZ)
-!
-!        TISBOD now uses new software to check for the
-!        existence of binary PCK files, search the for
-!        data corresponding to the requested body and time,
-!        and return the appropriate Euler angles. Otherwise
-!        the code calculates the Euler angles from the
-!        P_constants kernel file.
-!
-!-     SPICELIB Version 2.0.0, 04-SEP-1991 (NJB)
-!
-!         Updated to handle P_constants referenced to different epochs
-!         and inertial reference frames.
-!
-!         TISBOD now checks the kernel pool for presence of the
-!         variables
-!
-!            BODY#_CONSTANTS_REF_FRAME
-!
-!         and
-!
-!            BODY#_CONSTANTS_JED_EPOCH
-!
-!         where # is the NAIF integer code of the barycenter of a
-!         planetary system or of a body other than a planet or
-!         satellite. If either or both of these variables are
-!         present, the P_constants for BODY are presumed to be
-!         referenced to the specified inertial frame or epoch.
-!         If the epoch of the constants is not J2000, the input
-!         time ET is converted to seconds past the reference epoch.
-!         If the frame of the constants is not the frame specified
-!         by REF, the rotation from the P_constants' frame to
-!         body-fixed coordinates is transformed to the rotation from
-!         the requested frame to body-fixed coordinates. The same
-!         transformation is applied to the derivative of this
-!         rotation.
-!
-!         Due to the prescience of the original author, the code
-!         was already prepared to handle the possibility of
-!         specification of a P_constants inertial reference frame via
-!         kernel pool variables.
-!
-!         Also, the $Required_Reading and $Literature_References
-!         sections were updated. The SPK required reading has been
-!         deleted from the $Literature_References section, and the
-!         NAIF_IDS, KERNEL, and TIME Required Reading files have
-!         been added in the $Required_Reading section.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-
-!
-!     Local parameters
-!
-
-!
-!     Maximum number of coefficients per phase angle polynomial.
-!
-
-
-
-
-
-!
-!     Local variables
-!
-
-
-
-
-!
-!     POOL state counter.
-!
-
-
-!
-!     ID-based hash for text PCK data. KIDLST, KIDPOL, and KIDIDS
-!     provide the index in the body PCK data arrays at which the data
-!     of the body with a given ID are stored.
-!
-
-
-
-
-
-
-
-
-!
-!     Saved variables
-!
-!     Because we need to save almost everything, we save everything
-!     rather than taking a chance and accidentally leaving something
-!     off the list.
-!
-
-!
-!     Initial values
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Return a 6x6 matrix that transforms states in inertial
+!!     coordinates to states in body-equator-and-prime-meridian
+!!     coordinates.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!     PCK
+!!     NAIF_IDS
+!!     ROTATION
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     ROTATION
+!!     TRANSFORMATION
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     REF      is the NAIF name for an inertial reference frame.
+!!              Acceptable names include:
+!!
+!!                 Name       Description
+!!                 --------   --------------------------------
+!!                 'J2000'    Earth mean equator, dynamical
+!!                            equinox of J2000
+!!
+!!                 'B1950'    Earth mean equator, dynamical
+!!                            equinox of B1950
+!!
+!!                 'FK4'      Fundamental Catalog (4)
+!!
+!!                 'DE-118'   JPL Developmental Ephemeris (118)
+!!
+!!                 'DE-96'    JPL Developmental Ephemeris ( 96)
+!!
+!!                 'DE-102'   JPL Developmental Ephemeris (102)
+!!
+!!                 'DE-108'   JPL Developmental Ephemeris (108)
+!!
+!!                 'DE-111'   JPL Developmental Ephemeris (111)
+!!
+!!                 'DE-114'   JPL Developmental Ephemeris (114)
+!!
+!!                 'DE-122'   JPL Developmental Ephemeris (122)
+!!
+!!                 'DE-125'   JPL Developmental Ephemeris (125)
+!!
+!!                 'DE-130'   JPL Developmental Ephemeris (130)
+!!
+!!                 'GALACTIC' Galactic System II
+!!
+!!                 'DE-200'   JPL Developmental Ephemeris (200)
+!!
+!!                 'DE-202'   JPL Developmental Ephemeris (202)
+!!
+!!              See the Frames Required Reading frames.req for a full
+!!              list of inertial reference frame names built into
+!!              SPICE.
+!!
+!!              The output TSIPM will give the transformation
+!!              from this frame to the bodyfixed frame specified by
+!!              BODY at the epoch specified by ET.
+!!
+!!     BODY     is the integer ID code of the body for which the
+!!              state transformation matrix is requested. Bodies
+!!              are numbered according to the standard NAIF numbering
+!!              scheme. The numbering scheme is explained in the NAIF
+!!              IDs Required Reading naif_ids.req.
+!!
+!!     ET       is the epoch at which the state transformation
+!!              matrix is requested. (This is typically the
+!!              epoch of observation minus the one-way light time
+!!              from the observer to the body at the epoch of
+!!              observation.)
+!!
+!! ## Detailed Output
+!!
+!!     TSIPM    is a 6x6 transformation matrix. It is used to
+!!              transform states from inertial coordinates to body
+!!              fixed (also called equator and prime meridian ---
+!!              PM) coordinates.
+!!
+!!              Given a state S in the inertial reference frame
+!!              specified by REF, the corresponding bodyfixed state
+!!              is given by the matrix vector product:
+!!
+!!                 TSIPM * S
+!!
+!!              The X axis of the PM system is directed  to the
+!!              intersection of the equator and prime meridian.
+!!              The Z axis points along  the spin axis and points
+!!              towards the same side of the invariable plane of
+!!              the solar system as does earth's north pole.
+!!
+!!              NOTE: The inverse of TSIPM is NOT its transpose.
+!!              The matrix, TSIPM, has a structure as shown below:
+!!
+!!                 .-            -.
+!!                 |       :      |
+!!                 |   R   :  0   |
+!!                 | ......:......|
+!!                 |       :      |
+!!                 | dR/dt :  R   |
+!!                 |       :      |
+!!                 `-            -'
+!!
+!!              where R is a time varying rotation matrix and dR/dt is
+!!              its derivative. The inverse of this matrix is:
+!!
+!!                 .-              -.
+!!                 |     T  :       |
+!!                 |    R   :  0    |
+!!                 | .......:.......|
+!!                 |        :       |
+!!                 |      T :   T   |
+!!                 | dR/dt  :  R    |
+!!                 |        :       |
+!!                 `-              -'
+!!
+!!              The SPICELIB routine INVSTM is available for producing
+!!              this inverse.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1)  If data required to define the body-fixed frame associated
+!!         with BODY are not found in the binary PCK system or the kernel
+!!         pool, the error SPICE(FRAMEDATANOTFOUND) is signaled. In
+!!         the case of IAU style body-fixed frames, the absence of
+!!         prime meridian polynomial data (which are required) is used
+!!         as an indicator of missing data.
+!!
+!!     2)  If the test for exception (1) passes, but in fact requested
+!!         data are not available in the kernel pool, an error is
+!!         signaled by a routine in the call tree of this routine.
+!!
+!!     3)  If the kernel pool does not contain all of the data required
+!!         to define the number of nutation precession angles
+!!         corresponding to the available nutation precession
+!!         coefficients, the error SPICE(INSUFFICIENTANGLES) is
+!!         signaled.
+!!
+!!     4)  If the reference frame REF is not recognized, an error is
+!!         signaled by a routine in the call tree of this routine.
+!!
+!!     5)  If the specified body code BODY is not recognized, an error is
+!!         signaled by a routine in the call tree of this routine.
+!!
+!!     6)  If, for a given body, both forms of the kernel variable names
+!!
+!!            BODY<body ID>_CONSTANTS_JED_EPOCH
+!!            BODY<body ID>_CONSTS_JED_EPOCH
+!!
+!!         are found in the kernel pool, the error
+!!         SPICE(COMPETINGEPOCHSPEC) is signaled. This is done
+!!         regardless of whether the values assigned to the kernel
+!!         variable names match.
+!!
+!!     7)  If, for a given body, both forms of the kernel variable names
+!!
+!!            BODY<body ID>_CONSTANTS_REF_FRAME
+!!            BODY<body ID>_CONSTS_REF_FRAME
+!!
+!!         are found in the kernel pool, the error
+!!         SPICE(COMPETINGFRAMESPEC) is signaled. This is done
+!!         regardless of whether the values assigned to the kernel
+!!         variable names match.
+!!
+!!     8)  If the central body associated with the input BODY, whether
+!!         a system barycenter or BODY itself, has associated phase
+!!         angles (aka nutation precession angles), and the kernel
+!!         variable BODY<body ID>_MAX_PHASE_DEGREE for the central
+!!         body is present but has a value outside the range 1:3,
+!!         the error SPICE(DEGREEOUTOFRANGE) is signaled.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     Note: NAIF recommends the use of SPKEZR with the appropriate
+!!     frames kernels when possible over TISBOD.
+!!
+!!     The matrix for transforming inertial states to bodyfixed
+!!     states is the 6x6 matrix shown below as a block structured
+!!     matrix.
+!!
+!!        .-            -.
+!!        |       :      |
+!!        | TIPM  :  0   |
+!!        | ......:......|
+!!        |       :      |
+!!        | DTIPM : TIPM |
+!!        |       :      |
+!!        `-            -'
+!!
+!!     This can also be expressed in terms of Euler angles
+!!     PHI, DELTA and W. The transformation from inertial to
+!!     bodyfixed coordinates is represented in the SPICE kernel
+!!     pool as:
+!!
+!!        TIPM   = [W]  [DELTA]  [PHI]
+!!                    3        1      3
+!!     Thus
+!!
+!!        DTIPM  = d[W] /dt [DELTA]  [PHI]
+!!                     3           1      3
+!!
+!!               + [W]  d[DELTA] /dt  [PHI]
+!!                    3             1      3
+!!
+!!               + [W]  [DELTA]  d[PHI] /dt
+!!                    3        1           3
+!!
+!!     If a binary PCK file record can be used for the time and
+!!     body requested, it will be used. The most recently loaded
+!!     binary PCK file has first priority, followed by previously
+!!     loaded binary PCK files in backward time order. If no
+!!     binary PCK file has been loaded, the text P_constants
+!!     kernel file is used.
+!!
+!!     If there is only text PCK kernel information, it is
+!!     expressed in terms of RA, DEC and W, where
+!!
+!!        RA  = PHI - HALFPI
+!!        DEC = HALFPI - DELTA
+!!        W   = W
+!!
+!!     The angles RA, DEC, and W are defined as follows in the
+!!     text PCK file:
+!!
+!!                                      2    .-----
+!!                      RA1*t      RA2*t      \
+!!        RA  = RA0  + -------  + -------   +  )  a(i) * sin( theta(i) )
+!!                        T          2        /
+!!                                  T        '-----
+!!                                              i
+!!
+!!                                       2   .-----
+!!                      DEC1*t     DEC2*t     \
+!!        DEC = DEC0 + -------- + --------  +  )  d(i) * cos( theta(i) )
+!!                        T           2       /
+!!                                   T       '-----
+!!                                              i
+!!
+!!                                     2     .-----
+!!                       W1*t      W2*t       \
+!!        W   = W0   +  ------  + -------   +  )  w(i) * sin( theta(i) )
+!!                        d          2        /
+!!                                  d        '-----
+!!                                              i
+!!
+!!     where `d' is in seconds/day; T in seconds/Julian century;
+!!     a(i), d(i), and w(i) arrays apply to satellites only; and
+!!     theta(i), defined as
+!!
+!!                                THETA1(i)*t
+!!        theta(i) = THETA0(i) + -------------
+!!                                     T
+!!
+!!     are specific to each planet.
+!!
+!!     These angles ---typically nodal rates--- vary in number and
+!!     definition from one planetary system to the next.
+!!
+!!     Thus
+!!
+!!                                   .-----
+!!                 RA1     2*RA2*t    \   a(i)*THETA1(i)*cos(theta(i))
+!!     dRA/dt   = ----- + --------- +  ) ------------------------------
+!!                  T          2      /                 T
+!!                            T      '-----
+!!                                      i
+!!
+!!                                     .-----
+!!                 DEC1     2*DEC2*t    \   d(i)*THETA1(i)*sin(theta(i))
+!!      dDEC/dt = ------ + ---------- -  ) ------------------------------
+!!                   T          2       /                 T
+!!                             T       '-----
+!!                                        i
+!!
+!!                                 .-----
+!!                 W1     2*W2*t    \   w(i)*THETA1(i)*cos(theta(i))
+!!      dW/dt   = ---- + -------- +  ) ------------------------------
+!!                 d         2      /                 T
+!!                          d      '-----
+!!                                    i
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for these examples may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Calculate the matrix to transform a state vector from the
+!!        J2000 frame to the Saturn fixed frame at a specified
+!!        time, and use it to compute the geometric position and
+!!        velocity of Titan in Saturn's body-fixed frame.
+!!
+!!        Use the meta-kernel shown below to load the required SPICE
+!!        kernels.
+!!
+!!           KPL/MK
+!!
+!!           File name: tisbod_ex1.tm
+!!
+!!           This meta-kernel is intended to support operation of SPICE
+!!           example programs. The kernels shown here should not be
+!!           assumed to contain adequate or correct versions of data
+!!           required by SPICE-based user applications.
+!!
+!!           In order for an application to use this meta-kernel, the
+!!           kernels referenced here must be present in the user's
+!!           current working directory.
+!!
+!!           The names and contents of the kernels referenced
+!!           by this meta-kernel are as follows:
+!!
+!!              File name                     Contents
+!!              ---------                     --------
+!!              sat375.bsp                    Saturn satellite ephemeris
+!!              pck00010.tpc                  Planet orientation and
+!!                                            radii
+!!              naif0012.tls                  Leapseconds
+!!
+!!           \begindata
+!!
+!!              KERNELS_TO_LOAD = ( 'sat375.bsp',
+!!                                  'pck00010.tpc',
+!!                                  'naif0012.tls'  )
+!!
+!!           \begintext
+!!
+!!           End of meta-kernel
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM TISBOD_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              DOUBLE PRECISION      ET
+!!              DOUBLE PRECISION      LT
+!!              DOUBLE PRECISION      STATE  ( 6    )
+!!              DOUBLE PRECISION      SATVEC ( 6    )
+!!              DOUBLE PRECISION      TSIPM  ( 6, 6 )
+!!
+!!              INTEGER               I
+!!              INTEGER               SATID
+!!
+!!        C
+!!        C     Load the kernels.
+!!        C
+!!              CALL FURNSH ( 'tisbod_ex1.tm' )
+!!
+!!        C
+!!        C     The body ID for Saturn.
+!!        C
+!!              SATID = 699
+!!
+!!        C
+!!        C     Retrieve the transformation matrix at some time.
+!!        C
+!!              CALL STR2ET ( 'Jan 1 2005',   ET        )
+!!              CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
+!!
+!!        C
+!!        C     Retrieve the state of Titan as seen from Saturn
+!!        C     in the J2000 frame at ET.
+!!        C
+!!              CALL SPKEZR ( 'TITAN',  ET,    'J2000', 'NONE',
+!!             .              'SATURN', STATE, LT              )
+!!
+!!              WRITE(*,'(A)') 'Titan as seen from Saturn '
+!!             .            // '(J2000 frame):'
+!!              WRITE(*,'(A,3F13.3)') '   position   (km):',
+!!             .               ( STATE(I), I=1,3 )
+!!              WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
+!!             .               ( STATE(I), I=4,6 )
+!!
+!!        C
+!!        C     Rotate the 6-vector STATE into the
+!!        C     Saturn body-fixed reference frame.
+!!        C
+!!              CALL MXVG ( TSIPM, STATE, 6, 6, SATVEC )
+!!
+!!              WRITE(*,'(A)') 'Titan as seen from Saturn '
+!!             .            // '(IAU_SATURN frame):'
+!!              WRITE(*,'(A,3F13.3)') '   position   (km):',
+!!             .               ( SATVEC(I), I=1,3 )
+!!              WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
+!!             .               ( SATVEC(I), I=4,6 )
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Titan as seen from Saturn (J2000 frame):
+!!           position   (km):  1071928.661  -505781.970   -60383.976
+!!           velocity (km/s):        2.404        5.176       -0.560
+!!        Titan as seen from Saturn (IAU_SATURN frame):
+!!           position   (km):   401063.338 -1116965.364    -5408.806
+!!           velocity (km/s):     -177.547      -63.745        0.028
+!!
+!!        Note that the complete example could be replaced by a single
+!!        SPKEZR call:
+!!
+!!           CALL SPKEZR ( 'TITAN',  ET,    'IAU_SATURN', 'NONE',
+!!          .              'SATURN', STATE, LT                   )
+!!
+!!     2) Use TISBOD is used to compute the angular velocity vector (with
+!!        respect to the J2000 inertial frame) of the specified body at
+!!        given time.
+!!
+!!        Use the meta-kernel from Example 1 above.
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM TISBOD_EX2
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              DOUBLE PRECISION      AV     ( 3    )
+!!              DOUBLE PRECISION      ET
+!!              DOUBLE PRECISION      DTIPM  ( 3, 3 )
+!!              DOUBLE PRECISION      OMEGA  ( 3, 3 )
+!!              DOUBLE PRECISION      ROT    ( 3, 3 )
+!!              DOUBLE PRECISION      TIPM   ( 3, 3 )
+!!              DOUBLE PRECISION      TSIPM  ( 6, 6 )
+!!              DOUBLE PRECISION      V      ( 3    )
+!!
+!!              INTEGER               I
+!!              INTEGER               J
+!!              INTEGER               SATID
+!!
+!!        C
+!!        C     Load the kernels.
+!!        C
+!!              CALL FURNSH ( 'tisbod_ex1.tm' )
+!!
+!!        C
+!!        C     The body ID for Saturn.
+!!        C
+!!              SATID = 699
+!!
+!!        C
+!!        C     First get the state transformation matrix.
+!!        C
+!!              CALL STR2ET ( 'Jan 1 2005',   ET        )
+!!              CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
+!!
+!!        C
+!!        C     This matrix has the form:
+!!        C
+!!        C          .-            -.
+!!        C          |       :      |
+!!        C          | TIPM  :  0   |
+!!        C          | ......:......|
+!!        C          |       :      |
+!!        C          | DTIPM : TIPM |
+!!        C          |       :      |
+!!        C          `-            -'
+!!        C
+!!        C     We extract TIPM and DTIPM
+!!        C
+!!              DO  I = 1,3
+!!                 DO  J = 1,3
+!!
+!!                    TIPM  ( I, J ) = TSIPM ( I,   J )
+!!                    DTIPM ( I, J ) = TSIPM ( I+3, J )
+!!
+!!                 END DO
+!!              END DO
+!!
+!!        C
+!!        C     The transpose of TIPM and DTIPM, (TPMI and DTPMI), gives
+!!        C     the transformation from bodyfixed coordinates to inertial
+!!        C     coordinates.
+!!        C
+!!        C     Here is a fact about the relationship between angular
+!!        C     velocity associated with a time varying rotation matrix
+!!        C     that gives the orientation of a body with respect to
+!!        C     an inertial frame.
+!!        C
+!!        C        The angular velocity vector can be read from the off
+!!        C        diagonal components of the matrix product:
+!!        C
+!!        C                                t
+!!        C        OMEGA =     DTPMI * TPMI
+!!        C
+!!        C                         t
+!!        C              =     DTIPM * TIPM
+!!        C
+!!        C        the components of the angular velocity V will appear
+!!        C        in this matrix as:
+!!        C
+!!        C            .-                   -.
+!!        C            |                     |
+!!        C            |   0    -V(3)  V(2)  |
+!!        C            |                     |
+!!        C            |  V(3)    0   -V(1)  |
+!!        C            |                     |
+!!        C            | -V(2)   V(1)   0    |
+!!        C            |                     |
+!!        C            `-                   -'
+!!        C
+!!        C
+!!              CALL MTXM ( DTIPM, TIPM, OMEGA )
+!!
+!!              V(1) = OMEGA (3,2)
+!!              V(2) = OMEGA (1,3)
+!!              V(3) = OMEGA (2,1)
+!!
+!!        C
+!!        C     Display the results.
+!!        C
+!!              WRITE(*,'(A)') 'Angular velocity (km/s):'
+!!              WRITE(*,'(3F16.9)') V
+!!
+!!        C
+!!        C     It is possible to compute the angular velocity using
+!!        C     a single call to XF2RAV.
+!!        C
+!!              CALL XF2RAV ( TSIPM, ROT, AV )
+!!
+!!              WRITE(*,'(A)') 'Angular velocity using XF2RAV (km/s):'
+!!              WRITE(*,'(3F16.9)') AV
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Angular velocity (km/s):
+!!             0.000014001     0.000011995     0.000162744
+!!        Angular velocity using XF2RAV (km/s):
+!!             0.000014001     0.000011995     0.000162744
+!!
+!! ## Restrictions
+!!
+!!     1)  The kernel pool must be loaded with the appropriate
+!!         coefficients (from a text or binary PCK file) prior to calling
+!!         this routine.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     K.S. Zukor         (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 4.5.1, 16-DEC-2021 (NJB) (JDR)
+!!
+!!        The routine was updated to support user-defined maximum phase
+!!        angle degrees. The additional text kernel kernel variable name
+!!        BODYnnn_MAX_PHASE_DEGREE must be used when the phase angle
+!!        polynomials have degree higher than 1. The maximum allowed
+!!        degree is 3.
+!!
+!!        The kernel variable names
+!!
+!!           BODY#_CONSTS_REF_FRAME
+!!           BODY#_CONSTS_JED_EPOCH
+!!
+!!        are now recognized.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example.
+!!
+!!        Added note to $Particulars section.
+!!
+!!-    SPICELIB Version 4.5.0, 26-JUL-2016 (BVS)
+!!
+!!        The routine was updated to be more efficient by using a hash
+!!        and buffers so save text PCK data instead of doing kernel POOL
+!!        look-ups over an over again. The routine now checks the POOL
+!!        state counter and dumps all buffered data if it changes.
+!!
+!!        BUG FIX: changed available room in the BODVCD call
+!!        fetching 'NUT_PREC_ANGLES' from MAXANG to MAXANG*2.
+!!
+!!-    SPICELIB Version 4.4.0, 01-FEB-2008 (NJB)
+!!
+!!        The routine was updated to improve the error messages created
+!!        when required PCK data are not found. Now in most cases the
+!!        messages are created locally rather than by the kernel pool
+!!        access routines. In particular missing binary PCK data will
+!!        be indicated with a reasonable error message.
+!!
+!!-    SPICELIB Version 4.3.0, 13-DEC-2005 (NJB)
+!!
+!!        Bug fix: previous update introduced bug in state
+!!        transformation when REF was unequal to PCK native frame.
+!!
+!!-    SPICELIB Version 4.2.0, 23-OCT-2005 (NJB)
+!!
+!!        Re-wrote portions of algorithm to simplify source code.
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in MXM and VADDG calls.
+!!
+!!        Replaced calls to ZZBODVCD with calls to BODVCD.
+!!
+!!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added.
+!!
+!!-    SPICELIB Version 4.0.0, 12-FEB-2004 (NJB)
+!!
+!!        Code has been updated to support satellite ID codes in the
+!!        range 10000 to 99999 and to allow nutation precession angles
+!!        to be associated with any object.
+!!
+!!        Implementation changes were made to improve robustness
+!!        of the code.
+!!
+!!-    SPICELIB Version 3.3.0, 29-MAR-1995 (WLT)
+!!
+!!        Properly initialized the variable NPAIRS.
+!!
+!!-    SPICELIB Version 3.2.0, 22-MAR-1995 (KSZ)
+!!
+!!        Changed to call PCKMAT rather than PCKEUL.
+!!
+!!-    SPICELIB Version 3.1.0, 18-OCT-1994 (KSZ)
+!!
+!!        Fixed bug which incorrectly modded DW by two pi.
+!!
+!!-    SPICELIB Version 3.0.0, 10-MAR-1994 (KSZ)
+!!
+!!        Changed to look for binary PCK file, and used this
+!!        to find Euler angles, if such data has been loaded.
+!!
+!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB)
+!!
+!!        Updated to handle P_constants referenced to different epochs
+!!        and inertial reference frames.
+!!
+!!        $Required_Reading and $Literature_References sections were
+!!        updated.
+!!
+!!-    SPICELIB Version 1.0.0, 05-NOV-1990 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     transformation from inertial state to bodyfixed
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 4.5.0, 26-JUL-2016 (BVS)
+!!
+!!        The routine was updated to be more efficient by using a hash
+!!        and buffers so save text PCK data instead of doing kernel POOL
+!!        look-ups over an over again. The routine now checks the POOL
+!!        state counter and dumps all buffered data if it changes.
+!!
+!!-    SPICELIB Version 4.2.0, 23-OCT-2005 (NJB)
+!!
+!!        Re-wrote portions of algorithm to simplify source code.
+!!        The routine now takes advantage of EUL2XF, which wasn't
+!!        available when the first version of this routine was written.
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in MXM and VADDG calls.
+!!
+!!        Replaced calls to ZZBODVCD with calls to BODVCD.
+!!
+!!-    SPICELIB Version 4.1.0, 05-JAN-2005 (NJB)
+!!
+!!        Tests of routine FAILED() were added. The new checks
+!!        are intended to prevent arithmetic operations from
+!!        being performed with uninitialized or invalid data.
+!!
+!!-     SPICELIB Version 4.0.0, 27-JAN-2004 (NJB)
+!!
+!!         Code has been updated to support satellite ID codes in the
+!!         range 10000 to 99999 and to allow nutation precession angles
+!!         to be associated with any object.
+!!
+!!         Calls to deprecated kernel pool access routine RTPOOL
+!!         were replaced by calls to GDPOOL.
+!!
+!!         Calls to BODVAR have been replaced with calls to
+!!         ZZBODVCD.
+!!
+!!-     SPICELIB Version 3.3.0, 29-MAR-1995 (WLT)
+!!
+!!        The variable NPAIRS is now initialized
+!!        at the same point as NA, NTHETA, ND, and NW to be
+!!        zero. This prevents the routine from performing
+!!        needless calculations for planets and avoids possible
+!!        floating point exceptions.
+!!
+!!-     SPICELIB Version 3.2.0, 22-MAR-1995 (KSZ)
+!!
+!!        TISBOD now gets the TSIPM matrix from PCKMAT.
+!!        Reference frame calculation moved to end.
+!!
+!!-     SPICELIB Version 3.0.1, 07-OCT-1994 (KSZ)
+!!
+!!        TISBOD bug which mistakenly moded DW by 2PI
+!!        was removed.
+!!
+!!-     SPICELIB Version 3.0.0, 10-MAR-1994 (KSZ)
+!!
+!!        TISBOD now uses new software to check for the
+!!        existence of binary PCK files, search the for
+!!        data corresponding to the requested body and time,
+!!        and return the appropriate Euler angles. Otherwise
+!!        the code calculates the Euler angles from the
+!!        P_constants kernel file.
+!!
+!!-     SPICELIB Version 2.0.0, 04-SEP-1991 (NJB)
+!!
+!!         Updated to handle P_constants referenced to different epochs
+!!         and inertial reference frames.
+!!
+!!         TISBOD now checks the kernel pool for presence of the
+!!         variables
+!!
+!!            BODY#_CONSTANTS_REF_FRAME
+!!
+!!         and
+!!
+!!            BODY#_CONSTANTS_JED_EPOCH
+!!
+!!         where # is the NAIF integer code of the barycenter of a
+!!         planetary system or of a body other than a planet or
+!!         satellite. If either or both of these variables are
+!!         present, the P_constants for BODY are presumed to be
+!!         referenced to the specified inertial frame or epoch.
+!!         If the epoch of the constants is not J2000, the input
+!!         time ET is converted to seconds past the reference epoch.
+!!         If the frame of the constants is not the frame specified
+!!         by REF, the rotation from the P_constants' frame to
+!!         body-fixed coordinates is transformed to the rotation from
+!!         the requested frame to body-fixed coordinates. The same
+!!         transformation is applied to the derivative of this
+!!         rotation.
+!!
+!!         Due to the prescience of the original author, the code
+!!         was already prepared to handle the possibility of
+!!         specification of a P_constants inertial reference frame via
+!!         kernel pool variables.
+!!
+!!         Also, the $Required_Reading and $Literature_References
+!!         sections were updated. The SPK required reading has been
+!!         deleted from the $Literature_References section, and the
+!!         NAIF_IDS, KERNEL, and TIME Required Reading files have
+!!         been added in the $Required_Reading section.
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     Maximum number of coefficients per phase angle polynomial.
+!!
+!!     Local variables
+!!
+!!     POOL state counter.
+!!
+!!     ID-based hash for text PCK data. KIDLST, KIDPOL, and KIDIDS
+!!     provide the index in the body PCK data arrays at which the data
+!!     of the body with a given ID are stored.
+!!
+!!     Saved variables
+!!
+!!     Because we need to save almost everything, we save everything
+!!     rather than taking a chance and accidentally leaving something
+!!     off the list.
+!!
+!!     Initial values
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
       use pepper_arrays, only: cleard, moved
       use pepper_math, only: mxm, vdotg, vpack
       use pepper_strings, only: suffix
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
       real(wp) :: dpval_1(1)  !! one-element copy of dpval (array argument)
       integer(ip) :: pcref_1(1)  !! one-element copy of pcref (array argument)
       real(wp) :: pckepc_1(1)  !! one-element copy of pckepc (array argument)
-      include               'errhnd.inc'
-      include               'frmtyp.inc'
-      include               'zzctr.inc'
       integer(ip), parameter :: maxang = 200
       integer(ip), parameter :: mxphas = 4
       integer(ip), parameter :: mxpoly = 3
@@ -1811,383 +1766,349 @@ contains
       end procedure tisbod
 
       module procedure tkfram
-
-! $ Abstract
-!
-!     Find the position rotation matrix from a Text Kernel (TK) frame
-!     with the specified frame class ID to its base frame.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     FRCODE   is the unique frame class ID of the TK frame for which
-!              data is being requested. For TK frames the frame class
-!              ID is always equal to the frame ID.
-!
-! $ Detailed_Output
-!
-!     ROT      is a position rotation matrix that converts positions
-!              relative to the TK frame given by its frame class ID,
-!              FRCODE, to positions relative to the base frame given by
-!              its frame ID, FRAME.
-!
-!              Thus, if a position S has components x,y,z in the TK
-!              frame, then S has components x', y', z' in the base
-!              frame.
-!
-!                 .-  -.     .-     -. .- -.
-!                 | x' |     |       | | x |
-!                 | y' |  =  |  ROT  | | y |
-!                 | z' |     |       | | z |
-!                 `-  -'     `-     -' `- -'
-!
-!     FRAME    is the ID code of the base reference frame to which ROT
-!              will transform positions.
-!
-!     FOUND    is a logical indicating whether or not a frame definition
-!              for the TK frame with the frame class ID, FRCODE, was
-!              constructed from kernel pool data. If ROT and FRAME were
-!              constructed, FOUND will be returned with the value .TRUE.
-!              Otherwise it will be returned with the value .FALSE.
-!
-! $ Parameters
-!
-!     BUFSIZ   is the number of rotation, frame class ID pairs that can
-!              have their instance data buffered for the sake of
-!              improving run-time performance. This value MUST be
-!              positive and should probably be at least 10.
-!
-! $ Exceptions
-!
-!     1)  If some kernel variable associated with this frame is not
-!         present in the kernel pool, or does not have the proper type
-!         or dimension, an error is signaled by a routine in the call
-!         tree of this routine. In such a case FOUND will be set to
-!         .FALSE.
-!
-!     2)  If the input FRCODE has the value 0, the error
-!         SPICE(ZEROFRAMEID) is signaled. FOUND will be set to .FALSE.
-!
-!     3)  If the name of the frame corresponding to FRCODE cannot be
-!         determined, the error SPICE(INCOMPLETEFRAME) is signaled.
-!
-!     4)  If the frame given by FRCODE is defined relative to a frame
-!         that is unrecognized, the error SPICE(BADFRAMESPEC) is
-!         signaled. FOUND will be set to .FALSE.
-!
-!     5)  If the kernel pool specification for the frame given by
-!         FRCODE is not one of 'MATRIX', 'ANGLES' or 'QUATERNION',
-!         the error SPICE(UNKNOWNFRAMESPEC) is signaled. FOUND will be
-!         set to .FALSE.
-!
-!     6)  If the frame FRCODE is equal to the relative frame ID (i.e.
-!         the frame is defined relative to itself), the error
-!         SPICE(BADFRAMESPEC2) is signaled. FOUND will be set to .FALSE.
-!
-!     7)  If name-based and ID-based forms of any TKFRAME_ keyword
-!         are detected in the kernel pool at the same time, the error
-!         SPICE(COMPETINGFRAMESPEC) is signaled. FOUND will be set to
-!         .FALSE.
-!
-! $ Files
-!
-!     This routine makes use of the loaded text kernels to determine
-!     the rotation from a constant offset TK frame to its base frame.
-!
-! $ Particulars
-!
-!     This routine is used to construct the rotation from some frame
-!     that is a constant rotation offset from some other reference
-!     frame. This rotation is derived from data stored in the kernel
-!     pool.
-!
-!     This routine is intended to be used as a low level routine by the
-!     frame system software. However, you could use this routine to
-!     directly retrieve the rotation from an fixed offset TK frame to
-!     its base frame.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Compute the rotation from the DSS-34 topocentric frame to
-!        its base Earth body-fixed frame and use it to determine the
-!        geodetic latitude and longitude of the DSS-34 site.
-!
-!        Use the FK kernel below to load the required topocentric
-!        reference frame definition for the DSS-34 site.
-!
-!           earth_topo_050714.tf
-!
-!        Example code begins here.
-!
-!              PROGRAM TKFRAM_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions.
-!        C
-!              DOUBLE PRECISION      DPR
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         MYTOPO
-!              PARAMETER           ( MYTOPO = 'DSS-34_TOPO' )
-!
-!              INTEGER               MXFRLN
-!              PARAMETER           ( MXFRLN = 26 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(MXFRLN)    FRNAME
-!
-!              DOUBLE PRECISION      LAT
-!              DOUBLE PRECISION      LON
-!              DOUBLE PRECISION      RAD
-!              DOUBLE PRECISION      ROT   ( 3, 3 )
-!              DOUBLE PRECISION      Z     ( 3    )
-!
-!              INTEGER               FRAME
-!              INTEGER               FRCODE
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Load the FK that contains the topocentric reference
-!        C     frame definition for DSS-34.
-!        C
-!              CALL FURNSH ( 'earth_topo_050714.tf' )
-!
-!        C
-!        C     The name of the topocentric frame is MYTOPO.
-!        C     First we get the ID code of the topocentric frame.
-!        C
-!              CALL NAMFRM ( MYTOPO, FRCODE )
-!
-!        C
-!        C     Next get the rotation from the topocentric frame to
-!        C     the body-fixed frame. We can use the TK frame ID in
-!        C     place of the TK frame class ID in this call because
-!        C     for TK frames these IDs are identical.
-!        C
-!              CALL TKFRAM ( FRCODE, ROT, FRAME, FOUND )
-!
-!        C
-!        C     Make sure the topocentric frame is relative to one of
-!        C     the Earth fixed frames.
-!        C
-!              CALL FRMNAM( FRAME, FRNAME )
-!
-!              IF (       FRNAME .NE. 'IAU_EARTH'
-!             .     .AND. FRNAME .NE. 'EARTH_FIXED'
-!             .     .AND. FRNAME .NE. 'ITRF93'  ) THEN
-!
-!                 WRITE (*,*) 'The frame ', MYTOPO,
-!             .               ' does not appear to be '
-!                 WRITE (*,*) 'defined relative to an '
-!             .            // 'Earth fixed frame.'
-!                 STOP
-!
-!              END IF
-!
-!        C
-!        C     Things look ok. Get the location of the Z-axis in the
-!        C     topocentric frame.
-!        C
-!              Z(1) = ROT(1,3)
-!              Z(2) = ROT(2,3)
-!              Z(3) = ROT(3,3)
-!
-!        C
-!        C     Convert the Z vector to latitude, longitude and radius.
-!        C
-!              CALL RECLAT ( Z, RAD, LAT, LON )
-!
-!              WRITE (*,'(A)') 'The geodetic coordinates of the center'
-!              WRITE (*,'(A)') 'of the topographic frame are:'
-!              WRITE (*,*)
-!              WRITE (*,'(A,F20.13)') '   Latitude  (deg): ', LAT*DPR()
-!              WRITE (*,'(A,F20.13)') '   Longitude (deg): ', LON*DPR()
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        The geodetic coordinates of the center
-!        of the topographic frame are:
-!
-!           Latitude  (deg):    148.9819650021110
-!           Longitude (deg):    -35.3984778756552
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.3.0, 20-AUG-2021 (JDR) (BVS) (NJB)
-!
-!        BUG FIX: the routine now signals an error if it detects
-!        name-based and ID-based forms of any TKFRAME_ keyword present
-!        in the POOL at the same time. This prevents name-based
-!        keywords from frame definitions loaded with lower priority
-!        from being used instead of ID-based keywords from frame
-!        definitions loaded with higher priority.
-!
-!        BUG FIX: when failing to fetch any frame keywords from the
-!        POOL or for any other reason, the routine now always returns
-!        FOUND = .FALSE. Previously FOUND could be set to .TRUE. by a
-!        DTPOOL call preceding the failure.
-!
-!        BUG FIX: when failing due to a frame defined relative to
-!        itself or due to an unrecognized _SPEC, the routine now always
-!        returns FRAME = 0. Previously FRAME was set to the _RELATIVE
-!        keyword.
-!
-!        BUG FIX: the misspelled short error message
-!        SPICE(INCOMPLETEFRAME) was corrected. The message had been
-!        spelled correctly in header comments but not in the code.
-!
-!        Changed to return ROT as identity for all failures; previously
-!        it was returned this way only for some failures.
-!
-!        Changed the input argument name ID to FRCODE for consistency
-!        with other routines.
-!
-!        Fixed minor typo on the UNKNOWNFRAMESPEC long error message.
-!
-!        Edited the header to comply with NAIF standard and modern
-!        SPICE CK and frames terminology.
-!
-!        Added complete code example based on existing fragments.
-!
-!        Construction of kernel variable names now uses trimmed
-!        strings in order to suppress gfortran compile warnings.
-!
-!        Added DATA statements to initialize BUFFI, BUFFD, and IDENTS.
-!        This change suppresses ftnchek warnings for variables possibly
-!        not initialized before use. It is not a bug fix.
-!
-!        Minor inline comment typos were corrected.
-!
-!-    SPICELIB Version 2.2.0, 08-JAN-2014 (BVS)
-!
-!        Added an error check for frames defined relative to
-!        themselves.
-!
-!        Increased BUFSIZ from 20 to 200.
-!
-!-    SPICELIB Version 2.1.0, 23-APR-2009 (NJB)
-!
-!        Bug fix: watch is deleted only for frames
-!        that are deleted from the buffer.
-!
-!-    SPICELIB Version 2.0.0, 19-MAR-2009 (NJB)
-!
-!        Bug fix: this routine now deletes watches set on
-!        kernel variables of frames that are discarded from
-!        the local buffering system.
-!
-!-    SPICELIB Version 1.2.0, 09-SEP-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in CONVRT, UCRSS, VHATG and VSCL calls.
-!
-!-    SPICELIB Version 1.1.0, 21-NOV-2001 (FST)
-!
-!        Updated this routine to dump the buffer of frame ID codes
-!        it saves when it or one of the modules in its call tree
-!        signals an error. This fixes a bug where a frame's ID code is
-!        buffered, but the matrix and kernel pool watcher were not set
-!        properly.
-!
-!-    SPICELIB Version 1.0.0, 18-NOV-1996 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Fetch the rotation and frame of a text kernel frame
-!     Fetch the rotation and frame of a constant offset frame
-!
-!-&
-
-!
-!     Spicelib Functions
-!
-
-
-
-!
-!     Local Parameters
-!
-
-
-
-
-
-
-
-
-
-!
-!     Local Variables
-!
-
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
-!
-!     Programmer's note: this routine makes use of the *implementation*
-!     of LOCATI. If that routine is changed, the logic this routine
-!     uses to locate buffered, old frame IDs may need to change as well.
-!
-
-!
-!     Before we even check in, if N is less than 1 we can
-!     just return.
-!
-!     Perform any initializations that might be needed for this
-!     routine.
-!
+!! ## Abstract
+!!
+!!     Find the position rotation matrix from a Text Kernel (TK) frame
+!!     with the specified frame class ID to its base frame.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     FRCODE   is the unique frame class ID of the TK frame for which
+!!              data is being requested. For TK frames the frame class
+!!              ID is always equal to the frame ID.
+!!
+!! ## Detailed Output
+!!
+!!     ROT      is a position rotation matrix that converts positions
+!!              relative to the TK frame given by its frame class ID,
+!!              FRCODE, to positions relative to the base frame given by
+!!              its frame ID, FRAME.
+!!
+!!              Thus, if a position S has components x,y,z in the TK
+!!              frame, then S has components x', y', z' in the base
+!!              frame.
+!!
+!!                 .-  -.     .-     -. .- -.
+!!                 | x' |     |       | | x |
+!!                 | y' |  =  |  ROT  | | y |
+!!                 | z' |     |       | | z |
+!!                 `-  -'     `-     -' `- -'
+!!
+!!     FRAME    is the ID code of the base reference frame to which ROT
+!!              will transform positions.
+!!
+!!     FOUND    is a logical indicating whether or not a frame definition
+!!              for the TK frame with the frame class ID, FRCODE, was
+!!              constructed from kernel pool data. If ROT and FRAME were
+!!              constructed, FOUND will be returned with the value .TRUE.
+!!              Otherwise it will be returned with the value .FALSE.
+!!
+!! ## Parameters
+!!
+!!     BUFSIZ   is the number of rotation, frame class ID pairs that can
+!!              have their instance data buffered for the sake of
+!!              improving run-time performance. This value MUST be
+!!              positive and should probably be at least 10.
+!!
+!! ## Exceptions
+!!
+!!     1)  If some kernel variable associated with this frame is not
+!!         present in the kernel pool, or does not have the proper type
+!!         or dimension, an error is signaled by a routine in the call
+!!         tree of this routine. In such a case FOUND will be set to
+!!         .FALSE.
+!!
+!!     2)  If the input FRCODE has the value 0, the error
+!!         SPICE(ZEROFRAMEID) is signaled. FOUND will be set to .FALSE.
+!!
+!!     3)  If the name of the frame corresponding to FRCODE cannot be
+!!         determined, the error SPICE(INCOMPLETEFRAME) is signaled.
+!!
+!!     4)  If the frame given by FRCODE is defined relative to a frame
+!!         that is unrecognized, the error SPICE(BADFRAMESPEC) is
+!!         signaled. FOUND will be set to .FALSE.
+!!
+!!     5)  If the kernel pool specification for the frame given by
+!!         FRCODE is not one of 'MATRIX', 'ANGLES' or 'QUATERNION',
+!!         the error SPICE(UNKNOWNFRAMESPEC) is signaled. FOUND will be
+!!         set to .FALSE.
+!!
+!!     6)  If the frame FRCODE is equal to the relative frame ID (i.e.
+!!         the frame is defined relative to itself), the error
+!!         SPICE(BADFRAMESPEC2) is signaled. FOUND will be set to .FALSE.
+!!
+!!     7)  If name-based and ID-based forms of any TKFRAME_ keyword
+!!         are detected in the kernel pool at the same time, the error
+!!         SPICE(COMPETINGFRAMESPEC) is signaled. FOUND will be set to
+!!         .FALSE.
+!!
+!! ## Files
+!!
+!!     This routine makes use of the loaded text kernels to determine
+!!     the rotation from a constant offset TK frame to its base frame.
+!!
+!! ## Particulars
+!!
+!!     This routine is used to construct the rotation from some frame
+!!     that is a constant rotation offset from some other reference
+!!     frame. This rotation is derived from data stored in the kernel
+!!     pool.
+!!
+!!     This routine is intended to be used as a low level routine by the
+!!     frame system software. However, you could use this routine to
+!!     directly retrieve the rotation from an fixed offset TK frame to
+!!     its base frame.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as
+!!     input, the compiler and supporting libraries, and the machine
+!!     specific arithmetic implementation.
+!!
+!!     1) Compute the rotation from the DSS-34 topocentric frame to
+!!        its base Earth body-fixed frame and use it to determine the
+!!        geodetic latitude and longitude of the DSS-34 site.
+!!
+!!        Use the FK kernel below to load the required topocentric
+!!        reference frame definition for the DSS-34 site.
+!!
+!!           earth_topo_050714.tf
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM TKFRAM_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     SPICELIB functions.
+!!        C
+!!              DOUBLE PRECISION      DPR
+!!
+!!        C
+!!        C     Local parameters
+!!        C
+!!              CHARACTER*(*)         MYTOPO
+!!              PARAMETER           ( MYTOPO = 'DSS-34_TOPO' )
+!!
+!!              INTEGER               MXFRLN
+!!              PARAMETER           ( MXFRLN = 26 )
+!!
+!!        C
+!!        C     Local variables
+!!        C
+!!              CHARACTER*(MXFRLN)    FRNAME
+!!
+!!              DOUBLE PRECISION      LAT
+!!              DOUBLE PRECISION      LON
+!!              DOUBLE PRECISION      RAD
+!!              DOUBLE PRECISION      ROT   ( 3, 3 )
+!!              DOUBLE PRECISION      Z     ( 3    )
+!!
+!!              INTEGER               FRAME
+!!              INTEGER               FRCODE
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Load the FK that contains the topocentric reference
+!!        C     frame definition for DSS-34.
+!!        C
+!!              CALL FURNSH ( 'earth_topo_050714.tf' )
+!!
+!!        C
+!!        C     The name of the topocentric frame is MYTOPO.
+!!        C     First we get the ID code of the topocentric frame.
+!!        C
+!!              CALL NAMFRM ( MYTOPO, FRCODE )
+!!
+!!        C
+!!        C     Next get the rotation from the topocentric frame to
+!!        C     the body-fixed frame. We can use the TK frame ID in
+!!        C     place of the TK frame class ID in this call because
+!!        C     for TK frames these IDs are identical.
+!!        C
+!!              CALL TKFRAM ( FRCODE, ROT, FRAME, FOUND )
+!!
+!!        C
+!!        C     Make sure the topocentric frame is relative to one of
+!!        C     the Earth fixed frames.
+!!        C
+!!              CALL FRMNAM( FRAME, FRNAME )
+!!
+!!              IF (       FRNAME .NE. 'IAU_EARTH'
+!!             .     .AND. FRNAME .NE. 'EARTH_FIXED'
+!!             .     .AND. FRNAME .NE. 'ITRF93'  ) THEN
+!!
+!!                 WRITE (*,*) 'The frame ', MYTOPO,
+!!             .               ' does not appear to be '
+!!                 WRITE (*,*) 'defined relative to an '
+!!             .            // 'Earth fixed frame.'
+!!                 STOP
+!!
+!!              END IF
+!!
+!!        C
+!!        C     Things look ok. Get the location of the Z-axis in the
+!!        C     topocentric frame.
+!!        C
+!!              Z(1) = ROT(1,3)
+!!              Z(2) = ROT(2,3)
+!!              Z(3) = ROT(3,3)
+!!
+!!        C
+!!        C     Convert the Z vector to latitude, longitude and radius.
+!!        C
+!!              CALL RECLAT ( Z, RAD, LAT, LON )
+!!
+!!              WRITE (*,'(A)') 'The geodetic coordinates of the center'
+!!              WRITE (*,'(A)') 'of the topographic frame are:'
+!!              WRITE (*,*)
+!!              WRITE (*,'(A,F20.13)') '   Latitude  (deg): ', LAT*DPR()
+!!              WRITE (*,'(A,F20.13)') '   Longitude (deg): ', LON*DPR()
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        The geodetic coordinates of the center
+!!        of the topographic frame are:
+!!
+!!           Latitude  (deg):    148.9819650021110
+!!           Longitude (deg):    -35.3984778756552
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     F.S. Turner        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.3.0, 20-AUG-2021 (JDR) (BVS) (NJB)
+!!
+!!        BUG FIX: the routine now signals an error if it detects
+!!        name-based and ID-based forms of any TKFRAME_ keyword present
+!!        in the POOL at the same time. This prevents name-based
+!!        keywords from frame definitions loaded with lower priority
+!!        from being used instead of ID-based keywords from frame
+!!        definitions loaded with higher priority.
+!!
+!!        BUG FIX: when failing to fetch any frame keywords from the
+!!        POOL or for any other reason, the routine now always returns
+!!        FOUND = .FALSE. Previously FOUND could be set to .TRUE. by a
+!!        DTPOOL call preceding the failure.
+!!
+!!        BUG FIX: when failing due to a frame defined relative to
+!!        itself or due to an unrecognized _SPEC, the routine now always
+!!        returns FRAME = 0. Previously FRAME was set to the _RELATIVE
+!!        keyword.
+!!
+!!        BUG FIX: the misspelled short error message
+!!        SPICE(INCOMPLETEFRAME) was corrected. The message had been
+!!        spelled correctly in header comments but not in the code.
+!!
+!!        Changed to return ROT as identity for all failures; previously
+!!        it was returned this way only for some failures.
+!!
+!!        Changed the input argument name ID to FRCODE for consistency
+!!        with other routines.
+!!
+!!        Fixed minor typo on the UNKNOWNFRAMESPEC long error message.
+!!
+!!        Edited the header to comply with NAIF standard and modern
+!!        SPICE CK and frames terminology.
+!!
+!!        Added complete code example based on existing fragments.
+!!
+!!        Construction of kernel variable names now uses trimmed
+!!        strings in order to suppress gfortran compile warnings.
+!!
+!!        Added DATA statements to initialize BUFFI, BUFFD, and IDENTS.
+!!        This change suppresses ftnchek warnings for variables possibly
+!!        not initialized before use. It is not a bug fix.
+!!
+!!        Minor inline comment typos were corrected.
+!!
+!!-    SPICELIB Version 2.2.0, 08-JAN-2014 (BVS)
+!!
+!!        Added an error check for frames defined relative to
+!!        themselves.
+!!
+!!        Increased BUFSIZ from 20 to 200.
+!!
+!!-    SPICELIB Version 2.1.0, 23-APR-2009 (NJB)
+!!
+!!        Bug fix: watch is deleted only for frames
+!!        that are deleted from the buffer.
+!!
+!!-    SPICELIB Version 2.0.0, 19-MAR-2009 (NJB)
+!!
+!!        Bug fix: this routine now deletes watches set on
+!!        kernel variables of frames that are discarded from
+!!        the local buffering system.
+!!
+!!-    SPICELIB Version 1.2.0, 09-SEP-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in CONVRT, UCRSS, VHATG and VSCL calls.
+!!
+!!-    SPICELIB Version 1.1.0, 21-NOV-2001 (FST)
+!!
+!!        Updated this routine to dump the buffer of frame ID codes
+!!        it saves when it or one of the modules in its call tree
+!!        signals an error. This fixes a bug where a frame's ID code is
+!!        buffered, but the matrix and kernel pool watcher were not set
+!!        properly.
+!!
+!!-    SPICELIB Version 1.0.0, 18-NOV-1996 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     Fetch the rotation and frame of a text kernel frame
+!!     Fetch the rotation and frame of a constant offset frame
+!!
+!!     Spicelib Functions
+!!
+!!     Local Parameters
+!!
+!!     Local Variables
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
+!!     Programmer's note: this routine makes use of the *implementation*
+!!     of LOCATI. If that routine is changed, the logic this routine
+!!     uses to locate buffered, old frame IDs may need to change as well.
+!!
+!!     Before we even check in, if N is less than 1 we can
+!!     just return.
+!!
+!!     Perform any initializations that might be needed for this
+!!     routine.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       use pepper_math, only: ident, q2m, sharpr, vdot, vhatg, vsclip
@@ -2843,220 +2764,211 @@ contains
 !$Procedure ZZDYNFID ( Fetch frame ID kernel variable )
 
       module procedure zzdynfid
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Look up a frame definition kernel variable whose associated
+!!     value is a frame name or frame ID code.  The returned value is
+!!     always an ID code.  The kernel variable name can refer to
+!!     the frame being defined by either name or ID code.
+!!
+!!     If the kernel variable is not present, or if the variable
+!!     is not a frame name or a numeric value, signal an error.
+!!
+!! ## Required Reading
+!!
+!!     None.
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!     KERNEL
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     FRNAME         is the name of the reference frame with which
+!!                    the requested variable is associated.  This frame
+!!                    may be thought of as the frame associated with
+!!                    "left hand side" of the kernel variable
+!!                    assignment.
+!!
+!!     FRCODE         is the frame ID code of the reference frame with
+!!                    which the requested variable is associated.  This
+!!                    is the ID code corresponding to FRNAME.
+!!
+!!     ITEM           is a string identifying the specific datum
+!!                    to be fetched.  The kernel variable name
+!!                    has the form
+!!
+!!                       FRAME_<frame ID code>_<ITEM>
+!!
+!!                    or
+!!
+!!                       FRAME_<frame name>_<ITEM>
+!!
+!!                    The former of the two names takes precedence:
+!!                    this routine will look for a numeric variable
+!!                    of that name first.
+!!
+!!                    The value associated with the kernel variable
+!!                    must be one of
+!!
+!!                       - a reference frame ID code
+!!
+!!                       - a string representation of an integer,
+!!                         for example '5'
+!!
+!!                       - a reference frame name
+!!
+!! ## Detailed Output
+!!
+!!     IDCODE         is the frame ID code associated with the value of
+!!                    the requested kernel variable. This frame may be
+!!                    regarded as being associated with the "right hand
+!!                    side." of the kernel variable assignment. The
+!!                    kernel variable name of the form
+!!
+!!                       FRAME_<frame ID code>_<ITEM>
+!!
+!!                    will be looked up first; if this variable
+!!                    is found and has numeric type, the associated
+!!                    value will be returned.  If this variable is
+!!                    found and has character type, the value will
+!!                    be converted to a frame ID code, and that
+!!                    code will be returned.
+!!
+!!                    If this variable is not found, the variable
+!!
+!!                       FRAME_<frame name>_<ITEM>
+!!
+!!                    will be looked up.  If this variable is found and
+!!                    has numeric type, the associated value will be
+!!                    returned.  If this variable is found and has
+!!                    character type, the value will be converted to a
+!!                    frame ID code, and that code will be returned.
+!!
+!!                    If a numeric value associated with the selected
+!!                    kernel variable is not integral, it will be
+!!                    rounded to the closest integer.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If neither the frame-ID-based or frame-name-based form of the
+!!        requested kernel variable name matches a kernel variable
+!!        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
+!!        will be signaled.
+!!
+!!     2) If either the frame-ID-based or frame-name-based form of the
+!!        requested kernel variable name has length greater than KVNMLN,
+!!        the excessively long name will not be searched for. A search
+!!        will still be done using the alternative form of the name if
+!!        that form has length less than or equal to KVNMLN.
+!!
+!!     3) If both the frame-ID-based and frame-name-based forms of the
+!!        requested kernel variable name have length greater than KVNMLN,
+!!        the error SPICE(VARNAMETOOLONG) will be signaled.
+!!
+!!     4) If kernel variable matching one form of the requested kernel
+!!        variable names is found, but that variable has more than one
+!!        associated value, the error SPICE(BADVARIABLESIZE) will be
+!!        signaled.
+!!
+!!     5) If a name match is found for a character kernel variable, but
+!!        the value associated with the variable cannot be mapped to a
+!!        frame ID code or an integer, the error SPICE(NOTRANSLATION)
+!!        is signaled.
+!!
+!!     6) If a name match is found for a numeric kernel variable,
+!!        but that variable has a value that cannot be rounded to an
+!!        integer representable on the host platform, an error will
+!!        be signaled by a routine in the call tree of this routine.
+!!
+!! ## Files
+!!
+!!     1) Kernel variables fetched by this routine are normally
+!!        introduced into the kernel pool by loading one or more
+!!        frame kernels.  See the Frames Required Reading for
+!!        details.
+!!
+!! ## Particulars
+!!
+!!     This routine centralizes logic for kernel variable lookups that
+!!     must be performed by the SPICELIB frame subsystem. Part of the
+!!     functionality of this routine consists of handling error
+!!     conditions such as the unavailability of required kernel
+!!     variables; hence no "found" flag is returned to the caller.
+!!
+!!     As indicated above, the requested kernel variable may have a name
+!!     of the form
+!!
+!!        FRAME_<frame ID code>_<ITEM>
+!!
+!!     or
+!!
+!!        FRAME_<frame name>_<ITEM>
+!!
+!!     Because most frame definition keywords have the first form, this
+!!     routine looks for a name of that form first.
+!!
+!!     Note that although this routine considers the two forms of the
+!!     names to be synonymous, from the point of view of the kernel pool
+!!     data structure, these names are distinct.  Hence kernel variables
+!!     having names of both forms, but having possibly different
+!!     attributes, can be simultaneously present in the kernel pool.
+!!     Intentional use of this kernel pool feature is discouraged.
+!!
+!! ## Examples
+!!
+!!     1) See ZZDYNFRM.
+!!
+!!     2) Applications of this routine include finding ID codes of
+!!        frames associated with velocity vectors or constant vectors
+!!        serving to define two-vector dynamic frames.
+!!
+!! ## Restrictions
+!!
+!!     1) This is a SPICE private routine; the routine is subject
+!!        to change without notice.  User applications should not
+!!        call this routine.
+!!
+!!     2) An array-valued kernel variable matching the "ID code form"
+!!        of the requested kernel variable name could potentially
+!!        mask a scalar-valued kernel variable matching the "name
+!!        form" of the requested name.  This problem can be prevented
+!!        by sensible frame kernel design.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman    (JPL)
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
       use pepper_kinds, only: ip
       use pepper_strings, only: beint, intstr, repmc, rtrim
+      use pepper_inc_zzdyn
       implicit none
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Look up a frame definition kernel variable whose associated
-!     value is a frame name or frame ID code.  The returned value is
-!     always an ID code.  The kernel variable name can refer to
-!     the frame being defined by either name or ID code.
-!
-!     If the kernel variable is not present, or if the variable
-!     is not a frame name or a numeric value, signal an error.
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FRAMES
-!     KERNEL
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
-      include 'zzdyn.inc'
-
-
-! $ Detailed_Input
-!
-!     FRNAME         is the name of the reference frame with which
-!                    the requested variable is associated.  This frame
-!                    may be thought of as the frame associated with
-!                    "left hand side" of the kernel variable
-!                    assignment.
-!
-!     FRCODE         is the frame ID code of the reference frame with
-!                    which the requested variable is associated.  This
-!                    is the ID code corresponding to FRNAME.
-!
-!     ITEM           is a string identifying the specific datum
-!                    to be fetched.  The kernel variable name
-!                    has the form
-!
-!                       FRAME_<frame ID code>_<ITEM>
-!
-!                    or
-!
-!                       FRAME_<frame name>_<ITEM>
-!
-!                    The former of the two names takes precedence:
-!                    this routine will look for a numeric variable
-!                    of that name first.
-!
-!                    The value associated with the kernel variable
-!                    must be one of
-!
-!                       - a reference frame ID code
-!
-!                       - a string representation of an integer,
-!                         for example '5'
-!
-!                       - a reference frame name
-!
-! $ Detailed_Output
-!
-!     IDCODE         is the frame ID code associated with the value of
-!                    the requested kernel variable. This frame may be
-!                    regarded as being associated with the "right hand
-!                    side." of the kernel variable assignment. The
-!                    kernel variable name of the form
-!
-!                       FRAME_<frame ID code>_<ITEM>
-!
-!                    will be looked up first; if this variable
-!                    is found and has numeric type, the associated
-!                    value will be returned.  If this variable is
-!                    found and has character type, the value will
-!                    be converted to a frame ID code, and that
-!                    code will be returned.
-!
-!                    If this variable is not found, the variable
-!
-!                       FRAME_<frame name>_<ITEM>
-!
-!                    will be looked up.  If this variable is found and
-!                    has numeric type, the associated value will be
-!                    returned.  If this variable is found and has
-!                    character type, the value will be converted to a
-!                    frame ID code, and that code will be returned.
-!
-!                    If a numeric value associated with the selected
-!                    kernel variable is not integral, it will be
-!                    rounded to the closest integer.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If neither the frame-ID-based or frame-name-based form of the
-!        requested kernel variable name matches a kernel variable
-!        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
-!        will be signaled.
-!
-!     2) If either the frame-ID-based or frame-name-based form of the
-!        requested kernel variable name has length greater than KVNMLN,
-!        the excessively long name will not be searched for. A search
-!        will still be done using the alternative form of the name if
-!        that form has length less than or equal to KVNMLN.
-!
-!     3) If both the frame-ID-based and frame-name-based forms of the
-!        requested kernel variable name have length greater than KVNMLN,
-!        the error SPICE(VARNAMETOOLONG) will be signaled.
-!
-!     4) If kernel variable matching one form of the requested kernel
-!        variable names is found, but that variable has more than one
-!        associated value, the error SPICE(BADVARIABLESIZE) will be
-!        signaled.
-!
-!     5) If a name match is found for a character kernel variable, but
-!        the value associated with the variable cannot be mapped to a
-!        frame ID code or an integer, the error SPICE(NOTRANSLATION)
-!        is signaled.
-!
-!     6) If a name match is found for a numeric kernel variable,
-!        but that variable has a value that cannot be rounded to an
-!        integer representable on the host platform, an error will
-!        be signaled by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     1) Kernel variables fetched by this routine are normally
-!        introduced into the kernel pool by loading one or more
-!        frame kernels.  See the Frames Required Reading for
-!        details.
-!
-! $ Particulars
-!
-!     This routine centralizes logic for kernel variable lookups that
-!     must be performed by the SPICELIB frame subsystem. Part of the
-!     functionality of this routine consists of handling error
-!     conditions such as the unavailability of required kernel
-!     variables; hence no "found" flag is returned to the caller.
-!
-!     As indicated above, the requested kernel variable may have a name
-!     of the form
-!
-!        FRAME_<frame ID code>_<ITEM>
-!
-!     or
-!
-!        FRAME_<frame name>_<ITEM>
-!
-!     Because most frame definition keywords have the first form, this
-!     routine looks for a name of that form first.
-!
-!     Note that although this routine considers the two forms of the
-!     names to be synonymous, from the point of view of the kernel pool
-!     data structure, these names are distinct.  Hence kernel variables
-!     having names of both forms, but having possibly different
-!     attributes, can be simultaneously present in the kernel pool.
-!     Intentional use of this kernel pool feature is discouraged.
-!
-! $ Examples
-!
-!     1) See ZZDYNFRM.
-!
-!     2) Applications of this routine include finding ID codes of
-!        frames associated with velocity vectors or constant vectors
-!        serving to define two-vector dynamic frames.
-!
-! $ Restrictions
-!
-!     1) This is a SPICE private routine; the routine is subject
-!        to change without notice.  User applications should not
-!        call this routine.
-!
-!     2) An array-valued kernel variable matching the "ID code form"
-!        of the requested kernel variable name could potentially
-!        mask a scalar-valued kernel variable matching the "name
-!        form" of the requested name.  This problem can be prevented
-!        by sensible frame kernel design.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
       character(*), parameter :: templt = 'FRAME_#_#'
 
 !
@@ -3396,33 +3308,32 @@ contains
 !$Procedure ZZNAMFRM ( Frame name to ID translation, with bypass )
 
       module procedure zznamfrm
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Translate a string containing a frame name to its ID code, but
+!!     bypass calling NAMFRM and return saved value provided by the
+!!     caller if the name is the same as the saved name and the POOL
+!!     state did not change.
+!!
+!! ## Required Reading
+!!
+!!     NAIF_IDS
+!!
+!! ## Keywords
+!!
+!!     PRIVATE
+!!     FRAME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Translate a string containing a frame name to its ID code, but
-!     bypass calling NAMFRM and return saved value provided by the
-!     caller if the name is the same as the saved name and the POOL
-!     state did not change.
-!
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     PRIVATE
-!     FRAME
-!
-! $ Declarations
-
+      use pepper_inc_zzctr
       implicit none
 
-      include              'zzctr.inc'
 
 
 ! $ Detailed_Input
@@ -3655,259 +3566,249 @@ contains
 !$Procedure  ZZNOFCON ( Create frame connection long error message )
 
       module procedure zznofcon
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines.  Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Create an informative long error message for cases where the
+!!     frame system signals a SPICE(NOFRAMECONNECT) error.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!     PRIVATE
+!!     UTILITY
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     ET             Epoch of frame transformation, expressed as
+!!                    seconds past J2000 TDB.
+!!
+!!     FRAME1         Frame ID code of frame at start of first path.
+!!
+!!     ENDP1          Frame ID code of frame at end of first path;
+!!                    this frame is the last node that could be
+!!                    reached from the frame designated by FRAME1.
+!!
+!!     FRAME2         Frame ID code of frame at start of second path.
+!!
+!!     ENDP2          Frame ID code of frame at end of second path;
+!!                    this frame is the last node that could be
+!!                    reached from the frame designated by FRAME2.
+!!
+!! ## Detailed Output
+!!
+!!     ERRMSG         Long error message specifying computable
+!!                    frame paths, indications of missing SCLK
+!!                    or CK data, and optionally, debugging hints.
+!!
+!!                    The rules for formation of this message are:
+!!
+!!                       1) State the epoch.
+!!
+!!                       2) State the names of the frames for which
+!!                          a connection was attempted, if these
+!!                          names are available.
+!!
+!!                       3) State the names of the frames at the
+!!                          endpoints of both paths, if these
+!!                          names are available.
+!!
+!!                          Omit this portion of the message for any
+!!                          path of length one: in other words, if a
+!!                          frame and path endpoint coincide, omit the
+!!                          clause stating the frame can be connected to
+!!                          itself.
+!!
+!!                       4) For any path endpoint frame, if that
+!!                          frame is of CK type, indicate that
+!!                          CK and SCLK data must be loaded for
+!!                          that frame.
+!!
+!!                       5) For any path endpoint frame, if that
+!!                          frame is of CK type and SCLK data for the
+!!                          SCLK associated with that frame are not
+!!                          available, indicate this problem, along with
+!!                          the CK and SCLK ID codes associated with
+!!                          this frame.
+!!
+!!                       6) If at least one path endpoint frame
+!!                          is of CK type, and all required SCLK data
+!!                          are present, include a closing message
+!!                          explaining how CK coverage may be inadequate
+!!                          and recommending use of CKBRIEF.
+!!
+!!                       7) If both path endpoint frames are of CK type,
+!!                          and required SCLK data are present for only
+!!                          one of these frames, include a closing
+!!                          message explaining how CK coverage may be
+!!                          inadequate for a frame for which SCLK data
+!!                          are available, and recommending use of
+!!                          CKBRIEF.
+!!
+!!                       8) Omit the closing message if no path
+!!                          endpoint CK frame has associated SCLK
+!!                          data.
+!!
+!! ## Parameters
+!!
+!!     None.
+!!
+!! ## Exceptions
+!!
+!!     1) If a call to FRINFO or NAMFRM signals an error, this routine
+!!        will not be able to create a long error message. The
+!!        caller will not be able to diagnose the frame connection
+!!        failure, since an error condition will already exist.
+!!
+!! ## Files
+!!
+!!     1) Each input frame ID argument will be mapped, if possible,
+!!        to a frame name. Any input frame ID that's not built in
+!!        must
+!!
+!! ## Particulars
+!!
+!!     This routine centralizes creation of a long error message for
+!!     frame connection failures. This routine should be called
+!!     from:
+!!
+!!        FRMCHG
+!!        REFCHG
+!!        ZZFRMCH0
+!!        ZZFRMCH1
+!!        ZZREFCH0
+!!        ZZREFCH1
+!!
+!! ## Examples
+!!
+!!     Below are some examples of messages created by this routine.
+!!
+!!    1)   At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
+!!         TDB), there is insufficient information available to
+!!         transform from reference frame -82000 (CASSINI_SC_COORD) to
+!!         reference frame -41000 (MEX_SPACECRAFT). CASSINI_SC_COORD is
+!!         a CK frame; a CK file containing data for instrument or
+!!         structure -82000 at the epoch shown above, as well as a
+!!         corresponding SCLK kernel, must be loaded in order to use
+!!         this frame. Frame MEX_SPACECRAFT could be transformed to
+!!         frame -41001 (MEX_SC_REF). The latter is a CK frame; a CK
+!!         file containing data for instrument or structure -41001 at
+!!         the epoch shown above, as well as a corresponding SCLK
+!!         kernel, must be loaded in order to use this frame. Failure to
+!!         find required CK data could be due to one or more CK files
+!!         not having been loaded, or to the epoch shown above lying
+!!         within a coverage gap or beyond the coverage bounds of the
+!!         loaded CK files. It is also possible that no loaded CK file
+!!         has required angular velocity data for the input epoch, even
+!!         if a loaded CK does have attitude data for that epoch. You
+!!         can use CKBRIEF with the -dump option to display coverage
+!!         intervals of a CK file.
+!!
+!!    2)   At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
+!!         TDB), there is insufficient information available to
+!!         transform from reference frame -82360 (CASSINI_ISS_NAC) to
+!!         reference frame 1 (J2000). Frame CASSINI_ISS_NAC could be
+!!         transformed to frame -82000 (CASSINI_SC_COORD). The latter is
+!!         a CK frame; a CK file containing data for instrument or
+!!         structure -82000 at the epoch shown above, as well as a
+!!         corresponding SCLK kernel, must be loaded in order to use
+!!         this frame. Failure to find required CK data could be due to
+!!         one or more CK files not having been loaded, or to the epoch
+!!         shown above lying within a coverage gap or beyond the
+!!         coverage bounds of the loaded CK files. It is also possible
+!!         that no loaded CK file has required angular velocity data for
+!!         the input epoch, even if a loaded CK does have attitude data
+!!         for that epoch. You can use CKBRIEF with the -dump option to
+!!
+!!     3)  At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
+!!         TDB), there is insufficient information available to
+!!         transform from reference frame -82000 (CASSINI_SC_COORD) to
+!!         reference frame -41000 (MEX_SPACECRAFT). CASSINI_SC_COORD is
+!!         a CK frame; a CK file containing data for instrument or
+!!         structure -82000 at the epoch shown above, as well as a
+!!         corresponding SCLK kernel, must be loaded in order to use
+!!         this frame. No SCLK kernel for instrument or structure
+!!         -82000, with corresponding SCLK ID -82, is currently loaded.
+!!         Frame MEX_SPACECRAFT could be transformed to frame -41001
+!!         (MEX_SC_REF). The latter is a CK frame; a CK file containing
+!!         data for instrument or structure -41001 at the epoch shown
+!!         above, as well as a corresponding SCLK kernel, must be loaded
+!!         in order to use this frame. No SCLK kernel for instrument or
+!!         structure -41001, with corresponding SCLK ID -41, is
+!!         currently loaded.
+!!
+!!     4)  At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
+!!         TDB), there is insufficient information available to
+!!         transform from reference frame -82000 (CASSINI_SC_COORD) to
+!!         reference frame -41000 (MEX_SPACECRAFT). CASSINI_SC_COORD is
+!!         a CK frame; a CK file containing data for instrument or
+!!         structure -82000 at the epoch shown above, as well as a
+!!         corresponding SCLK kernel, must be loaded in order to use
+!!         this frame. Frame MEX_SPACECRAFT could be transformed to
+!!         frame -41001 (MEX_SC_REF). The latter is a CK frame; a CK
+!!         file containing data for instrument or structure -41001 at
+!!         the epoch shown above, as well as a corresponding SCLK
+!!         kernel, must be loaded in order to use this frame. No SCLK
+!!         kernel for instrument or structure -41001, with corresponding
+!!         SCLK ID -41, is currently loaded. For a CK frame for which
+!!         the corresponding SCLK kernel has been loaded, failure to
+!!         find required CK data could be due to one or more CK files
+!!         not having been loaded, or to the epoch shown above lying
+!!         within a coverage gap or beyond the coverage bounds of the
+!!         loaded CK files. It is also possible that no loaded CK file
+!!         has required angular velocity data for the input epoch, even
+!!         if a loaded CK does have attitude data for that epoch. You
+!!         can use CKBRIEF with the -dump option to display coverage
+!!         intervals of a CK file.
+!!
+!! ## Restrictions
+!!
+!!     1) This is a private routine. SPICE user applications should not
+!!        call this routine.
+!!
+!!     2) See exception (1) above.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.0.0, 09-SEP-2013 (NJB)
+!!
+!!        Long error message for missing CK data now
+!!        mentions the possibility of missing angular
+!!        velocity data.
+!!
+!!-    SPICELIB Version 1.0.0, 14-DEC-2008 (NJB)
+!!
+!! ## Index Entries
+!!
+!!     create error message for frame connection failure
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc, suffix
+      use pepper_inc_frmtyp
 
       implicit none
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Create an informative long error message for cases where the
-!     frame system signals a SPICE(NOFRAMECONNECT) error.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!     TIME
-!
-! $ Keywords
-!
-!     FRAMES
-!     PRIVATE
-!     UTILITY
-!
-! $ Declarations
-
-      include 'frmtyp.inc'
-
-
-! $ Detailed_Input
-!
-!     ET             Epoch of frame transformation, expressed as
-!                    seconds past J2000 TDB.
-!
-!     FRAME1         Frame ID code of frame at start of first path.
-!
-!     ENDP1          Frame ID code of frame at end of first path;
-!                    this frame is the last node that could be
-!                    reached from the frame designated by FRAME1.
-!
-!     FRAME2         Frame ID code of frame at start of second path.
-!
-!     ENDP2          Frame ID code of frame at end of second path;
-!                    this frame is the last node that could be
-!                    reached from the frame designated by FRAME2.
-!
-! $ Detailed_Output
-!
-!     ERRMSG         Long error message specifying computable
-!                    frame paths, indications of missing SCLK
-!                    or CK data, and optionally, debugging hints.
-!
-!                    The rules for formation of this message are:
-!
-!                       1) State the epoch.
-!
-!                       2) State the names of the frames for which
-!                          a connection was attempted, if these
-!                          names are available.
-!
-!                       3) State the names of the frames at the
-!                          endpoints of both paths, if these
-!                          names are available.
-!
-!                          Omit this portion of the message for any
-!                          path of length one: in other words, if a
-!                          frame and path endpoint coincide, omit the
-!                          clause stating the frame can be connected to
-!                          itself.
-!
-!                       4) For any path endpoint frame, if that
-!                          frame is of CK type, indicate that
-!                          CK and SCLK data must be loaded for
-!                          that frame.
-!
-!                       5) For any path endpoint frame, if that
-!                          frame is of CK type and SCLK data for the
-!                          SCLK associated with that frame are not
-!                          available, indicate this problem, along with
-!                          the CK and SCLK ID codes associated with
-!                          this frame.
-!
-!                       6) If at least one path endpoint frame
-!                          is of CK type, and all required SCLK data
-!                          are present, include a closing message
-!                          explaining how CK coverage may be inadequate
-!                          and recommending use of CKBRIEF.
-!
-!                       7) If both path endpoint frames are of CK type,
-!                          and required SCLK data are present for only
-!                          one of these frames, include a closing
-!                          message explaining how CK coverage may be
-!                          inadequate for a frame for which SCLK data
-!                          are available, and recommending use of
-!                          CKBRIEF.
-!
-!                       8) Omit the closing message if no path
-!                          endpoint CK frame has associated SCLK
-!                          data.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If a call to FRINFO or NAMFRM signals an error, this routine
-!        will not be able to create a long error message. The
-!        caller will not be able to diagnose the frame connection
-!        failure, since an error condition will already exist.
-!
-! $ Files
-!
-!     1) Each input frame ID argument will be mapped, if possible,
-!        to a frame name. Any input frame ID that's not built in
-!        must
-!
-! $ Particulars
-!
-!     This routine centralizes creation of a long error message for
-!     frame connection failures. This routine should be called
-!     from:
-!
-!        FRMCHG
-!        REFCHG
-!        ZZFRMCH0
-!        ZZFRMCH1
-!        ZZREFCH0
-!        ZZREFCH1
-!
-! $ Examples
-!
-!     Below are some examples of messages created by this routine.
-!
-!    1)   At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
-!         TDB), there is insufficient information available to
-!         transform from reference frame -82000 (CASSINI_SC_COORD) to
-!         reference frame -41000 (MEX_SPACECRAFT). CASSINI_SC_COORD is
-!         a CK frame; a CK file containing data for instrument or
-!         structure -82000 at the epoch shown above, as well as a
-!         corresponding SCLK kernel, must be loaded in order to use
-!         this frame. Frame MEX_SPACECRAFT could be transformed to
-!         frame -41001 (MEX_SC_REF). The latter is a CK frame; a CK
-!         file containing data for instrument or structure -41001 at
-!         the epoch shown above, as well as a corresponding SCLK
-!         kernel, must be loaded in order to use this frame. Failure to
-!         find required CK data could be due to one or more CK files
-!         not having been loaded, or to the epoch shown above lying
-!         within a coverage gap or beyond the coverage bounds of the
-!         loaded CK files. It is also possible that no loaded CK file
-!         has required angular velocity data for the input epoch, even
-!         if a loaded CK does have attitude data for that epoch. You
-!         can use CKBRIEF with the -dump option to display coverage
-!         intervals of a CK file.
-!
-!    2)   At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
-!         TDB), there is insufficient information available to
-!         transform from reference frame -82360 (CASSINI_ISS_NAC) to
-!         reference frame 1 (J2000). Frame CASSINI_ISS_NAC could be
-!         transformed to frame -82000 (CASSINI_SC_COORD). The latter is
-!         a CK frame; a CK file containing data for instrument or
-!         structure -82000 at the epoch shown above, as well as a
-!         corresponding SCLK kernel, must be loaded in order to use
-!         this frame. Failure to find required CK data could be due to
-!         one or more CK files not having been loaded, or to the epoch
-!         shown above lying within a coverage gap or beyond the
-!         coverage bounds of the loaded CK files. It is also possible
-!         that no loaded CK file has required angular velocity data for
-!         the input epoch, even if a loaded CK does have attitude data
-!         for that epoch. You can use CKBRIEF with the -dump option to
-!
-!     3)  At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
-!         TDB), there is insufficient information available to
-!         transform from reference frame -82000 (CASSINI_SC_COORD) to
-!         reference frame -41000 (MEX_SPACECRAFT). CASSINI_SC_COORD is
-!         a CK frame; a CK file containing data for instrument or
-!         structure -82000 at the epoch shown above, as well as a
-!         corresponding SCLK kernel, must be loaded in order to use
-!         this frame. No SCLK kernel for instrument or structure
-!         -82000, with corresponding SCLK ID -82, is currently loaded.
-!         Frame MEX_SPACECRAFT could be transformed to frame -41001
-!         (MEX_SC_REF). The latter is a CK frame; a CK file containing
-!         data for instrument or structure -41001 at the epoch shown
-!         above, as well as a corresponding SCLK kernel, must be loaded
-!         in order to use this frame. No SCLK kernel for instrument or
-!         structure -41001, with corresponding SCLK ID -41, is
-!         currently loaded.
-!
-!     4)  At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
-!         TDB), there is insufficient information available to
-!         transform from reference frame -82000 (CASSINI_SC_COORD) to
-!         reference frame -41000 (MEX_SPACECRAFT). CASSINI_SC_COORD is
-!         a CK frame; a CK file containing data for instrument or
-!         structure -82000 at the epoch shown above, as well as a
-!         corresponding SCLK kernel, must be loaded in order to use
-!         this frame. Frame MEX_SPACECRAFT could be transformed to
-!         frame -41001 (MEX_SC_REF). The latter is a CK frame; a CK
-!         file containing data for instrument or structure -41001 at
-!         the epoch shown above, as well as a corresponding SCLK
-!         kernel, must be loaded in order to use this frame. No SCLK
-!         kernel for instrument or structure -41001, with corresponding
-!         SCLK ID -41, is currently loaded. For a CK frame for which
-!         the corresponding SCLK kernel has been loaded, failure to
-!         find required CK data could be due to one or more CK files
-!         not having been loaded, or to the epoch shown above lying
-!         within a coverage gap or beyond the coverage bounds of the
-!         loaded CK files. It is also possible that no loaded CK file
-!         has required angular velocity data for the input epoch, even
-!         if a loaded CK does have attitude data for that epoch. You
-!         can use CKBRIEF with the -dump option to display coverage
-!         intervals of a CK file.
-!
-! $ Restrictions
-!
-!     1) This is a private routine. SPICE user applications should not
-!        call this routine.
-!
-!     2) See exception (1) above.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 09-SEP-2013 (NJB)
-!
-!        Long error message for missing CK data now
-!        mentions the possibility of missing angular
-!        velocity data.
-!
-!-    SPICELIB Version 1.0.0, 14-DEC-2008 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     create error message for frame connection failure
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: frnmln = 32
 
       integer(ip), parameter :: timlen = 35
@@ -4229,37 +4130,36 @@ contains
 !$Procedure ZZSWFFET ( Private, switch frame kernel pool data fetch )
 
       module procedure zzswffet
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Fetch kernel variables for a specified switch frame. Data
+!!     for the new frame are added to the switch frame database.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!     KERNEL
+!!     NAIF_IDS
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     Private
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Fetch kernel variables for a specified switch frame. Data
-!     for the new frame are added to the switch frame database.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!     KERNEL
-!     NAIF_IDS
-!     TIME
-!
-! $ Keywords
-!
-!     Private
-!
-! $ Declarations
-
+      use pepper_inc_zzswtchf
       implicit none
       integer(ip) :: fid_1(1)  !! one-element copy of fid (array argument)
       integer(ip) :: frclid_1(1)  !! one-element copy of frclid (array argument)
       integer(ip) :: frclas_1(1)  !! one-element copy of frclas (array argument)
 
-      include              'zzswtchf.inc'
 
 
 ! $ Detailed_Input
@@ -5303,24 +5203,23 @@ contains
 !$Procedure ZZTEME ( J2000 to TEME at epoch )
 
       module procedure zzteme
+!! ## Abstract
+!!
+!!     J2000 to TEME, and TEME to J2000, probably.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!
+!! ## Keywords
+!!
+!!     FRAMES
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: wp
       use pepper_arrays, only: moved
       use pepper_math, only: mxvg
-
-! $ Abstract
-!
-!     J2000 to TEME, and TEME to J2000, probably.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
       implicit none
 
 
@@ -5444,28 +5343,27 @@ contains
 !$Procedure SCE2C ( ET to continuous SCLK ticks )
 
       module procedure sce2c
+!! ## Abstract
+!!
+!!     Convert ephemeris seconds past J2000 (ET) to continuous encoded
+!!     spacecraft clock (`ticks').  Non-integral tick values may be
+!!     returned.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     SCLK
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Convert ephemeris seconds past J2000 (ET) to continuous encoded
-!     spacecraft clock (`ticks').  Non-integral tick values may be
-!     returned.
-!
-! $ Required_Reading
-!
-!     CK
-!     SCLK
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     CONVERSION
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 
@@ -5700,249 +5598,224 @@ contains
       end procedure sce2c
 
       module procedure spke10
-
-! $ Abstract
-!
-!     Evaluate a single SPK data record from a segment of type 10
-!     (NORAD two-line element sets.). This evaluator uses algorithms
-!     as described in Vallado 2006 [4].
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     ET       is a target epoch, specified as ephemeris seconds past
-!              J2000, at which a state vector is to be computed.
-!
-!     RECORD   is a data record which, when evaluated at epoch ET,
-!              will give the state (position and velocity) of some
-!              body, relative to some center, in some inertial
-!              reference frame.
-!
-!              The structure of RECORD is:
-!
-!                  RECORD(1)
-!                     .            Geophysical Constants such as
-!                     .            GM, J2, J3, J4, etc.
-!                     .
-!                  RECORD(NGEO)
-!
-!                  RECORD(NGEO + 1)
-!                     .
-!                     .            elements and epoch for the body
-!                     .            at epoch 1.
-!                     .
-!                  RECORD(NGEO + NELEMS )
-!
-!                  RECORD(NGEO + NELEMS + 1)
-!                     .
-!                     .            elements and epoch for the body
-!                     .            at epoch 2.
-!                     .
-!                  RECORD(NGEO + 2*NELEMS )
-!
-!              Epoch 1 and epoch 2 are the times in the segment that
-!              bracket ET. If ET is less than the first time in the
-!              segment then both epochs 1 and 2 are equal to the
-!              first time. And if ET is greater than the last time
-!              then, epochs 1 and 2 are set equal to this last time.
-!
-! $ Detailed_Output
-!
-!     STATE    is the state produced by evaluating RECORD at ET.
-!              Units are km and km/sec relative to the J2000
-!              reference frame.
-!
-! $ Parameters
-!
-!     NGEO     is the number of geophysical constants for SGP4 SPK
-!              records.
-!
-!     AFSPC    set the SGP4 propagator to use the original
-!              Space Track #3 GST algorithm as described in Hoots [1];
-!              value defined in zzsgp4.inc.
-!
-!     IMPRVD   set the SGP4 propagator to use the improved GST
-!              algorithm as defined in Vallado [4]; value defined in
-!              zzsgp4.inc.
-!
-! $ Exceptions
-!
-!     1)  If a problem occurs when evaluating the two-line elements, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine interpolates a state from the two reference sets
-!     of two-line element sets contained in RECORD.
-!
-!     It is assumed that this routine is used in conjunction with
-!     the routine SPKR10 as shown here:
-!
-!        CALL SPKR10   ( HANDLE, DESCR, ET, RECORD         )
-!        CALL SPKE10   (                ET, RECORD, STATE  )
-!
-!     Where it is known in advance that the HANDLE, DESCR pair points
-!     to a type 10 data segment.
-!
-! $ Examples
-!
-!     The SPKEnn routines are almost always used in conjunction with
-!     the corresponding SPKRnn routines, which read the records from
-!     SPK files.
-!
-!     The data returned by the SPKRnn routine is in its rawest form,
-!     taken directly from the segment. As such, it will be meaningless
-!     to a user unless he/she understands the structure of the data type
-!     completely. Given that understanding, however, the SPKRnn
-!     routines might be used to examine raw segment data before
-!     evaluating it with the SPKEnn routines.
-!
-!     C
-!     C     Get a segment applicable to a specified body and epoch.
-!     C
-!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
-!
-!     C
-!     C     Look at parts of the descriptor.
-!     C
-!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
-!           CENTER = ICD( 2 )
-!           REF    = ICD( 3 )
-!           TYPE   = ICD( 4 )
-!
-!           IF ( TYPE .EQ. 10 ) THEN
-!
-!              CALL SPKR10 ( HANDLE, DESCR, ET, RECORD )
-!                  .
-!                  .  Look at the RECORD data.
-!                  .
-!              CALL SPKE10 ( ET, RECORD, STATE )
-!                  .
-!                  .  Check out the evaluated state.
-!                  .
-!           END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1]  F. Hoots and R. Roehrich, "Spacetrack Report #3: Models for
-!          Propagation of the NORAD Element Sets," U.S. Air Force
-!          Aerospace Defense Command, Colorado Springs, CO, 1980.
-!
-!     [2]  F. Hoots, "Spacetrack Report #6: Models for Propagation of
-!          Space Command Element Sets,"  U.S. Air Force Aerospace
-!          Defense Command, Colorado Springs, CO, 1986.
-!
-!     [3]  F. Hoots, P. Schumacher and R. Glover, "History of Analytical
-!          Orbit Modeling in the U. S. Space Surveillance System,"
-!          Journal of Guidance, Control, and Dynamics. 27(2):174-185,
-!          2004.
-!
-!     [4]  D. Vallado, P. Crawford, R. Hujsak and T. Kelso, "Revisiting
-!          Spacetrack Report #3," paper AIAA 2006-6753 presented at the
-!          AIAA/AAS Astrodynamics Specialist Conference, Keystone, CO.,
-!          August 21-24, 2006.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.1.0, 10-OCT-2021 (JDR) (EDW)
-!
-!        Use of modified ZZTEME to eliminate a matrix inversion.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 3.0.0, 18-FEB-2015 (EDW)
-!
-!        Evaluator now uses Vallado derived propagator as described
-!        in Vallado 2006 [4].
-!
-!-    SPICELIB Version 2.0.0, 01-JAN-2011 (EDW)
-!
-!        Correction of state transformation calculation. Algorithm
-!        now computes state transformation as from TEME to J2000.
-!        The previous version of this routine calculated TETE to
-!        J2000.
-!
-!-    SPICELIB Version 1.1.0, 01-SEP-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in MTXV and VADD calls.
-!
-!-    SPICELIB Version 1.0.0, 18-JUL-1997 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     evaluate type_10 SPK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     The nutation in obliquity and longitude as well as their rates
-!     follow the elements.  So we've got four angles/angle rates
-!     following the elements
-!
-
-!
-!     The locations of the epochs and the starts of the element
-!     sets are given below.
-!
-
-
-
-
-
-!
-!     Local variables
-!
-
-
-!
-!     Constants (SPICELIB computed them on the first call).
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Evaluate a single SPK data record from a segment of type 10
+!!     (NORAD two-line element sets.). This evaluator uses algorithms
+!!     as described in Vallado 2006 [4].
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     ET       is a target epoch, specified as ephemeris seconds past
+!!              J2000, at which a state vector is to be computed.
+!!
+!!     RECORD   is a data record which, when evaluated at epoch ET,
+!!              will give the state (position and velocity) of some
+!!              body, relative to some center, in some inertial
+!!              reference frame.
+!!
+!!              The structure of RECORD is:
+!!
+!!                  RECORD(1)
+!!                     .            Geophysical Constants such as
+!!                     .            GM, J2, J3, J4, etc.
+!!                     .
+!!                  RECORD(NGEO)
+!!
+!!                  RECORD(NGEO + 1)
+!!                     .
+!!                     .            elements and epoch for the body
+!!                     .            at epoch 1.
+!!                     .
+!!                  RECORD(NGEO + NELEMS )
+!!
+!!                  RECORD(NGEO + NELEMS + 1)
+!!                     .
+!!                     .            elements and epoch for the body
+!!                     .            at epoch 2.
+!!                     .
+!!                  RECORD(NGEO + 2*NELEMS )
+!!
+!!              Epoch 1 and epoch 2 are the times in the segment that
+!!              bracket ET. If ET is less than the first time in the
+!!              segment then both epochs 1 and 2 are equal to the
+!!              first time. And if ET is greater than the last time
+!!              then, epochs 1 and 2 are set equal to this last time.
+!!
+!! ## Detailed Output
+!!
+!!     STATE    is the state produced by evaluating RECORD at ET.
+!!              Units are km and km/sec relative to the J2000
+!!              reference frame.
+!!
+!! ## Parameters
+!!
+!!     NGEO     is the number of geophysical constants for SGP4 SPK
+!!              records.
+!!
+!!     AFSPC    set the SGP4 propagator to use the original
+!!              Space Track #3 GST algorithm as described in Hoots [1];
+!!              value defined in zzsgp4.inc.
+!!
+!!     IMPRVD   set the SGP4 propagator to use the improved GST
+!!              algorithm as defined in Vallado [4]; value defined in
+!!              zzsgp4.inc.
+!!
+!! ## Exceptions
+!!
+!!     1)  If a problem occurs when evaluating the two-line elements, an
+!!         error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     None.
+!!
+!! ## Particulars
+!!
+!!     This routine interpolates a state from the two reference sets
+!!     of two-line element sets contained in RECORD.
+!!
+!!     It is assumed that this routine is used in conjunction with
+!!     the routine SPKR10 as shown here:
+!!
+!!        CALL SPKR10   ( HANDLE, DESCR, ET, RECORD         )
+!!        CALL SPKE10   (                ET, RECORD, STATE  )
+!!
+!!     Where it is known in advance that the HANDLE, DESCR pair points
+!!     to a type 10 data segment.
+!!
+!! ## Examples
+!!
+!!     The SPKEnn routines are almost always used in conjunction with
+!!     the corresponding SPKRnn routines, which read the records from
+!!     SPK files.
+!!
+!!     The data returned by the SPKRnn routine is in its rawest form,
+!!     taken directly from the segment. As such, it will be meaningless
+!!     to a user unless he/she understands the structure of the data type
+!!     completely. Given that understanding, however, the SPKRnn
+!!     routines might be used to examine raw segment data before
+!!     evaluating it with the SPKEnn routines.
+!!
+!!     C
+!!     C     Get a segment applicable to a specified body and epoch.
+!!     C
+!!           CALL SPKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
+!!
+!!     C
+!!     C     Look at parts of the descriptor.
+!!     C
+!!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!!           CENTER = ICD( 2 )
+!!           REF    = ICD( 3 )
+!!           TYPE   = ICD( 4 )
+!!
+!!           IF ( TYPE .EQ. 10 ) THEN
+!!
+!!              CALL SPKR10 ( HANDLE, DESCR, ET, RECORD )
+!!                  .
+!!                  .  Look at the RECORD data.
+!!                  .
+!!              CALL SPKE10 ( ET, RECORD, STATE )
+!!                  .
+!!                  .  Check out the evaluated state.
+!!                  .
+!!           END IF
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     [1]  F. Hoots and R. Roehrich, "Spacetrack Report #3: Models for
+!!          Propagation of the NORAD Element Sets," U.S. Air Force
+!!          Aerospace Defense Command, Colorado Springs, CO, 1980.
+!!
+!!     [2]  F. Hoots, "Spacetrack Report #6: Models for Propagation of
+!!          Space Command Element Sets,"  U.S. Air Force Aerospace
+!!          Defense Command, Colorado Springs, CO, 1986.
+!!
+!!     [3]  F. Hoots, P. Schumacher and R. Glover, "History of Analytical
+!!          Orbit Modeling in the U. S. Space Surveillance System,"
+!!          Journal of Guidance, Control, and Dynamics. 27(2):174-185,
+!!          2004.
+!!
+!!     [4]  D. Vallado, P. Crawford, R. Hujsak and T. Kelso, "Revisiting
+!!          Spacetrack Report #3," paper AIAA 2006-6753 presented at the
+!!          AIAA/AAS Astrodynamics Specialist Conference, Keystone, CO.,
+!!          August 21-24, 2006.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     W.L. Taber         (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 3.1.0, 10-OCT-2021 (JDR) (EDW)
+!!
+!!        Use of modified ZZTEME to eliminate a matrix inversion.
+!!
+!!        Edited the header to comply with NAIF standard.
+!!
+!!-    SPICELIB Version 3.0.0, 18-FEB-2015 (EDW)
+!!
+!!        Evaluator now uses Vallado derived propagator as described
+!!        in Vallado 2006 [4].
+!!
+!!-    SPICELIB Version 2.0.0, 01-JAN-2011 (EDW)
+!!
+!!        Correction of state transformation calculation. Algorithm
+!!        now computes state transformation as from TEME to J2000.
+!!        The previous version of this routine calculated TETE to
+!!        J2000.
+!!
+!!-    SPICELIB Version 1.1.0, 01-SEP-2005 (NJB)
+!!
+!!        Updated to remove non-standard use of duplicate arguments
+!!        in MTXV and VADD calls.
+!!
+!!-    SPICELIB Version 1.0.0, 18-JUL-1997 (WLT)
+!!
+!! ## Index Entries
+!!
+!!     evaluate type_10 SPK segment
+!!
+!!     SPICELIB functions
+!!
+!!     The nutation in obliquity and longitude as well as their rates
+!!     follow the elements.  So we've got four angles/angle rates
+!!     following the elements
+!!
+!!     The locations of the epochs and the starts of the element
+!!     sets are given below.
+!!
+!!     Local variables
+!!
+!!     Constants (SPICELIB computed them on the first call).
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_arrays, only: moved
       use pepper_math, only: mxvg, vadd, vequ, vlcom, vlcomg
+      use pepper_inc_zzsgp4
       implicit none
-      include 'zzsgp4.inc'
       integer(ip), parameter :: nangs = 4
       integer(ip), parameter :: time1 = ngeo + kepoch
       integer(ip), parameter :: time2 = nelems + nangs + time1
@@ -6096,29 +5969,28 @@ contains
 !$Procedure TIPBOD ( Transformation, inertial position to bodyfixed )
 
       module procedure tipbod
+!! ## Abstract
+!!
+!!     Return a 3x3 matrix that transforms positions in inertial
+!!     coordinates to positions in body-equator-and-prime-meridian
+!!     coordinates.
+!!
+!! ## Required Reading
+!!
+!!     FRAMES
+!!     PCK
+!!     NAIF_IDS
+!!     ROTATION
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     ROTATION
+!!     TRANSFORMATION
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return a 3x3 matrix that transforms positions in inertial
-!     coordinates to positions in body-equator-and-prime-meridian
-!     coordinates.
-!
-! $ Required_Reading
-!
-!     FRAMES
-!     PCK
-!     NAIF_IDS
-!     ROTATION
-!     TIME
-!
-! $ Keywords
-!
-!     ROTATION
-!     TRANSFORMATION
-!
-! $ Declarations
-
       implicit none
 
 
@@ -6525,26 +6397,25 @@ contains
 !$Procedure CKFROT ( CK frame, find position rotation )
 
       module procedure ckfrot
+!! ## Abstract
+!!
+!!     Find the position rotation matrix from a C-kernel (CK) frame with
+!!     the specified frame class ID (CK ID) to the base frame of the
+!!     highest priority CK segment containing orientation data for this
+!!     CK frame at the time requested.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: xpose
-
-! $ Abstract
-!
-!     Find the position rotation matrix from a C-kernel (CK) frame with
-!     the specified frame class ID (CK ID) to the base frame of the
-!     highest priority CK segment containing orientation data for this
-!     CK frame at the time requested.
-!
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -6977,26 +6848,25 @@ contains
 !$Procedure CKFXFM ( CK frame, find state transformation )
 
       module procedure ckfxfm
+!! ## Abstract
+!!
+!!     Find the state transformation matrix from a C-kernel (CK) frame
+!!     with the specified frame class ID (CK ID) to the base frame of
+!!     the highest priority CK segment containing orientation and
+!!     angular velocity data for this CK frame at the time requested.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!
+!! ## Keywords
+!!
+!!     POINTING
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: rav2xf
-
-! $ Abstract
-!
-!     Find the state transformation matrix from a C-kernel (CK) frame
-!     with the specified frame class ID (CK ID) to the base frame of
-!     the highest priority CK segment containing orientation and
-!     angular velocity data for this CK frame at the time requested.
-!
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     POINTING
-!
-! $ Declarations
-
       implicit none
 
 
@@ -7420,27 +7290,26 @@ contains
 !$Procedure SPKPVN ( S/P Kernel, position and velocity in native frame )
 
       module procedure spkpvn
+!! ## Abstract
+!!
+!!     Return, for a specified SPK segment and time, the state (position
+!!     and velocity) of the segment's target body relative to its center
+!!     of motion.
+!!
+!! ## Required Reading
+!!
+!!     SPK
+!!
+!! ## Keywords
+!!
+!!     EPHEMERIS
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Return, for a specified SPK segment and time, the state (position
-!     and velocity) of the segment's target body relative to its center
-!     of motion.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     EPHEMERIS
-!
-! $ Declarations
-
+      use pepper_inc_spkrec
       implicit none
 
-      include 'spkrec.inc'
 
 
 ! $ Detailed_Input
@@ -7798,356 +7667,319 @@ contains
       end procedure spkpvn
 
       module procedure zzswfxfm
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Return switch frame state or position transformation matrix.
-!
-! $ Required_Reading
-!
-!     CK
-!     FRAMES
-!     NAIF_IDS
-!     TIME
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     INFRM       is the frame ID code of switch frame for which
-!                 the transformation to a base frame at time ET is
-!                 sought.
-!
-!     ET          is a frame orientation evaluation epoch, expressed
-!                 as seconds past J2000 TDB.
-!
-!     NDIM        is the common row and column dimension of the output
-!                 matrix: 6 or 3. When NDIM is set to 6, a 6x6 state
-!                 transformation matrix is returned; when NDIM is set
-!                 to 3, a 3x3 position transformation matrix is
-!                 returned.
-!
-! $ Detailed_Output
-!
-!     XFORM       is a matrix that transforms vectors of dimension NDIM
-!                 from the switch frame designated by INFRM to the
-!                 frame designated by OUTFRM, at time ET.
-!
-!                 By definition, a switch frame is aligned with a
-!                 selected base frame at time ET. However, depending on
-!                 the class of the selected base frame, OUTFRM may
-!                 be set to that base frame, the base frame at ET of
-!                 that base, or the frame J2000. See the description of
-!                 OUTFRM below.
-!
-!                 XFORM is defined if and only if FOUND is .TRUE.
-!
-!     OUTFRM      is the frame ID code of a frame selected by this
-!                 routine, which may be a base frame of the switch
-!                 frame designated by INFRM, or which may be another
-!                 frame, selected as described below. The output matrix
-!                 XFORM transforms vectors of dimension NDIM from the
-!                 switch frame designated by INFRM to the frame
-!                 designated by OUTFRM.
-!
-!                 OUTFRM is defined if and only if FOUND is .TRUE.
-!
-!                 OUTFRM is selected as follows:
-!
-!                    - Base frames are obtained from the kernel
-!                      variable
-!
-!                         FRAME_< INFRM >_ALIGNED_WITH
-!
-!                      Base frames are listed in order of ascending
-!                      priority. A given frame may occur at multiple
-!                      indices of the base frame array.
-!
-!                    - If time intervals are included in the switch
-!                      frame specification, the highest priority
-!                      base frame for which the associated time
-!                      interval contains ET, and in which data are
-!                      available at ET, is chosen.
-!
-!                      If time intervals are not provided, the highest
-!                      priority base frame for which data are available
-!                      at ET is chosen.
-!
-!                      Data availability may depend on NDIM. This is
-!                      because 6x6 state transformations that rely on
-!                      CK data require angular velocity to be present;
-!                      3x3 position transformations don't.
-!
-!                      If no base frame providing data at ET is found
-!                      by the process described above, FOUND is set to
-!                      .FALSE. and OUTFRM is undefined.
-!
-!                    - If the process succeeds in finding a base frame
-!                      providing data at ET, OUTFRM is set according to
-!                      the class of the base frame:
-!
-!                         > Base is class INERTL: OUTFRM is set to
-!                           the ID code of J2000.
-!
-!                         > Base is class PCK: OUTFRM is set to the ID
-!                           code of J2000.
-!
-!                         > Base is class CK: OUTFRM is set to the ID
-!                           code of the CK frame's base frame at time
-!                           ET. This is the base returned by FRMGET for
-!                           ET, if NDIM is 6, or the base returned by
-!                           ROTGET at ET if NDIM is 3.
-!
-!                         > Base is class TK: OUTFRM is set to the ID
-!                           code of the TK frame's base frame. This is
-!                           the frame specified by the
-!                           TKFRAME_<ID>_RELATIVE keyword of the TK
-!                           frame's specification.
-!
-!                         > Base is class DYN: OUTFRM is set to the ID
-!                           code of the base frame.
-!
-!                         > Base is class SWTCH: OUTFRM is set to the
-!                           ID code of the base frame.
-!
-!     FOUND       is a logical flag indicating whether a frame
-!                 transformation was found at time ET. XFORM and OUTFRM
-!                 are valid if and only if FOUND is .TRUE.
-!
-! $ Parameters
-!
-!     See the include file zzswtchf.inc for SPICE-private parameters
-!     defining sizes of buffers used by the switch frame subsystem.
-!
-! $ Exceptions
-!
-!     1)  If NDIM is a value other than 6 or 3, the error
-!         SPICE(BADDIMENSION) will be signaled.
-!
-!     2)  If the switch frame designated by INFRM has more than MAXBAS
-!         associated base frames, the error is signaled by a routine in
-!         the call tree of this routine.
-!
-!     3)  If a frame specification cannot be found for a base frame of
-!         the frame designated by INFRM, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     4)  If an error is found in the specification of the switch frame
-!         designated by INFRM, the error is signaled by a routine in
-!         the call tree of this routine.
-!
-!     5)  If an error occurs while computing the transformation from
-!         the frame designated by INFRM to that designated by OUTFRM,
-!         the error is signaled by a routine in the call tree of this
-!         routine.
-
-! $ Files
-!
-!     Appropriate kernels must be loaded by the calling program before
-!     this routine is called.
-!
-!     The following data are required:
-!
-!         - A switch frame specification, normally provided by a
-!           frame kernel.
-!
-!         - Frame specifications for all base frames. Normally these
-!           specifications are provided by frame kernels.
-!
-!     The following data may be needed:
-!
-!         - A leapseconds kernel
-!
-!         - SCLK kernel parameters and data for each CK base frame.
-!           This information is normally provided by SCLK kernels.
-!
-!         - CK data for each CK base frame. These data are provided
-!           by C-kernels.
-!
-!         - PCK data for each PCK base frame.
-!
-!         - Any kernels required to specify any dynamic base frame.
-!
-!     In all cases, kernel data are normally loaded once per program
-!     run, NOT every time this routine is called.
-!
-! $ Particulars
-!
-!     The switch frame subsystem does not participate in fake
-!     recursion, hence there are no shadow routines corresponding to
-!     ZZSWFXFM and ZZSWFFET.
-!
-!     The only frame orientation evaluations performed in the process
-!     of computing the output transformation XFORM are those that
-!     don't require recursive use of the frame subsystem. The frame
-!     classes in this category are
-!
-!        Inertial
-!        PCK
-!        CK
-!        TK
-!
-!     For dynamic and switch base frames, no orientation is computed.
-!     Instead, the identity matrix is returned.
-!
-! $ Examples
-!
-!     None. See the routines FRMGET and ROTGET for examples of usage.
-!
-! $ Restrictions
-!
-!     1)  This routine is SPICE-private. User applications must not
-!         call it.
-!
-!     2)  To improve efficiency, this routine buffers switch frame
-!         specifications. The buffers are emptied after any update
-!         to the kernel pool. Since the process of parsing, and
-!         buffering parameters provided by, switch frame specifications
-!         is rather slow, applications using switch frames should
-!         avoid high-frequency kernel pool updates.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!     B.V. Semenov   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB) (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return switch frame transformation and base frame
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local parameters
-!
-
-!
-!     ID code of the J2000 frame:
-!
-
-!
-!     Size of linked list pool:
-!
-!     The add-only hash pool for frame IDs is singly linked.
-!
-
-!
-!     Dimensions
-!
-
-
-!
-!     Matrix sizes.
-!
-
-
-!
-!     Local variables
-!
-
-!
-!     Overview of frame storage data structures
-!     =========================================
-!
-!     This routine uses an add-only hash to index switch frames
-!     known to this routine. The hash maps input frame ID codes to
-!     head nodes of collision lists stored in the array HDFRAM.
-!     The collision lists are stored in the singly linked list pool
-!     FRPOOL.
-!
-!     Each node of a collision list is the index in the array FIDLST of
-!     a switch frame ID. The array FIDLST has the following associated,
-!     parallel arrays:
-!
-!        BASBEG       Start indices in the base frame attribute arrays
-!                     of values associated with specific switch frames.
-!                     For example, BASLST( BASBEG(FRAMAT) ) is the
-!                     index of the first base frame associated with
-!                     the switch frame having ID FIDLST(FRAMAT).
-!
-!        BASCNT       Base count for each switch frame
-!
-!        USETIM       Indicates whether time intervals are associated
-!                     with that frame's base frames
-!
-!        BINARY       Indicates whether time intervals are eligible for
-!                     binary search. To be eligible, the intervals
-!                     must have start times in ascending order and
-!                     must be disjoint or have singleton overlap.
-!
-!     Base frame attributes are stored in a set of parallel arrays.
-!     Attributes for bases of a given switch frame are listed in
-!     contiguous elements. The arrays and their contents are:
-!
-!        BASLST       Base frame ID codes. The base frames of a given
-!                     switch frame are listed in ascending priority
-!                     order in consecutive elements of BASLST.
-!
-!        STARTS       Base frame interval start times, expressed as
-!                     seconds past J2000 TDB. Valid for all bases of
-!                     a given switch frame, or unused for that frame.
-!
-!        STOPS        Base frame interval start times, expressed as
-!                     seconds past J2000 TDB. Valid for all bases of
-!                     a given switch frame, or unused for that frame.
-!
-!        CLSSES       Base frame classes.
-!
-!        CLSIDS       Base frame class IDs.
-!
-!     Each base frame list for a given switch frame is ordered
-!     according to ascending priority.
-!
-
-
-
-!
-!     Other declarations
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
-
+!! ## Abstract
+!!
+!!     SPICE Private routine intended solely for the support of SPICE
+!!     routines. Users should not call this routine directly due
+!!     to the volatile nature of this routine.
+!!
+!!     Return switch frame state or position transformation matrix.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     FRAMES
+!!     NAIF_IDS
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     None.
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     INFRM       is the frame ID code of switch frame for which
+!!                 the transformation to a base frame at time ET is
+!!                 sought.
+!!
+!!     ET          is a frame orientation evaluation epoch, expressed
+!!                 as seconds past J2000 TDB.
+!!
+!!     NDIM        is the common row and column dimension of the output
+!!                 matrix: 6 or 3. When NDIM is set to 6, a 6x6 state
+!!                 transformation matrix is returned; when NDIM is set
+!!                 to 3, a 3x3 position transformation matrix is
+!!                 returned.
+!!
+!! ## Detailed Output
+!!
+!!     XFORM       is a matrix that transforms vectors of dimension NDIM
+!!                 from the switch frame designated by INFRM to the
+!!                 frame designated by OUTFRM, at time ET.
+!!
+!!                 By definition, a switch frame is aligned with a
+!!                 selected base frame at time ET. However, depending on
+!!                 the class of the selected base frame, OUTFRM may
+!!                 be set to that base frame, the base frame at ET of
+!!                 that base, or the frame J2000. See the description of
+!!                 OUTFRM below.
+!!
+!!                 XFORM is defined if and only if FOUND is .TRUE.
+!!
+!!     OUTFRM      is the frame ID code of a frame selected by this
+!!                 routine, which may be a base frame of the switch
+!!                 frame designated by INFRM, or which may be another
+!!                 frame, selected as described below. The output matrix
+!!                 XFORM transforms vectors of dimension NDIM from the
+!!                 switch frame designated by INFRM to the frame
+!!                 designated by OUTFRM.
+!!
+!!                 OUTFRM is defined if and only if FOUND is .TRUE.
+!!
+!!                 OUTFRM is selected as follows:
+!!
+!!                    - Base frames are obtained from the kernel
+!!                      variable
+!!
+!!                         FRAME_< INFRM >_ALIGNED_WITH
+!!
+!!                      Base frames are listed in order of ascending
+!!                      priority. A given frame may occur at multiple
+!!                      indices of the base frame array.
+!!
+!!                    - If time intervals are included in the switch
+!!                      frame specification, the highest priority
+!!                      base frame for which the associated time
+!!                      interval contains ET, and in which data are
+!!                      available at ET, is chosen.
+!!
+!!                      If time intervals are not provided, the highest
+!!                      priority base frame for which data are available
+!!                      at ET is chosen.
+!!
+!!                      Data availability may depend on NDIM. This is
+!!                      because 6x6 state transformations that rely on
+!!                      CK data require angular velocity to be present;
+!!                      3x3 position transformations don't.
+!!
+!!                      If no base frame providing data at ET is found
+!!                      by the process described above, FOUND is set to
+!!                      .FALSE. and OUTFRM is undefined.
+!!
+!!                    - If the process succeeds in finding a base frame
+!!                      providing data at ET, OUTFRM is set according to
+!!                      the class of the base frame:
+!!
+!!                         > Base is class INERTL: OUTFRM is set to
+!!                           the ID code of J2000.
+!!
+!!                         > Base is class PCK: OUTFRM is set to the ID
+!!                           code of J2000.
+!!
+!!                         > Base is class CK: OUTFRM is set to the ID
+!!                           code of the CK frame's base frame at time
+!!                           ET. This is the base returned by FRMGET for
+!!                           ET, if NDIM is 6, or the base returned by
+!!                           ROTGET at ET if NDIM is 3.
+!!
+!!                         > Base is class TK: OUTFRM is set to the ID
+!!                           code of the TK frame's base frame. This is
+!!                           the frame specified by the
+!!                           TKFRAME_<ID>_RELATIVE keyword of the TK
+!!                           frame's specification.
+!!
+!!                         > Base is class DYN: OUTFRM is set to the ID
+!!                           code of the base frame.
+!!
+!!                         > Base is class SWTCH: OUTFRM is set to the
+!!                           ID code of the base frame.
+!!
+!!     FOUND       is a logical flag indicating whether a frame
+!!                 transformation was found at time ET. XFORM and OUTFRM
+!!                 are valid if and only if FOUND is .TRUE.
+!!
+!! ## Parameters
+!!
+!!     See the include file zzswtchf.inc for SPICE-private parameters
+!!     defining sizes of buffers used by the switch frame subsystem.
+!!
+!! ## Exceptions
+!!
+!!     1)  If NDIM is a value other than 6 or 3, the error
+!!         SPICE(BADDIMENSION) will be signaled.
+!!
+!!     2)  If the switch frame designated by INFRM has more than MAXBAS
+!!         associated base frames, the error is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     3)  If a frame specification cannot be found for a base frame of
+!!         the frame designated by INFRM, the error is signaled by a
+!!         routine in the call tree of this routine.
+!!
+!!     4)  If an error is found in the specification of the switch frame
+!!         designated by INFRM, the error is signaled by a routine in
+!!         the call tree of this routine.
+!!
+!!     5)  If an error occurs while computing the transformation from
+!!         the frame designated by INFRM to that designated by OUTFRM,
+!!         the error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!! ## Files
+!!
+!!     Appropriate kernels must be loaded by the calling program before
+!!     this routine is called.
+!!
+!!     The following data are required:
+!!
+!!         - A switch frame specification, normally provided by a
+!!           frame kernel.
+!!
+!!         - Frame specifications for all base frames. Normally these
+!!           specifications are provided by frame kernels.
+!!
+!!     The following data may be needed:
+!!
+!!         - A leapseconds kernel
+!!
+!!         - SCLK kernel parameters and data for each CK base frame.
+!!           This information is normally provided by SCLK kernels.
+!!
+!!         - CK data for each CK base frame. These data are provided
+!!           by C-kernels.
+!!
+!!         - PCK data for each PCK base frame.
+!!
+!!         - Any kernels required to specify any dynamic base frame.
+!!
+!!     In all cases, kernel data are normally loaded once per program
+!!     run, NOT every time this routine is called.
+!!
+!! ## Particulars
+!!
+!!     The switch frame subsystem does not participate in fake
+!!     recursion, hence there are no shadow routines corresponding to
+!!     ZZSWFXFM and ZZSWFFET.
+!!
+!!     The only frame orientation evaluations performed in the process
+!!     of computing the output transformation XFORM are those that
+!!     don't require recursive use of the frame subsystem. The frame
+!!     classes in this category are
+!!
+!!        Inertial
+!!        PCK
+!!        CK
+!!        TK
+!!
+!!     For dynamic and switch base frames, no orientation is computed.
+!!     Instead, the identity matrix is returned.
+!!
+!! ## Examples
+!!
+!!     None. See the routines FRMGET and ROTGET for examples of usage.
+!!
+!! ## Restrictions
+!!
+!!     1)  This routine is SPICE-private. User applications must not
+!!         call it.
+!!
+!!     2)  To improve efficiency, this routine buffers switch frame
+!!         specifications. The buffers are emptied after any update
+!!         to the kernel pool. Since the process of parsing, and
+!!         buffering parameters provided by, switch frame specifications
+!!         is rather slow, applications using switch frames should
+!!         avoid high-frequency kernel pool updates.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman   (JPL)
+!!     B.V. Semenov   (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB) (BVS)
+!!
+!! ## Index Entries
+!!
+!!     return switch frame transformation and base frame
+!!
+!!     SPICELIB functions
+!!
+!!     Local parameters
+!!
+!!     ID code of the J2000 frame:
+!!
+!!     Size of linked list pool:
+!!
+!!     The add-only hash pool for frame IDs is singly linked.
+!!
+!!     Dimensions
+!!
+!!     Matrix sizes.
+!!
+!!     Local variables
+!!
+!!     Overview of frame storage data structures
+!!     =========================================
+!!
+!!     This routine uses an add-only hash to index switch frames
+!!     known to this routine. The hash maps input frame ID codes to
+!!     head nodes of collision lists stored in the array HDFRAM.
+!!     The collision lists are stored in the singly linked list pool
+!!     FRPOOL.
+!!
+!!     Each node of a collision list is the index in the array FIDLST of
+!!     a switch frame ID. The array FIDLST has the following associated,
+!!     parallel arrays:
+!!
+!!        BASBEG       Start indices in the base frame attribute arrays
+!!                     of values associated with specific switch frames.
+!!                     For example, BASLST( BASBEG(FRAMAT) ) is the
+!!                     index of the first base frame associated with
+!!                     the switch frame having ID FIDLST(FRAMAT).
+!!
+!!        BASCNT       Base count for each switch frame
+!!
+!!        USETIM       Indicates whether time intervals are associated
+!!                     with that frame's base frames
+!!
+!!        BINARY       Indicates whether time intervals are eligible for
+!!                     binary search. To be eligible, the intervals
+!!                     must have start times in ascending order and
+!!                     must be disjoint or have singleton overlap.
+!!
+!!     Base frame attributes are stored in a set of parallel arrays.
+!!     Attributes for bases of a given switch frame are listed in
+!!     contiguous elements. The arrays and their contents are:
+!!
+!!        BASLST       Base frame ID codes. The base frames of a given
+!!                     switch frame are listed in ascending priority
+!!                     order in consecutive elements of BASLST.
+!!
+!!        STARTS       Base frame interval start times, expressed as
+!!                     seconds past J2000 TDB. Valid for all bases of
+!!                     a given switch frame, or unused for that frame.
+!!
+!!        STOPS        Base frame interval start times, expressed as
+!!                     seconds past J2000 TDB. Valid for all bases of
+!!                     a given switch frame, or unused for that frame.
+!!
+!!        CLSSES       Base frame classes.
+!!
+!!        CLSIDS       Base frame class IDs.
+!!
+!!     Each base frame list for a given switch frame is ordered
+!!     according to ascending priority.
+!!
+!!     Other declarations
+!!
+!!     Saved variables
+!!
+!!     Initial values
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: filld, lstled, moved
       use pepper_math, only: ident, xpose
+      use pepper_inc_frmtyp
+      use pepper_inc_zzswtchf
+      use pepper_inc_zzctr
       implicit none
-      include              'frmtyp.inc'
-      include              'zzswtchf.inc'
-      include              'zzctr.inc'
       integer(ip), parameter :: j2code = 1
       integer(ip), parameter :: fplsiz = maxfrm - lbsngl + 1
       integer(ip), parameter :: d3 = 3

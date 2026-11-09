@@ -19,13 +19,13 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! Handle of a DAF open for reading.
       real(wp) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
       integer(ip) :: first  !! The index of the first reference value to fetch.
       integer(ip) :: last  !! The index of the last reference value to fetch.
       real(wp) :: values ( * )  !! The reference values that were requested.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgfref ( handle, descr, first, last, values )
@@ -39,6 +39,7 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! Handle of a DAF file opened with write access.
       real(wp) :: descr  ( * )  !! Descriptor for a generic segment.
@@ -47,7 +48,6 @@
       real(wp) :: const  ( * )  !! Array of constant values for a generic segment.
       integer(ip) :: pktsiz ( * )  !! Size of the data packets.
       integer(ip) :: idxtyp  !! Index type for the reference values.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgbwfs ( handle, descr, segid, nconst, const, pktsiz, idxtyp )
@@ -61,6 +61,7 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! Handle of a DAF file opened with write access.
       real(wp) :: descr  ( * )  !! Descriptor for a segment.
@@ -68,7 +69,6 @@
       integer(ip) :: nconst  !! Number of constant values in a segment.
       real(wp) :: const  ( * )  !! Array of constant values for a segment.
       integer(ip) :: idxtyp  !! Index type for the reference values.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgbwvs ( handle, descr, segid, nconst, const, idxtyp )
@@ -82,13 +82,13 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! Handle of a DAF file opened with write access.
       integer(ip) :: npkts  !! Number of data packets to write to a segment.
       real(wp) :: pktdat ( * )  !! Array of packet data.
       integer(ip) :: nrefs  !! Number of reference values.
       real(wp) :: refdat ( * )  !! Reference data.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgwfpk ( handle, npkts, pktdat, nrefs, refdat )
@@ -103,6 +103,7 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! Handle of a DAF file opened with write access.
       integer(ip) :: npkts  !! Number of data packets to write to a segment.
@@ -110,7 +111,6 @@
       real(wp) :: pktdat ( * )  !! Array of packet data.
       integer(ip) :: nrefs  !! Number of reference values.
       real(wp) :: refdat ( * )  !! Reference data.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgwvpk ( handle, npkts, pktsiz, pktdat, nrefs, refdat )
@@ -123,9 +123,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle  !! Handle of a DAF file opened with write access.
-      include 'sgparam.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%sgwes ( handle )
@@ -157,9 +157,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Target epoch.
       character(*) :: ref  !! Target reference frame.
@@ -179,9 +179,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
       implicit none
-      include               'ninert.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Target epoch.
       character(*) :: ref  !! Target reference frame.
@@ -391,8 +391,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk18
       implicit none
-      include 'spk18.inc'
       integer(ip) :: handle  !! Handle of file containing source segment.
       integer(ip) :: baddr  !! Beginning address in file of source segment.
       integer(ip) :: eaddr  !! Ending address in file of source segment.
@@ -411,8 +411,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk19
       implicit none
-      include 'spk19.inc'
       integer(ip) :: handle  !! Handle of file containing source segment.
       integer(ip) :: baddr  !! Beginning address in file of source segment.
       integer(ip) :: eaddr  !! Ending address in file of source segment.
@@ -450,8 +450,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_spk21
       implicit none
-      include 'spk21.inc'
       integer(ip) :: handle  !! Handle of source segment.
       integer(ip) :: baddr  !! Beginning address of source segment.
       integer(ip) :: eaddr  !! Ending address of source segment.
@@ -569,8 +569,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
-      include 'sgparam.inc'
       integer(ip) :: handle  !! The handle of an SPK file open for writing.
       character(*) :: segid  !! The string to use for segment identifier.
       integer(ip) :: body  !! The NAIF ID code for the body of the segment.
@@ -629,8 +629,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -652,8 +652,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
-      include              'sgparam.inc'
       integer(ip) :: srchan  !! Handle of the SPK file with the source segment.
       real(wp) :: srcdsc(*)  !! Descriptor for the source segment.
       integer(ip) :: dsthan  !! Handle of the SPK file for the destination segment.
@@ -720,7 +720,7 @@
       call ctx%spkssb ( targ, et, ref, starg )
       end subroutine spkssb
 
-      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
       !> routine SPKAPS. This routine is supported for purposes of
       !> backward compatibility only.
       !>
@@ -754,8 +754,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -779,9 +779,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body NAIF ID code.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output position vector.
@@ -824,8 +824,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
       implicit none
-      include 'zzabcorr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Inertial reference frame of output state.
@@ -848,8 +848,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: targ  !! Target body name.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output position vector.
@@ -893,10 +893,10 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'frmtyp.inc'
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       integer(ip) :: targ  !! Target body.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output state vector.
@@ -921,9 +921,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       character(*) :: target  !! Name of target ephemeris object.
       real(wp) :: et  !! Observation epoch.
       character(*) :: outref  !! Reference frame of output state.
@@ -949,8 +949,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
       implicit none
-      include               'zzctr.inc'
       character(*) :: targ  !! Target body name.
       real(wp) :: et  !! Observer epoch.
       character(*) :: ref  !! Reference frame of output state vector.
@@ -975,8 +975,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_zzabcorr
       implicit none
-      include               'zzabcorr.inc'
       character(*) :: target  !! Name of target ephemeris object.
       real(wp) :: et  !! Observation epoch.
       character(*) :: outref  !! Reference frame of output state.
@@ -1002,9 +1002,9 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
       implicit none
-      include               'zzabcorr.inc'
-      include               'zzctr.inc'
       real(wp) :: trgsta ( 6 )  !! Target state relative to center of motion.
       real(wp) :: trgepc  !! Epoch of target state.
       character(*) :: trgctr  !! Center of motion of target.
@@ -1032,8 +1032,8 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: wp
+      use pepper_inc_zzabcorr
       implicit none
-      include               'zzabcorr.inc'
       real(wp) :: trgpos ( 3 )  !! Target position relative to center of motion.
       character(*) :: trgctr  !! Center of motion of target.
       character(*) :: trgref  !! Frame of target position.
@@ -1052,6 +1052,7 @@
       !> Umbrella of the SGSEQW routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine sgseqw ( handle, descr, segid, nconst, const, npkts, pktsiz, pktdat, nrefs, refdat, idxtyp )
       use pepper_kinds, only: ip, wp
+      use pepper_inc_sgparam
       implicit none
       integer(ip) :: handle
       real(wp) :: descr  ( * )
@@ -1064,7 +1065,6 @@
       integer(ip) :: nrefs
       real(wp) :: refdat ( * )
       integer(ip) :: idxtyp
-      include 'sgparam.inc'
       external :: setmsg, sigerr
       call setmsg ( 'This routine should never be called' &
       // ' directly. It exists as an umbrella routine' &

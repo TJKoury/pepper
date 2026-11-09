@@ -7,12 +7,12 @@
 module pepper_state_unitim
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzctr.inc'
    integer(ip), parameter :: lbcell = -5
    integer(ip), parameter :: needed = 4
    integer(ip), parameter :: lngvar = 16

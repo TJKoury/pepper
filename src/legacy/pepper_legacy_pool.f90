@@ -15,8 +15,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
+      use pepper_inc_zzctr
       implicit none
-      include                'zzctr.inc'
       integer(ip) :: oldctr ( ctrsiz )  !! Counter array to be set to initial user values.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -32,8 +32,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
+      use pepper_inc_zzctr
       implicit none
-      include                'zzctr.inc'
       integer(ip) :: oldctr ( ctrsiz )  !! Counter array to be set to initial subsystem values
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -48,8 +48,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
+      use pepper_inc_zzctr
       implicit none
-      include                'zzctr.inc'
       integer(ip) :: oldctr ( ctrsiz )  !! Counter array to be incremented.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -64,8 +64,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
+      use pepper_inc_zzctr
       implicit none
-      include                'zzctr.inc'
       integer(ip) :: newctr ( ctrsiz )  !! New counter value.
       integer(ip) :: oldctr ( ctrsiz )  !! Old counter value.
       logical :: update  !! Update flag.
@@ -586,8 +586,8 @@
       use pepper_instance, only: pepper_context, pepper_zzpini => zzpini
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip) :: lbcell
       parameter ( lbcell = -5 )
       integer(ip) :: lbpool
@@ -788,8 +788,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       call ctx%clpool (  )
@@ -804,8 +804,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: fname  !! Name of the text kernel file.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -820,8 +820,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! Name of the variable whose value is to be returned.
       integer(ip) :: n  !! Number of values associated with NAME.
       real(wp) :: values    ( * )  !! Values associated with NAME.
@@ -840,8 +840,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! Name of a numeric kernel variable.
       logical :: found  !! .TRUE. when the variable is in the pool.
       type(pepper_context), pointer :: ctx
@@ -860,8 +860,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip) :: unit  !! Logical unit to which the variables in the pool will be written.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -877,8 +877,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: names     ( * )  !! Variable names whose update causes the notice.
       integer(ip) :: nnames  !! The number of variables to associate with AGENT.
       character(*) :: agent  !! The name of an agent to be notified after updates.
@@ -896,8 +896,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: agent  !! Name of the agent to check for notices.
       logical :: update  !! .TRUE. if variables for AGENT have been updated.
       type(pepper_context), pointer :: ctx
@@ -914,8 +914,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! Name of the variable whose value is to be returned.
       integer(ip) :: n  !! Number of values returned for NAME.
       logical :: found  !! .TRUE. if variable is in pool.
@@ -935,8 +935,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! Name of the variable whose value is to be returned.
       integer(ip) :: n  !! Number of values returned for NAME.
       real(wp) :: values    ( * )  !! Values associated with NAME.
@@ -957,8 +957,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! Name of the variable whose value is to be returned.
       integer(ip) :: n  !! Number of values returned for NAME.
       logical :: found  !! .TRUE. if variable is in pool.
@@ -978,8 +978,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! Name of the variable whose value is to be returned.
       integer(ip) :: n  !! Number of values returned for NAME.
       logical :: found  !! .TRUE. if variable is in pool.
@@ -998,8 +998,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! The kernel pool name to associate with CVALS.
       integer(ip) :: n  !! The number of values to insert.
       character(*) :: cvals     ( * )  !! An array of strings to insert into the kernel pool.
@@ -1017,8 +1017,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! The kernel pool name to associate with VALUES.
       integer(ip) :: n  !! The number of values to insert.
       real(wp) :: values    ( * )  !! An array of values to insert into the kernel pool.
@@ -1036,8 +1036,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! The kernel pool name to associate with IVALS.
       integer(ip) :: n  !! The number of values to insert.
       integer(ip) :: ivals     ( * )  !! An array of integers to insert into the pool.
@@ -1055,8 +1055,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip) :: n  !! The number of entries in CVALS.
       character(*) :: cvals     ( * )  !! An array that contains a SPICE text kernel
       type(pepper_context), pointer :: ctx
@@ -1072,8 +1072,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! Name of the parameter to be returned.
       integer(ip) :: n  !! Value of parameter specified by NAME.
       logical :: found  !! .TRUE. if NAME is recognized.
@@ -1090,8 +1090,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! Name of the variable to be deleted.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1106,8 +1106,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: name  !! Template that names should match.
       integer(ip) :: n  !! Number of values returned for NAME.
       logical :: found  !! .TRUE. if there is at least one match.
@@ -1128,8 +1128,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       character(*) :: agent  !! The name of an agent to be notified after updates.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -1146,8 +1146,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       integer(ip) :: lbcell
       parameter ( lbcell = -5 )
       character(*) :: uwvars    ( lbcell : * )  !! Watched kernel variable set.
@@ -1169,8 +1169,8 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
+      use pepper_inc_zzctr
       implicit none
-      include              'zzctr.inc'
       logical :: update  !! Flag indicating if input counter was updated
       integer(ip) :: usrctr    ( ctrsiz )  !! POOL state counter tracked by the caller
       type(pepper_context), pointer :: ctx

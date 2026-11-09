@@ -8,13 +8,13 @@
 module pepper_state_zzdsksel
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_dskdsc
 
    implicit none
 
    private
 
-   include 'dsk.inc'
-   include 'dskdsc.inc'
 
    public :: init_zzdsksel_state
 

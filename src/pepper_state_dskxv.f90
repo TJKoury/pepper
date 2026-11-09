@@ -7,13 +7,13 @@
 module pepper_state_dskxv
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include 'dsktol.inc'
-   include 'zzctr.inc'
    integer(ip), parameter :: bdnmln = 36
    integer(ip), parameter :: frnmln = 32
 

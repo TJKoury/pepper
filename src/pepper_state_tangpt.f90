@@ -9,14 +9,14 @@
 module pepper_state_tangpt
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'frmtyp.inc'
-   include               'zzabcorr.inc'
-   include               'zzctr.inc'
    integer(ip), parameter :: bdnmln = 36
    integer(ip), parameter :: frnmln = 32
    integer(ip), parameter :: loclen = 15

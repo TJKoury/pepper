@@ -8,17 +8,17 @@
 module pepper_state_zzekad06
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekbool
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekdatpag
+      use pepper_inc_ekrecptr
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
 
    implicit none
 
    private
 
-   include 'ekbool.inc'
-   include 'ekcoldsc.inc'
-   include 'ekdatpag.inc'
-   include 'ekrecptr.inc'
-   include 'eksegdsc.inc'
-   include 'ektype.inc'
    integer(ip), parameter :: maxpad = 100
 
    public :: init_zzekad06_state

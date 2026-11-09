@@ -7,12 +7,12 @@
 module pepper_state_chgirf
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
 
    implicit none
 
    private
 
-   include              'ninert.inc'
    integer(ip), parameter :: maxf = ninert
 
    public :: init_chgirf_state

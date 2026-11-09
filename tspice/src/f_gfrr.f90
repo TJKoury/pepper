@@ -1,0 +1,733 @@
+!$Procedure F_GFRR ( GFRR family tests )
+
+      SUBROUTINE F_GFRR ( OK )
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+
+! $ Abstract
+!
+!     This routine tests the SPICELIB routine
+!
+!        GFRR
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     TEST FAMILY
+!
+! $ Declarations
+
+      IMPLICIT NONE
+
+
+      LOGICAL               OK
+
+! $ Brief_I/O
+!
+!     VARIABLE  I/O  DESCRIPTION
+!     --------  ---  --------------------------------------------------
+!     OK         O   logical indicating test status.
+!
+! $ Detailed_Input
+!
+!     None.
+!
+! $ Detailed_Output
+!
+!     OK         is a logical that indicates the test status to the
+!                caller.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     This routine does not generate any errors. Routines in its
+!     call tree may generate errors that are either intentional and
+!     trapped or unintentional and need reporting.  The test family
+!     utilities manage this.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine tests the higher-level SPICELIB
+!     geometry routine GFRR.
+!
+! $ Examples
+!
+!     None.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     E. D. Wright     (JPL)
+!
+! $ Version
+!
+!-    TSPICE Version 1.2.0, 28-JAN-2017 (EDW)
+!
+!        Modified GFSTOL test case to correspond to change
+!        in ZZGFSOLVX.
+!
+!-    TSPICE Version 1.1.0, 20-NOV-2012 (EDW)
+!
+!        Added test on GFSTOL use.
+!
+!-    TSPICE Version 1.0.0, 25-AUG-2009 (EDW)
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+      DOUBLE PRECISION      SPD
+
+      INTEGER               WNCARD
+
+
+!
+!     Local parameters
+!
+      CHARACTER*(*)         SPK
+      PARAMETER           ( SPK    = 'gfrr.bsp' )
+
+      CHARACTER*(*)         SPK1
+      PARAMETER           ( SPK1   = 'nat.bsp' )
+
+      CHARACTER*(*)         PCK1
+      PARAMETER           ( PCK1   = 'nat.pck' )
+
+      DOUBLE PRECISION      MEDIUM
+      PARAMETER           ( MEDIUM = 1.D-4 )
+
+      DOUBLE PRECISION      VTIGHT
+      PARAMETER           ( VTIGHT = 1.D-12 )
+
+      DOUBLE PRECISION      TIMTOL
+      PARAMETER           ( TIMTOL = 3.D-6 )
+
+      DOUBLE PRECISION      TDELTA
+      PARAMETER           ( TDELTA = 30.D0 )
+
+      INTEGER               BDNMLN
+      PARAMETER           ( BDNMLN = 36 )
+
+      INTEGER               LNSIZE
+      PARAMETER           ( LNSIZE = 80 )
+
+      INTEGER               TIMLEN
+      PARAMETER           ( TIMLEN = 50 )
+
+      INTEGER               LBCELL
+      PARAMETER           ( LBCELL = -5 )
+
+      INTEGER               MAXWIN
+      PARAMETER           ( MAXWIN = 20000 )
+
+      INTEGER               NCORR
+      PARAMETER           ( NCORR = 9 )
+
+      INTEGER               NSAMP
+      PARAMETER           ( NSAMP = 100 )
+
+!
+!     Local variables
+!
+      CHARACTER*(BDNMLN)    RELATE
+      CHARACTER*(BDNMLN)    TARGET
+      CHARACTER*(BDNMLN)    OBSRVR
+      CHARACTER*(LNSIZE)    ABCORR
+      CHARACTER*(LNSIZE)    TITLE
+      CHARACTER*(LNSIZE)    CORR   ( NCORR )
+
+
+      DOUBLE PRECISION      ADJUST
+      DOUBLE PRECISION      BEG
+      DOUBLE PRECISION      END
+      DOUBLE PRECISION      LEFT
+      DOUBLE PRECISION      REFVAL
+      DOUBLE PRECISION      RIGHT
+      DOUBLE PRECISION      STEP
+      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      DOUBLE PRECISION      CNFINE ( LBCELL : MAXWIN )
+      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWRR )
+
+
+      INTEGER               I
+      INTEGER               NDAYS
+      INTEGER               COUNT
+      INTEGER               MW
+      INTEGER               NW
+      INTEGER               HANDL1
+      INTEGER               HANDL2
+
+!
+!     Saved everything.
+!
+      SAVE
+
+!
+!     Initial values
+!
+      DATA                  CORR / 'NONE', &
+                                   'lt',  ' lt+s',  ' cn',  ' cn + s', &
+                                   'XLT', 'XLT + S', 'XCN', 'XCN+S'   /
+
+!
+!     Begin every test family with an open call.
+!
+      CALL TOPEN ( 'F_GFRR' )
+
+      CALL TCASE ( 'Setup: create and load SPK and LSK files.' )
+
+!
+!     Leapseconds:  Note that the LSK is deleted after loading, so we
+!     don't have to clean it up later.
+!
+      CALL TSTLSK
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     Load an SPK file as well.
+!
+      CALL TSTSPK ( SPK, .FALSE., HANDL1 )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      CALL FURNSH( SPK )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+!
+!     Create the PCK for Nat's Solar System.
+!
+      CALL NATPCK ( PCK1,  .FALSE., .TRUE.  )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      CALL FURNSH( PCK1 )
+      CALL CHCKXC( .FALSE., ' ', OK )
+
+!
+!     Create the SPK for Nat's Solar System.
+!
+      CALL NATSPK ( SPK1, .FALSE., HANDL2 )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      CALL FURNSH( SPK1 )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+
+      LEFT  = 0.D0
+      RIGHT = 360 * SPD()
+
+      CALL SSIZED ( MAXWIN, RESULT )
+      CALL SSIZED ( 2,      CNFINE )
+      CALL SCARDD ( 0,      RESULT )
+      CALL SCARDD ( 0,      CNFINE )
+
+      CALL WNINSD ( LEFT,   RIGHT, CNFINE )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+
+!
+!     Case 1
+!
+      CALL TCASE ( 'Invalid result window size' )
+
+      CALL SSIZED ( 1, RESULT )
+
+      STEP   = 10.D0
+      ADJUST = 0.D0
+      REFVAL = 0.D0
+      TARGET = 'MOON'
+      OBSRVR = 'EARTH'
+      RELATE = '>'
+      ABCORR = 'NONE'
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MAXWIN, NWRR,  WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(INVALIDDIMENSION)',   OK )
+
+
+      CALL SSIZED ( 0, RESULT )
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MAXWIN, NWRR,  WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(INVALIDDIMENSION)',   OK )
+
+
+
+!
+!     Case 2
+!
+      CALL TCASE ( 'Non-positive step size' )
+
+      CALL SSIZED ( MAXWIN, RESULT )
+      CALL SSIZED ( 2,      CNFINE )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+
+      STEP   = 0.D0
+      ADJUST = 0.D0
+      REFVAL = 0.D0
+      TARGET = 'MOON'
+      OBSRVR = 'EARTH'
+      RELATE = '>'
+      ABCORR = 'NONE'
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MAXWIN, NWRR,  WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(INVALIDSTEP)',   OK )
+
+
+      STEP = -1.D0
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MAXWIN, NWRR,  WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(INVALIDSTEP)',   OK )
+
+
+
+!
+!     Case 3
+!
+
+      CALL TCASE ( 'Invalid aberration correction specifier' )
+
+      STEP   = 7*SPD()
+      ADJUST = 0.D0
+      RELATE = 'LOCMAX'
+      REFVAL = 0.D0
+      TARGET = 'MOON'
+      OBSRVR = 'SUN'
+      MW     = MAXWIN
+      NW     = NWRR
+
+      CALL SCARDD ( 0,             CNFINE )
+      CALL WNINSD ( LEFT,   RIGHT, CNFINE )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      ABCORR = 'X'
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,     WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(INVALIDOPTION)',   OK )
+
+
+
+!
+!     Case 4
+!
+
+      CALL TCASE ( 'Invalid relations operator' )
+
+      STEP   = 7*SPD()
+      ADJUST = 0.D0
+      REFVAL = 0.D0
+      TARGET = 'MOON'
+      OBSRVR = 'SUN'
+      RELATE = 'LOCMAX'
+      ABCORR = 'NONE'
+      MW     = MAXWIN
+      NW     = NWRR
+      ABCORR = 'NONE'
+
+      RELATE = '!='
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,     WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(NOTRECOGNIZED)',   OK )
+
+
+
+!
+!     Case 5
+!
+
+      CALL TCASE ( 'Invalid body names' )
+
+      MW     = MAXWIN
+      NW     = NWRR
+      RELATE = 'LOCMAX'
+
+      TARGET = 'X'
+      OBSRVR = 'SUN'
+
+      CALL SCARDD ( 0,             CNFINE )
+      CALL WNINSD ( LEFT,   RIGHT, CNFINE )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,     WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(IDCODENOTFOUND)',   OK )
+
+      TARGET = 'EARTH'
+      OBSRVR = 'X'
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,     WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(IDCODENOTFOUND)',   OK )
+
+
+
+!
+!     Case 6
+!
+
+      CALL TCASE ( 'Negative adjustment value' )
+
+      TARGET = 'MOON'
+      ABCORR = 'NONE'
+      OBSRVR = 'SUN'
+      RELATE = 'LOCMAX'
+      REFVAL = 0.D0
+      STEP   = 7*SPD()
+      MW     = MAXWIN
+      NW     = NWRR
+
+      ADJUST = -1.D0
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,     WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)',   OK )
+
+
+
+!
+!     Case 7
+!
+
+      CALL TCASE ( 'Ephemeris data unavailable' )
+
+      TARGET = 'DAWN'
+      ABCORR = 'NONE'
+      OBSRVR = 'SUN'
+      RELATE = 'LOCMAX'
+      REFVAL = 0.D0
+      ADJUST = 0.D0
+      STEP   = 7*SPD()
+      MW     = MAXWIN
+      NW     = NWRR
+
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,     WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(SPKINSUFFDATA)',   OK )
+
+
+
+!
+!     Case 8
+!
+      CALL TCASE ( 'Invalid value for MW, NW' )
+
+      TARGET = 'MOON'
+      ABCORR = 'NONE'
+      OBSRVR = 'SUN'
+      RELATE = 'LOCMAX'
+      REFVAL = 0.D0
+      ADJUST = 0.D0
+      STEP   = 7*SPD()
+
+
+!
+!     Usable size of WORK windows is zero.
+!
+      MW = 0
+      NW = NWRR
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,  WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(INVALIDDIMENSION)',   OK )
+
+!
+!     Usable size of WORK windows is positive but below limit.
+!
+      MW = 1
+      NW = NWRR
+
+      CALL SCARDD ( 0,             CNFINE )
+      CALL WNINSD ( LEFT,   RIGHT, CNFINE )
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,     WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(INVALIDDIMENSION)',   OK )
+
+!
+!     Usable size of WORK windows is positive but is too small
+!     to hold all intervals found across CNFINE. CNFINE spans
+!     360 days, the local maximums occur approximately every
+!     28 days.
+!
+!
+
+      MW  = 6
+      NW = NWRR
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,     WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(WINDOWEXCESS)',   OK )
+
+
+!
+!      Work window count below limit - NW = 4
+!
+
+      MW = MAXWIN
+      NW = 4
+      CALL SCARDD ( 0,             CNFINE )
+      CALL WNINSD ( LEFT,   RIGHT, CNFINE )
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MW,     NW,     WORK,   RESULT )
+
+      CALL CHCKXC ( .TRUE., 'SPICE(INVALIDDIMENSION)', OK )
+
+
+!
+!     Case 9
+!
+!     Loops over aberration corrections for a configuration with
+!     a known geometry and behavior.
+!
+      TARGET = 'ALPHA'
+      OBSRVR = 'BETA'
+      REFVAL = 0.D0
+      ADJUST = 0.D0
+      STEP   = 0.4D0*SPD()
+      MW     = MAXWIN
+      NW     = NWRR
+
+!
+!     Confine for ninety days.
+!
+      NDAYS= 90
+      LEFT = 0.D0
+      RIGHT= NDAYS * SPD()
+
+      CALL SCARDD ( 0,             CNFINE )
+      CALL WNINSD ( LEFT,   RIGHT, CNFINE )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      DO I = 1, NCORR
+
+         ABCORR = CORR(I)
+
+         RELATE = 'LOCMAX'
+         CALL REPMC ( '# #', '#', RELATE, TITLE)
+         CALL REPMC ( TITLE, '#', ABCORR, TITLE)
+         CALL TCASE ( TITLE )
+
+         CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                     REFVAL, ADJUST, STEP,   CNFINE, &
+                     MW,     NW,     WORK,   RESULT )
+
+         CALL CHCKXC ( .FALSE., ' ',   OK )
+
+!
+!        Check the number of intervals in the result window.
+!        We expect one event per day.
+!
+         COUNT = 0
+         COUNT = WNCARD(RESULT)
+         CALL CHCKSI ( 'COUNT', COUNT, '=', NDAYS, 0, OK )
+
+
+
+         RELATE = 'LOCMIN'
+         CALL REPMC ( '# #', '#', RELATE, TITLE)
+         CALL REPMC ( TITLE, '#', ABCORR, TITLE)
+         CALL TCASE ( TITLE )
+
+         CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                     REFVAL, ADJUST, STEP,   CNFINE, &
+                     MW,     NW,     WORK,   RESULT )
+         CALL CHCKXC ( .FALSE., ' ',   OK )
+
+!
+!        Check the number of intervals in the result window.
+!        We expect one event per day.
+!
+         COUNT = 0
+         COUNT = WNCARD(RESULT)
+         CALL CHCKSI ( 'COUNT', COUNT, '=', NDAYS, 0, OK )
+
+
+!
+!        Each orbit of BETA includes a local minimum and local
+!        maximum range rate event with respect to ALPHA. As the
+!        orbit is periodic and closed, two events per orbit must
+!        exist where the sign of the range rate changes., i.e.
+!        the range rate equals zero.
+!
+         RELATE = '='
+         REFVAL = 0.D0
+
+         CALL REPMC ( '# #', '#', RELATE, TITLE)
+         CALL REPMC ( TITLE, '#', ABCORR, TITLE)
+         CALL TCASE ( TITLE )
+
+         CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                     REFVAL, ADJUST, STEP,   CNFINE, &
+                     MW,     NW,     WORK,   RESULT )
+         CALL CHCKXC ( .FALSE., ' ',   OK )
+
+!
+!        Check the number of intervals in the result window.
+!        We expect two events per day.
+!
+         COUNT = 0
+         COUNT = WNCARD(RESULT)
+         CALL CHCKSI ( 'COUNT', COUNT, '=', 2*NDAYS, 0, OK )
+
+
+      END DO
+
+
+
+
+!
+!     Case 10
+!
+      TITLE = 'Check the GF call uses the GFSTOL value'
+      CALL TCASE( TITLE )
+
+
+!
+!     Re-run a valid search after using GFSTOL to set the convergence
+!     tolerance to a value that should cause a numerical error signal.
+!
+
+      TARGET = 'ALPHA'
+      OBSRVR = 'BETA'
+      REFVAL = 0.D0
+      ADJUST = 0.D0
+      STEP   = 0.4D0*SPD()
+      RELATE = 'LOCMIN'
+      ABCORR = 'NONE'
+
+      LEFT = 0.D0
+      RIGHT= 2.D0 * SPD()
+
+      CALL SCARDD ( 0, RESULT )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      CALL SCARDD ( 0, CNFINE )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      CALL WNINSD ( LEFT,   RIGHT, CNFINE )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MAXWIN, NWRR,  WORK,   RESULT )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      COUNT = 0
+      COUNT = WNCARD(RESULT)
+      CALL CHCKSI ( 'COUNT', COUNT, '!=', 0, 0, OK )
+
+      CALL WNFETD ( RESULT, 1, BEG, END  )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      CALL SCARDD ( 0, RESULT )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+!
+!     Reset tol.
+!
+
+      CALL GFSTOL ( 1.D-4 )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      CALL GFRR ( TARGET, ABCORR, OBSRVR, RELATE, &
+                  REFVAL, ADJUST, STEP,   CNFINE, &
+                  MAXWIN, NWRR,  WORK,   RESULT )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+      COUNT = 0
+      COUNT = WNCARD(RESULT)
+      CALL CHCKSI ( 'COUNT', COUNT, '!=', 0, 0, OK )
+
+      CALL WNFETD ( RESULT, 1, LEFT, RIGHT  )
+      CALL CHCKXC ( .FALSE., ' ',   OK )
+
+!
+!     The values in the time window should not match
+!     as the search used different tolerances. Check
+!     the first value in the first interval.
+!
+      CALL CHCKSD ( TITLE, BEG, '!=', LEFT, 0.D0, OK )
+
+!
+!     Reset the convergence tolerance.
+!
+      CALL GFSTOL ( CNVTOL )
+
+
+
+
+!
+!     Case n
+!
+      CALL TCASE ( 'Clean up:  delete kernels.' )
+
+      CALL KCLEAR
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      CALL DELFIL ( SPK )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      CALL DELFIL ( SPK1 )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      CALL DELFIL ( PCK1 )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      CALL T_SUCCESS ( OK )
+
+      RETURN
+      END
+
+!
+!23456789012345678901234567890123456789012345678901234567890123456789012
+!

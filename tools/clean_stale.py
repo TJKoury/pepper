@@ -23,7 +23,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def source_of(obj: Path):
+def package_root(d: Path) -> Path:
+    """The root of the package whose objects are in build directory d
+    (build/gfortran_*/<package>): the tspice package's own objects are named
+    relative to tspice/, the library's relative to the repository."""
+    return ROOT / "tspice" if d.name == "tspice" else ROOT
+
+
+def source_of(obj: Path, base: Path = ROOT):
     """The source path of an fpm object name such as src_spicelib_pool.f90.o."""
     name = obj.name[:-2] if obj.name.endswith(".o") else None
     if not name:
@@ -31,12 +38,12 @@ def source_of(obj: Path):
     # fpm joins the path components with "_": try every split
     parts = name.split("_")
     for i in range(1, len(parts)):
-        cand = ROOT / "/".join(parts[:i]) / "_".join(parts[i:])
+        cand = base / "/".join(parts[:i]) / "_".join(parts[i:])
         if cand.exists():
             return cand
     for i in range(1, len(parts)):
         for j in range(i + 1, len(parts)):
-            cand = ROOT / "/".join(parts[:i]) / "/".join(parts[i:j]) / "_".join(parts[j:])
+            cand = base / "/".join(parts[:i]) / "/".join(parts[i:j]) / "_".join(parts[j:])
             if cand.exists():
                 return cand
     return None
@@ -44,14 +51,14 @@ def source_of(obj: Path):
 
 def main() -> int:
     removed = 0
-    for d in sorted((ROOT / "build").glob("gfortran_*/*")):
+    for d in sorted([*(ROOT / "build").glob("gfortran_*/*"), *(ROOT / "tspice" / "build").glob("gfortran_*/*")]):
         if not d.is_dir():
             continue
         stale = []
         for obj in d.glob("*.o"):
             if not obj.name.startswith(("src_", "test_", "app_", "example_")):
                 continue
-            if source_of(obj) is None:
+            if source_of(obj, package_root(d)) is None:
                 stale.append(obj)
         for obj in stale:
             for p in [obj, Path(str(obj) + ".log"), Path(str(obj) + ".digest")]:
@@ -67,11 +74,11 @@ def main() -> int:
     # removed by an earlier run while the archive was rebuilt by appending):
     # check the members of every archive.
     import subprocess
-    for a in (ROOT / "build").glob("gfortran_*/*/*.a"):
+    for a in [*(ROOT / "build").glob("gfortran_*/*/*.a"), *(ROOT / "tspice" / "build").glob("gfortran_*/*/*.a")]:
         r = subprocess.run(["ar", "t", str(a)], capture_output=True, text=True)
         members = [m for m in r.stdout.split() if m.endswith(".o")]
         bad = [m for m in members if m.startswith(("src_", "test_", "app_", "example_"))
-               and source_of(Path(m)) is None]
+               and source_of(Path(m), package_root(a.parent)) is None]
         if bad:
             a.unlink()
             print(f"clean_stale: removed {a.relative_to(ROOT)} ({len(bad)} members of deleted "
@@ -89,7 +96,7 @@ def main() -> int:
             for m in _re.finditer(r"^\s*module\s+(?!procedure|subroutine|function)(\w+)\s*$", text, _re.M | _re.I):
                 users[m.group(1).lower()] = src
     stale_mods = 0
-    for d in (ROOT / "build").glob("gfortran_*"):
+    for d in [*(ROOT / "build").glob("gfortran_*"), *(ROOT / "tspice" / "build").glob("gfortran_*")]:
         inst = d / "pepper_instance.mod"
         if not inst.exists():
             continue
@@ -113,7 +120,7 @@ def main() -> int:
     # a test then works with the old layout of the type. Remove those
     # objects too.
     recompile = 0
-    for obj in (ROOT / "build").glob("gfortran_*/*/*.o"):
+    for obj in [*(ROOT / "build").glob("gfortran_*/*/*.o"), *(ROOT / "tspice" / "build").glob("gfortran_*/*/*.o")]:
         if obj.name.startswith(("test_", "example_", "app_")) and obj.stat().st_mtime < newest:
             for p in [obj, Path(str(obj) + ".log"), Path(str(obj) + ".digest")]:
                 if p.exists():
@@ -122,7 +129,7 @@ def main() -> int:
     if recompile:
         print(f"clean_stale: removed {recompile} test/example objects older than the library sources")
     relink = 0
-    for exe in (ROOT / "build").glob("gfortran_*/*/*"):
+    for exe in [*(ROOT / "build").glob("gfortran_*/*/*"), *(ROOT / "tspice" / "build").glob("gfortran_*/*/*")]:
         if exe.parent.name in ("test", "example", "app") and exe.is_file() and \
                 exe.stat().st_mtime < newest:
             exe.unlink()

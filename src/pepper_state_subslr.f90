@@ -8,17 +8,17 @@
 module pepper_state_subslr
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
 
    implicit none
 
    private
 
-   include               'dsk.inc'
-   include               'frmtyp.inc'
-   include               'gf.inc'
-   include               'zzabcorr.inc'
-   include               'zzctr.inc'
-   include               'zzdsk.inc'
    integer(ip), parameter :: maxl = 36
    integer(ip), parameter :: frnmln = 32
 

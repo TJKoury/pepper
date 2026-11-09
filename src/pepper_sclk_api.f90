@@ -14,29 +14,28 @@ contains
 !$Procedure SCE2T ( ET to discrete SCLK ticks )
 
       module procedure sce2t
+!! ## Abstract
+!!
+!!     Convert ephemeris seconds past J2000 (ET) to integral
+!!     encoded spacecraft clock (`ticks'). For conversion to
+!!     fractional ticks, (required for C-kernel production), see
+!!     the routine SCE2C.
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     SCLK
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Convert ephemeris seconds past J2000 (ET) to integral
-!     encoded spacecraft clock (`ticks'). For conversion to
-!     fractional ticks, (required for C-kernel production), see
-!     the routine SCE2C.
-!
-! $ Required_Reading
-!
-!     CK
-!     SCLK
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     CONVERSION
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 
@@ -293,23 +292,22 @@ contains
 !$Procedure SCFMT ( Convert SCLK "ticks" to character clock format )
 
       module procedure scfmt
+!! ## Abstract
+!!
+!!     Convert encoded spacecraft clock ticks to character clock format.
+!!
+!! ## Required Reading
+!!
+!!     SCLK
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Convert encoded spacecraft clock ticks to character clock format.
-!
-! $ Required_Reading
-!
-!     SCLK
-!
-! $ Keywords
-!
-!     CONVERSION
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 
@@ -676,27 +674,26 @@ contains
 !$Procedure SCPART ( Spacecraft Clock Partition Information )
 
       module procedure scpart
+!! ## Abstract
+!!
+!!     Get spacecraft clock partition information from a spacecraft
+!!     clock kernel file.
+!!
+!! ## Required Reading
+!!
+!!     SCLK
+!!
+!! ## Keywords
+!!
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Get spacecraft clock partition information from a spacecraft
-!     clock kernel file.
-!
-! $ Required_Reading
-!
-!     SCLK
-!
-! $ Keywords
-!
-!     TIME
-!
-! $ Declarations
-
+      use pepper_inc_sclk
+      use pepper_inc_zzctr
       implicit none
 
-      include               'sclk.inc'
-      include               'zzctr.inc'
 
 
 ! $ Detailed_Input
@@ -991,27 +988,26 @@ contains
 !$Procedure SCT2E ( SCLK ticks to ET )
 
       module procedure sct2e
+!! ## Abstract
+!!
+!!     Convert encoded spacecraft clock (`ticks') to ephemeris
+!!     seconds past J2000 (ET).
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     SCLK
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Convert encoded spacecraft clock (`ticks') to ephemeris
-!     seconds past J2000 (ET).
-!
-! $ Required_Reading
-!
-!     CK
-!     SCLK
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     CONVERSION
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 
@@ -1279,23 +1275,22 @@ contains
 !$Procedure SCTIKS ( Convert spacecraft clock string to ticks. )
 
       module procedure sctiks
+!! ## Abstract
+!!
+!!     Convert a spacecraft clock format string to number of "ticks".
+!!
+!! ## Required Reading
+!!
+!!     SCLK
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Convert a spacecraft clock format string to number of "ticks".
-!
-! $ Required_Reading
-!
-!     SCLK
-!
-! $ Keywords
-!
-!     CONVERSION
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 
@@ -1587,488 +1582,468 @@ contains
       end procedure sctiks
 
       module procedure scdecd
-
-! $ Abstract
-!
-!     Convert a double precision encoding of spacecraft clock time into
-!     a character representation.
-!
-! $ Required_Reading
-!
-!     SCLK
-!
-! $ Keywords
-!
-!     CONVERSION
-!     TIME
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     SC       is the NAIF integer code of the spacecraft whose
-!              clock's time is being decoded.
-!
-!     SCLKDP   is the double precision encoding of a clock time in
-!              units of ticks since the spacecraft clock start time.
-!              This value does reflect partition information.
-!
-!              An analogy may be drawn between a spacecraft clock
-!              and a standard wall clock. The number of ticks
-!              corresponding to the wall clock string
-!
-!                 hh:mm:ss
-!
-!              would be the number of seconds represented by that
-!              time.
-!
-!              For example:
-!
-!                 Clock string      Number of ticks
-!                 ------------      ---------------
-!                   00:00:10              10
-!                   00:01:00              60
-!                   00:10:00             600
-!                   01:00:00            3600
-!
-!              If SCLKDP contains a fractional part the result
-!              is the same as if SCLKDP had been rounded to the
-!              nearest whole number.
-!
-! $ Detailed_Output
-!
-!     SCLKCH   is the character representation of the clock count.
-!              The exact form that SCLKCH takes depends on the
-!              spacecraft.
-!
-!              Nevertheless, SCLKCH will have the following general
-!              format:
-!
-!                 'pp/sclk_string'
-!
-!              'pp' is an integer greater than or equal to one and
-!              represents a "partition number".
-!
-!              Each mission is divided into some number of partitions.
-!              A new partition starts when the spacecraft clock
-!              resets, either to zero, or to some other
-!              value. Thus, the first partition for any mission
-!              starts with launch, and ends with the first clock
-!              reset. The second partition starts immediately when
-!              the first stopped, and so on.
-!
-!              In order to be completely unambiguous about a
-!              particular time, you need to specify a partition number
-!              along with the standard clock string.
-!
-!              Information about when partitions occur for different
-!              missions is contained in a spacecraft clock kernel
-!              file which needs to be loaded into the kernel pool
-!              before calling SCDECD.
-!
-!              The routine SCPART may be used to read the partition
-!              start and stop times, in encoded units of ticks, from
-!              the kernel file.
-!
-!              Since the end time of one partition is coincident with
-!              the begin time of the next, two different time strings
-!              with different partition numbers can encode into the
-!              same value.
-!
-!              For example, if partition 1 ends at time t1, and
-!              partition 2 starts at time t2, then
-!
-!                 '1/t1' and '2/t2'
-!
-!              will be encoded into the same value, say X. SCDECD
-!              always decodes such values into the latter of the
-!              two partitions. In this example,
-!
-!                 CALL SCDECD ( X, SC, CLKSTR )
-!
-!              will result in
-!
-!                 CLKSTR = '2/t2'.
-!
-!              'sclk_string' is a spacecraft specific clock string,
-!              typically consisting of a number of components
-!              separated by delimiters.
-!
-!              Using Galileo as an example, the full format is
-!
-!                 wwwwwwww:xx:y:z
-!
-!              where z is a mod-8 counter (values 0-7) which
-!              increments approximately once every 8 1/3 ms., y is a
-!              mod-10 counter (values 0-9) which increments once
-!              every time z turns over, i.e., approximately once every
-!              66 2/3 ms., xx is a mod-91 (values 0-90) counter
-!              which increments once every time y turns over, i.e.,
-!              once every 2/3 seconds. wwwwwwww is the Real-Time Image
-!              Count (RIM), which increments once every time xx turns
-!              over, i.e., once every 60 2/3 seconds. The roll-over
-!              expression for the RIM is 16777215, which corresponds
-!              to approximately 32 years.
-!
-!              wwwwwwww, xx, y, and z are referred to interchangeably
-!              as the fields or components of the spacecraft clock.
-!              SCLK components may be separated by any of these five
-!              characters: ' '  ':'  ','  '-'  '.'
-!              The delimiter used is determined by a kernel pool
-!              variable and can be adjusted by the user.
-!
-!              Some spacecraft clock components have offset, or
-!              starting, values different from zero. For example,
-!              with an offset value of 1, a mod 20 counter would
-!              cycle from 1 to 20 instead of from 0 to 19.
-!
-!              See the SCLK required reading for a detailed
-!              description of the Voyager and Mars Observer clock
-!              formats.
-!
-! $ Parameters
-!
-!     MXPART   is the maximum number of spacecraft clock partitions
-!              expected in the kernel file for any one spacecraft.
-!              See the INCLUDE file sclk.inc for this parameter's
-!              value.
-!
-! $ Exceptions
-!
-!     1)  If kernel variables required by this routine are unavailable,
-!         an error is signaled by a routine in the call tree of this
-!         routine. SCLKCH will be returned as a blank string in this
-!         case.
-!
-!     2)  If the number of partitions in the kernel file for spacecraft
-!         SC exceeds the parameter MXPART, the error
-!         SPICE(TOOMANYPARTS) is signaled. SCLKCH will be returned
-!         as a blank string in this case.
-!
-!     3)  If the encoded value does not fall in the boundaries of the
-!         mission, the error SPICE(VALUEOUTOFRANGE) is signaled.
-!         SCLKCH will be returned as a blank string in this case.
-!
-!     4)  If the declared length of SCLKCH is not large enough to
-!         contain the output clock string, the error
-!         SPICE(SCLKTRUNCATED) is signaled by either this routine or a
-!         routine in the call tree of this routine. On output SCLKCH
-!         will contain a portion of the truncated clock string.
-!
-! $ Files
-!
-!     A kernel file containing spacecraft clock partition information
-!     for the desired spacecraft must be loaded, using the routine
-!     FURNSH, before calling this routine.
-!
-! $ Particulars
-!
-!     In general, it is difficult to compare spacecraft clock counts
-!     numerically since there are too many clock components for a
-!     single comparison. The routine SCENCD provides a method of
-!     assigning a single double precision number to a spacecraft's
-!     clock count, given one of its character representations.
-!
-!     This routine performs the inverse operation to SCENCD, converting
-!     an encoded double precision number to character format.
-!
-!     To convert the number of ticks since the start of the mission to
-!     a clock format character string, SCDECD:
-!
-!        1) Determines the spacecraft clock partition that TICKS falls
-!           in.
-!
-!        2) Subtracts off the number of ticks occurring in previous
-!           partitions, to get the number of ticks since the beginning
-!           of the current partition.
-!
-!        3) Converts the resulting ticks to clock format and forms the
-!           string
-!
-!              'partition_number/clock_string'
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as input,
-!     the compiler and supporting libraries, and the machine specific
-!     arithmetic implementation.
-!
-!     1) Double precision encodings of spacecraft clock counts are used
-!        to tag pointing data in the C-kernel.
-!
-!        In the following example, pointing for a sequence of images
-!        from the CASSINI Imaging Science Subsystem (ISS) is requested
-!        from the C-kernel using an array of character spacecraft clock
-!        counts as input. The clock counts attached to the output are
-!        then decoded to character and compared with the input strings.
-!
-!        Use the CK kernel below to load the CASSINI image navigated
-!        spacecraft pointing and orientation data.
-!
-!           04153_04182ca_ISS.bc
-!
-!        Use the SCLK kernel below to load the CASSINI spacecraft clock
-!        time correlation data required for the conversion between
-!        spacecraft clock string representation and double precision
-!        encoding of spacecraft clock counts.
-!
-!           cas00071.tsc
-!
-!        Example code begins here.
-!
-!              PROGRAM SCDECD_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!        C     The instrument we want pointing for is the CASSINI
-!        C     spacecraft. The reference frame we want is
-!        C     J2000. The spacecraft is CASSINI.
-!        C
-!              INTEGER               SC
-!              PARAMETER           ( SC     = -82 )
-!
-!              INTEGER               INST
-!              PARAMETER           ( INST   = -82000 )
-!
-!              CHARACTER*(*)         REF
-!              PARAMETER           ( REF    = 'J2000' )
-!
-!              CHARACTER*(*)         CK
-!              PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
-!
-!              CHARACTER*(*)         SCLK
-!              PARAMETER           ( SCLK   = 'cas00071.tsc' )
-!
-!              INTEGER               NPICS
-!              PARAMETER           ( NPICS  = 4 )
-!
-!              CHARACTER*(*)         CLKTOL
-!              PARAMETER           ( CLKTOL = '1.0' )
-!
-!              INTEGER               MAXLEN
-!              PARAMETER           ( MAXLEN = 30 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(25)        SCLKIN (4)
-!              CHARACTER*(25)        SCLKOUT
-!
-!              DOUBLE PRECISION      CMAT   (3,3)
-!              DOUBLE PRECISION      TIMEIN
-!              DOUBLE PRECISION      TIMEOUT
-!              DOUBLE PRECISION      TOL
-!
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               K
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Set the input SCLK strings.
-!        C
-!              DATA                  SCLKIN /  '1/1465644279.0',
-!             .                                '1/1465644281.0',
-!             .                                '1/1465644351.0',
-!             .                                '1/1465644361.0'  /
-!
-!        C
-!        C     Load the appropriate files. We need
-!        C
-!        C        1. CK file containing pointing data.
-!        C        2. Spacecraft clock kernel file.
-!        C
-!              CALL FURNSH ( CK   )
-!              CALL FURNSH ( SCLK )
-!
-!        C
-!        C     Convert the tolerance string to ticks.
-!        C
-!              CALL SCTIKS ( SC, CLKTOL, TOL )
-!
-!              DO I= 1, NPICS
-!
-!                 CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
-!
-!                 CALL CKGP ( INST, TIMEIN,  TOL,  REF,
-!             .               CMAT, TIMEOUT, FOUND     )
-!
-!                 WRITE(*,*)
-!                 WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
-!
-!                 IF ( FOUND ) THEN
-!
-!                    CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
-!
-!                    WRITE(*,'(2A)') 'Output s/c clock count: ',
-!             .                                          SCLKOUT
-!                    WRITE(*,'(A)') 'Output C-Matrix:'
-!
-!                    DO J = 1, 3
-!
-!                       WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
-!
-!                    END DO
-!
-!                 ELSE
-!
-!                    WRITE(*,'(A)') 'No pointing found.'
-!
-!                 END IF
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Input s/c clock count : 1/1465644279.0
-!        No pointing found.
-!
-!        Input s/c clock count : 1/1465644281.0
-!        Output s/c clock count: 1/1465644281.171
-!        Output C-Matrix:
-!           -0.335351455948710    0.864374440205611    0.374694846658341
-!           -0.937887426812980   -0.343851965210223   -0.046184419961653
-!            0.088918927227039   -0.366909598048763    0.925997176691424
-!
-!        Input s/c clock count : 1/1465644351.0
-!        Output s/c clock count: 1/1465644351.071
-!        Output C-Matrix:
-!           -0.335380929397586    0.864363638262230    0.374693385378623
-!           -0.937874292008090   -0.343889838107825   -0.046169163264003
-!            0.088946301703530   -0.366899550417080    0.925998528787713
-!
-!        Input s/c clock count : 1/1465644361.0
-!        No pointing found.
-!
-! $ Restrictions
-!
-!     1)  Assumes that an SCLK kernel file appropriate for the clock
-!         designated by SC is loaded in the kernel pool at the time
-!         this routine is called.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     J.M. Lynch         (JPL)
-!     W.L. Taber         (JPL)
-!     R.E. Thurman       (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.2.0, 18-NOV-2021 (NJB) (JDR)
-!
-!        Now variables PSTART, PSTOP, and PTOTLS are saved. Made minor
-!        changes to formatting of code.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example based on existing example fragments using PDS
-!        archived CASSINI data.
-!
-!        Added FAILED() call after SCFMT call.
-!
-!        Removed unnecessary entries in $Revisions section.
-!
-!-    SPICELIB Version 2.1.0, 05-FEB-2008 (NJB)
-!
-!        Values of parameter MXPART and PARTLN are now
-!        provided by the INCLUDE file sclk.inc.
-!
-!-    SPICELIB Version 2.0.1, 22-AUG-2006 (EDW)
-!
-!        Replaced references to LDPOOL with references
-!        to FURNSH.
-!
-!-    SPICELIB Version 2.0.0, 17-APR-1992 (JML) (WLT)
-!
-!        The routine was changed to signal an error when SCLKCH is
-!        not long enough to contain the output spacecraft clock
-!        string.
-!
-!        FAILED is now checked after calling SCPART.
-!
-!        References to CLPOOL were deleted.
-!
-!        Miscellaneous minor updates to the header were performed.
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 06-SEP-1990 (JML) (RET)
-!
-!-&
-
-! $ Index_Entries
-!
-!     decode spacecraft_clock
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 17-APR-1992 (JML) (WLT)
-!
-!        The routine was changed to signal an error when SCLKCH is
-!        not long enough to contain the output spacecraft clock
-!        string. Previously, the SCLK routines simply truncated
-!        the clock string on the right. It was determined that
-!        since this truncation could easily go undetected by the
-!        user ( only the leftmost field of a clock string is
-!        required when clock string is used as an input to a
-!        SCLK routine ), it would be better to signal an error
-!        when this happens.
-!
-!        FAILED is checked after calling SCPART in case an
-!        error has occurred reading the kernel file and the
-!        error action is not set to 'abort'.
-!
-!        References to CLPOOL were deleted.
-!
-!        Miscellaneous minor updates to the header were performed.
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Convert a double precision encoding of spacecraft clock time into
+!!     a character representation.
+!!
+!! ## Required Reading
+!!
+!!     SCLK
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     TIME
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     SC       is the NAIF integer code of the spacecraft whose
+!!              clock's time is being decoded.
+!!
+!!     SCLKDP   is the double precision encoding of a clock time in
+!!              units of ticks since the spacecraft clock start time.
+!!              This value does reflect partition information.
+!!
+!!              An analogy may be drawn between a spacecraft clock
+!!              and a standard wall clock. The number of ticks
+!!              corresponding to the wall clock string
+!!
+!!                 hh:mm:ss
+!!
+!!              would be the number of seconds represented by that
+!!              time.
+!!
+!!              For example:
+!!
+!!                 Clock string      Number of ticks
+!!                 ------------      ---------------
+!!                   00:00:10              10
+!!                   00:01:00              60
+!!                   00:10:00             600
+!!                   01:00:00            3600
+!!
+!!              If SCLKDP contains a fractional part the result
+!!              is the same as if SCLKDP had been rounded to the
+!!              nearest whole number.
+!!
+!! ## Detailed Output
+!!
+!!     SCLKCH   is the character representation of the clock count.
+!!              The exact form that SCLKCH takes depends on the
+!!              spacecraft.
+!!
+!!              Nevertheless, SCLKCH will have the following general
+!!              format:
+!!
+!!                 'pp/sclk_string'
+!!
+!!              'pp' is an integer greater than or equal to one and
+!!              represents a "partition number".
+!!
+!!              Each mission is divided into some number of partitions.
+!!              A new partition starts when the spacecraft clock
+!!              resets, either to zero, or to some other
+!!              value. Thus, the first partition for any mission
+!!              starts with launch, and ends with the first clock
+!!              reset. The second partition starts immediately when
+!!              the first stopped, and so on.
+!!
+!!              In order to be completely unambiguous about a
+!!              particular time, you need to specify a partition number
+!!              along with the standard clock string.
+!!
+!!              Information about when partitions occur for different
+!!              missions is contained in a spacecraft clock kernel
+!!              file which needs to be loaded into the kernel pool
+!!              before calling SCDECD.
+!!
+!!              The routine SCPART may be used to read the partition
+!!              start and stop times, in encoded units of ticks, from
+!!              the kernel file.
+!!
+!!              Since the end time of one partition is coincident with
+!!              the begin time of the next, two different time strings
+!!              with different partition numbers can encode into the
+!!              same value.
+!!
+!!              For example, if partition 1 ends at time t1, and
+!!              partition 2 starts at time t2, then
+!!
+!!                 '1/t1' and '2/t2'
+!!
+!!              will be encoded into the same value, say X. SCDECD
+!!              always decodes such values into the latter of the
+!!              two partitions. In this example,
+!!
+!!                 CALL SCDECD ( X, SC, CLKSTR )
+!!
+!!              will result in
+!!
+!!                 CLKSTR = '2/t2'.
+!!
+!!              'sclk_string' is a spacecraft specific clock string,
+!!              typically consisting of a number of components
+!!              separated by delimiters.
+!!
+!!              Using Galileo as an example, the full format is
+!!
+!!                 wwwwwwww:xx:y:z
+!!
+!!              where z is a mod-8 counter (values 0-7) which
+!!              increments approximately once every 8 1/3 ms., y is a
+!!              mod-10 counter (values 0-9) which increments once
+!!              every time z turns over, i.e., approximately once every
+!!              66 2/3 ms., xx is a mod-91 (values 0-90) counter
+!!              which increments once every time y turns over, i.e.,
+!!              once every 2/3 seconds. wwwwwwww is the Real-Time Image
+!!              Count (RIM), which increments once every time xx turns
+!!              over, i.e., once every 60 2/3 seconds. The roll-over
+!!              expression for the RIM is 16777215, which corresponds
+!!              to approximately 32 years.
+!!
+!!              wwwwwwww, xx, y, and z are referred to interchangeably
+!!              as the fields or components of the spacecraft clock.
+!!              SCLK components may be separated by any of these five
+!!              characters: ' '  ':'  ','  '-'  '.'
+!!              The delimiter used is determined by a kernel pool
+!!              variable and can be adjusted by the user.
+!!
+!!              Some spacecraft clock components have offset, or
+!!              starting, values different from zero. For example,
+!!              with an offset value of 1, a mod 20 counter would
+!!              cycle from 1 to 20 instead of from 0 to 19.
+!!
+!!              See the SCLK required reading for a detailed
+!!              description of the Voyager and Mars Observer clock
+!!              formats.
+!!
+!! ## Parameters
+!!
+!!     MXPART   is the maximum number of spacecraft clock partitions
+!!              expected in the kernel file for any one spacecraft.
+!!              See the INCLUDE file sclk.inc for this parameter's
+!!              value.
+!!
+!! ## Exceptions
+!!
+!!     1)  If kernel variables required by this routine are unavailable,
+!!         an error is signaled by a routine in the call tree of this
+!!         routine. SCLKCH will be returned as a blank string in this
+!!         case.
+!!
+!!     2)  If the number of partitions in the kernel file for spacecraft
+!!         SC exceeds the parameter MXPART, the error
+!!         SPICE(TOOMANYPARTS) is signaled. SCLKCH will be returned
+!!         as a blank string in this case.
+!!
+!!     3)  If the encoded value does not fall in the boundaries of the
+!!         mission, the error SPICE(VALUEOUTOFRANGE) is signaled.
+!!         SCLKCH will be returned as a blank string in this case.
+!!
+!!     4)  If the declared length of SCLKCH is not large enough to
+!!         contain the output clock string, the error
+!!         SPICE(SCLKTRUNCATED) is signaled by either this routine or a
+!!         routine in the call tree of this routine. On output SCLKCH
+!!         will contain a portion of the truncated clock string.
+!!
+!! ## Files
+!!
+!!     A kernel file containing spacecraft clock partition information
+!!     for the desired spacecraft must be loaded, using the routine
+!!     FURNSH, before calling this routine.
+!!
+!! ## Particulars
+!!
+!!     In general, it is difficult to compare spacecraft clock counts
+!!     numerically since there are too many clock components for a
+!!     single comparison. The routine SCENCD provides a method of
+!!     assigning a single double precision number to a spacecraft's
+!!     clock count, given one of its character representations.
+!!
+!!     This routine performs the inverse operation to SCENCD, converting
+!!     an encoded double precision number to character format.
+!!
+!!     To convert the number of ticks since the start of the mission to
+!!     a clock format character string, SCDECD:
+!!
+!!        1) Determines the spacecraft clock partition that TICKS falls
+!!           in.
+!!
+!!        2) Subtracts off the number of ticks occurring in previous
+!!           partitions, to get the number of ticks since the beginning
+!!           of the current partition.
+!!
+!!        3) Converts the resulting ticks to clock format and forms the
+!!           string
+!!
+!!              'partition_number/clock_string'
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as input,
+!!     the compiler and supporting libraries, and the machine specific
+!!     arithmetic implementation.
+!!
+!!     1) Double precision encodings of spacecraft clock counts are used
+!!        to tag pointing data in the C-kernel.
+!!
+!!        In the following example, pointing for a sequence of images
+!!        from the CASSINI Imaging Science Subsystem (ISS) is requested
+!!        from the C-kernel using an array of character spacecraft clock
+!!        counts as input. The clock counts attached to the output are
+!!        then decoded to character and compared with the input strings.
+!!
+!!        Use the CK kernel below to load the CASSINI image navigated
+!!        spacecraft pointing and orientation data.
+!!
+!!           04153_04182ca_ISS.bc
+!!
+!!        Use the SCLK kernel below to load the CASSINI spacecraft clock
+!!        time correlation data required for the conversion between
+!!        spacecraft clock string representation and double precision
+!!        encoding of spacecraft clock counts.
+!!
+!!           cas00071.tsc
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM SCDECD_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!        C     The instrument we want pointing for is the CASSINI
+!!        C     spacecraft. The reference frame we want is
+!!        C     J2000. The spacecraft is CASSINI.
+!!        C
+!!              INTEGER               SC
+!!              PARAMETER           ( SC     = -82 )
+!!
+!!              INTEGER               INST
+!!              PARAMETER           ( INST   = -82000 )
+!!
+!!              CHARACTER*(*)         REF
+!!              PARAMETER           ( REF    = 'J2000' )
+!!
+!!              CHARACTER*(*)         CK
+!!              PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
+!!
+!!              CHARACTER*(*)         SCLK
+!!              PARAMETER           ( SCLK   = 'cas00071.tsc' )
+!!
+!!              INTEGER               NPICS
+!!              PARAMETER           ( NPICS  = 4 )
+!!
+!!              CHARACTER*(*)         CLKTOL
+!!              PARAMETER           ( CLKTOL = '1.0' )
+!!
+!!              INTEGER               MAXLEN
+!!              PARAMETER           ( MAXLEN = 30 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(25)        SCLKIN (4)
+!!              CHARACTER*(25)        SCLKOUT
+!!
+!!              DOUBLE PRECISION      CMAT   (3,3)
+!!              DOUBLE PRECISION      TIMEIN
+!!              DOUBLE PRECISION      TIMEOUT
+!!              DOUBLE PRECISION      TOL
+!!
+!!              INTEGER               I
+!!              INTEGER               J
+!!              INTEGER               K
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Set the input SCLK strings.
+!!        C
+!!              DATA                  SCLKIN /  '1/1465644279.0',
+!!             .                                '1/1465644281.0',
+!!             .                                '1/1465644351.0',
+!!             .                                '1/1465644361.0'  /
+!!
+!!        C
+!!        C     Load the appropriate files. We need
+!!        C
+!!        C        1. CK file containing pointing data.
+!!        C        2. Spacecraft clock kernel file.
+!!        C
+!!              CALL FURNSH ( CK   )
+!!              CALL FURNSH ( SCLK )
+!!
+!!        C
+!!        C     Convert the tolerance string to ticks.
+!!        C
+!!              CALL SCTIKS ( SC, CLKTOL, TOL )
+!!
+!!              DO I= 1, NPICS
+!!
+!!                 CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
+!!
+!!                 CALL CKGP ( INST, TIMEIN,  TOL,  REF,
+!!             .               CMAT, TIMEOUT, FOUND     )
+!!
+!!                 WRITE(*,*)
+!!                 WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
+!!
+!!                 IF ( FOUND ) THEN
+!!
+!!                    CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
+!!
+!!                    WRITE(*,'(2A)') 'Output s/c clock count: ',
+!!             .                                          SCLKOUT
+!!                    WRITE(*,'(A)') 'Output C-Matrix:'
+!!
+!!                    DO J = 1, 3
+!!
+!!                       WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
+!!
+!!                    END DO
+!!
+!!                 ELSE
+!!
+!!                    WRITE(*,'(A)') 'No pointing found.'
+!!
+!!                 END IF
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Input s/c clock count : 1/1465644279.0
+!!        No pointing found.
+!!
+!!        Input s/c clock count : 1/1465644281.0
+!!        Output s/c clock count: 1/1465644281.171
+!!        Output C-Matrix:
+!!           -0.335351455948710    0.864374440205611    0.374694846658341
+!!           -0.937887426812980   -0.343851965210223   -0.046184419961653
+!!            0.088918927227039   -0.366909598048763    0.925997176691424
+!!
+!!        Input s/c clock count : 1/1465644351.0
+!!        Output s/c clock count: 1/1465644351.071
+!!        Output C-Matrix:
+!!           -0.335380929397586    0.864363638262230    0.374693385378623
+!!           -0.937874292008090   -0.343889838107825   -0.046169163264003
+!!            0.088946301703530   -0.366899550417080    0.925998528787713
+!!
+!!        Input s/c clock count : 1/1465644361.0
+!!        No pointing found.
+!!
+!! ## Restrictions
+!!
+!!     1)  Assumes that an SCLK kernel file appropriate for the clock
+!!         designated by SC is loaded in the kernel pool at the time
+!!         this routine is called.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     J.M. Lynch         (JPL)
+!!     W.L. Taber         (JPL)
+!!     R.E. Thurman       (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 2.2.0, 18-NOV-2021 (NJB) (JDR)
+!!
+!!        Now variables PSTART, PSTOP, and PTOTLS are saved. Made minor
+!!        changes to formatting of code.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example based on existing example fragments using PDS
+!!        archived CASSINI data.
+!!
+!!        Added FAILED() call after SCFMT call.
+!!
+!!        Removed unnecessary entries in $Revisions section.
+!!
+!!-    SPICELIB Version 2.1.0, 05-FEB-2008 (NJB)
+!!
+!!        Values of parameter MXPART and PARTLN are now
+!!        provided by the INCLUDE file sclk.inc.
+!!
+!!-    SPICELIB Version 2.0.1, 22-AUG-2006 (EDW)
+!!
+!!        Replaced references to LDPOOL with references
+!!        to FURNSH.
+!!
+!!-    SPICELIB Version 2.0.0, 17-APR-1992 (JML) (WLT)
+!!
+!!        The routine was changed to signal an error when SCLKCH is
+!!        not long enough to contain the output spacecraft clock
+!!        string.
+!!
+!!        FAILED is now checked after calling SCPART.
+!!
+!!        References to CLPOOL were deleted.
+!!
+!!        Miscellaneous minor updates to the header were performed.
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 06-SEP-1990 (JML) (RET)
+!!
+!! ## Index Entries
+!!
+!!     decode spacecraft_clock
+!!
+!! ## Revisions
+!!
+!!-    SPICELIB Version 2.0.0, 17-APR-1992 (JML) (WLT)
+!!
+!!        The routine was changed to signal an error when SCLKCH is
+!!        not long enough to contain the output spacecraft clock
+!!        string. Previously, the SCLK routines simply truncated
+!!        the clock string on the right. It was determined that
+!!        since this truncation could easily go undetected by the
+!!        user ( only the leftmost field of a clock string is
+!!        required when clock string is used as an input to a
+!!        SCLK routine ), it would be better to signal an error
+!!        when this happens.
+!!
+!!        FAILED is checked after calling SCPART in case an
+!!        error has occurred reading the kernel file and the
+!!        error action is not set to 'abort'.
+!!
+!!        References to CLPOOL were deleted.
+!!
+!!        Miscellaneous minor updates to the header were performed.
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
       use pepper_strings, only: intstr, lastnb, prefix, suffix
+      use pepper_inc_sclk
       implicit none
-      include               'sclk.inc'
       character(partln)     prtstr
       integer(ip)           nparts
       integer(ip)           part
@@ -2204,490 +2179,473 @@ contains
       end procedure scdecd
 
       module procedure scencd
-
-! $ Abstract
-!
-!     Encode a character representation of spacecraft clock time into a
-!     double precision number.
-!
-! $ Required_Reading
-!
-!     SCLK
-!
-! $ Keywords
-!
-!     CONVERSION
-!     TIME
-!
-! $ Declarations
-
-
-
-
-! $ Detailed_Input
-!
-!     SC       is the standard NAIF ID of the spacecraft whose clock's
-!              time is being encoded.
-!
-!     SCLKCH   is the character representation of some spacecraft's
-!              clock count.
-!
-!              SCLKCH will have the following general format:
-!
-!                 'pp/sclk_string', or just
-!                    'sclk_string'
-!
-!              'pp' is an integer greater than or equal to one
-!              and is called the partition number.
-!
-!              Each mission is divided into some number of partitions.
-!              A new partition starts when the spacecraft clock
-!              resets, either to zero, or to some other
-!              value. Thus, the first partition for any mission
-!              starts with launch, and ends with the first clock
-!              reset. The second partition starts immediately when
-!              the first stopped, and so on.
-!
-!              In order to be completely unambiguous about a
-!              particular time, you need to specify a partition number
-!              along with the standard clock string.
-!
-!              Information about when partitions occur for different
-!              missions is contained in a spacecraft clock kernel
-!              file, which needs to be loaded into the kernel pool,
-!              using the routine FURNSH.
-!
-!              The routine SCPART is used to read the partition
-!              start and stop times, in encoded units of SCLK (called
-!              "ticks" -- see SCLKDP below) from the kernel file.
-!
-!              If the partition number is included, it must be
-!              separated from the rest of the string by a '/'.
-!              Any number of spaces may separate the partition number,
-!              the '/', and the rest of the clock string.
-!
-!              If the partition number is omitted, a default partition
-!              will be assumed. The default partition is the lowest-
-!              numbered partition that contains the given clock time.
-!              If the clock time does not fall in any of the
-!              partition boundaries then an error is signaled.
-!
-!              'sclk_string' is a spacecraft specific clock string.
-!              Using Galileo as an example, the full format is
-!
-!                 wwwwwwww:xx:y:z
-!
-!              where z is a mod-8 counter (values 0-7) which
-!              increments approximately once every 8 1/3 ms., y is a
-!              mod-10 counter (values 0-9) which increments once
-!              every time z turns over, i.e., approximately once every
-!              66 2/3 ms., xx is a mod-91 (values 0-90) counter
-!              which increments once every time y turns over, i.e.,
-!              once every 2/3 seconds. wwwwwwww is the Real-Time Image
-!              Count (RIM), which increments once every time xx turns
-!              over, i.e., once every 60 2/3 seconds. The roll-over
-!              expression for the RIM is 16777215, which corresponds
-!              to approximately 32 years.
-!
-!              wwwwwwww, xx, y, and z are referred to interchangeably
-!              as the fields or components of the spacecraft clock.
-!              SCLK components may be separated by any of these
-!              five characters: ' '  ':'  ','  '-'  '.'
-!              Any number of spaces can separate the components and
-!              the delimiters. The presence of the RIM component
-!              is required. Successive components may be omitted, and
-!              in such cases are assumed to represent zero values.
-!
-!              Values for the individual components may exceed the
-!              maximum expected values. For instance, '0:0:0:9' is
-!              an acceptable Galileo clock string, and will convert
-!              to the same number of ticks as '0:0:1:1'.
-!
-!              Consecutive delimiters containing no intervening digits
-!              are treated as if they delimit zero components.
-!
-!              Trailing zeros should always be included to match the
-!              length of the counter. For example, a Galileo clock
-!              count of '25684.90' should not be represented as
-!              '25684.9'.
-!
-!              Some spacecraft clock components have offset, or
-!              starting, values different from zero. For example,
-!              with an offset value of 1, a mod 20 counter would
-!              cycle from 1 to 20 instead of from 0 to 19.
-!
-!              See the SCLK required reading for a detailed
-!              description of the Voyager and Mars Observer clock
-!              formats.
-!
-! $ Detailed_Output
-!
-!     SCLKDP   is the double precision encoding of SCLKCH.
-!
-!              The encoding is such that order and proximity will be
-!              preserved. That is, if t1, t2, and t3 are spacecraft
-!              clock times, and t1*, t2*, and t3* are their encodings,
-!              then if
-!
-!                 t1 < t2 < t3, and
-!
-!              t2 is closer to t1 than to t3, you will have the result
-!              that
-!
-!                 t1* < t2* < t3*, and
-!
-!              t2* is closer to t1* than to t3*.
-!
-!              The units of encoded SCLK are "ticks since the start of
-!              the mission", where a "tick" is defined to be the
-!              shortest time increment expressible by a particular
-!              spacecraft's clock.
-!
-!              Each clock string without partition number represents
-!              a certain number of ticks, but you need to include
-!              partition information to determine the relative
-!              position of that time in relation to the start of the
-!              mission.
-!
-!              Since the end time of one partition is coincident
-!              with the begin time of the next, there are two
-!              different representations for this instant, and they
-!              will both yield the same encoding.
-!
-!              For example, if partition 1 has an end time of t1, and
-!              partition 2 has a begin time of t2, then if we executed
-!              the code fragment
-!
-!                 CALL SCENCD ( '1/t1', SC, X )
-!                 CALL SCENCD ( '2/t2', SC, Y )
-!
-!              we would obtain X = Y.
-!
-! $ Parameters
-!
-!     MXPART   is the maximum number of spacecraft clock partitions
-!              expected in the kernel file for any one spacecraft.
-!              See the INCLUDE file sclk.inc for this parameter's
-!              value.
-!
-! $ Exceptions
-!
-!     1)  If the number of partitions in the kernel file for spacecraft
-!         SC exceeds the parameter MXPART, the error
-!         SPICE(TOOMANYPARTS) is signaled.
-!
-!     2)  If any of the extracted clock components cannot be parsed as
-!         integers, or the string has too many components, or the value
-!         of one of the components is less than the offset value,
-!         an error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     If a partition number is included in the SCLK string, the
-!     following exceptions may occur:
-!
-!     3)  If the partition number cannot be parsed as an integer, the
-!         error SPICE(BADPARTNUMBER) is signaled.
-!
-!     4)  If the partition number is not in the range of the number of
-!         partitions found in the kernel pool, the error
-!         SPICE(BADPARTNUMBER) is signaled.
-!
-!     5)  If the clock count does not fall in the boundaries of the
-!         specified partition, the error SPICE(NOTINPART) is
-!         signaled.
-!
-!     If a partition number is not included in the SCLK string, the
-!     following exception may occur.
-!
-!     6)  If the clock count does not fall in the boundaries of any
-!         partition found in the kernel pool, the error
-!         SPICE(NOPARTITION) is signaled.
-!
-!     7)  If the partition delimiter (slash) is first found in the last
-!         position of SCLKCH, the error SPICE(INVALIDSCLKSTRING) is
-!         signaled.
-!
-! $ Files
-!
-!     A kernel file containing spacecraft clock partition information
-!     for the desired spacecraft must be loaded, using the routine
-!     FURNSH, before calling this routine.
-!
-! $ Particulars
-!
-!     In general, it is difficult to compare spacecraft clock counts
-!     numerically since there are too many clock components for a
-!     single comparison. This routine provides a method of assigning a
-!     single double precision number to a spacecraft's clock count,
-!     given one of its character representations.
-!
-!     The routine SCDECD performs the inverse operation of SCENCD,
-!     converting an encoded double precision number to character format.
-!
-!     To convert the string to ticks since the start of the mission,
-!     SCENCD
-!
-!        1) Converts the non-partition portion of the string to
-!           ticks, using the routine SCTIKS.
-!
-!        2) Determines the partition number for the clock time,
-!           either by getting it directly from the input string, or
-!           determining the default partition if none was specified.
-!
-!        3) Includes partition start and stop times, which are also
-!           measured in ticks, to compute the number of ticks
-!           from the beginning of the mission to the clock time.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as input,
-!     the compiler and supporting libraries, and the machine specific
-!     arithmetic implementation.
-!
-!     1) Double precision encodings of spacecraft clock counts are used
-!        to tag pointing data in the C-kernel.
-!
-!        In the following example, pointing for a sequence of images
-!        from the CASSINI Imaging Science Subsystem (ISS) is requested
-!        from the C-kernel using an array of character spacecraft clock
-!        counts as input. The clock counts attached to the output are
-!        then decoded to character and compared with the input strings.
-!
-!        Use the CK kernel below to load the CASSINI image navigated
-!        spacecraft pointing and orientation data.
-!
-!           04153_04182ca_ISS.bc
-!
-!        Use the SCLK kernel below to load the CASSINI spacecraft clock
-!        time correlation data required for the conversion between
-!        spacecraft clock string representation and double precision
-!        encoding of spacecraft clock counts.
-!
-!           cas00071.tsc
-!
-!        Example code begins here.
-!
-!              PROGRAM SCENCD_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!        C     The instrument we want pointing for is the CASSINI
-!        C     spacecraft. The reference frame we want is
-!        C     J2000. The spacecraft is CASSINI.
-!        C
-!              INTEGER               SC
-!              PARAMETER           ( SC     = -82 )
-!
-!              INTEGER               INST
-!              PARAMETER           ( INST   = -82000 )
-!
-!              CHARACTER*(*)         REF
-!              PARAMETER           ( REF    = 'J2000' )
-!
-!              CHARACTER*(*)         CK
-!              PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
-!
-!              CHARACTER*(*)         SCLK
-!              PARAMETER           ( SCLK   = 'cas00071.tsc' )
-!
-!              INTEGER               NPICS
-!              PARAMETER           ( NPICS  = 4 )
-!
-!              CHARACTER*(*)         CLKTOL
-!              PARAMETER           ( CLKTOL = '1.0' )
-!
-!              INTEGER               MAXLEN
-!              PARAMETER           ( MAXLEN = 30 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(25)        SCLKIN (4)
-!              CHARACTER*(25)        SCLKOUT
-!
-!              DOUBLE PRECISION      CMAT   (3,3)
-!              DOUBLE PRECISION      TIMEIN
-!              DOUBLE PRECISION      TIMEOUT
-!              DOUBLE PRECISION      TOL
-!
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               K
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Set the input SCLK strings.
-!        C
-!              DATA                  SCLKIN /  '1/1465644279.0',
-!             .                                '1/1465644281.0',
-!             .                                '1/1465644351.0',
-!             .                                '1/1465644361.0'  /
-!
-!        C
-!        C     Load the appropriate files. We need
-!        C
-!        C        1. CK file containing pointing data.
-!        C        2. Spacecraft clock kernel file.
-!        C
-!              CALL FURNSH ( CK   )
-!              CALL FURNSH ( SCLK )
-!
-!        C
-!        C     Convert the tolerance string to ticks.
-!        C
-!              CALL SCTIKS ( SC, CLKTOL, TOL )
-!
-!              DO I= 1, NPICS
-!
-!                 CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
-!
-!                 CALL CKGP ( INST, TIMEIN,  TOL,  REF,
-!             .               CMAT, TIMEOUT, FOUND     )
-!
-!                 WRITE(*,*)
-!                 WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
-!
-!                 IF ( FOUND ) THEN
-!
-!                    CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
-!
-!                    WRITE(*,'(2A)') 'Output s/c clock count: ',
-!             .                                          SCLKOUT
-!                    WRITE(*,'(A)') 'Output C-Matrix:'
-!
-!                    DO J = 1, 3
-!
-!                       WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
-!
-!                    END DO
-!
-!                 ELSE
-!
-!                    WRITE(*,'(A)') 'No pointing found.'
-!
-!                 END IF
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Input s/c clock count : 1/1465644279.0
-!        No pointing found.
-!
-!        Input s/c clock count : 1/1465644281.0
-!        Output s/c clock count: 1/1465644281.171
-!        Output C-Matrix:
-!           -0.335351455948710    0.864374440205611    0.374694846658341
-!           -0.937887426812980   -0.343851965210223   -0.046184419961653
-!            0.088918927227039   -0.366909598048763    0.925997176691424
-!
-!        Input s/c clock count : 1/1465644351.0
-!        Output s/c clock count: 1/1465644351.071
-!        Output C-Matrix:
-!           -0.335380929397586    0.864363638262230    0.374693385378623
-!           -0.937874292008090   -0.343889838107825   -0.046169163264003
-!            0.088946301703530   -0.366899550417080    0.925998528787713
-!
-!        Input s/c clock count : 1/1465644361.0
-!        No pointing found.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     J.M. Lynch         (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     R.E. Thurman       (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 21-NOV-2021 (NJB) (JDR)
-!
-!        Now variables PSTART, PSTOP, and PTOTLS are saved. Made minor
-!        changes to formatting of code.
-!
-!        Bug fix: out-of-range character positions of SCLKCH are
-!        no longer referenced.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example based on existing example fragments using PDS
-!        archived CASSINI data.
-!
-!        Removed wrong reference to routine CLPOOL from SCLKCH detailed
-!        description and $Files section, and reference to nonexistent
-!        TIKSnn routines.
-!
-!        Removed unnecessary $Revisions section.
-!
-!-    SPICELIB Version 1.2.0, 28-FEB-2014 (BVS)
-!
-!        Added FAILED checks to prevent passing uninitialized values to
-!        ANINT, which can causing numeric exceptions on some
-!        environments.
-!
-!-    SPICELIB Version 1.1.0, 05-FEB-2008 (NJB)
-!
-!        The values of the parameter MXPART is now
-!        provided by the INCLUDE file sclk.inc.
-!
-!-    SPICELIB Version 1.0.2, 22-AUG-2006 (EDW)
-!
-!        Replaced references to LDPOOL with references
-!        to FURNSH.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 03-SEP-1990 (JML) (RET)
-!
-!-&
-
-! $ Index_Entries
-!
-!     encode spacecraft_clock
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
-
-
-
-!
-!     Saved variables
-!
-
-!
-!     Standard SPICE error handling.
-!
+!! ## Abstract
+!!
+!!     Encode a character representation of spacecraft clock time into a
+!!     double precision number.
+!!
+!! ## Required Reading
+!!
+!!     SCLK
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     TIME
+!!
+!! ## Declarations
+!!
+!! ## Detailed Input
+!!
+!!     SC       is the standard NAIF ID of the spacecraft whose clock's
+!!              time is being encoded.
+!!
+!!     SCLKCH   is the character representation of some spacecraft's
+!!              clock count.
+!!
+!!              SCLKCH will have the following general format:
+!!
+!!                 'pp/sclk_string', or just
+!!                    'sclk_string'
+!!
+!!              'pp' is an integer greater than or equal to one
+!!              and is called the partition number.
+!!
+!!              Each mission is divided into some number of partitions.
+!!              A new partition starts when the spacecraft clock
+!!              resets, either to zero, or to some other
+!!              value. Thus, the first partition for any mission
+!!              starts with launch, and ends with the first clock
+!!              reset. The second partition starts immediately when
+!!              the first stopped, and so on.
+!!
+!!              In order to be completely unambiguous about a
+!!              particular time, you need to specify a partition number
+!!              along with the standard clock string.
+!!
+!!              Information about when partitions occur for different
+!!              missions is contained in a spacecraft clock kernel
+!!              file, which needs to be loaded into the kernel pool,
+!!              using the routine FURNSH.
+!!
+!!              The routine SCPART is used to read the partition
+!!              start and stop times, in encoded units of SCLK (called
+!!              "ticks" -- see SCLKDP below) from the kernel file.
+!!
+!!              If the partition number is included, it must be
+!!              separated from the rest of the string by a '/'.
+!!              Any number of spaces may separate the partition number,
+!!              the '/', and the rest of the clock string.
+!!
+!!              If the partition number is omitted, a default partition
+!!              will be assumed. The default partition is the lowest-
+!!              numbered partition that contains the given clock time.
+!!              If the clock time does not fall in any of the
+!!              partition boundaries then an error is signaled.
+!!
+!!              'sclk_string' is a spacecraft specific clock string.
+!!              Using Galileo as an example, the full format is
+!!
+!!                 wwwwwwww:xx:y:z
+!!
+!!              where z is a mod-8 counter (values 0-7) which
+!!              increments approximately once every 8 1/3 ms., y is a
+!!              mod-10 counter (values 0-9) which increments once
+!!              every time z turns over, i.e., approximately once every
+!!              66 2/3 ms., xx is a mod-91 (values 0-90) counter
+!!              which increments once every time y turns over, i.e.,
+!!              once every 2/3 seconds. wwwwwwww is the Real-Time Image
+!!              Count (RIM), which increments once every time xx turns
+!!              over, i.e., once every 60 2/3 seconds. The roll-over
+!!              expression for the RIM is 16777215, which corresponds
+!!              to approximately 32 years.
+!!
+!!              wwwwwwww, xx, y, and z are referred to interchangeably
+!!              as the fields or components of the spacecraft clock.
+!!              SCLK components may be separated by any of these
+!!              five characters: ' '  ':'  ','  '-'  '.'
+!!              Any number of spaces can separate the components and
+!!              the delimiters. The presence of the RIM component
+!!              is required. Successive components may be omitted, and
+!!              in such cases are assumed to represent zero values.
+!!
+!!              Values for the individual components may exceed the
+!!              maximum expected values. For instance, '0:0:0:9' is
+!!              an acceptable Galileo clock string, and will convert
+!!              to the same number of ticks as '0:0:1:1'.
+!!
+!!              Consecutive delimiters containing no intervening digits
+!!              are treated as if they delimit zero components.
+!!
+!!              Trailing zeros should always be included to match the
+!!              length of the counter. For example, a Galileo clock
+!!              count of '25684.90' should not be represented as
+!!              '25684.9'.
+!!
+!!              Some spacecraft clock components have offset, or
+!!              starting, values different from zero. For example,
+!!              with an offset value of 1, a mod 20 counter would
+!!              cycle from 1 to 20 instead of from 0 to 19.
+!!
+!!              See the SCLK required reading for a detailed
+!!              description of the Voyager and Mars Observer clock
+!!              formats.
+!!
+!! ## Detailed Output
+!!
+!!     SCLKDP   is the double precision encoding of SCLKCH.
+!!
+!!              The encoding is such that order and proximity will be
+!!              preserved. That is, if t1, t2, and t3 are spacecraft
+!!              clock times, and t1*, t2*, and t3* are their encodings,
+!!              then if
+!!
+!!                 t1 < t2 < t3, and
+!!
+!!              t2 is closer to t1 than to t3, you will have the result
+!!              that
+!!
+!!                 t1* < t2* < t3*, and
+!!
+!!              t2* is closer to t1* than to t3*.
+!!
+!!              The units of encoded SCLK are "ticks since the start of
+!!              the mission", where a "tick" is defined to be the
+!!              shortest time increment expressible by a particular
+!!              spacecraft's clock.
+!!
+!!              Each clock string without partition number represents
+!!              a certain number of ticks, but you need to include
+!!              partition information to determine the relative
+!!              position of that time in relation to the start of the
+!!              mission.
+!!
+!!              Since the end time of one partition is coincident
+!!              with the begin time of the next, there are two
+!!              different representations for this instant, and they
+!!              will both yield the same encoding.
+!!
+!!              For example, if partition 1 has an end time of t1, and
+!!              partition 2 has a begin time of t2, then if we executed
+!!              the code fragment
+!!
+!!                 CALL SCENCD ( '1/t1', SC, X )
+!!                 CALL SCENCD ( '2/t2', SC, Y )
+!!
+!!              we would obtain X = Y.
+!!
+!! ## Parameters
+!!
+!!     MXPART   is the maximum number of spacecraft clock partitions
+!!              expected in the kernel file for any one spacecraft.
+!!              See the INCLUDE file sclk.inc for this parameter's
+!!              value.
+!!
+!! ## Exceptions
+!!
+!!     1)  If the number of partitions in the kernel file for spacecraft
+!!         SC exceeds the parameter MXPART, the error
+!!         SPICE(TOOMANYPARTS) is signaled.
+!!
+!!     2)  If any of the extracted clock components cannot be parsed as
+!!         integers, or the string has too many components, or the value
+!!         of one of the components is less than the offset value,
+!!         an error is signaled by a routine in the call tree of this
+!!         routine.
+!!
+!!     If a partition number is included in the SCLK string, the
+!!     following exceptions may occur:
+!!
+!!     3)  If the partition number cannot be parsed as an integer, the
+!!         error SPICE(BADPARTNUMBER) is signaled.
+!!
+!!     4)  If the partition number is not in the range of the number of
+!!         partitions found in the kernel pool, the error
+!!         SPICE(BADPARTNUMBER) is signaled.
+!!
+!!     5)  If the clock count does not fall in the boundaries of the
+!!         specified partition, the error SPICE(NOTINPART) is
+!!         signaled.
+!!
+!!     If a partition number is not included in the SCLK string, the
+!!     following exception may occur.
+!!
+!!     6)  If the clock count does not fall in the boundaries of any
+!!         partition found in the kernel pool, the error
+!!         SPICE(NOPARTITION) is signaled.
+!!
+!!     7)  If the partition delimiter (slash) is first found in the last
+!!         position of SCLKCH, the error SPICE(INVALIDSCLKSTRING) is
+!!         signaled.
+!!
+!! ## Files
+!!
+!!     A kernel file containing spacecraft clock partition information
+!!     for the desired spacecraft must be loaded, using the routine
+!!     FURNSH, before calling this routine.
+!!
+!! ## Particulars
+!!
+!!     In general, it is difficult to compare spacecraft clock counts
+!!     numerically since there are too many clock components for a
+!!     single comparison. This routine provides a method of assigning a
+!!     single double precision number to a spacecraft's clock count,
+!!     given one of its character representations.
+!!
+!!     The routine SCDECD performs the inverse operation of SCENCD,
+!!     converting an encoded double precision number to character format.
+!!
+!!     To convert the string to ticks since the start of the mission,
+!!     SCENCD
+!!
+!!        1) Converts the non-partition portion of the string to
+!!           ticks, using the routine SCTIKS.
+!!
+!!        2) Determines the partition number for the clock time,
+!!           either by getting it directly from the input string, or
+!!           determining the default partition if none was specified.
+!!
+!!        3) Includes partition start and stop times, which are also
+!!           measured in ticks, to compute the number of ticks
+!!           from the beginning of the mission to the clock time.
+!!
+!! ## Examples
+!!
+!!     The numerical results shown for this example may differ across
+!!     platforms. The results depend on the SPICE kernels used as input,
+!!     the compiler and supporting libraries, and the machine specific
+!!     arithmetic implementation.
+!!
+!!     1) Double precision encodings of spacecraft clock counts are used
+!!        to tag pointing data in the C-kernel.
+!!
+!!        In the following example, pointing for a sequence of images
+!!        from the CASSINI Imaging Science Subsystem (ISS) is requested
+!!        from the C-kernel using an array of character spacecraft clock
+!!        counts as input. The clock counts attached to the output are
+!!        then decoded to character and compared with the input strings.
+!!
+!!        Use the CK kernel below to load the CASSINI image navigated
+!!        spacecraft pointing and orientation data.
+!!
+!!           04153_04182ca_ISS.bc
+!!
+!!        Use the SCLK kernel below to load the CASSINI spacecraft clock
+!!        time correlation data required for the conversion between
+!!        spacecraft clock string representation and double precision
+!!        encoding of spacecraft clock counts.
+!!
+!!           cas00071.tsc
+!!
+!!        Example code begins here.
+!!
+!!              PROGRAM SCENCD_EX1
+!!              IMPLICIT NONE
+!!
+!!        C
+!!        C     Local parameters.
+!!        C
+!!        C     The instrument we want pointing for is the CASSINI
+!!        C     spacecraft. The reference frame we want is
+!!        C     J2000. The spacecraft is CASSINI.
+!!        C
+!!              INTEGER               SC
+!!              PARAMETER           ( SC     = -82 )
+!!
+!!              INTEGER               INST
+!!              PARAMETER           ( INST   = -82000 )
+!!
+!!              CHARACTER*(*)         REF
+!!              PARAMETER           ( REF    = 'J2000' )
+!!
+!!              CHARACTER*(*)         CK
+!!              PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
+!!
+!!              CHARACTER*(*)         SCLK
+!!              PARAMETER           ( SCLK   = 'cas00071.tsc' )
+!!
+!!              INTEGER               NPICS
+!!              PARAMETER           ( NPICS  = 4 )
+!!
+!!              CHARACTER*(*)         CLKTOL
+!!              PARAMETER           ( CLKTOL = '1.0' )
+!!
+!!              INTEGER               MAXLEN
+!!              PARAMETER           ( MAXLEN = 30 )
+!!
+!!        C
+!!        C     Local variables.
+!!        C
+!!              CHARACTER*(25)        SCLKIN (4)
+!!              CHARACTER*(25)        SCLKOUT
+!!
+!!              DOUBLE PRECISION      CMAT   (3,3)
+!!              DOUBLE PRECISION      TIMEIN
+!!              DOUBLE PRECISION      TIMEOUT
+!!              DOUBLE PRECISION      TOL
+!!
+!!              INTEGER               I
+!!              INTEGER               J
+!!              INTEGER               K
+!!
+!!              LOGICAL               FOUND
+!!
+!!        C
+!!        C     Set the input SCLK strings.
+!!        C
+!!              DATA                  SCLKIN /  '1/1465644279.0',
+!!             .                                '1/1465644281.0',
+!!             .                                '1/1465644351.0',
+!!             .                                '1/1465644361.0'  /
+!!
+!!        C
+!!        C     Load the appropriate files. We need
+!!        C
+!!        C        1. CK file containing pointing data.
+!!        C        2. Spacecraft clock kernel file.
+!!        C
+!!              CALL FURNSH ( CK   )
+!!              CALL FURNSH ( SCLK )
+!!
+!!        C
+!!        C     Convert the tolerance string to ticks.
+!!        C
+!!              CALL SCTIKS ( SC, CLKTOL, TOL )
+!!
+!!              DO I= 1, NPICS
+!!
+!!                 CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
+!!
+!!                 CALL CKGP ( INST, TIMEIN,  TOL,  REF,
+!!             .               CMAT, TIMEOUT, FOUND     )
+!!
+!!                 WRITE(*,*)
+!!                 WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
+!!
+!!                 IF ( FOUND ) THEN
+!!
+!!                    CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
+!!
+!!                    WRITE(*,'(2A)') 'Output s/c clock count: ',
+!!             .                                          SCLKOUT
+!!                    WRITE(*,'(A)') 'Output C-Matrix:'
+!!
+!!                    DO J = 1, 3
+!!
+!!                       WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
+!!
+!!                    END DO
+!!
+!!                 ELSE
+!!
+!!                    WRITE(*,'(A)') 'No pointing found.'
+!!
+!!                 END IF
+!!
+!!              END DO
+!!
+!!              END
+!!
+!!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!!        platform, the output was:
+!!
+!!        Input s/c clock count : 1/1465644279.0
+!!        No pointing found.
+!!
+!!        Input s/c clock count : 1/1465644281.0
+!!        Output s/c clock count: 1/1465644281.171
+!!        Output C-Matrix:
+!!           -0.335351455948710    0.864374440205611    0.374694846658341
+!!           -0.937887426812980   -0.343851965210223   -0.046184419961653
+!!            0.088918927227039   -0.366909598048763    0.925997176691424
+!!
+!!        Input s/c clock count : 1/1465644351.0
+!!        Output s/c clock count: 1/1465644351.071
+!!        Output C-Matrix:
+!!           -0.335380929397586    0.864363638262230    0.374693385378623
+!!           -0.937874292008090   -0.343889838107825   -0.046169163264003
+!!            0.088946301703530   -0.366899550417080    0.925998528787713
+!!
+!!        Input s/c clock count : 1/1465644361.0
+!!        No pointing found.
+!!
+!! ## Restrictions
+!!
+!!     None.
+!!
+!! ## Literature References
+!!
+!!     None.
+!!
+!! ## Author and Institution
+!!
+!!     N.J. Bachman       (JPL)
+!!     J. Diaz del Rio    (ODC Space)
+!!     J.M. Lynch         (JPL)
+!!     B.V. Semenov       (JPL)
+!!     W.L. Taber         (JPL)
+!!     R.E. Thurman       (JPL)
+!!     E.D. Wright        (JPL)
+!!
+!! ## Version
+!!
+!!-    SPICELIB Version 1.3.0, 21-NOV-2021 (NJB) (JDR)
+!!
+!!        Now variables PSTART, PSTOP, and PTOTLS are saved. Made minor
+!!        changes to formatting of code.
+!!
+!!        Bug fix: out-of-range character positions of SCLKCH are
+!!        no longer referenced.
+!!
+!!        Edited the header to comply with NAIF standard. Added complete
+!!        code example based on existing example fragments using PDS
+!!        archived CASSINI data.
+!!
+!!        Removed wrong reference to routine CLPOOL from SCLKCH detailed
+!!        description and $Files section, and reference to nonexistent
+!!        TIKSnn routines.
+!!
+!!        Removed unnecessary $Revisions section.
+!!
+!!-    SPICELIB Version 1.2.0, 28-FEB-2014 (BVS)
+!!
+!!        Added FAILED checks to prevent passing uninitialized values to
+!!        ANINT, which can causing numeric exceptions on some
+!!        environments.
+!!
+!!-    SPICELIB Version 1.1.0, 05-FEB-2008 (NJB)
+!!
+!!        The values of the parameter MXPART is now
+!!        provided by the INCLUDE file sclk.inc.
+!!
+!!-    SPICELIB Version 1.0.2, 22-AUG-2006 (EDW)
+!!
+!!        Replaced references to LDPOOL with references
+!!        to FURNSH.
+!!
+!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!!
+!!        Comment section for permuted index source lines was added
+!!        following the header.
+!!
+!!-    SPICELIB Version 1.0.0, 03-SEP-1990 (JML) (RET)
+!!
+!! ## Index Entries
+!!
+!!     encode spacecraft_clock
+!!
+!!     SPICELIB functions
+!!
+!!     Local variables
+!!
+!!     Saved variables
+!!
+!!     Standard SPICE error handling.
+!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cpos, nparsi
+      use pepper_inc_sclk
       implicit none
-      include               'sclk.inc'
       integer(ip)           pos
       integer(ip)           nparts
       integer(ip)           pnter
@@ -2880,26 +2838,25 @@ contains
 !$Procedure SCE2S ( ET to SCLK string )
 
       module procedure sce2s
+!! ## Abstract
+!!
+!!     Convert an epoch specified as ephemeris seconds past J2000 (ET) to
+!!     a character string representation of a spacecraft clock value
+!!     (SCLK).
+!!
+!! ## Required Reading
+!!
+!!     SCLK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Convert an epoch specified as ephemeris seconds past J2000 (ET) to
-!     a character string representation of a spacecraft clock value
-!     (SCLK).
-!
-! $ Required_Reading
-!
-!     SCLK
-!     TIME
-!
-! $ Keywords
-!
-!     CONVERSION
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 
@@ -3182,27 +3139,26 @@ contains
 !$Procedure SCS2E ( SCLK string to ET )
 
       module procedure scs2e
+!! ## Abstract
+!!
+!!     Convert a spacecraft clock string to ephemeris seconds past
+!!     J2000 (ET).
+!!
+!! ## Required Reading
+!!
+!!     CK
+!!     SCLK
+!!     SPK
+!!     TIME
+!!
+!! ## Keywords
+!!
+!!     CONVERSION
+!!     TIME
+!!
+!! ## Declarations
+!!
       use pepper_kinds, only: ip, wp
-
-! $ Abstract
-!
-!     Convert a spacecraft clock string to ephemeris seconds past
-!     J2000 (ET).
-!
-! $ Required_Reading
-!
-!     CK
-!     SCLK
-!     SPK
-!     TIME
-!
-! $ Keywords
-!
-!     CONVERSION
-!     TIME
-!
-! $ Declarations
-
       implicit none
 
 

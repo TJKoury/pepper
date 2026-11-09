@@ -7,12 +7,12 @@
 module pepper_state_spkpv
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzctr.inc'
    integer(ip), parameter :: frnmln = 32
 
    public :: init_spkpv_state

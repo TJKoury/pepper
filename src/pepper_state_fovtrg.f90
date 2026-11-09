@@ -7,12 +7,12 @@
 module pepper_state_fovtrg
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_gf
 
    implicit none
 
    private
 
-   include              'gf.inc'
 
    public :: init_fovtrg_state
 

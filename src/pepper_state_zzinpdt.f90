@@ -8,12 +8,12 @@
 module pepper_state_zzinpdt
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_dsktol
 
    implicit none
 
    private
 
-   include 'dsktol.inc'
 
    public :: init_zzinpdt_state
 

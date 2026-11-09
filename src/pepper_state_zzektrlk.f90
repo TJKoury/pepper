@@ -7,14 +7,14 @@
 module pepper_state_zzektrlk
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_ekpage
+      use pepper_inc_ektree
+      use pepper_inc_ektype
 
    implicit none
 
    private
 
-   include 'ekpage.inc'
-   include 'ektree.inc'
-   include 'ektype.inc'
    integer(ip), parameter :: acclen = 15
 
    public :: init_zzektrlk_state

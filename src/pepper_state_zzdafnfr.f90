@@ -6,12 +6,12 @@
 module pepper_state_zzdafnfr
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzftprms
 
    implicit none
 
    private
 
-   include              'zzftprms.inc'
    integer(ip), parameter :: preftp = 603
    integer(ip), parameter :: pstftp = 297
 

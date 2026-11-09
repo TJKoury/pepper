@@ -1,4 +1,4 @@
-!> Deprecated: This routine has been superseded by the SPICELIB
+!> **Deprecated:** This routine has been superseded by the SPICELIB
 !> routine ILUMIN. This routine is supported for purposes of
 !> backward compatibility only.
 !>
@@ -8,12 +8,12 @@
 module pepper_state_illum
 
    use pepper_kinds, only: ip, wp
+      use pepper_inc_zzctr
 
    implicit none
 
    private
 
-   include               'zzctr.inc'
    integer(ip), parameter :: maxl = 36
 
    public :: init_illum_state
