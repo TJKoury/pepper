@@ -91,7 +91,7 @@
       PROGRAM TSPICE
       IMPLICIT NONE
 
-      INTEGER, PARAMETER :: NFAM = 400
+      INTEGER, PARAMETER :: NFAM = 399
       INTEGER, PARAMETER :: NAMLEN = 32
 
       CHARACTER(LEN=NAMLEN), PARAMETER :: FAMILY(NFAM) = [ CHARACTER(LEN=NAMLEN) :: &
@@ -166,7 +166,6 @@
          'F_DSKXV', &
          'F_DVOPS', &
          'F_DVSEP', &
-         'F_DWPOOL', &
          'F_DYN01', &
          'F_DYN02', &
          'F_DYN03', &
@@ -724,8 +723,6 @@
             CALL F_DVOPS ( OK )
          CASE ( 'F_DVSEP' )
             CALL F_DVSEP ( OK )
-         CASE ( 'F_DWPOOL' )
-            CALL F_DWPOOL ( OK )
          CASE ( 'F_DYN01' )
             CALL F_DYN01 ( OK )
          CASE ( 'F_DYN02' )

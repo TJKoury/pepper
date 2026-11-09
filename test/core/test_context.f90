@@ -1,5 +1,4 @@
-!> Unit tests of pepper_instance: error handling in native contexts and in a
-!> legacy context (the mode of the legacy interface's context).
+!> Unit tests of pepper_instance: error handling in contexts.
 program test_context
 
    use pepper_kinds, only: ip, wp
@@ -13,7 +12,7 @@ program test_context
    call test_native()
    call test_independent()
    call test_actions()
-   call test_legacy()
+   call test_settings()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -37,7 +36,7 @@ contains
       type(pepper_context) :: ctx
       character(1840) :: msg
       ctx = spice%new_context()
-      call check(.not. ctx%failed() .and. .not. ctx%is_legacy(), 'new context')
+      call check(.not. ctx%failed(), 'new context')
       call check(associated(ctx%instance(), spice), 'instance')
 
       call ctx%setmsg('Body # at # (# s) not found.')
@@ -101,29 +100,29 @@ contains
       call check(ctx%failed(), 'invalid action signals an error')
    end subroutine test_actions
 
-   !> A legacy context starts with SPICELIB's error settings (action DEFAULT,
-   !> device SCREEN); with RETURN it keeps the first error as SPICELIB does.
-   subroutine test_legacy()
+   !> The output device (NULL for a new context) can be set to SPICELIB's
+   !> SCREEN; under RETURN the first error is kept, as by SPICELIB.
+   subroutine test_settings()
       type(pepper_context) :: ctx
       character(255) :: text
       character(80) :: msg
-      ctx = spice%new_context(legacy=.true.)
-      call check(ctx%is_legacy(), 'legacy context')
+      ctx = spice%new_context()
       text = ' '
-      call ctx%erract('GET', text)
-      call check(text == 'DEFAULT', 'legacy default action: '//trim(text))
       call ctx%errdev('GET', text)
-      call check(text == 'SCREEN', 'legacy default device: '//trim(text))
-      text = 'RETURN'
-      call ctx%erract('SET', text)
+      call check(text == 'NULL', 'default device: '//trim(text))
+      text = 'SCREEN'
+      call ctx%errdev('SET', text)
+      text = ' '
+      call ctx%errdev('GET', text)
+      call check(text == 'SCREEN', 'device set: '//trim(text))
       text = 'NULL'
       call ctx%errdev('SET', text)
-      call ctx%sigerr('SPICE(LEGACYTEST)')
+      call ctx%sigerr('SPICE(FIRSTERROR)')
       call ctx%sigerr('SPICE(SECONDERROR)')
       call ctx%getmsg('SHORT', msg)
-      call check(ctx%failed() .and. msg == 'SPICE(LEGACYTEST)', 'legacy keeps the first error')
+      call check(ctx%failed() .and. msg == 'SPICE(FIRSTERROR)', 'first error kept')
       call ctx%reset()
-      call check(.not. ctx%failed(), 'legacy reset')
-   end subroutine test_legacy
+      call check(.not. ctx%failed(), 'reset')
+   end subroutine test_settings
 
 end program test_context

@@ -1,17 +1,14 @@
 !> Benchmark: the cost of a kernel pool lookup (gdpool) and of a watch
-!> (swpool + cvpool) in a native context and in a legacy context (which also
-!> keeps the watch log of the legacy interface).
+!> (swpool + cvpool) in a context.
 program bench_pool
    use pepper_kinds, only: ip, wp
    use pepper_instance, only: pepper_spice, pepper_context
    implicit none
    type(pepper_spice), target :: spice
-   type(pepper_context) :: ctx, lctx
+   type(pepper_context) :: ctx
    ctx = spice%new_context()
-   lctx = spice%new_context(legacy=.true.)
    call ctx%pdpool('BENCH_X', 3_ip, [1.0_wp, 2.0_wp, 3.0_wp])
-   call run(ctx, 'native context')
-   call run(lctx, 'legacy context')
+   call run(ctx, 'context')
 contains
    !> Time the lookups and watches in a context.
    subroutine run(c, label)

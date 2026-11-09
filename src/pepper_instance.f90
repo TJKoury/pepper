@@ -20,10 +20,9 @@
 !> the output device (ctx%errdev: SCREEN, NULL or a file) and the parts of a
 !> report that are printed (ctx%errprt). A new context returns on errors and
 !> prints nothing (action RETURN, device NULL): the caller gets the messages
-!> with ctx%getmsg and clears the error with ctx%reset(). The legacy context
-!> (used by the legacy SPICELIB interface in tspice/src/legacy) starts with
-!> SPICELIB's settings (action DEFAULT, device SCREEN, every part printed),
-!> so that the legacy interface behaves as SPICELIB does.
+!> with ctx%getmsg and clears the error with ctx%reset(). SPICELIB's own
+!> settings (action DEFAULT, device SCREEN) can be set with ctx%erract and
+!> ctx%errdev, as the legacy interface in tspice/src/legacy does.
 module pepper_instance
 
    use, intrinsic :: iso_fortran_env, only: error_unit, int64
@@ -343,7 +342,7 @@ module pepper_instance
    !> the log is emptied and every variable counts as changed.
    integer, parameter :: change_log_size = 10000
 
-   !> A kernel pool watch of a (non-legacy) context: the agent, the variables
+   !> A kernel pool watch of a context: the agent, the variables
    !> it watches, and the pool change it has seen last (see swpool_context).
    type :: pool_watch
       character(watch_name_length) :: agent = ' '  !! the agent
@@ -384,10 +383,9 @@ module pepper_instance
       !> Incremented by every load and unload of an SPK, CK, PCK or DSK file;
       !> contexts discard their segment caches when it changed.
       integer(ip) :: segment_epoch = 0
-      ! The kernel pool's changes, for the watches of the contexts other than
-      ! the legacy one (they do not use the pool's own watcher table, which
-      ! they would share; see swpool_context). Written only while kernels are
-      ! loaded or the pool is changed, like the pool itself.
+      ! The kernel pool's changes, for the watches of the contexts (each
+      ! context keeps its own watches; see swpool_context). Written only while
+      ! kernels are loaded or the pool is changed, like the pool itself.
       integer(int64) :: pool_changes = 0  !! number of changes of the kernel pool
       integer(int64) :: all_changed_at = 0  !! the change that counts as a change of every variable
       character(watch_name_length), allocatable :: changed_names(:)  !! the variables changed (log)
@@ -458,7 +456,6 @@ module pepper_instance
    type :: pepper_context
       private
       type(pepper_spice), pointer :: spice => null()  !! the instance
-      logical :: legacy = .false.  !! the legacy interface's context (SPICELIB's default settings)
       ! Error status, messages and settings (SPICELIB's error handling).
       logical :: failure = .false.  !! an error was signaled (and not reset)
       logical :: messages_allowed = .true.  !! the long message may be changed (ACCEPT, ALLOWD)
@@ -472,8 +469,7 @@ module pepper_instance
       logical :: print_trace = .true.  !! (the traceback: not kept by PEPPER)
       logical :: print_default = .true.  !! reports include the note on the default error handling
       integer(ip) :: files_seen = 0  !! the file_generation this context's record caches reflect
-      ! Kernel pool watches (SWPOOL, CVPOOL, DWPOOL) of a context other than
-      ! the legacy one.
+      ! Kernel pool watches (SWPOOL, CVPOOL, DWPOOL) of the context.
       type(pool_watch), allocatable :: watches(:)  !! the watches
       integer :: nwatches = 0  !! number of watches
       ! Per-context state of the subsystems (allocated when first used).
@@ -763,7 +759,6 @@ module pepper_instance
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
-      procedure, non_overridable :: is_legacy
       !> Close the context's file units when it goes away.
       final :: ctx_final
       procedure, non_overridable :: failed => ctx_failed
@@ -3689,8 +3684,8 @@ module pepper_instance
    ! --- pepper_pool
    public :: zzctruin, zzctrsin, zzctrinc, zzctrchk, zzcln, zztknerr, zzmkpc,&
       zzrept, zztpats, zzcmbt, zzgrep, zzispt, zzist, zznote, zzremt,&
-      zzsubt, zztokns, zzunpck, zzvalt, zzpini, zzrvar, zzrvbf, zzgapool,&
-      zzgpnm, zznwpool, zzvupool, zzpctrck
+      zzsubt, zztokns, zzunpck, zzvalt, zzpini, zzrvar, zzrvbf,&
+      zzgpnm, zzpctrck
 
    interface
 
@@ -4042,11 +4037,9 @@ module pepper_instance
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzpini ( ctx, first, maxvar, maxval, maxlin, begdat, begtxt, nmpool, dppool, chpool, namlst, datlst, maxagt, mxnote, wtvars, wtptrs, wtpool, wtagnt, agents, active, notify, subctr )
+      module subroutine zzpini ( ctx, first, maxvar, maxval, maxlin, begdat, begtxt, nmpool, dppool, chpool, namlst, datlst, subctr )
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) :: lbcell
-         parameter ( lbcell = -5 )
          integer(ip) :: lbpool
          parameter ( lbpool = -5 )
          logical, intent(inout) :: first  !! Used to determine if this is the first pass
@@ -4064,19 +4057,6 @@ module pepper_instance
          integer(ip), intent(out) :: namlst (              maxvar )  !! Heads of collision
                                                                      !! resolution lists
          integer(ip), intent(out) :: datlst (              maxvar )  !! Heads of data values lists
-         integer(ip), intent(in) :: maxagt  !! Maximum number of agents that can be supported
-         integer(ip), intent(in) :: mxnote  !! Maximum number of agents that can be notified
-         character(*), intent(inout) :: wtvars ( lbcell : maxvar )  !! Name array (watched
-                                                                    !! variables)
-                                                                  !! of the watcher symbol table
-         integer(ip), intent(out) :: wtptrs ( maxvar )  !! Pointer array of the watcher symbol table
-         integer(ip), intent(out) :: wtpool ( 2, lbpool:mxnote )  !! Linked list pool of the watcher
-                                                                  !! symbol table
-         character(*), intent(out) :: wtagnt ( mxnote )  !! Values array (agents) of the watcher
-                                                         !! symbol table
-         character(*), intent(inout) :: agents ( lbcell : * )  !! Set of agents
-         character(*), intent(inout) :: active ( lbcell : * )  !! Watchers that are active.
-         character(*), intent(inout) :: notify ( lbcell : * )  !! Agents to notify
          integer(ip), intent(out) :: subctr ( ctrsiz )  !! POOL state counter.
       end subroutine zzpini
 
@@ -4136,24 +4116,6 @@ module pepper_instance
       end subroutine zzrvbf
 
       !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      module subroutine zzgapool ( ctx, varnam, wtvars, wtptrs, wtpool, wtagnt, agtset )
-         class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) :: lbcell
-         parameter ( lbcell = -5 )
-         integer(ip) :: lbpool
-         parameter ( lbpool = -5 )
-         character(*), intent(in) :: varnam  !! Kernel variable name.
-         character(*), intent(in) :: wtvars ( lbcell : * )  !! Watched kernel variable set.
-         integer(ip), intent(in) :: wtptrs ( * )  !! Pointers from variables into the watch pool.
-         integer(ip), intent(in) :: wtpool ( 2, lbpool : * )  !! Watch pool used for managing agent
-                                                              !! names.
-         character(*), intent(in) :: wtagnt ( * )  !! Array of agent names.
-         character(*), intent(inout) :: agtset ( lbcell : * )  !! Set of agents for VARNAM.
-      end subroutine zzgapool
-
-      !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzgpnm ( ctx, namlst, nmpool, names, datlst, dppool, dpvals, chpool, chvals, varnam, found, lookat, nameat )
@@ -4180,27 +4142,6 @@ module pepper_instance
          integer(ip), intent(out) :: lookat  !! The value ZZHASH(VARNAM).
          integer(ip), intent(out) :: nameat  !! The location where VARNAM is to be located.
       end subroutine zzgpnm
-
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      module subroutine zznwpool ( ctx, varnam, wtvars, wtptrs, wtpool, wtagnt, agtwrk, notify, agents )
-         class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) :: lbcell
-         parameter ( lbcell = -5 )
-         integer(ip) :: lbpool
-         parameter ( lbpool = -5 )
-         character(*), intent(in) :: varnam  !! Kernel variable name.
-         character(*), intent(in) :: wtvars ( lbcell : * )  !! Watched kernel variable set.
-         integer(ip), intent(in) :: wtptrs ( * )  !! Pointers from variables into the watch pool.
-         integer(ip), intent(in) :: wtpool ( 2, lbpool : * )  !! Watch pool used for managing agent
-                                                              !! names.
-         character(*), intent(in) :: wtagnt ( * )  !! Array of agent names.
-         character(*), intent(inout) :: agtwrk ( lbcell : * )  !! Agent workspace cell.
-         character(*), intent(inout) :: notify ( lbcell : * )  !! Another agent workspace cell.
-         character(*), intent(inout) :: agents ( lbcell : * )  !! Set of agents to be notified of
-                                                               !! updates.
-      end subroutine zznwpool
 
       !> Remove all kernel variables from the kernel pool. Watches
       !> on kernel variables are retained.
@@ -4395,22 +4336,6 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: agent  !! The name of an agent to be notified after updates.
       end subroutine dwpool
-
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      module subroutine zzvupool ( ctx, uwvars, uwptrs, uwpool, uwagnt )
-      use pepper_inc_zzctr
-         class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) :: lbcell
-         parameter ( lbcell = -5 )
-         character(*), intent(inout) :: uwvars    ( lbcell : * )  !! Watched kernel variable set.
-         integer(ip), intent(out) :: uwptrs    ( * )  !! Pointers from variables into the watch
-                                                      !! pool.
-         integer(ip), intent(out) :: uwpool    ( 2, lbcell : * )  !! Watch pool used for managing
-                                                                  !! agent names.
-         character(*), intent(out) :: uwagnt    ( * )  !! Array of agent names.
-      end subroutine zzvupool
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due to the
@@ -20568,23 +20493,12 @@ module pepper_instance
 
 contains
 
-   !> A new context for this instance. With legacy = .true., it starts with
-   !> SPICELIB's error settings (action DEFAULT, device SCREEN, every part of
-   !> the report printed) and keeps SPICELIB's behavior where native contexts
-   !> differ (for the legacy interface only).
-   function new_context(this, legacy) result(ctx)
+   !> A new context for this instance.
+   function new_context(this) result(ctx)
       class(pepper_spice), target, intent(in) :: this  !! the instance (must have the target
                                                        !! attribute)
-      logical, intent(in), optional :: legacy  !! .true. for the legacy interface's context (default
-                                               !! .false.)
       type(pepper_context) :: ctx
       ctx%spice => this
-      if (present(legacy)) ctx%legacy = legacy
-      if (ctx%legacy) then
-         ! SPICELIB's initial settings
-         ctx%action = action_default
-         ctx%device = 'SCREEN'
-      end if
    end function new_context
 
    !> The instance this context belongs to.
@@ -20593,12 +20507,6 @@ contains
       type(pepper_spice), pointer :: spice
       spice => this%spice
    end function instance
-
-   !> True for a legacy context (the context of the legacy interface).
-   logical function is_legacy(this)
-      class(pepper_context), intent(in) :: this  !! the context
-      is_legacy = this%legacy
-   end function is_legacy
 
    !> True if an error has been signaled and not reset.
    logical function ctx_failed(this)
@@ -20832,7 +20740,7 @@ contains
       end do
    end function watch_index
 
-   !> SWPOOL for a context other than the legacy one: the watch is the
+   !> SWPOOL for a context: the watch is the
    !> context's own, so that contexts do not take each other's notices, and
    !> setting it changes nothing that other contexts use. As with SWPOOL, the
    !> agent's variables are added to those it watches already, and a notice
@@ -20894,7 +20802,7 @@ contains
       end associate
    end function watch_pending
 
-   !> CVPOOL for a context other than the legacy one: true if a variable the
+   !> CVPOOL for a context: true if a variable the
    !> agent watches (in this context) was updated since the last check.
    subroutine cvpool_context(ctx, agent, update)
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20908,7 +20816,7 @@ contains
       ctx%watches(k)%seen = ctx%spice%pool_changes
    end subroutine cvpool_context
 
-   !> DWPOOL for a context other than the legacy one: delete the agent's
+   !> DWPOOL for a context: delete the agent's
    !> watch; SPICE(UPDATEPENDING) if it has an unchecked update.
    subroutine dwpool_context(ctx, agent)
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20924,6 +20832,8 @@ contains
          return
       end if
       ctx%watches(k:ctx%nwatches - 1) = ctx%watches(k + 1:ctx%nwatches)
+      ! (the vacated last slot is reused by the next new watch)
+      if (allocated(ctx%watches(ctx%nwatches)%names)) deallocate (ctx%watches(ctx%nwatches)%names)
       ctx%nwatches = ctx%nwatches - 1
    end subroutine dwpool_context
 

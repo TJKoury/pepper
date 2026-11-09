@@ -164,41 +164,11 @@
       CALL CHCKSL ( 'FOUND', FOUND, .FALSE., OK )
 
 !
-! --- Case: ------------------------------------------------------
+!     PEPPER: the case "ZZBODTRN - Check watchers are properly set" is
+!     removed. ZZBODTRN notices changes of NAIF_BODY_NAME/NAIF_BODY_CODE
+!     through the pool's state counter and registers no watcher (agent
+!     ZZBODTRN) any more; the UPDATE cases below test that it notices them.
 !
-      CALL TCASE ( 'ZZBODTRN - Check watchers are properly set' )
-
-!
-!     Make certain that the initialization block is executed
-!     prior to attempting to check the watcher's set status.
-!     It is difficult to verify that each initialization block
-!     functions properly in a test family, since once INIT is
-!     set the code will not execute again.
-!
-      CALL ZZBODN2C ( 'EARTH', CODE, FOUND )
-
-      BUFFER(  1 ) = 'NAIF_BODY_CODE = 3000'
-      BUFFER(  2 ) = 'NAIF_BODY_NAME = ''ZZBODTRN_TEST_BODY'''
-
-      CALL LMPOOL ( BUFFER, 2 )
-
-      CALL CHCKXC ( .FALSE., ' ', OK )
-
-!
-!     Check to see that the watchers are activated.
-!
-      CALL CVPOOL ( 'ZZBODTRN', UPDATE )
-
-      CALL CHCKXC ( .FALSE., ' ', OK )
-
-      CALL CHCKSL ( 'UPDATE', UPDATE, .TRUE., OK )
-
-!
-!     Clean up.
-!
-      CALL CLPOOL ( )
-      CALL ZZBODRST ( )
-
 !
 ! --- Case: ------------------------------------------------------
 !

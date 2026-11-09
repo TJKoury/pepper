@@ -2753,9 +2753,12 @@
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      UPDATE = .FALSE.
+!     PEPPER: watches are kept by each context, not in the pool, so
+!     SWPOOL does not change the pool's state counter.
+!
+      UPDATE = .TRUE.
       CALL ZZPCTRCK ( USRCTR, UPDATE )
-      CALL CHCKSL ( 'SWPOOL counter UPDATE', UPDATE, .TRUE., OK )
+      CALL CHCKSL ( 'no SWPOOL counter UPDATE', UPDATE, .FALSE., OK )
 
 !
 !     Test counter after CVPOOL.
@@ -2923,9 +2926,12 @@
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      UPDATE = .FALSE.
+!     PEPPER: watches are kept by each context, not in the pool, so
+!     DWPOOL does not change the pool's state counter.
+!
+      UPDATE = .TRUE.
       CALL ZZPCTRCK ( USRCTR, UPDATE )
-      CALL CHCKSL ( 'DWPOOL counter UPDATE', UPDATE, .TRUE., OK )
+      CALL CHCKSL ( 'no DWPOOL counter UPDATE', UPDATE, .FALSE., OK )
 
 
 !

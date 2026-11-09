@@ -27,8 +27,14 @@ contains
    !> The context of the legacy interface (created on the first call).
    function legacy_context() result(ctx)
       type(pepper_context), pointer :: ctx  !! the default context
+      character(255) :: setting
       if (.not. initialized) then
-         default_context = default_spice%new_context(legacy=.true.)
+         default_context = default_spice%new_context()
+         ! SPICELIB's initial error settings
+         setting = 'DEFAULT'
+         call default_context%erract('SET', setting)
+         setting = 'SCREEN'
+         call default_context%errdev('SET', setting)
          initialized = .true.
       end if
       ctx => default_context

@@ -85,6 +85,10 @@ contains
       call check(.not. b%failed(), 'watch: dwpool after the check')
       call b%cvpool('AGENT', update)
       call check(.not. update, 'watch: no notices after dwpool')
+      ! a new watch after dwpool reuses the freed slot
+      call b%swpool('AGENT2', 1_ip, [character(32) :: 'WATCH_X'])
+      call b%cvpool('AGENT2', update)
+      call check(update .and. .not. b%failed(), 'watch: new watch after dwpool')
 
       call a%clpool()
       call a%cvpool('AGENT', update)

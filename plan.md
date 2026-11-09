@@ -291,12 +291,20 @@ Each phase ends with tspice green, the concurrency tests that apply passing, and
    - **Output** (`src/pepper_output.f90`): WRLINE, CLLINE and BYEBYE. A device is the screen, NULL, or a file opened with `newunit=`.
    - **`src/legacy/spicelib/` is gone:** its 26 routines are wrappers in `src/legacy/pepper_legacy_errsys.f90` that act on the legacy context. The exceptions are PRTPKG, an umbrella whose main entry signals SPICE(BOGUSENTRY), and ZZPHSH, which is unused. There is no global state besides the default instance and its context.
    - The library's objects of the deleted files had stayed in tspice's archive (dependency objects are named `.._src_...`); `tools/clean_stale.py` now recognizes them.
-9. **The legacy interface leaves the library (done):** `src/legacy/` (the 43 files of external wrappers with SPICELIB's names, the default instance and its context, the callback bridges) is now `tspice/src/legacy/`, in the tspice package, its only user. The library is only the module API; the legacy *mode* of a context (`new_context(legacy=.true.)`: SPICELIB's error settings, the pool watch log, the ZZBODTRN listing) stays in it.
+9. **The legacy interface leaves the library (done):** `src/legacy/` (the 43 files of external wrappers with SPICELIB's names, the default instance and its context, the callback bridges) is now `tspice/src/legacy/`, in the tspice package, its only user. The library is only the module API.
 
    *Result:*
    - The unit tests no longer use the wrappers. `test_context` tests a legacy context directly; `test_hash` compares `name_hash` with a copy of SPICELIB's ZZHASH2 algorithm; `test_pool`'s test of the separate legacy instance is gone.
    - The benchmarks no longer time the legacy interface. `bench_pool` compares a native context with a legacy context.
    - The generators (`tools/modularize.py`, `modularize_ctx.py`, `callbacks.py`) write the wrappers to `tspice/src/legacy/`.
+10. **No legacy mode in the library (done):** contexts had a `legacy` flag for the legacy interface's context. It gave SPICELIB's initial error settings, SPICELIB's shared watcher tables for SWPOOL/CVPOOL/DWPOOL, and ZZBODTRN's watcher registration. All three existed only to match SPICELIB internals that tspice checks. The flag (`new_context(legacy=)`, `is_legacy`) is gone.
+
+   *Result:*
+   - **One watcher model:** every context keeps its own watches against the instance's log of pool changes. SPICELIB's watcher tables (`wtvars`, `wtpool`, `wtagnt`, `wtptrs`, `active`, `agents`, `notify`, about 16 MB per instance) are removed from `pool_state`, along with ZZGAPOOL, ZZNWPOOL and ZZVUPOOL, which read or update them. The pool's modifiers only record the change (`pool_changed`). ZZBODTRN registers no watcher; it checks the pool's state counter. SWPOOL and DWPOOL no longer change the pool's state counter (they change nothing in the instance).
+   - **Error settings:** a context starts with RETURN and device NULL. The legacy interface's default context (in tspice) sets DEFAULT and SCREEN through `erract`/`errdev`.
+   - **A bug found:** `dwpool_context` left the freed slot's name list allocated, so the next new watch in that context failed (the legacy path had hidden it). It is fixed, with a check in `test_pool`.
+   - **tspice:** `F_DWPOOL` is removed (it compared ZZVUPOOL's copy of the watcher tables). `F_ZZBDTN` loses its case on the ZZBODTRN watcher. `F_POOL` case 40 now expects SWPOOL and DWPOOL to leave the state counter unchanged. DWPOOL is still tested by `F_POOL` and `test_pool`. 399 families.
+   - **Stale archives:** fpm rebuilds an archive only if it compiled one of its objects in the same run, so after a failed build the next run linked the old library. `tools/clean_stale.py` now removes an archive that is older than one of its objects.
 
 ### Risks
 

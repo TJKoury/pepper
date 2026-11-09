@@ -574,56 +574,6 @@
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> Legacy interface: calls zz routine zzpini with the legacy context.
-      subroutine zzpini ( first, &
-                          maxvar, maxval, maxlin, &
-                          begdat, begtxt, &
-                          nmpool, dppool, chpool, &
-                          namlst, datlst, &
-                          maxagt, mxnote, wtvars, &
-                          wtptrs, wtpool, wtagnt, &
-                          agents, active, notify, subctr  )
-      use pepper_instance, only: pepper_context, pepper_zzpini => zzpini
-      use pepper_legacy_context, only: legacy_context
-      use pepper_kinds, only: ip
-      use pepper_inc_zzctr
-      implicit none
-      integer(ip) :: lbcell
-      parameter ( lbcell = -5 )
-      integer(ip) :: lbpool
-      parameter ( lbpool = -5 )
-      logical :: first  !! Used to determine if this is the first pass
-      integer(ip) :: maxvar  !! Maximum number of variables in the pool
-      integer(ip) :: maxval  !! Maximum number of d.p. values in the pool
-      integer(ip) :: maxlin  !! Maximum number of string values in the pool
-      character(*) :: begdat  !! Marker used to begin data section of a kernel
-      character(*) :: begtxt  !! Marker used to begin text section of a kernel
-      integer(ip) :: nmpool ( 2,  lbpool : maxvar )  !! Linked list for resolving hash collisions of
-                                                     !! names
-      integer(ip) :: dppool ( 2,  lbpool : maxval )  !! Linked list for maintaining d.p. values.
-      integer(ip) :: chpool ( 2,  lbpool : maxlin )  !! Linked list for maintaining string values
-      integer(ip) :: namlst (              maxvar )  !! Heads of collision resolution lists
-      integer(ip) :: datlst (              maxvar )  !! Heads of data values lists
-      integer(ip) :: maxagt  !! Maximum number of agents that can be supported
-      integer(ip) :: mxnote  !! Maximum number of agents that can be notified
-      character(*) :: wtvars ( lbcell : maxvar )  !! Name array (watched variables) of the watcher
-                                                  !! symbol table
-      integer(ip) :: wtptrs ( maxvar )  !! Pointer array of the watcher symbol table
-      integer(ip) :: wtpool ( 2, lbpool:mxnote )  !! Linked list pool of the watcher symbol table
-      character(*) :: wtagnt ( mxnote )  !! Values array (agents) of the watcher symbol table
-      character(*) :: agents ( lbcell : * )  !! Set of agents
-      character(*) :: active ( lbcell : * )  !! Watchers that are active.
-      character(*) :: notify ( lbcell : * )  !! Agents to notify
-      integer(ip) :: subctr ( ctrsiz )  !! POOL state counter.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call pepper_zzpini ( ctx, first, maxvar, maxval, maxlin, begdat, begtxt, nmpool, dppool, chpool, namlst, datlst, maxagt, mxnote, wtvars, wtptrs, wtpool, wtagnt, agents, active, notify, subctr )
-      end subroutine zzpini
-
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
       !> Legacy interface: calls zz routine zzrvar with the legacy context.
       subroutine zzrvar ( namlst, &
                           nmpool, names, datlst, &
@@ -691,32 +641,6 @@
       end subroutine zzrvbf
 
       !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> Legacy interface: calls zz routine zzgapool with the legacy context.
-      subroutine zzgapool ( varnam, wtvars, wtptrs, &
-                            wtpool, wtagnt, agtset )
-      use pepper_instance, only: pepper_context, pepper_zzgapool => zzgapool
-      use pepper_legacy_context, only: legacy_context
-      use pepper_kinds, only: ip
-      implicit none
-      integer(ip) :: lbcell
-      parameter ( lbcell = -5 )
-      integer(ip) :: lbpool
-      parameter ( lbpool = -5 )
-      character(*) :: varnam  !! Kernel variable name.
-      character(*) :: wtvars ( lbcell : * )  !! Watched kernel variable set.
-      integer(ip) :: wtptrs ( * )  !! Pointers from variables into the watch pool.
-      integer(ip) :: wtpool ( 2, lbpool : * )  !! Watch pool used for managing agent names.
-      character(*) :: wtagnt ( * )  !! Array of agent names.
-      character(*) :: agtset ( lbcell : * )  !! Set of agents for VARNAM.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call pepper_zzgapool ( ctx, varnam, wtvars, wtptrs, wtpool, wtagnt, agtset )
-      end subroutine zzgapool
-
-      !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
@@ -750,34 +674,6 @@
       ctx => legacy_context()
       call pepper_zzgpnm ( ctx, namlst, nmpool, names, datlst, dppool, dpvals, chpool, chvals, varnam, found, lookat, nameat )
       end subroutine zzgpnm
-
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> Legacy interface: calls zz routine zznwpool with the legacy context.
-      subroutine zznwpool ( varnam, wtvars, wtptrs, wtpool, &
-                            wtagnt, agtwrk, notify, agents )
-      use pepper_instance, only: pepper_context, pepper_zznwpool => zznwpool
-      use pepper_legacy_context, only: legacy_context
-      use pepper_kinds, only: ip
-      implicit none
-      integer(ip) :: lbcell
-      parameter ( lbcell = -5 )
-      integer(ip) :: lbpool
-      parameter ( lbpool = -5 )
-      character(*) :: varnam  !! Kernel variable name.
-      character(*) :: wtvars ( lbcell : * )  !! Watched kernel variable set.
-      integer(ip) :: wtptrs ( * )  !! Pointers from variables into the watch pool.
-      integer(ip) :: wtpool ( 2, lbpool : * )  !! Watch pool used for managing agent names.
-      character(*) :: wtagnt ( * )  !! Array of agent names.
-      character(*) :: agtwrk ( lbcell : * )  !! Agent workspace cell.
-      character(*) :: notify ( lbcell : * )  !! Another agent workspace cell.
-      character(*) :: agents ( lbcell : * )  !! Set of agents to be notified of updates.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call pepper_zznwpool ( ctx, varnam, wtvars, wtptrs, wtpool, wtagnt, agtwrk, notify, agents )
-      end subroutine zznwpool
 
       !> Remove all kernel variables from the kernel pool. Watches
       !> on kernel variables are retained.
@@ -1135,29 +1031,6 @@
       ctx => legacy_context()
       call ctx%dwpool ( agent )
       end subroutine dwpool
-
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> Legacy interface: calls zz routine zzvupool with the legacy context.
-      subroutine zzvupool ( uwvars, uwptrs, uwpool, uwagnt )
-      use pepper_instance, only: pepper_context, pepper_zzvupool => zzvupool
-      use pepper_legacy_context, only: legacy_context
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_inc_zzctr
-      implicit none
-      integer(ip) :: lbcell
-      parameter ( lbcell = -5 )
-      character(*) :: uwvars    ( lbcell : * )  !! Watched kernel variable set.
-      integer(ip) :: uwptrs    ( * )  !! Pointers from variables into the watch pool.
-      integer(ip) :: uwpool    ( 2, lbcell : * )  !! Watch pool used for managing agent names.
-      character(*) :: uwagnt    ( * )  !! Array of agent names.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call pepper_zzvupool ( ctx, uwvars, uwptrs, uwpool, uwagnt )
-      end subroutine zzvupool
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due to the

@@ -54,7 +54,7 @@ thread (see `test/core/test_parallel.f90`).
 The library has no SPICELIB-style interface. One lives in the `tspice`
 package (`tspice/src/legacy/`), where NAIF's test suite uses it: SPICELIB's
 routines as external procedures (`call spkezr(...)`). They are thin wrappers
-that call the library with a default instance and a legacy context, whose
+that call the library with a default instance and context, whose
 error handling starts with SPICELIB's settings (`erract`, `errprt` and
 `errdev` work as in SPICELIB).
 

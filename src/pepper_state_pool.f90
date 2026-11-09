@@ -24,10 +24,6 @@ module pepper_state_pool
    parameter ( maxchr =     80 )
    integer(ip) :: maxlen
    parameter ( maxlen =     32 )
-   integer(ip) :: mxnote
-   parameter ( mxnote =  maxvar * 5 )
-   integer(ip) :: lbcell
-   parameter ( lbcell = -5 )
    integer(ip) :: lbpool
    parameter ( lbpool = -5 )
    integer(ip) :: mrklen
@@ -47,15 +43,6 @@ module pepper_state_pool
       integer(ip) :: dppool   ( 2, lbpool:maxval )  !! linked-list pool of the numeric values
       character(maxchr) :: chvals   (           maxlin )  !! character values
       real(wp) :: dpvals   (           maxval )  !! numeric values
-      character(maxlen) :: wtvars   (    lbcell : maxvar )  !! watcher table: the watched variables
-                                                            !! (a set)
-      integer(ip) :: wtpool   ( 2, lbpool : mxnote )  !! linked-list pool of the watcher table
-      character(maxlen) :: wtagnt   ( mxnote )  !! watcher table: the agents watching each variable
-      integer(ip) :: wtptrs   ( maxvar )  !! watcher table: pointers into wtpool for each watched
-                                          !! variable
-      character(maxlen) :: active   ( lbcell:mxnote )  !! set of the agents that have watchers
-      character(maxlen) :: agents   ( lbcell:mxnote )  !! work set of agents
-      character(maxlen) :: notify   ( lbcell:mxnote )  !! set of the agents to notify of an update
       logical :: first  !! the pool has not been initialized yet
       integer(ip) :: subctr ( ctrsiz )  !! pool state counter (changes when the pool changes)
       character(mrklen) :: begdat  !! the begin-data marker of text kernels
@@ -76,13 +63,6 @@ contains
       state%dppool = 0
       state%chvals = ' '
       state%dpvals = 0.0_wp
-      state%wtvars = ' '
-      state%wtpool = 0
-      state%wtagnt = ' '
-      state%wtptrs = 0
-      state%active = ' '
-      state%agents = ' '
-      state%notify = ' '
       state%first = .false.
       state%subctr = 0
       state%begdat = ' '

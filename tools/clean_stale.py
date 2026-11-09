@@ -88,6 +88,25 @@ def main() -> int:
             a.unlink()
             print(f"clean_stale: removed {a.relative_to(ROOT)} ({len(bad)} members of deleted "
                   f"sources, e.g. {bad[0]})")
+    # fpm rebuilds an archive only when it compiled one of its objects in the
+    # same run. After a failed build (objects compiled, then an error before
+    # the archive step) the next run finds the objects up to date and links
+    # the old archive. The archive is in another directory than the objects
+    # (the link and compile flags differ), so compare it with the objects of
+    # the same names in every build directory of its package, and remove it
+    # if one of them is newer.
+    for a in [*(ROOT / "build").glob("gfortran_*/*/*.a"), *(ROOT / "tspice" / "build").glob("gfortran_*/*/*.a")]:
+        if not a.exists():
+            continue
+        r = subprocess.run(["ar", "t", str(a)], capture_output=True, text=True)
+        members = {m for m in r.stdout.split() if m.endswith(".o")}
+        build_root = a.parent.parent.parent
+        newer = [o for o in build_root.glob(f"gfortran_*/{a.parent.name}/*.o")
+                 if o.name in members and o.stat().st_mtime > a.stat().st_mtime]
+        if newer:
+            a.unlink()
+            print(f"clean_stale: removed {a.relative_to(ROOT)} (older than {len(newer)} of its "
+                  f"objects, e.g. {newer[0].name})")
     # A module that uses pepper_instance keeps an old .mod after its own
     # source is unchanged and pepper_instance changed (seen after failed
     # builds): its users then see an old layout of pepper_context. Remove the

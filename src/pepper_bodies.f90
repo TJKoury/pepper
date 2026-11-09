@@ -7531,12 +7531,7 @@ contains
 !        variables.
 !
 !        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below). The legacy interface still registers the watchers,
-!        as SPICELIB does (for callers that check them).
-         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
-                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
-
-         if ( ctx%failed() ) return
+!        (see below).
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -7908,12 +7903,7 @@ contains
 !        variables.
 !
 !        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below). The legacy interface still registers the watchers,
-!        as SPICELIB does (for callers that check them).
-         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
-                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
-
-         if ( ctx%failed() ) return
+!        (see below).
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -8356,12 +8346,7 @@ contains
 !        variables.
 !
 !        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below). The legacy interface still registers the watchers,
-!        as SPICELIB does (for callers that check them).
-         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
-                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
-
-         if ( ctx%failed() ) return
+!        (see below).
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -8701,12 +8686,7 @@ contains
 !        variables.
 !
 !        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below). The legacy interface still registers the watchers,
-!        as SPICELIB does (for callers that check them).
-         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
-                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
-
-         if ( ctx%failed() ) return
+!        (see below).
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -8903,12 +8883,7 @@ contains
 !        variables.
 !
 !        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below). The legacy interface still registers the watchers,
-!        as SPICELIB does (for callers that check them).
-         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
-                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
-
-         if ( ctx%failed() ) return
+!        (see below).
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.

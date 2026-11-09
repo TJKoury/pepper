@@ -10686,7 +10686,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: clearc, cleari
       use pepper_inc_zzctr
       implicit none
 
@@ -10714,14 +10713,8 @@ contains
 !     MAXLIN      is the maximum number of character strings that
 !                 can be stored as data for kernel pool variables.
 !
-!     MXNOTE      is the maximum number of distinct variable-agents
-!                 pairs that can be maintained by the kernel pool.
-!                 (A variable is "paired" with an agent, if that agent
-!                 is to be notified whenever the variable is updated.)
-!
-!     MAXAGT      is the maximum number of agents that can be kept
-!                 on the distribution list for notification of updates
-!                 to kernel variables.
+!     PEPPER: MXNOTE and MAXAGT (the sizes of SPICELIB's watcher
+!     tables) are gone; each context keeps its own watches.
 !
 ! $ Detailed_Output
 !
@@ -10769,16 +10762,8 @@ contains
 !                 NAME.  On output all entries of DATLST are set to
 !                 zero.
 !
-!      WTPTR     is a symbol table of variables to watch for.  WTPTR
-!      WATPTR     contains the names of variables to watch. The
-!      WATVAL     values associated with a name are the names of agents
-!                 that have requested that the variable be watched.
-!
-!      AGENTS     Agents contains the list of agents that need to be
-!                 notified about updates to their variables.
-!
-!      ACTIVE     A temporary set.
-!      NOTIFY     A temporary set.
+!      PEPPER: WTVARS, WTPTRS, WTPOOL, WTAGNT, AGENTS, ACTIVE and NOTIFY
+!      (SPICELIB's watcher tables) are gone.
 !
 !      SUBCTR     Initialized POOL state counter.
 !
@@ -10888,15 +10873,6 @@ contains
          call lnkini ( ctx, maxvar, nmpool )
          call lnkini ( ctx, maxval, dppool )
          call lnkini ( ctx, maxlin, chpool )
-
-         call ssizec ( ctx, maxvar, wtvars )
-         call cleari ( maxvar, wtptrs )
-         call lnkini ( ctx, mxnote, wtpool )
-         call clearc ( mxnote, wtagnt )
-
-         call ssizec ( ctx, mxnote, agents )
-         call ssizec ( ctx, mxnote, active )
-         call ssizec ( ctx, mxnote, notify )
 
          call zzctrsin ( ctx, subctr )
 
@@ -13409,179 +13385,6 @@ contains
       return
       end procedure zzrvbf
 
-!$Procedure ZZGAPOOL ( Private: get agent set for watched variable )
-
-      module procedure zzgapool
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due to the
-!!     volatile nature of this routine.
-!!
-!!     Return a SPICE set containing the names of agents watching
-!!     a specified kernel variable.
-!!
-!! ## Required Reading
-!!
-!!     KERNEL
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-      use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc
-      implicit none
-
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-
-! $ Detailed_Input
-!
-!     VARNAM      is the name of a kernel variable.
-!
-!     WTVARS      is a SPICE set containing the contents of the kernel
-!                 pool watcher system's set WTVARS.
-!
-!     WTPTRS      is an array containing the contents of the kernel
-!                 pool watcher system's array WTPTRS.
-!
-!     WTPOOL      is a SPICE doubly linked list pool containing the
-!                 contents of the kernel pool watcher system's pool
-!                 WTPOOL.
-!
-!     WTAGNT      is an array containing the contents of the kernel
-!                 pool watcher system's array WTAGNT.
-!
-! $ Detailed_Output
-!
-!     AGTSET      is a SPICE set containing the names of the agents
-!                 associated with the kernel variable designated by
-!                 VARNAM.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the output set AGTSET is too small to hold the set of
-!        agents watching VARNAM, the error will be diagnosed by routines
-!        in the call tree of this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is not part of the SPICELIB API. This routine
-!     may be removed in a later version of the SPICE Toolkit, or
-!     its interface may change.
-!
-!     SPICE-based application code should not call this routine.
-!
-! $ Examples
-!
-!     See POOL entry point SWPOOL.
-!
-! $ Restrictions
-!
-!     1) This is a private routine. See $Particulars above.
-!
-!     2) Contents of the input arrays are assumed to be valid.
-!        The output returned by this routine is meaningless
-!        otherwise.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 17-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get agent set for watched kernel variable
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
-      integer(ip)           loc
-      integer(ip)           nfetch
-      integer(ip)           node
-
-      if ( ctx%failed() ) return
-
-!
-!     The output agent set is empty until we find any
-!     agents.
-!
-      call scardc ( ctx, 0, agtset )
-
-!
-!     Find the location of VARNAM in the set of watched
-!     variables.
-!
-      loc = bsrchc ( varnam, cardc( ctx,wtvars), wtvars(1) )
-
-      if ( loc == 0 ) then
-!
-!        This variable is not watched. The agent set is
-!        empty.
-!
-         return
-
-      end if
-
-!
-!     Set NODE to the head node of the agent list for VARNAM.
-!     Traverse the agent list for VARNAM. Collect the agents
-!     as an unordered list, then turn the list into a set.
-!
-      node   = wtptrs(loc)
-      nfetch = 0
-
-      do while ( node > 0 )
-
-         nfetch         = nfetch + 1
-         agtset(nfetch) = wtagnt(node)
-
-         node           = lnknxt( ctx, node, wtpool )
-
-      end do
-
-      call validc ( ctx, sizec( ctx,agtset), nfetch, agtset )
-
-      return
-      end procedure zzgapool
-
 !$Procedure      ZZGPNM ( Get position of a name )
 
       module procedure zzgpnm
@@ -13812,164 +13615,6 @@ contains
       return
 
       end procedure zzgpnm
-
-!$Procedure ZZNWPOOL ( Private: notify watchers of update )
-
-      module procedure zznwpool
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due to the
-!!     volatile nature of this routine.
-!!
-!!     Union the set of agents for a specified, watched kernel variable
-!!     with the set of agents on the kernel pool's update notification
-!!     list.
-!!
-!! ## Required Reading
-!!
-!!     KERNEL
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-      use pepper_kinds, only: ip
-      implicit none
-
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-
-! $ Detailed_Input
-!
-!     VARNAM      is the name of a kernel variable.
-!
-!     WTVARS      is a SPICE set containing the contents of the kernel
-!                 pool watcher system's set WTVARS.
-!
-!     WTPTRS      is an array containing the contents of the kernel
-!                 pool watcher system's array WTPTRS.
-!
-!     WTPOOL      is a SPICE doubly linked list pool containing the
-!                 contents of the kernel pool watcher system's pool
-!                 WTPOOL.
-!
-!     WTAGNT      is an array containing the contents of the kernel
-!                 pool watcher system's array WTAGNT.
-!
-!     AGTWRK,
-!     NOTIFY      are two workspace cells used to hold list of agents.
-!                 Both cells must have size at least equal to MXNOTE.
-!
-! $ Detailed_Output
-!
-!     AGTWRK,
-!     NOTIFY      are the input workspace cells after use. Contents
-!                 of these cells are undefined.
-!
-!     AGTSET      is a SPICE set containing the names of the agents
-!                 associated with the kernel variable designated by
-!                 VARNAM.
-!
-! $ Parameters
-!
-!     MXNOTE      Maximum size of the agent list WTAGNT in POOL.
-!                 See that routine for the parameter's value.
-!
-! $ Exceptions
-!
-!     1) If the output set AGENTS is too small to hold the result
-!        of the union performed by this routine, the error will be
-!        diagnosed by routines in the call tree of this routine.
-!
-!     2) If either workspace cell AGTWRK or NOTIFY has insufficient
-!        size, the error will be diagnosed by routines in the call tree
-!        of this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is not part of the SPICELIB API. This routine
-!     may be removed in a later version of the SPICE Toolkit, or
-!     its interface may change.
-!
-!     SPICE-based application code should not call this routine.
-!
-!     This routine centralizes the work of updating the kernel
-!     pool's update notification list to account for an update
-!     of a specified kernel variable. Most kernel pool entry
-!     points that perform kernel pool updates should call this
-!     routine to update the notification list.
-!
-! $ Examples
-!
-!     See POOL entry point SWPOOL.
-!
-! $ Restrictions
-!
-!     1) This is a private routine. See $Particulars above.
-!
-!     2) Contents of the input arrays are assumed to be valid.
-!        The output returned by this routine is meaningless
-!        otherwise.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 18-MAR-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     add agents to watcher system notification list
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-      if ( ctx%failed() ) return
-
-!
-!     Fetch the agents watching VARNAM into the set NOTIFY.
-!
-      call zzgapool ( ctx, varnam, wtvars, wtptrs, wtpool, wtagnt, notify )
-
-!
-!     Compute the union of NOTIFY and the agent list AGENTS.
-!     Place the result in the workspace set AGTWRK; then copy
-!     the result to AGENTS.
-!
-      call unionc ( ctx, notify, agents, agtwrk )
-      call copyc  ( ctx, agtwrk,         agents )
-
-      return
-      end procedure zznwpool
 
 !$Procedure POOL ( Maintain a pool of kernel variables )
 !
@@ -15072,10 +14717,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -15149,13 +14790,6 @@ contains
                   datlst => ctx%spice%pool%datlst, &
                   chpool => ctx%spice%pool%chpool, &
                   dppool => ctx%spice%pool%dppool, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -15171,10 +14805,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -15203,14 +14834,6 @@ contains
 !
       call pool_changed ( ctx%spice, ' ' )
 
-      do i = 1, cardc ( ctx, wtvars )
-!
-!        Union the update set AGENTS with the set of agents
-!        associated with the Ith watched variable.
-!
-         call zznwpool ( ctx, wtvars(i), wtvars, wtptrs, wtpool, &
-                         wtagnt,    active, notify, agents )
-      end do
 
       return
       end associate
@@ -15602,10 +15225,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -15681,13 +15300,6 @@ contains
                   dppool => ctx%spice%pool%dppool, &
                   chvals => ctx%spice%pool%chvals, &
                   dpvals => ctx%spice%pool%dpvals, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -15703,10 +15315,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -15738,15 +15347,6 @@ contains
 !
 !           PEPPER: record the change for the watches of the contexts.
             call pool_changed ( ctx%spice, varnam )
-            if (  elemc( ctx, varnam, wtvars )  ) then
-!
-!              Union the update set AGENTS with the set of agents
-!              associated with the variable NAME.
-!
-               call zznwpool ( ctx, varnam, wtvars, wtptrs, wtpool, &
-                               wtagnt, active, notify, agents )
-
-            end if
 
          end if
 
@@ -15979,10 +15579,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -16057,13 +15653,6 @@ contains
                   chpool => ctx%spice%pool%chpool, &
                   dppool => ctx%spice%pool%dppool, &
                   dpvals => ctx%spice%pool%dpvals, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -16079,10 +15668,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -16462,10 +16048,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -16539,13 +16121,6 @@ contains
                   datlst => ctx%spice%pool%datlst, &
                   chpool => ctx%spice%pool%chpool, &
                   dppool => ctx%spice%pool%dppool, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -16561,10 +16136,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -16912,10 +16484,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -17441,90 +17009,9 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_arrays, only: bsrchc, lstltc
-      use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
 !
-!     PEPPER: a context other than the legacy one keeps its own watches,
+!     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
 !     swpool_context in pepper_instance): contexts do not take each
 !     other's notices, and a watch set while other contexts read the
@@ -17532,304 +17019,10 @@ contains
 !     of a watched variable (loaded, set or deleted) since the last
 !     check, as by SPICELIB, and for every variable after CLPOOL.
 !
-      if ( .not. ctx%is_legacy() ) then
-         if ( ctx%failed() ) return
-         call swpool_context ( ctx, agent, nnames, names )
-         return
-      end if
-
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
+      call swpool_context ( ctx, agent, nnames, names )
 
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
-
-      end if
-
-!
-!     Increment POOL state counter. Although setting a watcher does not
-!     change the POOL we will increment the POOL state counter to make
-!     sure that the next call to CVPOOL with this watcher triggers the
-!     initial update.
-!
-      call zzctrinc ( ctx, subctr )
-
-!
-!     Do all of the error checking we need to do BEFORE touching
-!     the watcher data structure. We don't want to end up with
-!     a partial update due to running out of room in mid-update.
-!
-!     First make sure we can handle any new kernel variable names.
-!
-      need = 0
-
-      do i = 1, nnames
-
-         if (  .not.  elemc( ctx, names(i), wtvars )  ) then
-            need = need + 1
-         end if
-
-      end do
-
-      space = sizec( ctx,wtvars) - cardc( ctx,wtvars)
-
-      if ( need > space ) then
-
-         call ctx%setmsg ( 'The watched kernel variable name ' &
-         //            'list WTVARS has room for # more ' &
-         //            'elements, so the # new names (in ' &
-         //            'a list of # names) ' &
-         //            'associated with agent # ' &
-         //            'cannot be inserted.'              )
-         call ctx%errint ( '#', space                         )
-         call ctx%errint ( '#', need                          )
-         call ctx%errint ( '#', nnames                        )
-         call ctx%errch  ( '#', agent                         )
-         call ctx%sigerr ( 'SPICE(KERVARSETOVERFLOW)'         )
-         return
-
-      end if
-
-!
-!     If the input agent is a new one for any member of NAMES,
-!     make sure we have enough room to store this agent. Also
-!     check for kernel variables that would have more than
-!     MAXAGT agents watching them if this watch were established.
-!
-      need = 0
-
-      do i = 1, nnames
-!
-!        Get the agents associated with NAMES(I). The output argument
-!        ACTIVE is a SPICE set.
-!
-         call zzgapool ( ctx, names(i), wtvars, wtptrs, &
-                         wtpool,   wtagnt, active )
-
-         nfetch = cardc( ctx, active )
-
-         noagnt =       ( nfetch ==   0               ) &
-                   .or. ( .not.  elemc( ctx, agent, active ) )
-
-         if ( noagnt ) then
-
-            need = need + 1
-!
-!           Check the number of agents already associated with the
-!           current kernel variable.
-!
-            if ( nfetch == maxagt ) then
-
-               call ctx%setmsg ( 'The list of agents to notify when # '   // &
-                             'is updated is too big. The maximum '    // &
-                             'number of agents that any kernel'       // &
-                             'pool variable can activate is #.'       )
-               call ctx%errch  ( '#', names(i)                            )
-               call ctx%errint ( '#', maxagt                              )
-               call ctx%sigerr ( 'SPICE(TOOMANYWATCHES)'                  )
-               return
-
-            end if
-
-         end if
-
-      end do
-
-!
-!     See whether WTAGNT has enough room to set this watch.
-!
-      space = lnknfn( ctx, wtpool )
-
-      if ( need > space ) then
-
-         call ctx%setmsg ( 'The watched kernel variable agent ' &
-         //            'list WTAGNT has room for # more ' &
-         //            'elements, so the # new occurrences ' &
-         //            'of agent # required for the input ' &
-         //            'watch cannot be inserted.'          )
-         call ctx%errint ( '#', space                           )
-         call ctx%errint ( '#', need                            )
-         call ctx%errch  ( '#', agent                           )
-         call ctx%sigerr ( 'SPICE(AGENTLISTOVERFLOW)'           )
-         return
-
-      end if
-
-!
-!     All of the overflow checks have been done. We finally can
-!     get on with setting the specified watch.
-!
-!     For each variable specified by the array NAMES, put AGENT
-!     into its list of guys to be notified when a variable change
-!     occurs.
-!
-      do i = 1, nnames
-!
-!        Get the agents associated with NAMES(I). The output argument
-!        ACTIVE is a SPICE set.
-!
-         call zzgapool ( ctx, names(i), wtvars, wtptrs, &
-                         wtpool,   wtagnt, active )
-
-         nfetch = cardc( ctx, active )
-
-!
-!        Three things can happen now:
-!
-!           1) The kernel variable NAMES(I) is already watched by at
-!              least one agent, but not by AGENT. We need to add AGENT
-!              to the list of agents watching NAMES(I).
-!
-!           2) The kernel variable NAMES(I) isn't yet watched by any
-!              agent, so we need to insert NAMES(I) into WTVARS, as
-!              well as add AGENT to the (empty) list of agents watching
-!              NAMES(I).
-!
-!           3) The kernel variable NAMES(I) is already watched by AGENT.
-!              No action is needed.
-!
-!        We could get fancy and try to minimize the number of lines of
-!        code required to handle the first two cases...but we won't.
-!        We'll just take them one at a time.
-!
-         if ( nfetch > 0 ) then
-
-            if (  .not.  elemc( ctx, agent, active )  ) then
-!
-!              Case 1: at least one agent is already watching NAMES(I),
-!              but AGENT is not watching NAMES(I). We need the head of
-!              the agent list for this kernel variable.
-!
-               j    = bsrchc ( names(i), cardc( ctx,wtvars), wtvars(1) )
-
-               head = wtptrs(j)
-
-!
-!              Allocate a free node in the watch pool; append this node
-!              to the tail of the agent list for the kernel variable;
-!              we know that list is non-empty.
-!
-               call lnkan  ( ctx, wtpool, node )
-
-               tail = lnktl( ctx, head,   wtpool )
-
-               call lnkila ( ctx, tail,   node, wtpool )
-
-!
-!              Store the agent name at index NODE in the agent list.
-!
-               wtagnt( node ) = agent
-
-!
-!              The insertion is complete. We update AGENTS, which is
-!              the set of agents to notify, at the end of this routine.
-!
-            end if
-
-         else
-!
-!           Case 2: the kernel variable NAMES(I) isn't watched. Add it
-!           the watcher system. We've already ensured that there's
-!           room in WTVARS and WTAGNT and that the insertion won't give
-!           NAMES(I) an excessive number of agents.
-!
-!           Let J be the insertion index in WTVARS. Since NAMES(I)
-!           isn't yet a member of WTWARS, the insertion index will
-!           always follow that of the last element in WTVARS
-!           less than NAMES(I).
-!
-            j = 1 + lstltc ( names(i), cardc( ctx,wtvars), wtvars(1) )
-
-!
-!           Note that we don't use INSRTC to add NAMES(I) to WTVARS
-!           because we need the insertion index, and we don't want
-!           to execute a redundant search to find it.
-!
-!           We're now going to expand both the set WTVARS and the
-!           parallel array WTPTRS by inserting new values at index J.
-!           WTVARS(J) will receive the new kernel variable name
-!           NAMES(I) and WTPTRS(J) will receive a new node in the watch
-!           pool: this node provides an index into the agent list for
-!           NAMES(I).
-!
-!           Let NVARS be the size of the array WTVARS(1:*) prior to
-!           the insertion. NVARS will be updated by INSLAC.
-!
-!           NPTRS is the size of the associated pointer table WTPTRS.
-!
-            nvars = cardc( ctx, wtvars )
-            nptrs = nvars
-
-            call inslac ( ctx, names(i), 1, j, wtvars(1), nvars )
-
-!
-!           WTVARS is actually a set, so we must update its cardinality.
-!
-            call scardc ( ctx, nvars, wtvars )
-
-!
-!           Allocate a free node in the watch pool.
-!
-            call lnkan ( ctx, wtpool, node )
-
-!
-!           Now insert NODE in the pointer table WTPTRS at index J.
-!
-            call inslai ( ctx, [ node ], 1, j, wtptrs, nptrs )
-
-!
-!           Store the agent name at index NODE in the agent list.
-!
-            wtagnt( node ) = agent
-
-!
-!           The insertion is complete. We update AGENTS, which is the
-!           set of agents to notify, at the end of this routine.
-
-         end if
-
-      end do
-
-!
-!     We ALWAYS put this agent into the list of agents to be notified.
-!
-      call insrtc ( ctx, agent, agents )
-
-!
-!     That is all.
-!
       return
-      end associate
       end procedure swpool
 
       module procedure cvpool
@@ -18120,89 +17313,9 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
 !
-!     PEPPER: a context other than the legacy one keeps its own watches,
+!     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
 !     swpool_context in pepper_instance): contexts do not take each
 !     other's notices, and a watch set while other contexts read the
@@ -18210,63 +17323,10 @@ contains
 !     of a watched variable (loaded, set or deleted) since the last
 !     check, as by SPICELIB, and for every variable after CLPOOL.
 !
-      if ( .not. ctx%is_legacy() ) then
-         if ( ctx%failed() ) return
-         call cvpool_context ( ctx, agent, update )
-         return
-      end if
-
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
-
-      end if
-
-!
-!     Check to see if our agent is on the list of agents to be
-!     notified.  If it is, we take this agent off the list---he's
-!     now considered to have been notified.
-!
-      update = elemc  ( ctx, agent, agents )
-
-      if ( update ) then
-         call removc ( ctx, agent, agents )
-      end if
+      call cvpool_context ( ctx, agent, update )
 
       return
-      end associate
       end procedure cvpool
 
       module procedure gcpool
@@ -18505,10 +17565,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -18583,13 +17639,6 @@ contains
                   chpool => ctx%spice%pool%chpool, &
                   dppool => ctx%spice%pool%dppool, &
                   chvals => ctx%spice%pool%chvals, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -18605,10 +17654,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -18946,10 +17992,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -19024,13 +18066,6 @@ contains
                   chpool => ctx%spice%pool%chpool, &
                   dppool => ctx%spice%pool%dppool, &
                   dpvals => ctx%spice%pool%dpvals, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -19046,10 +18081,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -19394,10 +18426,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -19472,13 +18500,6 @@ contains
                   chpool => ctx%spice%pool%chpool, &
                   dppool => ctx%spice%pool%dppool, &
                   dpvals => ctx%spice%pool%dpvals, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -19494,10 +18515,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -19868,10 +18886,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -19945,13 +18959,6 @@ contains
                   datlst => ctx%spice%pool%datlst, &
                   chpool => ctx%spice%pool%chpool, &
                   dppool => ctx%spice%pool%dppool, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -19967,10 +18974,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -20303,10 +19307,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -20382,13 +19382,6 @@ contains
                   dppool => ctx%spice%pool%dppool, &
                   chvals => ctx%spice%pool%chvals, &
                   dpvals => ctx%spice%pool%dpvals, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -20428,10 +19421,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -20632,15 +19622,6 @@ contains
 !
 !     PEPPER: record the change for the watches of the contexts.
       call pool_changed ( ctx%spice, name )
-      if (  elemc( ctx, name, wtvars )  ) then
-!
-!        Union the update set AGENTS with the set of agents
-!        associated with the variable NAME.
-!
-         call zznwpool ( ctx, name,   wtvars, wtptrs, wtpool, &
-                         wtagnt, active, notify, agents )
-
-      end if
 
       return
       end associate
@@ -20889,10 +19870,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -20968,13 +19945,6 @@ contains
                   dppool => ctx%spice%pool%dppool, &
                   chvals => ctx%spice%pool%chvals, &
                   dpvals => ctx%spice%pool%dpvals, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -21014,10 +19984,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -21217,14 +20184,6 @@ contains
 !
 !     PEPPER: record the change for the watches of the contexts.
       call pool_changed ( ctx%spice, name )
-      if (  elemc( ctx, name, wtvars )  ) then
-!
-!        Union the update set AGENTS with the set of agents
-!        associated with the variable NAME.
-!
-         call zznwpool ( ctx, name,   wtvars, wtptrs, wtpool, &
-                         wtagnt, active, notify, agents )
-      end if
 
       return
       end associate
@@ -21473,10 +20432,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -21552,13 +20507,6 @@ contains
                   dppool => ctx%spice%pool%dppool, &
                   chvals => ctx%spice%pool%chvals, &
                   dpvals => ctx%spice%pool%dpvals, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -21598,10 +20546,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -21801,15 +20746,6 @@ contains
 !
 !     PEPPER: record the change for the watches of the contexts.
       call pool_changed ( ctx%spice, name )
-      if (  elemc( ctx, name, wtvars )  ) then
-!
-!        Union the update set AGENTS with the set of agents
-!        associated with the variable NAME.
-!
-         call zznwpool ( ctx, name,   wtvars, wtptrs, wtpool, &
-                         wtagnt, active, notify, agents )
-
-      end if
 
       return
       end associate
@@ -21997,10 +20933,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -22076,13 +21008,6 @@ contains
                   dppool => ctx%spice%pool%dppool, &
                   chvals => ctx%spice%pool%chvals, &
                   dpvals => ctx%spice%pool%dpvals, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -22098,10 +21023,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -22130,17 +21052,6 @@ contains
 
 !           PEPPER: record the change for the watches of the contexts.
             call pool_changed ( ctx%spice, varnam )
-            if (  elemc( ctx, varnam, wtvars )  ) then
-!
-!              The variable VARNAM is watched.
-!
-!              Union the update set AGENTS with the set of agents
-!              associated with the variable VARNAM.
-!
-               call zznwpool ( ctx, varnam, wtvars, wtptrs, wtpool, &
-                               wtagnt, active, notify, agents )
-
-            end if
 
          end if
 !
@@ -22310,6 +21221,10 @@ contains
       implicit none
       integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
+      integer(ip)           maxagt
+      parameter           ( maxagt =   1000 )
+      integer(ip)           mxnote
+      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           maxval
       parameter           ( maxval = 400000 )
       integer(ip)           maxlin
@@ -22318,10 +21233,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -22574,10 +21485,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -22651,13 +21558,6 @@ contains
                   datlst => ctx%spice%pool%datlst, &
                   chpool => ctx%spice%pool%chpool, &
                   dppool => ctx%spice%pool%dppool, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -22673,10 +21573,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -22742,15 +21639,6 @@ contains
 !
 !     PEPPER: record the change for the watches of the contexts.
       call pool_changed ( ctx%spice, name )
-      if (  elemc( ctx, name, wtvars )  ) then
-!
-!        Union the update set AGENTS with the set of agents
-!        associated with the variable NAME.
-!
-         call zznwpool ( ctx, name,   wtvars, wtptrs, wtpool, &
-                         wtagnt, active, notify, agents )
-
-      end if
 
       return
       end associate
@@ -22990,10 +21878,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
@@ -23067,13 +21951,6 @@ contains
                   datlst => ctx%spice%pool%datlst, &
                   chpool => ctx%spice%pool%chpool, &
                   dppool => ctx%spice%pool%dppool, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
                   first => ctx%spice%pool%first, &
                   subctr => ctx%spice%pool%subctr, &
                   begdat => ctx%spice%pool%begdat, &
@@ -23089,10 +21966,7 @@ contains
                         maxvar, maxval, maxlin, &
                         begdat, begtxt, &
                         nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
+                        namlst, datlst, subctr )
 
       end if
 
@@ -23284,89 +22158,9 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
 !
-!     PEPPER: a context other than the legacy one keeps its own watches,
+!     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
 !     swpool_context in pepper_instance): contexts do not take each
 !     other's notices, and a watch set while other contexts read the
@@ -23374,454 +22168,11 @@ contains
 !     of a watched variable (loaded, set or deleted) since the last
 !     check, as by SPICELIB, and for every variable after CLPOOL.
 !
-      if ( .not. ctx%is_legacy() ) then
-         if ( ctx%failed() ) return
-         call dwpool_context ( ctx, agent )
-         return
-      end if
-
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs, &
-                  active => ctx%spice%pool%active, &
-                  agents => ctx%spice%pool%agents, &
-                  notify => ctx%spice%pool%notify, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, &
-                        maxagt, mxnote, wtvars, &
-                        wtptrs, wtpool, wtagnt, &
-                        agents, active, notify, subctr )
-
-      end if
-
-!
-!     Make sure we're not silencing an agent who has something
-!     to say.
-!
-      if (  elemc( ctx, agent, agents )  ) then
-
-         call ctx%setmsg ( 'Could not delete AGENT # from the watch ' &
-         //            'symbol table because AGENT is associated ' &
-         //            'with at least one updated kernel variable. ' )
-         call ctx%errch  ( '#', agent                                    )
-         call ctx%sigerr ( 'SPICE(UPDATEPENDING)'                        )
-         return
-
-      end if
-
-!
-!     Increment POOL state counter.
-!
-      call zzctrinc ( ctx, subctr )
-
-!
-!     AGENT is no longer on the list of agents associated with a
-!     kernel variable update.
-!
-      call removc ( ctx, agent, agents )
-
-!
-!     For each kernel variable in the watcher's list, remove
-!     AGENT from its list of guys to be notified when a variable change
-!     occurs. If AGENT is the only value associated with the variable,
-!     delete the kernel variable's entry from the table.
-!
-!     This outer loop is relatively tricky, since
-!
-!        1) The upper loop bound can change during loop execution.
-!
-!        2) The loop index I doesn't necessary increase on every
-!           loop pass.
-!
-!     Infinite loops can lurk in code with the above attributes. We
-!     need to know that the loop will always terminate. Presume that
-!     no SPICE error occurs during the loop: then we observe
-!     that on each loop pass, either I increases or the loop bound
-!     CARDC(WTVARS) decreases, so the difference
-!
-!        CARDC(WTVARS) - I
-!
-!     does in fact decrease on every loop iteration. When this
-!     difference becomes -1, the loop will end.
-!
-!     If a SPICE error occurs during the loop, the FAILED test
-!     will terminate the loop.
-!
-!     Since WTVARS may shrink due to deletion of watches, we
-!     fetch the cardinality of WTVARS on each loop iteration.
-!
-      i = 1
-
-      do while (  ( i <= cardc( ctx,wtvars) )  .and.  ( .not. ctx%failed() )  )
-!
-!        Search the list of agents associated with the Ith watched
-!        variable for AGENT. We want the list count as well, so
-!        we'll traverse the whole list (which likely is short).
-!
-!        We don't use ZZGAPOOL here because we need to get the
-!        watcher pool nodes associated with AGENT.
-!
-!        If we find AGENT, we'll use AGNODE to designate
-!        the node associated with AGENT.
-!
-         node   = wtptrs(i)
-         nnodes = 0
-         agnode = 0
-
-         do while ( node > 0 )
-
-            nnodes = nnodes + 1
-!
-!           Fetch the next agent for the Ith kernel variable.
-!
-            if ( wtagnt(node) == agent ) then
-!
-!               Save the current node.
-!
-                agnode = node
-
-            end if
-!
-!           Find the next node in the list.
-!
-            node = lnknxt( ctx, node, wtpool )
-
-         end do
-
-         if ( agnode > 0 ) then
-!
-!           The input agent is on the agent list for the Ith watched
-!           kernel variable. Delete this agent from the list. Delete
-!           the node corresponding to AGENT from the watch pool. First
-!           set the corresponding agent name to blank.
-!
-            wtagnt(agnode) = ' '
-
-!
-!           If we're about to delete the head node of the agent list,
-!           we'll need to update WTPTRS(I) to point to the new head.
-!           It's possible that this agent list is empty after deletion
-!           of AGNODE; we'll handle that case after the LNKFSL call
-!           below.
-!
-            if ( wtptrs(i) == agnode ) then
-
-               wtptrs(i) = lnknxt( ctx, agnode, wtpool )
-
-            end if
-
-!
-!           Now free AGNODE.
-!
-            call lnkfsl ( ctx, agnode, agnode, wtpool )
-
-            if ( nnodes == 1 ) then
-!
-!              In fact AGENT is the *only* agent for the Ith variable.
-!              Deleting AGENT means that nobody's watching this
-!              variable any more, so delete the variable from the
-!              watched variable set.
-
-               nw     = cardc( ctx, wtvars )
-
-               varnam = wtvars(i)
-
-               call removc ( ctx, varnam, wtvars )
-
-!
-!              Remove the associated pointer from the pointer array.
-!
-               call remlai ( ctx, 1, i, wtptrs, nw )
-
-!
-!              Since we deleted the current variable table entry and
-!              compressed the set WTVARS and the array WTPTRS, I now
-!              points to the next variable in the table. Decrement I
-!              here to compensate for the increment operation at the
-!              bottom of the loop.
-!
-               i = i - 1
-
-            end if
-!
-!           We've now deleted AGENT from the AGENT list for WTVARS(I).
-!           If the deletion left no agents watching WTVARS(I), we
-!           deleted WTVARS(I) and its associated pointer WTPTRS(I).
-!
-         end if
-!
-!        We've processed the Ith kernel variable in the watcher table.
-!
-!        If we deleted the Ith WTVARS entry, we decremented I
-!        at that time, so the increment operation here always is
-!        applicable.
-!
-         i = i + 1
-
-!
-!        At this point in the loop, either I has increased or
-!        CARDC(WTVARS) has decreased; hence we've made progress
-!        toward loop termination.
-!
-      end do
+      call dwpool_context ( ctx, agent )
 
       return
-      end associate
       end procedure dwpool
-
-      module procedure zzvupool
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due to the
-!!     volatile nature of this routine.
-!!
-!!     Return copies of certain POOL variables that are used in the
-!!     implementation of the watcher mechanism. These variables
-!!     comprise a data structure that maps kernel variable names to sets
-!!     of agents watching those kernel variables.
-!!
-!! ## Required Reading
-!!
-!!     KERNEL
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         UWVARS    ( LBCELL : * )
-!!     INTEGER               UWPTRS    ( * )
-!!     INTEGER               UWPOOL    ( 2, LBCELL : * )
-!!     CHARACTER*(*)         UWAGNT    ( * )
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     UWVARS   is a set into which the local watcher system
-!!              set WTVARS has been copied.
-!!
-!!     UWPTRS   is an array into which the local watcher system
-!!              array WTPTRS has been copied.
-!!
-!!     UWPOOL   is a doubly linked list pool into which the local
-!!              watcher system doubly linked list pool WTPOOL has
-!!              been copied.
-!!
-!!     UWAGNT   is an array into which the local watcher system
-!!              array WTAGNT has been copied.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the output array UWVARS is too small to hold the
-!!         set WTVARS, an error is signaled by a routine
-!!         in the call tree of this routine.
-!!
-!!     2)  If any output array other than UWVARS is to small
-!!         to hold the corresponding watch system component,
-!!         memory corruption will occur.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine is not part of the SPICELIB API. This routine
-!!     may be removed in a later version of the SPICE Toolkit, or
-!!     its interface may change.
-!!
-!!     SPICE-based application code should not call this routine.
-!!
-!!     This is an "inspection hatch" routine used for SPICELIB
-!!     testing.
-!!
-!! ## Examples
-!!
-!!     See the TSPICE test family F_DWPOOL.
-!!
-!! ## Restrictions
-!!
-!!     1)  This is a private routine. See $Particulars above.
-!!
-!!     2)  The caller must provide output arrays of adequate
-!!         size. See the declarations of the watch system
-!!         components in the umbrella routine POOL for size
-!!         requirements.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.2, 17-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 1.0.1, 27-MAR-2014 (BVS)
-!!
-!!        Set $Index_Entries to "None." to make this entry no appear in
-!!        permuted index.
-!!
-!!-    SPICELIB Version 1.0.0, 19-MAR-2009 (NJB)
-!!
-!! ## Index Entries
-!!
-!!     None.
-!!
-!!     Standard SPICE error handling.
-!!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_arrays, only: movec, movei
-      use pepper_inc_zzctr
-      implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( wtvars => ctx%spice%pool%wtvars, &
-                  wtpool => ctx%spice%pool%wtpool, &
-                  wtagnt => ctx%spice%pool%wtagnt, &
-                  wtptrs => ctx%spice%pool%wtptrs )
-      if ( ctx%failed() ) return
-
-      call copyc ( ctx, wtvars, uwvars                )
-      call movei ( wtptrs, cardc( ctx,wtvars), uwptrs )
-
-!
-!     UWPOOL is expected to have dimensions
-!
-!        ( 2,  LBPOOL : MXNOTE )
-!
-
-      i = 2 * ( 6 + mxnote )
-
-      call movei ( wtpool, i, uwpool )
-
-      call movec ( wtagnt, mxnote, uwagnt )
-
-      return
-      end associate
-      end procedure zzvupool
 
       module procedure zzpctrck
 !! ## Abstract
@@ -23993,10 +22344,6 @@ contains
       parameter           ( maxchr =     80 )
       integer(ip)           maxlen
       parameter           ( maxlen =     32 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
       integer(ip)           lbpool
