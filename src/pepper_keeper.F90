@@ -1,9 +1,3196 @@
-!$Procedure KEEPER ( Keeps track of SPICE kernels )
+!> The kernel manager: loading (FURNSH), tracking (KTOTAL, KDATA, KINFO) and unloading (UNLOAD, KCLEAR) of SPICE kernels, including meta-kernels, and the routines it needs.
+!>
+!> The procedures keep SPICELIB's names and documentation; the context is
+!> their first argument (interfaces and type-bound procedures in
+!> pepper_instance). Moved here from src/spicelib by
+!> tools/modularize_ctx.py; the external procedures with the original
+!> interface are in src/legacy/pepper_legacy_keeper.f90.
+submodule (pepper_instance) pepper_keeper
 
-      subroutine keeper ( which,  kind, &
-                          file,   count, filtyp,  handle, &
-                          srcfil, found )
+   implicit none
+
+contains
+
+!$Procedure INTTXT ( Convert an integer to text )
+
+      module procedure inttxt
       use pepper_kinds, only: ip
+      use pepper_strings, only: suffix
+
+! $ Abstract
+!
+!     Convert an integer to an equivalent written phrase.
+!     For example, convert 121 to 'ONE HUNDRED TWENTY-ONE'.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     CONVERSION
+!     PARSING
+!     STRING
+!     UNITS
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     N        is any integer (less than 10**12 in absolute value).
+!              If N is less than 0, -N must be a legitimate number.
+!
+! $ Detailed_Output
+!
+!     STRING   is the English cardinal equivalent of N. STRING will
+!              contain only upper case letters.
+!
+!              The longest possible output string contains 145
+!              characters. One such string is:
+!
+!                 'NEGATIVE '                                  //
+!                 'SEVEN HUNDRED SEVENTY-SEVEN BILLION '       //
+!                 'SEVEN HUNDRED SEVENTY-SEVEN MILLION '       //
+!                 'SEVEN HUNDRED SEVENTY-SEVEN THOUSAND '      //
+!                 'SEVEN HUNDRED SEVENTY-SEVEN'
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+!     1)  If the resulting text is longer than the output string,
+!         it will be truncated on the right, leaving only the most
+!         significant portion of the number.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine is used primarily for constructing error messages.
+!     For example, an overflow message might look like the following:
+!
+!        'An excess of seventy-four parameters was detected.'
+!
+!     A second use might be to write dollar amounts: it's much harder
+!     to tamper with a string like
+!
+!        'Two thousand four hundred seventy-one dollars'
+!
+!     than with the equivalent string
+!
+!        '$ 2471.00'
+!
+! $ Examples
+!
+!     N           STRING
+!     ------      ------------------------------------------
+!     -43         NEGATIVE FORTY-THREE
+!      1          ONE
+!      2          TWO
+!      3          THREE
+!      4          FOUR
+!      20         TWENTY
+!      21         TWENTY-ONE
+!      99         NINETY-NINE
+!      82131      EIGHTY-TWO THOUSAND ONE HUNDRED THIRTY-ONE
+!
+! $ Restrictions
+!
+!     1)  This routine assumes that N will always be less than
+!         a trillion (10**12) in absolute value.
+!
+!     2)  In the event that N is less than zero, this routine assumes
+!         that -N is a legitimate integer on the host machine.
+!
+!     3)  This routine assumes that an integer as large as 10**9
+!         (one billion) is representable on the host machine.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     convert an integer to text
+!
+!-&
+
+!
+!     Local variables
+!
+      integer(ip), parameter :: lngest = 9
+
+      character(lngest), parameter :: number (19) = &
+         [ character(lngest) :: 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', &
+           'EIGHT', 'NINE', 'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', &
+           'FOURTEEN', 'FIFTEEN', 'SIXTEEN', 'SEVENTEEN', 'EIGHTEEN', &
+           'NINETEEN' ]
+      character(lngest)     suff
+      character(lngest), parameter :: tens   ( 9) = &
+         [ character(lngest) :: 'TEN', 'TWENTY', 'THIRTY', 'FORTY', 'FIFTY', 'SIXTY', &
+           'SEVENTY', 'EIGHTY', 'NINETY' ]
+
+      integer(ip)           num
+      integer(ip)           pad
+      integer(ip)           space
+      integer(ip)           x
+      integer(ip)           y
+
+!
+!     Saved variables
+!
+
+
+!
+!     Initial values
+!
+
+
+!
+!     Zero is easy.
+!
+      if ( n == 0 ) then
+
+         string = 'ZERO'
+         return
+
+      end if
+
+!
+!     If the number is negative, the string begins with the word
+!     `NEGATIVE', and otherwise the number can be treated as though
+!     it were positive.
+!
+      if ( n < 0 ) then
+
+         num    = - n
+         string = 'NEGATIVE'
+
+      else
+
+         num    =   n
+         string = ' '
+
+      end if
+
+!
+!     Construct the number portion, from left to right: billions,
+!     then millions, and so on. In case of overflow, SUFFIX simply
+!     leaves the output string unchanged, so there is no need to
+!     check explicitly for truncation.
+!
+      do while ( num > 0 )
+
+!
+!        Find the right unit (billion, million, or whatever),
+!        and the number (X) of those units. X should always
+!        be between zero and 999, regardless of the units.
+!
+         if ( num >= 1000000000 ) then
+
+            x    = num / 1000000000
+            suff = 'BILLION'
+            num  = num - x * 1000000000
+
+         else if  ( num >= 1000000 ) then
+
+            x    = num / 1000000
+            suff = 'MILLION'
+            num  = num - x * 1000000
+
+         else if  ( num >= 1000 )    then
+
+            x    = num / 1000
+            suff = 'THOUSAND'
+            num  = num - x * 1000
+
+         else
+
+            x    = num
+            suff = ' '
+            num  = 0
+
+         end if
+
+!
+!        Convert X to text, ...
+!
+         space = 1
+
+         do while ( x > 0 )
+
+            if ( string == ' ' ) then
+               pad = 0
+            else
+               pad = 1
+            end if
+
+            if ( x >= 100 ) then
+
+               y = x / 100
+               x = x - y*100
+
+               call suffix ( number(y), pad, string )
+               call suffix ( 'HUNDRED', 1,   string )
+
+            else if ( x >= 20 ) then
+
+               y = x / 10
+               x = x - y*10
+
+               call suffix ( tens(y), pad, string )
+
+               if ( x /= 0 ) then
+                  call suffix ( '-', 0, string )
+                  space = 0
+               end if
+
+            else
+
+               y = x
+               x = 0
+
+               if ( string == ' ' ) then
+                  space = 0
+               end if
+
+               call suffix ( number(y), space, string )
+
+            end if
+
+         end do
+
+!
+!        ... then add the units. Repeat as necessary.
+!
+         call suffix ( suff, 1, string )
+
+      end do
+
+      return
+      end procedure inttxt
+
+!$Procedure INTORD ( Convert an integer to ordinal text )
+
+      module procedure intord
+      use pepper_kinds, only: ip
+      use pepper_strings, only: lastnb, suffix
+
+! $ Abstract
+!
+!     Convert an integer to an equivalent written ordinal phrase.
+!     For example, convert 121 to 'ONE HUNDRED TWENTY-FIRST'.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     CONVERSION
+!     PARSING
+!     STRING
+!     UNITS
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+      integer(ip), parameter :: maxord = 148
+
+
+! $ Detailed_Input
+!
+!     N        is an integer (less than 10**12 in absolute value).
+!              Moreover, if N is less than zero, -N must be a
+!              a legitimate number on the host machine.
+!
+!              In the context of this routine N represents the
+!              ranking of some item within a group.
+!
+! $ Detailed_Output
+!
+!     STRING   is the English ordinal equivalent of N. STRING will
+!              contain only upper case letters.
+!
+! $ Parameters
+!
+!     MAXORD   is one more than the length of the longest ordinal
+!              string that can be produced by a call to this routine:
+!              One string of maximum length is:
+!
+!                 'NEGATIVE '                                  //
+!                 'SEVEN HUNDRED SEVENTY-SEVEN BILLION '       //
+!                 'SEVEN HUNDRED SEVENTY-SEVEN MILLION '       //
+!                 'SEVEN HUNDRED SEVENTY-SEVEN THOUSAND '      //
+!                 'SEVEN HUNDRED SEVENTY-SEVENTH'
+!
+!              It has 147 characters.
+!
+!              The parameter MAXORD is used to declare a local string
+!              of sufficient length to allow the construction of
+!              any ordinal string.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+!     1)  If the resulting ordinal is longer than the output string,
+!         it will be truncated on the right, leaving only the most
+!         significant portion of the ordinal.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This is used primarily for generating error messages. For example,
+!     if the third letter or token in a string is in error, it might
+!     be desirable to supply a message like the following:
+!
+!        'The third token of 31-JAN-198$ is not a valid year.'
+!
+! $ Examples
+!
+!     N           STRING
+!     ------      -------------------------------------------
+!     -6          NEGATIVE SIXTH
+!      1          FIRST
+!      2          SECOND
+!      3          THIRD
+!      4          FOURTH
+!      20         TWENTIETH
+!      21         TWENTY-FIRST
+!      99         NINETY-NINTH
+!      82131      EIGHTY-TWO THOUSAND ONE HUNDRED THIRTY-FIRST
+!
+! $ Restrictions
+!
+!     1)  Whatever restrictions apply to INTTXT apply to this routine
+!         as well.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     convert an integer to ordinal text
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local variables
+!
+      integer(ip)           i
+      integer(ip)           last
+      character(maxord)     mystr
+
+!
+!     First get the English equivalent of the cardinal N.
+!
+      mystr = ' '
+
+      call inttxt ( ctx, n, mystr )
+
+      last  = lastnb(mystr)
+      i     = last
+
+!
+!     Find the beginning of the last number of MYSTR.
+!
+      do while (       ( mystr(i:i) /= '-' ) &
+                 .and. ( mystr(i:i) /= ' ' ) &
+                 .and. ( i          >  1  )  )
+
+         i = i - 1
+
+      end do
+
+      if (      ( mystr(i:i) == ' ' ) &
+           .or. ( mystr(i:i) == '-' )  ) then
+
+         i = i + 1
+
+      end if
+
+!
+!     Now convert the last cardinal to an ordinal.
+!
+      if ( mystr(i:last) == 'ONE' ) then
+
+         mystr(i:) = 'FIRST'
+
+      else if ( mystr(i:last) == 'TWO' ) then
+
+         mystr(i:) = 'SECOND'
+
+      else if ( mystr(i:last) == 'THREE' ) then
+
+         mystr(i:) = 'THIRD'
+
+      else if ( mystr(i:last) == 'FIVE' ) then
+
+         mystr(i:) = 'FIFTH'
+
+      else if ( mystr(i:last) == 'EIGHT' ) then
+
+         mystr(i:) = 'EIGHTH'
+
+      else if ( mystr(i:last) == 'NINE' ) then
+
+         mystr(i:) = 'NINTH'
+
+      else if ( mystr (i:last) == 'TWELVE' ) then
+
+         mystr(i:) = 'TWELFTH'
+
+      else if ( mystr(last:last) == 'Y' ) then
+
+         mystr(last:) = 'IETH'
+
+      else
+
+         call suffix ( 'TH', 0, mystr )
+
+      end if
+
+!
+!     Now simply put MYSTR into STRING and return.
+!
+      string = mystr
+
+      return
+      end procedure intord
+
+!$Procedure REPMOT  ( Replace marker with ordinal text )
+
+      module procedure repmot
+      use pepper_kinds, only: ip
+      use pepper_strings, only: frstnb, lastnb, lcase, ljust, ucase
+
+! $ Abstract
+!
+!     Replace a marker with the text representation of an ordinal
+!     number.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     CHARACTER
+!     CONVERSION
+!     STRING
+!
+! $ Declarations
+
+      implicit none
+
+
+      integer(ip), parameter :: maxlon = 147
+
+! $ Detailed_Input
+!
+!     IN       is an arbitrary character string.
+!
+!     MARKER   is an arbitrary character string. The first occurrence of
+!              MARKER in the input string is to be replaced by the text
+!              representation of the ordinal number VALUE.
+!
+!              Leading and trailing blanks in MARKER are NOT
+!              significant. In particular, no substitution is performed
+!              if MARKER is blank.
+!
+!     VALUE    is an arbitrary integer.
+!
+!     RTCASE   indicates the case of the replacement text. RTCASE may be
+!              any of the following:
+!
+!                 RTCASE   Meaning        Example
+!                 ------   -----------    -----------------------
+!                 U, u     Uppercase      ONE HUNDRED FIFTY-THIRD
+!
+!                 L, l     Lowercase      one hundred fifty-third
+!
+!                 C, c     Capitalized    One hundred fifty-third
+!
+! $ Detailed_Output
+!
+!     OUT      is the string obtained by substituting the text
+!              representation of the ordinal number VALUE for the first
+!              occurrence of MARKER in the input string.
+!
+!              OUT and IN must be identical or disjoint.
+!
+! $ Parameters
+!
+!     MAXLON   is the maximum expected length of any ordinal text.
+!              147 characters are sufficient to hold the text
+!              representing any ordinal value whose corresponding
+!              ordinal value is in the range
+!
+!                ( -10**12, 10**12 )
+!
+!              An example of a number whose ordinal text representation
+!              is of maximum length is
+!
+!                 - 777 777 777 777
+!
+! $ Exceptions
+!
+!     1)  If OUT does not have sufficient length to accommodate the
+!         result of the substitution, the result will be truncated on
+!         the right.
+!
+!     2)  If MARKER is blank, or if MARKER is not a substring of IN,
+!         no substitution is performed. (OUT and IN are identical.)
+!
+!     3)  If the value of RTCASE is not recognized, the error
+!         SPICE(INVALIDCASE) is signaled. OUT is not changed.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This is one of a family of related routines for inserting values
+!     into strings. They are typically to construct messages that
+!     are partly fixed, and partly determined at run time. For example,
+!     a message like
+!
+!        'The fifty-first picture was found in directory [USER.DATA].'
+!
+!     might be constructed from the fixed string
+!
+!        'The #1 picture was found in directory #2.'
+!
+!     by the calls
+!
+!        CALL REPMOT ( STRING, '#1',  51,           'L', STRING )
+!        CALL REPMC  ( STRING, '#2', '[USER.DATA]',      STRING )
+!
+!     which substitute the ordinal text 'fifty-first' and the character
+!     string '[USER.DATA]' for the markers '#1' and '#2' respectively.
+!
+!     The complete list of routines is shown below.
+!
+!        REPMC    ( Replace marker with character string value )
+!        REPMD    ( Replace marker with double precision value )
+!        REPMF    ( Replace marker with formatted d.p. value   )
+!        REPMI    ( Replace marker with integer value          )
+!        REPML    ( Replace marker with logical value          )
+!        REPMCT   ( Replace marker with cardinal text          )
+!        REPMOT   ( Replace marker with ordinal text           )
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following example illustrate the use of REPMOT to
+!        replace a marker within a string with the ordinal text
+!        corresponding to an integer.
+!
+!        Example code begins here.
+!
+!              PROGRAM REPMOT_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER                 STRLEN
+!              PARAMETER             ( STRLEN = 80 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(STRLEN)      INSTR
+!              CHARACTER*(STRLEN)      MARKER
+!              CHARACTER*(STRLEN)      OUTSTR
+!
+!        C
+!        C     1. Uppercase
+!        C
+!              MARKER = '#'
+!              INSTR  = 'INVALID COMMAND. # WORD NOT RECOGNIZED.'
+!
+!              CALL REPMOT ( INSTR, MARKER, 5, 'U', OUTSTR )
+!
+!              WRITE(*,*) 'Case 1: Replacement text in uppercase.'
+!              WRITE(*,*) '   Input : ', INSTR
+!              WRITE(*,*) '   Output: ', OUTSTR
+!              WRITE(*,*) ' '
+!
+!        C
+!        C     2. Lowercase
+!        C
+!              MARKER = ' XX '
+!              INSTR  = 'The XX word of the XX sentence was ...'
+!
+!              CALL REPMOT ( INSTR, MARKER, 5, 'L', OUTSTR )
+!
+!              WRITE(*,*) 'Case 2: Replacement text in lowercase.'
+!              WRITE(*,*) '   Input : ', INSTR
+!              WRITE(*,*) '   Output: ', OUTSTR
+!              WRITE(*,*) ' '
+!
+!        C
+!        C     2. Capitalized
+!        C
+!              MARKER = ' XX '
+!              INSTR  = 'Name:  YY.  Rank:  XX.'
+!
+!              CALL REPMC  ( INSTR,  'YY',  'Moriarty', OUTSTR )
+!              CALL REPMOT ( OUTSTR, MARKER, 5,    'C', OUTSTR )
+!
+!              WRITE(*,*) 'Case 3: Replacement text capitalized.'
+!              WRITE(*,*) '   Input : ', INSTR
+!              WRITE(*,*) '   Output: ', OUTSTR
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!         Case 1: Replacement text in uppercase.
+!            Input : INVALID COMMAND. # WORD NOT RECOGNIZED.
+!            Output: INVALID COMMAND. FIFTH WORD NOT RECOGNIZED.
+!
+!         Case 2: Replacement text in lowercase.
+!            Input : The XX word of the XX sentence was ...
+!            Output: The fifth word of the XX sentence was ...
+!
+!         Case 3: Replacement text capitalized.
+!            Input : Name:  YY.  Rank:  XX.
+!            Output: Name:  Moriarty.  Rank:  Fifth.
+!
+! $ Restrictions
+!
+!     1)  VALUE must be in the range accepted by the SPICELIB routine
+!         INTORD. This range is currently
+!
+!            ( -10**12, 10**12 )
+!
+!         Note that the endpoints of the interval are excluded.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!     W.L. Taber         (JPL)
+!     I.M. Underwood     (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.3.0, 06-JUL-2021 (JDR)
+!
+!        Changed input argument name CASE to RTCASE for consistency
+!        with other routines.
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Updated code to remove unnecessary lines of code in the
+!        Standard SPICE error handling CHKIN statements.
+!
+!        Edited the header to comply with NAIF standard. Added complete
+!        code example from existing fragments. Improved example in
+!        $Particulars section.
+!
+!        Added REPML to the list of available replace marker routines.
+!
+!-    SPICELIB Version 1.2.0, 21-SEP-2013 (BVS)
+!
+!        Minor efficiency update: the routine now looks up the first
+!        and last non-blank characters only once.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
+!
+!-&
+
+! $ Index_Entries
+!
+!     replace marker with ordinal text
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local variables
+!
+      character(maxlon)     ord
+      character(1)          tmpcas
+
+      integer(ip)           mrknbf
+      integer(ip)           mrknbl
+
+      integer(ip)           mrkpsb
+      integer(ip)           mrkpse
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Bail out if RTCASE is not recognized.
+!
+      call ljust ( rtcase, tmpcas )
+      call ucase ( tmpcas, tmpcas )
+
+      if (        ( tmpcas /= 'U' ) &
+            .and. ( tmpcas /= 'L' ) &
+            .and. ( tmpcas /= 'C' )  ) then
+
+         call ctx%setmsg ( 'Case (#) must be U, L, or C.' )
+         call ctx%errch  ( '#', rtcase                    )
+         call ctx%sigerr ( 'SPICE(INVALIDCASE)'           )
+         return
+
+      end if
+
+!
+!     If MARKER is blank, no substitution is possible.
+!
+      if ( marker == ' ' ) then
+
+         out = in
+
+         return
+
+      end if
+
+!
+!     Locate the leftmost occurrence of MARKER, if there is one
+!     (ignoring leading and trailing blanks). If MARKER is not
+!     a substring of IN, no substitution can be performed.
+!
+      mrknbf = frstnb(marker)
+      mrknbl = lastnb(marker)
+
+      mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
+
+      if  ( mrkpsb == 0 ) then
+
+         out = in
+
+         return
+
+      end if
+
+      mrkpse = mrkpsb + mrknbl - mrknbf
+
+!
+!     Okay, RTCASE is recognized and MARKER has been found.
+!     Generate the ordinal text corresponding to VALUE.
+!
+      call intord ( ctx, value, ord )
+
+!
+!     CARD is always returned in upper case; change to the specified
+!     case, if required.
+!
+      if ( tmpcas == 'L' ) then
+
+         call lcase ( ord, ord )
+
+      else if ( tmpcas == 'C' ) then
+
+         call lcase ( ord(2:), ord(2:) )
+
+      end if
+
+!
+!     Replace MARKER with CARD.
+!
+      call repsub ( ctx, in, &
+                    mrkpsb, &
+                    mrkpse, &
+                    ord ( : lastnb(ord) ), &
+                    out )
+
+      return
+      end procedure repmot
+
+!$Procedure SEPOOL ( String from pool )
+
+      module procedure sepool
+      use pepper_kinds, only: ip
+      use pepper_strings, only: rtrim
+
+! $ Abstract
+!
+!     Retrieve the string starting at the FIDX element of the kernel
+!     pool variable, where the string may be continued across several
+!     components of the kernel pool variable.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     POOL
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     ITEM     is the name of a kernel pool variable for which
+!              the caller wants to retrieve a full (potentially
+!              continued) string.
+!
+!     FIDX     is the index of the first component (the start) of
+!              the string in ITEM.
+!
+!     CONTIN   is a sequence of characters which (if they appear as
+!              the last non-blank sequence of characters in a
+!              component of a value of a kernel pool variable)
+!              indicate that the string associated with the
+!              component is continued into the next literal
+!              component of the kernel pool variable.
+!
+!              If CONTIN is blank, all of the components of ITEM
+!              will be retrieved as a single string.
+!
+! $ Detailed_Output
+!
+!     STRING   is the full string starting at the FIDX element of the
+!              kernel pool variable specified by ITEM.
+!
+!              Note that if STRING is not sufficiently long to hold
+!              the fully continued string, the value will be
+!              truncated. You can determine if STRING has been
+!              truncated by examining the variable SIZE.
+!
+!     SIZE     is the index of last non-blank character of
+!              continued string as it is represented in the
+!              kernel pool. This is the actual number of characters
+!              needed to hold the requested string. If STRING
+!              contains a truncated portion of the full string,
+!              RTRIM(STRING) will be less than SIZE.
+!
+!              If the value of STRING should be a blank, then
+!              SIZE will be set to 1.
+!
+!     LIDX     is the index of the last component (the end) of
+!              the retrieved string in ITEM.
+!
+!     FOUND    is a logical variable indicating success of the
+!              request to retrieve the string.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the variable specified by ITEM is not present in the
+!         kernel pool or is present but is not character valued, STRING
+!         will be returned as a blank, SIZE will be returned with the
+!         value 0 and FOUND will be set to .FALSE. In particular if NTH
+!         is less than 1, STRING will be returned as a blank, SIZE will
+!         be zero and FOUND will be .FALSE.
+!
+!     2)  If the variable specified has a blank string associated
+!         with its full string starting at FIDX, STRING will be blank,
+!         SIZE will be 1 and FOUND will be set to .TRUE.
+!
+!     3)  If STRING is not long enough to hold all of the characters
+!         associated with the NTH string, it will be truncated on the
+!         right.
+!
+!     4)  If the continuation character is a blank, every component
+!         of the variable specified by ITEM will be inserted into
+!         the output string.
+!
+!     5)  If the continuation character is blank, then a blank component
+!         of a variable is treated as a component with no letters.
+!         For example:
+!
+!            STRINGS = ( 'This is a variable'
+!                        'with a blank'
+!                        ' '
+!                        'component.' )
+!
+!         Is equivalent to
+!
+!            STRINGS = ( 'This is a variable'
+!                        'with a blank'
+!                        'component.' )
+!
+!         from the point of view of SEPOOL if CONTIN is set to the
+!         blank character.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!      The SPICE Kernel Pool provides a very convenient interface
+!      for supplying both numeric and textual data to user application
+!      programs. However, any particular component of a character
+!      valued component of a kernel pool variable is limited to 80
+!      or fewer characters in length.
+!
+!      This routine allows you to overcome this limitation by
+!      "continuing" a character component of a kernel pool variable.
+!      To do this you need to select a continuation sequence
+!      of characters and then insert this sequence as the last non-blank
+!      set of characters that make up the portion of the component
+!      that should be continued.
+!
+!      For example, you may decide to use the sequence '//' to indicate
+!      that a string should be continued to the next component of
+!      a kernel pool variable. Then set up the
+!      kernel pool variable as shown below
+!
+!      LONG_STRINGS = ( 'This is part of the first component //'
+!                       'that needs more than one line when //'
+!                       'inserting it into the kernel pool.'
+!                       'This is the second string that is split //'
+!                       'up as several components of a kernel pool //'
+!                       'variable.' )
+!
+!      When loaded into the kernel pool, the variable LONG_STRINGS
+!      will have six literal components:
+!
+!         COMPONENT (1) = 'This is part of the first component //'
+!         COMPONENT (2) = 'that needs more than one line when //'
+!         COMPONENT (3) = 'inserting it into the kernel pool.'
+!         COMPONENT (4) = 'This is the second string that is split //'
+!         COMPONENT (5) = 'up as several components of a kernel pool //'
+!         COMPONENT (6) = 'variable.'
+!
+!      These are the components that would be retrieved by the call
+!
+!         CALL GCPOOL ( 'LONG_STRINGS', 1, 6, N, COMPONENT, FOUND )
+!
+!      However, using the routine SEPOOL you can view the variable
+!      LONG_STRINGS as having two long components.
+!
+!         STRING (1) = 'This is part of the first component that '
+!     .   //           'needs more than one line when inserting '
+!     .   //           'it into the kernel pool. '
+!
+!         STRING (2) = 'This is the second string that is split '
+!     .   //           'up as several components of a kernel pool '
+!     .   //           'variable. '
+!
+!      These string components would be retrieved by the following two
+!      calls.
+!
+!         FIDX = 1
+!         CALL SEPOOL ( 'LONG_STRINGS', FIDX, '//',
+!        .                              STRING(1), SIZE, LIDX, FOUND )
+!         FIDX = LIDX+1
+!         CALL SEPOOL ( 'LONG_STRINGS', FIDX, '//',
+!        .                              STRING(2), SIZE, LIDX, FOUND )
+!
+! $ Examples
+!
+!     Example 1. Retrieving file names.
+!
+!      Suppose a you have used the kernel pool as a mechanism for
+!      specifying SPK files to load at startup but that the full
+!      names of the files are too long to be contained in a single
+!      text line of a kernel pool assignment.
+!
+!      By selecting an appropriate continuation character ('*' for
+!      example)  you can insert the full names of the SPK files
+!      into the kernel pool and then retrieve them using this
+!      routine.
+!
+!      First set up the kernel pool specification of the strings
+!      as shown here:
+!
+!            SPK_FILES = ( 'this_is_the_full_path_specification_*'
+!                          'of_a_file_with_a_long_name'
+!                          'this_is_the_full_path_specification_*'
+!                          'of_a_second_file_with_a_very_long_*'
+!                          'name' )
+!
+!      Now to retrieve and load the SPK_FILES one at a time,
+!      exercise the following loop.
+!
+!      INTEGER               FILSIZ
+!      PARAMETER           ( FILSIZ = 255 )
+!
+!      CHARACTER*(FILSIZ)    FILE
+!      INTEGER               I
+!      INTEGER               LIDX
+!
+!      I = 1
+!
+!      CALL SEPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, LIDX, FOUND )
+!
+!      DO WHILE ( FOUND .AND. RTRIM(FILE) .EQ. SIZE )
+!
+!         CALL SPKLEF ( FILE, HANDLE )
+!         I = LIDX + 1
+!         CALL SEPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, LIDX, FOUND )
+!      END DO
+!
+!      IF ( FOUND .AND. RTRIM(FILE) .NE. SIZE ) THEN
+!         WRITE (*,*) 'The ', I, '''th file name was too long.'
+!      END IF
+!
+!      Example 2. Retrieving all components as a string.
+!
+!      Occasionally, it may be useful to retrieve the entire
+!      contents of a kernel pool variable as a single string. To
+!      do this you can use the blank character as the
+!      continuation character. For example if you place the
+!      following assignment in a text kernel
+!
+!          COMMENT = (  'This is a long note '
+!                       ' about the intended '
+!                       ' use of this text kernel that '
+!                       ' can be retrieved at run time.' )
+!
+!      you can retrieve COMMENT as single string via the call below.
+!
+!         CALL SEPOOL ( 'COMMENT', 1, ' ', COMMNT, SIZE, LIDX, FOUND )
+!
+!      The result will be that COMMNT will have the following value.
+!
+!         COMMNT = 'This is a long note about the intended use of '
+!     .   //       'this text kernel that can be retrieved at run '
+!     .   //       'time. '
+!
+!      Note that the leading blanks of each component of COMMENT are
+!      significant, trailing blanks are not significant.
+!
+!      If COMMENT had been set as
+!
+!          COMMENT = (  'This is a long note '
+!                       'about the intended '
+!                       'use of this text kernel that '
+!                       'can be retrieved at run time.' )
+!
+!      Then the call to SEPOOL above would have resulted in several
+!      words being run together as shown below.
+!
+!         COMMNT = 'This is a long noteabout the intendeduse of '
+!     .   //       'this text kernel thatcan be retrieved at run '
+!     .   //       'time. '
+!
+!      resulted in several words being run together as shown below.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 12-APR-2012 (WLT) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Retrieve a continued string value from the kernel pool
+!
+!-&
+
+!     SPICELIB Variables
+!
+
+      integer(ip), parameter :: lnsize = 80
+
+      character(lnsize)     part
+
+      integer(ip)           cfirst
+      integer(ip)           clast
+      integer(ip)           comp
+      integer(ip)           csize
+      integer(ip)           n
+      integer(ip)           putat
+      integer(ip)           room
+
+      logical               gotit
+      logical               more
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Return empty output if the input index is bad.
+!
+      if ( fidx < 1 ) then
+         found  = .false.
+         string = ' '
+         size   = 0
+         lidx   = 0
+         return
+      end if
+
+!
+!     Check in.
+!
+
+!
+!     Check if the first component exists. Return empty output if not.
+!
+      call gcpool ( ctx, item, fidx, 1, n, part, gotit )
+
+      gotit = gotit .and. n > 0
+
+      if ( .not. gotit ) then
+         found  = .false.
+         string = ' '
+         size   = 0
+         lidx   = 0
+         return
+      end if
+
+!
+!     Fetch the string using Bill's algorithm from STPOOL 'as is'.
+!
+      room   = len(string)
+      csize  = rtrim(contin)
+      putat  = 1
+
+      comp   = fidx
+      more   = .true.
+      string = ' '
+      n      =  0
+
+      do while ( more )
+
+         call gcpool ( ctx, item, comp, 1, n, part, more )
+
+         more = more .and. n > 0
+
+         if ( more ) then
+
+            found  = .true.
+
+            clast  = rtrim(part)
+            cfirst = clast - csize + 1
+
+            if ( cfirst < 0 ) then
+
+               if ( putat <= room ) then
+                  string(putat:) = part(1:clast)
+               end if
+
+               putat          = putat + clast
+               more           = .false.
+
+            else if ( part(cfirst:clast) /= contin ) then
+
+               if ( putat <= room ) then
+                  string(putat:) = part(1:clast)
+               end if
+               putat          = putat + clast
+               more           = .false.
+
+            else if ( cfirst > 1 ) then
+
+               if ( putat <= room ) then
+                  string(putat:) = part(1:cfirst-1)
+               end if
+               putat          = putat + cfirst - 1
+
+            end if
+
+         end if
+
+         comp = comp + 1
+
+      end do
+
+!
+!     We are done. Get the size of the full string and the index of its
+!     last component and checkout.
+!
+      size = putat - 1
+      lidx = comp  - 1
+
+      return
+      end procedure sepool
+
+!$Procedure STPOOL ( String from pool )
+
+      module procedure stpool
+      use pepper_kinds, only: ip
+      use pepper_strings, only: rtrim
+
+! $ Abstract
+!
+!     Retrieve the Nth string from a kernel pool variable, where the
+!     string may be continued across several components of the kernel
+!     pool variable.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     POOL
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     ITEM     is the name of a kernel pool variable for which
+!              the caller wants to retrieve a full (potentially
+!              continued) string component.
+!
+!     NTH      is the number of the string to retrieve from the kernel
+!              pool. The range of NTH is 1 to the number of full strings
+!              that are present.
+!
+!     CONTIN   is a sequence of characters which (if they appear as the
+!              last non-blank sequence of characters in a component of a
+!              value of a kernel pool variable) act as a continuation
+!              marker: the marker indicates that the string associated
+!              with the component is continued into the next literal
+!              component of the kernel pool variable.
+!
+!              If CONTIN is blank, all of the components of ITEM will be
+!              retrieved as a single string.
+!
+! $ Detailed_Output
+!
+!     NTHSTR   is the NTH full string associated with the kernel pool
+!              variable specified by ITEM.
+!
+!              Note that if NTHSTR is not sufficiently long to hold the
+!              fully continued string, the value will be truncated. You
+!              can determine if NTHSTR has been truncated by examining
+!              the variable SIZE.
+!
+!     SIZE     is the index of last non-blank character of the continued
+!              string as it is represented in the kernel pool. This is
+!              the actual number of characters needed to hold the
+!              requested string. If NTHSTR contains a truncated portion
+!              of the full string, RTRIM(NTHSTR) will be less than SIZE.
+!
+!              If the value of NTHSTR should be a blank, then SIZE will
+!              be set to 1.
+!
+!     FOUND    is a logical variable indicating success of the request
+!              to retrieve the NTH string associated with ITEM. If an
+!              Nth string exists, FOUND will be set to .TRUE.;
+!              otherwise FOUND will be set to .FALSE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the variable specified by ITEM is not present in the
+!         kernel pool or is present but is not character valued,
+!         NTHSTR will be returned as a blank, SIZE will be
+!         returned with the value 0 and FOUND will be set to .FALSE. In
+!         particular if NTH is less than 1, NTHSTR will be returned as a
+!         blank, SIZE will be zero and FOUND will be .FALSE.
+!
+!     2)  If the variable specified has a blank string associated
+!         with its NTH full string, NTHSTR will be blank, SIZE
+!         will be 1 and FOUND will be set to .TRUE.
+!
+!     3)  If NTHSTR is not long enough to hold all of the characters
+!         associated with the NTH string, it will be truncated on the
+!         right.
+!
+!     4)  If the continuation character is a blank, every component
+!         of the variable specified by ITEM will be inserted into
+!         the output string.
+!
+!     5)  If the continuation character is blank, then a blank component
+!         of a variable is treated as a component with no letters.
+!         For example:
+!
+!            STRINGS = ( 'This is a variable'
+!                        'with a blank'
+!                        ' '
+!                        'component.' )
+!
+!         Is equivalent to
+!
+!            STRINGS = ( 'This is a variable'
+!                        'with a blank'
+!                        'component.' )
+!
+!         from the point of view of STPOOL if CONTIN is set to the
+!         blank character.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     The SPICE Kernel Pool provides a very convenient interface
+!     for supplying both numeric and textual data to user application
+!     programs. However, any particular component of a character
+!     valued component of a kernel pool variable is limited to 80
+!     or fewer characters in length.
+!
+!     This routine allows you to overcome this limitation by
+!     "continuing" a character component of a kernel pool variable.
+!     To do this you need to select a continuation sequence
+!     of characters and then insert this sequence as the last non-blank
+!     set of characters that make up the portion of the component
+!     that should be continued.
+!
+!     For example, you may decide to use the sequence '//' to indicate
+!     that a string should be continued to the next component of
+!     a kernel pool variable. Then set up the
+!     kernel pool variable as shown below
+!
+!        LONG_STRINGS = ( 'This is part of the first component //'
+!                         'that needs more than one line when //'
+!                         'inserting it into the kernel pool.'
+!                         'This is the second string that is split //'
+!                         'up as several components of a kernel pool //'
+!                         'variable.' )
+!
+!     When loaded into the kernel pool, the variable LONG_STRINGS
+!     will have six literal components:
+!
+!        COMPONENT (1) = 'This is part of the first component //'
+!        COMPONENT (2) = 'that needs more than one line when //'
+!        COMPONENT (3) = 'inserting it into the kernel pool.'
+!        COMPONENT (4) = 'This is the second string that is split //'
+!        COMPONENT (5) = 'up as several components of a kernel pool //'
+!        COMPONENT (6) = 'variable.'
+!
+!     These are the components that would be retrieved by the call
+!
+!        CALL GCPOOL ( 'LONG_STRINGS', 1, 6, N, COMPONENT, FOUND )
+!
+!     However, using the routine STPOOL you can view the variable
+!     LONG_STRINGS as having two long components.
+!
+!        STRGNA = 'This is part of the first component that '
+!       . //      'needs more than one line when inserting '
+!       . //      'it into the kernel pool. '
+!
+!        STRGNB = 'This is the second string that is split '
+!       . //      'up as several components of a kernel pool '
+!       . //      'variable. '
+!
+!     These string components would be retrieved by the following two
+!     calls.
+!
+!        CALL STPOOL ( 'LONG_STRINGS', 1, '//', STRGNA, SIZE, FOUND )
+!        CALL STPOOL ( 'LONG_STRINGS', 2, '//', STRGNB, SIZE, FOUND )
+!
+! $ Examples
+!
+!     Example 1. Retrieving file names.
+!
+!     Suppose a you have used the kernel pool as a mechanism for
+!     specifying SPK files to load at startup but that the full
+!     names of the files are too long to be contained in a single
+!     text line of a kernel pool assignment.
+!
+!     By selecting an appropriate continuation character ('*' for
+!     example)  you can insert the full names of the SPK files
+!     into the kernel pool and then retrieve them using this
+!     routine.
+!
+!     First set up the kernel pool specification of the strings
+!     as shown here:
+!
+!           SPK_FILES = ( 'this_is_the_full_path_specification_*'
+!                         'of_a_file_with_a_long_name'
+!                         'this_is_the_full_path_specification_*'
+!                         'of_a_second_file_with_a_very_long_*'
+!                         'name' )
+!
+!     Now to retrieve and load the SPK_FILES one at a time,
+!     exercise the following loop.
+!
+!     INTEGER               FILSIZ
+!     PARAMETER           ( FILSIZ = 255 )
+!
+!     CHARACTER*(FILSIZ)    FILE
+!     INTEGER               I
+!
+!     I = 1
+!
+!     CALL STPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, FOUND )
+!
+!     DO WHILE ( FOUND .AND. RTRIM(FILE) .EQ. SIZE )
+!
+!        CALL SPKLEF ( FILE, HANDLE )
+!        I = I + 1
+!        CALL STPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, FOUND )
+!
+!     END DO
+!
+!     IF ( FOUND .AND. RTRIM(FILE) .NE. SIZE ) THEN
+!
+!        WRITE (*,*) 'The ', I, '''th file name was too long.'
+!
+!     END IF
+!
+!     Example 2. Retrieving all components as a string.
+!
+!     Occasionally, it may be useful to retrieve the entire
+!     contents of a kernel pool variable as a single string. To
+!     do this you can use the blank character as the
+!     continuation character. For example if you place the
+!     following assignment in a text kernel
+!
+!         COMMENT = (  'This is a long note '
+!                      ' about the intended '
+!                      ' use of this text kernel that '
+!                      ' can be retrieved at run time.' )
+!
+!     you can retrieve COMMENT as single string via the call below.
+!
+!        CALL STPOOL ( 'COMMENT', 1, ' ', COMMNT, SIZE, FOUND )
+!
+!     The result will be that COMMNT will have the following value.
+!
+!        COMMNT = 'This is a long note about the intended use of '
+!       . //      'this text kernel that can be retrieved at run '
+!       . //      'time. '
+!
+!     Note that the leading blanks of each component of COMMENT are
+!     significant, trailing blanks are not significant.
+!
+!     If COMMENT had been set as
+!
+!         COMMENT = (  'This is a long note '
+!                      'about the intended '
+!                      'use of this text kernel that '
+!                      'can be retrieved at run time.' )
+!
+!     Then the call to STPOOL above would have resulted in several
+!     words being run together as shown below.
+!
+!        COMMNT = 'This is a long noteabout the intendeduse of '
+!       . //      'this text kernel thatcan be retrieved at run '
+!       . //      'time. '
+!
+!     resulted in several words being run together as shown below.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
+!
+!        Changed the output argument name "STRING" to "NTHSTR" for
+!        consistency with other routines.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 11-JUL-1997 (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Retrieve a continued string value from the kernel pool
+!
+!-&
+
+!     SPICELIB Variables
+!
+
+      integer(ip), parameter :: lnsize = 80
+
+      character(lnsize)     part
+
+      integer(ip)           cfirst
+      integer(ip)           clast
+      integer(ip)           comp
+      integer(ip)           csize
+      integer(ip)           n
+      integer(ip)           putat
+      integer(ip)           room
+      integer(ip)           strno
+
+      logical               gotit
+      logical               more
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+      if ( nth < 1 ) then
+         found  = .false.
+         nthstr = ' '
+         size   = 0
+         return
+      end if
+
+      room  = len(nthstr)
+      csize = rtrim(contin)
+      putat = 1
+
+!
+!     Retrieve components until we've gone past the first NTH-1
+!     strings.
+!
+      strno = 1
+      comp  = 1
+      found = .false.
+
+      do while ( strno < nth )
+
+         call gcpool ( ctx, item, comp, 1, n, part, gotit )
+
+         gotit = n > 0
+
+         if ( .not. gotit ) then
+            nthstr = ' '
+            size   = 0
+            found  = .false.
+            return
+         end if
+
+         clast  = rtrim(part)
+         cfirst = clast - csize + 1
+
+         if ( cfirst < 0 ) then
+            strno = strno + 1
+         else if ( part(cfirst:clast) /= contin ) then
+            strno = strno + 1
+         end if
+
+         comp = comp + 1
+
+      end do
+
+!
+!     Once we've reached this point, COMP points to the component
+!     of the kernel pool variable that is the beginning of the NTH
+!     string.  Now just retrieve components until we run out or
+!     one is not continued.
+!
+      more   = .true.
+      nthstr = ' '
+      n      =  0
+
+      do while ( more )
+
+         call gcpool ( ctx, item, comp, 1, n, part, more )
+
+         more = more .and. n > 0
+
+         if ( more ) then
+
+            found  = .true.
+
+            clast  = rtrim(part)
+            cfirst = clast - csize + 1
+
+            if ( cfirst < 0 ) then
+
+               if ( putat <= room ) then
+                  nthstr(putat:) = part(1:clast)
+               end if
+
+               putat          = putat + clast
+               more           = .false.
+
+            else if ( part(cfirst:clast) /= contin ) then
+
+               if ( putat <= room ) then
+                  nthstr(putat:) = part(1:clast)
+               end if
+               putat          = putat + clast
+               more           = .false.
+
+            else if ( cfirst > 1 ) then
+
+               if ( putat <= room ) then
+                  nthstr(putat:) = part(1:cfirst-1)
+               end if
+               putat          = putat + cfirst - 1
+
+            end if
+
+         end if
+
+         comp = comp + 1
+
+      end do
+
+!
+!     We are done.  Get the size of the full string and checkout.
+!
+      size = putat - 1
+
+      return
+      end procedure stpool
+
+!$Procedure TKVRSN ( Toolkit version strings )
+
+      module procedure tkvrsn
+      use pepper_strings, only: eqstr
+
+! $ Abstract
+!
+!     Return the latest version string of a given item such as the
+!     Toolkit or a routine name.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     ITEM     is the item for which a version string is to be returned.
+!              ITEM may be 'TOOLKIT', entry point names, or program
+!              names. ITEM is case insensitive.
+!
+!              Currently, the only ITEM supported is 'TOOLKIT' and it
+!              will return the toolkit version number.
+!
+!              Any other ITEM will return 'No version found.'
+!
+! $ Detailed_Output
+!
+!     VERSTR   is the latest version string for the specified ITEM.
+!
+!              If ITEM is not one of the items having a version, the
+!              value 'No version found.' will be returned.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+!     1)  If the ITEM whose version string is requested is not
+!         recognized, the string 'No version found.' is returned.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     None.
+!
+! $ Examples
+!
+!     Suppose you want to find out the recent Toolkit configuration
+!     version number. Using the code fragment below:
+!
+!     CHARACTER*(80)        VERSN
+!
+!     CALL TKVRSN ( 'TOOLKIT', VERSN )
+!
+!     The variable VERSN would contain a string similar to the one
+!     shown below:
+!
+!        'N0035'
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     H.A. Neilan        (JPL)
+!     B.V. Semenov       (JPL)
+!     W.L. Taber         (JPL)
+!     F.S. Turner        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.16.0, 31-DEC-2021 (WLT)
+!
+!        Version update, N0067
+!
+!-    SPICELIB Version 3.15.0, 20-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 3.14.0, 05-APR-2017 (BVS)
+!
+!        Version update, N0066
+!
+!-    SPICELIB Version 3.13.0, 15-JUL-2014 (BVS)
+!
+!        Version update, N0065
+!
+!-    SPICELIB Version 3.12.0, 09-JUN-2010 (BVS)
+!
+!        Version update, N0064
+!
+!-    SPICELIB Version 3.11.0, 15-APR-2009 (BVS)
+!
+!        Version update, N0063
+!
+!-    SPICELIB Version 3.10.0, 04-MAR-2008 (BVS)
+!
+!        Version update, N0062
+!
+!-    SPICELIB Version 3.9.0, 27-NOV-2006 (BVS)
+!
+!        Version update, N0061
+!
+!-    SPICELIB Version 3.8.0, 16-DEC-2005 (BVS)
+!
+!        Version update, N0060
+!
+!-    SPICELIB Version 3.7.0, 17-NOV-2005 (BVS)
+!
+!        Version update, N0059
+!
+!-    SPICELIB Version 3.6.0, 11-JAN-2005 (BVS)
+!
+!        Version update, N0058
+!
+!-    SPICELIB Version 3.5.0, 02-MAR-2004 (BVS)
+!
+!        Version update, N0057
+!
+!-    SPICELIB Version 3.4.0, 30-JUL-2003 (BVS)
+!
+!        Version update, N0056
+!
+!-    SPICELIB Version 3.3.0, 26-FEB-2003 (BVS)
+!
+!        Version update, N0055
+!
+!-    SPICELIB Version 3.2.0, 13-DEC-2002 (BVS)
+!
+!        Version update, N0054
+!
+!-    SPICELIB Version 3.1.0, 05-SEP-2002 (BVS)
+!
+!        Version update, N0053
+!
+!-    SPICELIB Version 3.0.0, 06-FEB-2002 (FST)
+!
+!        Version update, N0052a
+!
+!-    SPICELIB Version 2.9.0, 17-JAN-2002 (WLT)
+!
+!        Version update, N0052
+!
+!-    SPICELIB Version 2.8.0, 07-APR-2000 (WLT)
+!
+!        Version update, N0051
+!
+!-    SPICELIB Version 2.7.0, 06-OCT-1999 (WLT)
+!
+!        Version update, N0050
+!
+!-    SPICELIB Version 2.6.0, 04-SEP-1998 (WLT)
+!
+!        Version update, N0049
+!
+!-    SPICELIB Version 2.5.0, 01-MAY-1998 (WLT)
+!
+!        Version update, N0048
+!
+!-    SPICELIB Version 2.4.0, 31-JUL-1997 (WLT)
+!
+!        Version update, N0047
+!
+!-    SPICELIB Version 2.3.0, 27-JAN-1997 (WLT)
+!
+!        Version update, N0046
+!
+!-    SPICELIB Version 2.2.0, 15-OCT-1996 (WLT)
+!
+!        Version update, N0045
+!
+!-    SPICELIB Version 2.1.0, 26-AUG-1996 (WLT)
+!
+!        Version update, N0044
+!
+!-    SPICELIB Version 2.0.0, 09-MAY-1996 (KRG)
+!
+!        Removed the check of the SPICELIB function RETURN. This
+!        routine is called by the error handling after an error
+!        has been signaled to get the toolkit version, so it
+!        cannot return on entry after an error.
+!
+!        The calls to CHKIN and CHKOUT have also been removed to
+!        completely isolate this subroutine from the error handling.
+!
+!        Version update, N0043.
+!
+!-    SPICELIB Version 1.7.0, 02-JAN-1996 (WLT)
+!
+!        Version update, N0042.
+!
+!-    SPICELIB Version 1.6.0, 28-SEP-1995 (HAN)
+!
+!        Version update, N0041.
+!
+!-    SPICELIB Version 1.5.0, 19-AUG-1995 (HAN)
+!
+!        Version update, N0040.
+!
+!-    SPICELIB Version 1.4.0, 05-JUN-1995 (HAN)
+!
+!        Version update, N0039.
+!
+!-    SPICELIB Version 1.3.0, 28-MAR-1995 (HAN)
+!
+!        Version update, N0038.
+!
+!-    SPICELIB Version 1.2.0, 23-DEC-1994 (HAN)
+!
+!        Version update, N0037.
+!
+!-    SPICELIB Version 1.1.0, 31-OCT-1994 (HAN)
+!
+!        Version update, N0036.
+!
+!-    SPICELIB Version 1.0.0, 23-AUG-1994 (HAN)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Return version strings
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     At the current time only the TOOLKIT version number is
+!     defined.
+!
+      if ( eqstr( item, 'TOOLKIT' ) ) then
+         verstr = 'N0067'
+      else
+         verstr = 'No version found.'
+      end if
+
+      return
+      end procedure tkvrsn
+
+!$Procedure ZZASCII ( determine/verify EOL terminators in a text file )
+
+      module procedure zzascii
+      use pepper_kinds, only: ip
+      use pepper_strings, only: eqstr, rtrim
+
+      implicit none
+
+! $ Abstract
+!
+!     Returns a string indicating the line terminators of an ASCII file
+!     and, if requested, stops execution if the terminator does match
+!     the one that is native to the platform on which the toolkit was
+!     compiled.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     FILE TYPE
+!
+! $ Declarations
+
+
+! $ Detailed_Input
+!
+!     FILE       the name of the ASCII file to scan for a line
+!                terminator
+!
+!     LINE       a character string of sufficient length to perform the
+!                line reads from FILE.
+!
+!     CHECK      a logical flag that, if set to .TRUE., instructs this
+!                routine to check terminator that has been determined
+!                against the one that is native to the platform, on
+!                which the toolkit was compiled, and to generate error
+!                if it was not the case. If set to .FALSE., instructs
+!                the routine to bypass the check.
+!
+! $ Detailed_Output
+!
+!     TERMIN     the terminator ID extracted from FILE. The possible
+!                values:
+!
+!                'CR'    - carriage return (Mac classic)
+!                'LF'    - line feed (Unix)
+!                'CR-LF' - carriage return and line feed (DOS)
+!                '?'     - unable to determine, possibly
+!                          due to an error event
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1) A SPICE(STRINGTOOSHORT) error signals if LINE has length less
+!        than 3.
+!
+!     2) A SPICE(FILEOPENFAILED) error signals if the file of interest
+!        fails to open, i.e. IOSTAT < 0.
+!
+!     3) A text kernel found to contain non-native line terminators
+!        and abort of the run was requested by causes this routine to
+!        signal the error SPICE(INCOMPATIBLEEOL).
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     The function scans a string read from a text file to determine
+!     the native platform of the file. The functions response is
+!     unpredictable if it scans a binary file.
+!
+! $ Examples
+!
+!     To return EOL terminator for a given file:
+!
+!         CHARACTER*(5)    TERMIN
+!         CHARACTER*(64)   LINE
+!
+!          ... given a file name
+!          ... and a line long enough to hold a text string
+!              from FILE
+!
+!         CALL ZZASCII( FILE, LINE, .FALSE., TERMIN )
+!
+!         CALL TOSTDO( 'FOUND FILE TERMINATOR '//TERMIN )
+!
+!     To stop if EOL terminator for a given file, if detected
+!     successfully, is not native to this platform:
+!
+!         CHARACTER*(5)    TERMIN
+!         CHARACTER*(64)   LINE
+!
+!          ... given a file name
+!          ... and a line long enough to hold a text string
+!              from FILE
+!
+!         CALL ZZASCII( FILE, LINE, .TRUE., TERMIN )
+!
+!     If the EOL terminator was not native, the call will generate
+!     SPICE(INCOMPATIBLEEOL) error.
+!
+! $ Restrictions
+!
+!     1) The terminator detection is not performed if the read from
+!        the file fails because the file is smaller than the allocated
+!        LINE size or for any other reason.
+!
+!     2) The terminator detection is not possible if the length of the
+!        first text line in the file exceeds the length of the LINE
+!        work space.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     E.D. Wright      (JPL)
+!     B.V. Semenov     (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.26.0, 28-NOV-2021 (BVS)
+!
+!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+!
+!-    SPICELIB Version 1.25.0, 10-MAR-2014 (BVS)
+!
+!        Updated for SUN-SOLARIS-64BIT-INTEL.
+!
+!-    SPICELIB Version 1.24.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-LINUX-64BIT-IFORT.
+!
+!-    SPICELIB Version 1.23.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-CYGWIN-GFORTRAN.
+!
+!-    SPICELIB Version 1.22.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+!
+!-    SPICELIB Version 1.21.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-CYGWIN-64BIT-GCC_C.
+!
+!-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
+!
+!        Updated for SUN-SOLARIS-INTEL.
+!
+!-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
+!
+!        Updated for SUN-SOLARIS-INTEL-CC_C.
+!
+!-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
+!
+!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+!
+!-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
+!
+!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+!
+!-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
+!
+!        Updated for PC-WINDOWS-64BIT-IFORT.
+!
+!-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
+!
+!        Updated for PC-LINUX-64BIT-GFORTRAN.
+!
+!-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
+!
+!        Updated for PC-64BIT-MS_C.
+!
+!-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
+!
+!        Updated for MAC-OSX-64BIT-INTEL_C.
+!
+!-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
+!
+!        Updated for MAC-OSX-64BIT-IFORT.
+!
+!-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
+!
+!        Updated for MAC-OSX-64BIT-GFORTRAN.
+!
+!-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
+!
+!        Updated for PC-LINUX-GFORTRAN.
+!
+!-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
+!
+!        Updated for MAC-OSX-GFORTRAN.
+!
+!-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
+!
+!        Updated for PC-LINUX-IFORT.
+!
+!-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
+!
+!        Updated for PC-LINUX-64BIT-GCC_C.
+!
+!-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
+!
+!        Updated for MAC-OSX-INTEL_C.
+!
+!-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
+!
+!        Updated for MAC-OSX-IFORT.
+!
+!-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
+!
+!        Updated for PC-WINDOWS-IFORT.
+!
+!-    SPICELIB Version 1.3.1, 26-OCT-2006 (EDW)
+!
+!        Expanded error message explanation the
+!        routine outputs when the file-of-interest
+!        includes non-native text line terminators.
+!
+!-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
+!
+!        Updated for SUN-SOLARIS-64BIT-GCC_C.
+!
+!-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
+!
+!        Updated for PC-CYGWIN_C.
+!
+!-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
+!
+!        Updated for PC-CYGWIN.
+!
+!-    SPICELIB Version 1.0.0, 17-FEB-2004 (EDW) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     determine ascii text file end-of-line type
+!
+!-&
+
+!
+!     SPICELIB functions.
+!
+
+!
+!     Local parameters.
+!
+      integer(ip), parameter :: eoltsz = 5
+
+!
+!     Local variables.
+!
+      character(eoltsz)     native
+
+      integer(ip)           doscnt
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           maccnt
+      integer(ip)           number
+      integer(ip)           reclen
+      integer(ip)           unxcnt
+
+!
+! Can't determine the terminator in RETURN
+!     mode.
+!
+      if ( ctx%failed() ) then
+         termin = '?'
+         return
+      end if
+
+!
+!     Check-in to the error system.
+!
+
+!
+!     Retrieve the native line terminator.
+!
+      call zzplatfm ( ctx, 'TEXT_FORMAT', native )
+
+!
+!     If it is VAX, return immediately with undefined terminator.
+!
+      if ( eqstr( native, 'VAX' ) ) then
+
+         termin = '?'
+
+         return
+
+      end if
+
+!
+!     Set the record length that will be used to read data from
+!     the file.
+!
+      reclen  = len(line)
+
+!
+!     Check the length of the work string is sufficient to perform the
+!     operations. Less than 3 is a no-op.
+!
+      if ( len(line) < 3 ) then
+
+         termin = '?'
+
+         call ctx%setmsg ( 'Work string lacks sufficient length' &
+                    // ' to perform operation.')
+         call ctx%sigerr ( 'SPICE(STRINGTOOSHORT)' )
+         return
+
+      end if
+
+!
+!     Find a free logical unit for file access.
+!
+!     PEPPER: the unit comes from NEWUNIT= in the OPEN below.
+
+!
+!     Open the file for DIRECT access.
+!
+      open ( newunit               = number  , &
+             file               = file( :rtrim(file) ), &
+             access             = 'DIRECT', &
+             status             = 'OLD'   , &
+             recl               = reclen  , &
+#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
+             mode               = 'READ', &
+#else
+#endif
+             iostat             = iostat  )
+
+      if ( iostat /= 0 ) then
+
+!
+!        The open failed, can't determine the terminator if the routine
+!        can't open the file.
+!
+         termin = '?'
+
+!
+!        Execute a close, J.I.C.
+!
+         close( number )
+
+         call ctx%setmsg ( 'File open failed for file ''$1''. IOSTAT ' &
+                     //' value $2.' )
+         call ctx%errch  ( '$1', file            )
+         call ctx%errint ( '$2', iostat          )
+         call ctx%sigerr ( 'SPICE(FILEOPENFAIL)' )
+         return
+
+      end if
+
+!
+!     Read a line into the LINE variable assigned by the user.
+!
+      line = ' '
+
+      read ( number, rec=1, iostat=iostat ) line
+
+      if ( iostat /= 0 ) then
+
+!
+!        If something went wrong during this read, a part or the whole
+!        returned line may contain garbage. Instead of examining it and
+!        making wrong determination based on it, set terminator to
+!        undefined and return.
+!
+         termin = '?'
+
+!
+!        Execute a close, J.I.C.
+!
+         close( number )
+
+         return
+
+      end if
+
+!
+!     We have a line of text data. Use ICHAR to scan for carriage
+!     returns and line feeds and count how may of various recognized
+!     line termination sequences are in this line.
+!
+      doscnt = 0
+      unxcnt = 0
+      maccnt = 0
+
+      i      = 1
+
+      do while ( i < len(line) )
+
+!
+!        Check for ICHAR values of 10 (LF) and 13 (CR).
+!
+         if      ( ichar(line(i:i)) == 10 ) then
+
+!
+!           Found a UNIX line terminator LF.
+!
+            unxcnt = unxcnt + 1
+
+         else if ( ichar(line(i:i)) == 13 ) then
+
+!
+!           Found CR, increment character counter and check
+!           the next character.
+!
+            i = i + 1
+
+            if ( ichar(line(i:i)) == 10 ) then
+
+!
+!              Found a DOS line terminator CR+LF.
+!
+               doscnt = doscnt + 1
+
+            else
+
+!
+!              Found a Classic Mac line terminator CR.
+!
+               maccnt = maccnt + 1
+
+            end if
+
+         end if
+
+         i = i + 1
+
+      end do
+
+!
+!     Examine the counters.
+!
+      if      ( doscnt > 0 .and. &
+                unxcnt == 0 .and. &
+                maccnt == 0       ) then
+
+!
+!        Only DOS terminator counter is non-zero. ID the file as DOS.
+!
+         termin = 'CR-LF'
+
+      else if ( doscnt == 0 .and. &
+                unxcnt > 0 .and. &
+                maccnt == 0       ) then
+
+!
+!        Only Unix terminator counter is non-zero. ID the file as UNIX.
+!
+         termin =  'LF'
+
+      else if ( doscnt == 0 .and. &
+                unxcnt == 0 .and. &
+                maccnt > 0       ) then
+
+!
+!        Only Mac terminator counter is non-zero. ID the file as Mac
+!        Classic.
+!
+         termin =  'CR'
+
+      else
+
+!
+!        We can get here in two cases. First if the line did not
+!        contain any CRs or LFs. Second if the line contained more than
+!        one kind of terminators. In either case the format of the file
+!        is unclear.
+!
+         termin = '?'
+
+      end if
+
+!
+!     Close the file.
+!
+      close ( number )
+
+!
+!     If we were told check the terminator against the native one, do
+!     it.
+!
+      if ( check ) then
+
+!
+!        If the terminator was identified and does not match the native
+!        one, error out.
+!
+         if ( .not. eqstr( termin, native ) .and. &
+              .not. eqstr( termin, '?'    )       ) then
+
+            call ctx%setmsg ( 'Text file ''$1'' contains lines ' &
+                     //   'terminated with ''$2'' while ' &
+                     //   'the expected terminator for ' &
+                     //   'this platform is ''$3''. SPICE ' &
+                     //   'cannot process the file in the ' &
+                     //   'current form. This problem ' &
+                     //   'likely occurred because the ' &
+                     //   'file was copied in binary mode ' &
+                     //   'between operating systems where ' &
+                     //   'the operating systems use different ' &
+                     //   'text line terminators. Try ' &
+                     //   'converting the file to native text ' &
+                     //   'form using a utility such as ' &
+                     //   'dos2unix or unix2dos.'     )
+
+            call ctx%errch  ( '$1', file   )
+            call ctx%errch  ( '$2', termin )
+            call ctx%errch  ( '$3', native )
+            call ctx%sigerr ( 'SPICE(INCOMPATIBLEEOL)' )
+            return
+
+         end if
+
+      end if
+
+      return
+      end procedure zzascii
+
+!$Procedure EXISTS ( Does the file exist? )
+
+      module procedure exists
+      use pepper_kinds, only: ip
+      use pepper_strings, only: rtrim
+
+! $ Abstract
+!
+!     Determine whether a file exists.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     FNAME    is the name of the file in question. This may be any
+!              unambiguous file name valid on the user's computer, for
+!              example
+!
+!                 '/usr/dir1/dir2/DATA.DAT'
+!                 './DATA.DAT'
+!                 'c:\usr\dir1\dir2\data.dat'
+!
+!              Environment or shell variables may not be used.
+!
+! $ Detailed_Output
+!
+!     The function returns the value .TRUE. if the file exists, .FALSE.
+!     otherwise.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the filename is blank, the error SPICE(BLANKFILENAME) is
+!         signaled.
+!
+!     2)  If an I/O error occurs while checking the existence of the
+!         indicated file, the error SPICE(INQUIREFAILED) is signaled.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     Use the Fortran INQUIRE statement to determine the existence
+!     of FNAME.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Given two arbitrary files (one of them the actual code example
+!        source file), determine if they exists.
+!
+!        Example code begins here.
+!
+!              PROGRAM EXISTS_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     SPICELIB functions.
+!        C
+!              LOGICAL                 EXISTS
+!              INTEGER                 RTRIM
+!
+!        C
+!        C     Local constants.
+!        C
+!              INTEGER                 FILEN
+!              PARAMETER             ( FILEN = 14 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(FILEN)       FNAME  ( 2 )
+!
+!              INTEGER                 I
+!
+!        C
+!        C     Define an array of file names.
+!        C
+!              DATA                    FNAME / 'exists_ex1.txt',
+!             .                                'exists_ex1.pgm' /
+!
+!              DO I = 1, 2
+!
+!                 IF ( EXISTS ( FNAME(I) ) ) THEN
+!
+!                    WRITE(*,*) 'The file ', FNAME(I)(:RTRIM(FNAME(I))),
+!             .                 ' exists.'
+!
+!                 ELSE
+!
+!                    WRITE(*,*) 'Cannot find the file ', FNAME(I)
+!
+!                 END IF
+!
+!              END DO
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!         Cannot find the file exists_ex1.txt
+!         The file exists_ex1.pgm exists.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     H.A. Neilan        (JPL)
+!     W.L. Taber         (JPL)
+!     I.M. Underwood     (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.3.0, 17-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!        Added complete code example.
+!
+!        Changed input argument name FILE to FNAME for consistency with
+!        other routines.
+!
+!        Added IMPLICIT NONE statement.
+!
+!-    SPICELIB Version 2.2.1, 01-JUL-2014 (NJB)
+!
+!        VAX examples were deleted from the header.
+!
+!-    SPICELIB Version 2.2.0, 09-DEC-1999 (WLT)
+!
+!        The input file name is now "trimmed" of trailing blanks
+!        before checking its existence.
+!
+!-    SPICELIB Version 2.1.0, 04-MAR-1996 (KRG)
+!
+!        Added a local logical variable that is used as temporary
+!        storage for the results from the INQUIRE statement rather
+!        than using the function name. This solved a problem on the
+!        macintosh.
+!
+!-    SPICELIB Version 2.0.0, 04-AUG-1994 (KRG)
+!
+!        Added a test to see if the filename was blank before the
+!        INQUIRE statement. This allows a meaningful error message to
+!        be presented.
+!
+!-    SPICELIB Version 1.1.0, 17-MAY-1994 (HAN)
+!
+!        If the value of the function RETURN is .TRUE. upon execution of
+!        this module, this function is assigned a default value of
+!        either 0, 0.0D0, .FALSE., or blank depending on the type of
+!        the function.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!
+!-&
+
+! $ Index_Entries
+!
+!     does the file exist
+!
+!-&
+
+! $ Revisions
+!
+!-    Beta Version 2.0.0, 29-DEC-1988 (HAN)
+!
+!        The IOSTAT specifier was added to the INQUIRE statement.
+!        If the value of IOSTAT is not equal to zero, an error
+!        occurred during the execution of the INQUIRE statement.
+!        In this case, a SPICELIB error is signaled and the routine
+!        checks out.
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local variables
+!
+      integer(ip)           iostat
+      integer(ip)           r
+
+      logical               myexst
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) then
+         exists = .false.
+         return
+      end if
+!
+!     Initialize the local variable MYEXST to be .FALSE.
+!
+      myexst = .false.
+
+!
+!     First we test to see if the filename is blank.
+!
+      if ( fname == ' ' ) then
+
+         exists = .false.
+         call ctx%setmsg ( 'The file name is blank. ' )
+         call ctx%sigerr ( 'SPICE(BLANKFILENAME)'     )
+         return
+
+      end if
+
+      r = rtrim(fname)
+!
+!     So simple, it defies explanation.
+!
+      inquire ( file = fname(1:r), exist = myexst, iostat = iostat )
+
+      if ( iostat /= 0 ) then
+
+         exists = .false.
+         call ctx%setmsg ( 'Value of IOSTAT was *.' )
+         call ctx%errint ( '*', iostat              )
+         call ctx%sigerr ( 'SPICE(INQUIREFAILED)'   )
+         return
+
+      end if
+!
+!     Set the value of the function, return.
+!
+      exists = myexst
+
+      return
+      end procedure exists
+
+!$Procedure ZZLDKER ( Load a kernel )
+
+      module procedure zzldker
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     SPICE Private routine intended solely for the support of SPICE
+!     routines.  Users should not call this routine directly due
+!     to the volatile nature of this routine.
+!
+!     Determine the architecture and type of a file and load
+!     the file into the appropriate SPICE subsystem
+!
+! $ Required_Reading
+!
+!      None.
+!
+! $ Keywords
+!
+!      PRIVATE
+!
+! $ Declarations
+
+      implicit none
+
+! $ Detailed_Input
+!
+!     FILE       is the name of a file that is anticipated to
+!                be a SPICE kernel.
+!
+!     NOFILE     is a template for the message that should be created
+!                with SETMSG if a problem is identified with FILE. The
+!                message should have the form: "[text] '#' [text] #" The
+!                first octothorpe ('#') will be replaced by the name of
+!                the file. The second by a descriptive message.
+!
+! $ Detailed_Output
+!
+!     FILTYP     is the type of the kernel as determined by the
+!                SPICE file record of the file or by various
+!                heuristics.  Possible return values are:
+!
+!                  TEXT   ---  if FILE is interpreted as a text kernel
+!                              suitable for loading via LDPOOL.  No
+!                              attempt is made to distinguish between
+!                              different types of text kernels.
+!                  SPK   |
+!                  CK    |
+!                  PCK   |---  if FILE is a binary PCK file.
+!                  DSK   |
+!                  EK    |
+!
+!                If a failure occurs during the attempt to load
+!                the FILE, FILTYP will be returned as the blank string.
+!
+!     HANDLE     is the DAF or DAS handle that is associated with the
+!                file.  If the FILTYP of the file is 'TEXT', HANDLE
+!                will be set to zero.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1) If the specified file does not exist, the error
+!        SPICE(NOSUCHFILE) will be signaled.
+!
+!     2) If the specified file can be identified as unloadable
+!        because it is a transfer format file, the error
+!        SPICE(TRANSFERFILE) will be signaled.
+!
+!     3) If the specified file can be identified as unloadable
+!        because it is an obsolete text E-kernel, the error
+!        SPICE(TYPE1TEXTEK) will be signaled.
+!
+!     4) If the specified file can be recognized as a DAF/DAS file
+!        but is not one of the currently recognized binary kernel
+!        types, the error SPICE(UNKNOWNKERNELTYPE) will be signaled.
+!
+!     5) FILTYP is not sufficiently long to hold the full text of the
+!        type of the kernel, the value returned will be the truncation
+!        of the value.  As currently implemented this truncated type is
+!        sufficient to distinguish between the various types of
+!        kernels.
+!
+!     6) If the FILE cannot be loaded, HANDLE will be set to zero.
+!
+!     7) All other problems associated with the loading of FILE
+!        are diagnosed by the routines called by this routine.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine is intended as a supporting routine for the
+!     SPICE routine FURNSH.  It handles the task of loading
+!     an arbitrary kernel without the caller having to specify
+!     the type of the kernel.
+!
+! $ Examples
+!
+!     None.  (After all it's a private routine)
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman    (JPL)
+!     W.L. Taber      (JPL)
+!     E.D. Wright     (JPL)
+!     B.V. Semenov    (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 17-OCT-2021 (BVS)
+!
+!        Wrapped KERLIN and TERMIN declarations in FORTRAN environment
+!        block to silence declared-not-used complaints from f2c.
+!
+!-    SPICELIB Version 2.0.0, 20-JAN-2016 (NJB)
+!
+!        Added ability to load DSK files.
+!
+!-    SPICELIB Version 1.17.0, 10-MAR-2014 (BVS)
+!
+!        Updated for SUN-SOLARIS-64BIT-INTEL.
+!
+!-    SPICELIB Version 1.16.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-LINUX-64BIT-IFORT.
+!
+!-    SPICELIB Version 1.15.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-CYGWIN-GFORTRAN.
+!
+!-    SPICELIB Version 1.14.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+!
+!-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
+!
+!        Updated for SUN-SOLARIS-INTEL.
+!
+!-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
+!
+!        Updated for PC-WINDOWS-64BIT-IFORT.
+!
+!-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
+!
+!        Updated for PC-LINUX-64BIT-GFORTRAN.
+!
+!-    SPICELIB Version 1.10.0, 13-MAY-2010 (BVS)
+!
+!        Updated for MAC-OSX-64BIT-IFORT.
+!
+!-    SPICELIB Version 1.9.0, 13-MAY-2010 (BVS)
+!
+!        Updated for MAC-OSX-64BIT-GFORTRAN.
+!
+!-    SPICELIB Version 1.8.0, 18-MAR-2009 (BVS)
+!
+!        Updated for PC-LINUX-GFORTRAN.
+!
+!-    SPICELIB Version 1.7.0, 18-MAR-2009 (BVS)
+!
+!        Updated for MAC-OSX-GFORTRAN.
+!
+!-    SPICELIB Version 1.6.0, 19-FEB-2008 (BVS)
+!
+!        Updated for PC-LINUX-IFORT.
+!
+!-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
+!
+!        Updated for MAC-OSX-IFORT.
+!
+!-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
+!
+!        Updated for PC-WINDOWS-IFORT.
+!
+!-    SPICELIB Version 1.3.0, 03-OCT-2005 (EDW)
+!
+!        Source file zzldker.f converted to master file.
+!        Modification occurred to prevent f2c's versions
+!        from making the zzascii test. CSPICE now
+!        includes coed to allow reading of non native text files.
+!
+!-    SPICELIB Version 1.2.0, 17-FEB-2004 (EDW) (BVS)
+!
+!        Added the ZZASCII terminator test for text files. Used a
+!        working line length of 132 characters (maximum text kernel
+!        line size.)
+!
+!-    SPICELIB Version 1.1.0, 24-JUN-2002 (EDW)
+!
+!        Added a call to ZZBODKIK to run the
+!        NAIF_BODY_NAME/CODE read/check routine
+!        whenever a text kernel loads.
+!
+!-    SPICELIB Version 1.0.0, 04-JUN-1999 (WLT)
+!
+!-&
+!
+!     SPICELIB Functions
+!
+
+!
+!     Local Variables.
+!
+      integer(ip), parameter :: wdsize = 32
+
+      integer(ip), parameter :: eoltsz = 5
+
+      integer(ip), parameter :: klinsz = 132
+
+      character(wdsize)     versn
+      character(wdsize)     arch
+      character(wdsize)     mytype
+      character(eoltsz)     termin
+      character(klinsz)     kerlin
+
+      if ( ctx%failed() ) return
+
+      if ( .not. exists( ctx, file ) ) then
+
+         call ctx%setmsg ( nofile )
+         call ctx%errch  ( '#', file )
+         call ctx%errch  ( '#', 'could not be located.' )
+         call ctx%sigerr ( 'SPICE(NOSUCHFILE)'  )
+         return
+
+      end if
+
+      call getfat ( ctx, file, arch, mytype )
+
+!
+!     Possible values for the architecture are:
+!
+!        DAF -- The file is based on the DAF architecture.
+!        DAS -- The file is based on the DAS architecture.
+!        XFR -- The file is in a SPICE transfer file format.
+!        DEC -- The file is an old SPICE decimal text file.
+!        ASC -- An ASCII text file.
+!        KPL -- Kernel Pool File (i.e., a text kernel)
+!        TXT -- An ASCII text file.
+!        TE1 -- Text E-Kernel type 1.
+!         ?  -- The architecture could not be determined.
+!
+!     Some of these are obviously losers.
+!
+      if (      arch == 'XFR' &
+           .or. arch == 'DEC' ) then
+
+         call ctx%setmsg ( nofile )
+         call ctx%errch  ( '#', file )
+         call ctx%errch  ( '#', 'is a transfer format file. ' &
+         //                 'Transfer format files cannot be ' &
+         //                 'loaded. ' )
+         call ctx%sigerr ( 'SPICE(TRANSFERFILE)'  )
+         return
+
+      else if ( arch == 'TE1' ) then
+
+         call ctx%setmsg ( nofile )
+         call ctx%errch  ( '#', file )
+         call ctx%errch  ( '#', 'is a type 1 text E-kernel.  These ' &
+         //                 'files are obsolete and cannot be ' &
+         //                 'loaded. ' )
+         call ctx%sigerr ( 'SPICE(TYPE1TEXTEK)' )
+         return
+
+      end if
+
+!
+!     That takes care of the obvious errors.  Try loading the
+!     kernel.
+!
+      handle = 0
+      filtyp = ' '
+
+      if ( arch == 'DAF' )      then
+
+         if      ( mytype == 'SPK' ) then
+
+            call spklef ( ctx, file, handle )
+
+         else if ( mytype == 'CK' ) then
+
+            call cklpf ( ctx, file, handle )
+
+         else if ( mytype == 'PCK' ) then
+
+            call pcklof ( ctx, file, handle )
+
+         else
+
+            call tkvrsn ( ctx, 'TOOLKIT', versn )
+            call ctx%setmsg ( nofile )
+            call ctx%errch  ( '#', file )
+            call ctx%errch  ( '#', 'is a "#" DAF file. This kind of ' &
+            //                 'binary file is not supported in ' &
+            //                 'version # of the SPICE toolkit. ' &
+            //                 'Check with NAIF to see if your ' &
+            //                 'toolkit version is up to date. ' )
+            call ctx%errch  ( '#', mytype  )
+            call ctx%errch  ( '#', versn )
+            call ctx%sigerr ( 'SPICE(UNKNOWNKERNELTYPE)' )
+            return
+
+         end if
+
+         filtyp = mytype
+
+      else if ( arch == 'DAS' ) then
+
+         if ( mytype == 'EK' ) then
+
+            call eklef ( file, handle )
+
+         else if ( mytype == 'DSK' ) then
+
+            call zzdsklsf ( ctx, file, handle )
+
+         else
+
+            call tkvrsn ( ctx, 'TOOLKIT', versn )
+            call ctx%setmsg ( nofile )
+            call ctx%errch  ( '#', file )
+            call ctx%errch  ( '#', 'is a "#" DAS file.  This kind of ' &
+            //                 'binary file is not supported in ' &
+            //                 'version # of the SPICE toolkit. ' &
+            //                 'Check with NAIF to see if your ' &
+            //                 'toolkit version is up to date. ' )
+            call ctx%errch  ( '#', mytype  )
+            call ctx%errch  ( '#', versn )
+            call ctx%sigerr ( 'SPICE(UNKNOWNKERNELTYPE)' )
+            return
+
+         end if
+
+         filtyp = mytype
+
+      else
+
+!
+!        Check for line terminator compatibility with this platform.
+!        .TRUE. means that ZZASCII will compare terminator
+!        detected with the one native to this platform and will
+!        stop if they don't match.
+!
+         call zzascii( ctx, file, kerlin, .true., termin )
+
+!
+!        Load the file using the text file loader.
+!
+         call ldpool ( ctx, file )
+
+         if ( .not. ctx%failed() ) then
+            filtyp = 'TEXT'
+!
+!           Cause the kernel pool mechanism to perform
+!           the standard error checks on the pool
+!           data.
+!
+            call zzbodkik ( ctx )
+         end if
+
+      end if
+
+      return
+      end procedure zzldker
+
+!$Procedure KEEPER ( Keeps track of SPICE kernels )
+!
+!     PEPPER: SPICELIB's umbrella routine KEEPER is not a procedure any more:
+!     its entry points are the module procedures below, and its saved
+!     variables are in pepper_state_keeper. Its documentation follows.
+!
+
 
 ! $ Abstract
 !
@@ -21,40 +3208,12 @@
 !
 ! $ Declarations
 
-      implicit none
 
-      integer(ip)           which
-      character(*)          kind
-      character(*)          file
-      integer(ip)           count
-      character(*)          filtyp
-      integer(ip)           handle
-      character(*)          srcfil
-      logical               found
 
-      integer(ip), parameter :: filsiz = 255
 
-      integer(ip), parameter :: ftsize = 5000
 
-      integer(ip), parameter :: maxtxt = 300
 
-      integer(ip), parameter :: maxfil = ftsize + maxtxt
 
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  ENTRY POINTS
-!     --------  ---  --------------------------------------------------
-!     WHICH      I   KDATA
-!     KIND       I   KTOTAL, KDATA
-!     FILE      I-O  FURNSH, KDATA, UNLOAD, KINFO
-!     COUNT      O   KTOTAL
-!     FILTYP    I-O  KTOTAL, KDATA, KINFO
-!     HANDLE     O   KDATA, KINFO
-!     SRCFIL     O   KDATA, KINFO
-!     FOUND      O   KDATA, KINFO
-!     FILSIZ     P   Maximum file name length.
-!     MAXFIL     P   Maximum number of files that can be loaded.
-!
 ! $ Detailed_Input
 !
 !     See Individual Entry points.
@@ -556,14 +3715,7 @@
 !
 !     SPICELIB Functions
 !
-      integer(ip)           isrchc
-      integer(ip)           pos
-      integer(ip)           rtrim
 
-      logical               eqstr
-      logical               failed
-      logical               return
-      logical               samsub
 
 !
 !     Here we set up the database of loaded kernels
@@ -571,15 +3723,11 @@
 !     The name of every file loaded through this interface will
 !     be stored in the array FILES.
 !
-      character(filsiz)     files ( maxfil )
-      save                  files
 !
 !     The handle of every loaded file will be stored in the array
 !     HANDLS.  If the file is a text kernel it will be assigned the
 !     handle 0.
 !
-      integer(ip)           handls( maxfil )
-      save                  handls
 !
 !     The source of each file specified will be stored in the integer
 !     array SRCFIL.  If the file is loaded directly, its source
@@ -587,111 +3735,17 @@
 !     in a text kernel, the index of the source file in FILES will
 !     be stored in SRCES.
 !
-      integer(ip)           srces ( maxfil )
-      save                  srces
 !
 !     The file type of every loaded kernel will be stored in the array
 !     TYPES.
 !
-      integer(ip), parameter :: typlen = 8
 
-      character(typlen)     types ( maxfil )
-      save                  types
 
 !
 !     The number of files loaded through this interfaces is kept in the
 !     integer LOADED.
-!
-      integer(ip)           loaded
-      save                  loaded
 
-      integer(ip), parameter :: wdsize = 32
-
-      integer(ip), parameter :: nknown = 3
-
-      integer(ip), parameter :: lnsize = 80
-
-      integer(ip), parameter :: msgsiz = 500
-
-      character(1)          norc
-      character(filsiz)     fil2ld
-
-      character(filsiz)     pvalue
-      character(lnsize)     symbol
-
-      character(msgsiz)     nofile
-
-      character(wdsize)     known ( nknown )
-      save                  known
-
-      character(typlen)     thstyp
-
-      integer(ip)           b
-      integer(ip)           cursrc
-      integer(ip)           d
-      integer(ip)           dollar
-      integer(ip)           e
-      integer(ip)           fidx
-      integer(ip)           filnum
-      integer(ip)           fnmlen
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           lidx
-      integer(ip)           myhand
-      integer(ip)           n
-      integer(ip)           n1
-      integer(ip)           n2
-      integer(ip)           n3
-      integer(ip)           nmult
-      integer(ip)           npaths
-      integer(ip)           npvals
-      integer(ip)           r
-      integer(ip)           size
-      integer(ip)           src
-      integer(ip)           start
-      integer(ip)           use
-
-      logical               add
-      logical               didck
-      logical               diddsk
-      logical               didek
-      logical               didpck
-      logical               didspk
-      logical               didtxt
-      logical               dock
-      logical               dodsk
-      logical               doek
-      logical               dometa
-      logical               dopck
-      logical               dospk
-      logical               dotext
-      logical               first
-      save                  first
-
-      logical               fnd
-      logical               gotit
-      logical               ok
-      logical               paths
-      logical               single
-      logical               update
-
-      data                  first     / .true. /
-      data                  loaded    /  0  /
-
-      call setmsg ( 'The routine KEEPER is an umbrella for a ' &
-      //            'collection of entry points that manage the ' &
-      //            'loading, tracking and unloading of SPICE ' &
-      //            'kernels.  KEEPER should not be called ' &
-      //            'directly. It is likely that a programming ' &
-      //            'error has been made. ' )
-      call sigerr ( 'SPICE(BOGUSENTRY)'  )
-      return
-
-!$Procedure FURNSH ( Furnish a program with SPICE kernels )
-
-      entry furnsh ( file )
+      module procedure furnsh
 
 ! $ Abstract
 !
@@ -711,13 +3765,6 @@
 !
 !     INTEGER               FILSIZ
 !     PARAMETER           ( FILSIZ = 255 )
-!
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     FILE       I   SPICE kernel file (text or binary).
-!     FILSIZ     P   Maximum file name length.
 !
 ! $ Detailed_Input
 !
@@ -1282,7 +4329,82 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( return() ) return
+      use pepper_kinds, only: ip
+      use pepper_strings, only: pos, repmc, rtrim, samsub
+      implicit none
+      integer(ip), parameter :: filsiz = 255
+      integer(ip), parameter :: ftsize = 5000
+      integer(ip), parameter :: maxtxt = 300
+      integer(ip), parameter :: maxfil = ftsize + maxtxt
+      integer(ip), parameter :: typlen = 8
+      integer(ip), parameter :: wdsize = 32
+      integer(ip), parameter :: nknown = 3
+      integer(ip), parameter :: lnsize = 80
+      integer(ip), parameter :: msgsiz = 500
+      character(1)          norc
+      character(filsiz)     fil2ld
+      character(filsiz)     pvalue
+      character(lnsize)     symbol
+      character(msgsiz)     nofile
+      character(typlen)     thstyp
+      integer(ip)           b
+      integer(ip)           cursrc
+      integer(ip)           d
+      integer(ip)           dollar
+      integer(ip)           e
+      integer(ip)           fidx
+      integer(ip)           filnum
+      integer(ip)           fnmlen
+      integer(ip)           hits
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           lidx
+      integer(ip)           myhand
+      integer(ip)           n
+      integer(ip)           n1
+      integer(ip)           n2
+      integer(ip)           n3
+      integer(ip)           nmult
+      integer(ip)           npaths
+      integer(ip)           npvals
+      integer(ip)           r
+      integer(ip)           size
+      integer(ip)           src
+      integer(ip)           start
+      integer(ip)           use
+      logical               add
+      logical               didck
+      logical               diddsk
+      logical               didek
+      logical               didpck
+      logical               didspk
+      logical               didtxt
+      logical               dock
+      logical               dodsk
+      logical               doek
+      logical               dometa
+      logical               dopck
+      logical               dospk
+      logical               dotext
+      logical               fnd
+      logical               gotit
+      logical               ok
+      logical               paths
+      logical               single
+      logical               update
+      if ( .not. allocated ( ctx%spice%keeper ) ) then
+         allocate ( ctx%spice%keeper )
+         call init_keeper_state ( ctx%spice%keeper )
+      end if
+      associate ( files => ctx%spice%keeper%files, &
+                  handls => ctx%spice%keeper%handls, &
+                  srces => ctx%spice%keeper%srces, &
+                  types => ctx%spice%keeper%types, &
+                  loaded => ctx%spice%keeper%loaded, &
+                  known => ctx%spice%keeper%known, &
+                  first => ctx%spice%keeper%first )
+      if ( ctx%failed() ) return
 
       if ( first ) then
 
@@ -1292,8 +4414,8 @@
          known(3) = 'PATH_VALUES'
          loaded   =  0
 
-         call swpool ( 'FURNSH', nknown, known )
-         call cvpool ( 'FURNSH', update )
+         call swpool ( ctx, 'FURNSH', nknown, known )
+         call cvpool ( ctx, 'FURNSH', update )
 
       end if
 
@@ -1302,13 +4424,13 @@
 !
       if ( rtrim(file) > filsiz ) then
 
-         call setmsg ( 'Input file name <#> has length @ characters. ' &
+         call ctx%setmsg ( 'Input file name <#> has length @ characters. ' &
          //            'The limit on the length of file names stored ' &
          //            'by FURNSH is @ characters.'                   )
-         call errch  ( '#', file                                      )
-         call errint ( '@', rtrim(file)                               )
-         call errint ( '@', filsiz                                    )
-         call sigerr ( 'SPICE(FILENAMETOOLONG)'                       )
+         call ctx%errch  ( '#', file                                      )
+         call ctx%errint ( '@', rtrim(file)                               )
+         call ctx%errint ( '@', filsiz                                    )
+         call ctx%sigerr ( 'SPICE(FILENAMETOOLONG)'                       )
          return
 
       end if
@@ -1318,7 +4440,7 @@
 !
       if ( loaded == maxfil ) then
 
-         call setmsg ( 'There is no room left in KEEPER to load ' &
+         call ctx%setmsg ( 'There is no room left in KEEPER to load ' &
          //            'another SPICE kernel.  The current limit ' &
          //            'on the number of files that can be ' &
          //            'loaded is #.  If you really need more ' &
@@ -1326,8 +4448,8 @@
          //            'increase the parameter MAXFIL in the ' &
          //            'subroutine KEEPER. ' )
 
-         call errint ( '#', maxfil )
-         call sigerr ( 'SPICE(NOMOREROOM)'  )
+         call ctx%errint ( '#', maxfil )
+         call ctx%sigerr ( 'SPICE(NOMOREROOM)'  )
          return
 
       end if
@@ -1336,7 +4458,7 @@
 !     have any affect on FURNSH's watch so we check the watcher
 !     here prior to the call to ZZLDKER.
 !
-      call cvpool ( 'FURNSH', update )
+      call cvpool ( ctx, 'FURNSH', update )
 
 !
 !     Set a preliminary value for the error message in case the
@@ -1345,9 +4467,9 @@
       nofile = 'The attempt to load "#" by the routine FURNSH ' &
       //       'failed. It #'
 
-      call zzldker ( file, nofile, thstyp, myhand )
+      call zzldker ( ctx, file, nofile, thstyp, myhand )
 
-      if ( failed() ) return
+      if ( ctx%failed() ) return
 
       loaded = loaded + 1
       cursrc = loaded
@@ -1357,7 +4479,7 @@
       handls(loaded) = myhand
       srces (loaded) = 0
 
-       call cvpool ( 'FURNSH', update )
+       call cvpool ( ctx, 'FURNSH', update )
 
       if ( .not. update ) then
 !
@@ -1372,7 +4494,7 @@
 !     See what is present in the kernel pool: Are any path symbols
 !     defined?
 !
-      call dtpool ( 'PATH_SYMBOLS', paths, npaths, norc )
+      call dtpool ( ctx, 'PATH_SYMBOLS', paths, npaths, norc )
 
       if (  paths .and. ( norc == 'C' )  ) then
 !
@@ -1381,43 +4503,43 @@
 !        might span multiple array elements.
 !
          i = 1
-         call stpool( 'PATH_VALUES', i, '+', pvalue, size, ok )
+         call stpool( ctx, 'PATH_VALUES', i, '+', pvalue, size, ok )
 
-         do while (  ok  .and.  ( .not. failed() )  )
+         do while (  ok  .and.  ( .not. ctx%failed() )  )
 !
 !           Reject excessively long path names.
 !
             if ( size > filsiz ) then
 
-               call setmsg ( 'In meta-kernel <#>, the path at ' &
+               call ctx%setmsg ( 'In meta-kernel <#>, the path at ' &
                //            'index # in the PATH_VALUES list has ' &
                //            'length # characters; the limit is # ' &
                //            'characters.'                          )
-               call errch  ( '#', file                              )
-               call errint ( '#', i                                 )
-               call errint ( '#', size                              )
-               call errint ( '#', filsiz                            )
-               call sigerr ( 'SPICE(PATHTOOLONG)'                   )
+               call ctx%errch  ( '#', file                              )
+               call ctx%errint ( '#', i                                 )
+               call ctx%errint ( '#', size                              )
+               call ctx%errint ( '#', filsiz                            )
+               call ctx%sigerr ( 'SPICE(PATHTOOLONG)'                   )
                return
 
             end if
 
             i = i + 1
-            call stpool( 'PATH_VALUES', i, '+', pvalue, size, ok )
+            call stpool( ctx, 'PATH_VALUES', i, '+', pvalue, size, ok )
 
          end do
 
-         if ( failed() ) return
+         if ( ctx%failed() ) return
 
          npvals = i - 1
 
          if ( npvals /= npaths ) then
 
-            call setmsg ( 'Number of path symbols is #; number of ' &
+            call ctx%setmsg ( 'Number of path symbols is #; number of ' &
             //            'path values is #; counts must match.'  )
-            call errint ( '#', npaths                             )
-            call errint ( '#', npvals                             )
-            call sigerr ( 'SPICE(PATHMISMATCH)'                   )
+            call ctx%errint ( '#', npaths                             )
+            call ctx%errint ( '#', npvals                             )
+            call ctx%sigerr ( 'SPICE(PATHMISMATCH)'                   )
             return
 
          end if
@@ -1440,24 +4562,24 @@
       filnum = 1
       fidx   = 1
 
-      call sepool( 'KERNELS_TO_LOAD',  fidx,    '+', &
+      call sepool( ctx, 'KERNELS_TO_LOAD',  fidx,    '+', &
                    fil2ld,             fnmlen,  lidx,  ok )
 
-      do while (  ok  .and.  ( .not. failed() )  )
+      do while (  ok  .and.  ( .not. ctx%failed() )  )
 !
 !        Reject excessively long file names.
 !
          if ( fnmlen > filsiz ) then
 
-            call setmsg ( 'In meta-kernel <#>, the file name at ' &
+            call ctx%setmsg ( 'In meta-kernel <#>, the file name at ' &
             //            'index # in the KERNELS_TO_LOAD list has ' &
             //            'length # characters; the limit is # ' &
             //            'characters.'                             )
-            call errch  ( '#', file                                 )
-            call errint ( '#', filnum                               )
-            call errint ( '#', fnmlen                               )
-            call errint ( '#', filsiz                               )
-            call sigerr ( 'SPICE(FILENAMETOOLONG)'                  )
+            call ctx%errch  ( '#', file                                 )
+            call ctx%errint ( '#', filnum                               )
+            call ctx%errint ( '#', fnmlen                               )
+            call ctx%errint ( '#', filsiz                               )
+            call ctx%sigerr ( 'SPICE(FILENAMETOOLONG)'                  )
             return
 
          end if
@@ -1467,13 +4589,13 @@
 !
          if ( loaded == maxfil ) then
 
-            call setmsg ( 'There is no room left in KEEPER to ' &
+            call ctx%setmsg ( 'There is no room left in KEEPER to ' &
             //            'load another SPICE kernel. The ' &
             //            'current limit on the number of files ' &
             //            'that can be loaded is #.'             )
 
-            call errint ( '#', maxfil )
-            call sigerr ( 'SPICE(NOMOREROOM)'  )
+            call ctx%errint ( '#', maxfil )
+            call ctx%sigerr ( 'SPICE(NOMOREROOM)'  )
             return
 
          end if
@@ -1501,7 +4623,7 @@
 
                do i = 1, npaths
 
-                  call gcpool( 'PATH_SYMBOLS', i, 1, n, symbol, fnd )
+                  call gcpool( ctx, 'PATH_SYMBOLS', i, 1, n, symbol, fnd )
 
                   r =  rtrim ( symbol )
 
@@ -1522,7 +4644,7 @@
 !                 path values. Note that we've already checked that
 !                 the path value will fit in PVALUE.
 !
-                  call stpool( 'PATH_VALUES', use, '+', pvalue, n, fnd )
+                  call stpool( ctx, 'PATH_VALUES', use, '+', pvalue, n, fnd )
 
 !
 !                 When the path is substituted for the symbol, the
@@ -1531,26 +4653,26 @@
 !
                   if ( ( fnmlen + n - size - 1 )  >  filsiz ) then
 
-                     call setmsg ( 'In meta-kernel <#>, the path at ' &
+                     call ctx%setmsg ( 'In meta-kernel <#>, the path at ' &
                      //            'index # in the PATH_SYMBOLS list ' &
                      //            'has # characters and the ' &
                      //            'file name at index # has ' &
                      //            '# characters. The combined path ' &
                      //            'and file name has # characters; ' &
                      //            'the limit is # characters.'       )
-                     call errch  ( '#', file                          )
-                     call errint ( '#', use                           )
-                     call errint ( '#', n                             )
-                     call errint ( '#', filnum                        )
-                     call errint ( '#', fnmlen                        )
-                     call errint ( '#', fnmlen + n                    )
-                     call errint ( '#', filsiz                        )
-                     call sigerr ( 'SPICE(FILENAMETOOLONG)'           )
+                     call ctx%errch  ( '#', file                          )
+                     call ctx%errint ( '#', use                           )
+                     call ctx%errint ( '#', n                             )
+                     call ctx%errint ( '#', filnum                        )
+                     call ctx%errint ( '#', fnmlen                        )
+                     call ctx%errint ( '#', fnmlen + n                    )
+                     call ctx%errint ( '#', filsiz                        )
+                     call ctx%sigerr ( 'SPICE(FILENAMETOOLONG)'           )
                      return
 
                   end if
 
-                  call repsub( fil2ld, d, d+size, pvalue(1:n), fil2ld )
+                  call repsub( ctx, fil2ld, d, d+size, pvalue(1:n), fil2ld )
 
                end if
 !
@@ -1572,19 +4694,19 @@
          nofile = 'The @ file ''#'' specified by KERNELS_TO_LOAD ' &
          //       'in the file @ #'
 
-         call repmot ( nofile, '@', filnum, 'L', nofile )
+         call repmot ( ctx, nofile, '@', filnum, 'L', nofile )
          call repmc  ( nofile, '@', file,        nofile )
 
-         call zzldker( fil2ld, nofile, thstyp, myhand )
+         call zzldker( ctx, fil2ld, nofile, thstyp, myhand )
 
-         if ( failed() ) return
+         if ( ctx%failed() ) return
 
          if ( thstyp == 'TEXT' ) then
 !
 !           See if we stepped on any of the recognized variables.  If
 !           we did, there's no point in trying to continue.
 !
-            call cvpool ( 'FURNSH', update )
+            call cvpool ( ctx, 'FURNSH', update )
 
             if ( update ) then
 !
@@ -1592,15 +4714,15 @@
 !              at recursion.
 !
                do i = 1, nknown
-                  call dvpool ( known(i) )
+                  call dvpool ( ctx, known(i) )
                end do
 !
 !              Take care of any watcher activation caused by the
 !              mop-up of the preceding loop.
 !
-               call cvpool ( 'FURNSH', update )
+               call cvpool ( ctx, 'FURNSH', update )
 
-               call setmsg ( 'Hmmm.  This is interesting. In the ' &
+               call ctx%setmsg ( 'Hmmm.  This is interesting. In the ' &
                //            'meta-text kernel ''#'' you''ve ' &
                //            'requested that the text kernel ' &
                //            '''#'' be loaded. This second file ' &
@@ -1611,9 +4733,9 @@
                //            'path is fraught with peril and can ' &
                //            'not be supported by FURNSH. ' )
 
-               call errch  ( '#', file   )
-               call errch  ( '#', fil2ld )
-               call sigerr ( 'SPICE(RECURSIVELOADING)' )
+               call ctx%errch  ( '#', file   )
+               call ctx%errch  ( '#', fil2ld )
+               call ctx%sigerr ( 'SPICE(RECURSIVELOADING)' )
                return
             end if
 
@@ -1634,7 +4756,7 @@
          filnum = filnum + 1
          fidx   = lidx   + 1
 
-         call sepool( 'KERNELS_TO_LOAD',  fidx,    '+', &
+         call sepool( ctx, 'KERNELS_TO_LOAD',  fidx,    '+', &
                        fil2ld,            fnmlen,  lidx,  ok )
 
       end do
@@ -1643,16 +4765,16 @@
 !     Last Step.  Remove the special variables from the kernel pool.
 !
       do i = 1, nknown
-         call dvpool ( known(i) )
+         call dvpool ( ctx, known(i) )
       end do
 
-      call cvpool ( 'FURNSH', update )
+      call cvpool ( ctx, 'FURNSH', update )
 
       return
+      end associate
+      end procedure furnsh
 
-!$Procedure KTOTAL ( Kernel Totals )
-
-      entry ktotal ( kind, count )
+      module procedure ktotal
 
 ! $ Abstract
 !
@@ -1671,13 +4793,6 @@
 !
 !     CHARACTER*(*)         KIND
 !     INTEGER               COUNT
-!
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     KIND       I   A list of kinds of kernels to count.
-!     COUNT      O   The number of kernels of type KIND.
 !
 ! $ Detailed_Input
 !
@@ -1919,6 +5034,77 @@
 !
 !-&
 
+      use pepper_kinds, only: ip
+      use pepper_strings, only: eqstr, fndnwd
+      implicit none
+      integer(ip), parameter :: filsiz = 255
+      integer(ip), parameter :: ftsize = 5000
+      integer(ip), parameter :: maxtxt = 300
+      integer(ip), parameter :: maxfil = ftsize + maxtxt
+      logical               return
+      integer(ip), parameter :: typlen = 8
+      integer(ip), parameter :: wdsize = 32
+      integer(ip), parameter :: nknown = 3
+      integer(ip), parameter :: lnsize = 80
+      integer(ip), parameter :: msgsiz = 500
+      character(1)          norc
+      character(filsiz)     fil2ld
+      character(filsiz)     pvalue
+      character(lnsize)     symbol
+      character(msgsiz)     nofile
+      character(typlen)     thstyp
+      integer(ip)           b
+      integer(ip)           cursrc
+      integer(ip)           d
+      integer(ip)           dollar
+      integer(ip)           e
+      integer(ip)           fidx
+      integer(ip)           filnum
+      integer(ip)           fnmlen
+      integer(ip)           hits
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           lidx
+      integer(ip)           myhand
+      integer(ip)           n
+      integer(ip)           n1
+      integer(ip)           n2
+      integer(ip)           n3
+      integer(ip)           nmult
+      integer(ip)           npaths
+      integer(ip)           npvals
+      integer(ip)           r
+      integer(ip)           size
+      integer(ip)           src
+      integer(ip)           start
+      integer(ip)           use
+      logical               add
+      logical               didck
+      logical               diddsk
+      logical               didek
+      logical               didpck
+      logical               didspk
+      logical               didtxt
+      logical               dock
+      logical               dodsk
+      logical               doek
+      logical               dometa
+      logical               dopck
+      logical               dospk
+      logical               dotext
+      logical               fnd
+      logical               gotit
+      logical               ok
+      logical               paths
+      logical               single
+      logical               update
+      if ( .not. allocated ( ctx%spice%keeper ) ) then
+         allocate ( ctx%spice%keeper )
+         call init_keeper_state ( ctx%spice%keeper )
+      end if
+      associate ( types => ctx%spice%keeper%types, &
+                  loaded => ctx%spice%keeper%loaded )
       if ( loaded == 0 ) then
          count = 0
          return
@@ -1977,10 +5163,10 @@
       end do
 
       return
+      end associate
+      end procedure ktotal
 
-!$Procedure KDATA ( Kernel Data )
-
-      entry kdata ( which, kind, file, filtyp, srcfil, handle, found )
+      module procedure kdata
 
 ! $ Abstract
 !
@@ -2004,18 +5190,6 @@
 !     CHARACTER*(*)         SRCFIL
 !     INTEGER               HANDLE
 !     LOGICAL               FOUND
-!
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     WHICH      I   Index of kernel to fetch from the list of kernels.
-!     KIND       I   The kind of kernel to which fetches are limited.
-!     FILE       O   The name of the kernel file.
-!     FILTYP     O   The type of the kernel.
-!     SRCFIL     O   Name of the source file used to load FILE.
-!     HANDLE     O   The handle attached to FILE.
-!     FOUND      O   .TRUE. if the specified file could be located.
 !
 ! $ Detailed_Input
 !
@@ -2311,6 +5485,80 @@
 !
 !-&
 
+      use pepper_kinds, only: ip
+      use pepper_strings, only: eqstr, fndnwd
+      implicit none
+      integer(ip), parameter :: filsiz = 255
+      integer(ip), parameter :: ftsize = 5000
+      integer(ip), parameter :: maxtxt = 300
+      integer(ip), parameter :: maxfil = ftsize + maxtxt
+      logical               return
+      integer(ip), parameter :: typlen = 8
+      integer(ip), parameter :: wdsize = 32
+      integer(ip), parameter :: nknown = 3
+      integer(ip), parameter :: lnsize = 80
+      integer(ip), parameter :: msgsiz = 500
+      character(1)          norc
+      character(filsiz)     fil2ld
+      character(filsiz)     pvalue
+      character(lnsize)     symbol
+      character(msgsiz)     nofile
+      character(typlen)     thstyp
+      integer(ip)           b
+      integer(ip)           cursrc
+      integer(ip)           d
+      integer(ip)           dollar
+      integer(ip)           e
+      integer(ip)           fidx
+      integer(ip)           filnum
+      integer(ip)           fnmlen
+      integer(ip)           hits
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           lidx
+      integer(ip)           myhand
+      integer(ip)           n
+      integer(ip)           n1
+      integer(ip)           n2
+      integer(ip)           n3
+      integer(ip)           nmult
+      integer(ip)           npaths
+      integer(ip)           npvals
+      integer(ip)           r
+      integer(ip)           size
+      integer(ip)           src
+      integer(ip)           start
+      integer(ip)           use
+      logical               add
+      logical               didck
+      logical               diddsk
+      logical               didek
+      logical               didpck
+      logical               didspk
+      logical               didtxt
+      logical               dock
+      logical               dodsk
+      logical               doek
+      logical               dometa
+      logical               dopck
+      logical               dospk
+      logical               dotext
+      logical               fnd
+      logical               gotit
+      logical               ok
+      logical               paths
+      logical               single
+      logical               update
+      if ( .not. allocated ( ctx%spice%keeper ) ) then
+         allocate ( ctx%spice%keeper )
+         call init_keeper_state ( ctx%spice%keeper )
+      end if
+      associate ( files => ctx%spice%keeper%files, &
+                  handls => ctx%spice%keeper%handls, &
+                  srces => ctx%spice%keeper%srces, &
+                  types => ctx%spice%keeper%types, &
+                  loaded => ctx%spice%keeper%loaded )
       file   = ' '
       filtyp = ' '
       srcfil = ' '
@@ -2403,10 +5651,10 @@
       end do
 
       return
+      end associate
+      end procedure kdata
 
-!$Procedure KINFO ( Kernel Information )
-
-      entry kinfo ( file, filtyp, srcfil, handle, found )
+      module procedure kinfo
 
 ! $ Abstract
 !
@@ -2427,16 +5675,6 @@
 !     CHARACTER*(*)         SRCFIL
 !     INTEGER               HANDLE
 !     LOGICAL               FOUND
-!
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     FILE       I   Name of a kernel to fetch information for
-!     FILTYP     O   The type of the kernel
-!     SRCFIL     O   Name of the source file used to load FILE.
-!     HANDLE     O   The handle attached to FILE.
-!     FOUND      O   .TRUE. if the specified file could be located.
 !
 ! $ Detailed_Input
 !
@@ -2691,6 +5929,80 @@
 !
 !-&
 
+      use pepper_kinds, only: ip
+      use pepper_arrays, only: isrchc
+      implicit none
+      integer(ip), parameter :: filsiz = 255
+      integer(ip), parameter :: ftsize = 5000
+      integer(ip), parameter :: maxtxt = 300
+      integer(ip), parameter :: maxfil = ftsize + maxtxt
+      logical               return
+      integer(ip), parameter :: typlen = 8
+      integer(ip), parameter :: wdsize = 32
+      integer(ip), parameter :: nknown = 3
+      integer(ip), parameter :: lnsize = 80
+      integer(ip), parameter :: msgsiz = 500
+      character(1)          norc
+      character(filsiz)     fil2ld
+      character(filsiz)     pvalue
+      character(lnsize)     symbol
+      character(msgsiz)     nofile
+      character(typlen)     thstyp
+      integer(ip)           b
+      integer(ip)           cursrc
+      integer(ip)           d
+      integer(ip)           dollar
+      integer(ip)           e
+      integer(ip)           fidx
+      integer(ip)           filnum
+      integer(ip)           fnmlen
+      integer(ip)           hits
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           lidx
+      integer(ip)           myhand
+      integer(ip)           n
+      integer(ip)           n1
+      integer(ip)           n2
+      integer(ip)           n3
+      integer(ip)           nmult
+      integer(ip)           npaths
+      integer(ip)           npvals
+      integer(ip)           r
+      integer(ip)           size
+      integer(ip)           src
+      integer(ip)           start
+      integer(ip)           use
+      logical               add
+      logical               didck
+      logical               diddsk
+      logical               didek
+      logical               didpck
+      logical               didspk
+      logical               didtxt
+      logical               dock
+      logical               dodsk
+      logical               doek
+      logical               dometa
+      logical               dopck
+      logical               dospk
+      logical               dotext
+      logical               fnd
+      logical               gotit
+      logical               ok
+      logical               paths
+      logical               single
+      logical               update
+      if ( .not. allocated ( ctx%spice%keeper ) ) then
+         allocate ( ctx%spice%keeper )
+         call init_keeper_state ( ctx%spice%keeper )
+      end if
+      associate ( files => ctx%spice%keeper%files, &
+                  handls => ctx%spice%keeper%handls, &
+                  srces => ctx%spice%keeper%srces, &
+                  types => ctx%spice%keeper%types, &
+                  loaded => ctx%spice%keeper%loaded )
       filtyp = ' '
       srcfil = ' '
       handle =  0
@@ -2711,10 +6023,10 @@
       end if
 
       return
+      end associate
+      end procedure kinfo
 
-!$Procedure KCLEAR ( Keeper clear )
-
-      entry kclear
+      module procedure kclear
 
 ! $ Abstract
 !
@@ -2731,10 +6043,6 @@
 !     KERNEL
 !
 ! $ Declarations
-!
-!     None.
-!
-! $ Brief_I/O
 !
 !     None.
 !
@@ -2930,7 +6238,79 @@
 !
 !-&
 
-      if ( return() ) return
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip), parameter :: filsiz = 255
+      integer(ip), parameter :: ftsize = 5000
+      integer(ip), parameter :: maxtxt = 300
+      integer(ip), parameter :: maxfil = ftsize + maxtxt
+      integer(ip), parameter :: typlen = 8
+      integer(ip), parameter :: wdsize = 32
+      integer(ip), parameter :: nknown = 3
+      integer(ip), parameter :: lnsize = 80
+      integer(ip), parameter :: msgsiz = 500
+      character(1)          norc
+      character(filsiz)     fil2ld
+      character(filsiz)     pvalue
+      character(lnsize)     symbol
+      character(msgsiz)     nofile
+      character(typlen)     thstyp
+      integer(ip)           b
+      integer(ip)           cursrc
+      integer(ip)           d
+      integer(ip)           dollar
+      integer(ip)           e
+      integer(ip)           fidx
+      integer(ip)           filnum
+      integer(ip)           fnmlen
+      integer(ip)           hits
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           lidx
+      integer(ip)           myhand
+      integer(ip)           n
+      integer(ip)           n1
+      integer(ip)           n2
+      integer(ip)           n3
+      integer(ip)           nmult
+      integer(ip)           npaths
+      integer(ip)           npvals
+      integer(ip)           r
+      integer(ip)           size
+      integer(ip)           src
+      integer(ip)           start
+      integer(ip)           use
+      logical               add
+      logical               didck
+      logical               diddsk
+      logical               didek
+      logical               didpck
+      logical               didspk
+      logical               didtxt
+      logical               dock
+      logical               dodsk
+      logical               doek
+      logical               dometa
+      logical               dopck
+      logical               dospk
+      logical               dotext
+      logical               fnd
+      logical               gotit
+      logical               ok
+      logical               paths
+      logical               single
+      logical               update
+      if ( .not. allocated ( ctx%spice%keeper ) ) then
+         allocate ( ctx%spice%keeper )
+         call init_keeper_state ( ctx%spice%keeper )
+      end if
+      associate ( files => ctx%spice%keeper%files, &
+                  handls => ctx%spice%keeper%handls, &
+                  srces => ctx%spice%keeper%srces, &
+                  types => ctx%spice%keeper%types, &
+                  loaded => ctx%spice%keeper%loaded )
+      if ( ctx%failed() ) return
 
 !
 !     Unloading all kernels is actually much less work than
@@ -2942,15 +6322,15 @@
 
          if (      types(i) == 'SPK' ) then
 
-            call spkuef ( handls(i) )
+            call spkuef ( ctx, handls(i) )
 
          else if ( types(i) == 'CK' ) then
 
-            call ckupf ( handls(i) )
+            call ckupf ( ctx, handls(i) )
 
          else if ( types(i) == 'PCK' ) then
 
-            call pckuof ( handls(i) )
+            call pckuof ( ctx, handls(i) )
 
          else if ( types(i) == 'EK' ) then
 
@@ -2958,13 +6338,13 @@
 
          else if ( types(i) == 'DSK' ) then
 
-            call zzdskusf ( handls(i) )
+            call zzdskusf ( ctx, handls(i) )
 
          end if
 
       end do
 
-      call clpool
+      call clpool ( ctx )
 
 !
 !     Although it's not strictly necessary, we initialize
@@ -2993,13 +6373,13 @@
 !     Clear this indication by calling CVPOOL.  (This is done for
 !     safety; the current implementation of FURNSH doesn't require it.)
 !
-      call cvpool ( 'FURNSH', update )
+      call cvpool ( ctx, 'FURNSH', update )
 
       return
+      end associate
+      end procedure kclear
 
-!$Procedure UNLOAD ( Unload a kernel )
-
-      entry unload ( file )
+      module procedure unload
 
 ! $ Abstract
 !
@@ -3016,12 +6396,6 @@
 ! $ Declarations
 !
 !     CHARACTER*(*)         FILE
-!
-! $ Brief_I/O
-!
-!     VARIABLE  I/O  DESCRIPTION
-!     --------  ---  --------------------------------------------------
-!     FILE       I   The name of a kernel to unload.
 !
 ! $ Detailed_Input
 !
@@ -3473,7 +6847,80 @@
 !
 !-&
 
-      if ( return() ) return
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip), parameter :: filsiz = 255
+      integer(ip), parameter :: ftsize = 5000
+      integer(ip), parameter :: maxtxt = 300
+      integer(ip), parameter :: maxfil = ftsize + maxtxt
+      integer(ip), parameter :: typlen = 8
+      integer(ip), parameter :: wdsize = 32
+      integer(ip), parameter :: nknown = 3
+      integer(ip), parameter :: lnsize = 80
+      integer(ip), parameter :: msgsiz = 500
+      character(1)          norc
+      character(filsiz)     fil2ld
+      character(filsiz)     pvalue
+      character(lnsize)     symbol
+      character(msgsiz)     nofile
+      character(typlen)     thstyp
+      integer(ip)           b
+      integer(ip)           cursrc
+      integer(ip)           d
+      integer(ip)           dollar
+      integer(ip)           e
+      integer(ip)           fidx
+      integer(ip)           filnum
+      integer(ip)           fnmlen
+      integer(ip)           hits
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           lidx
+      integer(ip)           myhand
+      integer(ip)           n
+      integer(ip)           n1
+      integer(ip)           n2
+      integer(ip)           n3
+      integer(ip)           nmult
+      integer(ip)           npaths
+      integer(ip)           npvals
+      integer(ip)           r
+      integer(ip)           size
+      integer(ip)           src
+      integer(ip)           start
+      integer(ip)           use
+      logical               add
+      logical               didck
+      logical               diddsk
+      logical               didek
+      logical               didpck
+      logical               didspk
+      logical               didtxt
+      logical               dock
+      logical               dodsk
+      logical               doek
+      logical               dometa
+      logical               dopck
+      logical               dospk
+      logical               dotext
+      logical               fnd
+      logical               gotit
+      logical               ok
+      logical               paths
+      logical               single
+      logical               update
+      if ( .not. allocated ( ctx%spice%keeper ) ) then
+         allocate ( ctx%spice%keeper )
+         call init_keeper_state ( ctx%spice%keeper )
+      end if
+      associate ( files => ctx%spice%keeper%files, &
+                  handls => ctx%spice%keeper%handls, &
+                  srces => ctx%spice%keeper%srces, &
+                  types => ctx%spice%keeper%types, &
+                  loaded => ctx%spice%keeper%loaded, &
+                  known => ctx%spice%keeper%known )
+      if ( ctx%failed() ) return
 
       didspk = .false.
       didpck = .false.
@@ -3557,7 +7004,7 @@
       if (      types(i) == 'SPK' ) then
 
          if ( single ) then
-            call spkuef ( handls(i) )
+            call spkuef ( ctx, handls(i) )
          end if
 
          didspk = .true.
@@ -3565,7 +7012,7 @@
       else if ( types(i) == 'CK' ) then
 
          if ( single ) then
-            call ckupf ( handls(i) )
+            call ckupf ( ctx, handls(i) )
          end if
 
          didck = .true.
@@ -3573,7 +7020,7 @@
       else if ( types(i) == 'DSK' ) then
 
          if ( single ) then
-            call zzdskusf ( handls(i) )
+            call zzdskusf ( ctx, handls(i) )
          end if
 
          diddsk = .true.
@@ -3581,7 +7028,7 @@
       else if ( types(i) == 'PCK' ) then
 
          if ( single ) then
-            call pckuof ( handls(i) )
+            call pckuof ( ctx, handls(i) )
          end if
 
          didpck = .true.
@@ -3596,7 +7043,7 @@
 
       else if ( types(i) == 'TEXT' ) then
 
-         call clpool
+         call clpool ( ctx )
          didtxt = .true.
 
       else if ( types(i) == 'META' ) then
@@ -3664,7 +7111,7 @@
                if ( types(j) == 'SPK' ) then
 
                   if ( single ) then
-                     call spkuef ( handls(j) )
+                     call spkuef ( ctx, handls(j) )
                   end if
 
                   didspk = .true.
@@ -3672,7 +7119,7 @@
                else if ( types(j) == 'CK' ) then
 
                   if ( single ) then
-                     call ckupf ( handls(j) )
+                     call ckupf ( ctx, handls(j) )
                   end if
 
                   didck = .true.
@@ -3680,7 +7127,7 @@
                else if ( types(j) == 'DSK' ) then
 
                   if ( single ) then
-                     call zzdskusf ( handls(j) )
+                     call zzdskusf ( ctx, handls(j) )
                   end if
 
                   diddsk = .true.
@@ -3688,7 +7135,7 @@
                else if ( types(j) == 'PCK' ) then
 
                   if ( single ) then
-                     call pckuof ( handls(j) )
+                     call pckuof ( ctx, handls(j) )
                   end if
 
                   didpck = .true.
@@ -3706,10 +7153,10 @@
                n1 = loaded
                n2 = loaded
                n3 = loaded
-               call remlac ( 1, j, files,  n1 )
-               call remlac ( 1, j, types,  n2 )
-               call remlai ( 1, j, srces,  n3 )
-               call remlai ( 1, j, handls, loaded )
+               call remlac ( ctx, 1, j, files,  n1 )
+               call remlac ( ctx, 1, j, types,  n2 )
+               call remlai ( ctx, 1, j, srces,  n3 )
+               call remlai ( ctx, 1, j, handls, loaded )
 
 !
 !              Each time we delete an item from the database, any
@@ -3740,7 +7187,7 @@
 !
 !        Now clear the kernel pool.
 !
-         call clpool
+         call clpool ( ctx )
 
       end if
 !
@@ -3749,10 +7196,10 @@
       n1 = loaded
       n2 = loaded
       n3 = loaded
-      call remlac ( 1, i, files,  n1 )
-      call remlac ( 1, i, types,  n2 )
-      call remlai ( 1, i, srces,  n3 )
-      call remlai ( 1, i, handls, loaded )
+      call remlac ( ctx, 1, i, files,  n1 )
+      call remlac ( ctx, 1, i, types,  n2 )
+      call remlai ( ctx, 1, i, srces,  n3 )
+      call remlai ( ctx, 1, i, handls, loaded )
 
 !
 !     Update any source pointers affected by the deletion of the Ith
@@ -3782,7 +7229,7 @@
             if (      types(i) == 'TEXT' &
                  .or. types(i) == 'META' ) then
 
-               call ldpool ( files(i) )
+               call ldpool ( ctx, files(i) )
 
                if ( types(i) == 'META' ) then
 !
@@ -3790,10 +7237,10 @@
 !                 around because we reloaded a meta-text kernel.
 !
                   do j = 1, nknown
-                     call dvpool ( known(j) )
+                     call dvpool ( ctx, known(j) )
                   end do
 
-                  call cvpool ( 'FURNSH', update )
+                  call cvpool ( ctx, 'FURNSH', update )
 
                end if
 
@@ -3811,7 +7258,7 @@
 
          do i = 1, loaded
             if ( types(i) == 'SPK' ) then
-               call spklef ( files(i), handls(i) )
+               call spklef ( ctx, files(i), handls(i) )
             end if
          end do
 
@@ -3825,7 +7272,7 @@
 
          do i = 1, loaded
             if ( types(i) == 'CK' ) then
-               call cklpf ( files(i), handls(i) )
+               call cklpf ( ctx, files(i), handls(i) )
             end if
          end do
 
@@ -3840,7 +7287,7 @@
 
          do i = 1, loaded
             if ( types(i) == 'DSK' ) then
-               call zzdsklsf ( files(i), handls(i) )
+               call zzdsklsf ( ctx, files(i), handls(i) )
             end if
          end do
 
@@ -3855,7 +7302,7 @@
 
          do i = 1, loaded
             if ( types(i) == 'PCK' ) then
-               call pcklof ( files(i), handls(i) )
+               call pcklof ( ctx, files(i), handls(i) )
             end if
          end do
 
@@ -3876,5 +7323,7 @@
       end if
 
       return
+      end associate
+      end procedure unload
 
-      end
+end submodule pepper_keeper

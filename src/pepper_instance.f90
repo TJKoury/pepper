@@ -96,6 +96,9 @@ module pepper_instance
    use pepper_state_ckbsr, only: ckbsr_state, init_ckbsr_state, ckbsr_context_state, init_ckbsr_context_state
    use pepper_state_zzdskbsr, only: zzdskbsr_state, init_zzdskbsr_state, zzdskbsr_context_state, init_zzdskbsr_context_state
    ! --- end pepper_segments
+   ! --- pepper_keeper
+   use pepper_state_keeper, only: keeper_state, init_keeper_state
+   ! --- end pepper_keeper
    ! <<< generated state modules
 
    implicit none
@@ -177,6 +180,9 @@ module pepper_instance
       type(ckbsr_state), allocatable :: ckbsr  !! state of CKBSR
       type(zzdskbsr_state), allocatable :: zzdskbsr  !! state of ZZDSKBSR
       ! --- end pepper_segments
+      ! --- pepper_keeper
+      type(keeper_state), allocatable :: keeper  !! state of KEEPER
+      ! --- end pepper_keeper
       ! <<< generated state components
    contains
       procedure, non_overridable :: new_context
@@ -651,6 +657,21 @@ module pepper_instance
       procedure, non_overridable :: cksns
       procedure, non_overridable :: ckhave
       ! --- end pepper_segments
+      ! --- pepper_keeper
+      procedure, non_overridable :: inttxt
+      procedure, non_overridable :: intord
+      procedure, non_overridable :: repmot
+      procedure, non_overridable :: sepool
+      procedure, non_overridable :: stpool
+      procedure, non_overridable :: tkvrsn
+      procedure, non_overridable :: exists
+      procedure, non_overridable :: furnsh
+      procedure, non_overridable :: ktotal
+      procedure, non_overridable :: kdata
+      procedure, non_overridable :: kinfo
+      procedure, non_overridable :: kclear
+      procedure, non_overridable :: unload
+      ! --- end pepper_keeper
       ! <<< generated bindings
    end type pepper_context
 
@@ -5989,6 +6010,163 @@ module pepper_instance
 
    end interface
    ! --- end pepper_segments
+   ! --- pepper_keeper
+   public :: zzascii, zzldker
+
+   interface
+
+      !> Convert an integer to an equivalent written phrase.
+      !> For example, convert 121 to 'ONE HUNDRED TWENTY-ONE'.
+      module subroutine inttxt ( ctx, n, string )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: n  !! An integer (less than 10**12 in absolute value).
+         character(*), intent(out) :: string  !! An English string representing the cardinal of N.
+      end subroutine inttxt
+
+      !> Convert an integer to an equivalent written ordinal phrase.
+      !> For example, convert 121 to 'ONE HUNDRED TWENTY-FIRST'.
+      module subroutine intord ( ctx, n, string )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: n  !! An integer (less than 10**12 in absolute value).
+         character(*), intent(out) :: string  !! An English string representing the ordinal of N.
+      end subroutine intord
+
+      !> Replace a marker with the text representation of an ordinal
+      !> number.
+      !>
+      !> MAXLON     P   Maximum length of an ordinal number.
+      module subroutine repmot ( ctx, in, marker, value, rtcase, out )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: in  !! Input string.
+         character(*), intent(in) :: marker  !! Marker to be replaced.
+         integer(ip), intent(in) :: value  !! Replacement value.
+         character(1), intent(in) :: rtcase  !! Case of replacement text.
+         character(*), intent(out) :: out  !! Output string.
+      end subroutine repmot
+
+      !> Retrieve the string starting at the FIDX element of the kernel
+      !> pool variable, where the string may be continued across several
+      !> components of the kernel pool variable.
+      module subroutine sepool ( ctx, item, fidx, contin, string, size, lidx, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: item  !! name of the kernel pool variable
+         integer(ip), intent(in) :: fidx  !! index of the first component of the string
+         character(*), intent(in) :: contin  !! character sequence used to indicate continuation
+         character(*), intent(out) :: string  !! a full string concatenated across continuations
+         integer(ip), intent(out) :: size  !! the number of character in the full string value
+         integer(ip), intent(out) :: lidx  !! index of the last component of the string
+         logical, intent(out) :: found  !! flag indicating success or failure of request
+      end subroutine sepool
+
+      !> Retrieve the Nth string from a kernel pool variable, where the
+      !> string may be continued across several components of the kernel
+      !> pool variable.
+      module subroutine stpool ( ctx, item, nth, contin, nthstr, size, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: item  !! Name of the kernel pool variable.
+         integer(ip), intent(in) :: nth  !! Index of the full string to retrieve.
+         character(*), intent(in) :: contin  !! Character sequence used to indicate continuation.
+         character(*), intent(out) :: nthstr  !! A full string concatenated across continuations.
+         integer(ip), intent(out) :: size  !! The number of characters in the full string value.
+         logical, intent(out) :: found  !! Flag indicating success or failure of request.
+      end subroutine stpool
+
+      !> Return the latest version string of a given item such as the
+      !> Toolkit or a routine name.
+      module subroutine tkvrsn ( ctx, item, verstr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: item  !! Item for which a version string is desired.
+         character(*), intent(out) :: verstr  !! Version string.
+      end subroutine tkvrsn
+
+      !> Returns a string indicating the line terminators of an ASCII file
+      !> and, if requested, stops execution if the terminator does match
+      !> the one that is native to the platform on which the toolkit was
+      !> compiled.
+      module subroutine zzascii ( ctx, file, line, check, termin )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! Name of the text file to scan.
+         character(*), intent(inout) :: line  !! The work string for file reads.
+         logical, intent(in) :: check  !! Flag directing to check for mismatched EOL.
+         character(*), intent(out) :: termin  !! The deduced terminator ID.
+      end subroutine zzascii
+
+      !> Determine whether a file exists.
+      !>
+      !> The function returns the value .TRUE. if the file exists, .FALSE.
+      !> otherwise.
+      module logical function exists ( ctx, fname )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! Name of the file in question.
+      end function exists
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzldker ( ctx, file, nofile, filtyp, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! The name of a file to be loaded.
+         character(*), intent(in) :: nofile  !! A message to issue if FILE cannot be located
+         character(*), intent(out) :: filtyp  !! The type of kernel.
+         integer(ip), intent(out) :: handle  !! The handle associated with the loaded kernel.
+      end subroutine zzldker
+
+      !> Load one or more SPICE kernels into a program.
+      !>
+      !> FILSIZ     P   Maximum file name length.
+      module subroutine furnsh ( ctx, file )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
+      end subroutine furnsh
+
+      !> Return the number of kernels of a specified type that are
+      !> currently loaded via the FURNSH interface.
+      module subroutine ktotal ( ctx, kind, count )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: kind  !! A list of kinds of kernels to count.
+         integer(ip), intent(out) :: count  !! The number of kernels of type KIND.
+      end subroutine ktotal
+
+      !> Return data for the nth kernel that is among a list of specified
+      !> kernel types.
+      module subroutine kdata ( ctx, which, kind, file, filtyp, srcfil, handle, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: which  !! Index of kernel to fetch from the list of kernels.
+         character(*), intent(in) :: kind  !! The kind of kernel to which fetches are limited.
+         character(*), intent(out) :: file  !! The name of the kernel file.
+         character(*), intent(out) :: filtyp  !! The type of the kernel.
+         integer(ip), intent(out) :: handle  !! The handle attached to FILE.
+         character(*), intent(out) :: srcfil  !! Name of the source file used to load FILE.
+         logical, intent(out) :: found  !! .TRUE. if the specified file could be located.
+      end subroutine kdata
+
+      !> Return information about a specific kernel
+      module subroutine kinfo ( ctx, file, filtyp, srcfil, handle, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! Name of a kernel to fetch information for
+         character(*), intent(out) :: filtyp  !! The type of the kernel
+         integer(ip), intent(out) :: handle  !! The handle attached to FILE.
+         character(*), intent(out) :: srcfil  !! Name of the source file used to load FILE.
+         logical, intent(out) :: found  !! .TRUE. if the specified file could be located.
+      end subroutine kinfo
+
+      !> Clear the KEEPER subsystem: unload all kernels, clear the kernel
+      !> pool, and re-initialize the subsystem. Existing watches on kernel
+      !> variables are retained.
+      !>
+      !> None.
+      module subroutine kclear ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+      end subroutine kclear
+
+      !> Unload a SPICE kernel.
+      module subroutine unload ( ctx, file )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! The name of a kernel to unload.
+      end subroutine unload
+
+   end interface
+   ! --- end pepper_keeper
    ! <<< generated interfaces
 
 contains

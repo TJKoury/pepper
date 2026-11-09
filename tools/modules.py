@@ -173,6 +173,9 @@ CONTEXT_MODULES = {
     "pepper_segments": """
         spkbsr pckbsr ckbsr zzdskbsr
         """.split(),
+    "pepper_keeper": """
+        inttxt intord repmot sepool stpool tkvrsn zzascii exists zzldker keeper
+        """.split(),
 }
 
 # Hand-written stateless modules (not generated from SPICELIB files) whose
@@ -206,6 +209,21 @@ UMBRELLAS = {
            "epoch_entries": [lo, un], "entries": [lo, un, sfs]}
        for n, lo, un, sfs in (("spkbsr", "spklef", "spkuef", "spksfs"),
                               ("pckbsr", "pcklof", "pckuof", "pcksfs"))},
+    # The kernel manager: the table of loaded kernels belongs to the
+    # instance, like the kernel pool and the files themselves; so does the
+    # FURNSH watcher on the meta-kernel variables (set on the first call).
+    "keeper": {"state": "files handls srces types loaded known first".split(),
+               "component": "keeper",
+               "docs": {"files": "name of each kernel loaded through FURNSH",
+                        "handls": "handle of each loaded kernel (0 for a text kernel)",
+                        "srces": "index in files of the meta-kernel each kernel was loaded "
+                                 "from (0: loaded directly)",
+                        "types": "type (SPK, CK, PCK, DSK, EK, TEXT, META) of each loaded kernel",
+                        "loaded": "number of kernels loaded",
+                        "known": "the meta-kernel variables (KERNELS_TO_LOAD, PATH_SYMBOLS, "
+                                 "PATH_VALUES) watched by FURNSH",
+                        "first": "the watcher has not been set yet"},
+               "entries": ["furnsh", "ktotal", "kdata", "kinfo", "kclear", "unload"]},
     "ckbsr": {"state": "fthan ftnum next nft".split(), "component": "ckbsr",
               "context_state": """alpha avneed findex fnd fresub iindex itbeg itchkp itexp ithfs
                                   itins itlb itlfs itprvd itprvf itprvh itprvi itub itruex newsch
@@ -326,6 +344,8 @@ UMBRELLAS = {
 # Legacy routines (still in src/spicelib) that moved code may call for now,
 # with the reason. Remove an entry when the routine moves.
 ALLOWED_LEGACY = {
+    "eklef": "loads an EK file (the EK query manager EKQMGR moves with the EK subsystem, phase 6)",
+    "ekuef": "unloads an EK file (the EK query manager EKQMGR moves with the EK subsystem, phase 6)",
     "wrline": "writes a line to a device or file (SPICELIB's error output; it moves "
               "with the error output, phase 7)",
 }

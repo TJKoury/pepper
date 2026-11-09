@@ -94,6 +94,9 @@ DOCS = {
     "pepper_segments": "Segment buffers of SPK, PCK, CK and DSK files: the tables of loaded "
                        "files (per instance) and the per-context caches of the segments found "
                        "for bodies and instruments.",
+    "pepper_keeper": "The kernel manager: loading (FURNSH), tracking (KTOTAL, KDATA, KINFO) "
+                     "and unloading (UNLOAD, KCLEAR) of SPICE kernels, including meta-kernels, "
+                     "and the routines it needs.",
     "pepper_dsk_files": "DLA (DAS linked array) files and DSK files: segment lists, opening "
                         "and closing, reading and writing type 2 segments (plates, vertices, "
                         "voxels), their descriptors, and the DSK tolerances.",
