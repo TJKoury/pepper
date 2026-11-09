@@ -25,7 +25,7 @@ todo notes
 * need to test with ifx in the CI.
 
 * start to modernize/improve the actual algorithms and code from spicelib
-  * remove arbitrary limitations that were due to static arrays in fortran 77. Examples: maximum number of kernels, maximum length of strings, maximum number of bodies, maximum number of frames, and so on.
+  * remove arbitrary limitations that were due to static arrays in fortran 77. Examples: maximum number of kernels, maximum length of strings, maximum number of bodies, maximum number of frames, and so on. (inventory and plan: limits.md)
   * improve performance of core routines using modern Fortran features (e.g., array operations, parallelization)
   * improve old fashioned code patterns by using modern Fortran constructs
   * goal is to make the code more maintainable, efficient, and compatible with modern Fortran standards

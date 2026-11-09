@@ -315,6 +315,8 @@ Each phase ends with tspice green, the concurrency tests that apply passing, and
    - **Docs:** each type keeps NAIF's purpose lines of its routine and the list of entry points.
    - `pepper_instance` uses the one module.
 
+12. **Remove SPICELIB's fixed limits (planned):** the number of kernels, pool variables, body and frame definitions, file name lengths, and so on. The inventory and the plan are in `limits.md`.
+
 ### Risks
 
 - **Size:** about 1400 routines, so the transformations must be scripted and verified (object-file comparison where the change is purely mechanical; tspice otherwise), and reviewable in subsystem-sized commits.
