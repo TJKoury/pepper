@@ -4,8 +4,7 @@
 ! are module procedures now (and external procedures in the other legacy
 ! files); see the comment block of each umbrella in its submodule.
 
-      !> Umbrella of the ZZDDHMAN routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the ZZDDHMAN routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzddhman ( lock, arch, fname, method, handle, unit, intamh, intarc, intbff, native, found, kill )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -26,8 +25,7 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine zzddhman
 
-      !> Umbrella of the DAFAH routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the DAFAH routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine dafah ( fname, ftype, nd, ni, ifname, resv, handle, unit, fhset, access )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -47,8 +45,7 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine dafah
 
-      !> Umbrella of the DAFFA routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the DAFFA routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine daffa ( handle, sum, name, found )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -61,8 +58,7 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine daffa
 
-      !> Umbrella of the DAFANA routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the DAFANA routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine dafana ( handle, sum, name, data, n )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -76,8 +72,7 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine dafana
 
-      !> Umbrella of the DAFRWD routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the DAFRWD routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine dafrwd ( handle, recno, begin, end, drec, data, found, reads, reqs )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -94,10 +89,9 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine dafrwd
 
-      !> Umbrella of the DASFM routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the DASFM routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine dasfm ( fname, ftype, ifname, handle, unit, free, lastla, lastrc, lastwd, nresvr, nresvc, ncomr, ncomc, fhset, access )
-      use pepper_kinds, only: ip
+      use pepper_kinds, only: ip, wp
       implicit none
       include 'das.inc'
       include 'errhnd.inc'
@@ -121,8 +115,7 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine dasfm
 
-      !> Umbrella of the DASRWR routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the DASRWR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine dasrwr ( handle, recno, recc, recd, reci, first, last, datad, datai, datac )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -142,12 +135,9 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine dasrwr
 
-      !> Umbrella of the ZZHSC routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the ZZHSC routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzhsc ( hashsz, hedlst, collst, items, item, itemat, new, avail )
-      use pepper_kinds, only: ip
-      use pepper_hash, only: name_hash
-      use pepper_constants, only: intmax
+      use pepper_kinds, only: ip, wp
       implicit none
       integer(ip), parameter :: lbpool = -5
       integer(ip) :: hashsz
@@ -162,10 +152,9 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine zzhsc
 
-      !> Umbrella of the ZZHSI routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the ZZHSI routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzhsi ( hashsz, hedlst, collst, items, item, param, itemat, new, avail )
-      use pepper_kinds, only: ip
+      use pepper_kinds, only: ip, wp
       implicit none
       integer(ip), parameter :: lbpool = -5
       integer(ip) :: hashsz
@@ -181,10 +170,9 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine zzhsi
 
-      !> Umbrella of the ZZBODBLT routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the ZZBODBLT routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzbodblt ( room, names, nornam, codes, nvals, device, reqst )
-      use pepper_kinds, only: ip
+      use pepper_kinds, only: ip, wp
       implicit none
       include              'zzbodtrn.inc'
       integer(ip) :: room
@@ -198,10 +186,9 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine zzbodblt
 
-      !> Umbrella of the ZZBODTRN routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the ZZBODTRN routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzbodtrn ( name, code, found, usrctr, update )
-      use pepper_kinds, only: ip
+      use pepper_kinds, only: ip, wp
       implicit none
       include               'zzbodtrn.inc'
       include               'zzctr.inc'
@@ -214,17 +201,19 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine zzbodtrn
 
-      !> Umbrella of the ZZCTR routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the ZZCTR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzctr ( newctr, oldctr, update )
-      use pepper_kinds, only: ip
-      use pepper_constants, only: intmax, intmin
+      use pepper_kinds, only: ip, wp
       implicit none
       include                'zzctr.inc'
       integer(ip) :: newctr ( ctrsiz )
       integer(ip) :: oldctr ( ctrsiz )
       logical :: update
-      external :: sigerr
+      external :: setmsg, sigerr
+      call setmsg ( 'ZZCTR: You have called an entry which performs ' &
+      // 'performs no run-time function. This may ' &
+      // 'indicate a bug. Please check the documentation ' &
+      // 'for the subroutine ZZCTR.' )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine zzctr
 
@@ -248,24 +237,25 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end function zztime
 
-      !> Umbrella of the RDKER routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the RDKER routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine rdker ( kernel, line, number, eof )
-      use pepper_kinds, only: ip
+      use pepper_kinds, only: ip, wp
       implicit none
       character(*) :: kernel
       character(*) :: line
       integer(ip) :: number
       logical :: eof
-      external :: sigerr
+      external :: setmsg, sigerr
+      call setmsg ( 'RDKER: You have called an entry which ' &
+      // 'performs no run-time function. This ' &
+      // 'may indicate a bug. Please check the ' &
+      // 'documentation for the subroutine RDKER.'     )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine rdker
 
-      !> Umbrella of the POOL routines: calling it directly signals
-      !> SPICE(BOGUSENTRY), as in SPICELIB.
+      !> Umbrella of the POOL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine pool ( fname, unit, name, names, nnames, agent, n, values, found, update, start, room, cvals, ivals, type, uwvars, uwptrs, uwpool, uwagnt, usrctr )
       use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
       implicit none
       include              'zzctr.inc'
       integer(ip) :: lbcell
@@ -290,6 +280,10 @@
       integer(ip) :: uwpool    ( 2, lbcell : * )
       character(*) :: uwagnt    ( * )
       integer(ip) :: usrctr    ( ctrsiz )
-      external :: sigerr
+      external :: setmsg, sigerr
+      call setmsg ( 'POOL: You have called an entry which performs ' &
+      // 'performs no run-time function. This may ' &
+      // 'indicate a bug. Please check the documentation ' &
+      // 'for the subroutine POOL.' )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine pool

@@ -341,7 +341,7 @@
       character(*) :: segid
       logical :: found
       external :: sigerr
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(CKBOGUSENTRY)' )
       end subroutine ckbsr
 
       !> Umbrella of the ZZDSKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
@@ -361,5 +361,5 @@
       real(wp) :: dskdsc ( * )
       logical :: found
       external :: sigerr
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      call sigerr ( 'SPICE(DSKBOGUSENTRY)' )
       end subroutine zzdskbsr

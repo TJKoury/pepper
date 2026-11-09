@@ -368,7 +368,15 @@ class Umbrella:
                "      use pepper_kinds, only: ip, wp",
                "      implicit none"] + spec_lines
         if self.main_bogus:
-            out += ["      external :: sigerr", "      call sigerr ( 'SPICE(BOGUSENTRY)' )"]
+            # SPICELIB's own error calls (the short message differs, e.g.
+            # SPICE(DSKBOGUSENTRY)), through the global error routines
+            calls = [s.text.strip() for s in self.main.body
+                     if re.match(r"\s*call\s+(setmsg|errch|errint|sigerr)\b", s.text, re.I)]
+            used = sorted({re.match(r"\s*call\s+(\w+)", c, re.I).group(1).lower() for c in calls})
+            out += [f"      external :: {', '.join(used)}"]
+            for c in calls:
+                parts = re.split(r"\s*//\s*", c)
+                out.append("      " + (" &\n      // ".join(parts) if len(c) > 100 else c))
         out.append(f"      end subroutine {self.name}")
         return "\n".join(out)
 
@@ -418,8 +426,15 @@ class Umbrella:
             if re.match(r"\s*parameter\b", s.text, re.I):
                 m = re.match(r"\s*parameter\s*\((.*)\)\s*$", s.text, re.I | re.S)
                 params |= {entity_name(x) for x in split_top(m.group(1))}
+        # (a module procedure passed as an argument is declared EXTERNAL in
+        # SPICELIB: that declaration would hide the module procedure)
+        externals = set()
+        for s in self.spec:
+            if re.match(r"\s*external\b", s.text, re.I):
+                externals |= {x.strip().lower() for x in s.text.split(None, 1)[1].split(",")}
         drop = set(self.args) | set(self.state) | set(self.cstate) | entry_names | \
-            {n for n in drop_functions - params if n in e.references() or n not in mentioned}
+            {n for n in drop_functions - params
+             if n in e.references() or n not in mentioned or n in externals}
         out = [f"      module procedure {e.name}"]
         # Documentation (without the Brief_I/O section, which is in the
         # interface now).

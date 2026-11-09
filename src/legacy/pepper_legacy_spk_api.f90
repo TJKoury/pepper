@@ -5,7 +5,7 @@
 !
 ! These keep the original SPICELIB interface for existing callers (such as
 ! the tspice tests). (ZZSPKFAO, ZZSPKFAP, ZZSPKFAT, ZZSPKFLT, ZZSPKFZO
-! and ZZSPKFZT have none: their state routine argument takes the context.)
+! and ZZSPKFZT are in pepper_legacy_spk_state.f90.)
 ! New code should use the type-bound procedures of
 ! pepper_context (e.g. ctx%cardd) instead.
 
@@ -1065,8 +1065,13 @@
       real(wp) :: refdat ( * )
       integer(ip) :: idxtyp
       include 'sgparam.inc'
-      external :: sigerr
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      external :: setmsg, sigerr
+      call setmsg ( 'This routine should never be called' &
+      // ' directly. It exists as an umbrella routine' &
+      // ' to maintain all of the variables for the' &
+      // ' generic segment sequential writing entry' &
+      // ' points.'                                    )
+      call sigerr ( 'SPICE(BOGUSENTRY)'                           )
       end subroutine sgseqw
 
       !> Umbrella of the ZZCVSTAT routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.

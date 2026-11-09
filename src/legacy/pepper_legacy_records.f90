@@ -1578,6 +1578,11 @@
       integer(ip) :: opmode
       real(wp) :: t
       real(wp) :: state     ( 6 )
-      external :: sigerr
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      external :: setmsg, sigerr
+      call setmsg ( 'The routine ZZSGP4 is an umbrella for ' &
+      // 'the SGP4 initializer and propagator entry ' &
+      // 'points. Do not call ZZSGP4. It is ' &
+      // 'likely that a programming error has ' &
+      // 'been made.' )
+      call sigerr ( 'SPICE(BOGUSENTRY)'  )
       end subroutine zzsgp4

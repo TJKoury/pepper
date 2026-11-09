@@ -26574,7 +26574,6 @@ contains
       implicit none
       include               'zzabcorr.inc'
       include               'zzctr.inc'
-      external              zzcvxsta
       integer(ip), parameter :: nevflg = 3
       integer(ip), parameter :: evlfln = 25
       integer(ip), parameter :: evlobs = 1
@@ -30858,7 +30857,6 @@ contains
       implicit none
       include               'zzabcorr.inc'
       include               'zzctr.inc'
-      external              zzcvxsta
       integer(ip), parameter :: nevflg = 3
       integer(ip), parameter :: evlfln = 25
       integer(ip), parameter :: evlobs = 1

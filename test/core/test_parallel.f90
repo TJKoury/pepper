@@ -1,0 +1,227 @@
+!> The phase 5 milestone: ephemeris, frame and time queries from several
+!> threads at once, each with its own context of one instance.
+!>
+!> A setup context writes and loads small kernels (a leapseconds kernel, an
+!> SPK with two bodies, the second relative to the first, a frame kernel with
+!> a TK frame, and body names). One context computes the reference results
+!> serially; then OpenMP threads, each with a context of its own, compute the
+!> same queries, interleaved in a different order, twice. Every result must
+!> be identical (bitwise) to the serial one.
+!>
+!> The library has no OpenMP; only this test uses it (`pixi run
+!> test-parallel` builds with -fopenmp). Built without OpenMP, the "parallel"
+!> part runs on one thread and the test still checks the results.
+program test_parallel
+
+   use pepper_kinds, only: ip, wp
+   use pepper_constants, only: twopi
+   use pepper_instance, only: pepper_spice, pepper_context
+   !$ use omp_lib, only: omp_get_thread_num, omp_get_max_threads
+
+   implicit none
+
+   character(*), parameter :: lsk = 'test_parallel.tls'
+   character(*), parameter :: spk = 'test_parallel.bsp'
+   character(*), parameter :: fk = 'test_parallel.tf'
+   integer, parameter :: nepoch = 2000  !! number of query epochs
+   integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1  !! results per epoch
+   integer, parameter :: nthreads = 4
+   type(pepper_spice), target :: spice
+   type(pepper_context) :: setup, serial
+   real(wp) :: et(nepoch)
+   real(wp) :: ref(nres, nepoch), par(nres, nepoch)
+   character(40) :: refutc(nepoch), parutc(nepoch)
+   integer :: failures = 0, pass, i, nbad, errors
+
+   setup = spice%new_context()
+   call delete_files()
+   call write_kernels()
+   call setup%furnsh(lsk)
+   call setup%furnsh(spk)
+   call setup%furnsh(fk)
+   call check(.not. setup%failed(), 'setup loads the kernels')
+
+   et = [(1.0e5_wp + (1.8e6_wp*(i - 1))/(nepoch - 1), i = 1, nepoch)]
+
+   ! the reference: one context, in order
+   serial = spice%new_context()
+   do i = 1, nepoch
+      call queries(serial, et(i), mod(i, 2) == 0, ref(:, i), refutc(i))
+   end do
+   call check(.not. serial%failed(), 'serial queries')
+
+   !$ print '(a, i0, a)', 'test_parallel: ', nthreads, ' threads'
+   do pass = 1, 2
+      par = 0.0_wp
+      parutc = ' '
+      errors = 0
+      !$omp parallel num_threads(nthreads) private(i) reduction(+:errors)
+      block
+         type(pepper_context) :: ctx
+         integer :: k
+         ctx = spice%new_context()
+         ! pass 1 forward, pass 2 backward; dynamic scheduling interleaves the
+         ! threads' epochs (and so the contexts' caches see different
+         ! sequences of queries than the serial run)
+         !$omp do schedule(dynamic, 7)
+         do k = 1, nepoch
+            i = merge(k, nepoch + 1 - k, pass == 1)
+            call queries(ctx, et(i), mod(i, 2) == 0, par(:, i), parutc(i))
+         end do
+         !$omp end do
+         if (ctx%failed()) errors = errors + 1
+      end block
+      !$omp end parallel
+      call check(errors == 0, 'no errors in the parallel queries')
+      nbad = count(any(par /= ref, dim=1) .or. parutc /= refutc)
+      if (nbad > 0) print '(a, i0, a, i0)', '   pass ', pass, ': epochs with different results: ', nbad
+      call check(nbad == 0, 'parallel results identical to the serial ones')
+   end do
+
+   call setup%kclear()
+   call delete_files()
+
+   if (failures > 0) then
+      print '(i0, a)', failures, ' check(s) failed'
+      stop 1
+   end if
+   print '(a)', 'test_parallel: all checks passed'
+
+contains
+
+   !> The queries for one epoch, through one context: states and positions
+   !> with aberration corrections, in J2000 and in the TK frame, rotations,
+   !> and a round trip through UTC strings. obsalt chooses the observer of
+   !> the first query (so that consecutive queries differ).
+   subroutine queries(ctx, t, obsalt, res, utc)
+      type(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: t  !! the epoch (TDB seconds past J2000)
+      logical, intent(in) :: obsalt  !! use the barycenter as the first observer
+      real(wp), intent(out) :: res(nres)  !! the results
+      character(*), intent(out) :: utc  !! the epoch as a UTC string
+      real(wp) :: lt, rot(3, 3)
+      character(32) :: obs
+      obs = merge('SOLAR SYSTEM BARYCENTER', 'PEPPER_A               ', obsalt)
+      call ctx%spkezr('PEPPER_B', t, 'J2000', 'CN+S', obs, res(1:6), res(7))
+      call ctx%spkpos('PEPPER_A', t, 'PEPPER_TK', 'LT', 'PEPPER_B', res(8:10), lt)
+      res(11) = lt
+      call ctx%pxform('J2000', 'ECLIPJ2000', t, rot)
+      res(12:20) = reshape(rot, [9])
+      call ctx%pxform('PEPPER_TK', 'J2000', t, rot)
+      res(21:29) = reshape(rot, [9])
+      call ctx%et2utc(t, 'ISOC', 3_ip, utc)
+      call ctx%str2et(utc, res(30))
+   end subroutine queries
+
+   !> Count and report a failed check.
+   subroutine check(ok, what)
+      logical, intent(in) :: ok  !! the check passed
+      character(*), intent(in) :: what  !! what was checked
+      character(1840) :: msg
+      if (.not. ok) then
+         failures = failures + 1
+         print '(2a)', 'FAILED: ', what
+         if (setup%failed()) then
+            call setup%getmsg('LONG', msg)
+            print '(2a)', '   setup: ', trim(msg)
+         end if
+         if (serial%failed()) then
+            call serial%getmsg('LONG', msg)
+            print '(2a)', '   serial: ', trim(msg)
+         end if
+      end if
+   end subroutine check
+
+   !> Remove the test files that exist.
+   subroutine delete_files()
+      character(32) :: files(3)
+      logical :: exists
+      integer :: unit, k
+      files = [character(32) :: lsk, spk, fk]
+      do k = 1, size(files)
+         inquire (file=trim(files(k)), exist=exists)
+         if (exists) then
+            open (newunit=unit, file=trim(files(k)), status='old')
+            close (unit, status='delete')
+         end if
+      end do
+   end subroutine delete_files
+
+   !> Write the kernels: the leapseconds, the frame kernel (a TK frame and
+   !> the body names) and the SPK.
+   subroutine write_kernels()
+      integer :: unit
+      open (newunit=unit, file=lsk, status='new', action='write')
+      write (unit, '(a)') 'KPL/LSK'
+      write (unit, '(a)') '\begindata'
+      write (unit, '(a)') 'DELTET/DELTA_T_A = 32.184'
+      write (unit, '(a)') 'DELTET/K = 1.657D-3'
+      write (unit, '(a)') 'DELTET/EB = 1.671D-2'
+      write (unit, '(a)') 'DELTET/M = ( 6.239996D0 1.99096871D-7 )'
+      write (unit, '(a)') 'DELTET/DELTA_AT = ( 32, @1999-JAN-1 )'
+      write (unit, '(a)') '\begintext'
+      close (unit)
+      open (newunit=unit, file=fk, status='new', action='write')
+      write (unit, '(a)') 'KPL/FK'
+      write (unit, '(a)') '\begindata'
+      write (unit, '(a)') 'NAIF_BODY_NAME += ( ''PEPPER_A'', ''PEPPER_B'' )'
+      write (unit, '(a)') 'NAIF_BODY_CODE += ( 1000, 1001 )'
+      write (unit, '(a)') 'FRAME_PEPPER_TK = 1500001'
+      write (unit, '(a)') 'FRAME_1500001_NAME = ''PEPPER_TK'''
+      write (unit, '(a)') 'FRAME_1500001_CLASS = 4'
+      write (unit, '(a)') 'FRAME_1500001_CLASS_ID = 1500001'
+      write (unit, '(a)') 'FRAME_1500001_CENTER = 1000'
+      write (unit, '(a)') 'TKFRAME_1500001_RELATIVE = ''ECLIPJ2000'''
+      write (unit, '(a)') 'TKFRAME_1500001_SPEC = ''ANGLES'''
+      write (unit, '(a)') 'TKFRAME_1500001_UNITS = ''DEGREES'''
+      write (unit, '(a)') 'TKFRAME_1500001_AXES = ( 3, 1, 3 )'
+      write (unit, '(a)') 'TKFRAME_1500001_ANGLES = ( 10.0, 20.0, 30.0 )'
+      write (unit, '(a)') '\begintext'
+      close (unit)
+      call write_spk()
+   end subroutine write_kernels
+
+   !> Write the SPK: body 1000 on a circle around the solar system
+   !> barycenter (1.5e8 km, one revolution in a year) and body 1001 on a
+   !> circle around body 1000 (4e5 km, 27 days), both in J2000, as type 9
+   !> segments (201 states, every 10000 s from 0 to 2e6 s, degree 7; the
+   !> epoch directory has two entries).
+   subroutine write_spk()
+      integer(ip) :: h
+      call setup%dafonw(spk, 'SPK', 2_ip, 6_ip, 'PEPPER parallel test SPK', 0_ip, h)
+      call segment(h, 1000_ip, 0_ip, 1.5e8_wp, 365.25_wp*86400.0_wp)
+      call segment(h, 1001_ip, 1000_ip, 4.0e5_wp, 27.0_wp*86400.0_wp)
+      call setup%dafcls(h)
+      call check(.not. setup%failed(), 'write ' // spk)
+   end subroutine write_spk
+
+   !> One type 9 segment of the SPK: the body on a circle of radius r (km)
+   !> and period p (s), slightly inclined to the X-Y plane of J2000,
+   !> around the center.
+   subroutine segment(h, body, center, r, p)
+      integer(ip), intent(in) :: h  !! handle of the SPK being written
+      integer(ip), intent(in) :: body  !! the body
+      integer(ip), intent(in) :: center  !! the center of motion
+      real(wp), intent(in) :: r  !! the radius (km)
+      real(wp), intent(in) :: p  !! the period (s)
+      integer, parameter :: n = 201, degree = 7
+      real(wp) :: epochs(n), states(6, n), w, sum(5)
+      integer :: k
+      w = twopi/p
+      epochs = [(1.0e4_wp*(k - 1), k = 1, n)]
+      do k = 1, n
+         states(:, k) = [r*cos(w*epochs(k)), r*sin(w*epochs(k)), 0.1_wp*r*sin(w*epochs(k)), &
+                         -r*w*sin(w*epochs(k)), r*w*cos(w*epochs(k)), 0.1_wp*r*w*cos(w*epochs(k))]
+      end do
+      call setup%dafps(2_ip, 6_ip, [epochs(1), epochs(n)], [body, center, 1_ip, 9_ip, 0_ip, 0_ip], sum)
+      call setup%dafbna(h, sum, 'CIRCLE')
+      ! type 9: the states, the epochs, the epoch directory (every 100th
+      ! epoch), the degree and the number of states
+      call setup%dafada(reshape(states, [6*n]), int(6*n, ip))
+      call setup%dafada(epochs, int(n, ip))
+      call setup%dafada([epochs(100), epochs(200)], 2_ip)
+      call setup%dafada([real(degree, wp), real(n, wp)], 2_ip)
+      call setup%dafena()
+   end subroutine segment
+
+end program test_parallel

@@ -226,6 +226,11 @@ def drop_section(lines: list, title: str) -> list:
 
 def module_procedure(r: Routine, ctx_where: dict, stateless: dict) -> str:
     refs = r.references()
+    # a moved routine passed as an argument is declared EXTERNAL in SPICELIB:
+    # that declaration would hide the module procedure
+    for s in r.spec:
+        if re.match(r"\s*external\b", s.text, re.I):
+            refs = refs | {x.strip().lower() for x in s.text.split(None, 1)[1].split(",")}
     ctx_names = {n for n in refs if n in ctx_where and n != r.name}
     consts = refs & set(CONSTANTS)
     imports = {}

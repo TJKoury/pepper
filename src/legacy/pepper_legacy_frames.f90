@@ -385,6 +385,12 @@
       integer(ip) :: frclss
       integer(ip) :: clssid
       logical :: found
-      external :: sigerr
+      external :: setmsg, sigerr
+      call setmsg ( 'A call has been made to the umbrella ' &
+      // 'routine FRAMEX. This routine doesn''t do ' &
+      // 'anything. It acts only as an umbrella ' &
+      // 'routine for its entry points. This call ' &
+      // 'probably indicates a misunderstanding in ' &
+      // 'programming. ' )
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       end subroutine framex

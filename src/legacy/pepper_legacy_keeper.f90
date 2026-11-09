@@ -279,6 +279,12 @@
       integer(ip) :: handle
       character(*) :: srcfil
       logical :: found
-      external :: sigerr
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      external :: setmsg, sigerr
+      call setmsg ( 'The routine KEEPER is an umbrella for a ' &
+      // 'collection of entry points that manage the ' &
+      // 'loading, tracking and unloading of SPICE ' &
+      // 'kernels.  KEEPER should not be called ' &
+      // 'directly. It is likely that a programming ' &
+      // 'error has been made. ' )
+      call sigerr ( 'SPICE(BOGUSENTRY)'  )
       end subroutine keeper

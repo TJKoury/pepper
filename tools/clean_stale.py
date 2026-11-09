@@ -63,6 +63,19 @@ def main() -> int:
                 a.unlink()
     if removed:
         print(f"clean_stale: removed {removed} objects of deleted sources (and the archives)")
+    # An archive can keep a member whose object file is gone already (e.g.
+    # removed by an earlier run while the archive was rebuilt by appending):
+    # check the members of every archive.
+    import subprocess
+    for a in (ROOT / "build").glob("gfortran_*/*/*.a"):
+        r = subprocess.run(["ar", "t", str(a)], capture_output=True, text=True)
+        members = [m for m in r.stdout.split() if m.endswith(".o")]
+        bad = [m for m in members if m.startswith(("src_", "test_", "app_", "example_"))
+               and source_of(Path(m)) is None]
+        if bad:
+            a.unlink()
+            print(f"clean_stale: removed {a.relative_to(ROOT)} ({len(bad)} members of deleted "
+                  f"sources, e.g. {bad[0]})")
     # fpm does not relink the executables (tests, examples) when only the
     # library changed: remove those older than the newest library source, so
     # that it links them again.

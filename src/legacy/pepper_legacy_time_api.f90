@@ -151,6 +151,9 @@
       integer(ip) :: beg     ( * )
       integer(ip) :: end     ( * )
       integer(ip) :: ident   ( * )
-      external :: sigerr
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      external :: setmsg, sigerr
+      call setmsg ( 'Your program has referenced the umbrella ' &
+      // 'subroutine SCANIT.  This may indicate a ' &
+      // 'programming error.'                           )
+      call sigerr ( 'SPICE(BOGUSENTRY)'                            )
       end subroutine scanit
