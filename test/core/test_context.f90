@@ -1,5 +1,6 @@
 !> Unit tests of pepper_instance: error handling in native contexts, and the
-!> forwarding of a legacy context to SPICELIB's global error routines.
+!> legacy context, whose error state the legacy routines (FAILED, ERRACT,
+!> GETMSG, ...) act on.
 program test_context
 
    use pepper_kinds, only: ip, wp
@@ -50,7 +51,7 @@ contains
       call ctx%getmsg('short', msg)
       call check(msg == 'SPICE(CELLTOOSMALL)', 'short message')
       call ctx%getmsg('LONG', msg)
-      call check(msg == 'Body MOON at 42 (1.5000000000000E+000 s) not found.', 'long message')
+      call check(msg == 'Body MOON at 42 (1.5000000000000E+00 s) not found.', 'long message')
       call ctx%getmsg('Explain', msg)
       call check(msg /= ' ', 'explanation')
 
@@ -102,7 +103,8 @@ contains
       call check(ctx%failed(), 'invalid action signals an error')
    end subroutine test_actions
 
-   !> The legacy context uses SPICELIB's global error state.
+   !> The legacy error routines (SPICELIB's names) act on the legacy context's
+   !> error state: the same error is seen through both.
    subroutine test_legacy()
       type(pepper_context), pointer :: ctx
       character(7) :: action

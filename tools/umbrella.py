@@ -373,7 +373,7 @@ class Umbrella:
             out.append(f"      external :: {', '.join(undeclared)}")
         if self.main_bogus:
             # SPICELIB's own error calls (the short message differs, e.g.
-            # SPICE(DSKBOGUSENTRY)), through the global error routines
+            # SPICE(DSKBOGUSENTRY)), through the legacy error routines
             calls = [s.text.strip() for s in self.main.body
                      if re.match(r"\s*call\s+(setmsg|errch|errint|sigerr)\b", s.text, re.I)]
             used = sorted({re.match(r"\s*call\s+(\w+)", c, re.I).group(1).lower() for c in calls})

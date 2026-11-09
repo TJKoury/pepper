@@ -6443,6 +6443,7 @@ contains
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderc, orderi
       use pepper_strings, only: eqstr, intstr, lastnb, ucase
+      use pepper_output, only: wrline
       use pepper_inc_zzbodtrn
       implicit none
       character(2*maxl+3) :: zzline

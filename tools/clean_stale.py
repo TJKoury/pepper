@@ -35,6 +35,11 @@ def source_of(obj: Path, base: Path = ROOT):
     name = obj.name[:-2] if obj.name.endswith(".o") else None
     if not name:
         return None
+    # a dependency's sources, named relative to the package: "../src/x.f90"
+    # becomes ".._src_x.f90"
+    while name.startswith(".._"):
+        base = base.parent
+        name = name[3:]
     # fpm joins the path components with "_": try every split
     parts = name.split("_")
     for i in range(1, len(parts)):
@@ -56,7 +61,7 @@ def main() -> int:
             continue
         stale = []
         for obj in d.glob("*.o"):
-            if not obj.name.startswith(("src_", "test_", "app_", "example_")):
+            if not obj.name.startswith(("src_", "test_", "app_", "example_", ".._")):
                 continue
             if source_of(obj, package_root(d)) is None:
                 stale.append(obj)
@@ -77,7 +82,7 @@ def main() -> int:
     for a in [*(ROOT / "build").glob("gfortran_*/*/*.a"), *(ROOT / "tspice" / "build").glob("gfortran_*/*/*.a")]:
         r = subprocess.run(["ar", "t", str(a)], capture_output=True, text=True)
         members = [m for m in r.stdout.split() if m.endswith(".o")]
-        bad = [m for m in members if m.startswith(("src_", "test_", "app_", "example_"))
+        bad = [m for m in members if m.startswith(("src_", "test_", "app_", "example_", ".._"))
                and source_of(Path(m), package_root(a.parent)) is None]
         if bad:
             a.unlink()

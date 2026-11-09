@@ -2,8 +2,10 @@
 !>
 !> The legacy external procedures (SPICELIB's names and arguments) have no
 !> context argument; they call the module procedures with this context.
-!> Its error handling is SPICELIB's global one (SIGERR, FAILED, ERRACT,
-!> ...). Like SPICELIB itself, the legacy interface is not thread-safe.
+!> The legacy error routines (SIGERR, FAILED, ERRACT, ...; in
+!> pepper_legacy_errsys) act on this context's error state, which starts with
+!> SPICELIB's settings (action DEFAULT, output to the screen). Like SPICELIB
+!> itself, the legacy interface is not thread-safe.
 !> This is the only global state in PEPPER, and the module API never uses
 !> it.
 module pepper_legacy_context

@@ -15,21 +15,23 @@
 !> Errors work as in SPICELIB, but per context and without a traceback: a
 !> routine that fails signals an error (ctx%sigerr, with a short message
 !> and an optional long message built with ctx%setmsg/errch/errdp/errint),
-!> and callers check ctx%failed(). The default error action of a context is
-!> RETURN, and nothing is printed: the caller gets the messages with
-!> ctx%getmsg and clears the error with ctx%reset(). The actions REPORT,
-!> ABORT and DEFAULT print the messages to error_unit (ABORT and DEFAULT
-!> then stop the program).
-!>
-!> A legacy context (only used by the legacy SPICELIB interface in
-!> src/legacy) forwards all error handling to SPICELIB's global error
-!> routines (SIGERR, FAILED, ...), so that the legacy interface behaves
-!> exactly as SPICELIB does, including ERRACT, ERRDEV and ERRPRT.
+!> and callers check ctx%failed(). Each context has SPICELIB's error
+!> settings: the action (ctx%erract: ABORT, REPORT, RETURN, IGNORE, DEFAULT),
+!> the output device (ctx%errdev: SCREEN, NULL or a file) and the parts of a
+!> report that are printed (ctx%errprt). A new context returns on errors and
+!> prints nothing (action RETURN, device NULL): the caller gets the messages
+!> with ctx%getmsg and clears the error with ctx%reset(). The legacy context
+!> (used by the legacy SPICELIB interface in src/legacy) starts with
+!> SPICELIB's settings (action DEFAULT, device SCREEN, every part printed),
+!> so that the legacy interface behaves as SPICELIB does.
 module pepper_instance
 
    use, intrinsic :: iso_fortran_env, only: error_unit, int64
    use pepper_kinds, only: ip, wp
    use pepper_errors, only: expln
+   use pepper_strings, only: dpstr, intstr, lparse, wdcnt, nextwd
+   use pepper_hash, only: name_hash
+   use pepper_output, only: wrline, byebye
    ! The state types of the subsystems (generated modules pepper_state_*).
    ! >>> generated state modules (tools/modularize_ctx.py)
    ! --- pepper_pool
@@ -353,6 +355,7 @@ module pepper_instance
    integer, parameter, public :: short_message_length = 25    !! SPICELIB's short message length
    integer, parameter, public :: long_message_length = 1840   !! SPICELIB's long message length
    integer, parameter, public :: explanation_length = 80      !! length of an explanation (EXPLN)
+   integer, parameter, public :: device_length = 255          !! length of a device name (ERRDEV)
 
    ! Error actions (ERRACT).
    integer, parameter :: action_abort = 1, action_report = 2, action_return = 3, &
@@ -390,6 +393,21 @@ module pepper_instance
       character(watch_name_length), allocatable :: changed_names(:)  !! the variables changed (log)
       integer(int64), allocatable :: changed_at(:)  !! the change number of each logged change
       integer :: nchanged = 0  !! number of entries in the log
+      ! Logical units reserved by RESLUN (not given by GETLUN/FNDLUN); 5, 6
+      ! and 7 (the standard units) are reserved from the start.
+      logical :: reserved_units(1:99) = [ &
+         .false., .false., .false., .false., .true., .true., .true., .false., .false., .false., &
+         .false., .false., .false., .false., .false., .false., .false., .false., .false., .false., &
+         .false., .false., .false., .false., .false., .false., .false., .false., .false., .false., &
+         .false., .false., .false., .false., .false., .false., .false., .false., .false., .false., &
+         .false., .false., .false., .false., .false., .false., .false., .false., .false., .false., &
+         .false., .false., .false., .false., .false., .false., .false., .false., .false., .false., &
+         .false., .false., .false., .false., .false., .false., .false., .false., .false., .false., &
+         .false., .false., .false., .false., .false., .false., .false., .false., .false., .false., &
+         .false., .false., .false., .false., .false., .false., .false., .false., .false., .false., &
+         .false., .false., .false., .false., .false., .false., .false., .false., .false. ]  !! the reserved units
+      integer :: last_unit = 1  !! the unit FNDLUN gave last
+      integer(ip) :: hash_divisor = -1  !! divisor of ZZHASH (set by ZZSHSH; -1: not set)
       character(255), allocatable :: closed_files(:)  !! names of the files closed so far
       integer(ip) :: nclosed = 0  !! number of names in closed_files
       ! The state of the subsystems (allocated when first used).
@@ -440,13 +458,19 @@ module pepper_instance
    type :: pepper_context
       private
       type(pepper_spice), pointer :: spice => null()  !! the instance
-      logical :: legacy = .false.  !! error handling by SPICELIB's global routines
-      ! Error status and messages (native contexts).
+      logical :: legacy = .false.  !! the legacy interface's context (SPICELIB's default settings)
+      ! Error status, messages and settings (SPICELIB's error handling).
       logical :: failure = .false.  !! an error was signaled (and not reset)
-      logical :: messages_allowed = .true.  !! the long message may be changed
+      logical :: messages_allowed = .true.  !! the long message may be changed (ACCEPT, ALLOWD)
       integer :: action = action_return  !! error action (index in action_names)
       character(short_message_length) :: short = ' '  !! short error message
       character(long_message_length) :: long = ' '  !! long error message
+      character(device_length) :: device = 'NULL'  !! output device of the reports: SCREEN, NULL or a file
+      logical :: print_short = .true.  !! reports include the short message (ERRPRT)
+      logical :: print_explain = .true.  !! reports include the explanation of the short message
+      logical :: print_long = .true.  !! reports include the long message
+      logical :: print_trace = .true.  !! (the traceback: not kept by PEPPER)
+      logical :: print_default = .true.  !! reports include the note on the default error handling
       integer(ip) :: files_seen = 0  !! the file_generation this context's record caches reflect
       ! Kernel pool watches (SWPOOL, CVPOOL, DWPOOL) of a context other than
       ! the legacy one.
@@ -753,6 +777,34 @@ module pepper_instance
       procedure, non_overridable :: reset => ctx_reset
       procedure, non_overridable :: getmsg => ctx_getmsg
       procedure, non_overridable :: erract => ctx_erract
+      procedure, non_overridable :: errdev => ctx_errdev
+      procedure, non_overridable :: errprt => ctx_errprt
+      procedure, non_overridable :: return => ctx_return
+      procedure, non_overridable :: outmsg => ctx_outmsg
+      ! SPICELIB's storage of the error state (used by its error routines;
+      ! public there, so here too)
+      procedure, non_overridable :: seterr => ctx_seterr
+      procedure, non_overridable :: accept => ctx_accept
+      procedure, non_overridable :: allowd => ctx_allowd
+      procedure, non_overridable :: getsms => ctx_getsms
+      procedure, non_overridable :: putsms => ctx_putsms
+      procedure, non_overridable :: getlms => ctx_getlms
+      procedure, non_overridable :: putlms => ctx_putlms
+      procedure, non_overridable :: getact => ctx_getact
+      procedure, non_overridable :: putact => ctx_putact
+      procedure, non_overridable :: getdev => ctx_getdev
+      procedure, non_overridable :: putdev => ctx_putdev
+      procedure, non_overridable :: setprt => ctx_setprt
+      procedure, non_overridable :: msgsel => ctx_msgsel
+      ! Logical units (SPICELIB's GETLUN, FNDLUN, RESLUN, FRELUN)
+      procedure, non_overridable :: getlun => ctx_getlun
+      procedure, non_overridable :: fndlun => ctx_fndlun
+      procedure, non_overridable :: reslun => ctx_reslun
+      procedure, non_overridable :: frelun => ctx_frelun
+      ! The hash with a divisor set once (SPICELIB's ZZSHSH, ZZHASH, ZZHASH2)
+      procedure, non_overridable :: zzshsh => ctx_zzshsh
+      procedure, non_overridable :: zzhash => ctx_zzhash
+      procedure, non_overridable :: zzhash2 => ctx_zzhash2
       ! >>> generated bindings (tools/modularize_ctx.py)
       ! --- pepper_cells
       procedure, non_overridable :: chbase
@@ -20516,8 +20568,10 @@ module pepper_instance
 
 contains
 
-   !> A new context for this instance. With legacy = .true., its error
-   !> handling is SPICELIB's global one (for the legacy interface only).
+   !> A new context for this instance. With legacy = .true., it starts with
+   !> SPICELIB's error settings (action DEFAULT, device SCREEN, every part of
+   !> the report printed) and keeps SPICELIB's behavior where native contexts
+   !> differ (for the legacy interface only).
    function new_context(this, legacy) result(ctx)
       class(pepper_spice), target, intent(in) :: this  !! the instance (must have the target
                                                        !! attribute)
@@ -20526,6 +20580,11 @@ contains
       type(pepper_context) :: ctx
       ctx%spice => this
       if (present(legacy)) ctx%legacy = legacy
+      if (ctx%legacy) then
+         ! SPICELIB's initial settings
+         ctx%action = action_default
+         ctx%device = 'SCREEN'
+      end if
    end function new_context
 
    !> The instance this context belongs to.
@@ -20535,7 +20594,7 @@ contains
       spice => this%spice
    end function instance
 
-   !> True for a legacy context (error handling by SPICELIB's global routines).
+   !> True for a legacy context (the context of the legacy interface).
    logical function is_legacy(this)
       class(pepper_context), intent(in) :: this  !! the context
       is_legacy = this%legacy
@@ -20544,104 +20603,75 @@ contains
    !> True if an error has been signaled and not reset.
    logical function ctx_failed(this)
       class(pepper_context), intent(in) :: this  !! the context
-      interface
-         logical function failed()   ! SPICELIB
-         end function failed
-      end interface
-      if (this%legacy) then
-         ctx_failed = failed()
-      else
-         ctx_failed = this%failure
-      end if
+      ctx_failed = this%failure
    end function ctx_failed
 
-   !> Signal an error with the short message msg (e.g. 'SPICE(BADINPUT)').
-   !> Under the RETURN action only the first error is kept: once the
-   !> context has failed, further errors and message changes are ignored
-   !> until reset().
+   !> True if the routine calling it should return at once: an error was
+   !> signaled and the error action is RETURN (SPICELIB's RETURN).
+   logical function ctx_return(this)
+      class(pepper_context), intent(in) :: this  !! the context
+      ctx_return = this%failure .and. this%action == action_return
+   end function ctx_return
+
+   !> Signal an error with the short message msg (e.g. 'SPICE(BADINPUT)'),
+   !> as SPICELIB's SIGERR: unless the action is IGNORE, the error status is
+   !> set and a report is written to the device (the parts selected with
+   !> errprt); under RETURN only the first error is kept (further errors and
+   !> message changes are ignored until reset()); ABORT and DEFAULT end the
+   !> program.
    subroutine ctx_sigerr(this, msg)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: msg  !! short error message, e.g. 'SPICE(BADINPUT)' (at most 25
                                        !! characters)
-      interface
-         subroutine sigerr(msg)   ! SPICELIB
-            character(*), intent(in) :: msg
-         end subroutine sigerr
-      end interface
-      if (this%legacy) then
-         call sigerr(msg)
-         return
+      if (this%action /= action_ignore) then
+         if (this%action /= action_return .or. .not. this%failure) then
+            this%failure = .true.
+            this%short = msg
+            if (this%action /= action_default) then
+               call this%outmsg('SHORT, EXPLAIN, LONG, TRACEBACK')
+            else
+               call this%outmsg('SHORT, EXPLAIN, LONG, TRACEBACK, DEFAULT')
+            end if
+            this%messages_allowed = this%action /= action_return
+         else
+            this%messages_allowed = .false.
+         end if
       end if
-      if (this%action == action_ignore) return
-      if (this%action /= action_return .or. .not. this%failure) then
-         this%failure = .true.
-         this%short = msg
-         if (this%action /= action_return) call report(this)
-         this%messages_allowed = this%action /= action_return
-      else
-         this%messages_allowed = .false.
-      end if
-      if (this%action == action_abort .or. this%action == action_default) then
-         error stop 'PEPPER: error (abort)'
-      end if
+      if (this%action == action_default .or. this%action == action_abort) call byebye('FAILURE')
    end subroutine ctx_sigerr
 
    !> Set the long error message (before calling sigerr). Markers in it
-   !> (e.g. '#') are replaced by errch, errdp and errint.
+   !> (e.g. '#') are replaced by errch, errdp, errint, errfnm and errhan.
    subroutine ctx_setmsg(this, msg)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: msg  !! long error message (at most 1840 characters), with markers
                                        !! to replace
-      interface
-         subroutine setmsg(msg)   ! SPICELIB
-            character(*), intent(in) :: msg
-         end subroutine setmsg
-      end interface
-      if (this%legacy) then
-         call setmsg(msg)
-      else if (this%messages_allowed) then
-         this%long = msg
-      end if
+      if (this%messages_allowed) this%long = msg
    end subroutine ctx_setmsg
 
    !> Replace the first occurrence of marker in the long message with the
-   !> string (without its leading and trailing blanks).
+   !> string (without its leading and trailing blanks; a blank string becomes
+   !> one blank).
    subroutine ctx_errch(this, marker, string)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: marker  !! marker in the long message, e.g. '#'
       character(*), intent(in) :: string  !! text that replaces the marker
-      interface
-         subroutine errch(marker, string)   ! SPICELIB
-            character(*), intent(in) :: marker, string
-         end subroutine errch
-      end interface
-      if (this%legacy) then
-         call errch(marker, string)
+      if (string == ' ') then
+         call replace_marker(this, marker, ' ')
       else
          call replace_marker(this, marker, trim(adjustl(string)))
       end if
    end subroutine ctx_errch
 
    !> Replace the first occurrence of marker in the long message with the
-   !> number (14 significant digits).
+   !> number, with 14 significant digits (as DPSTR writes it).
    subroutine ctx_errdp(this, marker, number)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: marker  !! marker in the long message, e.g. '#'
       real(wp), intent(in) :: number  !! number that replaces the marker
       character(32) :: text
-      interface
-         subroutine errdp(marker, number)   ! SPICELIB
-            import :: wp
-            character(*), intent(in) :: marker
-            real(wp), intent(in) :: number
-         end subroutine errdp
-      end interface
-      if (this%legacy) then
-         call errdp(marker, number)
-      else
-         write (text, '(es24.13e3)') number
-         call replace_marker(this, marker, trim(adjustl(text)))
-      end if
+      call dpstr(number, 14, text)
+      call replace_marker(this, marker, trim(adjustl(text)))
    end subroutine ctx_errdp
 
    !> Replace the first occurrence of marker in the long message with the
@@ -20651,19 +20681,8 @@ contains
       character(*), intent(in) :: marker  !! marker in the long message, e.g. '#'
       integer(ip), intent(in) :: number  !! integer that replaces the marker
       character(16) :: text
-      interface
-         subroutine errint(marker, number)   ! SPICELIB
-            import :: ip
-            character(*), intent(in) :: marker
-            integer(ip), intent(in) :: number
-         end subroutine errint
-      end interface
-      if (this%legacy) then
-         call errint(marker, number)
-      else
-         write (text, '(i0)') number
-         call replace_marker(this, marker, trim(text))
-      end if
+      call intstr(number, text)
+      call replace_marker(this, marker, trim(adjustl(text)))
    end subroutine ctx_errint
 
    !> Replace the first occurrence of marker in the long message with the
@@ -20673,54 +20692,33 @@ contains
       character(*), intent(in) :: marker  !! marker in the long message, e.g. '#'
       integer(ip), intent(in) :: unit  !! Fortran unit
       character(1024) :: name
-      logical :: opened
       integer :: ios
-      interface
-         subroutine errfnm(marker, unit)   ! SPICELIB
-            import :: ip
-            character(*), intent(in) :: marker
-            integer(ip), intent(in) :: unit
-         end subroutine errfnm
-      end interface
-      if (this%legacy) then
-         call errfnm(marker, unit)
-      else
-         name = ' '
-         inquire (unit=unit, opened=opened, name=name, iostat=ios)
-         if (ios /= 0 .or. .not. opened) name = ' '
-         call replace_marker(this, marker, trim(name))
-      end if
+      name = ' '
+      inquire (unit=unit, name=name, iostat=ios)
+      if (ios /= 0 .or. name == ' ') name = '<unavailable from the system>'
+      call this%errch(marker, name)
    end subroutine ctx_errfnm
 
    !> Replace the first occurrence of marker in the long message with the
-   !> name of the file with a DAF or DAS handle (blank if the handle is not
-   !> known).
+   !> name of the file with a DAF or DAS handle.
    subroutine ctx_errhan(this, marker, handle)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: marker  !! marker in the long message, e.g. '#'
       integer(ip), intent(in) :: handle  !! handle of a DAF or DAS file
       character(1024) :: name
+      character(16) :: number
       integer(ip) :: arc, bff, amh
-      logical :: found, failed_before
-      interface
-         subroutine errhan(marker, handle)   ! SPICELIB
-            import :: ip
-            character(*), intent(in) :: marker
-            integer(ip), intent(in) :: handle
-         end subroutine errhan
-      end interface
-      if (this%legacy) then
-         call errhan(marker, handle)
-         return
+      logical :: found
+      ! (the lookup needs the error status clear; a message being built
+      ! while an error is set is not changed anyway)
+      if (.not. this%messages_allowed) return
+      found = .false.
+      if (.not. this%failure) call zzddhnfo(this, handle, name, arc, bff, amh, found)
+      if (.not. found) then
+         call intstr(handle, number)
+         name = '<No name found for handle ' // trim(number) // '>'
       end if
-      ! Look up the name without disturbing an error that is being built.
-      failed_before = this%failure
-      name = ' '
-      if (.not. failed_before) then
-         call zzddhnfo(this, handle, name, arc, bff, amh, found)
-         if (.not. found) name = ' '
-      end if
-      call replace_marker(this, marker, trim(name))
+      call this%errch(marker, name)
    end subroutine ctx_errhan
 
    !> Note that this context wrote a record to a DAF or DAS file: the
@@ -20992,18 +20990,10 @@ contains
    !> Clear the error status and the messages.
    subroutine ctx_reset(this)
       class(pepper_context), intent(inout) :: this  !! the context
-      interface
-         subroutine reset()   ! SPICELIB
-         end subroutine reset
-      end interface
-      if (this%legacy) then
-         call reset()
-      else
-         this%failure = .false.
-         this%short = ' '
-         this%long = ' '
-         this%messages_allowed = .true.
-      end if
+      this%failure = .false.
+      this%short = ' '
+      this%long = ' '
+      this%messages_allowed = .true.
    end subroutine ctx_reset
 
    !> Get an error message: option 'SHORT', 'LONG' or 'EXPLAIN' (the
@@ -21012,26 +21002,16 @@ contains
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: option  !! 'SHORT', 'LONG' or 'EXPLAIN'
       character(*), intent(out) :: msg  !! the message
-      interface
-         subroutine getmsg(option, msg)   ! SPICELIB
-            character(*), intent(in) :: option
-            character(*), intent(out) :: msg
-         end subroutine getmsg
-      end interface
-      if (this%legacy) then
-         call getmsg(option, msg)
-         return
-      end if
       select case (upper(adjustl(option)))
       case ('SHORT')
          msg = this%short
-      case ('LONG')
-         msg = this%long
       case ('EXPLAIN')
          call expln(this%short, msg)
+      case ('LONG')
+         msg = this%long
       case default
-         call this%setmsg('Illegal option: #.')
-         call this%errch('#', option)
+         call this%setmsg('GETMSG: An invalid value of OPTION was input.  Valid choices are ''SHORT'','// &
+                          '       ''EXPLAIN'', or ''LONG''.  The value that was input was:  ' // option)
          call this%sigerr('SPICE(INVALIDMSGTYPE)')
       end select
    end subroutine ctx_getmsg
@@ -21043,16 +21023,6 @@ contains
       character(*), intent(in) :: op  !! 'GET' or 'SET'
       character(*), intent(inout) :: action  !! the action (output for 'GET', input for 'SET')
       integer :: k
-      interface
-         subroutine erract(op, action)   ! SPICELIB
-            character(*), intent(in) :: op
-            character(*), intent(inout) :: action
-         end subroutine erract
-      end interface
-      if (this%legacy) then
-         call erract(op, action)
-         return
-      end if
       select case (upper(adjustl(op)))
       case ('GET')
          action = action_names(this%action)
@@ -21061,25 +21031,476 @@ contains
          if (k > 0) then
             this%action = k
          else
-            call this%setmsg('Invalid action: #.')
-            call this%errch('#', action)
+            call this%setmsg('ERRACT: An invalid value of ACTION was supplied.  The value was:  ' // action)
             call this%sigerr('SPICE(INVALIDACTION)')
          end if
       case default
-         call this%setmsg('Invalid operation: #.')
-         call this%errch('#', op)
+         call this%setmsg('ERRACT: An invalid value of OP was supplied.  The value was:  ' // op)
          call this%sigerr('SPICE(INVALIDOPERATION)')
       end select
    end subroutine ctx_erract
 
+   !> Get (op = 'GET') or set (op = 'SET') the device the error reports are
+   !> written to: 'SCREEN', 'NULL' or the name of a file.
+   subroutine ctx_errdev(this, op, device)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: op  !! 'GET' or 'SET'
+      character(*), intent(inout) :: device  !! the device (output for 'GET', input for 'SET')
+      character(len(device)) :: up
+      select case (upper(adjustl(op)))
+      case ('GET')
+         device = this%device
+      case ('SET')
+         up = upper(adjustl(device))
+         if (len_trim(up) > device_length) then
+            call this%setmsg('ERRDEV:  Device name exceeds FILEN characters; device selection not '// &
+                             'updated. The first FILEN characters of the name were:  ' // &
+                             device(:device_length))
+            call this%sigerr('SPICE(DEVICENAMETOOLONG)')
+         else if (up == 'SCREEN' .or. up == 'NULL') then
+            this%device = up
+         else
+            this%device = device
+         end if
+      case default
+         call this%setmsg('ERRDEV:  An invalid value of OP was supplied.  The value was: ' // op)
+         call this%sigerr('SPICE(INVALIDOPERATION)')
+      end select
+   end subroutine ctx_errdev
+
+   !> Get (op = 'GET') or change (op = 'SET') the parts of an error report
+   !> that are written: a list of SHORT, LONG, EXPLAIN, TRACEBACK, DEFAULT,
+   !> ALL (the first four) and NONE, separated by commas. 'SET' adds the
+   !> parts named (NONE removes all of them first).
+   subroutine ctx_errprt(this, op, list)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: op  !! 'GET' or 'SET'
+      character(*), intent(inout) :: list  !! the list (output for 'GET', input for 'SET')
+      character(16) :: words(10)
+      integer(ip) :: nwords, i
+      logical :: s, l, x, tr, d
+      s = this%print_short; l = this%print_long; x = this%print_explain
+      tr = this%print_trace; d = this%print_default
+      select case (upper(adjustl(op)))
+      case ('GET')
+         list = ' '
+         if (s) call add('SHORT')
+         if (l) call add('LONG')
+         if (x) call add('EXPLAIN')
+         if (tr) call add('TRACEBACK')
+         if (d) call add('DEFAULT')
+      case ('SET')
+         call lparse(list, ',', size(words, kind=ip), nwords, words)
+         do i = 1, nwords
+            select case (upper(words(i)))
+            case ('SHORT')
+               s = .true.
+            case ('LONG')
+               l = .true.
+            case ('EXPLAIN')
+               x = .true.
+            case ('TRACEBACK')
+               tr = .true.
+            case ('ALL')
+               s = .true.; l = .true.; x = .true.; tr = .true.
+            case ('DEFAULT')
+               s = .true.; l = .true.; x = .true.; tr = .true.; d = .true.
+            case ('NONE')
+               s = .false.; l = .false.; x = .false.; tr = .false.; d = .false.
+            case (' ')
+            case default
+               call this%setmsg('ERRPRT: An invalid list item was found in the error message list.  '// &
+                                'The word was:' // words(i))
+               call this%sigerr('SPICE(INVALIDLISTITEM)')
+            end select
+         end do
+         if (this%setprt(s, x, l, tr, d)) continue
+      case default
+         call this%setmsg('ERRPRT:  An invalid value of OP was supplied.  The value was: ' // op)
+         call this%sigerr('SPICE(INVALIDOPERATION)')
+      end select
+   contains
+      subroutine add(word)
+         character(*), intent(in) :: word
+         if (list == ' ') then
+            list = word
+         else
+            list = trim(list) // ', ' // word
+         end if
+      end subroutine add
+   end subroutine ctx_errprt
+
+   !> Write an error report with the parts in list (SHORT, EXPLAIN, LONG,
+   !> TRACEBACK, DEFAULT) that are also selected with errprt, to the device
+   !> (SPICELIB's OUTMSG; its format).
+   subroutine ctx_outmsg(this, list)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: list  !! the parts of the report to write
+      integer, parameter :: ll = 80  !! length of an output line
+      character(ll), parameter :: defmsg(4) = [character(ll) :: &
+         'Oh, by the way:  The SPICELIB error handling actions are USER-TAILORABLE.  You', &
+         'can choose whether the Toolkit aborts or continues when errors occur, which', &
+         'error messages to output, and where to send the output.  Please read the ERROR', &
+         '"Required Reading" file, or see the routines ERRACT, ERRDEV, and ERRPRT.']
+      character(16) :: words(5)
+      character(ll) :: border, line
+      character(explanation_length) :: xmsg
+      character(long_message_length) :: lmsg, outwrd
+      character(80) :: versn
+      integer(ip) :: nwords, i, nw, start, wrdlen, remain
+      logical :: short, expl, long, dfault
+      border = repeat('=', ll)
+      short = .false.; expl = .false.; long = .false.; dfault = .false.
+      call lparse(list, ',', size(words, kind=ip), nwords, words)
+      do i = 1, nwords
+         select case (upper(words(i)))
+         case ('SHORT')
+            short = .true.
+         case ('EXPLAIN')
+            expl = .true.
+         case ('LONG')
+            long = .true.
+         case ('TRACEBACK')
+         case ('DEFAULT')
+            dfault = .true.
+         case default
+            call wrline(this%device, 'SPICE(INVALIDLISTITEM)')
+            call wrline(this%device, ' ')
+            call wrline(this%device, 'OUTMSG:  An invalid message type was specified in the type list. ')
+            call wrline(this%device, 'The invalid message type was ' // words(i))
+         end select
+      end do
+      short = short .and. this%print_short
+      expl = expl .and. this%print_explain
+      long = long .and. this%print_long
+      dfault = dfault .and. this%print_default
+      if (.not. (short .or. expl .or. long .or. dfault) .or. upper(adjustl(this%device)) == 'NULL') return
+      call wrline(this%device, ' ')
+      call wrline(this%device, border)
+      call wrline(this%device, ' ')
+      call tkvrsn(this, 'TOOLKIT', versn)
+      call wrline(this%device, 'Toolkit version: ' // versn)
+      call wrline(this%device, ' ')
+      if (short .and. expl) then
+         call expln(this%short, xmsg)
+         call wrline(this%device, trim(this%short) // ' -- ' // xmsg)
+         call wrline(this%device, ' ')
+      else if (short) then
+         call wrline(this%device, this%short)
+         call wrline(this%device, ' ')
+      else if (expl) then
+         call expln(this%short, xmsg)
+         call wrline(this%device, xmsg)
+         call wrline(this%device, ' ')
+      end if
+      if (long) then
+         ! the long message in lines of at most LL characters, broken
+         ! between words (words longer than a line are cut)
+         lmsg = this%long
+         nw = wdcnt(lmsg)
+         line = ' '
+         start = 1
+         do i = 1, nw
+            call nextwd(lmsg, outwrd, lmsg)
+            wrdlen = len_trim(outwrd)
+            if (start + wrdlen <= ll) then
+               line(start:) = outwrd
+               start = start + wrdlen + 1
+            else if (wrdlen <= ll) then
+               call wrline(this%device, line)
+               start = wrdlen + 2
+               line = outwrd
+            else
+               if (start > 1) then
+                  remain = ll - start
+               else
+                  remain = ll
+               end if
+               if (remain < 10) then
+                  call wrline(this%device, line)
+                  line = ' '
+                  remain = ll
+                  start = 1
+               end if
+               do while (wrdlen > ll)
+                  line(start:) = outwrd(1:remain)
+                  call wrline(this%device, line)
+                  outwrd(1:remain) = ' '
+                  outwrd = adjustl(outwrd)
+                  line = ' '
+                  wrdlen = wrdlen - remain
+                  remain = ll
+                  start = 1
+               end do
+               if (wrdlen > 0) then
+                  start = wrdlen + 2
+                  line = outwrd
+               end if
+            end if
+         end do
+         if (line /= ' ') call wrline(this%device, line)
+         call wrline(this%device, ' ')
+      end if
+      if (dfault) then
+         do i = 1, size(defmsg)
+            call wrline(this%device, defmsg(i))
+         end do
+         call wrline(this%device, ' ')
+      end if
+      call wrline(this%device, border)
+   end subroutine ctx_outmsg
+
+   ! ------------------------------------------------------------------------
+   ! SPICELIB's storage of the error state (SETERR, ACCEPT, ...): public in
+   ! SPICELIB, used by its error routines; here they act on the context.
+
+   !> Set the error status; returns .true. (SPICELIB's SETERR).
+   logical function ctx_seterr(this, status)
+      class(pepper_context), intent(inout) :: this  !! the context
+      logical, intent(in) :: status  !! the error status
+      this%failure = status
+      ctx_seterr = .true.
+   end function ctx_seterr
+
+   !> Allow (ok = .true.) or forbid changes of the long message; returns
+   !> .false. (SPICELIB's ACCEPT).
+   logical function ctx_accept(this, ok)
+      class(pepper_context), intent(inout) :: this  !! the context
+      logical, intent(in) :: ok  !! changes of the long message are allowed
+      this%messages_allowed = ok
+      ctx_accept = .false.
+   end function ctx_accept
+
+   !> True if changes of the long message are allowed (SPICELIB's ALLOWD).
+   logical function ctx_allowd(this)
+      class(pepper_context), intent(in) :: this  !! the context
+      ctx_allowd = this%messages_allowed
+   end function ctx_allowd
+
+   !> The short error message (SPICELIB's GETSMS).
+   subroutine ctx_getsms(this, msg)
+      class(pepper_context), intent(in) :: this  !! the context
+      character(*), intent(out) :: msg  !! the short message
+      msg = this%short
+   end subroutine ctx_getsms
+
+   !> Store the short error message (SPICELIB's PUTSMS).
+   subroutine ctx_putsms(this, msg)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: msg  !! the short message
+      this%short = msg
+   end subroutine ctx_putsms
+
+   !> The long error message (SPICELIB's GETLMS).
+   subroutine ctx_getlms(this, msg)
+      class(pepper_context), intent(in) :: this  !! the context
+      character(*), intent(out) :: msg  !! the long message
+      msg = this%long
+   end subroutine ctx_getlms
+
+   !> Store the long error message (SPICELIB's PUTLMS).
+   subroutine ctx_putlms(this, msg)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: msg  !! the long message
+      this%long = msg
+   end subroutine ctx_putlms
+
+   !> The error action as a code: 1 ABORT, 2 REPORT, 3 RETURN, 4 IGNORE,
+   !> 5 DEFAULT (SPICELIB's GETACT).
+   subroutine ctx_getact(this, action)
+      class(pepper_context), intent(in) :: this  !! the context
+      integer(ip), intent(out) :: action  !! the action code
+      action = this%action
+   end subroutine ctx_getact
+
+   !> Store the error action code (SPICELIB's PUTACT; see getact).
+   subroutine ctx_putact(this, action)
+      class(pepper_context), intent(inout) :: this  !! the context
+      integer(ip), intent(in) :: action  !! the action code
+      this%action = action
+   end subroutine ctx_putact
+
+   !> The device of the error reports (SPICELIB's GETDEV).
+   subroutine ctx_getdev(this, device)
+      class(pepper_context), intent(in) :: this  !! the context
+      character(*), intent(out) :: device  !! the device
+      device = this%device
+   end subroutine ctx_getdev
+
+   !> Store the device of the error reports (SPICELIB's PUTDEV).
+   subroutine ctx_putdev(this, device)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: device  !! the device
+      this%device = device
+   end subroutine ctx_putdev
+
+   !> Select the parts of the error reports; returns .true. (SPICELIB's
+   !> SETPRT).
+   logical function ctx_setprt(this, short, expl, long, trace, dfault)
+      class(pepper_context), intent(inout) :: this  !! the context
+      logical, intent(in) :: short  !! the short message
+      logical, intent(in) :: expl  !! the explanation of the short message
+      logical, intent(in) :: long  !! the long message
+      logical, intent(in) :: trace  !! the traceback
+      logical, intent(in) :: dfault  !! the note on the default error handling
+      this%print_short = short
+      this%print_explain = expl
+      this%print_long = long
+      this%print_trace = trace
+      this%print_default = dfault
+      ctx_setprt = .true.
+   end function ctx_setprt
+
+   !> True if a part of the error reports is selected: SHORT, EXPLAIN, LONG,
+   !> TRACEBACK or DEFAULT (SPICELIB's MSGSEL).
+   logical function ctx_msgsel(this, type)
+      class(pepper_context), intent(in) :: this  !! the context
+      character(*), intent(in) :: type  !! the part
+      select case (upper(adjustl(type)))
+      case ('SHORT')
+         ctx_msgsel = this%print_short
+      case ('EXPLAIN')
+         ctx_msgsel = this%print_explain
+      case ('LONG')
+         ctx_msgsel = this%print_long
+      case ('TRACEBACK')
+         ctx_msgsel = this%print_trace
+      case ('DEFAULT')
+         ctx_msgsel = this%print_default
+      case default
+         call wrline(this%device, 'SPICE(INVALIDMSGTYPE)')
+         call wrline(this%device, ' ')
+         call wrline(this%device, 'MSGSEL:  An invalid message type was specified: ' // type)
+         ctx_msgsel = .false.
+      end select
+   end function ctx_msgsel
+
+   ! ------------------------------------------------------------------------
+   ! Logical units (SPICELIB's GETLUN, FNDLUN, RESLUN, FRELUN). PEPPER opens
+   ! its files with NEWUNIT=; these are for programs that want a unit
+   ! number from 1 to 99 to open a file themselves. The reserved units belong
+   ! to the instance.
+
+   !> A free logical unit (not open, not reserved), or 0 if there is none,
+   !> or -IOSTAT if INQUIRE failed (SPICELIB's FNDLUN).
+   subroutine ctx_fndlun(this, unit)
+      class(pepper_context), intent(inout) :: this  !! the context
+      integer(ip), intent(out) :: unit  !! the unit
+      integer :: i, k, ios
+      logical :: opened
+      associate (s => this%spice)
+         do k = 1, 99
+            i = modulo(s%last_unit + k - 1, 99) + 1
+            if (s%reserved_units(i)) cycle
+            inquire (unit=i, opened=opened, iostat=ios)
+            if (ios > 0) then
+               unit = -ios
+               return
+            end if
+            if (.not. opened) then
+               unit = i
+               s%last_unit = i
+               return
+            end if
+         end do
+      end associate
+      unit = 0
+   end subroutine ctx_fndlun
+
+   !> A free logical unit; signals SPICE(NOFREELOGICALUNIT) if there is none
+   !> (SPICELIB's GETLUN).
+   subroutine ctx_getlun(this, unit)
+      class(pepper_context), intent(inout) :: this  !! the context
+      integer(ip), intent(out) :: unit  !! the unit
+      if (this%return()) return
+      call this%fndlun(unit)
+      if (unit == 0) then
+         call this%setmsg('No free logical units are available.')
+         call this%sigerr('SPICE(NOFREELOGICALUNIT)')
+      else if (unit < 0) then
+         call this%setmsg('INQUIRE iostat was #.')
+         call this%errint('#', -unit)
+         call this%sigerr('SPICE(INQUIREFAILED)')
+         unit = 0
+      end if
+   end subroutine ctx_getlun
+
+   !> Reserve a logical unit: fndlun and getlun do not give it (SPICELIB's
+   !> RESLUN). Units outside 1:99 are ignored.
+   subroutine ctx_reslun(this, unit)
+      class(pepper_context), intent(inout) :: this  !! the context
+      integer(ip), intent(in) :: unit  !! the unit
+      if (unit >= 1 .and. unit <= 99) this%spice%reserved_units(unit) = .true.
+   end subroutine ctx_reslun
+
+   !> Free a reserved logical unit (SPICELIB's FRELUN).
+   subroutine ctx_frelun(this, unit)
+      class(pepper_context), intent(inout) :: this  !! the context
+      integer(ip), intent(in) :: unit  !! the unit
+      if (unit >= 1 .and. unit <= 99) this%spice%reserved_units(unit) = .false.
+   end subroutine ctx_frelun
+
+   ! ------------------------------------------------------------------------
+   ! The hash with a divisor set once (SPICELIB's ZZSHSH, ZZHASH, ZZHASH2):
+   ! the values of name_hash. The divisor belongs to the instance.
+
+   !> Set the divisor of zzhash; returns 0 (SPICELIB's ZZSHSH).
+   integer(ip) function ctx_zzshsh(this, m)
+      class(pepper_context), intent(inout) :: this  !! the context
+      integer(ip), intent(in) :: m  !! the divisor (number of hash values)
+      integer(ip), parameter :: maxdiv = huge(1_ip) / 68 - 1
+      ctx_zzshsh = 0
+      if (m <= 0 .or. m > maxdiv) then
+         call this%setmsg('The input hash function divisor was not in the allowed range from 1 to #. It was #.')
+         call this%errint('#', maxdiv)
+         call this%errint('#', m)
+         call this%sigerr('SPICE(INVALIDDIVISOR)')
+         return
+      end if
+      this%spice%hash_divisor = m
+   end function ctx_zzshsh
+
+   !> The hash value of a word, from 1 to the divisor set with zzshsh
+   !> (SPICELIB's ZZHASH).
+   integer(ip) function ctx_zzhash(this, word)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: word  !! the word (it ends at its first blank)
+      if (this%spice%hash_divisor == -1) then
+         ctx_zzhash = 0
+         call this%setmsg('The ZZHASH function was called before the POOL hash parameters were '// &
+                          'initialized by a call to ZZSHSH.')
+         call this%sigerr('SPICE(CALLEDOUTOFORDER)')
+         return
+      end if
+      ctx_zzhash = name_hash(word, this%spice%hash_divisor)
+   end function ctx_zzhash
+
+   !> The hash value of a word, from 1 to m2 (SPICELIB's ZZHASH2).
+   integer(ip) function ctx_zzhash2(this, word, m2)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: word  !! the word (it ends at its first blank)
+      integer(ip), intent(in) :: m2  !! the divisor
+      integer(ip), parameter :: maxdiv = huge(1_ip) / 68 - 1
+      if (m2 <= 0 .or. m2 > maxdiv) then
+         ctx_zzhash2 = 0
+         call this%setmsg('The input hash function divisor was not in the allowed range from 1 to #. It was #.')
+         call this%errint('#', maxdiv)
+         call this%errint('#', m2)
+         call this%sigerr('SPICE(INVALIDDIVISOR)')
+         return
+      end if
+      ctx_zzhash2 = name_hash(word, m2)
+   end function ctx_zzhash2
+
    ! ------------------------------------------------------------------------
    ! Helpers
 
-   !> Replace the first occurrence of marker in the long message (if
-   !> messages may be changed; see sigerr).
+   !> Replace the first occurrence of marker (without its leading and
+   !> trailing blanks) in the long message with string, if the long message
+   !> may be changed (see sigerr).
    subroutine replace_marker(this, marker, string)
       type(pepper_context), intent(inout) :: this  !! the context
-      character(*), intent(in) :: marker  !! marker, e.g. '#' (leading and trailing blanks ignored)
+      character(*), intent(in) :: marker  !! marker, e.g. '#'
       character(*), intent(in) :: string  !! replacement text (used as is)
       character(:), allocatable :: mark
       integer :: k
@@ -21090,18 +21511,6 @@ contains
       if (k == 0) return
       this%long = this%long(:k - 1) // string // this%long(k + len(mark):)
    end subroutine replace_marker
-
-   !> Print the error messages of a native context to error_unit.
-   subroutine report(this)
-      type(pepper_context), intent(in) :: this  !! the context
-      character(explanation_length) :: explain
-      call expln(this%short, explain)
-      write (error_unit, '(a)') '', '================================================', &
-         'PEPPER error: ' // trim(this%short)
-      if (explain /= ' ') write (error_unit, '(a)') trim(explain)
-      if (this%long /= ' ') write (error_unit, '(a)') '', trim(this%long)
-      write (error_unit, '(a)') '================================================'
-   end subroutine report
 
    !> Uppercase version of a string (ASCII letters).
    pure function upper(s) result(u)

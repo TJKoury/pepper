@@ -51,7 +51,10 @@ if (ctx%failed()) ...
 Load kernels first, then query from any number of threads, one context per
 thread (see `test/core/test_parallel.f90`). Programs written for SPICELIB can
 use the legacy interface: the same routines as external procedures
-(`call spkezr(...)`), with SPICELIB's global error handling.
+(`call spkezr(...)`), a drop-in replacement for SPICELIB. They are thin
+wrappers that call the library with a default instance and context, whose
+error handling starts with SPICELIB's settings (`erract`, `errprt`, `errdev`
+work as in SPICELIB).
 
 Bugs and inconsistencies found in SPICELIB N0067 are listed in
 `spicelib_bugs.md`; the design and its history are in `plan.md`.

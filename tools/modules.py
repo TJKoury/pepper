@@ -713,10 +713,7 @@ UMBRELLAS = {
 
 # Legacy routines (still in src/spicelib) that moved code may call for now,
 # with the reason. Remove an entry when the routine moves.
-ALLOWED_LEGACY = {
-    "wrline": "writes a line to a device or file (SPICELIB's error output; it moves "
-              "with the error output, phase 7)",
-}
+ALLOWED_LEGACY = {}
 
 # Callbacks: the procedures that SPICELIB passes as arguments (EXTERNAL
 # arguments). Each has an abstract interface in pepper_instance with the
