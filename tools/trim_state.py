@@ -45,7 +45,7 @@ def procedures(text: str, comp_path: str):
     lines = text.split("\n")
     out, start = [], None
     for i, l in enumerate(lines):
-        if re.match(r"\s*module procedure \w+\s*$", l) or re.match(r"\s*subroutine \w+", l):
+        if re.match(r"\s*module procedure \w+\s*$", l) or re.match(r"\s*(module )?subroutine \w+", l):
             start = i
         elif re.match(r"\s*end (procedure|subroutine)\b", l) and start is not None:
             body = "\n".join(lines[start:i + 1])

@@ -116,6 +116,19 @@ DOCS = {
                       "frame defined by states of bodies calls copies one level down.",
     "pepper_transforms": "Frame transformations: FRMGET and ROTGET (one frame to its base), "
                          "FRMCHG and REFCHG (between any two frames), PXFORM and SXFORM.",
+    "pepper_time_api": "Time conversion and output: ET2UTC, UTC2ET, TIMOUT, TPICTR, DELTET, "
+                       "and the scanner they use (SCANIT).",
+    "pepper_sclk_api": "Spacecraft clock conversions: SCS2E, SCE2S, SCT2E, SCE2T, SCENCD, "
+                       "SCDECD, SCTIKS, SCFMT, SCPART.",
+    "pepper_ck_api": "C-kernel pointing (CKGP, CKGPAV) and coverage (CKCOV, CKOBJ).",
+    "pepper_pck_api": "PCK coverage and frames (PCKCOV, PCKFRM), and Euler angles of bodies "
+                      "(BODEUL, PCKEUL).",
+    "pepper_dsk_write": "Writing type 2 DSK segments (DSKW02).",
+    "pepper_spk_api": "The SPK API: states and positions of targets relative to observers with "
+                      "aberration corrections (SPKEZR, SPKPOS, SPKEZ, SPKEZP, SPKGEO, SPKGPS, "
+                      "SPKSSB, SPKAPO, SPKAPP, SPKACS, SPKAPS, SPKLTC, SPKCPO, SPKCPT, SPKCVO, "
+                      "SPKCVT), coverage, segment subsetting (SPKSUB, SPKS*), and the generic "
+                      "segment writer (SGSEQW).",
     "pepper_keeper": "The kernel manager: loading (FURNSH), tracking (KTOTAL, KDATA, KINFO) "
                      "and unloading (UNLOAD, KCLEAR) of SPICE kernels, including meta-kernels, "
                      "and the routines it needs.",

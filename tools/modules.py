@@ -209,6 +209,28 @@ CONTEXT_MODULES = {
     "pepper_transforms": """
         frmget rotget frmchg refchg pxform sxform
         """.split(),
+    "pepper_time_api": """
+        deltet et2utc scanit tpictr utc2et timout
+        """.split(),
+    "pepper_sclk_api": """
+        sce2t scfmt scpart sct2e sctiks scdecd scencd sce2s scs2e
+        """.split(),
+    "pepper_ck_api": """
+        ckobj ckgp ckgpav zzckcv01 zzckcv02 zzckcv03 zzckcv04 zzckcv05 zzckcv06 ckcov
+        """.split(),
+    "pepper_pck_api": """
+        pckcov pckeul pckfrm bodeul
+        """.split(),
+    "pepper_dsk_write": """
+        dskw02
+        """.split(),
+    "pepper_spk_api": """
+        sgfref sgseqw spkcov spkgeo spkgps spkobj spkpds spks01 spks02 spks03
+        spks05 spks08 spks09 spks15 spks17 spks18 spks19 spks20 spks21 spkuds
+        zzcorsxf zzcvstat spk14a spk14b spk14e spkapo spkltc spks10 spks12 spks13
+        spkssb spkapp spkaps spkezp spks14 zzspkflt spkacs spkpos spksub zzspkfao
+        zzspkfap spkez zzspkfat zzspkfzo spkcvo spkezr zzspkfzt spkcpo spkcvt spkcpt
+        """.split(),
     "pepper_keeper": """
         inttxt intord repmot sepool stpool tkvrsn zzascii exists zzldker keeper
         """.split(),
@@ -233,6 +255,45 @@ HANDWRITTEN = {
 # variables named in SAVE statements or initialized by DATA; it also works for
 # routines without ENTRY points (e.g. with a saved cache).
 UMBRELLAS = {
+    # The SPK, CK, PCK, SCLK and time API (phase 5): caches of the names and
+    # corrections asked for last, first-call setup, segments being written
+    # (SGSEQW) and call sequences (ZZCVSTAT): per context.
+    "deltet": {"state": "saved", "component": "deltet_state", "where": "context", "entries": ['deltet']},
+    "et2utc": {"state": "saved", "component": "et2utc_state", "where": "context", "entries": ['et2utc']},
+    "scanit": {"state": [], "component": None, "entries": ['scanpr', 'scan']},
+    "sgseqw": {"state": "saved", "component": "sgseqw_state", "where": "context", "entries": ['sgbwfs', 'sgbwvs', 'sgwfpk', 'sgwvpk', 'sgwes']},
+    "spkgeo": {"state": "saved", "component": "spkgeo_state", "where": "context", "entries": ['spkgeo']},
+    "spkgps": {"state": "saved", "component": "spkgps_state", "where": "context", "entries": ['spkgps']},
+    "spks01": {"state": "saved", "component": "spks01_state", "where": "context", "entries": ['spks01']},
+    "spks02": {"state": "saved", "component": "spks02_state", "where": "context", "entries": ['spks02']},
+    "spks03": {"state": "saved", "component": "spks03_state", "where": "context", "entries": ['spks03']},
+    "spks19": {"state": "saved", "component": "spks19_state", "where": "context", "entries": ['spks19']},
+    "spks20": {"state": "saved", "component": "spks20_state", "where": "context", "entries": ['spks20']},
+    "spks21": {"state": "saved", "component": "spks21_state", "where": "context", "entries": ['spks21']},
+    "zzcvstat": {"state": "saved", "component": "zzcvstat_state", "where": "context", "entries": ['zzcvxsta', 'zzcvssta']},
+    "bodeul": {"state": "saved", "component": "bodeul_state", "where": "context", "entries": ['bodeul']},
+    "ckgp": {"state": "saved", "component": "ckgp_state", "where": "context", "entries": ['ckgp']},
+    "ckgpav": {"state": "saved", "component": "ckgpav_state", "where": "context", "entries": ['ckgpav']},
+    "scdecd": {"state": "saved", "component": "scdecd_state", "where": "context", "entries": ['scdecd']},
+    "scencd": {"state": "saved", "component": "scencd_state", "where": "context", "entries": ['scencd']},
+    "spkapo": {"state": "saved", "component": "spkapo_state", "where": "context", "entries": ['spkapo']},
+    "spkltc": {"state": "saved", "component": "spkltc_state", "where": "context", "entries": ['spkltc']},
+    "timout": {"state": "saved", "component": "timout_state", "where": "context", "entries": ['timout']},
+    "spkapp": {"state": "saved", "component": "spkapp_state", "where": "context", "entries": ['spkapp']},
+    "spkaps": {"state": "saved", "component": "spkaps_state", "where": "context", "entries": ['spkaps']},
+    "spkezp": {"state": "saved", "component": "spkezp_state", "where": "context", "entries": ['spkezp']},
+    "zzspkflt": {"state": "saved", "component": "zzspkflt_state", "where": "context", "entries": ['zzspkflt']},
+    "spkacs": {"state": "saved", "component": "spkacs_state", "where": "context", "entries": ['spkacs']},
+    "spkpos": {"state": "saved", "component": "spkpos_state", "where": "context", "entries": ['spkpos']},
+    "zzspkfao": {"state": "saved", "component": "zzspkfao_state", "where": "context", "entries": ['zzspkfao']},
+    "zzspkfap": {"state": "saved", "component": "zzspkfap_state", "where": "context", "entries": ['zzspkfap']},
+    "spkez": {"state": "saved", "component": "spkez_state", "where": "context", "entries": ['spkez']},
+    "zzspkfat": {"state": "saved", "component": "zzspkfat_state", "where": "context", "entries": ['zzspkfat']},
+    "zzspkfzo": {"state": "saved", "component": "zzspkfzo_state", "where": "context", "entries": ['zzspkfzo']},
+    "spkcvo": {"state": "saved", "component": "spkcvo_state", "where": "context", "entries": ['spkcvo']},
+    "spkezr": {"state": "saved", "component": "spkezr_state", "where": "context", "entries": ['spkezr']},
+    "zzspkfzt": {"state": "saved", "component": "zzspkfzt_state", "where": "context", "entries": ['zzspkfzt']},
+    "spkcvt": {"state": "saved", "component": "spkcvt_state", "where": "context", "entries": ['spkcvt']},
     # The rest of the frame system (phase 5): caches (of the frame data, the
     # last frames and corrections asked for) and first-call setup, per context.
     "frmget": {"state": "saved", "component": "frmget_state", "where": "context", "entries": ['frmget']},

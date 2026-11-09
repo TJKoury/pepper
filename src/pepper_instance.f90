@@ -169,6 +169,46 @@ module pepper_instance
    use pepper_state_pxform, only: pxform_state, init_pxform_state
    use pepper_state_sxform, only: sxform_state, init_sxform_state
    ! --- end pepper_transforms
+   ! --- pepper_time_api
+   use pepper_state_deltet, only: deltet_state, init_deltet_state
+   use pepper_state_et2utc, only: et2utc_state, init_et2utc_state
+   use pepper_state_timout, only: timout_state, init_timout_state
+   ! --- end pepper_time_api
+   ! --- pepper_sclk_api
+   use pepper_state_scdecd, only: scdecd_state, init_scdecd_state
+   use pepper_state_scencd, only: scencd_state, init_scencd_state
+   ! --- end pepper_sclk_api
+   ! --- pepper_ck_api
+   use pepper_state_ckgp, only: ckgp_state, init_ckgp_state
+   use pepper_state_ckgpav, only: ckgpav_state, init_ckgpav_state
+   ! --- end pepper_ck_api
+   ! --- pepper_pck_api
+   use pepper_state_bodeul, only: bodeul_state, init_bodeul_state
+   ! --- end pepper_pck_api
+   ! --- pepper_spk_api
+   use pepper_state_sgseqw, only: sgseqw_state, init_sgseqw_state
+   use pepper_state_spkgeo, only: spkgeo_state, init_spkgeo_state
+   use pepper_state_spkgps, only: spkgps_state, init_spkgps_state
+   use pepper_state_spks19, only: spks19_state, init_spks19_state
+   use pepper_state_zzcvstat, only: zzcvstat_state, init_zzcvstat_state
+   use pepper_state_spkapo, only: spkapo_state, init_spkapo_state
+   use pepper_state_spkltc, only: spkltc_state, init_spkltc_state
+   use pepper_state_spkapp, only: spkapp_state, init_spkapp_state
+   use pepper_state_spkaps, only: spkaps_state, init_spkaps_state
+   use pepper_state_spkezp, only: spkezp_state, init_spkezp_state
+   use pepper_state_zzspkflt, only: zzspkflt_state, init_zzspkflt_state
+   use pepper_state_spkacs, only: spkacs_state, init_spkacs_state
+   use pepper_state_spkpos, only: spkpos_state, init_spkpos_state
+   use pepper_state_zzspkfao, only: zzspkfao_state, init_zzspkfao_state
+   use pepper_state_zzspkfap, only: zzspkfap_state, init_zzspkfap_state
+   use pepper_state_spkez, only: spkez_state, init_spkez_state
+   use pepper_state_zzspkfat, only: zzspkfat_state, init_zzspkfat_state
+   use pepper_state_zzspkfzo, only: zzspkfzo_state, init_zzspkfzo_state
+   use pepper_state_spkcvo, only: spkcvo_state, init_spkcvo_state
+   use pepper_state_spkezr, only: spkezr_state, init_spkezr_state
+   use pepper_state_zzspkfzt, only: zzspkfzt_state, init_zzspkfzt_state
+   use pepper_state_spkcvt, only: spkcvt_state, init_spkcvt_state
+   ! --- end pepper_spk_api
    ! <<< generated state modules
 
    implicit none
@@ -432,6 +472,46 @@ module pepper_instance
       type(pxform_state), allocatable :: pxform_state  !! state of PXFORM
       type(sxform_state), allocatable :: sxform_state  !! state of SXFORM
       ! --- end pepper_transforms
+      ! --- pepper_time_api
+      type(deltet_state), allocatable :: deltet_state  !! state of DELTET
+      type(et2utc_state), allocatable :: et2utc_state  !! state of ET2UTC
+      type(timout_state), allocatable :: timout_state  !! state of TIMOUT
+      ! --- end pepper_time_api
+      ! --- pepper_sclk_api
+      type(scdecd_state), allocatable :: scdecd_state  !! state of SCDECD
+      type(scencd_state), allocatable :: scencd_state  !! state of SCENCD
+      ! --- end pepper_sclk_api
+      ! --- pepper_ck_api
+      type(ckgp_state), allocatable :: ckgp_state  !! state of CKGP
+      type(ckgpav_state), allocatable :: ckgpav_state  !! state of CKGPAV
+      ! --- end pepper_ck_api
+      ! --- pepper_pck_api
+      type(bodeul_state), allocatable :: bodeul_state  !! state of BODEUL
+      ! --- end pepper_pck_api
+      ! --- pepper_spk_api
+      type(sgseqw_state), allocatable :: sgseqw_state  !! state of SGSEQW
+      type(spkgeo_state), allocatable :: spkgeo_state  !! state of SPKGEO
+      type(spkgps_state), allocatable :: spkgps_state  !! state of SPKGPS
+      type(spks19_state), allocatable :: spks19_state  !! state of SPKS19
+      type(zzcvstat_state), allocatable :: zzcvstat_state  !! state of ZZCVSTAT
+      type(spkapo_state), allocatable :: spkapo_state  !! state of SPKAPO
+      type(spkltc_state), allocatable :: spkltc_state  !! state of SPKLTC
+      type(spkapp_state), allocatable :: spkapp_state  !! state of SPKAPP
+      type(spkaps_state), allocatable :: spkaps_state  !! state of SPKAPS
+      type(spkezp_state), allocatable :: spkezp_state  !! state of SPKEZP
+      type(zzspkflt_state), allocatable :: zzspkflt_state  !! state of ZZSPKFLT
+      type(spkacs_state), allocatable :: spkacs_state  !! state of SPKACS
+      type(spkpos_state), allocatable :: spkpos_state  !! state of SPKPOS
+      type(zzspkfao_state), allocatable :: zzspkfao_state  !! state of ZZSPKFAO
+      type(zzspkfap_state), allocatable :: zzspkfap_state  !! state of ZZSPKFAP
+      type(spkez_state), allocatable :: spkez_state  !! state of SPKEZ
+      type(zzspkfat_state), allocatable :: zzspkfat_state  !! state of ZZSPKFAT
+      type(zzspkfzo_state), allocatable :: zzspkfzo_state  !! state of ZZSPKFZO
+      type(spkcvo_state), allocatable :: spkcvo_state  !! state of SPKCVO
+      type(spkezr_state), allocatable :: spkezr_state  !! state of SPKEZR
+      type(zzspkfzt_state), allocatable :: zzspkfzt_state  !! state of ZZSPKFZT
+      type(spkcvt_state), allocatable :: spkcvt_state  !! state of SPKCVT
+      ! --- end pepper_spk_api
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
@@ -979,8 +1059,110 @@ module pepper_instance
       procedure, non_overridable :: pxform
       procedure, non_overridable :: sxform
       ! --- end pepper_transforms
+      ! --- pepper_time_api
+      procedure, non_overridable :: deltet
+      procedure, non_overridable :: et2utc
+      procedure, non_overridable :: scanpr
+      procedure, non_overridable :: scan
+      procedure, non_overridable :: tpictr
+      procedure, non_overridable :: utc2et
+      procedure, non_overridable :: timout
+      ! --- end pepper_time_api
+      ! --- pepper_sclk_api
+      procedure, non_overridable :: sce2t
+      procedure, non_overridable :: scfmt
+      procedure, non_overridable :: scpart
+      procedure, non_overridable :: sct2e
+      procedure, non_overridable :: sctiks
+      procedure, non_overridable :: scdecd
+      procedure, non_overridable :: scencd
+      procedure, non_overridable :: sce2s
+      procedure, non_overridable :: scs2e
+      ! --- end pepper_sclk_api
+      ! --- pepper_ck_api
+      procedure, non_overridable :: ckobj
+      procedure, non_overridable :: ckgp
+      procedure, non_overridable :: ckgpav
+      procedure, non_overridable :: ckcov
+      ! --- end pepper_ck_api
+      ! --- pepper_pck_api
+      procedure, non_overridable :: pckcov
+      procedure, non_overridable :: pckeul
+      procedure, non_overridable :: pckfrm
+      procedure, non_overridable :: bodeul
+      ! --- end pepper_pck_api
+      ! --- pepper_dsk_write
+      procedure, non_overridable :: dskw02
+      ! --- end pepper_dsk_write
+      ! --- pepper_spk_api
+      procedure, non_overridable :: sgfref
+      procedure, non_overridable :: sgbwfs
+      procedure, non_overridable :: sgbwvs
+      procedure, non_overridable :: sgwfpk
+      procedure, non_overridable :: sgwvpk
+      procedure, non_overridable :: sgwes
+      procedure, non_overridable :: spkcov
+      procedure, non_overridable :: spkgeo
+      procedure, non_overridable :: spkgps
+      procedure, non_overridable :: spkobj
+      procedure, non_overridable :: spkpds
+      procedure, non_overridable :: spks01
+      procedure, non_overridable :: spks02
+      procedure, non_overridable :: spks03
+      procedure, non_overridable :: spks05
+      procedure, non_overridable :: spks08
+      procedure, non_overridable :: spks09
+      procedure, non_overridable :: spks15
+      procedure, non_overridable :: spks17
+      procedure, non_overridable :: spks18
+      procedure, non_overridable :: spks19
+      procedure, non_overridable :: spks20
+      procedure, non_overridable :: spks21
+      procedure, non_overridable :: spkuds
+      procedure, non_overridable :: spk14a
+      procedure, non_overridable :: spk14b
+      procedure, non_overridable :: spk14e
+      procedure, non_overridable :: spkapo
+      procedure, non_overridable :: spkltc
+      procedure, non_overridable :: spks10
+      procedure, non_overridable :: spks12
+      procedure, non_overridable :: spks13
+      procedure, non_overridable :: spkssb
+      procedure, non_overridable :: spkapp
+      procedure, non_overridable :: spkaps
+      procedure, non_overridable :: spkezp
+      procedure, non_overridable :: spks14
+      procedure, non_overridable :: spkacs
+      procedure, non_overridable :: spkpos
+      procedure, non_overridable :: spksub
+      procedure, non_overridable :: spkez
+      procedure, non_overridable :: spkcvo
+      procedure, non_overridable :: spkezr
+      procedure, non_overridable :: spkcpo
+      procedure, non_overridable :: spkcvt
+      procedure, non_overridable :: spkcpt
+      ! --- end pepper_spk_api
       ! <<< generated bindings
    end type pepper_context
+
+   public :: zzspk_state
+
+   abstract interface
+      !> A state routine for the SPK routines that take one (ZZSPKFAO,
+      !> ZZSPKFAP, ZZSPKFAT, ZZSPKFLT, ZZSPKFZO, ZZSPKFZT): the state of an
+      !> object (relative to the solar system barycenter) at an epoch, in an
+      !> inertial frame, and a counter that changes when the state function
+      !> does. SPICELIB's is ZZCVXSTA (a constant-velocity object). PEPPER:
+      !> it takes the context as its first argument.
+      subroutine zzspk_state ( ctx, et, ref, center, state )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! epoch (TDB seconds past J2000)
+         character(*), intent(in) :: ref  !! inertial reference frame of the state
+         integer(ip), intent(out) :: center  !! ID code of the center of motion
+         real(wp), intent(out) :: state ( 6 )  !! state of the object
+      end subroutine zzspk_state
+   end interface
 
    ! The procedures of the subsystems, implemented in submodules of this
    ! module (e.g. pepper_cells in src/pepper_cells.f90). Each has the
@@ -9064,6 +9246,1170 @@ module pepper_instance
 
    end interface
    ! --- end pepper_transforms
+   ! --- pepper_time_api
+   interface
+
+      !> Return the value of Delta ET (ET-UTC) for an input epoch.
+      module subroutine deltet ( ctx, epoch, eptype, delta )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: epoch  !! Input epoch (seconds past J2000).
+         character(*), intent(in) :: eptype  !! Type of input epoch ('UTC' or 'ET').
+         real(wp), intent(out) :: delta  !! Delta ET (ET-UTC) at input epoch.
+      end subroutine deltet
+
+      !> Convert an input time from ephemeris seconds past J2000
+      !> to Calendar, Day-of-Year, or Julian Date format, UTC.
+      module subroutine et2utc ( ctx, et, format, prec, utcstr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Epoch, given in ephemeris seconds past J2000.
+         character(*), intent(in) :: format  !! Format of output epoch.
+         integer(ip), intent(in) :: prec  !! Digits of precision in fractional seconds or days.
+         character(*), intent(out) :: utcstr  !! Output time string, UTC.
+      end subroutine et2utc
+
+      !> Prepare recognized markers and auxiliary arrays for the
+      !> routine SCAN.
+      module subroutine scanpr ( ctx, nmarks, marks, mrklen, pnters )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(inout) :: nmarks  !! Number of recognizable substrings.
+         character(*), intent(inout) :: marks   ( * )  !! Recognizable substrings.
+         integer(ip), intent(out) :: mrklen  ( * )  !! auxiliary array describing MARKS.
+         integer(ip), intent(out) :: pnters  ( * )  !! auxiliary array describing MARKS.
+      end subroutine scanpr
+
+      !> Scan a string and return the beginnings and ends of recognized
+      !> and unrecognized substrings. The full collection of these
+      !> substrings partitions the string.
+      module subroutine scan ( ctx, string, marks, mrklen, pnters, room, start, ntokns, ident, beg, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! string to be scanned.
+         integer(ip), intent(in) :: room  !! space available for storing substring descriptions.
+         character(*), intent(in) :: marks   ( * )  !! recognizable substrings.
+         integer(ip), intent(in) :: mrklen  ( * )  !! an auxiliary array describing MARKS.
+         integer(ip), intent(in) :: pnters  ( * )  !! an auxiliary array describing MARKS.
+         integer(ip), intent(inout) :: start  !! position from which to begin/resume scanning.
+         integer(ip), intent(out) :: ntokns  !! number of scanned substrings.
+         integer(ip), intent(out) :: beg     ( * )  !! beginnings of scanned substrings.
+         integer(ip), intent(out) :: end     ( * )  !! endings of scanned substrings.
+         integer(ip), intent(out) :: ident   ( * )  !! position of scanned substring within array MARKS.
+      end subroutine scan
+
+      !> Create a time format picture suitable for use by the routine
+      !> TIMOUT from a given sample time string.
+      module subroutine tpictr ( ctx, sample, pictur, ok, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: sample  !! is a sample date time string
+         character(*), intent(out) :: pictur  !! is a format picture that describes SAMPLE
+         logical, intent(out) :: ok  !! indicates success or failure to parse SAMPLE
+         character(*), intent(out) :: errmsg  !! a diagnostic returned if SAMPLE cannot be parsed
+      end subroutine tpictr
+
+      !> Convert an input time from Calendar or Julian Date format, UTC,
+      !> to ephemeris seconds past J2000.
+      module subroutine utc2et ( ctx, utcstr, et )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: utcstr  !! Input time string, UTC.
+         real(wp), intent(out) :: et  !! Output epoch, ephemeris seconds past J2000.
+      end subroutine utc2et
+
+      !> Convert an input epoch represented in TDB seconds past the TDB
+      !> epoch of J2000 to a character string formatted to the
+      !> specifications of a user's format picture.
+      module subroutine timout ( ctx, et, pictur, output )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Epoch in seconds past the ephemeris epoch J2000.
+         character(*), intent(in) :: pictur  !! A format specification for the output string.
+         character(*), intent(out) :: output  !! A string representation of the input epoch.
+      end subroutine timout
+
+   end interface
+   ! --- end pepper_time_api
+   ! --- pepper_sclk_api
+   interface
+
+      !> Convert ephemeris seconds past J2000 (ET) to integral
+      !> encoded spacecraft clock (`ticks'). For conversion to
+      !> fractional ticks, (required for C-kernel production), see
+      !> the routine SCE2C.
+      module subroutine sce2t ( ctx, sc, et, sclkdp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+         real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+         real(wp), intent(out) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start.
+      end subroutine sce2t
+
+      !> Convert encoded spacecraft clock ticks to character clock format.
+      module subroutine scfmt ( ctx, sc, ticks, clkstr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+         real(wp), intent(in) :: ticks  !! Spacecraft clock count encoded representation.
+         character(*), intent(out) :: clkstr  !! Character representation of a clock count.
+      end subroutine scfmt
+
+      !> Get spacecraft clock partition information from a spacecraft
+      !> clock kernel file.
+      !>
+      !> MXPART     P   Maximum number of partitions.
+      module subroutine scpart ( ctx, sc, nparts, pstart, pstop )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'sclk.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+         integer(ip), intent(out) :: nparts  !! The number of spacecraft clock partitions.
+         real(wp), intent(out) :: pstart  ( * )  !! Array of partition start times.
+         real(wp), intent(out) :: pstop   ( * )  !! Array of partition stop times.
+      end subroutine scpart
+
+      !> Convert encoded spacecraft clock (`ticks') to ephemeris
+      !> seconds past J2000 (ET).
+      module subroutine sct2e ( ctx, sc, sclkdp, et )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+         real(wp), intent(in) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start.
+         real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000.
+      end subroutine sct2e
+
+      !> Convert a spacecraft clock format string to number of "ticks".
+      module subroutine sctiks ( ctx, sc, clkstr, ticks )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+         character(*), intent(in) :: clkstr  !! Character representation of a spacecraft clock.
+         real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock string.
+      end subroutine sctiks
+
+      !> Convert a double precision encoding of spacecraft clock time into
+      !> a character representation.
+      !>
+      !> MXPART     P   Maximum number of spacecraft clock partitions.
+      module subroutine scdecd ( ctx, sc, sclkdp, sclkch )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'sclk.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+         real(wp), intent(in) :: sclkdp  !! Encoded representation of a spacecraft clock count.
+         character(*), intent(out) :: sclkch  !! Character representation of a clock count.
+      end subroutine scdecd
+
+      !> Encode a character representation of spacecraft clock time into a
+      !> double precision number.
+      !>
+      !> MXPART     P   Maximum number of spacecraft clock partitions.
+      module subroutine scencd ( ctx, sc, sclkch, sclkdp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'sclk.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+         character(*), intent(in) :: sclkch  !! Character representation of a spacecraft clock.
+         real(wp), intent(out) :: sclkdp  !! Encoded representation of the clock count.
+      end subroutine scencd
+
+      !> Convert an epoch specified as ephemeris seconds past J2000 (ET) to
+      !> a character string representation of a spacecraft clock value
+      !> (SCLK).
+      module subroutine sce2s ( ctx, sc, et, sclkch )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft clock ID code.
+         real(wp), intent(in) :: et  !! Ephemeris time, specified as seconds past J2000.
+         character(*), intent(out) :: sclkch  !! An SCLK string.
+      end subroutine sce2s
+
+      !> Convert a spacecraft clock string to ephemeris seconds past
+      !> J2000 (ET).
+      module subroutine scs2e ( ctx, sc, sclkch, et )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: sc  !! NAIF integer code for a spacecraft.
+         character(*), intent(in) :: sclkch  !! An SCLK string.
+         real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000.
+      end subroutine scs2e
+
+   end interface
+   ! --- end pepper_sclk_api
+   ! --- pepper_ck_api
+   public :: zzckcv01, zzckcv02, zzckcv03, zzckcv04, zzckcv05, zzckcv06
+
+   interface
+
+      !> Find the set of ID codes of all objects in a specified CK file.
+      module subroutine ckobj ( ctx, ckfnm, ids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: ckfnm  !! Name of CK file.
+         integer(ip), intent(inout) :: ids ( lbcell : * )  !! Set of ID codes of objects in CK file.
+      end subroutine ckobj
+
+      !> Get pointing (attitude) for a specified spacecraft clock time.
+      module subroutine ckgp ( ctx, inst, sclkdp, tol, ref, cmat, clkout, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'frmtyp.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
+         real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
+         real(wp), intent(in) :: tol  !! Time tolerance.
+         character(*), intent(in) :: ref  !! Reference frame.
+         real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix pointing data.
+         real(wp), intent(out) :: clkout  !! Output encoded spacecraft clock time.
+         logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
+      end subroutine ckgp
+
+      !> Get pointing (attitude) and angular velocity for a specified
+      !> spacecraft clock time.
+      module subroutine ckgpav ( ctx, inst, sclkdp, tol, ref, cmat, av, clkout, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'frmtyp.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
+         real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
+         real(wp), intent(in) :: tol  !! Time tolerance.
+         character(*), intent(in) :: ref  !! Reference frame.
+         real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix pointing data.
+         real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
+         real(wp), intent(out) :: clkout  !! Output encoded spacecraft clock time.
+         logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
+      end subroutine ckgpav
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzckcv01 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+         integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+         integer(ip), intent(in) :: arrend  !! Ending DAF address
+         integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+         real(wp), intent(in) :: tol  !! Tolerance in ticks.
+         character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      end subroutine zzckcv01
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzckcv02 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+         integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+         integer(ip), intent(in) :: arrend  !! Ending DAF address
+         integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+         real(wp), intent(in) :: tol  !! Tolerance in ticks.
+         character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      end subroutine zzckcv02
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzckcv03 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+         integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+         integer(ip), intent(in) :: arrend  !! Ending DAF address
+         integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+         real(wp), intent(in) :: tol  !! Tolerance in ticks.
+         character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      end subroutine zzckcv03
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> CK4RSZ     P   C-kernel Type 04 Maximum Record Size
+      module subroutine zzckcv04 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ckparam.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+         integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+         integer(ip), intent(in) :: arrend  !! Ending DAF address
+         integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+         real(wp), intent(in) :: tol  !! Tolerance in ticks.
+         character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      end subroutine zzckcv04
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzckcv05 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ck05.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+         integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+         integer(ip), intent(in) :: arrend  !! Ending DAF address
+         integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+         real(wp), intent(in) :: dc     ( 2 )  !! D.p. component of CK segment descriptor.
+         real(wp), intent(in) :: tol  !! Tolerance in ticks.
+         character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      end subroutine zzckcv05
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzckcv06 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ck06.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access.
+         integer(ip), intent(in) :: arrbeg  !! Beginning DAF address.
+         integer(ip), intent(in) :: arrend  !! Ending DAF address.
+         integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+         real(wp), intent(in) :: dc     ( 2 )  !! D.p. component of CK segment descriptor.
+         real(wp), intent(in) :: tol  !! Tolerance in ticks.
+         character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      end subroutine zzckcv06
+
+      !> Find the coverage window for a specified object in a specified CK
+      !> file.
+      module subroutine ckcov ( ctx, ckfnm, idcode, needav, level, tol, timsys, cover )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: ckfnm  !! Name of CK file.
+         integer(ip), intent(in) :: idcode  !! ID code of object.
+         logical, intent(in) :: needav  !! Flag indicating whether angular velocity is needed.
+         character(*), intent(in) :: level  !! Coverage level: 'SEGMENT' OR 'INTERVAL'.
+         real(wp), intent(in) :: tol  !! Tolerance in ticks.
+         character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+         real(wp), intent(inout) :: cover ( lbcell : * )  !! Window giving coverage for IDCODE.
+      end subroutine ckcov
+
+   end interface
+   ! --- end pepper_ck_api
+   ! --- pepper_pck_api
+   interface
+
+      !> Find the coverage window for a specified reference frame in a
+      !> specified binary PCK file.
+      module subroutine pckcov ( ctx, pckfnm, idcode, cover )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: pckfnm  !! Name of PCK file.
+         integer(ip), intent(in) :: idcode  !! Class ID code of PCK reference frame.
+         real(wp), intent(inout) :: cover  ( lbcell : * )  !! Window giving coverage in PCKFNM for IDCODE.
+      end subroutine pckcov
+
+      !> This routine is obsolete. It supports only the type 02 binary
+      !> PCK format. It is maintained only for backward compatibility
+      module subroutine pckeul ( ctx, body, et, found, ref, eulang )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! ID code of body
+         real(wp), intent(in) :: et  !! Epoch of transformation
+         logical, intent(out) :: found  !! .TRUE. if ET, BODY found in a PCK file
+         character(*), intent(out) :: ref  !! Name of inertial ref. frame of state
+         real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
+      end subroutine pckeul
+
+      !> Find the set of reference frame class ID codes of all frames
+      !> in a specified binary PCK file.
+      module subroutine pckfrm ( ctx, pckfnm, ids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: pckfnm  !! Name of PCK file.
+         integer(ip), intent(inout) :: ids    ( lbcell : * )  !! Set of frame class ID codes of frames in PCK file.
+      end subroutine pckfrm
+
+      !> Return the Euler angles needed to compute the transformation from
+      !> inertial to body-fixed coordinates for any body in the kernel
+      !> pool.
+      module subroutine bodeul ( ctx, body, et, ra, dec, w, lambda )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! ID code of body.
+         real(wp), intent(in) :: et  !! Epoch of transformation.
+         real(wp), intent(out) :: ra  !! Right ascension of the (IAU) north pole.
+         real(wp), intent(out) :: dec  !! Declination of the (IAU) north pole of the body.
+         real(wp), intent(out) :: w  !! Prime meridian rotation angle.
+         real(wp), intent(out) :: lambda  !! Angle between the prime meridian and longitude of longest axis.
+      end subroutine bodeul
+
+   end interface
+   ! --- end pepper_pck_api
+   ! --- pepper_dsk_write
+   interface
+
+      !> Write a type 2 segment to a DSK file.
+      !>
+      !> ANGMRG     P   Angular round-off margin.
+      !> GENCLS     P   General surface DSK class.
+      !> SVFCLS     P   Single-valued function DSK class.
+      !> NSYPAR     P   Maximum number of coordinate system parameters in
+      !> a DSK descriptor.
+      !> MAXCGR     P   Maximum DSK type 2 coarse voxel count.
+      !> MAXPLT     P   Maximum DSK type 2 plate count.
+      !> MAXVOX     P   Maximum DSK type 2 voxel count.
+      !> MAXVRT     P   Maximum DSK type 2 vertex count.
+      module subroutine dskw02 ( ctx, handle, center, surfid, dclass, frame, corsys, corpar, mncor1, mxcor1, mncor2, mxcor2, mncor3, mxcor3, first, last, nv, vrtces, np, plates, spaixd, spaixi )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'dskdsc.inc'
+         include  'dsktol.inc'
+         include  'dsk02.inc'
+         integer(ip), intent(in) :: handle  !! Handle assigned to the opened DSK file.
+         integer(ip), intent(in) :: center  !! Central body ID code.
+         integer(ip), intent(in) :: surfid  !! Surface ID code.
+         integer(ip), intent(in) :: dclass  !! Data class.
+         character(*), intent(in) :: frame  !! Reference frame.
+         integer(ip), intent(in) :: corsys  !! Coordinate system code.
+         real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
+         real(wp), intent(in) :: mncor1  !! Minimum value of first coordinate.
+         real(wp), intent(in) :: mxcor1  !! Maximum value of first coordinate.
+         real(wp), intent(in) :: mncor2  !! Minimum value of second coordinate.
+         real(wp), intent(in) :: mxcor2  !! Maximum value of second coordinate.
+         real(wp), intent(in) :: mncor3  !! Minimum value of third coordinate.
+         real(wp), intent(in) :: mxcor3  !! Maximum value of third coordinate.
+         real(wp), intent(in) :: first  !! Coverage start time.
+         real(wp), intent(in) :: last  !! Coverage stop time.
+         integer(ip), intent(in) :: nv  !! Number of vertices.
+         real(wp), intent(in) :: vrtces ( 3, nv )  !! Vertices.
+         integer(ip), intent(in) :: np  !! Number of plates.
+         integer(ip), intent(in) :: plates ( 3, np )  !! Plates.
+         real(wp), intent(in) :: spaixd ( * )  !! Double precision component of spatial index.
+         integer(ip), intent(in) :: spaixi ( * )  !! Integer component of spatial index.
+      end subroutine dskw02
+
+   end interface
+   ! --- end pepper_dsk_write
+   ! --- pepper_spk_api
+   public :: zzcorsxf, zzcvxsta, zzcvssta, zzspkflt, zzspkfao, zzspkfap, zzspkfat,&
+      zzspkfzo, zzspkfzt
+
+   interface
+
+      !> Fetch from the references partition of a generic segment
+      !> the double precision numbers from FIRST to LAST. The
+      !> segment is identified by a DAF file handle and segment
+      !> descriptor.
+      module subroutine sgfref ( ctx, handle, descr, first, last, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF open for reading.
+         real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
+         integer(ip), intent(in) :: first  !! The index of the first reference value to fetch.
+         integer(ip), intent(in) :: last  !! The index of the last reference value to fetch.
+         real(wp), intent(out) :: values ( * )  !! The reference values that were requested.
+         include 'sgparam.inc'
+      end subroutine sgfref
+
+      !> Begin writing a generic segment that will contain fixed size data
+      !> packets.
+      module subroutine sgbwfs ( ctx, handle, descr, segid, nconst, const, pktsiz, idxtyp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
+         real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment.
+         character(*), intent(in) :: segid  !! Identifier for a generic segment.
+         integer(ip), intent(in) :: nconst  !! Number of constant values in a generic segment.
+         real(wp), intent(in) :: const  ( * )  !! Array of constant values for a generic segment.
+         integer(ip), intent(in) :: pktsiz ( * )  !! Size of the data packets.
+         integer(ip), intent(in) :: idxtyp  !! Index type for the reference values.
+         include 'sgparam.inc'
+      end subroutine sgbwfs
+
+      !> Begin writing a generic segment that will contain variable size
+      !> data packets.
+      module subroutine sgbwvs ( ctx, handle, descr, segid, nconst, const, idxtyp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
+         real(wp), intent(in) :: descr  ( * )  !! Descriptor for a segment.
+         character(*), intent(in) :: segid  !! Identifier for a segment.
+         integer(ip), intent(in) :: nconst  !! Number of constant values in a segment.
+         real(wp), intent(in) :: const  ( * )  !! Array of constant values for a segment.
+         integer(ip), intent(in) :: idxtyp  !! Index type for the reference values.
+         include 'sgparam.inc'
+      end subroutine sgbwvs
+
+      !> Write one or more fixed size data packets to the generic segment
+      !> currently being written to the DAF file associated with HANDLE.
+      module subroutine sgwfpk ( ctx, handle, npkts, pktdat, nrefs, refdat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
+         integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
+         real(wp), intent(in) :: pktdat ( * )  !! Array of packet data.
+         integer(ip), intent(in) :: nrefs  !! Number of reference values.
+         real(wp), intent(in) :: refdat ( * )  !! Reference data.
+         include 'sgparam.inc'
+      end subroutine sgwfpk
+
+      !> Write one or more variable size data packets to the generic
+      !> segment currently being written to the DAF file associated with
+      !> HANDLE.
+      module subroutine sgwvpk ( ctx, handle, npkts, pktsiz, pktdat, nrefs, refdat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
+         integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
+         integer(ip), intent(in) :: pktsiz ( * )  !! Array of sizes of variable size packets.
+         real(wp), intent(in) :: pktdat ( * )  !! Array of packet data.
+         integer(ip), intent(in) :: nrefs  !! Number of reference values.
+         real(wp), intent(in) :: refdat ( * )  !! Reference data.
+         include 'sgparam.inc'
+      end subroutine sgwvpk
+
+      !> End the generic segment in the DAF file associated with HANDLE.
+      module subroutine sgwes ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
+         include 'sgparam.inc'
+      end subroutine sgwes
+
+      !> Find the coverage window for a specified ephemeris object in a
+      !> specified SPK file.
+      module subroutine spkcov ( ctx, spkfnm, idcode, cover )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: spkfnm  !! Name of SPK file.
+         integer(ip), intent(in) :: idcode  !! ID code of ephemeris object.
+         real(wp), intent(inout) :: cover ( lbcell : * )  !! Window giving coverage in SPKFNM for IDCODE.
+      end subroutine spkcov
+
+      !> Compute the geometric state (position and velocity) of a target
+      !> body relative to an observing body.
+      module subroutine spkgeo ( ctx, targ, et, ref, obs, state, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ninert.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: state    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! Light time.
+      end subroutine spkgeo
+
+      !> Compute the geometric position of a target body relative to an
+      !> observing body.
+      module subroutine spkgps ( ctx, targ, et, ref, obs, pos, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ninert.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: pos ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! Light time.
+      end subroutine spkgps
+
+      !> Find the set of ID codes of all objects in a specified SPK file.
+      module subroutine spkobj ( ctx, spkfnm, ids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: spkfnm  !! Name of SPK file.
+         integer(ip), intent(inout) :: ids    ( lbcell : * )  !! Set of ID codes of objects in SPK file.
+      end subroutine spkobj
+
+      !> Perform routine error checks and if all check pass, pack the
+      !> descriptor for an SPK segment
+      module subroutine spkpds ( ctx, body, center, frame, type, first, last, descr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+         integer(ip), intent(in) :: center  !! The center of motion for BODY.
+         character(*), intent(in) :: frame  !! The frame for this segment.
+         integer(ip), intent(in) :: type  !! The type of SPK segment to create.
+         real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+         real(wp), intent(in) :: last  !! The last  epoch for which the segment is valid.
+         real(wp), intent(out) :: descr ( * )  !! An SPK segment descriptor.
+      end subroutine spkpds
+
+      !> Extract a subset of the data in a SPK segment of type 1
+      !> into a new segment.
+      module subroutine spks01 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks01
+
+      !> Extract a subset of the data in a SPK segment of type 2
+      !> into a new segment.
+      module subroutine spks02 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks02
+
+      !> Extract a subset of the data in a SPK segment of type 3 (Chebyshev
+      !> polynomials, position and velocity) into a new segment.
+      module subroutine spks03 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks03
+
+      !> Extract a subset of the data in an SPK segment of type 5
+      !> into a new segment.
+      module subroutine spks05 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks05
+
+      !> Extract a subset of the data in an SPK segment of type 8
+      !> into a new segment.
+      module subroutine spks08 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks08
+
+      !> Extract a subset of the data in an SPK segment of type 9
+      !> into a new segment.
+      module subroutine spks09 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks09
+
+      !> Extract a subset of the data in an SPK segment of type 15
+      !> into a new segment.
+      module subroutine spks15 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks15
+
+      !> Extract a subset of the data in an SPK segment of type 17
+      !> into a new segment.
+      module subroutine spks17 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks17
+
+      !> Extract a subset of the data in an SPK segment of type 18
+      !> into a new segment.
+      module subroutine spks18 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk18.inc'
+         integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks18
+
+      !> Extract a subset of the data in an SPK segment of type 19
+      !> into a new segment.
+      module subroutine spks19 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk19.inc'
+         integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks19
+
+      !> Extract a subset of the data in a SPK segment of type 20
+      !> into a new segment.
+      module subroutine spks20 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks20
+
+      !> Extract a subset of the data in a SPK segment of type 21
+      !> into a new segment.
+      module subroutine spks21 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk21.inc'
+         integer(ip), intent(in) :: handle  !! Handle of source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks21
+
+      !> Unpack the contents of an SPK segment descriptor.
+      module subroutine spkuds ( ctx, descr, body, center, frame, type, first, last, baddrs, eaddrs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: descr ( * )  !! An SPK segment descriptor.
+         integer(ip), intent(out) :: body  !! The NAIF ID code for the body of the segment.
+         integer(ip), intent(out) :: center  !! The center of motion for BODY.
+         integer(ip), intent(out) :: frame  !! The code for the frame of this segment.
+         integer(ip), intent(out) :: type  !! The type of SPK segment.
+         real(wp), intent(out) :: first  !! The first epoch for which the segment is valid.
+         real(wp), intent(out) :: last  !! The last  epoch for which the segment is valid.
+         integer(ip), intent(out) :: baddrs  !! Beginning DAF address of the segment.
+         integer(ip), intent(out) :: eaddrs  !! Ending DAF address of the segment.
+      end subroutine spkuds
+
+      !> Correct a state transformation matrix for the rate of change of
+      !> light time.
+      module subroutine zzcorsxf ( ctx, xmit, dlt, xform, corxfm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         logical, intent(in) :: xmit  !! Radiation direction flag.
+         real(wp), intent(in) :: dlt  !! Light time derivative with respect to TDB.
+         real(wp), intent(in) :: xform  ( 6, 6 )  !! State transformation matrix.
+         real(wp), intent(out) :: corxfm ( 6, 6 )  !! Corrected state transformation matrix.
+      end subroutine zzcorsxf
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzcvxsta ( ctx, et, ref, center, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         integer(ip), intent(out) :: center  !! ID code of center of motion.
+         real(wp), intent(out) :: state ( 6 )  !! State vector.
+      end subroutine zzcvxsta
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzcvssta ( ctx, state, center, et, ref )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         integer(ip), intent(in) :: center  !! ID code of center of motion.
+         real(wp), intent(in) :: state ( 6 )  !! State vector.
+      end subroutine zzcvssta
+
+      !> Add data to a type 14 SPK segment associated with HANDLE.
+      module subroutine spk14a ( ctx, handle, ncsets, coeffs, epochs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of an SPK file open for writing.
+         integer(ip), intent(in) :: ncsets  !! The number of coefficient sets and epochs.
+         real(wp), intent(in) :: coeffs ( * )  !! The collection of coefficient sets.
+         real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the coefficient sets.
+      end subroutine spk14a
+
+      !> Begin a type 14 SPK segment in the SPK file associated with
+      !> HANDLE.
+      module subroutine spk14b ( ctx, handle, segid, body, center, frame, first, last, chbdeg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'sgparam.inc'
+         integer(ip), intent(in) :: handle  !! The handle of an SPK file open for writing.
+         character(*), intent(in) :: segid  !! The string to use for segment identifier.
+         integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+         integer(ip), intent(in) :: center  !! The center of motion for BODY.
+         character(*), intent(in) :: frame  !! The reference frame for this segment.
+         real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+         real(wp), intent(in) :: last  !! The last epoch for which the segment is valid.
+         integer(ip), intent(in) :: chbdeg  !! The degree of the Chebyshev Polynomial used.
+      end subroutine spk14b
+
+      !> End the type 14 SPK segment currently being written to the SPK
+      !> file associated with HANDLE.
+      module subroutine spk14e ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of an SPK file open for writing.
+      end subroutine spk14e
+
+      !> Return the position of a target body relative to an observer,
+      !> optionally corrected for light time and stellar aberration.
+      module subroutine spkapo ( ctx, targ, et, ref, sobs, abcorr, ptarg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of observer's state.
+         real(wp), intent(in) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine spkapo
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time,
+      !> expressed relative to an inertial reference frame.
+      module subroutine spkltc ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+         real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine spkltc
+
+      !> Extract a subset of the data in a type 10 SPK segment into a new
+      !> type 10 segment.
+      module subroutine spks10 ( ctx, srchan, srcdsc, dsthan, dstdsc, dstsid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'sgparam.inc'
+         integer(ip), intent(in) :: srchan  !! Handle of the SPK file with the source segment.
+         real(wp), intent(in) :: srcdsc(*)  !! Descriptor for the source segment.
+         integer(ip), intent(in) :: dsthan  !! Handle of the SPK file for the destination segment.
+         real(wp), intent(in) :: dstdsc(*)  !! Descriptor for the destination segment.
+         character(*), intent(in) :: dstsid  !! Segment identifier for the new segment.
+      end subroutine spks10
+
+      !> Extract a subset of the data in an SPK segment of type 12
+      !> into a new segment.
+      module subroutine spks12 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks12
+
+      !> Extract a subset of the data in an SPK segment of type 13
+      !> into a new segment.
+      module subroutine spks13 ( ctx, handle, baddr, eaddr, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+         integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+         integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      end subroutine spks13
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to the solar system barycenter.
+      module subroutine spkssb ( ctx, targ, et, ref, starg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+      end subroutine spkssb
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine SPKAPS. This routine is supported for purposes of
+      !> backward compatibility only.
+      module subroutine spkapp ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of observer's state.
+         real(wp), intent(in) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine spkapp
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer specified by its state and
+      !> acceleration relative to the solar system barycenter. The
+      !> returned state may be optionally corrected for light time
+      !> and stellar aberration. All input and output vectors are
+      !> expressed relative to an inertial reference frame.
+      module subroutine spkaps ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+         real(wp), intent(in) :: accobs ( 3 )  !! Acceleration of the observer relative to the SSB.
+         real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine spkaps
+
+      !> Return the position of a target body relative to an observing
+      !> body, optionally corrected for light time (planetary aberration)
+      !> and stellar aberration.
+      module subroutine spkezp ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'frmtyp.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body NAIF ID code.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output position vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observing body NAIF ID code.
+         real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine spkezp
+
+      !> Extract a subset of the data in a type 14 SPK segment into a new
+      !> type 14 segment.
+      module subroutine spks14 ( ctx, srchan, srcdsc, dsthan, dstdsc, dstsid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: srchan  !! Handle of the SPK file with the source segment.
+         real(wp), intent(in) :: srcdsc(*)  !! Descriptor for the source segment.
+         integer(ip), intent(in) :: dsthan  !! Handle of the SPK file for the destination segment.
+         real(wp), intent(in) :: dstdsc(*)  !! Descriptor for the destination segment.
+         character(*), intent(in) :: dstsid  !! Segment identifier for the new segment.
+      end subroutine spks14
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspkflt ( ctx, trgsub, et, ref, abcorr, stobs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+         real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspkflt
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time
+      !> and stellar aberration, expressed relative to an inertial
+      !> reference frame.
+      module subroutine spkacs ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observer.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine spkacs
+
+      !> Return the position of a target body relative to an observing
+      !> body, optionally corrected for light time (planetary aberration)
+      !> and stellar aberration.
+      module subroutine spkpos ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: targ  !! Target body name.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output position vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obs  !! Observing body name.
+         real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine spkpos
+
+      !> Extract a subset of the data in an SPK segment into a
+      !> separate segment.
+      module subroutine spksub ( ctx, handle, descr, ident, begin, end, newh )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of source segment.
+         real(wp), intent(in) :: descr    ( 5 )  !! Descriptor of source segment.
+         character(*), intent(in) :: ident  !! Identifier of source segment.
+         real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+         real(wp), intent(in) :: end  !! End (final epoch) of subset.
+         integer(ip), intent(in) :: newh  !! Handle of new segment.
+      end subroutine spksub
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspkfao ( ctx, targ, et, ref, abcorr, obssub, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(zzspk_state) :: obssub  !! routine returning the observer's state (relative to the SSB)
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspkfao
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspkfap ( ctx, trgsub, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+         real(wp), intent(in) :: accobs ( 3 )  !! Acceleration of the observer relative to the SSB.
+         real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspkfap
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration.
+      module subroutine spkez ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'frmtyp.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output state vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine spkez
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspkfat ( ctx, trgsub, et, ref, abcorr, obs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observer.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspkfat
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzspkfzo ( ctx, targ, et, ref, abcorr, obssub, starg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(zzspk_state) :: obssub  !! routine returning the observer's state (relative to the SSB)
+         include              'frmtyp.inc'
+         include              'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output state vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkfzo
+
+      !> Return the state of a specified target relative to an "observer,"
+      !> where the observer has constant velocity in a specified reference
+      !> frame. The observer's state is provided by the calling program
+      !> rather than by loaded SPK files.
+      module subroutine spkcvo ( ctx, target, et, outref, refloc, abcorr, obssta, obsepc, obsctr, obsref, state, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         character(*), intent(in) :: target  !! Name of target ephemeris object.
+         real(wp), intent(in) :: et  !! Observation epoch.
+         character(*), intent(in) :: outref  !! Reference frame of output state.
+         character(*), intent(in) :: refloc  !! Output reference frame evaluation locus.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         real(wp), intent(in) :: obssta ( 6 )  !! Observer state relative to center of motion.
+         real(wp), intent(in) :: obsepc  !! Epoch of observer state.
+         character(*), intent(in) :: obsctr  !! Center of motion of observer.
+         character(*), intent(in) :: obsref  !! Frame of observer state.
+         real(wp), intent(out) :: state  ( 6 )  !! State of target with respect to observer.
+         real(wp), intent(out) :: lt  !! One way light time between target and observer.
+      end subroutine spkcvo
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration.
+      module subroutine spkezr ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: targ  !! Target body name.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output state vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obs  !! Observing body name.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine spkezr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspkfzt ( ctx, trgsub, et, ref, abcorr, obs, starg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
+         include              'frmtyp.inc'
+         include              'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output state vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkfzt
+
+      !> Return the state of a specified target relative to an "observer,"
+      !> where the observer has constant position in a specified reference
+      !> frame. The observer's position is provided by the calling program
+      !> rather than by loaded SPK files.
+      module subroutine spkcpo ( ctx, target, et, outref, refloc, abcorr, obspos, obsctr, obsref, state, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzabcorr.inc'
+         character(*), intent(in) :: target  !! Name of target ephemeris object.
+         real(wp), intent(in) :: et  !! Observation epoch.
+         character(*), intent(in) :: outref  !! Reference frame of output state.
+         character(*), intent(in) :: refloc  !! Output reference frame evaluation locus.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         real(wp), intent(in) :: obspos ( 3 )  !! Observer position relative to center of motion.
+         character(*), intent(in) :: obsctr  !! Center of motion of observer.
+         character(*), intent(in) :: obsref  !! Frame of observer position.
+         real(wp), intent(out) :: state  ( 6 )  !! State of target with respect to observer.
+         real(wp), intent(out) :: lt  !! One way light time between target and observer.
+      end subroutine spkcpo
+
+      !> Return the state, relative to a specified observer, of a target
+      !> having constant velocity in a specified reference frame. The
+      !> target's state is provided by the calling program rather than by
+      !> loaded SPK files.
+      module subroutine spkcvt ( ctx, trgsta, trgepc, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         real(wp), intent(in) :: trgsta ( 6 )  !! Target state relative to center of motion.
+         real(wp), intent(in) :: trgepc  !! Epoch of target state.
+         character(*), intent(in) :: trgctr  !! Center of motion of target.
+         character(*), intent(in) :: trgref  !! Frame of target state.
+         real(wp), intent(in) :: et  !! Observation epoch.
+         character(*), intent(in) :: outref  !! Reference frame of output state.
+         character(*), intent(in) :: refloc  !! Output reference frame evaluation locus.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing ephemeris object.
+         real(wp), intent(out) :: state  ( 6 )  !! State of target with respect to observer.
+         real(wp), intent(out) :: lt  !! One way light time between target and observer.
+      end subroutine spkcvt
+
+      !> Return the state, relative to a specified observer, of a target
+      !> having constant position in a specified reference frame. The
+      !> target's position is provided by the calling program rather than
+      !> by loaded SPK files.
+      module subroutine spkcpt ( ctx, trgpos, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzabcorr.inc'
+         real(wp), intent(in) :: trgpos ( 3 )  !! Target position relative to center of motion.
+         character(*), intent(in) :: trgctr  !! Center of motion of target.
+         character(*), intent(in) :: trgref  !! Frame of target position.
+         real(wp), intent(in) :: et  !! Observation epoch.
+         character(*), intent(in) :: outref  !! Reference frame of output state.
+         character(*), intent(in) :: refloc  !! Output reference frame evaluation locus.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing ephemeris object.
+         real(wp), intent(out) :: state  ( 6 )  !! State of target with respect to observer.
+         real(wp), intent(out) :: lt  !! One way light time between target and observer.
+      end subroutine spkcpt
+
+   end interface
+   ! --- end pepper_spk_api
    ! <<< generated interfaces
 
 contains
