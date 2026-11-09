@@ -125,9 +125,8 @@ is a limit. They must grow together, or the smallest becomes the limit.
   - the EK B-tree node sizes;
   - `mxclsg` 100 columns per EK segment (probably format; to be confirmed).
 - **SCLK kernels:** `mxnfld` 10 fields.
-- **Text kernel lines:** 132 characters. This is NAIF's documented text-kernel
-  rule, to be confirmed in `kernel.req`. Longer lines are silently truncated
-  today. They should be an error instead.
+- **Text kernel lines:** 132 characters (kept, decision 2). This is NAIF's
+  documented text-kernel rule. Longer lines are silently truncated today.
 - **Built-in data:** `nperm`, `ninert`, `nninrt`, `maxbfr` (fixed tables).
 - **Guards:**
   - `RECURSIONTOODEEP`: a dynamic frame may not be used at recursion level 1.
@@ -136,7 +135,7 @@ is a limit. They must grow together, or the smallest becomes the limit.
   - GF progress line lengths (an 80-column display).
 - **Frame chains:** no fixed length (the buffer of 10 nodes is folded).
 
-### D. Name lengths (decision needed)
+### D. Name lengths (decided: no limit)
 
 | Length | What | Where it appears |
 |---|---|---|
@@ -272,8 +271,10 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
    - **Error messages:** deferred-length `short`, `long` and `device`.
      `getmsg` still truncates to the caller's buffer; an allocatable getter is
      added. This fixes `et2lst`'s code.
-   - **Text kernel lines over 132 characters:** an error instead of
-     truncation, unless the decision is to allow longer lines.
+   - **Text kernel lines:** the 132-character limit stays (decision 2). It
+     is documented in the `furnsh` and `ldpool` docstrings and the user
+     docs. Today the read (`rdtext`, into `character(132)`) cuts a longer
+     line without an error; making that an error is proposed, not decided.
 2. **Number of loaded kernels:**
    - **Tables, in order:**
      - ZZDDHMAN file table;
@@ -303,9 +304,9 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
    - **Name table:** the hash map.
    - **Values:** grow with `lnkgrow`, or move to per-variable allocatable arrays
      (measure `gdpool` and `ldpool`).
-   - **String values:** `maxchr`, depending on decision D.
+   - **String values:** `maxchr` goes (decision 1).
    - **Error codes:** `KERNELPOOLFULL` and `NOMOREROOM` go away.
-   - **`szpool`:** reports the current capacity, or `huge(0)`. `MAXAGT` and
+   - **`szpool`:** reports `huge(0)` (unlimited, decision 4). `MAXAGT` and
      `MXNOTE` are not enforced already.
    - **Tests:** 100000 variables, a 10⁶-value variable, and a text kernel with
      many variables. None exist today.
@@ -376,18 +377,18 @@ parallel-startup gain, and it depends on the containers from 0.
 - **Parallel:** `test_parallel` loads more than the old limits, then queries
   from all threads, and compares bitwise with a serial run.
 
-## Decisions for the user
+## Decisions
 
-1. **Name lengths (D).**
-   - Recommendation: keep 36/32 as the length of *outputs* (the API's
-     `character(*)` arguments are already flexible). Store names internally
-     at their full length, and signal an error instead of truncating a longer
-     name from a kernel.
-   - Pool string values (80): lift, since they are stored, not part of a
-     format.
-2. **Text kernel lines.** Make longer lines an error (strict, compatible with
-   SPICELIB), or accept them (more permissive, kernels then not portable to
-   SPICELIB).
-3. **Caps on caches.** Fixed caps, or settings on the instance (e.g.
-   `spice%set_cache_size(...)`).
-4. **`szpool`.** The current capacity, or `huge(0)` for "unlimited".
+Made (2026-11-09):
+
+1. **Name lengths (D): no limit.** Body, surface, frame and pool variable names,
+   and pool string values, are stored as allocatable strings with no maximum.
+   The 36/32/80 constants remain only where a fixed-length output is part of an
+   existing interface; a caller's shorter variable truncates as any Fortran
+   assignment does.
+2. **Text kernel lines: keep 132 for now.** Document it (the `furnsh`/`ldpool`
+   docstrings and the user-facing docs), including what happens to a longer
+   line today.
+3. **Caps on caches:** open (see B).
+4. **`szpool`: reports unlimited** (`huge(0)` for the sizes that no longer have
+   a limit).
