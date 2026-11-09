@@ -95,8 +95,8 @@ is a limit. They must grow together, or the smallest becomes the limit.
   bounds file descriptors (C), so it stays an LRU.
 - **BSR body and segment tables** (SPK/CK 100000 segments, 10 MB per context
   each; PCK 5000; DSK 10000). When full they evict, or search without
-  buffering. Keep them as caches, but start them small and grow them up to a
-  cap: most contexts use a tiny fraction.
+  buffering. Keep them as caches, but start them small and grow them with no
+  cap (decision 3): most contexts use a tiny fraction.
 - Other caches that are fine:
   - DAFRWD and DASRWR record buffers;
   - DASA2L;
@@ -330,8 +330,8 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      - `f_zzsc01` changes.
    - **TISBOD and BODEUL:** `maxang`.
 5. **Segment caches and memory:**
-   - The BSR segment and body tables start small and grow up to a cap. Do they
-     still need a cap? Measure.
+   - The BSR segment and body tables start small and grow with no cap
+     (decision 3).
    - The DSK segment table falls back or grows instead of failing:
      `BUFFEROVERFLOW` and `SEGMENTTABLEFULL` go. `f_zzdskbsr` and `f_sbf`
      change.
@@ -389,6 +389,15 @@ Made (2026-11-09):
 2. **Text kernel lines: keep 132 for now.** Document it (the `furnsh`/`ldpool`
    docstrings and the user-facing docs), including what happens to a longer
    line today.
-3. **Caps on caches:** open (see B).
+3. **Caches: no large static arrays.** The principle: nothing is allocated at
+   a fixed size that may not be used; every table starts small and grows on
+   demand.
+   - **No cap** for caches bounded by the loaded data: the SPK/CK/PCK/DSK
+     segment and body tables, TKFRAM, SC01 and the FRAMEX kernel-frame cache
+     (which also ends its `HASHISFULL` failure).
+   - **An instance setting** only for the unit table (open files per context),
+     whose bound is the OS limit on open files; default 23.
+   - **Unchanged:** the small fixed buffers tuned for speed (DAFRWD and DASRWR
+     record buffers, DASA2L).
 4. **`szpool`: reports unlimited** (`huge(0)` for the sizes that no longer have
    a limit).
