@@ -13,14 +13,16 @@ predocmark_alt: |
 display: public
          protected
 source: true
-graph: false
-search: false
+graph: true
+search: true
 preprocess: true
 fpp_extensions: F90
 macro: SPICE_OS_MACOS
        SPICE_COMPILER_GFORTRAN
 extra_filetypes: inc !
 md_extensions: markdown.extensions.toc
+front_page_file: README.md
+logo: ./media/logo.svg
 ---
 
 PEPPER is a modern Fortran library derived from NAIF's SPICE Toolkit for
