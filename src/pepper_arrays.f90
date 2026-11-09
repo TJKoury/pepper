@@ -3,7 +3,7 @@
 !> The procedures keep SPICELIB's names, arguments and documentation. They
 !> have no saved state and do not signal SPICE errors. Moved here from
 !> src/spicelib by tools/modularize.py; the external procedures with the
-!> original interface are in src/legacy/pepper_legacy_arrays.f90.
+!> original interface are in tspice/src/legacy/pepper_legacy_arrays.f90.
 module pepper_arrays
 
    implicit none

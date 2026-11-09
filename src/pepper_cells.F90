@@ -5,7 +5,7 @@
 !> their first argument (interfaces and type-bound procedures in
 !> pepper_instance). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in src/legacy/pepper_legacy_cells.f90.
+!> interface are in tspice/src/legacy/pepper_legacy_cells.f90.
 submodule (pepper_instance) pepper_cells
 
    implicit none

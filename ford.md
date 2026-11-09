@@ -3,7 +3,6 @@ project: PEPPER
 summary: A modern Fortran, thread-safe reimagining of NAIF's SPICELIB (N0067).
 author: Jacob Williams
 src_dir: ./src
-exclude_dir: ./src/legacy
 output_dir: ./doc
 project_github: https://github.com/jacobwilliams/pepper
 predocmark: >

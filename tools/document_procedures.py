@@ -17,7 +17,7 @@ then deleted, since its content is inline: every argument must have its
 returns ...") is added to the docstring.
 
 With LEGACY_FILE (the legacy wrappers of the module, e.g.
-src/legacy/pepper_legacy_math.f90), its wrappers get the same
+tspice/src/legacy/pepper_legacy_math.f90), its wrappers get the same
 documentation, plus a line naming the module procedure they call.
 Procedures that already have a ``!>`` docstring, and declarations that
 already have a ``!!`` comment, are left alone, so running it again changes

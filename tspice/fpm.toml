@@ -1,5 +1,7 @@
-# NAIF's test suite for SPICELIB (tspice), run against PEPPER's legacy
-# interface. A package of its own: its F77-style code passes arguments
+# NAIF's test suite for SPICELIB (tspice), run against PEPPER through a
+# legacy interface: src/legacy/ has SPICELIB's routines as external
+# procedures, thin wrappers that call the library with a default instance and
+# context (it is not part of the library). A package of its own: its F77-style code passes arguments
 # against their declarations (scalar for array, different types for one
 # dummy argument) and needs gfortran's -fallow-argument-mismatch, which the
 # library does not. Build and run through the pixi tasks (pixi run tspice).

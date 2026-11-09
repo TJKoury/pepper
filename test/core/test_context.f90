@@ -1,11 +1,9 @@
-!> Unit tests of pepper_instance: error handling in native contexts, and the
-!> legacy context, whose error state the legacy routines (FAILED, ERRACT,
-!> GETMSG, ...) act on.
+!> Unit tests of pepper_instance: error handling in native contexts and in a
+!> legacy context (the mode of the legacy interface's context).
 program test_context
 
    use pepper_kinds, only: ip, wp
    use pepper_instance, only: pepper_spice, pepper_context
-   use pepper_legacy_context, only: legacy_context
 
    implicit none
 
@@ -103,26 +101,29 @@ contains
       call check(ctx%failed(), 'invalid action signals an error')
    end subroutine test_actions
 
-   !> The legacy error routines (SPICELIB's names) act on the legacy context's
-   !> error state: the same error is seen through both.
+   !> A legacy context starts with SPICELIB's error settings (action DEFAULT,
+   !> device SCREEN); with RETURN it keeps the first error as SPICELIB does.
    subroutine test_legacy()
-      type(pepper_context), pointer :: ctx
-      character(7) :: action
+      type(pepper_context) :: ctx
+      character(255) :: text
       character(80) :: msg
-      logical, external :: failed
-      external :: erract, errprt, getmsg, reset
-      ctx => legacy_context()
+      ctx = spice%new_context(legacy=.true.)
       call check(ctx%is_legacy(), 'legacy context')
-      action = 'RETURN'
-      call erract('SET', action)
-      msg = 'NONE'
-      call errprt('SET', msg)
+      text = ' '
+      call ctx%erract('GET', text)
+      call check(text == 'DEFAULT', 'legacy default action: '//trim(text))
+      call ctx%errdev('GET', text)
+      call check(text == 'SCREEN', 'legacy default device: '//trim(text))
+      text = 'RETURN'
+      call ctx%erract('SET', text)
+      text = 'NULL'
+      call ctx%errdev('SET', text)
       call ctx%sigerr('SPICE(LEGACYTEST)')
-      call check(failed() .and. ctx%failed(), 'legacy sigerr sets FAILED')
-      call getmsg('SHORT', msg)
-      call check(msg == 'SPICE(LEGACYTEST)', 'legacy short message')
+      call ctx%sigerr('SPICE(SECONDERROR)')
+      call ctx%getmsg('SHORT', msg)
+      call check(ctx%failed() .and. msg == 'SPICE(LEGACYTEST)', 'legacy keeps the first error')
       call ctx%reset()
-      call check(.not. failed(), 'legacy reset')
+      call check(.not. ctx%failed(), 'legacy reset')
    end subroutine test_legacy
 
 end program test_context

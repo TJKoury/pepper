@@ -25,7 +25,7 @@ For each MODULE (a key of modules.CONTEXT_MODULES, e.g. pepper_cells):
   the Abstract); a type-bound procedure of pepper_context for each routine
   whose name does not start with ``zz`` (``ctx%cardd(cell)``); the zz
   routines are public module procedures instead.
-- src/legacy/pepper_legacy_<name>.f90 is written: external procedures with
+- tspice/src/legacy/pepper_legacy_<name>.f90 is written: external procedures with
   SPICELIB's names and arguments that call the routines with
   legacy_context().
 - The routines' files in src/spicelib are deleted.
@@ -595,7 +595,7 @@ def generate(mod: str, dry_run: bool) -> list:
             "!> their first argument (interfaces and type-bound procedures in\n"
             f"!> pepper_instance). Moved here from src/spicelib by\n"
             f"!> tools/modularize_ctx.py; the external procedures with the original\n"
-            f"!> interface are in src/legacy/{legacy_name(mod)}.\n"
+            f"!> interface are in tspice/src/legacy/{legacy_name(mod)}.\n"
             f"submodule (pepper_instance) {mod}\n\n   implicit none\n\ncontains\n\n"
             + "\n\n".join(procs) + f"\n\nend submodule {mod}\n")
     text = INSTANCE.read_text(encoding="ascii")
@@ -628,7 +628,7 @@ def generate(mod: str, dry_run: bool) -> list:
                               ("context", "context state components")):
             if comps[where]:
                 text = replace_region(text, region, mod, "\n".join(comps[where]))
-    legacy = SRC / "legacy" / legacy_name(mod)
+    legacy = SRC.parent / "tspice" / "src" / "legacy" / legacy_name(mod)
     mains = [u.legacy_main(spec_for_args(u.main, {}, {}, "      ")) for u in umbrellas
              if u.main_dropped()]
     wrappers = LEGACY_HEADER.format(mod=mod, src=f"src/{sub.name}") + "\n" + \

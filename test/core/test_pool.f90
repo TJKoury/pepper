@@ -18,7 +18,6 @@ program test_pool
 
    call test_put_get()
    call test_errors()
-   call test_legacy_separate()
    call test_text_kernel()
    call test_watches()
 
@@ -118,16 +117,6 @@ contains
       call check(ctx%failed() .and. short == 'SPICE(BADARRAYSIZE)', 'room 0: '//short)
       call ctx%reset()
    end subroutine test_errors
-
-   !> The legacy interface uses its own (default) instance.
-   subroutine test_legacy_separate()
-      real(wp) :: values(5)
-      integer(ip) :: n
-      logical :: found
-      external :: gdpool
-      call gdpool('TEST_X', 1_ip, 5_ip, n, values, found)
-      call check(.not. found, 'legacy pool is separate')
-   end subroutine test_legacy_separate
 
    !> Load a text kernel into an instance; @-dates become seconds past J2000.
    subroutine test_text_kernel()

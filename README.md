@@ -49,12 +49,14 @@ if (ctx%failed()) ...
 ```
 
 Load kernels first, then query from any number of threads, one context per
-thread (see `test/core/test_parallel.f90`). Programs written for SPICELIB can
-use the legacy interface: the same routines as external procedures
-(`call spkezr(...)`), a drop-in replacement for SPICELIB. They are thin
-wrappers that call the library with a default instance and context, whose
-error handling starts with SPICELIB's settings (`erract`, `errprt`, `errdev`
-work as in SPICELIB).
+thread (see `test/core/test_parallel.f90`).
+
+The library has no SPICELIB-style interface. One lives in the `tspice`
+package (`tspice/src/legacy/`), where NAIF's test suite uses it: SPICELIB's
+routines as external procedures (`call spkezr(...)`). They are thin wrappers
+that call the library with a default instance and a legacy context, whose
+error handling starts with SPICELIB's settings (`erract`, `errprt` and
+`errdev` work as in SPICELIB).
 
 Bugs and inconsistencies found in SPICELIB N0067 are listed in
 `spicelib_bugs.md`; the design and its history are in `plan.md`.

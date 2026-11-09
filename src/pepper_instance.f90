@@ -21,7 +21,7 @@
 !> report that are printed (ctx%errprt). A new context returns on errors and
 !> prints nothing (action RETURN, device NULL): the caller gets the messages
 !> with ctx%getmsg and clears the error with ctx%reset(). The legacy context
-!> (used by the legacy SPICELIB interface in src/legacy) starts with
+!> (used by the legacy SPICELIB interface in tspice/src/legacy) starts with
 !> SPICELIB's settings (action DEFAULT, device SCREEN, every part printed),
 !> so that the legacy interface behaves as SPICELIB does.
 module pepper_instance

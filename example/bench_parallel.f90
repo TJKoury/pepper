@@ -1,6 +1,5 @@
 !> Benchmark: SPK, frame and time queries from 1, 2, 4 and 8 threads, each
-!> with its own context of one instance (the setting of test_parallel), and
-!> the same queries through the legacy interface on one thread.
+!> with its own context of one instance (the setting of test_parallel).
 !>
 !>     pixi run bench-parallel
 !>
@@ -60,16 +59,6 @@ program bench_parallel
          ' us/epoch, speedup ', base/(t1 - t0)
    end do
 
-   ! the legacy interface (one thread; SPICELIB's global error handling). It
-   ! is a separate instance: the files are unloaded from this one first.
-   call setup%kclear()
-   t0 = wtime()
-   do i = 1, nepoch
-      call legacy_queries(et(i))
-   end do
-   t1 = wtime()
-   print '(a, f9.3, a)', 'legacy interface: ', (t1 - t0)*1.0e6_wp/nepoch, ' us/epoch (1 thread)'
-
    call delete_files()
 
 contains
@@ -96,28 +85,6 @@ contains
       call ctx%et2utc(t, 'ISOC', 3_ip, utc)
       call ctx%str2et(utc, res(30))
    end subroutine queries
-
-   !> The same queries through the legacy interface (the kernels are loaded
-   !> into the legacy instance on the first call).
-   subroutine legacy_queries(t)
-      real(wp), intent(in) :: t  !! the epoch
-      real(wp) :: res(30), lt, rot(3, 3)
-      character(40) :: utc
-      logical, save :: first = .true.
-      external :: furnsh, spkezr, spkpos, pxform, et2utc, str2et
-      if (first) then
-         call furnsh(lsk)
-         call furnsh(spk)
-         call furnsh(fk)
-         first = .false.
-      end if
-      call spkezr('PEPPER_B', t, 'J2000', 'CN+S', 'PEPPER_A', res(1:6), res(7))
-      call spkpos('PEPPER_A', t, 'PEPPER_TK', 'LT', 'PEPPER_B', res(8:10), lt)
-      call pxform('J2000', 'ECLIPJ2000', t, rot)
-      call pxform('PEPPER_TK', 'J2000', t, rot)
-      call et2utc(t, 'ISOC', 3_ip, utc)
-      call str2et(utc, res(30))
-   end subroutine legacy_queries
 
    !> Remove the test files that exist.
    subroutine delete_files()
