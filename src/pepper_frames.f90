@@ -5617,26 +5617,41 @@ contains
    pure function frame_variable ( frcode, item ) result ( name )
       integer(ip), intent(in) :: frcode  !! the frame ID code
       character(*), intent(in) :: item  !! the item, e.g. NAME
-      character(:), allocatable :: name
+      character(7 + int_text_length(frcode) + len(item)) :: name
       name = 'FRAME_' // int_text ( frcode ) // '_' // item
    end function frame_variable
 
    !> PEPPER: an integer as text, without blanks.
+   !>
+   !> The string functions here have results of a length given by a
+   !> specification expression, not a deferred length: gfortran keeps
+   !> the length of a deferred-length result in a static variable at the
+   !> call site, which is not thread-safe (see text_length in
+   !> pepper_instance).
    pure function int_text ( i ) result ( text )
+      use pepper_strings, only: intstr
       integer(ip), intent(in) :: i  !! the integer
-      character(:), allocatable :: text
+      character(int_text_length(i)) :: text
       character(24) :: buf
-      write ( buf, '(i0)' ) i
-      text = trim ( buf )
+      call intstr ( i, buf )
+      text = buf
    end function int_text
+
+   !> PEPPER: the length of int_text's result.
+   pure integer function int_text_length ( i ) result ( n )
+      use pepper_strings, only: intstr
+      integer(ip), intent(in) :: i  !! the integer
+      character(24) :: buf
+      call intstr ( i, buf )
+      n = len_trim ( buf )
+   end function int_text_length
 
    !> PEPPER: a string as REPMC substitutes it for a marker: without
    !> leading and trailing blanks, or a single blank if it is blank.
    pure function marker_text ( value ) result ( text )
       character(*), intent(in) :: value  !! the string
-      character(:), allocatable :: text
-      text = trim ( adjustl ( value ) )
-      if ( len ( text ) == 0 ) text = ' '
+      character(max(1, len_trim(adjustl(value)))) :: text
+      text = adjustl ( value )
    end function marker_text
 
 end submodule pepper_frames

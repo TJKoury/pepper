@@ -2158,6 +2158,8 @@
       procedure(legacy_gf_step) :: udstep  !! the gf_step routine
       procedure(legacy_gf_refine) :: udrefn  !! the gf_refine routine
       type(pepper_context), pointer :: ctx
+      real(wp), allocatable :: res(:), pts(:,:)
+      integer(ip) :: n, room
       procedure(legacy_zztan_cond), pointer :: outer_udcond  !! the outer call's routine
       procedure(legacy_gf_step), pointer :: outer_udstep  !! the outer call's routine
       procedure(legacy_gf_refine), pointer :: outer_udrefn  !! the outer call's routine
@@ -2168,7 +2170,26 @@
       current_gf_step => udstep
       outer_udrefn => current_gf_refine
       current_gf_refine => udrefn
-      call pepper_zztanslv ( ctx, bridge_zztan_cond, bridge_gf_step, bridge_gf_refine, cstep, step, start, finish, tol, result, points, endflg )
+      ! PEPPER: the context routine grows RESULT and POINTS (allocatable);
+      ! this interface keeps SPICELIB's fixed arrays: the cell is copied
+      ! in and out, and ROOM gives SPICELIB's errors for lack of room.
+      room = nint ( result(-1), ip )
+      allocate ( res(lbcell:room), pts(3,max(room,1)) )
+      res = result(lbcell:room)
+      pts = 0.0_wp
+      call pepper_zztanslv ( ctx, bridge_zztan_cond, bridge_gf_step, bridge_gf_refine, cstep, step, start, finish, tol, res, pts, endflg, room )
+      n = nint ( res(0), ip )
+      if ( n > room .and. .not. ctx%failed() ) then
+         call ctx%setmsg ( 'The result has # elements; the size of the cell is #.' )
+         call ctx%errint ( '#', n )
+         call ctx%errint ( '#', room )
+         call ctx%sigerr ( 'SPICE(WINDOWEXCESS)' )
+      end if
+      n = min ( n, room )
+      result(lbcell:0) = res(lbcell:0)
+      result(0) = real ( n, wp )
+      result(1:n) = res(1:n)
+      points(:,1:min(n,size(pts,2,kind=ip))) = pts(:,1:min(n,size(pts,2,kind=ip)))
       current_zztan_cond => outer_udcond
       current_gf_step => outer_udstep
       current_gf_refine => outer_udrefn
@@ -4445,8 +4466,29 @@
       real(wp) :: result ( lbcell : * )  !! Cell (not window) containing transition angles.
       real(wp) :: points ( 3, * )  !! Array of tangent points.
       type(pepper_context), pointer :: ctx
+      real(wp), allocatable :: res(:), pts(:,:)
+      integer(ip) :: n, room
       ctx => legacy_context()
-      call pepper_zztangnt ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis, schstp, soltol, result, points )
+      ! PEPPER: the context routine grows RESULT and POINTS (allocatable);
+      ! this interface keeps SPICELIB's fixed arrays: the cell is copied
+      ! in and out, and a result larger than the cell is an error.
+      room = nint ( result(-1), ip )
+      allocate ( res(lbcell:room), pts(3,max(room,1)) )
+      res = result(lbcell:room)
+      pts = 0.0_wp
+      call pepper_zztangnt ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis, schstp, soltol, res, pts )
+      n = nint ( res(0), ip )
+      if ( n > room .and. .not. ctx%failed() ) then
+         call ctx%setmsg ( 'The result has # elements; the size of the cell is #.' )
+         call ctx%errint ( '#', n )
+         call ctx%errint ( '#', room )
+         call ctx%sigerr ( 'SPICE(WINDOWEXCESS)' )
+      end if
+      n = min ( n, room )
+      result(lbcell:0) = res(lbcell:0)
+      result(0) = real ( n, wp )
+      result(1:n) = res(1:n)
+      points(:,1:min(n,size(pts,2,kind=ip))) = pts(:,1:min(n,size(pts,2,kind=ip)))
       end subroutine zztangnt
 
       !> Find limb points on a target body. The limb is the set of points

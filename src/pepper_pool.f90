@@ -14889,6 +14889,7 @@ contains
       character(2)          finish
       character(:), allocatable :: line
       character(:), allocatable :: cvalue
+      character(:), allocatable :: dq
       integer(ip)           i
       integer(ip)           iostat
       integer(ip)           k
@@ -14951,7 +14952,8 @@ contains
                write ( unit, '(1X,A,D25.17,A)', iostat=iostat ) &
                line, v%dvals(i), finish
             else
-               cvalue = quote // double_quotes ( v%cvals(i)%s ) // quote
+               call double_quotes ( v%cvals(i)%s, dq )
+               cvalue = quote // dq // quote
                write ( unit, '(1X,3A)', iostat=iostat ) &
                line, cvalue, finish
             end if
@@ -14985,16 +14987,20 @@ contains
 !        The string with each quote doubled (as in a kernel's string
 !        values).
 !
-         pure function double_quotes ( str ) result ( out )
-            character(*), intent(in) :: str
-            character(:), allocatable :: out
+!        (A subroutine, not a function with a deferred-length result:
+!        gfortran keeps that length in a static variable at the call
+!        site, which is not thread-safe.)
+!
+         pure subroutine double_quotes ( str, out )
+            character(*), intent(in) :: str  !! the string
+            character(:), allocatable, intent(out) :: out  !! the string with its quotes doubled
             integer :: j
             out = ''
             do j = 1, len ( str )
                out = out // str(j:j)
                if ( str(j:j) == quote ) out = out // quote
             end do
-         end function double_quotes
+         end subroutine double_quotes
       end procedure wrpool
 
       module procedure swpool

@@ -74,9 +74,9 @@ contains
 !!         have not been loaded into the kernel pool, the error
 !!         SPICE(KERNELVARNOTFOUND) is signaled.
 !!
-!!     3)  If the number of leapseconds in the pool is greater than
-!!         the local leapseconds buffer size, the error
-!!         SPICE(BUFFEROVERFLOW) is signaled.
+!!     3)  PEPPER: the leapseconds buffer holds all the leapseconds in
+!!         the pool (SPICELIB: 200, then the error
+!!         SPICE(BUFFERTOOSMALL), documented as SPICE(BUFFEROVERFLOW)).
 !!
 !! ## Files
 !!
@@ -211,15 +211,14 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase
+      use pepper_containers, only: grow
       implicit none
       real(wp) :: eb_1(1)  !! one-element copy of eb (array argument)
       real(wp) :: k_1(1)  !! one-element copy of k (array argument)
       real(wp) :: dta_1(1)  !! one-element copy of dta (array argument)
-      integer(ip), parameter :: nmax = 200
       character(4)          type
       character(1)          dtype
       real(wp)              aet
-      real(wp)              dleap  ( 2,nmax )
       real(wp)              dta
       real(wp)              ea
       real(wp)              eb
@@ -258,23 +257,18 @@ contains
       call gdpool ( ctx, 'DELTET/M',         1, 2, n, m,   found(4) )
 
 !
-!     Check that the number of leapseconds is not too great for our
-!     buffer size (not likely).
+!     PEPPER: the buffer grows to hold the leapseconds (SPICELIB: 200,
+!     SPICE(BUFFERTOOSMALL)).
 !
       call dtpool ( ctx, 'DELTET/DELTA_AT', found(5), nleap, dtype )
 
-      if ( nleap > (2*nmax) ) then
+      if ( .not. found(5) ) nleap = 0
 
-         call ctx%setmsg ( 'Number of leapseconds, #, is greater than ' // &
-                       'the number that can be buffered, #.'         )
-         call ctx%errint ( '#',  nleap/2                                 )
-         call ctx%errint ( '#',  nmax                                    )
-         call ctx%sigerr ( 'SPICE(BUFFERTOOSMALL)'                       )
-         return
+      call grow ( ctx%deltet_state%dleap, max ( (nleap + 1) / 2, 1_ip ), 2_ip )
 
-      end if
+      associate ( dleap => ctx%deltet_state%dleap )
 
-      call gdpool ( ctx, 'DELTET/DELTA_AT',  1,            2*nmax, &
+      call gdpool ( ctx, 'DELTET/DELTA_AT',  1,  size( dleap, kind=ip ), &
                      nleap,             dleap(1,1),   found(5) )
 
       nleap = nleap / 2
@@ -387,6 +381,7 @@ contains
       delta = dta + leaps + ettai
 
       return
+      end associate
       end associate
       end procedure deltet
 

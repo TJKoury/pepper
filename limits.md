@@ -553,12 +553,59 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      Whole run (100 contexts): 157 s → 129 s (system time 40 s → 9.7 s),
      peak memory 1.11 GB → 0.60 GB. With 23 open files, the random query
      is now the cost of reopening a file (the setting removes it).
-6. **Algorithm work buffers:**
-   - **DSK:** `maxhit` and the `dskx02` voxel and plate lists. `xdda` returns an
-     allocatable result, which removes the 1.6 MB stack frame.
-   - **Tangent points:** the `limbpt`/`termpt` `maxwin`.
-   - **FOV vertices:** GF `maxvrt`.
-   - **Leap seconds:** `deltet`.
+6. **Algorithm work buffers.** Done so far:
+   - **DSK ray intercepts** (DSKX02, per context): SPICELIB's work
+     arrays (50000 voxels on a ray, 256000 plates in a voxel group, the
+     100000-entry coarse grid: 3.4 MB per context, and 1.6 MB more on the
+     stack) are allocatable. The coarse grid and the voxel lists are sized
+     from the segment's grid when a segment is first used (XDDA steps one
+     voxel along one axis at a time, so a ray crosses at most `nx+ny+nz`
+     voxels; that memory is proportional to the segment's own voxel data);
+     the plate lists grow with the plates read. `ARRAYTOOSMALL` is gone.
+     XDDA keeps its interface (the caller's room).
+   - **DSK segments containing a point** (ZZDSKBUN, ZZDSKBUX): the hit
+     buffers are sized by the number of segments searched (SPICELIB: 1000,
+     `TOOMANYHITS`, `BUFFERTOOSMALL`; 88 KB on the stack).
+   - **Tangent points** (LIMBPT, TERMPT through ZZTANGNT and ZZTANSLV):
+     the window of transitions and the points in a cutting half-plane
+     grow (SPICELIB: 2000, `ARRAYTOOSMALL`/`WINDOWEXCESS`). ZZTANSLV
+     and ZZTANGNT take allocatable arrays; ZZTANSLV's optional `room`
+     keeps SPICELIB's errors for the legacy interface (`F_ZZTANSLV`
+     cases 16 and 17). New `grow_cell` (pepper_containers) grows a
+     double precision cell or window.
+   - **FOV vertices** (GF FOV searches, FOVRAY, FOVTRG through
+     ZZGFFVIN; ZZELVUPY): the boundary vectors are held for as many as
+     the instrument's kernel variable has (SPICELIB: `MAXVRT` = 10000,
+     `BOUNDARYTOOBIG`; 400 KB per context), and ZZELVUPY's work array
+     grows to the number of vectors (`MAXFOV` = 10000, `INVALIDCOUNT`;
+     240 KB). GETFVN keeps its caller's room (phase 7).
+   - **Leapseconds:** DELTET's buffer grows (SPICELIB: 200,
+     `BUFFERTOOSMALL`), and so does TTRANS's table (SPICELIB: 140, the
+     later ones silently dropped, so UTC strings disagreed with DELTET;
+     `spicelib_bugs.md`).
+   - Tests (`test_limits`): `test_leapseconds` (300), `test_fov_vertices`
+     (12000 boundary vectors: FOVRAY and ZZELVUPY), `test_dsk_hits` (1100
+     segments containing a point: SRFNRM and DSKXV). Not tested past the
+     old limit: the DSKX02 lists (a ray through more than 50000 voxels, or
+     256000 plates in a voxel group, needs a very large shape model) and
+     the 2000 tangent points in one half-plane.
+
+   - **Thread safety** (found by `pixi run test-parallel`, which failed
+     in about half of its runs since the phase 4 string helpers): gfortran
+     keeps the length of a deferred-length character function result
+     (`character(:), allocatable` result) in a static variable at each
+     call site, shared by the threads. FRAMEX's kernel variable names
+     (`int_text`, `marker_text`, `frame_variable`, phase 4) came out with
+     other threads' lengths, so lookups failed and the heap was corrupted.
+     The 13 such functions of the library (also the error messages,
+     `ctx%message`, file names, surface keys, WRPOOL's quotes) return
+     strings of a length computed from their arguments, or are
+     subroutines. `tools/check_threads.py` (`pixi run check-threads`, run
+     by `pixi run test`) rejects such functions in the sources; `pixi run
+     check-threads-ir` lists any uninitialized static in the generated
+     code (none). `test-parallel`: 0 failures in 20 runs.
+
+   To do:
    - **EK queries:** last. The encoded query is a flat integer cell laid out
      from the maxima, so this is a rewrite of the parser's output, and the
      least-used subsystem. EKQMGR's tables of loaded EK files, tables,
@@ -665,6 +712,7 @@ or listed for later.
 | ZZBODTRN, FRAMEX (per context) | Every context builds its own tables of body names and kernel frames from the pool | Build them once per instance when the pool changes (read-only during queries) | 5 |
 | BSR tables | 10 MB each, allocated and zeroed in full by the first query of a context: 2.5 ms and about 20 MB per context | Done: replaced by the index; a context keeps a growing re-use map (first query 1560 → 23 µs) | 5 |
 | CCIFRM | Scans the pool with GNPOOL in batches of 100 and, because GIPOOL overwrites the batch count, restarts each batch one name later: each `FRAME_*_CLASS` name is examined up to 100 times, and each batch is a full pool scan | Done: names fetched once | 4 |
+| DELTET | Reads its five kernel variables (and copies all the leapseconds) on every call: every UTC/ET conversion. TTRANS caches its table behind a pool watch | Cache them behind a watch, as TTRANS does | later |
 
 ## Testing
 
@@ -684,6 +732,9 @@ or listed for later.
   `-fsanitize=address` runs the growth tests.
 - **Parallel:** `test_parallel` loads more than the old limits, then queries
   from all threads, and compares bitwise with a serial run.
+  `pixi run test` builds it without OpenMP (one thread): run `pixi run
+  test-parallel`, several times (a race shows in some runs only), and
+  `pixi run check-threads-ir` after changes to string-returning code.
 
 ## Decisions
 

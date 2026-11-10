@@ -27,7 +27,7 @@ module pepper_containers
    private
 
    public :: string, string_map, int_map
-   public :: grow, grown_capacity, lnkgrow
+   public :: grow, grown_capacity, grow_cell, lnkgrow
 
    integer(ip), parameter :: min_capacity = 8  !! smallest capacity `grow` allocates
    integer(ip), parameter :: min_slots = 16  !! initial number of slots of a hash map
@@ -230,6 +230,30 @@ contains
          allocate (a(rows, grown_capacity(0_ip, needed)), source=0.0_wp)
       end if
    end subroutine grow_real_2d
+
+   !> Make room for `needed` elements in a double precision SPICE cell
+   !> (or window) held in an allocatable array with lower bound -5
+   !> (LBCELL). The control area and the elements are kept, and the
+   !> cell's size (`cell(-1)`) is set to the new capacity. A cell that is
+   !> not allocated is allocated empty, with its size set.
+   pure subroutine grow_cell(cell, needed)
+      real(wp), allocatable, intent(inout) :: cell(:)  !! the cell, `cell(-5:size)`
+      integer(ip), intent(in) :: needed  !! the number of elements needed
+      real(wp), allocatable :: tmp(:)
+      integer(ip) :: n, m
+      if (allocated(cell)) then
+         n = ubound(cell, 1, kind=ip)
+         if (n >= needed) return
+         m = grown_capacity(n, needed)
+         allocate (tmp(-5:m), source=0.0_wp)
+         tmp(-5:n) = cell
+         call move_alloc(tmp, cell)
+      else
+         m = grown_capacity(0_ip, needed)
+         allocate (cell(-5:m), source=0.0_wp)
+      end if
+      cell(-1) = real(m, wp)
+   end subroutine grow_cell
 
    !> Enlarge a doubly linked list pool (the layout of LNKINI: `pool(2,
    !> lbpool:size)` with the size, the number of free nodes and the head of

@@ -13,7 +13,9 @@ python = "3.13.*"
 [tasks]
 clean-stale = { cmd = "python tools/clean_stale.py", description = "Remove build products of deleted sources (see tools/clean_stale.py)" }
 build = { cmd = "fpm build", depends-on = ["clean-stale"], description = "Build the library" }
-test = { cmd = "fpm test", depends-on = ["clean-stale"], description = "Build and run the unit tests (test/core); NAIF's test suite is the tspice package (pixi run tspice)" }
+check-threads = { cmd = "python tools/check_threads.py", description = "Check the sources for constructs gfortran makes thread-unsafe: functions with deferred-length character results (see tools/check_threads.py)" }
+check-threads-ir = { cmd = "python tools/check_threads.py --ir", description = "Also build with -fdump-tree-original and list every uninitialized static in the generated code (a build directory of its own)" }
+test = { cmd = "fpm test", depends-on = ["clean-stale", "check-threads"], description = "Build and run the unit tests (test/core); NAIF's test suite is the tspice package (pixi run tspice)" }
 # Extra arguments are passed to tools/run_tspice.py, e.g.
 #   pixi run tspice                 # all families, one job per CPU
 #   pixi run tspice -j 4 'spk*'     # families matching F_SPK*

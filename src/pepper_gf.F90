@@ -2825,6 +2825,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi
       use pepper_arrays, only: cleard
+      use pepper_containers, only: grow
       use pepper_math, only: frame, mxv, ucrss, vequ, vhat, vhatip, vnorm, vrotv, vscl, vsclip, vsep, vsub, vzero
       use pepper_strings, only: cmprss, ljust, ucase
       use pepper_inc_zzabcorr
@@ -2881,13 +2882,11 @@ contains
          call init_zzgffvu_state ( ctx%zzgffvu_state )
       end if
       associate ( svarad => ctx%zzgffvu_state%svarad, &
-                  svbnds => ctx%zzgffvu_state%svbnds, &
                   svcorr => ctx%zzgffvu_state%svcorr, &
                   svedct => ctx%zzgffvu_state%svedct, &
                   svetrg => ctx%zzgffvu_state%svetrg, &
                   svfaxi => ctx%zzgffvu_state%svfaxi, &
                   svfovm => ctx%zzgffvu_state%svfovm, &
-                  svfpol => ctx%zzgffvu_state%svfpol, &
                   svfsmx => ctx%zzgffvu_state%svfsmx, &
                   svfvct => ctx%zzgffvu_state%svfvct, &
                   svinam => ctx%zzgffvu_state%svinam, &
@@ -2913,10 +2912,10 @@ contains
 !     statements and aren't guaranteed to be initialized
 !     for all cases.
 !
-      call cleard ( 3*maxvrt, svbnds )
+      if ( allocated ( ctx%zzgffvu_state%svbnds ) ) ctx%zzgffvu_state%svbnds = 0.0_wp
       call cleard ( 3,        svedct )
       call cleard ( 3,        svfaxi )
-      call cleard ( 2*maxvrt, svfpol )
+      if ( allocated ( ctx%zzgffvu_state%svfpol ) ) ctx%zzgffvu_state%svfpol = 0.0_wp
       call cleard ( 9,        svfsmx )
       call cleard ( ubpl,     svplan )
       call cleard ( 3,        svrdir )
@@ -3245,18 +3244,35 @@ contains
 !     PEPPER: the instrument frame name is saved at the length of its
 !     kernel variable's value (SPICELIB: 32 characters).
 !
+!     PEPPER: the boundary vectors are held for as many as the
+!     instrument's kernel variable has (SPICELIB: MAXVRT = 10000,
+!     BOUNDARYTOOBIG); GETFOV makes at most 4 for an ANGLES
+!     specification.
+!
       block
          character(:), allocatable :: fovfrm
          character(24) :: idtext
+         character(1) :: vtype
+         integer(ip) :: nval
          logical :: fnd
          write ( idtext, '(i0)' ) svinst
          call ctx%pool_string ( 'INS' // trim(idtext) // '_FOV_FRAME', 1_ip, fovfrm, fnd )
          ctx%zzgffvu_state%svifrm = repeat ( ' ', max ( len(fovfrm), 32 ) )
+         call ctx%dtpool ( 'INS' // trim(idtext) // '_FOV_BOUNDARY', fnd, nval, vtype )
+         if ( .not. fnd ) then
+            call ctx%dtpool ( 'INS' // trim(idtext) // '_FOV_BOUNDARY_CORNERS', fnd, nval, vtype )
+         end if
+         if ( .not. fnd ) nval = 0
+         call grow ( ctx%zzgffvu_state%svbnds, max ( 4_ip, (nval + 2) / 3 ), 3_ip )
+         call grow ( ctx%zzgffvu_state%svfpol, size ( ctx%zzgffvu_state%svbnds, 2, kind=ip ), 2_ip )
       end block
-      call getfov ( ctx, svinst, maxvrt, svishp, &
-                    ctx%zzgffvu_state%svifrm, bsite,  svnvrt, svbnds )
+      call getfov ( ctx, svinst, size ( ctx%zzgffvu_state%svbnds, 2, kind=ip ), svishp, &
+                    ctx%zzgffvu_state%svifrm, bsite,  svnvrt, ctx%zzgffvu_state%svbnds )
 
       if ( ctx%failed() ) return
+
+      associate ( svbnds => ctx%zzgffvu_state%svbnds, &
+                  svfpol => ctx%zzgffvu_state%svfpol )
 
 !
 !     Scale boresight vector to unit length.
@@ -3594,6 +3610,7 @@ contains
 
       return
       end associate
+      end associate
       end procedure zzgffvin
 
       module procedure zzgffvst
@@ -3753,6 +3770,10 @@ contains
       if ( .not. allocated ( ctx%zzgffvu_state ) ) then
          allocate ( ctx%zzgffvu_state )
          call init_zzgffvu_state ( ctx%zzgffvu_state )
+      end if
+!     PEPPER: allocated by ZZGFFVIN (empty if it was not called).
+      if ( .not. allocated ( ctx%zzgffvu_state%svbnds ) ) then
+         allocate ( ctx%zzgffvu_state%svbnds(3,0), ctx%zzgffvu_state%svfpol(2,0) )
       end if
       associate ( svarad => ctx%zzgffvu_state%svarad, &
                   svbnds => ctx%zzgffvu_state%svbnds, &

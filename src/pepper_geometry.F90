@@ -297,7 +297,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: brcktd
+      use pepper_math, only: brcktd, vequ
       implicit none
 
 
@@ -5400,7 +5400,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_math, only: brcktd
+      use pepper_math, only: brcktd, vequ
       implicit none
       integer(ip), parameter :: nmodl = 6
       integer(ip), parameter :: kj2 = 1
@@ -19978,7 +19978,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: brcktd
+      use pepper_math, only: brcktd, vequ
       implicit none
 
 
@@ -23482,7 +23482,7 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi, pi
-      use pepper_math, only: brcktd
+      use pepper_math, only: brcktd, vequ
       use pepper_inc_dsktol
       implicit none
 
@@ -38773,7 +38773,7 @@ contains
 
 !$Procedure ZZTANSLV ( Private --- tangent point solver )
 
-      module subroutine zztanslv ( ctx, udcond, udstep, udrefn, cstep, step, start, finish, tol, result, points, endflg )
+      module subroutine zztanslv ( ctx, udcond, udstep, udrefn, cstep, step, start, finish, tol, result, points, endflg, room )
 !! ## Abstract
 !!
 !!     SPICE Private routine intended solely for the support of SPICE
@@ -38799,9 +38799,9 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: touchd
       use pepper_math, only: brcktd, vequ
+      use pepper_containers, only: grow, grow_cell
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 
 ! $ Detailed_Input
@@ -38950,9 +38950,10 @@ contains
 !                root-finding operations. TOL is measured in the units
 !                of the independent variable and is greater than zero.
 !
-!     RESULT     is an initialized SPICE window. RESULT must be large
-!                enough to hold all of the intervals found by the
-!                search.
+!     RESULT     is an initialized SPICE window. PEPPER: an allocatable
+!                array with lower bound LBCELL, which grows to hold all
+!                of the intervals found by the search (SPICELIB: RESULT
+!                had to be large enough).
 !
 ! $ Detailed_Output
 !
@@ -39001,8 +39002,9 @@ contains
 !                points on a target body, the vectors contained in
 !                POINTS, when valid, are such tangent points.
 !
-!                POINTS must be declared with size at least 3 times
-!                that of RESULT.
+!                PEPPER: POINTS is an allocatable 3xN array, which
+!                grows (SPICELIB: it had to have at least 3 times the
+!                size of RESULT).
 !
 !     ENDFLG     is an array of two logical flags that indicate
 !                whether state transitions occur at the initial
@@ -39043,14 +39045,10 @@ contains
 !         MXLOOP iterations, the error SPICE(NOCONVERGENCE) will be
 !         signaled.
 !
-!     7)  If the POINTS array doesn't have enough room to store
-!         the points associated with state transitions, the error
-!         SPICE(ARRAYTOOSMALL) will be signaled.
-!
-!     8)  If the result window doesn't have enough room to store
-!         the abscissas associated with state transitions, the error
-!         will be signaled by a routine in the call tree of this
-!         routine.
+!     7)  PEPPER: RESULT and POINTS grow, so there are no errors for
+!         lack of room (SPICELIB signaled SPICE(ARRAYTOOSMALL) for
+!         POINTS, and its window routines SPICE(WINDOWEXCESS) for
+!         RESULT).
 !
 ! $ Files
 !
@@ -39138,7 +39136,6 @@ contains
       real(wp)              xpoint ( 3 )
 
       integer(ip)           nloop
-      integer(ip)           room
       integer(ip)           to
 
       logical               cursta
@@ -39172,9 +39169,10 @@ contains
       real(wp), intent(in) :: start  !! Beginning of the search interval.
       real(wp), intent(in) :: finish  !! End of the search interval.
       real(wp), intent(in) :: tol  !! Maximum error in detection of state transitions.
-      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
-      real(wp), intent(out) :: points ( 3, * )  !! Array of points associated with transitions.
+      real(wp), allocatable, intent(inout) :: result ( : )  !! SPICE window containing results. Lower bound LBCELL; grows (PEPPER).
+      real(wp), allocatable, intent(inout) :: points ( :, : )  !! Array of points associated with transitions. Grows (PEPPER).
       logical, intent(out) :: endflg ( 2 )  !! Endpoint transition flags.
+      integer(ip), intent(in), optional :: room  !! SPICELIB's fixed capacity (legacy interface): RESULT and POINTS do not grow, and the errors for lack of room are SPICELIB's.
 
 !
 !     Standard SPICE error handling.
@@ -39299,7 +39297,6 @@ contains
       curx   = start
 
       to     = 1
-      room   = sized( ctx, result )
       prvset = .false.
 
 !
@@ -39337,7 +39334,6 @@ contains
 !        inserting anything into POINTS.
 !
          to   = to   + 1
-         room = room - 1
 
       else
 
@@ -39623,6 +39619,8 @@ contains
                //       'TRNSTN represents time of passage out of the ' &
                //       'state-of-interest.'
 
+               if ( .not. present(room) ) &
+                  call grow_cell ( result, cardd( ctx, result ) + 2 )
                call zzwninsd ( ctx, begin, trnstn, contxt, result )
 
                if ( ctx%failed() ) return
@@ -39649,44 +39647,38 @@ contains
 !           For all state transitions, record the last point found
 !           by the state function.
 !
-            if ( room > 0 ) then
 !
-!              Add the last point found during the transition search to
-!              the POINTS array.
+!           PEPPER: the window and the points grow (SPICELIB signaled
+!           SPICE(ARRAYTOOSMALL) when POINTS had SIZED(RESULT) points).
 !
-               if ( prvset ) then
-
-                  call vequ ( prvpnt, points(1,to) )
-
-                  to     = to   + 1
-                  room   = room - 1
-                  prvset = .false.
-
-               else
-
-                  call ctx%setmsg ( 'PRVPNT should always be set when a ' &
-                  //            'transition is detected. We found a ' &
-                  //            'transition at #, but PRVSET ' &
-                  //            'indicates we don''t have a previous ' &
-                  //            'point saved.'                        )
-                  call ctx%errdp  ( '#', trnstn                           )
-                  call ctx%sigerr ( 'SPICE(BUG)'                          )
+            if ( present(room) ) then
+               if ( to > room ) then
+                  call ctx%setmsg ( 'Out of room in the POINTS array. Room ' &
+                  //            'is assumed to be adequate for SIZED(' &
+                  //            'RESULT) 3-vectors; this size is #.'    )
+                  call ctx%errint ( '#', room                             )
+                  call ctx%sigerr ( 'SPICE(ARRAYTOOSMALL)'                )
                   return
-
                end if
+            end if
+
+            if ( prvset ) then
+
+               call grow ( points, to, 3_ip )
+               points(:,to) = prvpnt
+
+               to     = to   + 1
+               prvset = .false.
 
             else
-!
-!              We ran out of room in the output point array. Note that
-!              this error can occur before the result window insertion
-!              fails, since that insertion takes place when the state
-!              becomes .FALSE.
-!
-               call ctx%setmsg ( 'Out of room in the POINTS array. Room ' &
-               //            'is assumed to be adequate for SIZED(' &
-               //            'RESULT) 3-vectors; this size is #.'    )
-               call ctx%errint ( '#', sized( ctx,result)                      )
-               call ctx%sigerr ( 'SPICE(ARRAYTOOSMALL)'                  )
+
+               call ctx%setmsg ( 'PRVPNT should always be set when a ' &
+               //            'transition is detected. We found a ' &
+               //            'transition at #, but PRVSET ' &
+               //            'indicates we don''t have a previous ' &
+               //            'point saved.'                        )
+               call ctx%errdp  ( '#', trnstn                           )
+               call ctx%sigerr ( 'SPICE(BUG)'                          )
                return
 
             end if
@@ -39717,6 +39709,8 @@ contains
          contxt = 'Adding interval [BEGIN,FINISH] to RESULT. FINISH ' &
          //       'represents end of the search interval.'
 
+         if ( .not. present(room) ) &
+            call grow_cell ( result, cardd( ctx, result ) + 2 )
          call zzwninsd ( ctx, begin, finish, contxt, result )
 
          endflg(2) = .false.
@@ -46697,7 +46691,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_math, only: brcktd
+      use pepper_math, only: brcktd, vequ
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
@@ -56923,7 +56917,7 @@ contains
             call srf%clear ( )
             return
          end if
-         srf%nornam(i)%s = normalized ( srf%names(i)%s )
+         call normalize ( srf%names(i)%s, srf%nornam(i)%s )
       end do
       call srf%index ( )
       srf%extker = .true.
@@ -56936,13 +56930,17 @@ contains
 !        A surface name normalized as by LJUCRS (left-justified,
 !        uppercase, single blanks), without trailing blanks.
 !
-         pure function normalized ( name ) result ( nor )
-            character(*), intent(in) :: name
-            character(:), allocatable :: nor
+!        (A subroutine, not a function with a deferred-length result:
+!        gfortran keeps that length in a static variable at the call
+!        site, which is not thread-safe.)
+!
+         pure subroutine normalize ( name, nor )
+            character(*), intent(in) :: name  !! the name
+            character(:), allocatable, intent(out) :: nor  !! the normalized name
             character(len(name)) :: buf
             call ljucrs ( 1, name, buf )
             nor = trim ( buf )
-         end function normalized
+         end subroutine normalize
       end procedure zzsrfker
 
 !$Procedure CGV2EL ( Center and generating vectors to ellipse )
@@ -67244,9 +67242,9 @@ contains
 !!
 !!     UBPL           is the array upper bound for SPICELIB planes.
 !!
-!!     MAXFOV         is the maximum number of boundary vectors that
-!!                    may be supplied in the input array argument
-!!                    BOUNDS.
+!!     MAXFOV         PEPPER: removed. SPICELIB's maximum number of
+!!                    boundary vectors (10000) in BOUNDS; the work
+!!                    array grows to N.
 !!
 !! ## Exceptions
 !!
@@ -67268,8 +67266,8 @@ contains
 !!         error.
 !!
 !!     4)  If the number of boundary vectors N is not at least 3,
-!!         or if the number exceeds MAXFOV, the error
-!!         SPICE(INVALIDCOUNT) will be signaled.
+!!         the error SPICE(INVALIDCOUNT) will be signaled. PEPPER:
+!!         there is no maximum (SPICELIB: MAXFOV = 10000).
 !!
 !!     5)  If any boundary vector is the zero vector, the error
 !!         SPICE(ZEROVECTOR) will be signaled.
@@ -67430,13 +67428,13 @@ contains
 !!     Initial values
 !!
       use pepper_kinds, only: ip, wp
+      use pepper_containers, only: grow
       use pepper_constants, only: pi
       use pepper_math, only: el2cgv, ucrss, vdist, vdot, vhat, vlcom, vnorm, vsep, vsub, vzero
       use pepper_inc_errhnd
       implicit none
       integer(ip), parameter :: ubel = 9
       integer(ip), parameter :: ubpl = 4
-      integer(ip), parameter :: maxfov = 10000
       character(lmsgln)     errmsg
       real(wp)              a
       real(wp)              apex   ( 3 )
@@ -67480,6 +67478,7 @@ contains
          allocate ( ctx%zzelvupy_state )
          call init_zzelvupy_state ( ctx%zzelvupy_state )
       end if
+      call grow ( ctx%zzelvupy_state%work, max ( n, 1_ip ), 3_ip )
       associate ( origin => ctx%zzelvupy_state%origin, &
                   work => ctx%zzelvupy_state%work )
       if ( ctx%failed() ) return
@@ -67595,20 +67594,6 @@ contains
          call ctx%setmsg ( 'The number of boundary vectors was #; ' // &
                        'this number must be at least 3.'        )
          call ctx%errint ( '#',  n                                  )
-         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                    )
-         return
-
-      end if
-
-!
-!     There must be no more than MAXFOV boundary vectors.
-!
-      if ( n > maxfov ) then
-
-         call ctx%setmsg ( 'The number of boundary vectors was #; ' // &
-                       'this number must not exceed #.'         )
-         call ctx%errint ( '#',  n                                  )
-         call ctx%errint ( '#',  maxfov                             )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                    )
          return
 
@@ -72790,9 +72775,10 @@ contains
 !!         than MAXCGR (see dsk02.inc) voxels, the error
 !!         SPICE(GRIDTOOLARGE) is signaled.
 !!
-!!     8)  If the plate list for any intersected voxel is too large
-!!         for this routine to buffer, the error SPICE(ARRAYTOOSMALL)
-!!         is signaled.
+!!     8)  PEPPER: the plate lists of the intersected voxels are
+!!         buffered whatever their size (SPICELIB signaled
+!!         SPICE(ARRAYTOOSMALL) beyond 256000 plates in a voxel group,
+!!         and XDDA beyond 50000 voxels on the ray).
 !!
 !!     9)  Due to round-off errors, results from this routine may
 !!         differ across platforms. Results also may differ from
@@ -73476,7 +73462,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: cleari, filli, isrchi, movei, orderi
+      use pepper_arrays, only: cleari, isrchi, movei, orderi
+      use pepper_containers, only: grow
       use pepper_math, only: insang, pltexp, pltnrm, vdot, vequ, vhat, vlcom, vlcom3, vsub, vsubg, vzero
       use pepper_inc_dla
       use pepper_inc_dskdsc
@@ -73487,8 +73474,6 @@ contains
       integer(ip) :: voxptr_1(1)  !! one-element copy of voxptr (array argument)
       integer(ip)           vox2id
       real(wp), parameter :: vtxtol = 1.0e-12_wp
-      integer(ip), parameter :: nvxlst = 50000
-      integer(ip), parameter :: maxpl = maxplt/125
       integer(ip), parameter :: none = 0
       integer(ip), parameter :: bufsiz = 200
       real(wp)              coord  ( 3 )
@@ -73531,7 +73516,6 @@ contains
       integer(ip)           nvbuf
       integer(ip)           nvxout
       integer(ip)           offset
-      integer(ip)           plroom
       integer(ip)           pntr
       integer(ip)           start
       integer(ip)           to
@@ -73555,7 +73539,6 @@ contains
                                                           - (1 + dim2) )
       integer(ip) :: vtxnpl
       real(wp) :: vtxbds ( 2, 3 )
-      integer(ip) :: ordvec ( maxpl )
       integer(ip) :: ncgr
       integer(ip) :: nv
       integer(ip) :: voxnpl
@@ -73564,30 +73547,21 @@ contains
       real(wp) :: xtol
       integer(ip) :: nvxtot
       integer(ip) :: voxnpt
-      integer(ip) :: voxlst ( 3, nvxlst )
-      if ( .not. allocated ( ctx%dskx02_state ) ) then
-         allocate ( ctx%dskx02_state )
-         call init_dskx02_state ( ctx%dskx02_state )
-      end if
+      integer(ip) :: nvxmax
+      if ( .not. allocated ( ctx%dskx02_state ) ) allocate ( ctx%dskx02_state )
       associate ( cgrext => ctx%dskx02_state%cgrext, &
-                  cgrptr => ctx%dskx02_state%cgrptr, &
                   cgscal => ctx%dskx02_state%cgscal, &
                   cgscl2 => ctx%dskx02_state%cgscl2, &
                   corsys => ctx%dskx02_state%corsys, &
                   dskdsc => ctx%dskx02_state%dskdsc, &
                   grdext => ctx%dskx02_state%grdext, &
                   grdtol => ctx%dskx02_state%grdtol, &
-                  platid => ctx%dskx02_state%platid, &
                   prvdsc => ctx%dskx02_state%prvdsc, &
                   prvhan => ctx%dskx02_state%prvhan, &
-                  source => ctx%dskx02_state%source, &
                   vbuff => ctx%dskx02_state%vbuff, &
                   vgrext => ctx%dskx02_state%vgrext, &
                   voxori => ctx%dskx02_state%voxori, &
-                  voxsiz => ctx%dskx02_state%voxsiz, &
-                  vxlcg => ctx%dskx02_state%vxlcg, &
-                  vxlout => ctx%dskx02_state%vxlout, &
-                  vxlstr => ctx%dskx02_state%vxlstr )
+                  voxsiz => ctx%dskx02_state%voxsiz )
       if ( ctx%failed() ) return
 
 !
@@ -73718,7 +73692,23 @@ contains
 
          end if
 
-         call dski02 ( ctx, handle, dladsc, kwcgpt, 1, maxcgr, dim, cgrptr )
+!
+!        PEPPER: the coarse grid and the voxel lists are sized for this
+!        segment. XDDA steps one voxel along one axis at a time, never
+!        backwards, so a ray crosses at most NX+NY+NZ voxels of the grid
+!        (SPICELIB: 50000).
+!
+         call grow ( ctx%dskx02_state%cgrptr, ncgr )
+
+         nvxmax = vgrext(1) + vgrext(2) + vgrext(3)
+
+         call grow ( ctx%dskx02_state%voxlst, nvxmax, 3_ip )
+         call grow ( ctx%dskx02_state%vxlcg,  nvxmax, 3_ip )
+         call grow ( ctx%dskx02_state%vxlout, nvxmax )
+         call grow ( ctx%dskx02_state%vxlstr, nvxmax )
+
+         call dski02 ( ctx, handle, dladsc, kwcgpt, 1, ncgr, dim, &
+                       ctx%dskx02_state%cgrptr                    )
 
          call dskgd  ( ctx, handle, dladsc, dskdsc )
 
@@ -73732,6 +73722,11 @@ contains
 
       end if
 
+      associate ( cgrptr => ctx%dskx02_state%cgrptr, &
+                  voxlst => ctx%dskx02_state%voxlst, &
+                  vxlcg  => ctx%dskx02_state%vxlcg, &
+                  vxlout => ctx%dskx02_state%vxlout, &
+                  vxlstr => ctx%dskx02_state%vxlstr )
 !
 !     Compute tolerance used for determining whether an intercept
 !     is inside a voxel. The expansion fraction must be fetched
@@ -73760,7 +73755,8 @@ contains
 !
 !     Determine the voxels hit by the ray.
 !
-      call xdda ( ctx, coord, udir, vgrext, nvxlst, nvxout, voxlst )
+      call xdda ( ctx, coord, udir, vgrext, size( voxlst, 2, kind=ip ), &
+                  nvxout, voxlst                                    )
 
       if ( ctx%failed() ) return
 
@@ -73892,8 +73888,6 @@ contains
 
          grpend = min ( grpbeg + grpsiz - 1,  nvxout )
 
-         plroom = maxpl
-
          do vi = grpbeg, grpend
 !
 !           Look up the plate list pointer for this voxel.
@@ -73936,29 +73930,19 @@ contains
             end if
 
             if ( nplate > 0 ) then
-
-               if ( nplate <= plroom ) then
 !
-!                 Get the plate list for this voxel.
+!              Get the plate list for this voxel. PEPPER: the plate
+!              lists grow (SPICELIB: 256000 plates in a voxel group,
+!              ARRAYTOOSMALL).
 !
-                  call dski02 ( ctx, handle,   dladsc, kwvxpl, &
-                                voxptr+1, nplate, dim,    platid(pntr) )
+               call grow ( ctx%dskx02_state%platid, pntr + nplate - 1 )
+               call grow ( ctx%dskx02_state%source, pntr + nplate - 1 )
 
-                  if ( ctx%failed() ) return
+               call dski02 ( ctx, handle,   dladsc, kwvxpl, &
+                             voxptr+1, nplate, dim, &
+                             ctx%dskx02_state%platid(pntr)   )
 
-                  plroom = plroom - nplate
-
-               else
-
-                  call ctx%setmsg ( 'NPLATE = #. Available room in ' &
-                  //            'PLATID array = #. Array size = #.' )
-                  call ctx%errint ( '#', nplate                         )
-                  call ctx%errint ( '#', plroom                         )
-                  call ctx%errint ( '#', maxpl                          )
-                  call ctx%sigerr ( 'SPICE(ARRAYTOOSMALL)'              )
-                  return
-
-               end if
+               if ( ctx%failed() ) return
 
 !
 !              Fill in the corresponding elements of the parallel
@@ -73966,7 +73950,7 @@ contains
 !              XDDA lists these voxels in the order the ray hits
 !              them, so the lowest indexed voxels are hit first.
 !
-               call filli ( vi, nplate, source(pntr) )
+               ctx%dskx02_state%source(pntr:pntr+nplate-1) = vi
 
             end if
 
@@ -73980,6 +73964,12 @@ contains
 !        We've collected all plate info for the current voxel group.
 !
          totplt = pntr-1
+
+         call grow ( ctx%dskx02_state%ordvec, totplt )
+
+         associate ( platid => ctx%dskx02_state%platid, &
+                     source => ctx%dskx02_state%source, &
+                     ordvec => ctx%dskx02_state%ordvec )
 
 !
 !        We want to sort the plate ID array and remove duplicates.
@@ -74318,6 +74308,7 @@ contains
             i = i + 1
 
          end do
+         end associate
 !
 !        We're done with the current voxel group.
 !
@@ -74331,6 +74322,7 @@ contains
 !     That's all folks.
 !
       return
+      end associate
       end associate
       end procedure dskx02
 
@@ -81155,8 +81147,9 @@ contains
 !         in a DSK descriptor, the error SPICE(BADCOORDSYS) is
 !         signaled.
 !
-!     3)  If the input point is contained in more than MAXHIT
-!         segments, the error SPICE(TOOMANYHITS) is signaled.
+!     3)  PEPPER: no limit on the number of segments containing the
+!         input point (SPICELIB signaled SPICE(TOOMANYHITS) for more
+!         than MAXHIT = 1000).
 !
 !     4)  If the input point is not contained in any DSK segment,
 !         the error SPICE(POINTNOTINSEGMENT) is signaled.
@@ -81236,7 +81229,6 @@ contains
 !
 !     Local parameters
 !
-      integer(ip), parameter :: maxhit = 1000
 
 !
 !     Local variables
@@ -81244,7 +81236,7 @@ contains
       real(wp)              dist
       real(wp)              segpt  ( 3 )
       real(wp)              sgmarg
-      real(wp)              sgxbuf ( 3, 3, maxhit )
+      real(wp), allocatable :: sgxbuf ( :, :, : )
       real(wp)              verts  ( 3, 3 )
       real(wp)              vtemp  ( 3 )
       real(wp)              xform  ( 3, 3 )
@@ -81258,7 +81250,7 @@ contains
       integer(ip)           plid
       integer(ip)           prvfrm
       integer(ip)           segfid
-      integer(ip)           sghit  ( maxhit )
+      integer(ip), allocatable :: sghit ( : )
       integer(ip)           surfce
       integer(ip)           winner
 
@@ -81293,6 +81285,12 @@ contains
          return
 
       end if
+
+!
+!     PEPPER: at most NSEG segments contain the point (SPICELIB: a
+!     buffer of 1000 hits, TOOMANYHITS).
+!
+      allocate ( sghit(nseg), sgxbuf(3,3,nseg) )
 
 !
 !     Get the segment margin from the tolerance database.
@@ -81466,16 +81464,6 @@ contains
 !                 boundary of this segment. Save the index of the
 !                 segment in the "hit list."
 !
-                  if ( nhit == maxhit ) then
-
-                     call ctx%setmsg ( 'Too many segments contain the ' &
-                     //            'input point. Buffer size is #.'  )
-                     call ctx%errint ( '#', maxhit                       )
-                     call ctx%sigerr ( 'SPICE(TOOMANYHITS)'              )
-                     return
-
-                  end if
-
                   nhit           = nhit + 1
                   sghit ( nhit ) = i
 !
@@ -82026,8 +82014,9 @@ contains
 !         in a DSK descriptor, the error SPICE(BADCOORDSYS) is
 !         signaled.
 !
-!     3)  If the input point is contained in more than MAXHIT
-!         segments, the error SPICE(BUFFERTOOSMALL) is signaled.
+!     3)  PEPPER: no limit on the number of segments containing the
+!         input point (SPICELIB signaled SPICE(BUFFERTOOSMALL) for more
+!         than MAXHIT = 1000).
 !
 !     4)  Any other errors that occur while looking up DSK data or
 !         mapping the surface point to a normal vector will be signaled
@@ -82122,7 +82111,6 @@ contains
 !
       real(wp), parameter :: radscl = 1.01_wp
 
-      integer(ip), parameter :: maxhit = 1000
 
 !
 !     Local variables
@@ -82134,9 +82122,9 @@ contains
       real(wp)              segdir ( 3 )
       real(wp)              segvtx ( 3 )
       real(wp)              pnear  ( 3 )
-      real(wp)              sgdist ( maxhit )
+      real(wp), allocatable :: sgdist ( : )
       real(wp)              sgmarg
-      real(wp)              sgxbuf ( 3, 3, maxhit )
+      real(wp), allocatable :: sgxbuf ( :, :, : )
       real(wp)              sphvtx ( 3 )
       real(wp)              srfx   ( 3 )
       real(wp)              vtemp  ( 3 )
@@ -82144,14 +82132,14 @@ contains
 
       integer(ip)           dtype
       integer(ip)           i
-      integer(ip)           iorder ( maxhit )
+      integer(ip), allocatable :: iorder ( : )
       integer(ip)           j
       integer(ip)           k
       integer(ip)           nhit
       integer(ip)           nxpts
       integer(ip)           prvfrm
       integer(ip)           segfid
-      integer(ip)           sghit  ( maxhit )
+      integer(ip), allocatable :: sghit ( : )
       integer(ip)           surfce
       integer(ip)           winner
 
@@ -82184,6 +82172,12 @@ contains
          return
 
       end if
+
+!
+!     PEPPER: at most NSEG segments contain the point (SPICELIB: a
+!     buffer of 1000 hits, BUFFERTOOSMALL).
+!
+      allocate ( iorder(nseg), sgdist(nseg), sghit(nseg), sgxbuf(3,3,nseg) )
 
 !
 !     No intercept has been found.
@@ -82391,16 +82385,6 @@ contains
 !                 index of the segment in the "hit list." Record the
 !                 distance from the ray's vertex to the intercept in
 !                 the parallel array SGDIST.
-
-                  if ( nhit == maxhit ) then
-
-                     call ctx%setmsg ( 'Too many segments were hit by the ' &
-                     //            'input ray. Buffer size is #.'      )
-                     call ctx%errint ( '#', maxhit                         )
-                     call ctx%sigerr ( 'SPICE(BUFFERTOOSMALL)'             )
-                     return
-
-                  end if
 
                   nhit           = nhit + 1
                   sghit ( nhit ) = i
@@ -102885,7 +102869,7 @@ contains
 !!
 !!     Initial values
 !!
-       use pepper_containers, only: grow
+       use pepper_containers, only: grow, grow_cell
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleari, touchd
@@ -102906,7 +102890,6 @@ contains
       integer(ip), parameter :: maxl = 36
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: maxivl = 1000
-      integer(ip), parameter :: maxwin = 2 * maxivl
       integer(ip), parameter :: ubel = 9
       character(cvtlen)     lmbstr
       character(acllen)     nrmloc
@@ -102932,7 +102915,8 @@ contains
       real(wp)              prvlt
       real(wp)              raydir ( 3 )
       real(wp)              rayvtx ( 3 )
-      real(wp)              result ( lbcell : maxwin )
+      real(wp), allocatable :: result ( : )
+      real(wp), allocatable :: pntbuf ( :, : )
       real(wp)              roll
       real(wp)              s
       real(wp)              smajor ( 3 )
@@ -102976,7 +102960,6 @@ contains
                   lmbtyp => ctx%limbpt_state%lmbtyp, &
                   loccde => ctx%limbpt_state%loccde, &
                   nsurf => ctx%limbpt_state%nsurf, &
-                  pntbuf => ctx%limbpt_state%pntbuf, &
                   prvcor => ctx%limbpt_state%prvcor, &
                   prvloc => ctx%limbpt_state%prvloc, &
                   prvmth => ctx%limbpt_state%prvmth, &
@@ -103490,7 +103473,13 @@ contains
 !     Find limb points on the target.
 !
       call cleari ( ncuts,  npts   )
-      call ssized ( ctx, maxwin, result )
+!
+!     PEPPER: the window of transitions in a cutting half-plane and the
+!     buffer of points grow as ZZTANGNT finds points (SPICELIB: 2000
+!     points, ARRAYTOOSMALL).
+!
+      call grow_cell ( result, 2 * 16 )
+      allocate ( pntbuf(3, 16), source = 0.0_wp )
 
 !
 !     Get initial observer-target vector, expressed in the target
@@ -106074,7 +106063,7 @@ contains
 !!
 !!     Initial values
 !!
-       use pepper_containers, only: grow
+       use pepper_containers, only: grow, grow_cell
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleari, touchd
@@ -106095,7 +106084,6 @@ contains
       integer(ip), parameter :: maxl = 36
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: maxivl = 1000
-      integer(ip), parameter :: maxwin = 2 * maxivl
       character(cvtlen)     pntdef
       character(acllen)     nrmloc
       character(shplen)     shpstr
@@ -106115,7 +106103,8 @@ contains
       real(wp)              ptarg  ( 3 )
       real(wp)              raydir ( 3 )
       real(wp)              rayvtx ( 3 )
-      real(wp)              result ( lbcell : maxwin )
+      real(wp), allocatable :: result ( : )
+      real(wp), allocatable :: pntbuf ( :, : )
       real(wp)              roll
       real(wp)              srfvec ( 3 )
       real(wp)              ssblt
@@ -106158,7 +106147,6 @@ contains
                   maxrad => ctx%termpt_state%maxrad, &
                   nrad => ctx%termpt_state%nrad, &
                   nsurf => ctx%termpt_state%nsurf, &
-                  pntbuf => ctx%termpt_state%pntbuf, &
                   prvcor => ctx%termpt_state%prvcor, &
                   prvilu => ctx%termpt_state%prvilu, &
                   prvloc => ctx%termpt_state%prvloc, &
@@ -106715,7 +106703,13 @@ contains
 !     Find terminator points on the target.
 !
       call cleari ( ncuts,  npts   )
-      call ssized ( ctx, maxwin, result )
+!
+!     PEPPER: the window of transitions in a cutting half-plane and the
+!     buffer of points grow as ZZTANGNT finds points (SPICELIB: 2000
+!     points, ARRAYTOOSMALL).
+!
+      call grow_cell ( result, 2 * 16 )
+      allocate ( pntbuf(3, 16), source = 0.0_wp )
 
 !
 !     Get initial observer-target vector, expressed in the target

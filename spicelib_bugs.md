@@ -38,6 +38,7 @@ Kinds:
 | FRAMEX | The cache of kernel-defined frames (`MAXKFR` = 5209 entries) is reset only when the pool changes, and entries are added with ZZHSCADD/ZZHSIADD without checking for room (ZZHSCAVL), so looking up the 5210th distinct kernel frame between pool changes signals `SPICE(HASHISFULL)` instead of evicting. | Fixed: the caches grow (`limits.md`, phase 4). |
 | ZZRVBF (LMPOOL) | Copies the characters of a string value into the pool's 80-character slot without the bounds check ZZRVAR has: a string value longer than 80 characters in an LMPOOL buffer is written past the end of its slot, into the next value. | Fixed: string values have no length limit (`limits.md`, phase 3). |
 | ZZBODDEF (BODDEF) | The documented limit is `MAXP` = 150 new names, but the check is against `MAXE` − `NPERM` = 161; `MAXP` is not used in code. | Unchanged. |
+| TTRANS | Reads the leapseconds (`DELTET/DELTA_AT`) with GDPOOL into a table of `MAXLP` = 140, which returns only the first 140 without an error: with more leapseconds, UTC strings (STR2ET, ET2UTC, TIMOUT) silently use the 140th offset for later epochs, while DELTET (a buffer of 200, an error past it) uses the right one. | Fixed: the table holds all the leapseconds (`limits.md`, phase 6). |
 
 ## EK
 
@@ -104,6 +105,7 @@ what SPICELIB does; PEPPER declares them `intent(inout)`):
 | ZZDSKBSR (ZZDSKSNS) | `DLSDSC` for `DLADSC`. |
 | ZZSEGBOX | The table and Detailed_Output name the arguments CENTER and RADIUS; they are BOXCTR and MAXR. |
 | ZZDSKBUX | DC and IC missing from the table. |
+| DELTET | The Exceptions section says SPICE(BUFFEROVERFLOW) for too many leapseconds; the code signals SPICE(BUFFERTOOSMALL). (Moot in PEPPER: no limit.) |
 | ZZGFRPWK (ZZGFWKAD) | The table lists TOTAL (an argument of ZZGFWKIN) instead of TCHECK. |
 | ZZEKQORD, ZZEKQSEL | TABIDX listed twice; the second is COLIDX. |
 | ZZEKRP2N | `RECTPR` for `RECPTR`. |

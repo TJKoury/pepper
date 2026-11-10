@@ -5553,7 +5553,7 @@ contains
             call ker%clear ( )
             return
          end if
-         ker%nornam(i)%s = normalized ( ker%names(i)%s )
+         call normalize ( ker%names(i)%s, ker%nornam(i)%s )
       end do
       call ker%index ( )
       ker%extker = .true.
@@ -5565,13 +5565,17 @@ contains
 !        A body name normalized as by LJUCRS (left-justified, uppercase,
 !        single blanks), without trailing blanks.
 !
-         pure function normalized ( name ) result ( nor )
-            character(*), intent(in) :: name
-            character(:), allocatable :: nor
+!        (A subroutine, not a function with a deferred-length result:
+!        gfortran keeps that length in a static variable at the call
+!        site, which is not thread-safe.)
+!
+         pure subroutine normalize ( name, nor )
+            character(*), intent(in) :: name  !! the name
+            character(:), allocatable, intent(out) :: nor  !! the normalized name
             character(len(name)) :: buf
             call ljucrs ( 1, name, buf )
             nor = trim ( buf )
-         end function normalized
+         end subroutine normalize
       end procedure zzbodker
 
 !$Procedure ZZBODBLT ( Private --- Retrieve Built-In Body-Code Maps )

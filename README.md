@@ -22,6 +22,7 @@ pixi run build          # the library
 pixi run test           # the unit tests (test/core)
 pixi run tspice         # NAIF's test suite (the tspice package), in parallel
 pixi run test-parallel  # queries from several OpenMP threads
+pixi run check-threads  # no thread-unsafe constructs (also run by `pixi run test`)
 pixi run bench-parallel # timings from 1, 2, 4 and 8 threads
 pixi run docs           # FORD documentation in doc/
 ```
@@ -50,6 +51,15 @@ if (ctx%failed()) ...
 
 Load kernels first, then query from any number of threads, one context per
 thread (see `test/core/test_parallel.f90`).
+
+gfortran (at least up to 16.2) keeps the length of a deferred-length
+character function result (a `character(:), allocatable` result) in a static
+variable at each call site, which threads share. The library therefore has no
+such functions: they return strings of a length computed from their
+arguments, or are subroutines with an allocatable argument
+(`tools/check_threads.py` checks the sources; `pixi run check-threads-ir`
+checks the generated code for any static variable). The same applies to
+programs that call PEPPER from several threads.
 
 Each context keeps up to 23 files open at a time, as SPICELIB does, and
 reopens a file when it needs it again. A program that queries many kernels in

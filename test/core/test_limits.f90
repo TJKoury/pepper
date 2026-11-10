@@ -11,7 +11,7 @@
 program test_limits
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context, zzprsmet
+   use pepper_instance, only: pepper_spice, pepper_context, zzprsmet, zzelvupy
    use pepper_test_kernels, only: write_lsk, write_spk, kernel_name, delete_file, circle_state, &
       write_tk_frames, frame_name, write_body_names, body_name
 
@@ -37,6 +37,9 @@ program test_limits
    call test_frame_names()
    call test_search_order()
    call test_open_files()
+   call test_leapseconds()
+   call test_fov_vertices()
+   call test_dsk_hits()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -656,6 +659,116 @@ contains
       call check(abs(ra - ra1) + abs(dec - dec1) + abs(w - w1) < 1.0e-12_wp, 'nutation: bodeul with 300 angles')
       call ctx%clpool()
    end subroutine test_nutation
+
+   !> 300 leapseconds (SPICELIB: DELTET's buffer of 200, BUFFERTOOSMALL;
+   !> TTRANS's table of 140, the later ones silently dropped): Delta ET
+   !> after the last one, and a UTC string (TTRANS) that agrees with it.
+   subroutine test_leapseconds()
+      integer(ip), parameter :: n = 300
+      real(wp) :: dat(2*n), delta, delta2, et, sp2000
+      character(40) :: utc
+      character(80) :: errmsg
+      integer(ip) :: i
+      ! TAI-UTC = 9 + i seconds from midnight UTC, 180*i - 10000 days past J2000
+      do i = 1, n
+         dat(2*i - 1) = 9 + i
+         dat(2*i) = (180.0_wp*i - 10000)*86400 - 43200
+      end do
+      call ctx%clpool()
+      call ctx%pdpool('DELTET/DELTA_T_A', 1_ip, [32.184_wp])
+      call ctx%pdpool('DELTET/K', 1_ip, [1.657e-3_wp])
+      call ctx%pdpool('DELTET/EB', 1_ip, [1.671e-2_wp])
+      call ctx%pdpool('DELTET/M', 2_ip, [6.239996_wp, 1.99096871e-7_wp])
+      call ctx%pdpool('DELTET/DELTA_AT', 2*n, dat)
+      call ctx%deltet(dat(2*n) + 1.0e6_wp, 'UTC', delta)
+      call check_ok('leapseconds: deltet')
+      call check(abs(delta - (32.184_wp + 9 + n)) < 0.01_wp, 'leapseconds: deltet after the last one')
+      et = dat(2*n) + 1.0e6_wp + delta
+      call ctx%deltet(et, 'ET', delta2)
+      call check(abs(delta2 - delta) < 1.0e-6_wp, 'leapseconds: deltet (ET)')
+      call ctx%et2utc(et, 'ISOC', 3_ip, utc)
+      call ctx%tparse(utc, sp2000, errmsg)
+      call check_ok('leapseconds: et2utc')
+      call check(errmsg == ' ' .and. abs(et - sp2000 - delta) < 1.0e-3_wp, 'leapseconds: et2utc after the last one')
+      call ctx%str2et(utc, et)
+      call check_ok('leapseconds: str2et')
+      call check(abs(et - (sp2000 + delta)) < 1.0e-3_wp, 'leapseconds: str2et after the last one')
+      call ctx%clpool()
+   end subroutine test_leapseconds
+
+   !> A polygonal FOV with 12000 boundary vectors (SPICELIB: MAXVRT and
+   !> MAXFOV, 10000): rays in and out of it (FOVRAY, through ZZGFFVIN),
+   !> and ellipses in and out of its pyramid (ZZELVUPY).
+   subroutine test_fov_vertices()
+      integer(ip), parameter :: n = 12000
+      real(wp), parameter :: half = 10*acos(-1.0_wp)/180  ! half angle of the FOV cone
+      real(wp) :: bounds(3, n), ellips(9), a
+      logical :: visible, found
+      integer(ip) :: i
+      do i = 1, n
+         a = 2*acos(-1.0_wp)*(i - 1)/n
+         bounds(:, i) = [sin(half)*cos(a), sin(half)*sin(a), cos(half)]
+      end do
+      call ctx%clpool()
+      call ctx%pcpool('INS-900001_FOV_SHAPE', 1_ip, ['POLYGON'])
+      call ctx%pcpool('INS-900001_FOV_FRAME', 1_ip, ['J2000'])
+      call ctx%pdpool('INS-900001_BORESIGHT', 3_ip, [0.0_wp, 0.0_wp, 1.0_wp])
+      call ctx%pdpool('INS-900001_FOV_BOUNDARY_CORNERS', 3*n, reshape(bounds, [3*n]))
+      call ctx%fovray('-900001', [0.1_wp, 0.0_wp, 1.0_wp], 'J2000', 'NONE', '399', 0.0_wp, visible)
+      call check_ok('FOV vertices: fovray')
+      call check(visible, 'FOV vertices: a ray inside')
+      call ctx%fovray('-900001', [0.2_wp, 0.0_wp, 1.0_wp], 'J2000', 'NONE', '399', 0.0_wp, visible)
+      call check(.not. visible, 'FOV vertices: a ray outside')
+      call ctx%cgv2el([0.0_wp, 0.0_wp, 100.0_wp], [1.0_wp, 0.0_wp, 0.0_wp], [0.0_wp, 1.0_wp, 0.0_wp], ellips)
+      call zzelvupy(ctx, ellips, [0.0_wp, 0.0_wp, 0.0_wp], [0.0_wp, 0.0_wp, 1.0_wp], n, bounds, found)
+      call check_ok('FOV vertices: zzelvupy')
+      call check(found, 'FOV vertices: an ellipse inside')
+      call ctx%cgv2el([50.0_wp, 0.0_wp, 100.0_wp], [1.0_wp, 0.0_wp, 0.0_wp], [0.0_wp, 1.0_wp, 0.0_wp], ellips)
+      call zzelvupy(ctx, ellips, [0.0_wp, 0.0_wp, 0.0_wp], [0.0_wp, 0.0_wp, 1.0_wp], n, bounds, found)
+      call check(.not. found, 'FOV vertices: an ellipse outside')
+      call ctx%clpool()
+   end subroutine test_fov_vertices
+
+   !> 1100 DSK segments of one body that all contain a point
+   !> (SPICELIB: 1000 hits, ZZDSKBUN's TOOMANYHITS and ZZDSKBUX's
+   !> BUFFERTOOSMALL): the normal at a surface point (SRFNRM) and a ray
+   !> intercept (DSKXV). The shape is an octahedron of radius 1000 km.
+   subroutine test_dsk_hits()
+      character(*), parameter :: dsk = prefix // 'hits.bds'
+      integer(ip), parameter :: nseg = 1100, nv = 6, np = 8
+      real(wp), parameter :: pi = acos(-1.0_wp), r = 1000.0_wp
+      real(wp) :: vrtces(3, nv), spaixd(10), corpar(10), mncor3, mxcor3, normal(3), xpt(3)
+      integer(ip) :: plates(3, np), handle, i
+      integer(ip), allocatable :: work(:, :), spaixi(:)
+      logical :: found(1)
+      vrtces = reshape([r, 0.0_wp, 0.0_wp, -r, 0.0_wp, 0.0_wp, 0.0_wp, r, 0.0_wp, &
+                        0.0_wp, -r, 0.0_wp, 0.0_wp, 0.0_wp, r, 0.0_wp, 0.0_wp, -r], [3, nv])
+      ! outward plates: +x,+y,+z ... in each octant
+      plates = reshape([1, 3, 5, 3, 2, 5, 2, 4, 5, 4, 1, 5, 3, 1, 6, 2, 3, 6, 4, 2, 6, 1, 4, 6], [3, np])
+      allocate (work(2, 10000), spaixi(200000))
+      corpar = 0
+      call ctx%dskmi2(nv, vrtces, np, plates, 1.0_wp, 2_ip, 10000_ip, 10000_ip, 10000_ip, .true., &
+                      200000_ip, work, spaixd, spaixi)
+      call ctx%dskrb2(nv, vrtces, np, plates, 1_ip, corpar, mncor3, mxcor3)
+      call delete_file(dsk)
+      call ctx%dskopn(dsk, dsk, 0_ip, handle)
+      do i = 1, nseg
+         call ctx%dskw02(handle, 499_ip, 1_ip, 1_ip, 'IAU_MARS', 1_ip, corpar, -pi, pi, -pi/2, pi/2, &
+                         mncor3, mxcor3, -1.0e9_wp, 1.0e9_wp, nv, vrtces, np, plates, spaixd, spaixi)
+      end do
+      call ctx%dskcls(handle, .true.)
+      call check_ok('DSK hits: write')
+      call ctx%furnsh(dsk)
+      call ctx%srfnrm('DSK/UNPRIORITIZED', '499', 0.0_wp, 'IAU_MARS', 1_ip, [r/3, r/3, r/3], normal)
+      call check_ok('DSK hits: srfnrm')
+      call check(maxval(abs(normal - 1/sqrt(3.0_wp))) < 1.0e-9_wp, 'DSK hits: srfnrm normal')
+      call ctx%dskxv(.false., '499', 0_ip, [0_ip], 0.0_wp, 'IAU_MARS', 1_ip, [2*r, 2*r, 2*r], &
+                     [-1.0_wp, -1.0_wp, -1.0_wp], xpt, found)
+      call check_ok('DSK hits: dskxv')
+      call check(found(1) .and. maxval(abs(xpt - r/3)) < 1.0e-6_wp, 'DSK hits: dskxv intercept')
+      call ctx%unload(dsk)
+      call delete_file(dsk)
+   end subroutine test_dsk_hits
 
    !> PCK constants of a body with its own nutation/precession angles
    !> (the first n of ANGLES) and coefficients (the first n of COEF).

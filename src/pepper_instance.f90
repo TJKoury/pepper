@@ -13484,20 +13484,20 @@ module pepper_instance
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zztanslv ( ctx, udcond, udstep, udrefn, cstep, step, start, finish, tol, result, points, endflg )
+      module subroutine zztanslv ( ctx, udcond, udstep, udrefn, cstep, step, start, finish, tol, result, points, endflg, room )
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zztan_cond) :: udcond  !! the zztan_cond routine
          procedure(gf_step) :: udstep  !! the gf_step routine
          procedure(gf_refine) :: udrefn  !! the gf_refine routine
-         integer(ip), parameter :: lbcell = -5
          logical, intent(in) :: cstep  !! Logical indicating constant step size.
          real(wp), intent(in) :: step  !! Constant step size for finding geometric events.
          real(wp), intent(in) :: start  !! Beginning of the search interval.
          real(wp), intent(in) :: finish  !! End of the search interval.
          real(wp), intent(in) :: tol  !! Maximum error in detection of state transitions.
-         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
-         real(wp), intent(out) :: points ( 3, * )  !! Array of points associated with transitions.
+         real(wp), allocatable, intent(inout) :: result ( : )  !! SPICE window containing results. Lower bound LBCELL; grows (PEPPER).
+         real(wp), allocatable, intent(inout) :: points ( :, : )  !! Array of points associated with transitions. Grows (PEPPER).
          logical, intent(out) :: endflg ( 2 )  !! Endpoint transition flags.
+         integer(ip), intent(in), optional :: room  !! SPICELIB's fixed capacity (legacy interface): RESULT and POINTS do not grow, and the errors for lack of room are SPICELIB's.
       end subroutine zztanslv
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -15028,7 +15028,6 @@ module pepper_instance
       module subroutine zztangnt ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis, schstp, soltol, result, points )
       use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: curve  !! Type of curve: limb or terminator type.
          real(wp), intent(in) :: srcrad  !! Radius of illumination source.
          integer(ip), intent(in) :: shape  !! Target shape.
@@ -15041,8 +15040,8 @@ module pepper_instance
          real(wp), intent(in) :: axis   ( 3 )  !! Axis vector: edge of cutting half-plane.
          real(wp), intent(in) :: schstp  !! Angular step size for searching.
          real(wp), intent(in) :: soltol  !! Solution convergence tolerance.
-         real(wp), intent(inout) :: result ( lbcell : * )  !! Cell (not window) containing transition angles.
-         real(wp), intent(out) :: points ( 3, * )  !! Array of tangent points.
+         real(wp), allocatable, intent(inout) :: result ( : )  !! Cell (not window) containing transition angles. Lower bound LBCELL; grows (PEPPER).
+         real(wp), allocatable, intent(inout) :: points ( :, : )  !! Array of tangent points. Grows (PEPPER).
       end subroutine zztangnt
 
       !> Find limb points on a target body. The limb is the set of points
@@ -20275,16 +20274,28 @@ contains
 
    !> The name of the file with a DAF or DAS handle, whole (blank if no
    !> file has the handle).
-   function file_name(spice, handle) result(name)
+   pure function file_name(spice, handle) result(name)
       type(pepper_spice), intent(in) :: spice  !! the instance
       integer(ip), intent(in) :: handle  !! the handle
-      character(:), allocatable :: name  !! the file name
+      character(file_name_length(spice, handle)) :: name  !! the file name
       integer(ip) :: i
       name = ' '
       if (.not. allocated(spice%zzddhman)) return
       i = spice%zzddhman%find(handle)
       if (i > 0) name = spice%zzddhman%files(i)%name
    end function file_name
+
+   !> The length of file_name's result: the length of the file's name, 1
+   !> if there is no file with the handle.
+   pure integer function file_name_length(spice, handle) result(n)
+      type(pepper_spice), intent(in) :: spice  !! the instance
+      integer(ip), intent(in) :: handle  !! the handle
+      integer(ip) :: i
+      n = 1
+      if (.not. allocated(spice%zzddhman)) return
+      i = spice%zzddhman%find(handle)
+      if (i > 0) n = len(spice%zzddhman%files(i)%name)
+   end function file_name_length
 
    !> Replace the first occurrence of marker in the long message with the
    !> name of the file with a DAF or DAS handle.
@@ -20625,7 +20636,7 @@ contains
    function ctx_message(this, option) result(msg)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: option  !! 'SHORT', 'LONG' or 'EXPLAIN'
-      character(:), allocatable :: msg  !! the message (without trailing blanks)
+      character(message_length(this, option)) :: msg  !! the message (without trailing blanks)
       character(explanation_length) :: xmsg
       select case (upper(adjustl(option)))
       case ('SHORT')
@@ -21152,7 +21163,7 @@ contains
    !> The short error message (blank if none).
    pure function short_text(this) result(msg)
       type(pepper_context), intent(in) :: this  !! the context
-      character(:), allocatable :: msg  !! the message
+      character(text_length(this%short)) :: msg  !! the message
       if (allocated(this%short)) then
          msg = this%short
       else
@@ -21163,7 +21174,7 @@ contains
    !> The long error message (blank if none).
    pure function long_text(this) result(msg)
       type(pepper_context), intent(in) :: this  !! the context
-      character(:), allocatable :: msg  !! the message
+      character(text_length(this%long)) :: msg  !! the message
       if (allocated(this%long)) then
          msg = this%long
       else
@@ -21174,13 +21185,46 @@ contains
    !> The device of the error reports ('NULL' if never set).
    pure function device_text(this) result(device)
       type(pepper_context), intent(in) :: this  !! the context
-      character(:), allocatable :: device  !! the device
+      character(merge(text_length(this%device), 4, allocated(this%device))) :: device  !! the device
       if (allocated(this%device)) then
          device = this%device
       else
          device = 'NULL'
       end if
    end function device_text
+
+   !> The length of a string that may not be allocated (0 if it is not).
+   !>
+   !> PEPPER: the functions of this module that return strings give them
+   !> the length of a specification expression like this one, not a
+   !> deferred length (`character(:), allocatable` results): gfortran (at
+   !> least up to 16.2) keeps the length of a deferred-length function
+   !> result in a static variable at each call site (`slen`), which threads
+   !> share, so concurrent calls get each other's lengths and corrupt the
+   !> heap. Functions with a deferred-length result are not used.
+   pure integer function text_length(s) result(n)
+      character(:), allocatable, intent(in) :: s  !! the string
+      n = 0
+      if (allocated(s)) n = len(s)
+   end function text_length
+
+   !> The length of ctx_message's result for an option.
+   pure integer function message_length(this, option) result(n)
+      class(pepper_context), intent(in) :: this  !! the context
+      character(*), intent(in) :: option  !! 'SHORT', 'LONG' or 'EXPLAIN'
+      character(explanation_length) :: xmsg
+      select case (upper(adjustl(option)))
+      case ('SHORT')
+         n = text_length(this%short)
+      case ('EXPLAIN')
+         call expln(short_text(this), xmsg)
+         n = len_trim(xmsg)
+      case ('LONG')
+         n = text_length(this%long)
+      case default
+         n = 0
+      end select
+   end function message_length
 
    !> Uppercase version of a string (ASCII letters).
    pure function upper(s) result(u)

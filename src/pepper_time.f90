@@ -5709,6 +5709,7 @@ contains
       use pepper_math, only: odd
       use pepper_strings, only: nextwd, ucase
       use pepper_inc_zzctr
+      use pepper_containers, only: grow
       implicit none
       integer(ip), parameter :: mxcomp = 10
       integer(ip)           divble
@@ -5757,7 +5758,6 @@ contains
       integer(ip), parameter :: octl0 = oct0 + 1
       integer(ip), parameter :: novl0 = nov0 + 1
       integer(ip), parameter :: decl0 = dec0 + 1
-      integer(ip), parameter :: maxlp = 140
       integer(ip), parameter :: maxvar = 1
       integer(ip), parameter :: daysec = 1
       integer(ip), parameter :: dayp2 = daysec + 1
@@ -5882,6 +5882,7 @@ contains
       integer(ip) :: taiptr
       integer(ip) :: dyear
       real(wp) :: tai
+      character(1) :: dtype
       integer(ip) :: rem
       if ( .not. allocated ( ctx%ttrans_state ) ) allocate ( ctx%ttrans_state )
       associate ( unifrm => ctx%ttrans_state%unifrm, &
@@ -5893,9 +5894,7 @@ contains
                   halfd => ctx%ttrans_state%halfd, &
                   jd1101 => ctx%ttrans_state%jd1101, &
                   secspd => ctx%ttrans_state%secspd, &
-                  taitab => ctx%ttrans_state%taitab, &
                   tsecs => ctx%ttrans_state%tsecs, &
-                  daytab => ctx%ttrans_state%daytab, &
                   dn2000 => ctx%ttrans_state%dn2000, &
                   dofyr => ctx%ttrans_state%dofyr, &
                   nref => ctx%ttrans_state%nref, &
@@ -6106,11 +6105,26 @@ contains
 
       if ( update .or. nodata ) then
 !
+!        PEPPER: the tables hold all the leapseconds of the kernel
+!        pool (SPICELIB: 140; GDPOOL silently dropped the others).
+!
+         call dtpool ( ctx, 'DELTET/DELTA_AT', found, nref, dtype )
+
+         if ( .not. found ) nref = 0
+
+         call grow ( ctx%ttrans_state%taitab, max ( nref, 1_ip ) )
+         call grow ( ctx%ttrans_state%daytab, max ( nref, 1_ip ) )
+
+         associate ( taitab => ctx%ttrans_state%taitab, &
+                     daytab => ctx%ttrans_state%daytab )
+!
 !        We load the TAI-UTC offsets and formal leapsecond epochs
 !        into the TAITAB.  (We will modify this array in a minute).
 !
-         call gdpool ( ctx, 'DELTET/DELTA_AT',  1,       2*maxlp, &
-                       nref,               taitab,  found    )
+         if ( found ) then
+            call gdpool ( ctx, 'DELTET/DELTA_AT',  1,  size( taitab, kind=ip ), &
+                          nref,               taitab,  found    )
+         end if
 
 !
 !        Make sure all of the requested data was there.
@@ -6206,7 +6220,12 @@ contains
 !
          nodata = .false.
 
+         end associate
+
       end if
+
+      associate ( taitab => ctx%ttrans_state%taitab, &
+                  daytab => ctx%ttrans_state%daytab )
 
 !
 !     Make local normalized copies of FROM and TO.
@@ -6852,6 +6871,7 @@ contains
 !
 
       return
+      end associate
       end associate
       end procedure ttrans
 

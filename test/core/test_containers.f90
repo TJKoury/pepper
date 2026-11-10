@@ -5,7 +5,7 @@
 program test_containers
 
    use pepper_kinds, only: ip, wp
-   use pepper_containers, only: string, string_map, int_map, grow, grown_capacity, lnkgrow
+   use pepper_containers, only: string, string_map, int_map, grow, grown_capacity, grow_cell, lnkgrow
    use pepper_instance, only: pepper_spice, pepper_context
 
    implicit none
@@ -19,6 +19,7 @@ program test_containers
    call test_int_map()
    call test_int_map_random()
    call test_lnkgrow()
+   call test_grow_cell()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -356,5 +357,28 @@ contains
       call check(n == 995, 'lnkgrow: list B has 995 nodes')
       call check(.not. ctx%failed(), 'lnkgrow: no errors')
    end subroutine test_lnkgrow
+
+   !> grow_cell allocates an empty cell with its size set, keeps the
+   !> control area and the intervals of a window when it grows it, and
+   !> the window routines see the new size.
+   subroutine test_grow_cell()
+      type(pepper_spice), target :: spice
+      type(pepper_context) :: ctx
+      real(wp), allocatable :: w(:)
+      integer(ip) :: i
+
+      ctx = spice%new_context()
+      call grow_cell(w, 2_ip)
+      call check(lbound(w, 1) == -5 .and. ctx%sized(w) == ubound(w, 1) .and. ctx%cardd(w) == 0, &
+                 'grow_cell: new')
+      do i = 1, 100
+         if (ctx%cardd(w) + 2 > ctx%sized(w)) call grow_cell(w, ctx%cardd(w) + 2)
+         call ctx%wninsd(real(2*i, wp), real(2*i + 1, wp), w)
+      end do
+      call check(.not. ctx%failed() .and. ctx%wncard(w) == 100 .and. ctx%sized(w) >= 200 &
+                 .and. w(1) == 2.0_wp .and. w(200) == 201.0_wp, 'grow_cell: window of 100 intervals')
+      call grow_cell(w, 10_ip)
+      call check(ctx%wncard(w) == 100, 'grow_cell: no shrink')
+   end subroutine test_grow_cell
 
 end program test_containers

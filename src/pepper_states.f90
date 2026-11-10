@@ -24,7 +24,6 @@ module pepper_states
    use pepper_segment_index, only: segment_index, segment_reuse
    use pepper_inc_das, only: ftsize
    use pepper_inc_dla, only: dladsz
-   use pepper_inc_dsk02, only: maxcgr, maxplt
    use pepper_inc_dskdsc, only: dskdsz, nsypar
    use pepper_inc_dsktol, only: angmrg, lonali, ptmemm, sgpadm, sgreed, xfract
    use pepper_inc_ekcnamsz, only: cnamsz
@@ -36,7 +35,7 @@ module pepper_states
    use pepper_inc_ekquery, only: eqvdsz
    use pepper_inc_eksegdsc, only: sdscsz
    use pepper_inc_ektnamsz, only: tnamsz
-   use pepper_inc_gf, only: annulr, any, full, maxvrt, noctyp, oclln, partl, shplen
+   use pepper_inc_gf, only: annulr, any, full, noctyp, oclln, partl, shplen
    use pepper_inc_ninert, only: ninert
    use pepper_inc_nninrt, only: nninrt
    use pepper_inc_sclk, only: mxnfld, mxpart
@@ -59,7 +58,7 @@ module pepper_states
 
    public :: init_dafana_state, dafana_grow, &
        init_dafec_state, init_daffa_state, daffa_grow, init_dafrwd_state, init_dasec_state, &
-       init_dasrwr_state, init_dskx02_state, init_ekqmgr_state, init_ekqmgr_context_state, &
+       init_dasrwr_state, init_ekqmgr_state, init_ekqmgr_context_state, &
        init_framex_state, init_limbpt_state, &
        init_sc01_state, &
        init_termpt_state, init_tisbod_state, init_tkfram_state, &
@@ -701,6 +700,7 @@ module pepper_states
       !> error message templates naming each missing DELTET kernel variable
       character(20) :: missed ( 5 ) = [ character(20) :: 'DELTET/DELTA_T_A, #', 'DELTET/K, #', 'DELTET/EB, #', &
          'DELTET/M, #', 'DELTET/DELTA_AT, #' ]
+      real(wp), allocatable :: dleap ( :, : )  !! work: the leapseconds and their epochs (DELTET/DELTA_AT); grows (SPICELIB: a local buffer of 200)
    end type deltet_state
 
    ! ------------------------------------------------------------------ DIAGS2
@@ -846,8 +846,6 @@ module pepper_states
 
    ! ------------------------------------------------------------------ DSKX02
 
-   integer(ip), parameter :: nvxlst = 50000
-   integer(ip), parameter :: maxpl = maxplt/125
    integer(ip), parameter :: dskx02_bufsiz = 200
 
    !> Determine the plate ID and body-fixed coordinates of the
@@ -857,27 +855,33 @@ module pepper_states
    !> The saved variables of SPICELIB's DSKX02 routines (entry points dskx02),
    !> held in pepper_context (one per thread).
    !>
-   !> No default initialization (3453136 bytes): see init_dskx02_state.
+   !> SPICELIB's fixed work arrays (50000 voxels on a ray, 256000 plates
+   !> in a voxel group, the 100000-entry coarse grid: 3.4 MB per context)
+   !> are allocatable: the coarse grid and the voxel lists are sized from
+   !> the segment's voxel grid (a ray crosses at most `nx+ny+nz` voxels),
+   !> and the plate lists grow with the plates read.
    type, public :: dskx02_state
-      integer(ip) :: cgrext ( 3 )  !! coarse voxel grid extents of the current segment
-      integer(ip) :: cgrptr ( maxcgr )  !! coarse voxel grid pointers of the current segment
-      integer(ip) :: cgscal  !! coarse voxel scale of the current segment
-      integer(ip) :: cgscl2  !! square of the coarse voxel scale
-      integer(ip) :: corsys  !! coordinate system code of the current segment
-      real(wp) :: dskdsc ( dskdsz )  !! DSK descriptor of the current segment
-      real(wp) :: grdext ( 3 )  !! voxel grid extents (km) of the current segment
-      real(wp) :: grdtol  !! tolerance for the ray vertex being inside the voxel grid
-      integer(ip) :: platid ( maxpl )  !! work: plate IDs of the voxels of the current group
-      integer(ip) :: prvdsc ( dladsz )  !! DLA descriptor of the segment used last
-      integer(ip) :: prvhan  !! DSK handle of the segment used last (0 if its data were not fully read)
-      integer(ip) :: source ( maxpl )  !! work: index (into the voxel list) of the voxel each plate in PLATID came from
-      real(wp) :: vbuff ( 3, dskx02_bufsiz )  !! work: buffer of plate vertices already fetched during this call
-      integer(ip) :: vgrext ( 3 )  !! voxel grid extents (in voxels) of the current segment
-      real(wp) :: voxori ( 3 )  !! voxel grid origin of the current segment
-      real(wp) :: voxsiz  !! voxel size (km) of the current segment
-      integer(ip) :: vxlcg ( 3, nvxlst )  !! work: coarse voxel coordinates of the voxels hit by the ray
-      integer(ip) :: vxlout ( nvxlst )  !! work: indices (into the voxel list) of the voxels with non-empty coarse voxels
-      integer(ip) :: vxlstr ( nvxlst )  !! work: start pointers of the fine voxel data of the voxels hit by the ray
+      integer(ip) :: cgrext ( 3 ) = 0  !! coarse voxel grid extents of the current segment
+      integer(ip), allocatable :: cgrptr ( : )  !! coarse voxel grid pointers of the current segment
+      integer(ip) :: cgscal = 0  !! coarse voxel scale of the current segment
+      integer(ip) :: cgscl2 = 0  !! square of the coarse voxel scale
+      integer(ip) :: corsys = 0  !! coordinate system code of the current segment
+      real(wp) :: dskdsc ( dskdsz ) = 0.0_wp  !! DSK descriptor of the current segment
+      real(wp) :: grdext ( 3 ) = -1.0_wp  !! voxel grid extents (km) of the current segment
+      real(wp) :: grdtol = 0.0_wp  !! tolerance for the ray vertex being inside the voxel grid
+      integer(ip), allocatable :: ordvec ( : )  !! work: order vector of PLATID
+      integer(ip), allocatable :: platid ( : )  !! work: plate IDs of the voxels of the current group
+      integer(ip) :: prvdsc ( dladsz ) = 0  !! DLA descriptor of the segment used last
+      integer(ip) :: prvhan = 0  !! DSK handle of the segment used last (0 if its data were not fully read)
+      integer(ip), allocatable :: source ( : )  !! work: index (into the voxel list) of the voxel each plate in PLATID came from
+      real(wp) :: vbuff ( 3, dskx02_bufsiz ) = 0.0_wp  !! work: buffer of plate vertices already fetched during this call
+      integer(ip) :: vgrext ( 3 ) = 0  !! voxel grid extents (in voxels) of the current segment
+      real(wp) :: voxori ( 3 ) = 0.0_wp  !! voxel grid origin of the current segment
+      real(wp) :: voxsiz = 0.0_wp  !! voxel size (km) of the current segment
+      integer(ip), allocatable :: voxlst ( :, : )  !! work: grid coordinates of the voxels hit by the ray (XDDA)
+      integer(ip), allocatable :: vxlcg ( :, : )  !! work: coarse voxel coordinates of the voxels hit by the ray
+      integer(ip), allocatable :: vxlout ( : )  !! work: indices (into the voxel list) of the voxels with non-empty coarse voxels
+      integer(ip), allocatable :: vxlstr ( : )  !! work: start pointers of the fine voxel data of the voxels hit by the ray
    end type dskx02_state
 
    ! ------------------------------------------------------------------ DSKXSI
@@ -1534,7 +1538,6 @@ module pepper_states
 
    integer(ip), parameter :: limbpt_maxl = 36
    integer(ip), parameter :: limbpt_frnmln = 32
-   integer(ip), parameter :: limbpt_maxwin = 2 * maxivl
 
    !> Find limb points on a target body. The limb is the set of points
    !> of tangency on the target of rays emanating from the observer.
@@ -1544,13 +1547,12 @@ module pepper_states
    !> The saved variables of SPICELIB's LIMBPT routines (entry points limbpt),
    !> held in pepper_context (one per thread).
    !>
-   !> No default initialization (49168 bytes): see init_limbpt_state.
+   !> No default initialization (1168 bytes): see init_limbpt_state.
    type, public :: limbpt_state
       logical :: first  !! first call: counters, correction, method and locus not yet set up
       integer(ip) :: lmbtyp  !! limb type parsed from the saved method (tangent or guided)
       integer(ip) :: loccde  !! aberration correction locus code parsed from the saved CORLOC
       integer(ip) :: nsurf  !! number of surface IDs in the saved method's surface list
-      real(wp) :: pntbuf ( 3, limbpt_maxwin )  !! work: buffer of the limb points found in one cutting half-plane
       character(corlen) :: prvcor  !! aberration correction string of the previous call
       character(acllen) :: prvloc  !! aberration correction locus string (CORLOC) of the previous call
       character(mthlen) :: prvmth  !! method string of the previous call (blank after a parse error)
@@ -2721,7 +2723,6 @@ module pepper_states
 
    integer(ip), parameter :: termpt_maxl = 36
    integer(ip), parameter :: termpt_frnmln = 32
-   integer(ip), parameter :: termpt_maxwin = 2 * maxivl
 
    !> Find terminator points on a target body. The caller specifies
    !> half-planes, bounded by the illumination source center-target
@@ -2730,14 +2731,13 @@ module pepper_states
    !> The saved variables of SPICELIB's TERMPT routines (entry points termpt),
    !> held in pepper_context (one per thread).
    !>
-   !> No default initialization (49272 bytes): see init_termpt_state.
+   !> No default initialization (1272 bytes): see init_termpt_state.
    type, public :: termpt_state
       logical :: first  !! first call: counters not yet initialized and no correction/method parsed yet
       integer(ip) :: loccde  !! work: code of the aberration correction locus (CENTER or ELLIPSOID TERMINATOR)
       real(wp) :: maxrad  !! work: maximum radius of the target DSK surfaces (DSK shape only)
       integer(ip) :: nrad  !! work: number of radii returned by the last ZZBODVCD lookup
       integer(ip) :: nsurf  !! number of surface IDs in the previous METHOD string
-      real(wp) :: pntbuf ( 3, termpt_maxwin )  !! work: terminator points found in the current cutting half-plane
       character(corlen) :: prvcor  !! aberration correction string of the previous call
       integer(ip) :: prvilu  !! ID code of the illumination source whose radii were looked up last (0 after a failure)
       character(acllen) :: prvloc  !! aberration correction locus string of the previous call
@@ -2989,7 +2989,6 @@ module pepper_states
 
    ! ------------------------------------------------------------------ TTRANS
 
-   integer(ip), parameter :: maxlp = 140
    integer(ip), parameter :: ttrans_maxvar = 1
    integer(ip), parameter :: daysec = 1
    integer(ip), parameter :: dayp2 = daysec + 1
@@ -3029,9 +3028,9 @@ module pepper_states
       real(wp) :: halfd = 0.0_wp  !! number of seconds in half a day
       real(wp) :: jd1101 = 0.0_wp  !! Julian date UTC of Jan 1, 1 AD (computed on the first call)
       real(wp) :: secspd = 0.0_wp  !! number of seconds in a day
-      real(wp) :: taitab ( 2*maxlp ) = 0.0_wp  !! TAI at the starts of the UTC days around each leapsecond (from DELTET/DELTA_AT)
+      real(wp), allocatable :: taitab ( : )  !! TAI at the starts of the UTC days around each leapsecond (from DELTET/DELTA_AT); grows (SPICELIB: 140 leapseconds)
       real(wp) :: tsecs = 0.0_wp  !! scratch: seconds into the day, then into the minute, of the time being converted
-      integer(ip) :: daytab ( 2*maxlp ) = 0  !! day numbers past 1 Jan 1 AD of the days in TAITAB
+      integer(ip), allocatable :: daytab ( : )  !! day numbers past 1 Jan 1 AD of the days in TAITAB
       integer(ip) :: dn2000 = 0  !! day number past 1 Jan 1 AD of Jan 1, 2000 (computed on the first call)
       integer(ip) :: dofyr = 0  !! scratch: day of year of the time being converted
       integer(ip) :: nref = 0  !! number of entries in TAITAB and DAYTAB
@@ -4015,18 +4014,16 @@ module pepper_states
 
    ! ------------------------------------------------------------------ ZZELVUPY
 
-   integer(ip), parameter :: maxfov = 10000
-
    !> Determine whether a specified ellipse intersects the pyramid
    !> defined by a polygonal field of view.
    !>
    !> The saved variables of SPICELIB's ZZELVUPY routines (entry points
    !> zzelvupy), held in pepper_context (one per thread).
    !>
-   !> No default initialization (240024 bytes): see init_zzelvupy_state.
+   !> See init_zzelvupy_state.
    type, public :: zzelvupy_state
       real(wp) :: origin ( 3 )  !! the origin (zero vector), constant
-      real(wp) :: work ( 3, maxfov )  !! work: projections of the FOV boundary vectors onto the FOV plane
+      real(wp), allocatable :: work ( :, : )  !! work: projections of the FOV boundary vectors onto the FOV plane; grows to the number of vectors (SPICELIB: 10000)
    end type zzelvupy_state
 
    ! ------------------------------------------------------------------ ZZFRMGT0
@@ -4215,16 +4212,16 @@ module pepper_states
    !> The saved variables of SPICELIB's ZZGFFVU routines (entry points
    !> zzgffvin, zzgffvst), held in pepper_context (one per thread).
    !>
-   !> No default initialization (400584 bytes): see init_zzgffvu_state.
+   !> No default initialization: see init_zzgffvu_state.
    type, public :: zzgffvu_state
       real(wp) :: svarad  !! angular radius of the FOV (max angle between axis and boundary vectors)
-      real(wp) :: svbnds ( 3, maxvrt )  !! FOV boundary vectors, from GETFOV (second semi-axis added for circles)
+      real(wp), allocatable :: svbnds ( :, : )  !! FOV boundary vectors, from GETFOV (second semi-axis added for circles); as many as the instrument has (SPICELIB: MAXVRT)
       character(corlen) :: svcorr  !! aberration correction saved by ZZGFFVIN
       real(wp) :: svedct ( 3 )  !! center of the ellipsoid representing a circular/elliptical FOV (for ZZOCCED)
       logical :: svetrg  !! the target is an ellipsoid
       real(wp) :: svfaxi ( 3 )  !! FOV axis vector (instrument frame)
       real(wp) :: svfovm ( 3, 3 )  !! rotation from the instrument frame to a frame whose +Z is the FOV axis
-      real(wp) :: svfpol ( 2, maxvrt )  !! 2D vertices of the FOV polygon in the FOV plane (svfovm frame)
+      real(wp), allocatable :: svfpol ( :, : )  !! 2D vertices of the FOV polygon in the FOV plane (svfovm frame), the size of SVBNDS
       real(wp) :: svfsmx ( 3, 3 )  !! semi-axis matrix of the ellipsoid representing the FOV (for ZZOCCED)
       real(wp) :: svfvct ( 3 )  !! unit FOV axis vector: center of the FOV plane
       character(:), allocatable :: svifrm  !! instrument frame name, from GETFOV
@@ -5844,31 +5841,6 @@ contains
       state%pass1 = .true.
    end subroutine init_dasrwr_state
 
-   !> Set the initial values of a new dskx02_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_dskx02_state(state)
-      type(dskx02_state), intent(inout) :: state  !! the state
-      state%cgrext = 0
-      state%cgrptr = 0
-      state%cgscal = 0
-      state%cgscl2 = 0
-      state%corsys = 0
-      state%dskdsc = 0.0_wp
-      state%grdext = -1.0_wp
-      state%grdtol = 0.0_wp
-      state%platid = 0
-      state%prvdsc = 0
-      state%prvhan = 0
-      state%source = 0
-      state%vbuff = 0.0_wp
-      state%vgrext = 0
-      state%voxori = 0.0_wp
-      state%voxsiz = 0.0_wp
-      state%vxlcg = 0
-      state%vxlout = 0
-      state%vxlstr = 0
-   end subroutine init_dskx02_state
-
    !> Set the initial values of a new ekqmgr_state: SPICELIB's DATA
    !> values, and zero for the other components.
    pure subroutine init_ekqmgr_state(state)
@@ -6100,7 +6072,6 @@ contains
       state%lmbtyp = 0
       state%loccde = 0
       state%nsurf = 0
-      state%pntbuf = 0.0_wp
       state%prvcor = ' '
       state%prvloc = ' '
       state%prvmth = ' '
@@ -6285,7 +6256,6 @@ contains
       state%maxrad = 0.0_wp
       state%nrad = 0
       state%nsurf = 0
-      state%pntbuf = 0.0_wp
       state%prvcor = ' '
       state%prvilu = 0
       state%prvloc = ' '
@@ -6640,7 +6610,6 @@ contains
    pure subroutine init_zzelvupy_state(state)
       type(zzelvupy_state), intent(inout) :: state  !! the state
       state%origin = 0.0_wp
-      state%work = 0.0_wp
    end subroutine init_zzelvupy_state
 
    !> Set the initial values of a new zzgffvu_state: SPICELIB's DATA
@@ -6648,13 +6617,11 @@ contains
    pure subroutine init_zzgffvu_state(state)
       type(zzgffvu_state), intent(inout) :: state  !! the state
       state%svarad = 0.0_wp
-      state%svbnds = 0.0_wp
       state%svcorr = ' '
       state%svedct = 0.0_wp
       state%svetrg = .false.
       state%svfaxi = 0.0_wp
       state%svfovm = 0.0_wp
-      state%svfpol = 0.0_wp
       state%svfsmx = 0.0_wp
       state%svfvct = 0.0_wp
       state%svifrm = ' '
@@ -6695,20 +6662,28 @@ contains
    pure function surface_key(item, body) result(key)
       character(*), intent(in) :: item  !! the normalized name, or the ID as text
       integer(ip), intent(in) :: body  !! the body ID code
-      character(:), allocatable :: key
-      character(12) :: b
-      write (b, '(i0)') body
-      key = trim(b) // achar(0) // trim(item)
+      character(id_text_length(body) + 1 + len_trim(item)) :: key
+      key = id_text(body) // achar(0) // trim(item)
    end function surface_key
 
-   !> The ID as text, for surface_key.
+   !> The ID as text, for surface_key. (Not a deferred-length result:
+   !> gfortran keeps that length in a static variable at the call site,
+   !> which is not thread-safe; see text_length in pepper_instance.)
    pure function id_text(id) result(t)
       integer(ip), intent(in) :: id  !! the ID
-      character(:), allocatable :: t
+      character(id_text_length(id)) :: t
       character(12) :: b
       write (b, '(i0)') id
-      t = trim(b)
+      t = b
    end function id_text
+
+   !> The length of id_text's result.
+   pure integer function id_text_length(id) result(n)
+      integer(ip), intent(in) :: id  !! the ID
+      character(12) :: b
+      write (b, '(i0)') id
+      n = len_trim(b)
+   end function id_text_length
 
    !> Build the maps (SPICELIB's ZZSRFINI order: from the last assignment
    !> to the first, a (name, body) is added if it is new, and then its
