@@ -129,7 +129,7 @@
 !
 ! --- Case: ------------------------------------------------------
 !
-      CALL TCASE ( 'DAFBNA SPICE(STFULL) Exception' )
+      CALL TCASE ( 'DAFBNA past 20 DAFs (PEPPER: no STFULL)' )
 
 !
 !     Create and load some test DAFs to use.
@@ -152,7 +152,10 @@
 !
 !     Check for the exception.
 !
-      CALL CHCKXC ( .TRUE., 'SPICE(STFULL)', OK )
+!     PEPPER: DAFANA's state table grows (SPICELIB's had 20 entries and
+!     signaled SPICE(STFULL) for the 21st DAF): no exception.
+!
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 !     Clean up.

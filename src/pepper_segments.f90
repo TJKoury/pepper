@@ -907,7 +907,6 @@ contains
       use pepper_constants, only: intmax
       use pepper_arrays, only: isrchi
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 10000
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 100000
@@ -1414,7 +1413,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi, moved
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 10000
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 100000
@@ -1874,7 +1872,6 @@ contains
       use pepper_constants, only: dpmax, dpmin, intmax
       use pepper_arrays, only: cleard, isrchi, moved
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 10000
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 100000
@@ -4066,7 +4063,6 @@ contains
       use pepper_constants, only: intmax
       use pepper_arrays, only: isrchi
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 20
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 5000
@@ -4485,7 +4481,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi, moved
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 20
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 5000
@@ -4854,7 +4849,6 @@ contains
       use pepper_constants, only: dpmax, dpmin, intmax
       use pepper_arrays, only: cleard, isrchi, moved
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 20
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 5000
@@ -7273,7 +7267,6 @@ contains
       use pepper_constants, only: intmax
       use pepper_arrays, only: isrchi
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: itsize = 5000
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 100000
@@ -7798,7 +7791,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi, moved
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: itsize = 5000
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 100000
@@ -8172,7 +8164,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchi
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: itsize = 5000
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 100000
@@ -8603,7 +8594,6 @@ contains
       use pepper_constants, only: dpmax, dpmin, intmax
       use pepper_arrays, only: cleard, moved
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: itsize = 5000
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 100000
@@ -10309,7 +10299,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: itsize = 5000
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 100000
@@ -10805,7 +10794,6 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 100
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 10000
@@ -11203,7 +11191,6 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 100
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 10000
@@ -11483,7 +11470,6 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 100
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 10000
@@ -11767,7 +11753,6 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 100
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 10000
@@ -12904,7 +12889,6 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: btsize = 100
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: stsize = 10000

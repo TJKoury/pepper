@@ -2320,7 +2320,7 @@ contains
       implicit none
       integer(ip), parameter :: filsiz = 255
       character(nwc)        chrrec
-      character(filsiz)     fname
+      character(1)     fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       integer(ip)           intamh
       integer(ip)           intarc
       integer(ip)           iostat
@@ -2530,7 +2530,7 @@ contains
       implicit none
       integer(ip), parameter :: filsiz = 255
       character(nwc)        chrrec
-      character(filsiz)     fname
+      character(1)     fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       integer(ip)           intamh
       integer(ip)           intarc
       integer(ip)           iostat
@@ -4463,7 +4463,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -5136,7 +5135,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -5732,7 +5730,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -6275,7 +6272,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -7363,7 +7359,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -7931,7 +7926,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -8291,7 +8285,7 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
+      character(:), allocatable :: locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -8412,9 +8406,7 @@ contains
 !
 !              Try to obtain the DAS file's name.
 !
-               inquire ( unit   = number, &
-                         name   = locdas, &
-                         iostat = inqsta )
+               locdas = file_name ( ctx%spice, handle )
 
                call zzddhcls ( ctx, handle, 'DAS', .false. )
 
@@ -8651,7 +8643,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -8892,7 +8883,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -9182,7 +9172,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -9424,7 +9413,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -9652,7 +9640,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -9942,7 +9929,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -10232,7 +10218,6 @@ contains
       character(acclen)     acc
       character(fmtlen)     format
       character(idwlen)     idword
-      character(filen)      locdas
       character(ifnlen)     locifn
       character(fmtlen)     locfmt
       character(tailen)     tail
@@ -26258,6 +26243,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchi
       use pepper_inc_das
@@ -26291,6 +26277,16 @@ contains
          allocate ( ctx%dasec_state )
          call init_dasec_state ( ctx%dasec_state )
       end if
+!
+!     PEPPER: make room in the table of files for one more (before the
+!     ASSOCIATE block: the arrays may be reallocated).
+!
+      call grow ( ctx%dasec_state%filchr, ctx%dasec_state%nfiles + 1 )
+      call grow ( ctx%dasec_state%filcnt, ctx%dasec_state%nfiles + 1 )
+      call grow ( ctx%dasec_state%filhan, ctx%dasec_state%nfiles + 1 )
+      call grow ( ctx%dasec_state%lstpos, ctx%dasec_state%nfiles + 1 )
+      call grow ( ctx%dasec_state%lstrec, ctx%dasec_state%nfiles + 1 )
+
       associate ( crecrd => ctx%dasec_state%crecrd, &
                   filcnt => ctx%dasec_state%filcnt, &
                   filchr => ctx%dasec_state%filchr, &
@@ -26312,15 +26308,6 @@ contains
          nfiles = 0
          lsthan = -1
 
-         do i = 1, ftsize
-
-            filcnt(i) = 0
-            filchr(i) = 0
-            filhan(i) = 0
-            lstrec(i) = 0
-            lstpos(i) = 0
-
-         end do
 
       end if
 !
@@ -26582,15 +26569,8 @@ contains
 !           has been read, so add it to the file table and save all of
 !           its information if there is room in the file table.
 !
-            if ( nfiles >= ftsize ) then
-
-               call ctx%setmsg ( 'The file table is full with # files,'  // &
-                             ' and another file could not be added.'  )
-               call ctx%errint ( '#',ftsize                               )
-               call ctx%sigerr ( 'SPICE(FILETABLEFULL)'                   )
-               return
-
-            end if
+            ! PEPPER: the table of files grows (SPICELIB signaled an error
+            ! here when it had FTSIZE files).
 
             nfiles         = nfiles + 1
             filcnt(nfiles) = ncomc

@@ -279,8 +279,8 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
    - **File and path names** moved to phase 2: they are stored in the same
      tables (KEEPER, ZZDDHMAN, DAF/DAS) that phase 2 turns into growable
      records, so each table is converted once.
-2. **Number of loaded kernels, and file names.** Done so far (each table
-   an array of records or growable arrays, file names allocatable):
+2. **Number of loaded kernels, and file names.** Done (each table an array
+   of records or growable arrays, file names allocatable):
    - ZZDDHMAN (handle manager): records with names of any length, binary
      search by handle; `FTFULL` is gone. Fixes ZZDDHOPN's truncation.
    - DAFAH and DASFM (DAF and DAS file tables): records, binary search by
@@ -302,8 +302,21 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
    - `closed_files` is a string map (it was a list scanned on each open).
    - Tests: `test_limits` (paths over 255 characters through FURNSH, UNLOAD
      and meta-kernels; 6000 SPKs; priorities after unloading).
-   Still to do: DAFEC and DASEC, DAFANA (20 DAFs written at once), EKQMGR,
-   and the DAF/DAS locals that fetch a file name for an error message.
+   - DAFEC, DASEC (comments being read from several files): grow
+     (SPICELIB: 5000 entries per context).
+   - DAFANA (DAFs being written at once): starts with 4 entries and grows
+     (SPICELIB: 20, `STFULL`).
+   - File names in error messages: `errhan` takes the name whole from the
+     handle manager. SPICELIB's DAF and DAS routines had 44 local
+     255-character name variables, most of them unused; those that fetched
+     a name for a message use `errhan` now. The record readers (ZZDAFGDR, ZZDAFGSR, ZZDASGRD, ...) no
+     longer copy a file name they do not use on every call.
+   - Unused `FTSIZE`/`TBSIZE` locals removed (26).
+   - Tests: `test_limits` also writes 40 DAFs at once and reads the
+     comments of 20 DAFs in turn; tspice `F_DAFANA` expects success past
+     20 DAFs.
+   - EKQMGR (20 EK files, 100 tables, ...) moved to phase 6, with the rest
+     of the EK query limits.
 
    The plan for the step:
    - **File and path names** (from phase 1): allocatable strings in the
@@ -388,7 +401,8 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
    - **Leap seconds:** `deltet`.
    - **EK queries:** last. The encoded query is a flat integer cell laid out
      from the maxima, so this is a rewrite of the parser's output, and the
-     least-used subsystem.
+     least-used subsystem. EKQMGR's tables of loaded EK files, tables,
+     segments and columns (from phase 2) go with it.
 7. **API for caller buffers** (E, its own design document first):
    - **Allocatable outputs:** variants like `gdpool(name, values)` with
      `values` allocatable, `bodvrd`, `getfov`, `spkcov` into a window type,
@@ -476,6 +490,8 @@ or listed for later.
 | KEEPER `unload` | Reloads every remaining SPK/CK/PCK/DSK after an unload (one file open each): O(N²) opens to unload N files, 16.7 ms per unload at 2000 files | Done: reload only when the unloaded entry is a second load of a file | 2 |
 | DAFAH `dafhsf`, DASFM | A linear search (DAF) or list walk (DAS) of the open files on every handle lookup; sets of the same handles kept twice, DASCLS copying the set on each close | Done: records sorted by handle, binary search | 2 |
 | `closed_files` (PEPPER) | A list of every file ever closed, scanned on each open | Done: a string map | 2 |
+| ZZDAFGDR, ZZDAFGSR, ZZDAFGFR, ZZDASGRD, ZZDASGRI | Copy the file's name (255 characters) from the handle manager on every record read, without using it | Done: not copied | 2 |
+| DASCLS | Copies the set of all open DAS handles on every close, to test one | Done: one lookup | 2 |
 | SPKBSR, CKBSR, PCKBSR, ZZDSKBSR | The first query of a body in a context reads the summary records of every file loaded after the one holding it (opening each: the unit table keeps 23 open): O(N) file opens. Measured: a random body among 2000 SPKs, 200 µs against 0.55 µs for a known one; the first queries in `test_limits` (6000 SPKs) took minutes when every 7th body was queried | Index the segments by body when a file is loaded (instance-wide, read-only during queries); this also replaces the per-context segment caches | 5 |
 | DAFFA `dafbfs`, `dafbbs` | Walk the per-context list of searched DAFs (most recent first) to find the handle: O(DAFs searched) per search | Goes with the index above; or a handle map | 5 |
 | ZZDDHOPN (`zzddhf2h`) | Opens a file to identify it (inode/name) on every load, including reloads | Follows from the unload fix; consider identifying by name first | 2 |

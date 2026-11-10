@@ -59,7 +59,7 @@ module pepper_states
 
    private
 
-   public :: init_ckbsr_state, init_ckbsr_context_state, init_dafana_state, &
+   public :: init_ckbsr_state, init_ckbsr_context_state, init_dafana_state, dafana_grow, &
        init_dafec_state, init_daffa_state, daffa_grow, init_dafrwd_state, init_dasec_state, &
        init_dasrwr_state, init_dskx02_state, init_ekqmgr_state, init_ekqmgr_context_state, &
        init_framex_state, init_limbpt_state, init_pckbsr_state, init_pckbsr_context_state, &
@@ -403,7 +403,7 @@ module pepper_states
 
    ! ------------------------------------------------------------------ DAFANA
 
-   integer(ip), parameter :: dafana_tbsize = 20
+   integer(ip), parameter :: dafana_tbsize = 4  !! PEPPER: initial size of the state table (it grows)
    integer(ip), parameter :: ifnlen = 60
    integer(ip), parameter :: maxsum = 125
 
@@ -414,29 +414,30 @@ module pepper_states
    !>
    !> No default initialization (41776 bytes): see init_dafana_state.
    type, public :: dafana_state
-      integer(ip) :: stfh (         dafana_tbsize )  !! handle of each DAF being written
-      character(ifnlen) :: stifnm (         dafana_tbsize )  !! internal file name of each DAF being
+      ! PEPPER: the state table starts with DAFANA_TBSIZE entries and grows
+      ! (dafana_grow); SPICELIB had 20 and signaled SPICE(STFULL) when a
+      ! 21st DAF was written to at the same time.
+      integer(ip), allocatable :: stfh (:)  !! handle of each DAF being written
+      character(ifnlen), allocatable :: stifnm (:)  !! internal file name of each DAF being
                                                              !! written
-      logical :: staddg (         dafana_tbsize )  !! an array is being added to each DAF (between DAFBNA
+      logical, allocatable :: staddg (:)  !! an array is being added to each DAF (between DAFBNA
                                                    !! and DAFENA)
-      integer(ip) :: stfrst (         dafana_tbsize )  !! record number of the first summary record of each
+      integer(ip), allocatable :: stfrst (:)  !! record number of the first summary record of each
                                                        !! DAF
-      integer(ip) :: stlast (         dafana_tbsize )  !! record number of the last summary record of each
+      integer(ip), allocatable :: stlast (:)  !! record number of the last summary record of each
                                                        !! DAF
-      integer(ip) :: stfree (         dafana_tbsize )  !! address of the next free word of each DAF
-      integer(ip) :: stbegn (         dafana_tbsize )  !! beginning address of the new array of each DAF
-      real(wp) :: stlsum ( maxsum, dafana_tbsize )  !! summary of the new array of each DAF
-      character(crlen) :: stname (         dafana_tbsize )  !! name of the new array of each DAF
-      integer(ip) :: stpool ( dafana_tbsize )  !! linked-list pool of the state table (active and free
+      integer(ip), allocatable :: stfree (:)  !! address of the next free word of each DAF
+      integer(ip), allocatable :: stbegn (:)  !! beginning address of the new array of each DAF
+      real(wp), allocatable :: stlsum (:, :)  !! summary of the new array of each DAF
+      character(crlen), allocatable :: stname (:)  !! name of the new array of each DAF
+      integer(ip), allocatable :: stpool (:)  !! linked-list pool of the state table (active and free
                                                !! entries)
       integer(ip) :: sthead  !! head of the list of active entries of the state table
       integer(ip) :: stfptr  !! head of the list of free entries of the state table
-      logical :: first  !! the state table has not been initialized yet
    end type dafana_state
 
    ! ------------------------------------------------------------------ DAFEC
 
-   integer(ip), parameter :: dafec_ftsize = 5000
    integer(ip), parameter :: dafec_mxcrec = 1000
 
    !> Extract comments from the comment area of a binary DAF.
@@ -446,16 +447,17 @@ module pepper_states
    !>
    !> No default initialization (101016 bytes): see init_dafec_state.
    type, public :: dafec_state
+      ! PEPPER: the tables of files grow (SPICELIB: FTSIZE, 5000, entries).
       character(dafec_mxcrec) :: crecrd  !! the comment record read last
       character(1) :: eocmrk  !! the end-of-comments marker
       character(1) :: eolmrk  !! the end-of-line marker
-      integer(ip) :: filchr (dafec_ftsize)  !! the file table declarations for keeping track of which files
+      integer(ip), allocatable :: filchr (:)  !! the file table declarations for keeping track of which files
                                             !! are currently in the process of having comments extracted.
-      integer(ip) :: filcnt (dafec_ftsize)  !! number of comment lines read from each file
-      integer(ip) :: filhan (dafec_ftsize)  !! handles of the files whose comments are being read
+      integer(ip), allocatable :: filcnt (:)  !! number of comment lines read from each file
+      integer(ip), allocatable :: filhan (:)  !! handles of the files whose comments are being read
       integer(ip) :: lsthan  !! the handle read last
-      integer(ip) :: lstpos (dafec_ftsize)  !! position in the last comment record of each file
-      integer(ip) :: lstrec (dafec_ftsize)  !! the comment record read last of each file
+      integer(ip), allocatable :: lstpos (:)  !! position in the last comment record of each file
+      integer(ip), allocatable :: lstrec (:)  !! the comment record read last of each file
       integer(ip) :: nfiles  !! number of files whose comments are being read
       logical :: first  !! the tables have not been set up yet (they are set up on the first call)
    end type dafec_state
@@ -624,14 +626,15 @@ module pepper_states
    !>
    !> No default initialization (101036 bytes): see init_dasec_state.
    type, public :: dasec_state
+      ! PEPPER: the tables of files grow (SPICELIB: FTSIZE, 5000, entries).
       character(dasec_mxcrec) :: crecrd  !! the comment record read last
-      integer(ip) :: filcnt (ftsize)  !! the file table declarations for keeping track of which files
+      integer(ip), allocatable :: filcnt (:)  !! the file table declarations for keeping track of which files
                                       !! are currently in the process of having comments extracted.
-      integer(ip) :: filchr (ftsize)  !! number of comment characters read from each file
-      integer(ip) :: filhan (ftsize)  !! handles of the files whose comments are being read
+      integer(ip), allocatable :: filchr (:)  !! number of comment characters read from each file
+      integer(ip), allocatable :: filhan (:)  !! handles of the files whose comments are being read
       integer(ip) :: lsthan  !! the handle read last
-      integer(ip) :: lstpos (ftsize)  !! position in the last comment record of each file
-      integer(ip) :: lstrec (ftsize)  !! the comment record read last of each file
+      integer(ip), allocatable :: lstpos (:)  !! position in the last comment record of each file
+      integer(ip), allocatable :: lstrec (:)  !! the comment record read last of each file
       integer(ip) :: nfiles  !! number of files whose comments are being read
       logical :: first  !! the tables have not been set up yet (they are set up on the first call)
    end type dasec_state
@@ -5773,20 +5776,37 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_dafana_state(state)
       type(dafana_state), intent(inout) :: state  !! the state
-      state%stfh = 0
-      state%stifnm = ' '
-      state%staddg = .false.
-      state%stfrst = 0
-      state%stlast = 0
-      state%stfree = 0
-      state%stbegn = 0
-      state%stlsum = 0.0_wp
-      state%stname = ' '
-      state%stpool = 0
       state%sthead = nil
       state%stfptr = nil
-      state%first = .true.
+      call dafana_grow(state)
    end subroutine init_dafana_state
+
+   !> Enlarge the DAFANA state table (to DAFANA_TBSIZE entries if it has
+   !> none, else to twice its size), keeping its entries and lists; the
+   !> new entries are added to the free list.
+   pure subroutine dafana_grow(state)
+      type(dafana_state), intent(inout) :: state  !! the state
+      integer(ip) :: n, m, i
+      n = 0
+      if (allocated(state%stpool)) n = size(state%stpool)
+      m = max(dafana_tbsize, 2*n)
+      call grow(state%stfh, m)
+      call grow(state%stifnm, m)
+      call grow(state%staddg, m)
+      call grow(state%stfrst, m)
+      call grow(state%stlast, m)
+      call grow(state%stfree, m)
+      call grow(state%stbegn, m)
+      call grow(state%stlsum, m, maxsum)
+      call grow(state%stname, m)
+      call grow(state%stpool, m)
+      m = size(state%stpool)
+      do i = n + 1, m - 1
+         state%stpool(i) = i + 1
+      end do
+      state%stpool(m) = state%stfptr
+      state%stfptr = n + 1
+   end subroutine dafana_grow
 
    !> Set the initial values of a new dafec_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -5795,13 +5815,10 @@ contains
       state%crecrd = ' '
       state%eocmrk = ' '
       state%eolmrk = ' '
-      state%filchr = 0
-      state%filcnt = 0
-      state%filhan = 0
       state%lsthan = 0
-      state%lstpos = 0
-      state%lstrec = 0
       state%nfiles = 0
+      allocate ( state%filchr(8), state%filcnt(8), state%filhan(8), state%lstpos(8), &
+                 state%lstrec(8), source=0_ip )
       state%first = .true.
    end subroutine init_dafec_state
 
@@ -5859,13 +5876,10 @@ contains
    pure subroutine init_dasec_state(state)
       type(dasec_state), intent(inout) :: state  !! the state
       state%crecrd = ' '
-      state%filcnt = 0
-      state%filchr = 0
-      state%filhan = 0
       state%lsthan = 0
-      state%lstpos = 0
-      state%lstrec = 0
       state%nfiles = 0
+      allocate ( state%filchr(8), state%filcnt(8), state%filhan(8), state%lstpos(8), &
+                 state%lstrec(8), source=0_ip )
       state%first = .true.
    end subroutine init_dasec_state
 

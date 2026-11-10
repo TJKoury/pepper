@@ -3769,7 +3769,7 @@ contains
       integer(ip), parameter :: ifnstr = 17
       integer(ip), parameter :: inlen = 4
       character(cbfsiz)     chrbuf
-      character(filen)      fname
+      character(1)      fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(idwlen)     locidw
       character(ifnlen)     locifn
       character(strsiz)     tmpstr
@@ -4341,7 +4341,7 @@ contains
       use pepper_inc_zzddhman
       implicit none
       character(cbfsiz)     chrbuf
-      character(filen)      fname
+      character(1)      fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(strsiz)     tmpstr
       real(wp)              dpbuf  ( 128 )
       integer(ip)           i
@@ -4620,7 +4620,7 @@ contains
       integer(ip), parameter :: dplen = 8
       integer(ip), parameter :: inlen = dplen/2
       character(cbfsiz)     chrbuf
-      character(filen)      fname
+      character(1)      fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(strsiz)     tmpstr
       real(wp)              dpbuf  ( 128 )
       integer(ip)           cindex
@@ -6060,7 +6060,6 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -6563,7 +6562,6 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -6984,7 +6982,6 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -7548,7 +7545,6 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -8111,7 +8107,6 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -8428,7 +8423,6 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -8676,7 +8670,6 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -8873,7 +8866,7 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
+      character(1)      dafnam  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -9112,7 +9105,6 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -9130,6 +9122,7 @@ contains
       integer(ip)           iamh
       integer(ip)           iostat
       integer(ip)           lun
+      character(1)          dafnam  ! PEPPER: the name is taken whole below
       logical               found
       if ( ctx%failed() ) return
 
@@ -9141,9 +9134,7 @@ contains
          call ctx%sigerr ( 'SPICE(DAFNOSUCHHANDLE)'                )
          return
       end if
-
-      fname = dafnam
-
+      fname = file_name ( ctx%spice, handle )
       return
       end procedure dafhfn
 
@@ -9369,7 +9360,7 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
+      character(1)      dafnam  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -9587,7 +9578,6 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -9882,7 +9872,7 @@ contains
       integer(ip)           findex
       character(acclen)     acc
       character(crlen)      crec
-      character(filen)      dafnam
+      character(1)      dafnam  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(fmtlen)     format
       character(idlen)      idword
       character(ifnlen)     ifn
@@ -18057,6 +18047,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip
       use pepper_arrays, only: isrchi
       use pepper_strings, only: cpos, ncpos
@@ -18064,7 +18055,6 @@ contains
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: inteoc = 4
       integer(ip), parameter :: inteol = 0
-      integer(ip), parameter :: ftsize = 5000
       integer(ip), parameter :: mxcrec = 1000
       character(1)          ch
       character(ifnlen)     ifname
@@ -18095,6 +18085,16 @@ contains
          allocate ( ctx%dafec_state )
          call init_dafec_state ( ctx%dafec_state )
       end if
+!
+!     PEPPER: make room in the table of files for one more (before the
+!     ASSOCIATE block: the arrays may be reallocated).
+!
+      call grow ( ctx%dafec_state%filchr, ctx%dafec_state%nfiles + 1 )
+      call grow ( ctx%dafec_state%filcnt, ctx%dafec_state%nfiles + 1 )
+      call grow ( ctx%dafec_state%filhan, ctx%dafec_state%nfiles + 1 )
+      call grow ( ctx%dafec_state%lstpos, ctx%dafec_state%nfiles + 1 )
+      call grow ( ctx%dafec_state%lstrec, ctx%dafec_state%nfiles + 1 )
+
       associate ( crecrd => ctx%dafec_state%crecrd, &
                   eocmrk => ctx%dafec_state%eocmrk, &
                   eolmrk => ctx%dafec_state%eolmrk, &
@@ -18120,15 +18120,6 @@ contains
          eocmrk = char ( inteoc )
          eolmrk = char ( inteol )
 
-         do i = 1, ftsize
-
-            filchr(i) = 0
-            filcnt(i) = 0
-            filhan(i) = 0
-            lstpos(i) = 0
-            lstrec(i) = 0
-
-         end do
 
       end if
 !
@@ -18502,15 +18493,8 @@ contains
 !           has been read, so add it to the file table and save all of
 !           its information if there is room in the file table.
 !
-            if ( nfiles >= ftsize ) then
-
-               call ctx%setmsg ( 'The file table is full with # files,'  // &
-                             ' and another file could not be added.'  )
-               call ctx%errint ( '#',ftsize                               )
-               call ctx%sigerr ( 'SPICE(FILETABLEFULL)'                   )
-               return
-
-            end if
+            ! PEPPER: the table of files grows (SPICELIB signaled an error
+            ! here when it had FTSIZE files).
 
             nfiles         = nfiles + 1
             filchr(nfiles) = nchars
@@ -19509,7 +19493,6 @@ contains
       use pepper_arrays, only: moved
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = 20
       integer(ip), parameter :: arycnt = 3
       integer(ip), parameter :: bwdptr = 2
       integer(ip), parameter :: crlen = 1000
@@ -19537,6 +19520,7 @@ contains
          allocate ( ctx%dafana )
          call init_dafana_state ( ctx%dafana )
       end if
+      call dafana_room ( ctx )
       associate ( stfh => ctx%dafana%stfh, &
                   stifnm => ctx%dafana%stifnm, &
                   staddg => ctx%dafana%staddg, &
@@ -19548,8 +19532,7 @@ contains
                   stname => ctx%dafana%stname, &
                   stpool => ctx%dafana%stpool, &
                   sthead => ctx%dafana%sthead, &
-                  stfptr => ctx%dafana%stfptr, &
-                  first => ctx%dafana%first )
+                  stfptr => ctx%dafana%stfptr )
       if ( ctx%failed() ) return
 
 !
@@ -19565,18 +19548,6 @@ contains
 !     open DAFs.
 !
 
-      if ( first ) then
-
-         do i = 1,  tbsize - 1
-            stpool(i)   =  i + 1
-         end do
-
-         stpool(tbsize) = nil
-         stfptr         = 1
-         sthead         = nil
-         first          = .false.
-
-      end if
 
 !
 !     We know that the beginning of the array will be the first
@@ -19820,20 +19791,8 @@ contains
 !           Now, check to see if there is now room to add the dossier
 !           for the new DAF to the state table.  If not signal an error.
 !
-            if ( stfptr == nil ) then
-
-               call ctx%setmsg ( 'Attempt to initiate create a new ' &
-               //            'array in DAF ''#'' has failed. ' &
-               //            'DAFANA''s state table has room ' &
-               //            'to manage writing to # new arrays ' &
-               //            'simultaneously, but there is no room ' &
-               //            'left in the table for this DAF.'       )
-               call ctx%errhan ( '#', handle                             )
-               call ctx%errint ( '#', tbsize                             )
-               call ctx%sigerr ( 'SPICE(STFULL)'                         )
-               return
-
-            end if
+            ! PEPPER: DAFANA_ROOM has made room (the table grows; SPICELIB
+            ! signaled SPICE(STFULL) here with 20 DAFs).
 
          end if
 
@@ -20018,7 +19977,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = 20
       integer(ip), parameter :: arycnt = 3
       integer(ip), parameter :: bwdptr = 2
       integer(ip), parameter :: crlen = 1000
@@ -20031,7 +19989,6 @@ contains
       integer(ip), parameter :: maxsum = 125
       integer(ip), parameter :: nil = -1
       integer(ip) :: p
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
          call init_dafana_state ( ctx%dafana )
@@ -20070,10 +20027,9 @@ contains
 
          if ( ctx%failed() ) return
 
-         call dafhfn ( ctx,  stfh(p), dafnam                                )
          call ctx%setmsg ( 'An attempt was made to add data to an array ' // &
                        'that has not yet been begun, in file #.'       )
-         call ctx%errch  ( '#', dafnam                                     )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(DAFNEWCONFLICT)'                         )
          return
 
@@ -20234,7 +20190,6 @@ contains
       use pepper_arrays, only: cleard, moved
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = 20
       integer(ip), parameter :: arycnt = 3
       integer(ip), parameter :: bwdptr = 2
       integer(ip), parameter :: crlen = 1000
@@ -20260,7 +20215,6 @@ contains
       integer(ip) :: ic     ( maxnic )
       integer(ip) :: ni
       integer(ip) :: word
-      character(filen) :: dafnam
       real(wp) :: dc     ( maxndc )
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
@@ -20300,10 +20254,9 @@ contains
 
          if ( ctx%failed() ) return
 
-         call dafhfn ( ctx,  stfh(p), dafnam                                )
          call ctx%setmsg ( 'An attempt was made to end an array that has '// &
                        'not yet been begun, in file #.'                )
-         call ctx%errch  ( '#', dafnam                                     )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(DAFNEWCONFLICT)'                         )
          return
 
@@ -20581,7 +20534,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = 20
       integer(ip), parameter :: arycnt = 3
       integer(ip), parameter :: bwdptr = 2
       integer(ip), parameter :: crlen = 1000
@@ -20596,7 +20548,6 @@ contains
       integer(ip) :: p
       integer(ip) :: prev
       logical :: found
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
          call init_dafana_state ( ctx%dafana )
@@ -20644,18 +20595,16 @@ contains
 !
       if ( .not. found ) then
 
-         call dafhfn ( ctx,  handle, dafnam                               )
          call ctx%setmsg ( 'No write in progress to #. (Handle was #.) ' )
-         call ctx%errch  ( '#',  dafnam                                  )
+         call ctx%errhan ( '#', handle )
          call ctx%errint ( '#',  handle                                  )
          call ctx%sigerr ( 'SPICE(NOARRAYSTARTED)'                       )
          return
 
       else if ( .not. staddg(p) ) then
 
-         call dafhfn ( ctx,  handle, dafnam                               )
          call ctx%setmsg ( 'No write in progress to #. (Handle was #.) ' )
-         call ctx%errch  ( '#',  dafnam                                  )
+         call ctx%errhan ( '#', handle )
          call ctx%errint ( '#',  handle                                  )
          call ctx%sigerr ( 'SPICE(NOARRAYSTARTED)'                       )
          return
@@ -22094,7 +22043,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -22113,7 +22061,6 @@ contains
       integer(ip) :: ni
       integer(ip) :: fward
       logical :: fnd
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -22246,14 +22193,13 @@ contains
 
       if ( .not. fnd ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'Attempt to read descriptor record # '    // &
                        'of DAF ''#'' failed; record was '        // &
                        'not found. This condition may indicate ' // &
                        'a corrupted DAF.' )
          call ctx%errint ( '#', stnext(p)                            )
-         call ctx%errch  ( '#', dafnam                               )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
          return
 
@@ -22548,7 +22494,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -22558,7 +22503,6 @@ contains
       integer(ip), parameter :: nil = -1
       integer(ip) :: p
       logical :: fnd
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -22653,14 +22597,13 @@ contains
 
             if ( .not. fnd ) then
 
-               call dafhfn ( ctx, stfh(p), dafnam )
 
                call ctx%setmsg ( 'Attempt to read descriptor record # '   // &
                              'of DAF ''#'' failed; record was '       // &
                              'not found. This condition may indicate '// &
                              'a corrupted DAF.' )
                call ctx%errint ( '#', stnext(p)                            )
-               call ctx%errch  ( '#', dafnam                               )
+               call ctx%errhan ( '#', stfh(p) )
                call ctx%sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
                return
 
@@ -22948,7 +22891,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -22967,7 +22909,6 @@ contains
       integer(ip) :: ni
       integer(ip) :: fward
       logical :: fnd
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -23099,14 +23040,13 @@ contains
 
       if ( .not. fnd ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'Attempt to read descriptor record # '    // &
                        'of DAF ''#'' failed; record was '        // &
                        'not found. This condition may indicate ' // &
                        'a corrupted DAF.' )
          call ctx%errint ( '#', stnext(p)                            )
-         call ctx%errch  ( '#', dafnam                               )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
          return
 
@@ -23411,7 +23351,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -23421,7 +23360,6 @@ contains
       integer(ip), parameter :: nil = -1
       integer(ip) :: p
       logical :: fnd
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -23515,14 +23453,13 @@ contains
 
             if ( .not. fnd ) then
 
-               call dafhfn ( ctx, stfh(p), dafnam )
 
                call ctx%setmsg ( 'Attempt to read descriptor record # '   // &
                              'of DAF ''#'' failed; record was '       // &
                              'not found. This condition may indicate '// &
                              'a corrupted DAF.' )
                call ctx%errint ( '#', stnext(p)                            )
-               call ctx%errch  ( '#', dafnam                               )
+               call ctx%errhan ( '#', stfh(p) )
                call ctx%sigerr ( 'SPICE(RECORDNOTFOUND)'                   )
                return
 
@@ -23821,7 +23758,6 @@ contains
       use pepper_arrays, only: moved
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -23834,7 +23770,6 @@ contains
       integer(ip) :: p
       integer(ip) :: nd
       integer(ip) :: ni
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -23880,21 +23815,19 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
@@ -24059,7 +23992,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -24073,7 +24005,6 @@ contains
       integer(ip) :: namsiz
       integer(ip) :: nd
       integer(ip) :: ni
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -24121,21 +24052,19 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
@@ -24354,7 +24283,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -24554,7 +24482,6 @@ contains
       use pepper_arrays, only: moved, movei
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -24572,7 +24499,6 @@ contains
       integer(ip) :: ni
       real(wp) :: exsum  ( maxndc )
       integer(ip) :: newic  ( maxnic )
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -24620,21 +24546,19 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
@@ -24819,7 +24743,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -24833,7 +24756,6 @@ contains
       integer(ip) :: namsiz
       integer(ip) :: nd
       integer(ip) :: ni
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -24882,21 +24804,19 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
@@ -25084,7 +25004,6 @@ contains
       use pepper_arrays, only: moved
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -25097,7 +25016,6 @@ contains
       integer(ip) :: p
       integer(ip) :: nd
       integer(ip) :: ni
-      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -25145,21 +25063,19 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
 
-         call dafhfn ( ctx, stfh(p), dafnam )
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
-         call ctx%errch  ( '#',     dafnam                                 )
+         call ctx%errhan ( '#', stfh(p) )
          call ctx%sigerr ( 'SPICE(NOCURRENTARRAY)'                         )
          return
 
@@ -25303,7 +25219,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: tbsize = ftsize
       integer(ip), parameter :: crlen = 1000
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: lbcell = -5
@@ -28638,5 +28553,26 @@ contains
       end do
       if (ctx%daffa%stfptr == nil) call daffa_grow(ctx%daffa)
    end subroutine daffa_room
+
+   !> PEPPER: make room in the DAFANA state table before DAFBNA (which
+   !> may need one more entry) enters its ASSOCIATE block: if no entry is
+   !> free and DAFBNA's two ways of freeing one (entries of DAFs no longer
+   !> open; entries of DAFs to which no array is being added) would find
+   !> none, double the table.
+   subroutine dafana_room(ctx)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nil = -1
+      integer(ip) :: p
+      logical :: open
+      if (ctx%dafana%stfptr /= nil) return
+      p = ctx%dafana%sthead
+      do while (p /= nil)
+         open = .false.
+         if (allocated(ctx%spice%dafah)) open = ctx%spice%dafah%find(ctx%dafana%stfh(p)) > 0
+         if (.not. open .or. .not. ctx%dafana%staddg(p)) return
+         p = ctx%dafana%stpool(p)
+      end do
+      call dafana_grow(ctx%dafana)
+   end subroutine dafana_room
 
 end submodule pepper_daf

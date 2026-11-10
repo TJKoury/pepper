@@ -20306,26 +20306,37 @@ contains
       call this%errch(marker, name)
    end subroutine ctx_errfnm
 
+   !> The name of the file with a DAF or DAS handle, whole (blank if no
+   !> file has the handle).
+   function file_name(spice, handle) result(name)
+      type(pepper_spice), intent(in) :: spice  !! the instance
+      integer(ip), intent(in) :: handle  !! the handle
+      character(:), allocatable :: name  !! the file name
+      integer(ip) :: i
+      name = ' '
+      if (.not. allocated(spice%zzddhman)) return
+      i = spice%zzddhman%find(handle)
+      if (i > 0) name = spice%zzddhman%files(i)%name
+   end function file_name
+
    !> Replace the first occurrence of marker in the long message with the
    !> name of the file with a DAF or DAS handle.
    subroutine ctx_errhan(this, marker, handle)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: marker  !! marker in the long message, e.g. '#'
       integer(ip), intent(in) :: handle  !! handle of a DAF or DAS file
-      character(1024) :: name
       character(16) :: number
-      integer(ip) :: arc, bff, amh
-      logical :: found
-      ! (the lookup needs the error status clear; a message being built
-      ! while an error is set is not changed anyway)
+      integer(ip) :: i
       if (.not. this%messages_allowed) return
-      found = .false.
-      if (.not. this%failure) call zzddhnfo(this, handle, name, arc, bff, amh, found)
-      if (.not. found) then
+      ! the name, whole, from the handle manager's file table
+      i = 0
+      if (allocated(this%spice%zzddhman)) i = this%spice%zzddhman%find(handle)
+      if (i > 0) then
+         call this%errch(marker, file_name(this%spice, handle))
+      else
          call intstr(handle, number)
-         name = '<No name found for handle ' // trim(number) // '>'
+         call this%errch(marker, '<No name found for handle ' // trim(number) // '>')
       end if
-      call this%errch(marker, name)
    end subroutine ctx_errhan
 
    !> Note that this context wrote a record to a DAF or DAS file: the

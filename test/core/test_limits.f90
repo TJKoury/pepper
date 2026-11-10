@@ -1,7 +1,8 @@
 !> Tests past SPICELIB's fixed limits (limits.md): file names longer than
 !> 255 characters, more kernels than the 5000 (5300 through FURNSH) that
-!> SPICELIB's file tables held, and the priority of SPK files after
-!> unloading.
+!> SPICELIB's file tables held, the priority of SPK files after
+!> unloading, more DAFs written at once than DAFANA's 20, and comments
+!> read from many DAFs in turn (DAFEC's table).
 program test_limits
 
    use pepper_kinds, only: ip, wp
@@ -19,6 +20,8 @@ program test_limits
    call test_long_paths()
    call test_priorities()
    call test_many_spks()
+   call test_many_writers()
+   call test_many_comment_readers()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -255,5 +258,83 @@ contains
          call delete_file(kernel_name(prefix // 'many_', i, '.bsp'))
       end do
    end subroutine test_many_spks
+
+   !> 40 DAFs (SPKs) written at once, more than DAFANA's 20: an array is
+   !> begun in each, then each is finished in turn (DAFCAD), and every
+   !> SPK gives its states.
+   subroutine test_many_writers()
+      integer(ip), parameter :: n = 40, first = 920001, nstates = 11
+      integer(ip) :: handles(n), i, k
+      real(wp) :: sum(5), epochs(nstates), states(6, nstates), state(6), lt, err
+      epochs = [(1.0e5_wp*(k - 1), k = 1, nstates)]
+      do i = 1, n
+         call delete_file(kernel_name(prefix // 'writer_', i, '.bsp'))
+         call ctx%dafonw(kernel_name(prefix // 'writer_', i, '.bsp'), 'SPK', 2_ip, 6_ip, 'writers', 0_ip, &
+                         handles(i))
+         call ctx%dafps(2_ip, 6_ip, [epochs(1), epochs(nstates)], [first + i - 1, 0_ip, 1_ip, 9_ip, 0_ip, 0_ip], &
+                        sum)
+         call ctx%dafbna(handles(i), sum, 'WRITER')
+      end do
+      call check_ok('writers: begin the arrays')
+      do i = 1, n
+         do k = 1, nstates
+            states(:, k) = circle_state(1.0e5_wp, 1.0e-3_wp*i, epochs(k))
+         end do
+         call ctx%dafcad(handles(i))
+         call ctx%dafada(reshape(states, [6*nstates]), 6*nstates)
+         call ctx%dafada(epochs, nstates)
+         call ctx%dafada([7.0_wp, real(nstates, wp)], 2_ip)
+         call ctx%dafena()
+         call ctx%dafcls(handles(i))
+      end do
+      call check_ok('writers: finish the arrays')
+      err = 0
+      do i = 1, n
+         call ctx%furnsh(kernel_name(prefix // 'writer_', i, '.bsp'))
+         call ctx%spkgeo(first + i - 1, 1.0e3_wp, 'J2000', 0_ip, state, lt)
+         err = max(err, position_error(state, 1.0e5_wp, 1.0e-3_wp*i, 1.0e3_wp))
+      end do
+      call check_ok('writers: read the SPKs')
+      call check(err < 1.0e-3_wp, 'writers: the states')
+      call ctx%kclear()
+      do i = 1, n
+         call delete_file(kernel_name(prefix // 'writer_', i, '.bsp'))
+      end do
+   end subroutine test_many_writers
+
+   !> The comments of 20 DAFs read in turn, one line per call, so that
+   !> DAFEC keeps its place in all of them at once (its table starts with
+   !> 8 entries; SPICELIB's had 5000).
+   subroutine test_many_comment_readers()
+      integer(ip), parameter :: n = 20, nlines = 5
+      integer(ip) :: handles(n), i, k, got
+      character(80) :: lines(nlines), line(1)
+      logical :: done, ok
+      do i = 1, n
+         call write_spk(ctx, kernel_name(prefix // 'comments_', i, '.bsp'), 930000_ip + i, 0_ip, 1.0e5_wp, 0.0_wp)
+         call ctx%dafopw(kernel_name(prefix // 'comments_', i, '.bsp'), handles(i))
+         do k = 1, nlines
+            write (lines(k), '(a,i0,a,i0)') 'file ', i, ' line ', k
+         end do
+         call ctx%dafac(handles(i), nlines, lines)
+         call ctx%dafcls(handles(i))
+         call ctx%dafopr(kernel_name(prefix // 'comments_', i, '.bsp'), handles(i))
+      end do
+      call check_ok('comments: writing')
+      ok = .true.
+      do k = 1, nlines
+         do i = 1, n
+            call ctx%dafec(handles(i), 1_ip, got, line, done)
+            write (lines(1), '(a,i0,a,i0)') 'file ', i, ' line ', k
+            ok = ok .and. got == 1 .and. line(1) == lines(1) .and. (done .eqv. (k == nlines))
+         end do
+      end do
+      call check_ok('comments: reading')
+      call check(ok, 'comments: the lines of each file, in turn')
+      do i = 1, n
+         call ctx%dafcls(handles(i))
+         call delete_file(kernel_name(prefix // 'comments_', i, '.bsp'))
+      end do
+   end subroutine test_many_comment_readers
 
 end program test_limits
