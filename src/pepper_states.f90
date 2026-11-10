@@ -3158,6 +3158,7 @@ module pepper_states
       procedure :: append => body_names_append
       procedure :: remove => body_names_remove
       procedure :: index => body_names_index
+      procedure :: index_last => body_names_index_last
       procedure :: name_index => body_names_name_index
       procedure :: code_index => body_names_code_index
    end type body_names
@@ -3184,6 +3185,7 @@ module pepper_states
                         !! calls)
       logical :: first  !! the tables have not been set up yet (they are set up on the first call)
       integer(ip) :: boddef_epoch  !! the instance's boddef_epoch these tables include
+      integer(ip) :: boddef_count  !! the number of the instance's definitions these tables include
    end type zzbodtrn_state
 
    ! ------------------------------------------------------------------ ZZBQUAD
@@ -6257,6 +6259,7 @@ contains
       state%i = 0
       state%first = .true.
       state%boddef_epoch = 0
+      state%boddef_count = 0
    end subroutine init_zzbodtrn_state
 
    !> Remove the kernel pool names.
@@ -6317,6 +6320,15 @@ contains
          if (.not. found) call self%code_map%set(self%codes(i), i)
       end do
    end subroutine body_names_index
+
+   !> Add the last name and code to the maps, when its name was not
+   !> assigned before (the result of index, in O(1)): the last assignment
+   !> is the one its name and its code map to.
+   pure subroutine body_names_index_last(self)
+      class(body_names), intent(inout) :: self  !! the names
+      call self%name_map%set(self%nornam(self%nvals)%s, self%nvals)
+      call self%code_map%set(self%codes(self%nvals), self%nvals)
+   end subroutine body_names_index_last
 
    !> The index of a normalized name: 0 if it is not assigned.
    pure integer(ip) function body_names_name_index(self, nornam) result(i)

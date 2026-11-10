@@ -5,19 +5,22 @@
 program test_bodies
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance, only: pepper_spice, pepper_context, zzbodrst
 
    implicit none
 
    type(pepper_spice), target :: spice
    type(pepper_context) :: a, b
    integer :: failures = 0
+   integer(ip) :: code_  !! work: a code
+   logical :: found_  !! work: found flag
 
    a = spice%new_context()
    b = spice%new_context()
 
    call test_builtin()
    call test_boddef()
+   call test_boddef_changes()
    call test_pool_names()
 
    if (failures > 0) then
@@ -67,6 +70,61 @@ contains
       call b%bodc2n(-999001_ip, name, found)
       call check(found .and. name == 'PEPPER_PROBE', 'bodc2n of the defined code')
    end subroutine test_boddef
+
+   !> Redefinitions and resets, seen by the defining context, by a context
+   !> that takes up the definitions made since it last looked (b), and by
+   !> a new one (c): a code defined twice maps to the later name; a name
+   !> given another code no longer holds the old one, which goes back to
+   !> the earlier name; after a reset only the built-in names and the
+   !> later definitions are known.
+   subroutine test_boddef_changes()
+      type(pepper_context) :: c
+      call b%bodn2c('EARTH', code_, found_)   ! b is up to date
+      call a%boddef('PEPPER_Y1', -999101_ip)
+      call a%boddef('PEPPER_Y2', -999101_ip)
+      call expect('code defined twice', 'PEPPER_Y2', -999101_ip)
+      call a%boddef('PEPPER_Y2', -999102_ip)   ! removes the assignment of Y2
+      call a%boddef('pepper_y1', -999101_ip)   ! the same name and code: the name's spelling
+      call a%boddef('PEPPER_Y3', -999103_ip)
+      call expect('code given back', 'pepper_y1', -999101_ip)
+      call expect('name with a new code', 'PEPPER_Y2', -999102_ip)
+      call expect('new name after a removal', 'PEPPER_Y3', -999103_ip)
+      call expect('earlier definition', 'PEPPER_PROBE', -999001_ip)
+      call zzbodrst(a)
+      call a%boddef('PEPPER_Y4', -999104_ip)
+      call expect('definition after a reset', 'PEPPER_Y4', -999104_ip)
+      c = spice%new_context()
+      call c%bodn2c('PEPPER_Y1', code_, found_)
+      call b%bodn2c('PEPPER_Y1', code_, found_)
+      call check(.not. found_, 'reset: b')
+      call a%bodn2c('PEPPER_Y1', code_, found_)
+      call check(.not. found_, 'reset: a')
+      call c%bodn2c('PEPPER_Y1', code_, found_)
+      call check(.not. found_, 'reset: c')
+      call check(.not. a%failed() .and. .not. b%failed() .and. .not. c%failed(), 'redefinitions: no errors')
+   end subroutine test_boddef_changes
+
+   !> Check the name and the code in contexts a, b and a new one.
+   subroutine expect(what, name, code)
+      character(*), intent(in) :: what  !! the case
+      character(*), intent(in) :: name  !! the name the code maps to
+      integer(ip), intent(in) :: code  !! the code
+      type(pepper_context) :: n
+      character(36) :: got
+      n = spice%new_context()
+      call a%bodn2c(name, code_, found_)
+      call check(found_ .and. code_ == code, what // ': bodn2c, a')
+      call b%bodn2c(name, code_, found_)
+      call check(found_ .and. code_ == code, what // ': bodn2c, b')
+      call n%bodn2c(name, code_, found_)
+      call check(found_ .and. code_ == code, what // ': bodn2c, new context')
+      call a%bodc2n(code, got, found_)
+      call check(found_ .and. got == name, what // ': bodc2n, a')
+      call b%bodc2n(code, got, found_)
+      call check(found_ .and. got == name, what // ': bodc2n, b')
+      call n%bodc2n(code, got, found_)
+      call check(found_ .and. got == name, what // ': bodc2n, new context')
+   end subroutine expect
 
    !> Names from a text kernel loaded after both contexts built their tables.
    subroutine test_pool_names()

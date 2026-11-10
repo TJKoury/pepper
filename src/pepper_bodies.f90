@@ -8016,6 +8016,7 @@ contains
       integer(ip) :: index
       character(:), allocatable :: tmpnam
       integer(ip) :: codidx
+      logical :: removed
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
@@ -8107,6 +8108,7 @@ contains
 !     in the definitions.
 !
       index = def%name_index ( tmpnam )
+      removed = index /= 0
       if ( index /= 0 ) then
 !
 !        We are going to replace an existing entry.  There are
@@ -8153,8 +8155,16 @@ contains
 !     Now, we need to add the new entry on to the end of the list, and
 !     rebuild the maps (SPICELIB's ZZBODINI).
 !
+!     PEPPER: a new name is added to the maps (SPICELIB rebuilt them on
+!     every definition: O(n**2) for n definitions); they are rebuilt only
+!     when an assignment was removed (the indices after it changed).
+!
       call def%append ( trim ( name ), tmpnam, code )
-      call def%index ( )
+      if ( removed ) then
+         call def%index ( )
+      else
+         call def%index_last ( )
+      end if
       return
       end associate
       end subroutine zzboddef_apply
@@ -11878,6 +11888,7 @@ contains
       if ( ctx%failed() ) return
       call record_boddef ( ctx%spice, name, code )
       ctx%zzbodtrn%boddef_epoch = ctx%spice%boddef_epoch
+      ctx%zzbodtrn%boddef_count = ctx%spice%boddef_count
       end procedure zzboddef
 
       !> Reset the defined names to the built-in names (SPICELIB's
@@ -11889,27 +11900,44 @@ contains
       call zzbodrst_apply ( ctx )
       if ( ctx%failed() ) return
       ctx%zzbodtrn%boddef_epoch = ctx%spice%boddef_epoch
+      ctx%zzbodtrn%boddef_count = 0
       end procedure zzbodrst
 
       !> Bring this context's table of defined body names up to date with the
       !> instance: if names were defined or reset (through any context) since
-      !> this context last looked, rebuild the table from the built-in names
-      !> and the instance's record of definitions.
+      !> this context last looked, apply the definitions made since, or after
+      !> a reset rebuild the table from the built-in names and the instance's
+      !> record of definitions.
       subroutine sync_boddefs ( ctx )
       class(pepper_context), intent(inout) :: ctx  !! the context
-      integer(ip) :: k
+      integer(ip) :: k, first
       if ( allocated ( ctx%zzbodtrn ) ) then
          if ( ctx%zzbodtrn%boddef_epoch == ctx%spice%boddef_epoch ) return
       else if ( ctx%spice%boddef_epoch == 0 ) then
          return
       end if
-      call zzbodrst_apply ( ctx )
-      do k = 1, ctx%spice%boddef_count
+!
+!     The epoch changes by one for each definition and for each reset,
+!     and a reset sets the count to zero: the definitions made since the
+!     context last looked are all there is to apply when the epoch and
+!     the count changed by the same amount.
+!
+      first = 1
+      if ( allocated ( ctx%zzbodtrn ) ) then
+         if (       ( ctx%zzbodtrn%boddef_count <= ctx%spice%boddef_count ) &
+              .and. (   ctx%spice%boddef_epoch - ctx%zzbodtrn%boddef_epoch     &
+                     == ctx%spice%boddef_count - ctx%zzbodtrn%boddef_count ) ) then
+            first = ctx%zzbodtrn%boddef_count + 1
+         end if
+      end if
+      if ( first == 1 ) call zzbodrst_apply ( ctx )
+      do k = first, ctx%spice%boddef_count
          if ( ctx%failed() ) return
          call zzboddef_apply ( ctx, ctx%spice%boddef_names(k)%s, &
                                ctx%spice%boddef_codes(k) )
       end do
       ctx%zzbodtrn%boddef_epoch = ctx%spice%boddef_epoch
+      ctx%zzbodtrn%boddef_count = ctx%spice%boddef_count
       end subroutine sync_boddefs
 
       !> Append a name/code pair to the instance's record of definitions.

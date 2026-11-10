@@ -18,7 +18,7 @@ program bench_limits
    use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: rpd
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance, only: pepper_spice, pepper_context, zzbodrst
    use pepper_test_kernels, only: write_lsk, write_spk, write_pool_kernel, write_body_names, &
       write_tk_frames, kernel_name, delete_file, body_name, frame_name, circle_state
 
@@ -240,6 +240,7 @@ contains
       integer(ip) :: i, k, code
       logical :: found, ok
       character(36) :: name
+      type(pepper_context) :: other
       call write_body_names(names_file, nnames, first_name)
       t0 = now()
       call ctx%furnsh(names_file)
@@ -264,6 +265,26 @@ contains
       call ctx%unload(names_file)
       call delete_file(names_file)
       call check_ctx(ctx, 'the body names')
+      ! BODDEF: define the names one by one, then translate one in another
+      ! context (which takes up all the definitions), then define one more
+      other = spice%new_context()
+      t0 = now()
+      do i = 1, nnames
+         call ctx%boddef(body_name(i), first_name + i - 1)
+      end do
+      call report('boddef (per name)', nnames, now() - t0)
+      call check_ctx(ctx, 'boddef')
+      t0 = now()
+      call other%bodn2c(body_name(nnames), code, found)
+      call report('first bodn2c in another context (per name)', nnames, now() - t0)
+      call check(found .and. code == first_name + nnames - 1, 'boddef: another context')
+      call ctx%boddef('BENCH EXTRA NAME', 1_ip)
+      t0 = now()
+      call other%bodn2c('BENCH EXTRA NAME', code, found)
+      call report('bodn2c in another context, one boddef more', 1_ip, now() - t0)
+      call check(found .and. code == 1, 'boddef: one more, another context')
+      call zzbodrst(ctx)
+      call check_ctx(ctx, 'the defined body names')
    end subroutine bench_names
 
    !> Load `nframes` TK frames and compute rotations to J2000.
