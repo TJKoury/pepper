@@ -1863,7 +1863,7 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupc
-      use pepper_strings, only: ljust, rtrim
+      use pepper_strings, only: rtrim
       implicit none
       logical               return
       character(1)          letter
@@ -1903,7 +1903,7 @@ contains
 !     First left justify MARKS and remove duplicates.
 !
       do i = 1, nmarks
-         call ljust ( marks(i), marks(i) )
+         marks(i) = adjustl(marks(i))
       end do
 
       n = nmarks
@@ -4140,9 +4140,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j1950, j2000, spd
-      use pepper_arrays, only: bsrchc, isrchi
-      use pepper_math, only: brcktd, brckti
-      use pepper_strings, only: lcase, ljust, prefix, rtrim, scanrj, ucase
+      use pepper_arrays, only: bsrchc
+      use pepper_strings, only: lcase, prefix, rtrim, scanrj, ucase
       implicit none
       integer(ip), parameter :: currnt = 1
       integer(ip), parameter :: begin = currnt
@@ -4563,7 +4562,7 @@ contains
 !     left to resolve).
 !
       mystr = ' '
-      call    ljust ( pictur, mystr(1:maxlen-1) )
+      mystr(1:maxlen-1) = adjustl(pictur)
       e     = rtrim (         mystr             ) + 1
       start = 1
 
@@ -4703,15 +4702,13 @@ contains
 !     Next determine whether or not we shall be performing rounding
 !     on output.
 !
-      pumpup =      isrchi ( id(round), ntokns, ident ) /= 0
+      pumpup =      findloc(ident(1:ntokns), id(round), dim=1) /= 0
 
 !
 !     Determine if we have an Era specification
 !
-      doera  =      isrchi ( id(lera),  ntokns, ident ) /= 0 &
-               .or. isrchi ( id(uera),  ntokns, ident ) /= 0 &
-               .or. isrchi ( id(uerax), ntokns, ident ) /= 0 &
-               .or. isrchi ( id(lerax), ntokns, ident ) /= 0
+      doera  =      findloc(ident(1:ntokns), id(lera), dim=1) /= 0  .or. findloc(ident(1:ntokns), id(uera), &
+         dim=1) /= 0  .or. findloc(ident(1:ntokns), id(uerax), dim=1) /= 0  .or. findloc(ident(1:ntokns), id(lerax), dim=1) /= 0
 
 !
 !     Until we've examined the year, we assume that the era is not
@@ -4916,7 +4913,7 @@ contains
 !              We are going to truncate the number to the number of
 !              places requested NOT round.
 !
-               trncat = brckti( width - length(numtyp) - 1, 0, 14 )
+               trncat = max(0, min(14, width - length(numtyp) - 1))
                frac   = value - dint(value )
 
                if ( frac < 0 ) then
@@ -4927,7 +4924,7 @@ contains
                intmed = ( dint( frac * power(trncat) ) - 0.125_wp ) &
                                       / power(trncat)
 
-               frac   = brcktd( intmed,      0.0_wp,      1.0_wp )
+               frac   = max(0.0_wp, min(1.0_wp, intmed))
 
                value  = dint(value) + frac
 
@@ -5036,7 +5033,7 @@ contains
                call ttrans( ctx, intyp, bastyp, ntvec  )
 
                delta = max(1.0_wp, ntvec(1) - ptvec(1) )
-               frac  = brcktd( 0.0_wp, 1.0_wp, (myet - ptvec(1)) / delta )
+               frac  = max(min(1.0_wp, (myet - ptvec(1)) / delta), min(max(1.0_wp, (myet - ptvec(1)) / delta), 0.0_wp))
 
                value = value + frac
 
@@ -5399,7 +5396,7 @@ contains
                   end if
 
                else
-                  call ljust ( string(appnd:), string(appnd:) )
+                  string(appnd:) = adjustl(string(appnd:))
                   appnd          = appnd + 4
                end if
 

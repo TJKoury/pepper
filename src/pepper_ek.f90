@@ -426,7 +426,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: lastnb
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
@@ -488,7 +487,7 @@ contains
 !
       call lxidnt ( ctx, idspec, tabnam, 1, idend, nchars )
 
-      if ( ( nchars == 0 ) .or. ( nchars < lastnb(tabnam))  ) then
+      if ( ( nchars == 0 ) .or. ( nchars < len_trim(tabnam))  ) then
 
          call ctx%setmsg ( 'Table name <#> violates syntax rules.' )
          call ctx%errch  ( '#', tabnam                             )
@@ -525,8 +524,7 @@ contains
 !
          call lxidnt ( ctx, idspec, cnames(i), 1, idend, nchars )
 
-         if (       ( nchars == 0                    ) &
-               .or. ( nchars < lastnb( cnames(i) )  )   ) then
+         if (       ( nchars == 0                    )  .or. ( nchars < len_trim(cnames(i))  )   ) then
 
             call ctx%setmsg ( 'Column name <#> violates syntax rules.' )
             call ctx%errch  ( '#', cnames(i)                           )
@@ -600,7 +598,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari, filli
       use pepper_inc_ekcoldsc
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
@@ -941,8 +938,8 @@ contains
 !     determine the status, we must know whether the parent file is
 !     shadowed.
 !
-      call cleari ( ipsize,                recptr )
-      call filli  ( uninit, ipsize-dptbas, recptr )
+      recptr = 0
+      recptr(1:ipsize-dptbas) = uninit
 
       call ekshdw ( ctx, handle, isshad )
 
@@ -1174,7 +1171,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: nblen
       use pepper_inc_ekcnamsz
       use pepper_inc_ektnamsz
@@ -1276,7 +1272,7 @@ contains
 
          found = .false.
 
-         j = isrchc ( cat1nm(i), ncols, cnames )
+         j = findloc(cnames(1:ncols), cat1nm(i), dim=1)
 
          if ( j > 0  ) then
             found = cat1dt(i) == dtypes(j) .and. .not. nullok(j)
@@ -1455,7 +1451,6 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
@@ -1589,7 +1584,7 @@ contains
 !        prepare a data buffer to be written out as a page.
 !
          call zzekaps  ( ctx, handle, segdsc, int, .false., p, pbase )
-         call cleari   ( pgsizi, page )
+         page = 0
 
       end if
 
@@ -1668,7 +1663,7 @@ contains
             if ( nwrite < ndata ) then
 
                call zzekaps ( ctx, handle, segdsc, int, .false., p, pbase )
-               call cleari  ( pgsizi, page )
+               page = 0
 
                n   =  0
                to  =  1
@@ -1860,7 +1855,6 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
@@ -1995,7 +1989,7 @@ contains
 !        prepare a data buffer to be written out as a page.
 !
          call zzekaps  ( ctx, handle, segdsc, dp, .false., p, pbase )
-         call cleard   ( pgsizd, page )
+         page = 0.0_wp
 
       end if
 
@@ -2074,7 +2068,7 @@ contains
             if ( nwrite < ndata ) then
 
                call zzekaps  ( ctx, handle, segdsc, dp, .false., p, pbase )
-               call cleard   ( pgsizd, page )
+               page = 0.0_wp
 
                n   =  0
                to  =  1
@@ -2789,7 +2783,6 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
@@ -2923,7 +2916,7 @@ contains
 !        prepare a data buffer to be written out as a page.
 !
          call zzekaps  ( ctx, handle, segdsc, int, .false., p, pbase )
-         call cleari   ( pgsizi, page )
+         page = 0
 
       end if
 
@@ -3074,7 +3067,7 @@ contains
             if ( remain > 0 ) then
 
                call zzekaps ( ctx, handle, segdsc, int, .false., p2, pbase )
-               call cleari  ( pgsizi, page )
+               page = 0
 
                n      =  0
                nlink  =  0
@@ -3275,7 +3268,6 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
@@ -3410,7 +3402,7 @@ contains
 !        prepare a data buffer to be written out as a page.
 !
          call zzekaps  ( ctx, handle, segdsc, dp, .false., p, pbase )
-         call cleard   ( pgsizd, page )
+         page = 0.0_wp
 
       end if
 
@@ -3560,7 +3552,7 @@ contains
             if ( remain > 0 ) then
 
                call zzekaps ( ctx, handle, segdsc, dp, .false., p2, pbase )
-               call cleard  ( pgsizd, page )
+               page = 0.0_wp
 
                n      =  0
                nlink  =  0
@@ -9408,7 +9400,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
@@ -9437,7 +9428,7 @@ contains
 !     to.
 !
       to  =  1
-      call cleari ( pgsizi, page )
+      page = 0
 
       do from = 1, nvals
 !
@@ -11862,7 +11853,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_ekbool
       use pepper_inc_ekclas07
       use pepper_inc_ekcoldsc
@@ -11946,7 +11936,7 @@ contains
 !     to.
 !
       to  =  1
-      call cleari ( pgsizi, page )
+      page = 0
 
       do from = 1, nrows
 
@@ -12164,7 +12154,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       use pepper_inc_ekbool
       use pepper_inc_ekclas08
       use pepper_inc_ekcnamsz
@@ -12249,7 +12238,7 @@ contains
 !     to.
 !
       to  =  1
-      call cleard ( pgsizd, page )
+      page = 0.0_wp
 
       do from = 1, nrows
 
@@ -19093,7 +19082,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movei
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_ekqlimit
@@ -19126,8 +19114,8 @@ contains
       hans(1)  =  han1
       hans(2)  =  han2
 
-      call movei ( sgdsc1, sdscsz, sgdscs(1,1) )
-      call movei ( sgdsc2, sdscsz, sgdscs(1,2) )
+      sgdscs(:,1) = sgdsc1
+      sgdscs(:,2) = sgdsc2
 
       rows(1)  =  row1
       rows(2)  =  row2
@@ -19140,8 +19128,8 @@ contains
 !        Compare the entries in the two rows in the columns indicated
 !        by the Nth column descriptor pair.
 !
-         call movei ( cdlst1(1,col), cdscsz, cldscs(1,1) )
-         call movei ( cdlst2(1,col), cdscsz, cldscs(1,2) )
+         cldscs(:,1) = cdlst1(:,col)
+         cldscs(:,2) = cdlst2(:,col)
 
          elts(1)  =  elts1(col)
          elts(2)  =  elts2(col)
@@ -19452,7 +19440,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movei
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_ekqlimit
@@ -19722,8 +19709,8 @@ contains
                colptr(i) = lnknxt( ctx, colptr(i), dtpool )
             end do
 
-            call movei ( dtdscs( 1, colptr(i) ),  cdscsz,  cldscs(1,i) )
-            call movei ( stsdsc( 1, segs(i)   ),  sdscsz,  sgdscs(1,i) )
+            cldscs(:,i) = dtdscs(:,colptr(i))
+            sgdscs(:,i) = stsdsc(:,segs(i))
 
             dtype  (i)  =  dtdscs ( typidx, colptr(i) )
             elidxs (i)  =  elts   ( col )
@@ -20026,7 +20013,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movei
       use pepper_strings, only: matchi
       use pepper_inc_ekbool
       use pepper_inc_ekopcd
@@ -20079,8 +20065,8 @@ contains
             hans(1)  =  lhans(n)
             hans(2)  =  rhans(n)
 
-            call movei ( lsdscs(1,n), sdscsz, sgdscs(1,1) )
-            call movei ( rsdscs(1,n), sdscsz, sgdscs(1,2) )
+            sgdscs(:,1) = lsdscs(:,n)
+            sgdscs(:,2) = rsdscs(:,n)
 
             rows(1)  =  lrows(n)
             rows(2)  =  rrows(n)
@@ -20088,8 +20074,8 @@ contains
             elts(1)  =  lelts(n)
             elts(2)  =  relts(n)
 
-            call movei ( lcdscs(1,n), cdscsz, cldscs(1,1) )
-            call movei ( rcdscs(1,n), cdscsz, cldscs(1,2) )
+            cldscs(:,1) = lcdscs(:,n)
+            cldscs(:,2) = rcdscs(:,n)
 
             rel  =  zzekecmp ( ctx, hans,  sgdscs,  cldscs,  rows,  elts  )
 
@@ -23412,7 +23398,6 @@ contains
 !!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movei
       use pepper_containers, only: grow
       use pepper_inc_ekcoldsc
       use pepper_inc_ekjrs
@@ -23541,8 +23526,8 @@ contains
             lhans(j) =  sthan ( lseg )
             rhans(j) =  sthan ( rseg )
 
-            call movei ( stsdsc(1,lseg), sdscsz, lsdsc(1,j) )
-            call movei ( stsdsc(1,rseg), sdscsz, rsdsc(1,j) )
+            lsdsc(1:sdscsz,j) = stsdsc(:,lseg)
+            rsdsc(1:sdscsz,j) = stsdsc(:,rseg)
 
             dtptr   =  stdtpt(lseg)
 
@@ -23550,7 +23535,7 @@ contains
                dtptr  =  lnknxt( ctx, dtptr, dtpool )
             end do
 
-            call movei ( dtdscs(1,dtptr), cdscsz,  ldscrs(1,j) )
+            ldscrs(1:cdscsz,j) = dtdscs(:,dtptr)
 
             dtptr   =  stdtpt(rseg)
 
@@ -23558,7 +23543,7 @@ contains
                dtptr  =  lnknxt( ctx, dtptr, dtpool )
             end do
 
-            call movei ( dtdscs(1,dtptr), cdscsz, rdscrs(1,j) )
+            rdscrs(1:cdscsz,j) = dtdscs(:,dtptr)
 
          end if
 
@@ -24724,7 +24709,6 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: movei
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
@@ -25058,7 +25042,7 @@ contains
 
       i   =  conmap(  ordi( ctx, key, idxset )  )
 
-      call movei ( dsclst(1,i), cdscsz, keydsc )
+      keydsc(1:cdscsz) = dsclst(:,i)
 
 !
 !     De-activate constraints on the key column that we've already
@@ -30241,7 +30225,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc, movec, movei
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -30539,7 +30522,7 @@ contains
 !           column names.  Bail out if we find any.
 !
             call ssizec ( ctx, mxclld,        cnmset    )
-            call movec  ( cnams,  ncols, cnmset(1) )
+            cnmset(1:ncols) = cnams(1:ncols)
             call validc ( ctx, mxclld, ncols, cnmset    )
 
             if ( cardc( ctx,cnmset) < ncols ) then
@@ -30686,7 +30669,7 @@ contains
             stncol(stnew)   =  segdsc(ncidx)
             stdtpt(stnew)   =  0
 
-            call movei ( segdsc, sdscsz, stdscs(1,stnew) )
+            stdscs(1:sdscsz,stnew) = segdsc
 
 !
 !           The next step is to set up the column attributes and
@@ -30717,7 +30700,7 @@ contains
                do while (       ( j     >  0       ) &
                           .and. ( state /= 'ABORT'  )   )
 
-                  k  =  isrchc ( ctnams(j), ncols, cnams )
+                  k  =  findloc(cnams(1:ncols), ctnams(j), dim=1)
 
                   if ( k > 0 ) then
 !
@@ -30779,9 +30762,7 @@ contains
 !
 !                          Fill in the descriptor.
 !
-                           call movei (  cdscrs(1,k), &
-                                         cdscsz, &
-                                         dtdscs(1,dtnew)  )
+                           dtdscs(1:cdscsz,dtnew) = cdscrs(:,k)
 
                         end if
 !
@@ -30915,9 +30896,7 @@ contains
 !
 !                       Fill in the descriptor.
 !
-                        call movei (  cdscrs(1,k), &
-                                      cdscsz, &
-                                      dtdscs(1,dtnew)  )
+                        dtdscs(1:cdscsz,dtnew) = cdscrs(:,k)
 
                      end if
 
@@ -33442,7 +33421,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleari, movei
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -33881,7 +33859,7 @@ contains
                         j  = lnknxt( ctx,j,dtpool)
                      end do
 
-                     call movei ( dtdscs(1,j), cdscsz, ldscrs(1,i) )
+                     ldscrs(1:cdscsz,i) = dtdscs(1:cdscsz,j)
 
                   end if
 
@@ -33967,7 +33945,7 @@ contains
                            j  = lnknxt( ctx,j,dtpool)
                         end do
 
-                        call movei(dtdscs(1,j), cdscsz, ldscrs(1,i) )
+                        ldscrs(1:cdscsz,i) = dtdscs(1:cdscsz,j)
 
                         j  =  stdtpt(seg)
 
@@ -33975,7 +33953,7 @@ contains
                            j  = lnknxt( ctx,j,dtpool)
                         end do
 
-                        call movei(dtdscs(1,j), cdscsz, rdscrs(1,i) )
+                        rdscrs(1:cdscsz,i) = dtdscs(1:cdscsz,j)
 
                      end if
 
@@ -40378,7 +40356,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: repmc
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -40662,10 +40639,10 @@ contains
 !        Find the qualifying name in the FROM table list.  If the
 !        name is not there, look in the alias list.
 !
-         tabidx  =  isrchc ( eqryc(tb:te), ntab, tablst )
+         tabidx  =  findloc(tablst(1:ntab), eqryc(tb:te), dim=1)
 
          if ( tabidx == 0 ) then
-            tabidx  =  isrchc ( eqryc(tb:te), ntab, alslst )
+            tabidx  =  findloc(alslst(1:ntab), eqryc(tb:te), dim=1)
          end if
 
 !
@@ -40755,7 +40732,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: repmc, ucase
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -41042,10 +41018,10 @@ contains
 !
       if ( qual ) then
 
-         tabidx  =  isrchc ( tmptab, ntab, tablst )
+         tabidx  =  findloc(tablst(1:ntab), tmptab, dim=1)
 
          if ( tabidx == 0 ) then
-            tabidx = isrchc ( tmptab, ntab, alslst )
+            tabidx = findloc(alslst(1:ntab), tmptab, dim=1)
          end if
 
 !
@@ -41658,7 +41634,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: movei
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -41909,7 +41884,7 @@ contains
 !
                call zzekinqn ( ctx, et, time, lxb, lxe, eqryi, eqryd, descr )
 
-               call movei ( descr, eqvdsz, eqryi(base+eqbval) )
+               eqryi(base+eqbval:base+eqbval+eqvdsz-1) = descr
 
             end if
 !
@@ -42621,7 +42596,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: repmc
       use pepper_inc_ekbool
       use pepper_inc_ekqlimit
@@ -42848,7 +42822,7 @@ contains
 !
       do i = 1, ntab
 
-         j  =  isrchc ( alias(i), ntab, table )
+         j  =  findloc(table(1:ntab), alias(i), dim=1)
 
          if ( j /= 0 ) then
 

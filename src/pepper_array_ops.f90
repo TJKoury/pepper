@@ -32,7 +32,6 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
-      use pepper_strings, only: nbwid
       implicit none
 
 ! $ Detailed_Input
@@ -227,7 +226,7 @@ contains
 !     happen to be shorter than those in the input array.
 !
       outlen = len   ( array(1)       )
-      widest = nbwid ( array,  nelt   )
+      widest = max(0, maxval(len_trim(array(1:nelt))))
 
 !
 !     The greatest common divisor need only be computed once.
@@ -741,9 +740,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movec
       use pepper_math, only: gcd
-      use pepper_strings, only: nbwid
       implicit none
 
 ! $ Detailed_Input
@@ -950,7 +947,7 @@ contains
 
       else if ( k == 0 ) then
 
-         call movec  ( array, nelt, out )
+         out(1:nelt) = array(1:nelt)
          return
 
       end if
@@ -975,7 +972,7 @@ contains
 !     happen to be shorter thAn those in the input array.
 !
       outlen = len   ( out(1)         )
-      widest = nbwid ( array,  nelt   )
+      widest = max(0, maxval(len_trim(array(1:nelt))))
       limit  = min   ( outlen, widest )
 
 !
@@ -1045,7 +1042,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_math, only: gcd
       implicit none
 
@@ -1241,7 +1237,7 @@ contains
 
       else if ( k == 0 ) then
 
-         call moved  ( array, nelt, out )
+         out(1:nelt) = array(1:nelt)
          return
 
       end if
@@ -1296,7 +1292,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movei
       use pepper_math, only: gcd
       implicit none
 
@@ -1492,7 +1487,7 @@ contains
 
       else if ( k == 0 ) then
 
-         call movei ( array, nelt, out )
+         out(1:nelt) = array(1:nelt)
          return
 
       end if

@@ -297,7 +297,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: brcktd, vequ
       implicit none
 
 
@@ -412,7 +411,7 @@ contains
 
       x = ( t1 * 0.5_wp ) + ( t2 * 0.5_wp )
 
-      t = brcktd ( x, t1, t2 )
+      t = max(min(t1, t2), min(max(t1, t2), x))
 
       return
       end procedure gfrefn
@@ -547,8 +546,7 @@ contains
 !!     get the correct indefinite article
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
-      use pepper_strings, only: ljust, replch, ucase
+      use pepper_strings, only: replch, ucase
       implicit none
       integer(ip), parameter :: anwrds = 22
       integer(ip), parameter :: awrds = 33
@@ -577,7 +575,7 @@ contains
       call ucase ( word,              myword )
       call replch( myword, '''', ' ', myword )
       call replch( myword, '"',  ' ', myword )
-      call ljust ( myword,            myword )
+      myword = adjustl(myword)
       call ucase ( case,              mycase )
 
       ana = ' '
@@ -623,14 +621,14 @@ contains
 !
       do i = 7, 2, -1
 
-         if ( isrchc ( start(i), awrds,  aword ) /= 0 ) then
+         if ( findloc(aword, start(i), dim=1) /= 0 ) then
 
             ana = a (caps)
             return
 
          end if
 
-         if ( isrchc ( start(i), anwrds, anword ) /= 0 ) then
+         if ( findloc(anword, start(i), dim=1) /= 0 ) then
 
             ana = an(caps)
             return
@@ -1409,7 +1407,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
-      use pepper_arrays, only: moved
       use pepper_math, only: ident, mxv, recazl
       use pepper_strings, only: eqstr
       implicit none
@@ -1529,7 +1526,7 @@ contains
             if ( obspos(3) < 0.0_wp ) then
 
                call rotmat ( ctx, xftopo, pi, 1, tmpmat )
-               call moved  ( tmpmat, 9,       xftopo )
+               xftopo = tmpmat
 
             end if
 
@@ -1899,7 +1896,7 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderi
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
       implicit none
@@ -1959,7 +1956,7 @@ contains
 !
       if  (      ( frmcls > swtch ) &
             .or. ( frmcls == 0   ) &
-            .or. ( frmcls < all )  ) then
+            .or. ( frmcls < frmtyp_all )  ) then
 
          call ctx%setmsg ( 'Frame class specifier FRMCLS was #; this ' &
          //            'value is not supported.'                  )
@@ -2001,7 +1998,7 @@ contains
          j = corder(i)
 
          if (      ( fclass(j) == frmcls ) &
-              .or. ( frmcls    == all    )  ) then
+              .or. ( frmcls    == frmtyp_all    )  ) then
 !
 !           The frame at index J belongs to the
 !           requested class. Append the frame's ID
@@ -2420,7 +2417,6 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
-      use pepper_math, only: vscl
       implicit none
 
 
@@ -2762,8 +2758,8 @@ contains
 !
       v = dsqrt( mu*(1.0_wp + ecc) / rp )
 
-      call vscl( rp, basisp, pstate(1) )
-      call vscl( v,  basisq, pstate(4) )
+      pstate(1:3) = rp*basisp
+      pstate(4:6) = v*basisq
 
 !
 !     Finally compute DT the elapsed time since the epoch of periapse.
@@ -3061,7 +3057,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: vpack
       implicit none
 
 
@@ -3466,7 +3461,7 @@ contains
 !
 !     First move the X,Y and Z coordinates into a vector.
 !
-      call vpack  ( x, y, z, rectan )
+      rectan = [x, y, z]
 
 !
 !     Convert from rectangular to geodetic coordinates.
@@ -3508,7 +3503,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: unorm, vdot, vzero
+      use pepper_math, only: unorm, vdot
       implicit none
 
 
@@ -3813,7 +3808,7 @@ contains
 !
       call unorm( state(1), p, r)
 
-      if ( vzero(p) ) then
+      if ( all(p == 0.0_wp) ) then
 
          dhfa = 0.0_wp
          call ctx%setmsg( 'The position component of the input state ' &
@@ -4154,7 +4149,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: moved
       use pepper_math, only: vhatg
       implicit none
       real(wp)              a
@@ -4177,8 +4171,8 @@ contains
 
       if  ( symmat(1,2) == 0.0_wp ) then
 
-         call moved  ( ident,  4, rotate )
-         call moved  ( symmat, 4, diag   )
+         rotate = ident
+         diag = symmat
 !
 !        Explicitly zero out the (2,1) entry of DIAG, since DIAG is
 !        guaranteed to be diagonal.
@@ -4333,7 +4327,7 @@ contains
 !        Unitize the eigenvector.
 !
          call vhatg ( eigvec, 2, tmpv   )
-         call moved ( tmpv,   2, eigvec )
+         eigvec = tmpv
 
          rotate(1,1)  =  eigvec(2)
          rotate(2,1)  = -eigvec(1)
@@ -4363,7 +4357,7 @@ contains
 !        Unitize the eigenvector.
 !
          call vhatg ( eigvec, 2, tmpv   )
-         call moved ( tmpv,   2, eigvec )
+         eigvec = tmpv
 
          rotate(1,1)  =  eigvec(1)
          rotate(2,1)  =  eigvec(2)
@@ -4611,7 +4605,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: fndnwd, lastnb, nblen, nparsd, wdindx
+      use pepper_strings, only: fndnwd, nblen, nparsd, wdindx
       implicit none
 
 
@@ -4824,7 +4818,7 @@ contains
 !     string.
 !
       positn  =  wdindx ( string, keywd )
-      length  =  lastnb ( string      )
+      length  =  len_trim(string)
 
       if ( positn == 0 ) then
          nfound = -1
@@ -5400,7 +5394,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_math, only: brcktd, vequ
       implicit none
       integer(ip), parameter :: nmodl = 6
       integer(ip), parameter :: kj2 = 1
@@ -6468,7 +6461,7 @@ contains
 
       do while ( upper > lower .and. count < mxloop )
          count = count + 1
-         epw   = brcktd( 0.5_wp * ( upper + lower ), lower, upper )
+         epw   = max(min(lower, upper), min(max(lower, upper), 0.5_wp * ( upper + lower )))
 !
 !        EPW eventually will not be different from one of the
 !        two bracketing values.  If this is the time, we need
@@ -7756,7 +7749,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: vlcom
       implicit none
 
 
@@ -8198,7 +8190,7 @@ contains
 !
 !     Move along the normal to the input point.
 !
-      call vlcom ( 1.0_wp, base, height, normal, rectan )
+      rectan = 1.0_wp*base + height*normal
 
       return
       end procedure georec
@@ -8224,8 +8216,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
-      use pepper_math, only: unorm, vcrss, vequ, vhat, vlcom, vnorm, vperp, vrotv, vscl, vzero
-      use pepper_strings, only: eqstr, ljust, rtrim, suffix, ucase
+      use pepper_math, only: unorm, vcrss, vhat, vnorm, vperp, vrotv
+      use pepper_strings, only: eqstr, rtrim, suffix, ucase
       implicit none
       real(wp) :: crsang_1(1)  !! one-element copy of crsang (array argument)
       real(wp) :: refang_1(1)  !! one-element copy of refang (array argument)
@@ -9000,7 +8992,7 @@ contains
 !     provide the desired case-insensitivity to the keyword value.
 !
       call ucase ( shape, shape )
-      call ljust ( shape, shape )
+      shape = adjustl(shape)
 
 !
 !     Check whether shape identified that we got is one from the list
@@ -9076,7 +9068,7 @@ contains
 !
 !     Check whether boresight is a zero vector; complain if it is.
 !
-      if ( vzero(bsight) ) then
+      if ( all(bsight == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The boresight vector, stored in the ''#'' ' &
          //            'variable, is the zero vector.'               )
@@ -9485,7 +9477,7 @@ contains
 !           counter-clockwise fashion about the boresight.
 !
             call vcrss ( bsight, normal(1,1), tmpvec      )
-            call vequ  ( tmpvec,              normal(1,2) )
+            normal(:,2) = tmpvec
 !
 !           Now rotate BSIGHT by CRSANG about the NORMAL(1,2) using
 !           the routine VROTV.
@@ -9597,7 +9589,7 @@ contains
 !           Unitize B1.
 !
             call vhat  ( b1,     tmpvec )
-            call vequ  ( tmpvec, b1     )
+            b1 = tmpvec
 
 !
 !           Step (3), compute B2 by crossing B and B1.
@@ -9640,10 +9632,10 @@ contains
             sinran = dsin ( refang )
             sincan = dsin ( crsang )
 
-            call vlcom ( -cosran, b1, sinran, b, normal(1,1) )
-            call vlcom ( -coscan, b2, sincan, b, normal(1,2) )
-            call vlcom (  cosran, b1, sinran, b, normal(1,3) )
-            call vlcom (  coscan, b2, sincan, b, normal(1,4) )
+            normal(:,1) = (-cosran)*b1 + sinran*b
+            normal(:,2) = (-coscan)*b2 + sincan*b
+            normal(:,3) = cosran*b1 + sinran*b
+            normal(:,4) = coscan*b2 + sincan*b
 
 !
 !           We are almost finished. Compute the boundary corner
@@ -9661,7 +9653,7 @@ contains
             do i = 1, 4
 
                call unorm ( bounds(1,i),  tmpvec,  vmag        )
-               call vscl  ( bmag,         tmpvec,  bounds(1,i) )
+               bounds(:,i) = bmag*tmpvec
 
             end do
 
@@ -10637,7 +10629,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vequ, vminus, vsep, vsub
+      use pepper_math, only: vsep
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
@@ -10783,8 +10775,8 @@ contains
 !     found point from the target body center to the observer and
 !     Sun, and already take light time corrections into account.
 !
-      call vminus ( tstate, obsvec )
-      call vequ   ( sstate, sunvec )
+      obsvec = -tstate(1:3)
+      sunvec = sstate(1:3)
 
 !
 !     Now we'll modify target-observer and target-Sun vectors to
@@ -10792,8 +10784,8 @@ contains
 !     surface point of interest; we want the vectors to point from
 !     the surface point to the observer and Sun respectively.
 !
-      call vsub ( obsvec, spoint, offobs )
-      call vsub ( sunvec, spoint, offsun )
+      offobs = obsvec - spoint
+      offsun = sunvec - spoint
 
 !
 !     Find the surface normal at SPOINT.  We'll need the radii of the
@@ -11018,7 +11010,7 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
-      use pepper_strings, only: ljust, repmc, rtrim
+      use pepper_strings, only: repmc, rtrim
       implicit none
 
 
@@ -11223,7 +11215,7 @@ contains
 !     Left justify the input time string, and determine the location of
 !     it's last non-blank character.  Finally make some local copies.
 !
-      call      ljust ( tstrng, ascii )
+      ascii = adjustl(tstrng)
       l      =  rtrim (         ascii )
       mystr  =  ascii
       change = .false.
@@ -11567,7 +11559,7 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_strings, only: repmc
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
       implicit none
@@ -11967,7 +11959,7 @@ contains
 !
       if  (      ( frmcls > swtch ) &
             .or. ( frmcls == 0     ) &
-            .or. ( frmcls < all   )  ) then
+            .or. ( frmcls < frmtyp_all   )  ) then
 
          call ctx%setmsg ( 'Frame class specifier FRMCLS was #; this ' &
          //            'value is not supported.'                  )
@@ -12097,7 +12089,7 @@ contains
 !                       Check whether the frame class is one
 !                       we want.
 !
-                     if (      ( frmcls == all    ) &
+                     if (      ( frmcls == frmtyp_all    ) &
                           .or. ( frmcls == fclass )  ) then
 !
 !                          We have a winner. Add it to the output set.
@@ -12182,7 +12174,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: lastnb
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -12471,7 +12462,7 @@ contains
 !        Eliminate trailing blanks.  EOL is the last non-blank
 !        character in the list.
 !
-         eol = lastnb ( list )
+         eol = len_trim(list)
 
 !
 !        As the King said to Alice: 'Begin at the beginning.
@@ -14736,7 +14727,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: el2cgv, mtxv, mxv, vadd, vdist, vequ, vnorm, vpack, vsclip, vsub
+      use pepper_math, only: el2cgv, mtxv, mxv, vdist, vnorm
       implicit none
 
       integer(ip), parameter :: ubel = 9
@@ -14962,16 +14953,16 @@ contains
 
       scale = 1.0_wp / majlen
 
-      call vsclip ( scale, smajor )
-      call vsclip ( scale, sminor )
+      smajor = scale*smajor
+      sminor = scale*sminor
 
 !
 !     Translate ellipse and point so that the ellipse is centered at
 !     the origin.  Scale the point's coordinates to maintain the
 !     correct relative position to the scaled ellipse.
 !
-      call vsub   ( point, center, tmppnt )
-      call vsclip ( scale,         tmppnt )
+      tmppnt = point - center
+      tmppnt = scale*tmppnt
 
 !
 !     We want to reduce the problem to a two-dimensional one.  We'll
@@ -14986,7 +14977,7 @@ contains
 !     Apply the coordinate transformation to our scaled input point.
 !
       call mxv  ( rotate, tmppnt, tempv  )
-      call vequ ( tempv,          tmppnt )
+      tmppnt = tempv
 
 !
 !     We must find the distance between the orthogonal projection of
@@ -14997,7 +14988,7 @@ contains
 !
 !     we'll call this projection PRJPNT.
 !
-      call vpack ( tmppnt(1),  tmppnt(2),  0.0_wp,  prjpnt )
+      prjpnt = [tmppnt(1), tmppnt(2), 0.0_wp]
 
 !
 !     Now we're ready to find the distance between and a triaxial
@@ -15017,14 +15008,14 @@ contains
 !
 !     Scale the near point coordinates back to the original scale.
 !
-      call vsclip ( majlen, pnear )
+      pnear = majlen*pnear
 
 !
 !     Apply the required inverse rotation and translation to PNEAR.
 !     Compute the point-to-ellipse distance.
 !
       call mtxv ( rotate, pnear,  tempv )
-      call vadd ( tempv,  center, pnear )
+      pnear = tempv + center
 
       dist = vdist ( pnear, point )
 
@@ -15579,7 +15570,7 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: pi, twopi
-      use pepper_math, only: exact, ucrss, vcrss, vdot, vequ, vhat, vlcom, vnorm, vpack, vsclip, vsep, vzero
+      use pepper_math, only: exact, ucrss, vcrss, vdot, vhat, vnorm, vsep
       implicit none
       real(wp), parameter :: close = 1.0e-10_wp
       real(wp)              argp
@@ -15645,14 +15636,14 @@ contains
 !                        e = (1/mu)( (v  - mu/r) r  -  <r,v> v )
 !                        -                       -      - -  -
 !
-      call vequ ( state(1), r )
-      call vequ ( state(4), v )
+      r = state(1:3)
+      v = state(4:6)
 
 !
 !     Check for non-physical cases. Probably due to user
 !     input error
 !
-      if ( vzero(r) ) then
+      if ( all(r == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Zero vector for input position vector.' )
          call ctx%sigerr ( 'SPICE(DEGENERATECASE)'                  )
@@ -15660,7 +15651,7 @@ contains
 
       end if
 
-      if ( vzero(v) ) then
+      if ( all(v == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Zero vector for input velocity vector.' )
          call ctx%sigerr ( 'SPICE(DEGENERATECASE)'                  )
@@ -15677,7 +15668,7 @@ contains
 !     If the specific angular momentum vector is the zero vector,
 !     we have a degenerate orbit and cannot proceed.
 !
-      if ( vzero(h) ) then
+      if ( all(h == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input position and velocity are too close '  // &
                        'to parallel; the specific angular momentum ' // &
@@ -15687,10 +15678,10 @@ contains
 
       end if
 
-      call vpack  ( -h(2), h(1), 0.0_wp, n )
+      n = [-h(2), h(1), 0.0_wp]
 
-      call vlcom  ( vmag**2 - mu/rmag,  r,  -vdot(r,v),  v,  e )
-      call vsclip ( 1.0_wp/mu, e )
+      e = (vmag**2 - mu/rmag)*r + (-vdot(r,v))*v
+      e = (1.0_wp/mu)*e
 
 !
 !     We begin by determining the size and shape of the orbit.
@@ -15724,11 +15715,11 @@ contains
 
       if ( abs ( inc - 0.0_wp ) < close ) then
          inc = 0.0_wp
-         call vpack ( 1.0_wp, 0.0_wp, 0.0_wp, n )
+         n = [1.0_wp, 0.0_wp, 0.0_wp]
 
       else if ( abs ( inc - pi ) < close ) then
          inc = pi
-         call vpack ( 1.0_wp, 0.0_wp, 0.0_wp, n )
+         n = [1.0_wp, 0.0_wp, 0.0_wp]
       end if
 
 !
@@ -18136,7 +18127,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: frstnb, lastnb, lcase, ljust, ucase
+      use pepper_strings, only: lcase, ucase
       implicit none
 
 
@@ -18402,7 +18393,7 @@ contains
 !
 !     Bail out if RTCASE is not recognized.
 !
-      call ljust ( rtcase, tmpcas )
+      tmpcas = adjustl(rtcase)
       call ucase ( tmpcas, tmpcas )
 
       if (        ( tmpcas /= 'U' ) &
@@ -18432,8 +18423,8 @@ contains
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      mrknbf = frstnb(marker)
-      mrknbl = lastnb(marker)
+      mrknbf = verify(marker, ' ')
+      mrknbl = len_trim(marker)
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
@@ -18470,11 +18461,7 @@ contains
 !
 !     Replace MARKER with CARD.
 !
-      call repsub ( ctx, in, &
-                    mrkpsb, &
-                    mrkpse, &
-                    card ( : lastnb(card) ), &
-                    out                                       )
+      call repsub ( ctx, in,  mrkpsb,  mrkpse,  card ( : len_trim(card) ),  out                                       )
 
       return
       end procedure repmct
@@ -18701,8 +18688,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
-      use pepper_strings, only: frstnb, lastnb, ucase
+      use pepper_strings, only: ucase
       implicit none
       integer(ip), parameter :: maxllt = 5
       integer(ip), parameter :: ncase = 3
@@ -18730,7 +18716,7 @@ contains
 !
       call ucase ( rtcase, tmpcas )
 
-      casidx = isrchc ( tmpcas, ncase, casstr )
+      casidx = findloc(casstr, tmpcas, dim=1)
 
       if ( casidx == 0 ) then
 
@@ -18757,8 +18743,8 @@ contains
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      mrknbf = frstnb(marker)
-      mrknbl = lastnb(marker)
+      mrknbf = verify(marker, ' ')
+      mrknbl = len_trim(marker)
 
 !
 !     MARKER is non-blank, so the index range below is valid.
@@ -18793,11 +18779,7 @@ contains
 !
 !     Replace MARKER with LVALUE.
 !
-      call repsub ( ctx, in, &
-                    mrkpsb, &
-                    mrkpse, &
-                    lvalue( : lastnb(lvalue) ), &
-                    out )
+      call repsub ( ctx, in,  mrkpsb,  mrkpse,  lvalue( : len_trim(lvalue) ),  out )
 
       return
       end associate
@@ -19978,7 +19960,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: brcktd, vequ
       implicit none
 
 
@@ -20194,7 +20175,7 @@ contains
                  * ( cos ( lat1 - lat2 )  -  sl1sl2 ) &
                  +   sl1sl2
 
-      sphsd   =      radius * acos ( brcktd ( cosang, -1.0_wp, 1.0_wp ) )
+      sphsd   =      radius * acos ( max(-1.0_wp, min(1.0_wp, cosang)) )
 
       return
       end procedure sphsd
@@ -20792,7 +20773,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       implicit none
 
 
@@ -20884,7 +20865,7 @@ contains
 
       character(wdsize)     myname
 
-      call ljust ( name,   myname )
+      myname = adjustl(name)
       call ucase ( myname, myname )
 
       if ( myname == 'STDIN' ) then
@@ -21129,8 +21110,7 @@ contains
 !!     Initial values
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
-      use pepper_math, only: vdot, vequ, vhat, vlcom, vnorm, vperp, vsub, vzero
+      use pepper_math, only: vdot, vhat, vnorm, vperp
       implicit none
       integer(ip), parameter :: msgdim = 7
       integer(ip), parameter :: msglen = 32
@@ -21152,7 +21132,7 @@ contains
 !     Check the input vector to see if its the zero vector. If it is
 !     signal an error and return.
 !
-      if  ( vzero(u) )  then
+      if  ( all(u == 0.0_wp) )  then
 
          call ctx%setmsg ( 'SURFPT: The input vector is the zero vector.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                            )
@@ -21197,7 +21177,7 @@ contains
 !
       found = .false.
 
-      call cleard ( 3, point )
+      point = 0.0_wp
 
 !
 !     Apply a linear transformation to the point, direction vector,
@@ -21222,7 +21202,7 @@ contains
 !
 !     Find the component of Y parallel to X.
 !
-      call vsub ( y, p, yproj )
+      yproj = y - p
 
 !
 !     Find the magnitudes of Y and P.
@@ -21285,7 +21265,7 @@ contains
 !        The ray's vertex is on the surface of the ellipsoid.
 !        The vertex is the first point of intersection.
 !
-         call vequ ( positn, point )
+         point = positn
 
          found = .true.
          return
@@ -21314,7 +21294,7 @@ contains
 !
 !     Find the intercept point on the unit sphere.
 !
-      call vlcom (  1.0_wp,  p,  sign * scale,  ux,  point  )
+      point = 1.0_wp*p + (sign * scale)*ux
 
 !
 !     Undo our linear transformation.
@@ -22229,9 +22209,9 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_arrays, only: swapd, touchd
-      use pepper_math, only: el2cgv, vadd, vdist, vdot, vhat, vlcom3, vnorm, vsep, vsub, vzero
-      use pepper_strings, only: cmprss, ljust
+      use pepper_arrays, only: swapd
+      use pepper_math, only: el2cgv, vdist, vdot, vhat, vnorm, vsep
+      use pepper_strings, only: cmprss
       implicit none
       integer(ip), parameter :: ubel = 9
 
@@ -22664,7 +22644,7 @@ contains
 !     Decide whether we're looking for a minimum or maximum.
 !
       call cmprss ( ' ', 0, extrem, exttyp )
-      call ljust  (         exttyp, exttyp )
+      exttyp = adjustl(exttyp)
 
       if ( exttyp == 'MIN' ) then
 
@@ -22694,7 +22674,7 @@ contains
       a   =   vnorm(smajor)
       b   =   vnorm(sminor)
 
-      if (  vzero(smajor) .or. vzero(sminor)  )   then
+      if (  all(smajor == 0.0_wp) .or. all(sminor == 0.0_wp)  )   then
 
          call ctx%setmsg ( 'Semi-axis lengths:  A = #, B = #.' )
          call ctx%errdp  ( '#', a                              )
@@ -22714,7 +22694,7 @@ contains
 !
 !     The ray's direction vector must be non-zero.
 !
-      if ( vzero(dir) ) then
+      if ( all(dir == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Ray''s direction vector must be non-zero.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                         )
@@ -22779,7 +22759,7 @@ contains
 !        aligned with the axes of the ellipse and centered at
 !        the ellipse's center.
 !
-         call vsub ( xpt, center, xoff )
+         xoff = xpt - center
 
          acomp = vdot ( xoff, smajor ) / a
          bcomp = vdot ( xoff, sminor ) / b
@@ -22848,7 +22828,7 @@ contains
 !     the ellipse's center from the vertex position to obtain a
 !     translated ellipse centered at the origin.
 !
-      call vsub ( vertex, center, v2 )
+      v2 = vertex - center
 
       if ( domin ) then
          extprx = 2.0_wp
@@ -22867,9 +22847,7 @@ contains
 
          theta  =  i * delta
 
-         call vlcom3 (  -1.0_wp,        v2, &
-                        cos(theta),   smajor, &
-                        sin(theta),   sminor,   diff  )
+         diff = (-1.0_wp)*v2 + cos(theta)*smajor + sin(theta)*sminor
 
          call vhat ( diff, udiff )
 
@@ -22963,8 +22941,7 @@ contains
       nitr    = 0
       proxy   = 3.0_wp
 
-      do while (        (  nitr                <= maxitr ) &
-                 .and.  (  touchd(upper-lower) > tol    )  )
+      do while (        (  nitr                <= maxitr )  .and.  (  (upper-lower) > tol    )  )
 !
 !        At this point, the following order relations hold:
 !
@@ -22993,9 +22970,7 @@ contains
 !        BTWPRX.  To do this, we need the proxy function value at
 !        NEWPT.
 !
-         call vlcom3 (  -1.0_wp,        v2, &
-                        cos(newpt),   smajor, &
-                        sin(newpt),   sminor,   diff  )
+         diff = (-1.0_wp)*v2 + cos(newpt)*smajor + sin(newpt)*sminor
 
          call vhat ( diff, udiff )
 
@@ -23046,12 +23021,12 @@ contains
 !     At this point, LPT is a good estimate of the limb point at which
 !     the extremum of the angular separation from the ray occurs.
 !
-      call vadd ( diff, v2, lpt )
+      lpt = diff + v2
 
 !
 !     Add the center back to LPT to find EXTPT on the original ellipse.
 !
-      call vadd ( center, lpt, extpt )
+      extpt = center + lpt
 
 !
 !     Set the angular separation at EXTPT.
@@ -23200,7 +23175,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: touchd
       implicit none
       real(wp)              denom
       real(wp)              dscrim
@@ -23332,7 +23306,7 @@ contains
 !        We can safely compute the discriminant now, due the
 !        check we've already performed.
 !
-         dscrim = touchd(  ( b*b ) - ( 4*a*c )  )
+         dscrim = (( b*b ) - ( 4*a*c ))
 
          if ( dscrim < 0.0_wp ) then
 !
@@ -23482,7 +23456,6 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi, pi
-      use pepper_math, only: brcktd, vequ
       use pepper_inc_dsktol
       implicit none
 
@@ -23698,7 +23671,7 @@ contains
 !     The input latitude is, at worst, slightly out of range.
 !     Bracket it.
 !
-      mlat = brcktd( midlat, -halfpi, halfpi )
+      mlat = max(min(-halfpi, halfpi), min(max(-halfpi, halfpi), midlat))
 
 !
 !     The endpoint latitude EPTLAT is defined by
@@ -24157,7 +24130,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi
-      use pepper_math, only: vadd, vdot, vequ, vhat, vhatip, vlcom, vminus, vsub, vzero
+      use pepper_math, only: vdot, vhat, vhatip
       implicit none
 
 
@@ -24300,7 +24273,7 @@ contains
 !
 !     Check the axis.
 !
-      if ( vzero(axis) ) then
+      if ( all(axis == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Cone axis is the zero vector' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'            )
@@ -24315,10 +24288,10 @@ contains
       if ( angle > halfpi ) then
 
          locang = pi - angle
-         call vminus ( axis, locaxi )
+         locaxi = -axis
       else
          locang = angle
-         call vequ   ( axis, locaxi )
+         locaxi = axis
       end if
 
       call vhatip ( locaxi )
@@ -24329,8 +24302,8 @@ contains
 !     Calculate the offsets of the endpoints from the apex,
 !     and get unit-length versions of these.
 !
-      call vsub ( endpt1, apex, off1 )
-      call vsub ( endpt2, apex, off2 )
+      off1 = endpt1 - apex
+      off2 = endpt2 - apex
 
       call vhat ( off1, uoff1 )
       call vhat ( off2, uoff2 )
@@ -24360,7 +24333,7 @@ contains
 !
 !     Prepare for a solution by bisection.
 !
-      call vsub ( off2, off1, seg )
+      seg = off2 - off1
 
       low    = 0.0_wp
       high   = 1.0_wp
@@ -24374,7 +24347,7 @@ contains
 
          midpt = ( low + high ) / 2
 
-         call vlcom ( 1.0_wp, off1, midpt, seg, x )
+         x = 1.0_wp*off1 + midpt*seg
 
          call vhat ( x, ux )
 
@@ -24402,7 +24375,7 @@ contains
 !     X is an offset from APEX. The solution is an offset from the
 !     origin.
 !
-      call vadd ( apex, x, xpt )
+      xpt = apex + x
 
       return
       end procedure zzcxbrut
@@ -24974,7 +24947,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, cleari
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
@@ -25161,11 +25133,11 @@ contains
 
          sthan(i) = 0
 
-         call cleard( dskdsz, stdscr(1,i) )
-         call cleari( dladsz, stdlad(1,i) )
+         stdscr(:,i) = 0.0_wp
+         stdlad(:,i) = 0
 
-         call cleard( 3,      stoff (1,i) )
-         call cleard( 3,      stctr (1,i) )
+         stoff(:,i) = 0.0_wp
+         stctr(:,i) = 0.0_wp
 
          strad(i) = 0.0_wp
 
@@ -25202,7 +25174,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved, movei
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
@@ -25508,10 +25479,10 @@ contains
                j        = i - nstdel
                sthan(j) = sthan(i)
 
-               call moved( stdscr(1,i), dskdsz, stdscr(1,j) )
-               call movei( stdlad(1,i), dladsz, stdlad(1,j) )
-               call moved( stoff (1,i), 3,      stoff (1,j) )
-               call moved( stctr (1,i), 3,      stctr (1,j) )
+               stdscr(:,j) = stdscr(:,i)
+               stdlad(:,j) = stdlad(:,i)
+               stoff(:,j) = stoff(:,i)
+               stctr(:,j) = stctr(:,i)
 
                strad(j) = strad(i)
 
@@ -26953,7 +26924,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_arrays, only: moved
       use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
@@ -26993,7 +26963,7 @@ contains
       savfid = framid
       savsys = corsys
 
-      call moved ( corpar, nsypar, savpar )
+      savpar = corpar(1:nsypar)
 
       savet  = et
       savco1 = cor1
@@ -27388,7 +27358,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_math, only: vequ
       use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
@@ -27426,7 +27395,7 @@ contains
       savcls = dclass
       savet  = et
       savfid = framid
-      call vequ ( pos, savpos )
+      savpos = pos
 
       return
       end associate
@@ -27547,7 +27516,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_math, only: mxv, reclat, vequ
+      use pepper_math, only: mxv, reclat
       use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
@@ -27612,7 +27581,7 @@ contains
 !        The request frame and segment frame match. Just copy
 !        the saved vector.
 !
-         call vequ ( savpos, locpos )
+         locpos = savpos
 
       else
 !
@@ -27754,7 +27723,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_math, only: vnorm
       use pepper_inc_dskdsc
       implicit none
@@ -28009,7 +27977,7 @@ contains
 !        First copy the bounds into an appropriately dimensioned
 !        array.
 !
-         call moved ( dskdsc(mn1idx), 6, bds )
+         bds = reshape(dskdsc(mn1idx:mn1idx+6-1), shape(bds))
 
           b = mn1idx - 1
 
@@ -28062,9 +28030,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, twopi
-      use pepper_arrays, only: touchd
-      use pepper_math, only: frame, latrec, mxv, pl2nvc, vadd, vdot, vequ, vminus, vnorm, vpack, vscl, vsep, vsub
-      use pepper_strings, only: ljust, ucase
+      use pepper_math, only: frame, latrec, mxv, pl2nvc, vdot, vnorm, vsep
+      use pepper_strings, only: ucase
       implicit none
 
 
@@ -28294,7 +28261,7 @@ contains
 !
 !     Check the terminator type.
 !
-      call ljust ( type,   loctyp )
+      loctyp = adjustl(type)
       call ucase ( loctyp, loctyp )
 
       if (  loctyp == 'UMBRAL' ) then
@@ -28387,7 +28354,7 @@ contains
 !     Let the negative of the ellipsoid-light source vector be the
 !     Z-axis of a frame we'll use to generate the terminator set.
 !
-      call vminus ( srcpos, z )
+      z = -srcpos
 
       call frame  ( z,  x,  y )
 
@@ -28396,9 +28363,9 @@ contains
 !     from the source-centered frame back to the target body-fixed
 !     frame.
 !
-      call vequ ( x, trans(1,1) )
-      call vequ ( y, trans(1,2) )
-      call vequ ( z, trans(1,3) )
+      trans(:,1) = x
+      trans(:,2) = y
+      trans(:,3) = z
 
 !
 !     Find the maximum and minimum target radii.
@@ -28473,11 +28440,10 @@ contains
          prvang = angle + halfpi
          nitr   = 0
 
-         do while (       ( nitr                        <= maxitr ) &
-                    .and. ( touchd( abs(angle-prvang) ) < prvdif )  )
+         do while (       ( nitr                        <= maxitr )  .and. ( (abs(angle-prvang)) < prvdif )  )
 
             nitr    =   nitr  + 1
-            prvdif  =   touchd ( abs(angle-prvang) )
+            prvdif  =   (abs(angle-prvang))
             prvang  =   angle
 !
 !           Find the closest point on the ellipsoid to the plane
@@ -28489,7 +28455,7 @@ contains
 !
             call latrec ( srcrad, theta, angle, vtx )
 
-            call vequ   ( vtx, dir )
+            dir = vtx
 
 !
 !           VTX and DIR are expressed in the source-centered frame.  We
@@ -28497,10 +28463,10 @@ contains
 !           vectors into that frame.
 !
             call mxv  ( trans,  vtx,   vtemp )
-            call vadd ( srcpos, vtemp, vtx   )
+            vtx = srcpos + vtemp
 
             call mxv  ( trans,  dir,   vtemp )
-            call vequ ( vtemp,         dir   )
+            dir = vtemp
 
 !
 !           Create the plane defined by VTX and DIR.
@@ -28549,19 +28515,19 @@ contains
 !           Having lambda we can compute E.
 !
 
-            call vpack ( a*dir(1), b*dir(2), c*dir(3), v )
+            v = [a*dir(1), b*dir(2), c*dir(3)]
 
             lambda = 1.0_wp / vnorm(v)
 
-            call vpack ( a*v(1), b*v(2), c*v(3), e )
+            e = [a*v(1), b*v(2), c*v(3)]
 
-            call vscl  ( lambda, e, trmpts(1,i) )
+            trmpts(:,i) = lambda*e
 
 !
 !           Make a new estimate of the plane rotation required to touch
 !           the target.
 !
-            call vsub ( trmpts(1,i), vtx, offset )
+            offset = trmpts(:,i) - vtx
 
 !
 !           Let ANGERR be an estimate of the magnitude of angular error
@@ -28625,8 +28591,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
-      use pepper_arrays, only: cleard, touchd
-      use pepper_math, only: mxv, vadd, vcrss, vdist, vdot, vequ, vhat, vnorm, vperp, vrotv, vscl, vzero
+      use pepper_math, only: mxv, vcrss, vdist, vdot, vhat, vnorm, vperp, vrotv
       implicit none
 
 
@@ -28839,7 +28804,7 @@ contains
 !
 !     Check AXIS and PLNVEC.
 !
-      if ( vzero( axis ) ) then
+      if ( all(axis == 0.0_wp) ) then
 
          call ctx%setmsg ( 'AXIS must be a non-zero vector but is ' &
          //            'in fact zero.'                         )
@@ -28864,7 +28829,7 @@ contains
 
       end if
 
-      if ( vzero( plnvec ) ) then
+      if ( all(plnvec == 0.0_wp) ) then
 
          call ctx%setmsg ( 'PLNVEC must be a non-zero vector but is ' &
          //            'in fact zero.'                           )
@@ -28877,7 +28842,7 @@ contains
 !     Transform the source, target, axis, and plane vector
 !     so that the target becomes a unit sphere.
 !
-      call cleard ( 9, trans )
+      trans = 0.0_wp
 
       ta         = 1.0_wp / a
       tb         = 1.0_wp / b
@@ -28905,7 +28870,7 @@ contains
 !
       call vcrss ( tplnvc, taxis, hplnml )
 
-      if ( vzero(hplnml) ) then
+      if ( all(hplnml == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Plane reference vector and axis are ' &
          //            'linearly dependent.'                 )
@@ -28988,7 +28953,7 @@ contains
 !     Let SGNNML be the "signed" normal which is parallel to NORMAL
 !     in the umbral case and anti-parallel otherwise.
 !
-      call vscl   ( s,  normal, sgnnml )
+      sgnnml = s*normal
 
       call ednmpt ( ctx, xa, xb, xc, sgnnml, srcpnt )
 
@@ -28996,8 +28961,8 @@ contains
 !     Express the source point as an offset from the transformed
 !     target center.
 !
-      call vadd ( srcpnt, taxis, tmpvec )
-      call vequ ( tmpvec,        srcpnt )
+      tmpvec = srcpnt + taxis
+      srcpnt = tmpvec
 
 !
 !     H is the height of the surface point on the source, relative
@@ -29008,7 +28973,7 @@ contains
 !
       h      = vdot( srcpnt, normal ) - const
 
-      angerr = touchd( -h / d )
+      angerr = (-h / d)
 
       nitr   = 0
 
@@ -29025,7 +28990,7 @@ contains
 !        closer to the source point.
 !
          call vrotv ( targpt, hplnml, angerr, tmpvec )
-         call vequ  ( tmpvec,                 targpt )
+         targpt = tmpvec
          call vhat  ( targpt, normal )
 
 !
@@ -29033,15 +28998,15 @@ contains
 !
          const = vdot( normal, targpt )
 
-         call vscl   ( s,  normal, sgnnml )
+         sgnnml = s*normal
 
 !
 !        Find the near point on the source to the tangent plane.
 !
          call ednmpt ( ctx, xa, xb, xc, sgnnml, srcpnt )
 
-         call vadd ( srcpnt, taxis, tmpvec )
-         call vequ ( tmpvec,        srcpnt )
+         tmpvec = srcpnt + taxis
+         srcpnt = tmpvec
 
 !
 !        Re-compute the height error and angular error.
@@ -29051,7 +29016,7 @@ contains
          call vperp ( srcpnt, hplnml, proj )
 
          d      = vdist ( proj, targpt )
-         angerr = touchd( -h / d )
+         angerr = (-h / d)
 
          nitr   = nitr + 1
 
@@ -30256,7 +30221,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: rpd, twopi
-      use pepper_strings, only: lastnb, nparsd, nparsi, repmc
+      use pepper_strings, only: nparsd, nparsi, repmc
       implicit none
       integer(ip), parameter :: start = 0
       integer(ip), parameter :: kndt20 = start  + 1
@@ -30420,8 +30385,7 @@ contains
 !
       do k = 1, 2
 
-         if ( lastnb( lines(k) ) /= 68 .and. &
-              lastnb( lines(k) ) /= 69 ) then
+         if ( len_trim(lines(k)) /= 68 .and.  len_trim(lines(k)) /= 69 ) then
 
 !
 !          The TLE data line was not 68 or 69 characters long (ignoring
@@ -30431,7 +30395,7 @@ contains
                //   ' Expected length 68 or 69 elements, ' &
                //   'actual length: #2. TLE line value: #3'
             call repmi ( ctx, error, '#1', k                 , error )
-            call repmi ( ctx, error, '#2', lastnb( lines(k) ), error )
+            call repmi ( ctx, error, '#2', len_trim(lines(k)), error )
             call repmc ( error, '#3', lines(k)          , error )
 
             ok = .false.
@@ -31088,7 +31052,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: brckti
       use pepper_inc_zzholdd
       implicit none
       integer(ip)           i
@@ -31105,7 +31068,7 @@ contains
 !
 !     Confirm a proper ID value.
 !
-      if ( brckti(id, 1, nid) /= id ) then
+      if ( max(min(1, nid), min(max(1, nid), id)) /= id ) then
 
          value = 0.0_wp
          ok    = .false.
@@ -31234,7 +31197,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi
-      use pepper_math, only: mxv, reclat, ucrss, vcrss, vhat, vhatip, vlcom, vrotv, vsclip, vsep, vzero
+      use pepper_math, only: mxv, reclat, ucrss, vcrss, vhat, vhatip, vrotv, vsep
       implicit none
 
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -31562,7 +31525,7 @@ contains
 !        We insist on consecutive boundary vectors being
 !        linearly independent.
 !
-         if ( vzero(cp) ) then
+         if ( all(cp == 0.0_wp) ) then
 
             call ctx%setmsg ( 'Polygonal FOV must have linearly ' &
             //            'independent consecutive boundary ' &
@@ -31607,7 +31570,7 @@ contains
 !                    angular separations will be computed using the new
 !                    value of CP.
 !
-                     call vsclip ( -1.0_wp, cp )
+                     cp = (-1.0_wp)*cp
 
                      sep = pi - sep
 
@@ -31684,7 +31647,7 @@ contains
 !              be linearly dependent, but if we have such a pair,
 !              it doesn't define an exterior face.
 !
-               if ( .not. vzero(cp) ) then
+               if ( .not. all(cp == 0.0_wp) ) then
 !
 !                 The rays having direction vectors indexed I and NEXT
 !                 define a semi-infinite sector of a plane that might
@@ -31722,7 +31685,7 @@ contains
 !                             be computed using the new value of CP.
 !
 
-                              call vsclip ( -1.0_wp, cp )
+                              cp = (-1.0_wp)*cp
 
                               sep = pi - sep
 
@@ -31831,7 +31794,7 @@ contains
       call vhat ( bounds(1,i),    ray1 )
       call vhat ( bounds(1,next), ray2 )
 
-      call vlcom  ( 0.5_wp, ray1, 0.5_wp, ray2, xvec )
+      xvec = 0.5_wp*ray1 + 0.5_wp*ray2
 
       call vhatip ( xvec )
       call vhat   ( cp,   yvec )
@@ -32452,7 +32415,7 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vdot, vequ
+      use pepper_math, only: vdot
       implicit none
       real(wp)              dircon
       real(wp)              h
@@ -32494,7 +32457,7 @@ contains
 !           intercept is the ray's vertex.
 !
             nxpts = 1
-            call vequ ( vertex, xpt )
+            xpt = vertex
 
          end if
 
@@ -32573,7 +32536,7 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi, twopi
-      use pepper_math, only: cylrec, vnorm, vpack
+      use pepper_math, only: cylrec, vnorm
       implicit none
 
 
@@ -32875,7 +32838,7 @@ contains
 !     The radius is the distance from the center of the box
 !     to any corner.
 !
-      call vpack ( lr/2, lt/2, lz/2, diag )
+      diag = [lr/2, lt/2, lz/2]
 
       radius = vnorm( diag )
 
@@ -33602,7 +33565,6 @@ contains
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
       use pepper_constants, only: dpr
-      use pepper_arrays, only: touchd
       implicit none
 
 
@@ -33809,7 +33771,7 @@ contains
 !     less than TOL, the bounds are considered to be "out of
 !     order."
 !
-      if ( outmax <= touchd(outmin + tol) ) then
+      if ( outmax <= (outmin + tol) ) then
 !
 !        Shift one of the bounds by 2*pi, while keeping
 !        the bounds in the range [-2pi, 2pi].
@@ -33818,14 +33780,14 @@ contains
 !
 !           OUTMAX is non-positive. Shift it to the right.
 !
-            outmax = min ( touchd(outmax + pi2),  pi2 )
+            outmax = min ( (outmax + pi2),  pi2 )
 
             if ( outmax < outmin ) then
 !
 !              If the bounds are still out of order, shift the lower
 !              bound left.
 !
-               outmin = max ( touchd(outmin - pi2), -pi2 )
+               outmin = max ( (outmin - pi2), -pi2 )
 
             end if
 
@@ -33833,7 +33795,7 @@ contains
 !
 !           OUTMAX is > 0. Shift the lower bound left.
 !
-            outmin = max ( touchd(outmin - pi2), -pi2 )
+            outmin = max ( (outmin - pi2), -pi2 )
 
          end if
 
@@ -33843,13 +33805,13 @@ contains
 !     If the bounds are too far apart, move them together. Note
 !     that OUTMIN and OUTMAX are already set at this point.
 !
-      delta = touchd( outmax - outmin )
+      delta = (outmax - outmin)
 
-      if (  delta  >  touchd( pi2 + tol )  ) then
+      if (  delta  >  (pi2 + tol)  ) then
 !
 !        Shift the upper bound lower by 2*pi.
 !
-         outmax = touchd( outmax - pi2 )
+         outmax = (outmax - pi2)
 
       end if
 
@@ -33907,7 +33869,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vnorm, vpack
+      use pepper_math, only: vnorm
       implicit none
 
 
@@ -34057,7 +34019,7 @@ contains
 !     The radius is the distance from the center of the box
 !     to any corner.
 !
-      call vpack ( lx/2, ly/2, lz/2, diag )
+      diag = [lx/2, ly/2, lz/2]
 
       radius = vnorm( diag )
 
@@ -34204,7 +34166,6 @@ contains
 !! Just test the RETURN status.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       use pepper_math, only: ucrss, vhat
       implicit none
       real(wp)              east   ( 3 )
@@ -34219,7 +34180,7 @@ contains
 
       if (  ( v(1) == 0.0_wp ) .and. ( v(2) == 0.0_wp )  ) then
 
-         call cleard ( 9, m )
+         m = 0.0_wp
 
          call ctx%setmsg ( 'Input vector (# # #) lies on Z-axis; ' &
          //            'tangential and normal directions are ' &
@@ -34295,7 +34256,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: vdot, vlcom
+      use pepper_math, only: vdot
       implicit none
 
 
@@ -34397,7 +34358,7 @@ contains
 !
       cpar = vdot ( vertex, udir )
 
-      call vlcom ( 1.0_wp, vertex, -cpar, udir, perp )
+      perp = 1.0_wp*vertex + (-cpar)*udir
 
       pmag2 = vdot( perp, perp )
       r2    = r * r
@@ -35415,10 +35376,9 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: touchd
-      use pepper_math, only: mxv, vadd, vdist, vequ, vhatip, vminus, vnorm, vscl, vsep, vsub, vzero
+      use pepper_math, only: mxv, vdist, vhatip, vnorm, vsep
       use pepper_strings, only: suffix
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       implicit none
       character(*), parameter :: rname = 'ZZSFXCOR'
@@ -35501,7 +35461,7 @@ contains
 !
 !     Check for a zero ray direction vector.
 !
-      if ( vzero(dvec) ) then
+      if ( all(dvec == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input ray direction was the zero vector; this ' &
          //            'vector must be non-zero.'                      )
@@ -35590,7 +35550,7 @@ contains
 !     Negate the target's position to obtain the position of the
 !     observer relative to the target.
 !
-      call vminus ( tpos, obspos )
+      obspos = -tpos
 
 !
 !     We now need to convert the direction vector into the
@@ -35677,7 +35637,7 @@ contains
 !     modify J2DIR, if necessary, to account for stellar
 !     aberration.
 !
-      call vequ ( j2dir, j2geom )
+      j2geom = j2dir
 
 !
 !     Map J2DIR (in the J2000 frame) to the target body-fixed
@@ -35748,14 +35708,14 @@ contains
 !              to STLDIR and finding the difference with J2DIR.
 !
                call stlabx ( ctx, stldir, ssbost(4), j2est  )
-               call vsub   ( j2dir,  j2est,     stlerr )
+               stlerr = j2dir - j2est
 
 !
 !              Adding the error in the reception mapping to STLDIR
 !              will give us an improved estimate of the inverse.
 !
-               call vadd ( stlerr, stldir, stltmp )
-               call vequ ( stltmp,         stldir )
+               stltmp = stlerr + stldir
+               stldir = stltmp
 
                relerr = vnorm(stlerr) / vnorm(stldir)
                i      = i + 1
@@ -35789,14 +35749,14 @@ contains
 !              to STLDIR and finding the difference with J2DIR.
 !
                call stelab ( ctx, stldir, ssbost(4), j2est  )
-               call vsub   ( j2dir,  j2est,     stlerr )
+               stlerr = j2dir - j2est
 
 !
 !              Adding the error in the reception mapping to STLDIR
 !              will give us an improved estimate of the inverse.
 !
-               call vadd ( stlerr, stldir, stltmp )
-               call vequ ( stltmp,         stldir )
+               stltmp = stlerr + stldir
+               stldir = stltmp
 
                relerr = vnorm(stlerr) / vnorm(stldir)
                i      = i + 1
@@ -35814,7 +35774,7 @@ contains
 !        Replace the J2000-relative ray direction with the corrected
 !        direction.
 !
-         call vequ ( stldir,  j2dir )
+         j2dir = stldir
          call mxv  ( j2tmat,  j2dir,   trgdir )
 
       end if
@@ -35859,7 +35819,7 @@ contains
 !
          reject = dasine ( ctx, margin * maxrad / range,  rndtol )
 
-         call vminus ( obspos, negpos )
+         negpos = -obspos
 
          if (  vsep( negpos, trgdir )  >  reject  ) then
 !
@@ -35888,7 +35848,7 @@ contains
 !
       if (  found  .and.  ( .not. uselt )  ) then
 
-         call vsub ( spoint, obspos, srfvec )
+         srfvec = spoint - obspos
 
          return
 
@@ -35947,7 +35907,7 @@ contains
 !           Convert this vector from the J2000 frame to the target
 !           frame at TRGEPC.
 !
-            call vsub   ( ssbost,  ssbtst, j2pos         )
+            j2pos = ssbost(1:3) - ssbtst(1:3)
             call pxform ( ctx, 'J2000', fixref, trgepc, xform )
 
             if ( ctx%failed() ) return
@@ -36033,7 +35993,7 @@ contains
 !        Note that SSBOST contains the J2000-relative state of the
 !        observer relative to the solar system barycenter at ET.
 !
-         call vsub   ( ssbost,  ssbtst, j2pos         )
+         j2pos = ssbost(1:3) - ssbtst(1:3)
          call pxform ( ctx, 'J2000', fixref, trgepc, xform )
 
          if ( ctx%failed() ) return
@@ -36043,7 +36003,7 @@ contains
 !        the J2000 frame to the target frame at the target epoch.
 !
          call mxv    ( xform,  j2pos, obspos )
-         call vminus ( obspos, negpos )
+         negpos = -obspos
 
 !
 !        Convert the ray's direction vector from the J2000 frame
@@ -36113,8 +36073,8 @@ contains
 !        the problem, because that variable can be optimized out of
 !        existence.
 !
-         ltdiff  =   abs( touchd(lt     - prevlt) )
-         etdiff  =   abs( touchd(trgepc - prevet) )
+         ltdiff  =   abs( (lt     - prevlt) )
+         etdiff  =   abs( (trgepc - prevet) )
          prevlt  =   lt
          prevet  =   trgepc
          i       =   i + 1
@@ -36144,7 +36104,7 @@ contains
 !
 !     Scale UDIR to obtain the desired value of SRFVEC.
 !
-      call vscl ( srflen, udir, srfvec )
+      srfvec = srflen*udir
 
       return
       end associate
@@ -36339,7 +36299,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: opsgnd, reclat, vcrss, vdot, vequ, vhatip, vsub, vzero
+      use pepper_math, only: opsgnd, reclat, vcrss, vdot, vhatip
       implicit none
       integer(ip), parameter :: ubpl = 4
       real(wp)              crease ( 3 )
@@ -36375,16 +36335,16 @@ contains
          minlat = lat1
          maxlat = lat2
 
-         call vequ ( p1, minp )
-         call vequ ( p2, maxp )
+         minp = p1
+         maxp = p2
 
       else
 
          minlat = lat2
          maxlat = lat1
 
-         call vequ ( p2, minp )
-         call vequ ( p1, maxp )
+         minp = p2
+         maxp = p1
 
       end if
 
@@ -36395,7 +36355,7 @@ contains
 !
       call vcrss ( p1, p2, normal )
 
-      if ( vzero(normal) ) then
+      if ( all(normal == 0.0_wp) ) then
 !
 !        We have a special case: P1 and P2 define a line passing
 !        through the origin. The latitude extrema lie on the
@@ -36429,7 +36389,7 @@ contains
 !
       call vcrss ( z, normal, crease )
 
-      if ( vzero(crease) ) then
+      if ( all(crease == 0.0_wp) ) then
 !
 !        Z and NORMAL are linearly dependent; PLANE1 coincides (up to
 !        round-off error) with the X-Y plane. We've already computed
@@ -36475,7 +36435,7 @@ contains
 !
          call nvc2pl ( ctx, crease, 0.0_wp, plane2 )
 
-         call vsub ( p2, p1, dir )
+         dir = p2 - p1
 
          call inrypl ( ctx, p1, dir, plane2, nxpts, t )
 
@@ -36501,12 +36461,12 @@ contains
             if ( lat > maxlat ) then
 
                maxlat = lat
-               call vequ ( t, maxp )
+               maxp = t
 
             else if ( lat < minlat ) then
 
                minlat = lat
-               call vequ ( t, minp )
+               minp = t
 
             end if
 !
@@ -36764,7 +36724,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: ljucrs
       use pepper_inc_zzabcorr
       implicit none
@@ -36875,7 +36834,7 @@ contains
 !
 !     If we pass the error check, then SHAPE1 exists in SVSHAP.
 !
-      shp1 = isrchc( shap1, spshpn, svshap)
+      shp1 = findloc(svshap, shap1, dim=1)
 
       if ( shp1 == 0 ) then
 
@@ -36921,7 +36880,7 @@ contains
 !
 !     If we pass the error check, then SHAPE2 exists in SVSHAP.
 !
-      shp2 = isrchc( shap2, spshpn, svshap)
+      shp2 = findloc(svshap, shap2, dim=1)
 
       if ( shp2 == 0 ) then
 
@@ -37065,8 +37024,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: touchd
-      use pepper_math, only: brcktd, vequ
       use pepper_containers, only: grow, grow_cell
       implicit none
 
@@ -37478,9 +37435,7 @@ contains
 !     Make sure that TOL is not too small, i.e. that neither
 !     START + TOL nor START - TOL equals START.
 !
-      if (  ( touchd (start - tol) == start ) &
-           .or. &
-            ( touchd (start + tol) == start ) ) then
+      if (  ( (start - tol) == start )  .or.  ( (start + tol) == start ) ) then
 
          call ctx%setmsg ('TOL has value #1. '                      // &
                       'This value is too small to distinguish ' // &
@@ -37497,9 +37452,7 @@ contains
 !     Make sure that TOL is not too small, i.e. that neither
 !     FINISH + TOL nor FINISH - TOL equals FINISH.
 !
-      if (  ( touchd (finish - tol) == finish ) &
-           .or. &
-            ( touchd (finish + tol) == finish ) ) then
+      if (  ( (finish - tol) == finish )  .or.  ( (finish + tol) == finish ) ) then
 
          call ctx%setmsg ('TOL has value #1. '                      // &
                       'This value is too small to distinguish ' // &
@@ -37530,7 +37483,7 @@ contains
 
          maxmag = max( abs(start), abs(finish) )
 
-         if ( touchd(maxmag+step) == maxmag ) then
+         if ( (maxmag+step) == maxmag ) then
 
             call ctx%setmsg ( 'STEP has value #1. This value ' &
             //            'is too small to guarantee that ' &
@@ -37576,7 +37529,7 @@ contains
       if ( ctx%failed() ) return
 
       if ( cursta ) then
-         call vequ ( xpoint, prvpnt )
+         prvpnt = xpoint
          prvset = .true.
       end if
 
@@ -37648,7 +37601,7 @@ contains
 !        Add the X step to the current X.  Make sure that the
 !        X does not move beyond the end of the search interval.
 !
-         curx = min ( touchd(curx + xstep), finish )
+         curx = min ( (curx + xstep), finish )
 
 !
 !        Compute the state at CURX.
@@ -37658,7 +37611,7 @@ contains
          if ( ctx%failed() ) return
 
          if ( cursta ) then
-            call vequ ( xpoint, prvpnt )
+            prvpnt = xpoint
             prvset = .true.
          end if
 
@@ -37686,7 +37639,7 @@ contains
 
             end if
 
-            curx = min ( touchd(curx + xstep), finish )
+            curx = min ( (curx + xstep), finish )
 !
 !           Compute the current state.
 !
@@ -37699,7 +37652,7 @@ contains
 !              Save the associated vector for the X value CURX. In
 !              normal usage, XPOINT is a surface intercept point.
 !
-               call vequ ( xpoint, prvpnt )
+               prvpnt = xpoint
                prvset = .true.
 
             end if
@@ -37763,7 +37716,7 @@ contains
 !
             nloop = 0
 
-            do while ( touchd (x2 - x1) > tol )
+            do while ( (x2 - x1) > tol )
 
                nloop = nloop + 1
 !
@@ -37806,7 +37759,7 @@ contains
 !              point. Set X1 and X2 equal to T.
 !
 
-               t = brcktd ( t, x1, x2 )
+               t = max(min(x1, x2), min(max(x1, x2), t))
 
                if ( t == x1 ) then
 !
@@ -37836,7 +37789,7 @@ contains
 !                    Save the latest point associated with a
 !                    .TRUE. state.
 !
-                     call vequ ( xpoint, prvpnt )
+                     prvpnt = xpoint
                      prvset = .true.
 
                   end if
@@ -37866,7 +37819,7 @@ contains
 !           abscissa value as marking the transition from STATE1 to
 !           STATE2.
 !
-            trnstn = brcktd( (x1 + x2)*0.5_wp, x1, x2 )
+            trnstn = max(min(x1, x2), min(max(x1, x2), (x1 + x2)*0.5_wp))
 
 !
 !           In state-of-interest or not? INSTAT indicates that STATE1
@@ -38177,7 +38130,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_math, only: pl2nvc, ucrss, vdot, vequ, vminus, vperp, vsep, vsub, vzero
+      use pepper_math, only: pl2nvc, ucrss, vdot, vperp, vsep
       implicit none
       integer(ip), parameter :: ubpl = 4
 
@@ -38406,7 +38359,7 @@ contains
 !
 !     Check the normal vector.
 !
-      if ( vzero(normal) ) then
+      if ( all(normal == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Plane''s normal vector is zero.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'               )
@@ -38422,8 +38375,8 @@ contains
 !
       if (  vdot( normal, vertcs(1,1) )  <  0.0_wp  ) then
 
-         call vminus ( normal, vtemp  )
-         call vequ   ( vtemp,  normal )
+         vtemp = -normal
+         normal = vtemp
 
       end if
 
@@ -38432,7 +38385,7 @@ contains
 !     of this angle from the preceding angle; add the difference to
 !     the total.
 !
-      call vsub  ( vertcs(1,1), point, vtemp )
+      vtemp = vertcs(:,1) - point
 
 !
 !     Get the component RVEC of the difference vector orthogonal to
@@ -38457,7 +38410,7 @@ contains
 !        Find the angular separation of RVEC and the next vector
 !        RNEXT.
 !
-         call vsub  ( vertcs(1,j), point,   vtemp )
+         vtemp = vertcs(:,j) - point
          call vperp ( vtemp,       normal,  rnext )
 
          sep  =  vsep ( rnext, rvec )
@@ -38484,7 +38437,7 @@ contains
 !
 !        Update RVEC.
 !
-         call vequ ( rnext, rvec )
+         rvec = rnext
 
       end do
 
@@ -38681,8 +38634,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_arrays, only: moved
-      use pepper_math, only: vdotg, vsepg, vsubg
+      use pepper_math, only: vdotg, vsepg
       implicit none
       real(wp)              atotal
       real(wp)              rnext  ( 2 )
@@ -38717,7 +38669,7 @@ contains
 !
       atotal  = 0.0_wp
 
-      call vsubg ( vertcs(1,1), point, 2, rvec )
+      rvec = vertcs(:,1) - point
 
       do i = 2, n+1
 
@@ -38731,7 +38683,7 @@ contains
 !        Find the angular separation of RVEC and the next vector
 !        RNEXT.
 !
-         call vsubg ( vertcs(1,j), point, 2, rnext )
+         rnext = vertcs(:,j) - point
 
          sep  =  vsepg ( rnext, rvec, 2 )
 
@@ -38758,7 +38710,7 @@ contains
 !
 !        Update RVEC.
 !
-         call moved ( rnext, 2, rvec )
+         rvec = rnext
 
       end do
 
@@ -40186,7 +40138,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: dvhat, vcrss, vdot, vnorm, vzero
+      use pepper_math, only: dvhat, vcrss, vdot, vnorm
       implicit none
 
 
@@ -40494,7 +40446,7 @@ contains
 !
 !     Handle the parallel and anti-parallel cases.
 !
-      if ( vzero(pcross) ) then
+      if ( all(pcross == 0.0_wp) ) then
 
          dvsep = 0.0_wp
          return
@@ -41258,7 +41210,6 @@ contains
 !!     Standard SPICELIB error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vminus
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: maxl = 36
@@ -41426,7 +41377,7 @@ contains
 
       call zzcorepc ( ctx, abcorr, et,    lttarg, trgepc )
 
-      call vminus   ( trgpos, obspos )
+      obspos = -trgpos
 
       call spkezp   ( ctx, srcid, trgepc, fixref, abcorr, &
                       trgid, srcpos, ltsrc          )
@@ -43140,8 +43091,7 @@ contains
       use pepper_kinds, only: wp
       use pepper_constants, only: dpmax
       use pepper_constants, only: twopi
-      use pepper_arrays, only: cleard
-      use pepper_math, only: exact, mxv, recrad, ucrss, unorm, vdot, vequ, vlcom, vnorm
+      use pepper_math, only: exact, mxv, recrad, ucrss, unorm, vdot, vnorm
       use pepper_inc_oscltx
       implicit none
 
@@ -43669,7 +43619,7 @@ contains
 !     is necessary because this routine may return early if A or TAU
 !     cannot be computed.
 !
-      call cleard ( oscxsz-8, elts(9) )
+      elts(9:9+oscxsz-8-1) = 0.0_wp
       nu  = 0.0_wp
       tau = 0.0_wp
       a   = 0.0_wp
@@ -43708,7 +43658,7 @@ contains
 !        mu     is the GM value of the center of motion
 !
       call unorm ( state, rhat, rmag )
-      call vequ  ( state(4),    vel  )
+      vel = state(4:6)
 
       vmag = vnorm( vel )
 
@@ -43728,7 +43678,7 @@ contains
 !
 !        ECCVEC is the eccentricity vector:
 !
-         call vlcom ( c1, rhat, c2, vel, eccvec )
+         eccvec = c1*rhat + c2*vel
 
 !
 !        POLE is the orbital pole unit vector.
@@ -44959,7 +44909,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_math, only: brcktd, vequ
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
@@ -45141,7 +45090,7 @@ contains
 !
 !     Make sure round-off error doesn't take LON out of range.
 !
-      lon = brcktd (  lon,   0.0_wp,  twopi  )
+      lon = max(min(0.0_wp, twopi), min(max(0.0_wp, twopi), lon))
 
       return
       end associate
@@ -45168,8 +45117,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, moved
-      use pepper_math, only: vdot, vlcom, vnorm, vsclip
+      use pepper_math, only: vdot, vnorm
       implicit none
 
 
@@ -45510,8 +45458,8 @@ contains
 !
 !     Copy the input vectors.
 !
-      call moved ( vec1, 3, tmpvc1 )
-      call moved ( vec2, 3, tmpvc2 )
+      tmpvc1 = vec1
+      tmpvc2 = vec2
 
 !
 !     Scale the vectors to try to prevent arithmetic unpleasantness.
@@ -45522,8 +45470,8 @@ contains
 
       if ( scale == 0.0_wp ) then
 
-         call cleard ( 3, smajor )
-         call cleard ( 3, sminor )
+         smajor = 0.0_wp
+         sminor = 0.0_wp
 
          return
 
@@ -45564,14 +45512,14 @@ contains
 
       end if
 
-      call vlcom ( c(1,major), tmpvc1, c(2,major), tmpvc2, smajor )
-      call vlcom ( c(1,minor), tmpvc1, c(2,minor), tmpvc2, sminor )
+      smajor = c(1,major)*tmpvc1 + c(2,major)*tmpvc2
+      sminor = c(1,minor)*tmpvc1 + c(2,minor)*tmpvc2
 
 !
 !     Undo the initial scaling.
 !
-      call vsclip ( scale, smajor )
-      call vsclip ( scale, sminor )
+      smajor = scale*smajor
+      sminor = scale*sminor
 
       return
       end procedure saelgv
@@ -46731,7 +46679,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vdist, vminus
+      use pepper_math, only: vdist
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
@@ -46885,7 +46833,7 @@ contains
 !     Negate the target's state to obtain the position of the observer
 !     relative to the target.
 !
-      call vminus ( tstate, pos )
+      pos = -tstate(1:3)
 
 !
 !     Find the sub-point and "altitude" (distance from observer to
@@ -47588,7 +47536,7 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: dpmax
-      use pepper_math, only: dvhat, vdot, vequ, vlcom3, vnorm, vscl, vsub
+      use pepper_math, only: dvhat, vdot, vnorm
       implicit none
 
 
@@ -48076,13 +48024,13 @@ contains
 !
       call surfnm ( ctx, a, b, c, x, n )
 
-      call vequ ( stvrtx,    v )
-      call vequ ( stdhat,    u )
+      v = stvrtx(1:3)
+      u = stdhat(1:3)
 
-      call vequ ( stvrtx(4), dv )
-      call vequ ( stdhat(4), du )
+      dv = stvrtx(4:6)
+      du = stdhat(4:6)
 
-      call vsub ( v, x, vmx )
+      vmx = v - x
 
 !
 !     Reject the vertex if it's on the ellipsoid.
@@ -48129,7 +48077,7 @@ contains
 !     Evaluate the second term of the equation for DX, but don't
 !     divide by < U,N > just yet.
 !
-      call vscl ( vdot( vmx, n ),  du,  second )
+      second = vdot( vmx, n )*du
 
 !
 !                                                         2
@@ -48137,7 +48085,7 @@ contains
 !
       dsnum = udn * vdot( dv, n )  -  vdot( vmx, n ) * vdot( du, n )
 
-      call vscl ( dsnum, u, third )
+      third = dsnum*u
 
 !
 !     We'll use the following test.
@@ -48173,13 +48121,13 @@ contains
 !
       r = 1.0_wp / udn
 
-      call vlcom3( 1.0_wp, dv, -r, second, -(r**2), third, stx(4) )
+      stx(4:6) = 1.0_wp*dv + (-r)*second + (-(r**2))*third
 
 !
 !     Since we could compute the velocity, we can assign the
 !     intercept point, and set the found flag to .TRUE.
 !
-      call vequ ( x, stx )
+      stx(1:3) = x
 
       found = .true.
 
@@ -48933,7 +48881,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ljust, rjust
+      use pepper_strings, only: rjust
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -49105,7 +49053,7 @@ contains
 !
          if ( i == 1 ) then
 
-            call ljust ( name,   line                    )
+            line = adjustl(name)
             call rjust ( dirctv, line(margin-4:margin-3) )
 
             if ( vardim > 1 ) then
@@ -49173,7 +49121,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_math, only: brcktd, brckti, vzero
       implicit none
 
       real(wp), parameter :: grdtol = 1.0e-12_wp
@@ -49493,7 +49440,7 @@ contains
 !
 !     Check if ray direction vector is a zero vector.
 !
-      if ( vzero( raydir ) ) then
+      if ( all(raydir == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Ray is the zero vector.'  )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'        )
@@ -49587,7 +49534,7 @@ contains
 
          icoord(i) = 1 + intvtx(i)
 
-         icoord(i) = brckti (  icoord(i),  1,  grdext( iaxis(i) )  )
+         icoord(i) = max(min(1, grdext( iaxis(i) )), min(max(1, grdext( iaxis(i) )), icoord(i)))
 
          voxlst( iaxis(i), 1 ) = icoord(i)
 
@@ -49614,9 +49561,7 @@ contains
 !
       do i = 1, 3
 
-         vtxoff(i) = brcktd( vertex( iaxis(i) ) - (icoord(i)-1), &
-                             0.0_wp, &
-                             1.0_wp                               )
+         vtxoff(i) = max(0.0_wp, min(1.0_wp, vertex( iaxis(i) ) - (icoord(i)-1)))
       end do
 
 !
@@ -50022,7 +49967,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: touchd
       implicit none
       real(wp), parameter :: small = 1.0e-8_wp
       real(wp)              coeffs ( 3 )
@@ -50073,9 +50017,9 @@ contains
 !
       maxmag = max( abs(a), abs(b), abs(c) )
 
-      coeffs(1) = touchd(  a / maxmag )
-      coeffs(2) = touchd(  b / maxmag )
-      coeffs(3) = touchd(  c / maxmag )
+      coeffs(1) = (a / maxmag)
+      coeffs(2) = (b / maxmag)
+      coeffs(3) = (c / maxmag)
 
 !
 !     Identify the coefficient of largest magnitude.
@@ -50507,7 +50451,6 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: cleard, isrchi, movei
       use pepper_math, only: vnorm
       use pepper_strings, only: repmc
       use pepper_inc_errhnd
@@ -50654,7 +50597,7 @@ contains
 !        surface list.
 !
          prvfid = 0
-         call cleard ( 3, offset )
+         offset = 0.0_wp
 
 !
 !        Re-initialize MINR and MAXR.
@@ -50680,7 +50623,7 @@ contains
 
                surfid = nint( dskdsc(srfidx) )
 
-               i      = isrchi ( surfid, nsurf, srflst )
+               i      = findloc(srflst(1:nsurf), surfid, dim=1)
             else
                i      = 1
             end if
@@ -50930,7 +50873,7 @@ contains
 
          if ( newlst ) then
 
-            call movei ( srflst, nsurf, prvlst )
+            prvlst(1:nsurf) = srflst(1:nsurf)
 
          end if
 
@@ -50974,8 +50917,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
-      use pepper_arrays, only: cleard
-      use pepper_math, only: vadd, vcrss, vequ, vhat, vhatip, vsclip, vsep, vzero
+      use pepper_math, only: vcrss, vhat, vhatip, vsep
       implicit none
 
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -51210,7 +51152,7 @@ contains
 !        We insist on consecutive boundary vectors being
 !        linearly independent.
 !
-         if ( vzero(cp) ) then
+         if ( all(cp == 0.0_wp) ) then
 
             call ctx%setmsg ( 'Polygonal FOV must have linearly ' &
             //            'independent consecutive boundary ' &
@@ -51232,17 +51174,17 @@ contains
 !     a candidate axis. In many cases, this simple approach
 !     does the trick.
 !
-      call cleard ( 3, axis )
+      axis = 0.0_wp
 
       do i = 1, n
 
          call vhat ( bounds(1,i), uvec    )
-         call vadd ( uvec,        axis, v )
-         call vequ ( v,           axis    )
+         v = uvec + axis
+         axis = v
 
       end do
 
-      call vsclip ( 1.0_wp/n, axis )
+      axis = (1.0_wp/n)*axis
 
 !
 !     If each boundary vector has sufficiently small
@@ -53518,7 +53460,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
-      use pepper_math, only: reclat, vsub
+      use pepper_math, only: reclat
       implicit none
       integer(ip), parameter :: lt = -1
       integer(ip), parameter :: eq = 0
@@ -53625,7 +53567,7 @@ contains
 !
       apex(3) = yincpt
 
-      call vsub ( p, apex, offset )
+      offset = p - apex
 
 !     We'll use the planetocentric [sic] latitude of the offset
 !     vector for comparison.
@@ -54072,7 +54014,7 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi, twopi
-      use pepper_math, only: cylrec, vnorm, vpack
+      use pepper_math, only: cylrec, vnorm
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
       implicit none
@@ -54452,7 +54394,7 @@ contains
 !     The radius is the distance from the center of the box
 !     to any corner.
 !
-      call vpack ( lr/2, lt/2, lz/2, diag )
+      diag = [lr/2, lt/2, lz/2]
 
       radius = vnorm( diag )
 
@@ -54483,7 +54425,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vadd, vequ, vhat, vlcom, vnorm, vsub, vzero
+      use pepper_math, only: vhat, vnorm
       implicit none
 
 
@@ -54611,7 +54553,7 @@ contains
 !
 !     Check for a zero ray direction vector.
 !
-      if ( vzero(raydir) ) then
+      if ( all(raydir == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input ray direction was the zero vector; this ' &
          //            'vector must be non-zero.'                      )
@@ -54645,7 +54587,7 @@ contains
          center(i) = boxori(i) + extent(i)/2
       end do
 
-      call vsub  ( vertex, center, offset )
+      offset = vertex - center
 
 !
 !     If the ray's vertex is inside the box, we consider the
@@ -54655,7 +54597,7 @@ contains
            .and. ( abs( offset(2) ) <= extent(2)/2 ) &
            .and. ( abs( offset(3) ) <= extent(3)/2 )  ) then
 
-         call vequ ( vertex, xpt )
+         xpt = vertex
          found = .true.
 
          return
@@ -54671,7 +54613,7 @@ contains
 !
 !        The vertex is already inside the bounding sphere.
 !
-         call vequ ( offset, sphxpt )
+         sphxpt = offset
 
       else
 
@@ -54803,7 +54745,7 @@ contains
 !     Compute the candidate intercept. Note that we're now working
 !     in a frame centered at the box origin.
 !
-      call vlcom ( 1.0_wp, sphvtx, maxt, udir, xpt )
+      xpt = 1.0_wp*sphvtx + maxt*udir
 
 !
 !     Decide whether XPT is actually on the surface of the box.
@@ -54893,8 +54835,8 @@ contains
 !
 !     Shift XPT to the input reference frame.
 !
-      call vadd ( xpt,   boxori, vtemp )
-      call vequ ( vtemp,         xpt   )
+      vtemp = xpt + boxori
+      xpt = vtemp
 
       found = .true.
 
@@ -55231,7 +55173,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vequ
       implicit none
 
       integer(ip), parameter :: ubel = 9
@@ -55514,7 +55455,7 @@ contains
 !
 !     The center of the ellipse is held in the first three elements.
 !
-      call vequ ( center, ellips(ctrpos) )
+      ellips(ctrpos:ctrpos+3-1) = center
 
 !
 !     Find the semi-axes of the ellipse.  These may be degenerate.
@@ -56017,7 +55958,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, twopi
-      use pepper_math, only: latrec, vlcom
+      use pepper_math, only: latrec
       implicit none
       real(wp), parameter :: tol = 1.0e-6_wp
       real(wp), parameter :: tothrd = 2.0_wp/3.0_wp
@@ -56536,8 +56477,8 @@ contains
 !
 !     Sum the components to obtain U and V
 !
-      call vlcom ( sinuk, m, cosuk, n, u )
-      call vlcom ( cosuk, m,-sinuk, n, v )
+      u = sinuk*m + cosuk*n
+      v = cosuk*m + (-sinuk)*n
 
 !
 !     Determine the position and velocity then pack the STATE vector
@@ -56549,7 +56490,7 @@ contains
 
       scale = xkmper/ae
 
-      call vlcom( rk*scale, u, zero, v, state(1) )
+      state(1:3) = (rk*scale)*u + zero*v
 
 !
 !     Now scale to KPS for the velocity component
@@ -56557,7 +56498,7 @@ contains
 
       scale = scale / 60.0_wp
 
-      call vlcom( rdotk*scale, u, rfdotk*scale, v, state(4) )
+      state(4:6) = (rdotk*scale)*u + (rfdotk*scale)*v
 
 !
 !     All done now....
@@ -56587,8 +56528,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
-      use pepper_math, only: brcktd, reclat
-      use pepper_strings, only: intstr, ljust, ucase
+      use pepper_math, only: reclat
+      use pepper_strings, only: intstr, ucase
       implicit none
       real(wp) :: rate_1(1)  !! one-element copy of rate (array argument)
 
@@ -57017,7 +56958,7 @@ contains
 !
       if ( ctx%failed() ) return
 
-      call ljust ( type,   mytype )
+      mytype = adjustl(type)
       call ucase ( mytype, mytype )
 
       if ( mytype == 'PLANETOGRAPHIC' ) then
@@ -57168,7 +57109,7 @@ contains
 !     Convert the angle to "angle seconds" before or after local noon.
 !
       secnds = 86400.0_wp * angle / twopi
-      secnds = brcktd ( secnds, -43200.0_wp, 43200.0_wp )
+      secnds = max(-43200.0_wp, min(43200.0_wp, secnds))
 
 !
 !     Get the hour, and minutes components of the local time.
@@ -57473,7 +57414,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi
-      use pepper_math, only: frame, mtxv, mxv, unorm, vadd, vdist, vdot, vequ, vhat, vsub
+      use pepper_math, only: frame, mtxv, mxv, unorm, vdist, vdot, vhat
       implicit none
       real(wp), parameter :: costol = 1.0e-10_wp
       real(wp), parameter :: hsptol = 1.0e-14_wp
@@ -57571,7 +57512,7 @@ contains
 !     The endpoints of the segment must be distinct. Check this after
 !     computing a unit direction vector for the line segment.
 !
-      call vsub  ( endpt2, endpt1, dir )
+      dir = endpt2 - endpt1
 
       call unorm ( dir, udir, dmag )
 
@@ -57614,8 +57555,8 @@ contains
 !     Compute the offsets of the endpoints of the segment from
 !     the cone's apex.
 !
-      call vsub ( endpt1, apex, off1 )
-      call vsub ( endpt2, apex, off2 )
+      off1 = endpt1 - apex
+      off2 = endpt2 - apex
 
 !
 !     Deal with some of the simple cases first.
@@ -57684,7 +57625,7 @@ contains
 !              second endpoint. It's a valid solution.
 !
                nxpts = 1
-               call vequ ( plnx, xpt1 )
+               xpt1 = plnx
 
             end if
 
@@ -57813,7 +57754,7 @@ contains
             xpt1(2) = endpt1(2) + s1*udir(2)
             xpt1(3) = endpt1(3) + s1*udir(3)
 
-            call vsub  ( xpt1, apex, v1 )
+            v1 = xpt1 - apex
 
 !
 !           See whether V1 is on the cone.
@@ -57852,7 +57793,7 @@ contains
                xpt2(2) = endpt1(2) + s2*udir(2)
                xpt2(3) = endpt1(3) + s2*udir(3)
 
-               call vsub  ( xpt2, apex, v2 )
+               v2 = xpt2 - apex
 
 !
 !              See whether V2 is on the cone.
@@ -57880,7 +57821,7 @@ contains
 !
 !                    This is the only valid root; overwrite XPT1.
 !
-                     call vequ ( xpt2, xpt1 )
+                     xpt1 = xpt2
 
                   end if
 
@@ -57997,7 +57938,7 @@ contains
 !                 origin.
 !
                   call mtxv ( xform,  vtemp, vtemp2 )
-                  call vadd ( vtemp2, apex,  xpt1   )
+                  xpt1 = vtemp2 + apex
 
                   nxpts = 1
 
@@ -58013,7 +57954,7 @@ contains
 !                 origin.
 !
                   call mtxv ( xform,  vtemp, vtemp2 )
-                  call vadd ( vtemp2, apex,  xpt2   )
+                  xpt2 = vtemp2 + apex
 
                   if ( nxpts == 1 ) then
 !
@@ -58026,7 +57967,7 @@ contains
 !                    The second root is the only valid root. Move it
 !                    into XPT1.
 !
-                     call vequ ( xpt2, xpt1 )
+                     xpt1 = xpt2
 
                      nxpts = 1
 
@@ -58040,7 +57981,7 @@ contains
 !              the segment and cone. This occurs at the point
 !              having maximum latitude: MAXP.
 !
-               call vequ ( maxp, xpt1 )
+               xpt1 = maxp
 
                nxpts = 1
 
@@ -59227,8 +59168,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: isrchc
-      use pepper_math, only: cylrec, drdcyl, drdlat, drdsph, latrec, mxv, reccyl, reclat, recsph, sphrec, vequ, vequg, vpack
+      use pepper_math, only: cylrec, drdcyl, drdlat, drdsph, latrec, mxv, reccyl, reclat, recsph, sphrec
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
@@ -59299,8 +59239,8 @@ contains
 !     code of the input and output coordinate systems into
 !     ISYS and OSYS.
 !
-      isys = isrchc ( isysu, ncosys, cosys )
-      osys = isrchc ( osysu, ncosys, cosys )
+      isys = findloc(cosys, isysu, dim=1)
+      osys = findloc(cosys, osysu, dim=1)
 
 !
 !     If the coordinate systems are not acceptable, an error is
@@ -59355,7 +59295,7 @@ contains
 !
       if ( isys == osys ) then
 
-         call vequg  ( istate, 6, ostate )
+         ostate = istate
          return
 
       end if
@@ -59571,8 +59511,8 @@ contains
 !        If the input coordinate system is rectangular, the input
 !        position does not need to be translated into rectangular.
 !
-         call vequ ( istate(1), ipos )
-         call vequ ( istate(4), ivel )
+         ipos = istate(1:3)
+         ivel = istate(4:6)
 
       else
 
@@ -59630,7 +59570,7 @@ contains
 !
 !                  ... to cylindrical
 !
-                  call vpack  ( 0.0_wp, 0.0_wp, ivel(3), ostate(4) )
+                  ostate(4:6) = [0.0_wp, 0.0_wp, ivel(3)]
 
                   call reccyl ( ipos(1),  ostate(1), ostate(2), &
                                 ostate(3) )
@@ -59640,7 +59580,7 @@ contains
 !
 !                  ... to latitudinal
 !
-                  call vpack  ( ivel(3), 0.0_wp, 0.0_wp, ostate(4) )
+                  ostate(4:6) = [ivel(3), 0.0_wp, 0.0_wp]
 
                   call reclat ( ipos(1), ostate(1),  ostate(2), &
                                 ostate(3) )
@@ -59650,7 +59590,7 @@ contains
 !
 !                  ... to spherical
 !
-                  call vpack  ( ivel(3), 0.0_wp, 0.0_wp, ostate(4) )
+                  ostate(4:6) = [ivel(3), 0.0_wp, 0.0_wp]
 
                   call recsph ( ipos(1), ostate(1),  ostate(2), &
                                 ostate(3) )
@@ -59660,7 +59600,7 @@ contains
 !
 !                  ... to geodetic
 !
-                  call vpack  ( 0.0_wp, 0.0_wp, ivel(3),  ostate(4) )
+                  ostate(4:6) = [0.0_wp, 0.0_wp, ivel(3)]
 
                   call recgeo ( ctx, ipos(1), radii(1), f, ostate(1), &
                                 ostate(2), ostate(3) )
@@ -59670,7 +59610,7 @@ contains
 !
 !                  ... to planetographic
 !
-                  call vpack  ( 0.0_wp, 0.0_wp, ivel(3), ostate(4) )
+                  ostate(4:6) = [0.0_wp, 0.0_wp, ivel(3)]
 
                   call recpgr ( ctx, body, ipos(1), radii(1), f, ostate(1), &
                                 ostate(2), ostate(3) )
@@ -59819,8 +59759,8 @@ contains
 !        the rectangular IPOS and IVEL, respectively, because the
 !        components have already been converted to rectangular.
 !
-         call vequ ( ipos, ostate(1) )
-         call vequ ( ivel, ostate(4) )
+         ostate(1:3) = ipos
+         ostate(4:6) = ivel
 
       else
 
@@ -59869,8 +59809,7 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: cleard, moved
-      use pepper_math, only: mxvg, vdot, vhat, vminug, vsclip, vsep, vzero
+      use pepper_math, only: mxvg, vdot, vhat, vsep
       use pepper_strings, only: eqstr
       use pepper_inc_zzabcorr
       implicit none
@@ -60046,7 +59985,7 @@ contains
 !
 !     Reject zero normal vectors.
 !
-      if ( vzero(normal) ) then
+      if ( all(normal == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The input normal vector must not be zero, ' &
          //            'but sadly, it was.'                       )
@@ -60124,7 +60063,7 @@ contains
 !
          call zzcorsxf ( ctx, .false., dlt, xform, tmpxfm )
 
-         call moved ( tmpxfm, 36, xform )
+         xform = tmpxfm
 
       end if
 
@@ -60133,7 +60072,7 @@ contains
 !     Convert the normal vector to unit length for safety.
 !
       call vhat   ( normal, fxnsta    )
-      call cleard ( 3,      fxnsta(4) )
+      fxnsta(4:6) = 0.0_wp
 
 !
 !     Transform the state of the normal vector to the inertial
@@ -60157,7 +60096,7 @@ contains
 !
 !        d(ETSURF) / d(ET) = ( 1 - DLT )
 !
-         call vsclip ( 1.0_wp - dlt,  srcsta(4) )
+         srcsta(4:6) = (1.0_wp - dlt)*srcsta(4:6)
 
       end if
 
@@ -60165,7 +60104,7 @@ contains
 !     The surface-point observer state we wish to use is the negative
 !     of the observer-surface point state.
 !
-      call vminug ( starg, 6, obssta )
+      obssta = -starg
 
 !
 !     Compute the state (value and rate of change )
@@ -61171,7 +61110,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vequ
       implicit none
 
 
@@ -61346,7 +61284,7 @@ contains
 !
          nxpts = 1
 
-         call vequ ( vertex, xpt )
+         xpt = vertex
 
          return
 
@@ -62570,7 +62508,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: brcktd, pl2nvc, pl2psv, vnorm, vsclip, vzero
+      use pepper_math, only: pl2nvc, pl2psv, vnorm
       implicit none
 
       integer(ip), parameter :: ubel = 9
@@ -62987,7 +62925,7 @@ contains
 !
       call pl2nvc ( plane, normal, const )
 
-      if ( vzero(normal) ) then
+      if ( all(normal == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Normal vector of the input ' // &
                        'PLANE is the zero vector.'   )
@@ -63115,10 +63053,10 @@ contains
 !     Scale the generating vectors by the radius of the intersection
 !     circle.
 !
-      rcircl =  dsqrt (  brcktd ( 1.0_wp - dist**2,  0.0_wp,  1.0_wp  )  )
+      rcircl =  dsqrt (  max(0.0_wp, min(1.0_wp, 1.0_wp - dist**2))  )
 
-      call vsclip ( rcircl, vec1 )
-      call vsclip ( rcircl, vec2 )
+      vec1 = rcircl*vec1
+      vec2 = rcircl*vec2
 
 !
 !     Step 3:
@@ -64966,7 +64904,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, isrchi, moved, movei
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
@@ -65259,7 +65196,7 @@ contains
 !     present. (Such a call likely indicates the tables were
 !     not re-initialized after a BSR state change.)
 !
-      i = isrchi( bodyid, btnbod, btbody )
+      i = findloc(btbody(1:btnbod), bodyid, dim=1)
 
       if ( i > 0 ) then
 
@@ -65365,8 +65302,8 @@ contains
 !
          sthan( stfree ) = handle
 
-         call movei ( dladsc, dladsz, stdlad(1,stfree) )
-         call moved ( dskdsc, dskdsz, stdscr(1,stfree) )
+         stdlad(:,stfree) = dladsc
+         stdscr(:,stfree) = dskdsc
 
          stfree          = stfree + 1
 
@@ -65416,7 +65353,7 @@ contains
 
          if ( segctr == frmctr ) then
 
-            call cleard ( 3, stoff(1,j) )
+            stoff(:,j) = 0.0_wp
 
          else
 
@@ -65698,7 +65635,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_containers, only: grow
       use pepper_constants, only: pi
-      use pepper_math, only: el2cgv, ucrss, vdist, vdot, vhat, vlcom, vnorm, vsep, vsub, vzero
+      use pepper_math, only: el2cgv, ucrss, vdist, vdot, vhat, vnorm, vsep
       use pepper_inc_errhnd
       implicit none
       integer(ip), parameter :: ubel = 9
@@ -65791,7 +65728,7 @@ contains
 !     the semi-minor axis to be the zero vector as well.  But
 !     round-off error could conceivably violate this assumption.
 !
-      if ( vzero(smajor) .or. vzero(sminor) ) then
+      if ( all(smajor == 0.0_wp) .or. all(sminor == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input ellipse has semi-major axis '   // &
                        'length # and semi-minor axis length ' // &
@@ -65846,7 +65783,7 @@ contains
 !
 !     The axis must not be the zero vector.
 !
-      if (  vzero(axis)  ) then
+      if (  all(axis == 0.0_wp)  ) then
 
          call ctx%setmsg ( 'The pyramid''s axis the zero vector.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                    )
@@ -65875,7 +65812,7 @@ contains
 !     ellipse.  This vector will be used in several places later;
 !     it's convenient to compute it here.
 !
-      call vsub ( center, apex, ctrvec )
+      ctrvec = center - apex
 
 !
 !     Compute PASIZE:  an upper bound on the angular radius of a
@@ -65920,16 +65857,16 @@ contains
 
          call ucrss ( bounds(1,i), bounds(1,j), cp )
 
-         if ( vzero(cp) ) then
+         if ( all(cp == 0.0_wp) ) then
 !
 !           The cross product may be zero because one of the
 !           boundary vectors is zero.  Check this first.
 !
-            if (  vzero( bounds(1,j) ) .or. vzero( bounds(1,i) ) ) then
+            if (  all(bounds(:,j) == 0.0_wp) .or. all(bounds(:,i) == 0.0_wp) ) then
 
                errmsg = 'The # boundary vector is the zero vector.'
 
-               if (  vzero( bounds(1,i) )  ) then
+               if (  all(bounds(:,i) == 0.0_wp)  ) then
                   j = i
                end if
 
@@ -66107,7 +66044,7 @@ contains
 !        ellipse.  So in this special case, APEX would be in the region
 !        bounded by the ellipse.
 !
-         call vsub ( xpt, center, offset )
+         offset = xpt - center
 
          x  =  vdot  ( offset, smajor ) / a
          y  =  vdot  ( offset, sminor ) / b
@@ -66177,7 +66114,7 @@ contains
 !           Let EBSCTR ("pyramid edge bisector") be a bisector of the
 !           sector bounded by EDGE1 and EDGE2.
 !
-            call vlcom ( 0.5_wp, edge1, 0.5_wp, edge2, ebsctr )
+            ebsctr = 0.5_wp*edge1 + 0.5_wp*edge2
 
 !
 !           Let HAFEDG be half of the angular measure of this sector.
@@ -66190,10 +66127,10 @@ contains
 !           and the plane containing the currently considered side of
 !           the pyramid.
 !
-            call vsub ( xpt1,  apex,  vtemp )
+            vtemp = xpt1 - apex
             call vhat ( vtemp,        vxpt1 )
 
-            call vsub ( xpt2,  apex,  vtemp )
+            vtemp = xpt2 - apex
             call vhat ( vtemp,        vxpt2 )
 
 !
@@ -66214,7 +66151,7 @@ contains
 !           Let VBSCTR ("VXPT bisector") be a bisector of the sector
 !           bounded by VXPT1 and VXPT2.
 !
-            call vlcom ( 0.5_wp, vxpt1, 0.5_wp, vxpt2, vbsctr )
+            vbsctr = 0.5_wp*vxpt1 + 0.5_wp*vxpt2
 
 !
 !           Let HAFSEC be half of the angular measure of the sector
@@ -67035,7 +66972,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, halfpi
-      use pepper_math, only: reclat, ucrss, vdist, vdot, vequ, vhat, vlcom, vminus, vnorm, vpack
+      use pepper_math, only: reclat, ucrss, vdist, vdot, vhat, vnorm
       use pepper_inc_dsktol
       implicit none
       integer(ip), parameter :: lonidx = 1
@@ -67088,7 +67025,7 @@ contains
 !
          nxpts = 1
 
-         call vequ ( vertex, xpt )
+         xpt = vertex
 
          return
 
@@ -67162,7 +67099,7 @@ contains
 !
 !        This solution is a candidate.
 !
-         call vequ ( srfx, xpt )
+         xpt = srfx
          nxpts  = 1
 
          if ( vr > maxr ) then
@@ -67195,7 +67132,7 @@ contains
 !
       s = vnorm(vertex) + radfac * maxr
 
-      call vlcom ( 1.0_wp, vertex, s, udir, endpt2 )
+      endpt2 = 1.0_wp*vertex + s*udir
 
 !
 !     Now try the upper latitude bound. We can skip this test
@@ -67230,7 +67167,7 @@ contains
 
                if ( dist < mndist ) then
 
-                  call vequ ( srfx, xpt )
+                  xpt = srfx
 
                   nxpts  = 1
 
@@ -67269,7 +67206,7 @@ contains
 
                   if ( dist < mndist ) then
 
-                     call vequ ( xpt2, xpt )
+                     xpt = xpt2
 
                      nxpts  = 1
                      mndist = dist
@@ -67325,7 +67262,7 @@ contains
 
                if ( dist < mndist ) then
 
-                  call vequ ( srfx, xpt )
+                  xpt = srfx
 
                   nxpts  = 1
 
@@ -67364,7 +67301,7 @@ contains
 
                   if ( dist < mndist ) then
 
-                     call vequ ( xpt2, xpt )
+                     xpt = xpt2
 
                      nxpts  = 1
                      mndist = dist
@@ -67403,7 +67340,7 @@ contains
 !        The vector WESTB is an outward-facing vector normal to
 !        the west boundary.
 !
-         call vpack ( sin(minlon), -cos(minlon), 0.0_wp, westb )
+         westb = [sin(minlon), -cos(minlon), 0.0_wp]
 
          s = radfac * ( vnorm(vertex) + maxr )
 
@@ -67439,7 +67376,7 @@ contains
 !
 !                    Record the intercept, distance, and surface index.
 !
-                     call vequ ( srfx, xpt )
+                     xpt = srfx
 
                      nxpts  = 1
                      mndist = dist
@@ -67459,7 +67396,7 @@ contains
 !        The vector EASTB is an outward-facing vector normal to
 !        the east boundary.
 
-         call vpack ( -sin(maxlon), cos(maxlon), 0.0_wp, eastb )
+         eastb = [-sin(maxlon), cos(maxlon), 0.0_wp]
 
          call zzinrypl ( ctx, vertex, udir, eastb, 0.0_wp, s, nx, srfx )
 
@@ -67491,7 +67428,7 @@ contains
 !
 !                    Record the intercept, distance, and surface index.
 !
-                     call vequ ( srfx, xpt )
+                     xpt = srfx
 
                      nxpts  = 1
                      mndist = dist
@@ -67533,7 +67470,7 @@ contains
 !
 !                 Record the intercept, distance, and surface index.
 !
-                  call vequ ( srfx, xpt )
+                  xpt = srfx
 
                   nxpts  = 1
                   mndist = dist
@@ -67550,7 +67487,7 @@ contains
 !        the case where the intercept further from the ray's vertex is
 !        the correct solution.
 !
-         call vminus( udir, negdir )
+         negdir = -udir
 
          call zzryxsph ( ctx, endpt2, negdir, minr, srfx, found )
 
@@ -67568,7 +67505,7 @@ contains
 !
 !                 Record the intercept, distance, and surface index.
 !
-                  call vequ ( srfx, xpt )
+                  xpt = srfx
 
                   nxpts  = 1
                   mndist = dist
@@ -67609,8 +67546,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
-      use pepper_math, only: vscl, vsclg
       implicit none
 
       integer(ip), parameter :: ubel = 9
@@ -68050,7 +67985,7 @@ contains
 
       end if
 
-      call vscl ( 1.0_wp / scale, viewpt, v )
+      v = (1.0_wp / scale)*viewpt
 
 !
 !     The viewing point must be outside of the ellipsoid.  LEVEL is the
@@ -68146,8 +68081,8 @@ contains
 !
 !     Undo the scaling before returning the limb.
 !
-      call vsclg ( scale, limb, ubel, tmpel )
-      call moved ( tmpel, ubel,       limb  )
+      tmpel = scale*limb
+      limb = tmpel
 
       return
       end procedure edlimb
@@ -68173,7 +68108,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: unorm, vminus, vscl, vsclip
+      use pepper_math, only: unorm
       implicit none
 
       integer(ip), parameter :: ubel = 9
@@ -68606,7 +68541,7 @@ contains
 !     whether rays intersect a body, so we treat the line as a pair
 !     of rays.
 !
-      call vminus ( udir, oppdir )
+      oppdir = -udir
 
       call surfpt ( ctx, sclpt, udir,   scla, sclb, sclc, pt(1,1), found(1) )
       call surfpt ( ctx, sclpt, oppdir, scla, sclb, sclc, pt(1,2), found(2) )
@@ -68617,7 +68552,7 @@ contains
 
             dist  =  0.0_wp
 
-            call vscl   ( scale,    pt(1,i),  pnear )
+            pnear = scale*pt(:,i)
             return
 
          end if
@@ -68686,7 +68621,7 @@ contains
 !
 !     Undo the scaling.
 !
-      call vsclip ( scale, pnear )
+      pnear = scale*pnear
 
       dist = scale * dist
 
@@ -70094,7 +70029,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, halfpi
-      use pepper_math, only: ucrss, vdist, vdot, vequ, vhat, vlcom, vminus, vnorm, vpack, vsep, vsub, vzero
+      use pepper_math, only: ucrss, vdist, vdot, vhat, vnorm, vsep
       use pepper_inc_dsktol
       implicit none
       integer(ip), parameter :: lonidx = 1
@@ -70163,7 +70098,7 @@ contains
 
       end if
 
-      if ( vzero(raydir) ) then
+      if ( all(raydir == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The ray''s direction was the zero vector.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                         )
@@ -70184,7 +70119,7 @@ contains
 !
          nxpts = 1
 
-         call vequ ( vertex, xpt )
+         xpt = vertex
 
          return
 
@@ -70292,7 +70227,7 @@ contains
 !
 !        This solution is a candidate.
 !
-         call vequ ( srfx, xpt )
+         xpt = srfx
          nxpts  = 1
 
 !
@@ -70335,7 +70270,7 @@ contains
 
       s    = vnorm(vertex) + radfac * maxr
 
-      call vlcom ( 1.0_wp, vertex, s, udir, endpt2 )
+      endpt2 = 1.0_wp*vertex + s*udir
 
 !
 !     Now try the upper latitude bound. We can skip this test
@@ -70369,7 +70304,7 @@ contains
 !
 !        (The comparison will be done later.)
 !
-         call vsub ( vertex, apex, vtxoff )
+         vtxoff = vertex - apex
 
          vtxang = vsep ( vtxoff, z )
 
@@ -70427,7 +70362,7 @@ contains
 !
                nx = 1
 
-               call vequ( xpt2, srfx )
+               srfx = xpt2
 
             else if (  ( .not. xval1 )  .and.  ( .not. xval2 )  ) then
 !
@@ -70458,7 +70393,7 @@ contains
 
                if ( dist < mndist ) then
 
-                  call vequ ( srfx, xpt )
+                  xpt = srfx
 
                   nxpts  = 1
 
@@ -70517,7 +70452,7 @@ contains
 
                   if ( dist < mndist ) then
 
-                     call vequ ( xpt2, xpt )
+                     xpt = xpt2
 
                      nxpts  = 1
                      mndist = dist
@@ -70576,7 +70511,7 @@ contains
 !
 !        (The comparison will be done later.)
 !
-         call vsub ( vertex, apex, vtxoff )
+         vtxoff = vertex - apex
 
          vtxang = vsep ( vtxoff, z )
 
@@ -70610,7 +70545,7 @@ contains
 !
                nx = 1
 
-               call vequ( xpt2, srfx )
+               srfx = xpt2
 
             else if (  ( .not. xval1 )  .and.  ( .not. xval2 )  ) then
 !
@@ -70641,7 +70576,7 @@ contains
 
                if ( dist < mndist ) then
 
-                  call vequ ( srfx, xpt )
+                  xpt = srfx
 
                   nxpts  = 1
 
@@ -70700,7 +70635,7 @@ contains
 
                   if ( dist < mndist ) then
 
-                     call vequ ( xpt2, xpt )
+                     xpt = xpt2
 
                      nxpts  = 1
                      mndist = dist
@@ -70736,7 +70671,7 @@ contains
 !        Check the longitude boundaries. Try the plane of western
 !        longitude first.
 !
-         call vpack ( sin(minlon), -cos(minlon), 0.0_wp, westb )
+         westb = [sin(minlon), -cos(minlon), 0.0_wp]
 
          s = radfac * ( vnorm(vertex) + maxr )
 
@@ -70772,7 +70707,7 @@ contains
 !
 !                    Record the intercept, distance, and surface index.
 !
-                     call vequ ( srfx, xpt )
+                     xpt = srfx
 
                      nxpts  = 1
                      mndist = dist
@@ -70789,7 +70724,7 @@ contains
 !
 !        Try the plane of eastern longitude next.
 !
-         call vpack ( -sin(maxlon), cos(maxlon), 0.0_wp, eastb )
+         eastb = [-sin(maxlon), cos(maxlon), 0.0_wp]
 
          call zzinrypl ( ctx, vertex, udir, eastb, 0.0_wp, s, nx, srfx )
 
@@ -70821,7 +70756,7 @@ contains
 !
 !                    Record the intercept, distance, and surface index.
 !
-                     call vequ ( srfx, xpt )
+                     xpt = srfx
 
                      nxpts  = 1
                      mndist = dist
@@ -70863,7 +70798,7 @@ contains
 !
 !              Record the intercept, distance, and surface index.
 !
-               call vequ ( srfx, xpt )
+               xpt = srfx
 
                nxpts  = 1
                mndist = dist
@@ -70880,7 +70815,7 @@ contains
 !     case where the intersection farther from the ray's vertex is the
 !     correct one.
 !
-      call vminus( udir, negdir )
+      negdir = -udir
 
       call surfpt ( ctx, endpt2, negdir, emin, emin, pmin, srfx, found )
 
@@ -70900,7 +70835,7 @@ contains
 !
 !              Record the intercept, distance, and surface index.
 !
-               call vequ ( srfx, xpt )
+               xpt = srfx
 
                nxpts  = 1
 !
@@ -71730,9 +71665,9 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: cleari, isrchi, movei, orderi
+      use pepper_arrays, only: orderi
       use pepper_containers, only: grow
-      use pepper_math, only: insang, pltexp, pltnrm, vdot, vequ, vhat, vlcom, vlcom3, vsub, vsubg, vzero
+      use pepper_math, only: insang, pltexp, pltnrm, vdot, vhat
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
@@ -71843,12 +71778,12 @@ contains
 !
 !     Initialize the vertex buffer.
 !
-      call cleari( bufsiz, vidxs )
+      vidxs = 0
 
 !
 !     Check whether the ray direction vector is the zero vector.
 !
-      if ( vzero( raydir ) ) then
+      if ( all(raydir == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Ray direction is the zero vector.' )
          call ctx%sigerr ( 'SPICE(RAYISZEROVECTOR)'            )
@@ -71986,7 +71921,7 @@ contains
 
          prvhan = handle
 
-         call movei ( dladsc, dladsz, prvdsc )
+         prvdsc = dladsc(1:dladsz)
 
       end if
 
@@ -72046,7 +71981,7 @@ contains
 !     This vertex change is not performed if the vertex is already
 !     inside, or within a small margin away from, the voxel grid.
 !
-      call vsub ( vertex, voxori, vtxoff )
+      vtxoff = vertex - voxori
 
       if (      (  vtxoff(1) <   -grdtol               ) &
            .or. (  vtxoff(1) >  ( grdtol + grdext(1) ) ) &
@@ -72060,8 +71995,7 @@ contains
 !        margin. Move the ray-grid intercept away from the grid to
 !        improve numeric performance.
 !
-         call vlcom3 (  1.0_wp, voxori, voxsiz, coord, &
-                       -1.0_wp, udir,   vtx2           )
+         vtx2 = 1.0_wp*voxori + voxsiz*coord + (-1.0_wp)*udir
 
       end if
 
@@ -72071,9 +72005,9 @@ contains
 !     make 3 copies of the observer's location so that we make a single
 !     subroutine call to handle the 3 subtractions.
 !
-      call vequ ( vtx2, obsmat(1,1) )
-      call vequ ( vtx2, obsmat(1,2) )
-      call vequ ( vtx2, obsmat(1,3) )
+      obsmat(:,1) = vtx2
+      obsmat(:,2) = vtx2
+      obsmat(:,3) = vtx2
 
 !
 !     Use the coarse voxel grid to compress the voxel list. We
@@ -72373,13 +72307,13 @@ contains
 !                    Any vertex may be buffered already. Look in
 !                    the vertex buffer before reading the vertex.
 !
-                     vloc = isrchi ( vids(k), nvbuf, vidxs )
+                     vloc = findloc(vidxs(1:nvbuf), vids(k), dim=1)
 
                      if ( vloc > 0 ) then
 !
 !                       The vertex was buffered; just copy it.
 !
-                        call vequ ( vbuff(1,vloc), points(1,k) )
+                        points(:,k) = vbuff(:,vloc)
 
                      else
 !
@@ -72400,7 +72334,7 @@ contains
 
                            nvbuf = nvbuf + 1
 
-                           call vequ ( points(1,k), vbuff(1,nvbuf) )
+                           vbuff(:,nvbuf) = points(:,k)
 
                            vidxs( nvbuf ) = vids(k)
 
@@ -72424,7 +72358,7 @@ contains
 !                 members of the edge rays. Finally see if the ray
 !                 lies inside the tetrahedron.
 !
-                  call vsubg  ( points,     obsmat, 9,  edges )
+                  edges = points - obsmat
 
                   call pltexp ( edges,      xpdfrc,     xpnts )
 
@@ -72468,7 +72402,7 @@ contains
 !                          ___    ____   __________
 !                          XPT2 = VTX2 + SCALE*UDIR
 !
-                        call vlcom ( 1.0_wp, vtx2, scale, udir, xpt2 )
+                        xpt2 = 1.0_wp*vtx2 + scale*udir
 
 !
 !                       Compute the voxel grid coordinates of the
@@ -72520,7 +72454,7 @@ contains
 !                             intercepts beyond the voxel designated by
 !                             FINAL.
 !
-                              call vequ ( xpt2, xpt )
+                              xpt = xpt2
 
                               have   = .true.
                               near   = scale
@@ -73567,10 +73501,9 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: touchd
-      use pepper_math, only: mxv, vadd, vdist, vequ, vminus, vnorm, vsep, vsub
-      use pepper_strings, only: eqchr, eqstr, ljust, repmc, ucase
-      use pepper_inc_frmtyp
+      use pepper_math, only: mxv, vdist, vnorm, vsep
+      use pepper_strings, only: eqchr, eqstr, repmc, ucase
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       real(wp), parameter :: cnvlim = 1.0e-17_wp
@@ -73714,7 +73647,7 @@ contains
 !     Get a left-justified, upper case copy of the aberration
 !     correction flag.
 !
-      call ljust ( abcorr, loccor )
+      loccor = adjustl(abcorr)
       call ucase ( loccor, loccor )
 
 !
@@ -73810,7 +73743,7 @@ contains
 !     Negate the target's position to obtain the position of the
 !     observer relative to the target.
 !
-      call vminus ( tpos, obspos )
+      obspos = -tpos
 
 !
 !     We now need to convert the direction vector into the
@@ -73968,14 +73901,14 @@ contains
 !           to STLDIR and finding the difference with J2DIR.
 !
             call stlabx ( ctx, stldir, ssbost(4), j2est  )
-            call vsub   ( j2dir,  j2est,     stlerr )
+            stlerr = j2dir - j2est
 
 !
 !           Adding the error in the transmission mapping to STLDIR
 !           will give us a second-order estimate of the inverse.
 !
-            call vadd ( stlerr, stldir, stltmp )
-            call vequ ( stltmp,         stldir )
+            stltmp = stlerr + stldir
+            stldir = stltmp
 !
 !           At this point we've found a good estimate of the
 !           direction vector under the inverse of the transmission
@@ -73996,14 +73929,14 @@ contains
 !           to STLDIR and finding the difference with J2DIR.
 !
             call stelab ( ctx, stldir, ssbost(4), j2est  )
-            call vsub   ( j2dir,  j2est,     stlerr )
+            stlerr = j2dir - j2est
 
 !
 !           Adding the error in the reception mapping to STLDIR
 !           will give us a second-order estimate of the inverse.
 !
-            call vadd ( stlerr, stldir, stltmp )
-            call vequ ( stltmp,         stldir )
+            stltmp = stlerr + stldir
+            stldir = stltmp
 
 !
 !           At this point we've found a good estimate of the
@@ -74016,7 +73949,7 @@ contains
 !        Replace the J2000-relative ray direction with the corrected
 !        direction.
 !
-         call vequ ( stldir,  j2dir )
+         j2dir = stldir
          call mxv  ( j2tmat,  j2dir,   trgdir )
 
       end if
@@ -74070,7 +74003,7 @@ contains
 !
             reject = dasine ( ctx, margin * maxrad / range,  rndtol )
 
-            call vminus ( obspos, negpos )
+            negpos = -obspos
 
             if (  vsep( negpos, trgdir )  >  reject  ) then
 !
@@ -74155,7 +74088,7 @@ contains
 !              Convert this vector from the J2000 frame to the target
 !              frame at TRGEPC.
 !
-               call vsub   ( ssbost,  ssbtst, j2pos         )
+               j2pos = ssbost(1:3) - ssbtst(1:3)
                call pxform ( ctx, 'J2000', frname, trgepc, xform )
 
                if ( ctx%failed() ) return
@@ -74242,7 +74175,7 @@ contains
 !           Convert this vector from the J2000 frame to the target
 !           frame at TRGEPC.
 !
-            call vsub   ( ssbost,  ssbtst, j2pos         )
+            j2pos = ssbost(1:3) - ssbtst(1:3)
             call pxform ( ctx, 'J2000', frname, trgepc, xform )
 
             if ( ctx%failed() ) return
@@ -74252,7 +74185,7 @@ contains
 !           the J2000 frame to the target frame at the target epoch.
 !
             call mxv    ( xform,  j2pos, obspos )
-            call vminus ( obspos, negpos )
+            negpos = -obspos
 
 !
 !           Convert the ray's direction vector from the J2000 frame
@@ -74293,8 +74226,8 @@ contains
 !           variable doesn't solve the problem, because that variable
 !           can be optimized out of existence.
 !
-            ltdiff  =   abs( touchd(lt     - prevlt) )
-            etdiff  =   abs( touchd(trgepc - prevet) )
+            ltdiff  =   abs( (lt     - prevlt) )
+            etdiff  =   abs( (trgepc - prevet) )
             prevlt  =   lt
             prevet  =   trgepc
             i       =   i + 1
@@ -76232,10 +76165,9 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: cleard, touchd
-      use pepper_math, only: mtxv, mxv, vadd, vdist, vdot, vequ, vminus, vnorm, vrel, vsub, vzero
+      use pepper_math, only: mtxv, mxv, vdist, vdot, vnorm, vrel
       use pepper_strings, only: eqstr, ljucrs
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
@@ -76467,7 +76399,7 @@ contains
 !
 !     Check for a zero ray direction vector.
 !
-      if ( vzero(dvec) ) then
+      if ( all(dvec == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input ray direction was the zero ' &
          //            'vector; this vector must be non-zero.' )
@@ -76637,7 +76569,7 @@ contains
 
       if ( ctx%failed() ) return
 
-      if ( vzero(tpos) ) then
+      if ( all(tpos == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Observer # and target # have distinct ' &
          //            'ID codes but the distance between these ' &
@@ -76653,7 +76585,7 @@ contains
 !     Negate the target's position to obtain the position of the
 !     observer relative to the target.
 !
-      call vminus ( tpos, fixobs )
+      fixobs = -tpos
 
 !
 !     Now we can check whether the observer is inside the ellipsoid.
@@ -76730,7 +76662,7 @@ contains
 !
       if ( dfrcde == j2code ) then
 
-         call vequ ( dvec, j2dir )
+         j2dir = dvec
 
       else
 
@@ -76765,7 +76697,7 @@ contains
 !     Compute the observer-to-surface point vector for the initial
 !     estimated solution.
 !
-      call vsub ( srfpt, fixobs, srfvec )
+      srfvec = srfpt - fixobs
 
 !
 !     Now compute the tangent point.
@@ -76805,13 +76737,13 @@ contains
 !        for the ray pointing away from the target could give a
 !        different result. We handle that case separately later on.
 !
-         call vsub ( tanpt, fixobs, tanoff )
+         tanoff = tanpt - fixobs
 
          if ( vdot( tanoff, fixdir ) <= 0.0_wp ) then
 !
 !           TANPT is on or behind the ray's vertex.
 !
-            call vequ ( fixobs, tanpt )
+            tanpt = fixobs
             range = 0.0_wp
 
             call nearpt ( ctx, fixobs, svradi(1), svradi(2), svradi(3), &
@@ -76821,7 +76753,7 @@ contains
 !
 !           Compute SRFVEC using our newly computed value of SRFPT.
 !
-            call vsub ( srfpt, fixobs, srfvec )
+            srfvec = srfpt - fixobs
 
          else
 !
@@ -76833,7 +76765,7 @@ contains
 !              and SRFVEC are already set. To eliminate any error in
 !              TANPT, we set it equal to SRFPT.
 !
-               call vequ ( srfpt, tanpt )
+               tanpt = srfpt
 
                range = vnorm ( srfvec )
 
@@ -76957,8 +76889,8 @@ contains
 !           Track the output points in order to test convergence of
 !           the stellar aberration correction.
 !
-            call vequ ( tanpt, prvtan )
-            call vequ ( srfpt, prvsrf )
+            prvtan = tanpt
+            prvsrf = srfpt
 
          end if
 
@@ -76979,7 +76911,7 @@ contains
 !        SSBOST contains the J2000-relative state of the observer
 !        relative to the solar system barycenter at ET.
 !
-         call vsub   ( ssbost,  ssbtst, j2opos         )
+         j2opos = ssbost(1:3) - ssbtst(1:3)
          call pxform ( ctx, 'J2000', fixref, trgepc, j2fixm )
 
          if ( ctx%failed() ) return
@@ -77009,8 +76941,8 @@ contains
 !           Compute the position of the locus relative to the observer
 !           in the J2000 frame.
 !
-            call vminus ( j2opos, j2tpos )
-            call vadd   ( j2tpos, j2lcus, j2lpos )
+            j2tpos = -j2opos
+            j2lpos = j2tpos + j2lcus
 
 !
 !           Correct the vector from the observer to the aberration
@@ -77024,7 +76956,7 @@ contains
                call stelab ( ctx, j2lpos, ssbost(4), stlloc )
             end if
 
-            call vsub ( stlloc, j2lpos, stloff )
+            stloff = stlloc - j2lpos
 
 !
 !           Convert the stellar aberration correction offset to the
@@ -77037,7 +76969,7 @@ contains
 !           We're not using stellar aberration correction, so just
 !           zero out the offset.
 !
-            call cleard ( 3, stlfix )
+            stlfix = 0.0_wp
 
          end if
 
@@ -77047,7 +76979,7 @@ contains
 !        TRGPOS be the negative of this vector.
 !
          call mxv    ( j2fixm, j2opos, fixobs )
-         call vminus ( fixobs, trgpos )
+         trgpos = -fixobs
 
 !
 !        Convert the ray direction vector from the J2000 frame
@@ -77066,7 +76998,7 @@ contains
 !        If stellar aberration correction was not commanded, then
 !        STLFIX is the zero vector.
 !
-         call vsub ( fixobs, stlfix, stlobs )
+         stlobs = fixobs - stlfix
 
 !
 !        Re-compute the surface point and ray altitude.
@@ -77088,27 +77020,27 @@ contains
          if ( alt /= 0.0_wp ) then
             call nplnpt ( ctx, stlobs, fixdir, srfpt, tanpt, dval )
          else
-            call vequ ( srfpt, tanpt )
+            tanpt = srfpt
          end if
 
 !
 !        The output SRFVEC extends from the observer to the apparent
 !        position of the surface point.
 !
-         call vsub ( srfpt, stlobs, srfvec )
+         srfvec = srfpt - stlobs
 
 !
 !        We may need to update TANPT, SRFPT and SRFVEC if the tangent
 !        point is behind the observer (the look-away case).
 !
-         call vsub ( tanpt, stlobs, tanoff )
+         tanoff = tanpt - stlobs
 
          if ( vdot( tanoff, fixdir ) <= 0.0_wp ) then
 !
 !           TANPT is on or behind the ray's vertex. Reset TANPT to be
 !           the vertex.
 !
-            call vequ ( stlobs, tanpt )
+            tanpt = stlobs
             range = 0.0_wp
 
 !
@@ -77122,7 +77054,7 @@ contains
 
             if ( ctx%failed() ) return
 
-            call vsub ( srfpt, tanpt, srfvec )
+            srfvec = srfpt - tanpt
 
 !
 !           Set the light time and the target epoch, based on the
@@ -77176,7 +77108,7 @@ contains
 !        this loop pass. Determine whether light time and stellar
 !        aberration have converged.
 !
-         lt      =   touchd( lt )
+         lt      =   (lt)
          ltdiff  =   abs( lt     - prevlt )
          epcdif  =   abs( trgepc - prvepc )
 
@@ -77222,8 +77154,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi
-      use pepper_arrays, only: cleard
-      use pepper_math, only: det, el2cgv, mtxv, mxm, mxv, ucrss, unorm, vadd, vdist, vequ, vminus, vnorm, vsep, vsub, xpose
+      use pepper_math, only: det, el2cgv, mtxv, mxm, mxv, ucrss, unorm, vdist, vnorm, vsep
       use pepper_inc_zzocced
       implicit none
 
@@ -77743,12 +77674,12 @@ contains
 !     Compute view point-to-target vectors and ranges for both
 !     target bodies.
 !
-      call vequ ( centr1, ctrs(1,1) )
-      call vequ ( centr2, ctrs(1,2) )
+      ctrs(:,1) = centr1
+      ctrs(:,2) = centr2
 
       do i = 1, 2
 
-         call vsub ( ctrs(1,i), viewpt, tpos(1,i) )
+         tpos(:,i) = ctrs(:,i) - viewpt
 
          dist(i) = vnorm( tpos(1,i) )
 
@@ -77789,7 +77720,7 @@ contains
 !
 !     Find the position of the second target relative to the first.
 !
-      call vsub ( tpos(1,2), tpos(1,1), t12pos )
+      t12pos = tpos(:,2) - tpos(:,1)
 
       ttdist = vnorm ( t12pos )
 
@@ -77899,7 +77830,7 @@ contains
 !           relative to the center of the Ith target, in the principal
 !           axis frame of the Ith target.
 !
-            call vminus ( xtpos(1,i), xvwtrg )
+            xvwtrg = -xtpos(:,i)
 
             call edlimb ( ctx, r(1,i), r(2,i), r(3,i), xvwtrg, limb )
 
@@ -78008,7 +77939,7 @@ contains
 !
 !        Let T1OPOS be the vector from the first target to the observer.
 !
-         call vminus ( tpos(1,1), t1opos )
+         t1opos = -tpos(:,1)
 
 !
 !        ANGCMP is the angle between a vector from the first target's
@@ -78123,13 +78054,13 @@ contains
 !     into the principal axis frame of the smaller ellipsoid first.
 !     Let SMLMAT be the rotation matrix that effects this mapping.
 !
-      call xpose ( rmat(1,1,smlidx),  smlmat )
+      smlmat = transpose(rmat(:,:,smlidx))
 
 !
 !     Apply SMLMAT to the vector from the center of the smaller
 !     ellipsoid to the viewing point.
 !
-      call vsub ( viewpt, ctrs(1,smlidx), smlvu )
+      smlvu = viewpt - ctrs(:,smlidx)
 
       call mxv  ( smlmat, smlvu,          view  )
 
@@ -78154,8 +78085,8 @@ contains
 !     this center relative to the origin; we use the vector SMLCTR for
 !     this.
 !
-      call vadd ( ctrs(1,smlidx), smlctr, tmpctr )
-      call vequ ( tmpctr,                 smlctr )
+      tmpctr = ctrs(:,smlidx) + smlctr
+      smlctr = tmpctr
 
 !
 !     Create the transformation matrix that maps the larger ellipsoid
@@ -78165,7 +78096,7 @@ contains
 !     components by the reciprocals of the respective semi-axis
 !     lengths of the large ellipsoid.
 !
-      call cleard ( 9, sclmat )
+      sclmat = 0.0_wp
 
       sclmat(1,1) = 1.0_wp / r(1,bigidx)
       sclmat(2,2) = 1.0_wp / r(2,bigidx)
@@ -78179,7 +78110,7 @@ contains
 !
 !     We use one matrix SCLROT to perform these composed operations.
 !
-      call xpose ( rmat(1,1,bigidx),  xr          )
+      xr = transpose(rmat(:,:,bigidx))
       call mxm   ( sclmat,            xr,  sclrot )
 
 !
@@ -78200,7 +78131,7 @@ contains
 !     Map the limb vectors of the smaller ellipsoid.
 !
       call mxv  ( sclrot, smlctr, tmpctr )
-      call vequ ( tmpctr,         smlctr )
+      smlctr = tmpctr
 
       call mxv  ( sclrot, smlmaj, tmpmaj )
       call mxv  ( sclrot, smlmin, tmpmin )
@@ -78217,7 +78148,7 @@ contains
 !     Find the direction vector of the ray from the viewing point
 !     to the transformed center of the large ellipsoid.
 !
-      call vsub ( bigctr, xview, raydir )
+      raydir = bigctr - xview
 
 !
 !     Find the angular separation of the ray and the transformed
@@ -78268,12 +78199,12 @@ contains
 !
 !     Find the vector from the center of the sphere to MINPT.
 !
-      call vsub ( minpt, bigctr, minvec )
+      minvec = minpt - bigctr
 
 !
 !     Get the inverse of the ray's direction vector.
 !
-      call vminus ( raydir, invray )
+      invray = -raydir
 
 !
 !     Now we can apply the criterion from the spherical occultation
@@ -78363,7 +78294,7 @@ contains
 !        not preserve distances, so we must re-compute the distance
 !        from the viewing point to the center of the small ellipsoid.
 !
-         call vsub ( xview, smlctr, xsmlvu )
+         xsmlvu = xview - smlctr
 
          xdist(smlidx) = vnorm ( xsmlvu )
 
@@ -78477,7 +78408,7 @@ contains
 !
 !        Compute angular separation of the transformed centers.
 !
-         call vsub ( smlctr, xview, smldir )
+         smldir = smlctr - xview
 
          xasep  =  vsep ( raydir, smldir )
 
@@ -78798,8 +78729,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: moved, movei
-      use pepper_math, only: brckti, pltexp, pltnrm, vdot, vhatip, vsub
+      use pepper_math, only: pltexp, pltnrm, vdot, vhatip
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
@@ -78911,7 +78841,7 @@ contains
 !        changes. Save the current handle and DLA descriptor.
 !
          prvhan = handle
-         call movei ( dladsc, dladsz, prvdsc )
+         prvdsc = dladsc(1:dladsz)
 
          pass1  = .false.
 
@@ -78955,13 +78885,13 @@ contains
 !     point is outside the voxel grid, map the point to the closest
 !     voxel.
 !
-      call vsub ( point, voxori, offset )
+      offset = point - voxori
 
       do i = 1, 3
 
          j         = int( offset(i) / voxsiz ) + 1
 
-         vgrcor(i) = brckti( j,  1,  vgrext(i) )
+         vgrcor(i) = max(min(1, vgrext(i)), min(max(1, vgrext(i)), j))
 
       end do
 
@@ -79071,7 +79001,7 @@ contains
 
             call vhatip ( normal )
 
-            call vsub ( point, xverts(1,1), pntoff )
+            pntoff = point - xverts(:,1)
 
             if ( abs( vdot(pntoff,normal) ) <= limit ) then
 !
@@ -79106,8 +79036,8 @@ contains
 !
 !                 Set the output vertices to the original version.
 !
-                  call movei ( plttmp, 3, plate )
-                  call moved ( vrttmp, 9, verts )
+                  plate = plttmp
+                  verts = vrttmp
 !
 !                 We'll return the above values if we don't find
 !                 a better match.
@@ -79332,8 +79262,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi, moved
-      use pepper_math, only: mtxv, mxv, pltnrm, vdist, vequ, vhatip, vsub
+      use pepper_math, only: mtxv, mxv, pltnrm, vdist, vhatip
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
@@ -79575,7 +79504,7 @@ contains
 !     Make a local copy of the point. We'll update this copy
 !     later if need be.
 !
-      call vequ ( point, segpt )
+      segpt = point
 
 !
 !     By default, each segment in the input list must be checked
@@ -79611,7 +79540,7 @@ contains
             if ( nsurf > 0 ) then
 
                surfce = nint( dskbuf(srfidx,i) )
-               j      = isrchi( surfce, nsurf, srflst )
+               j      = findloc(srflst(1:nsurf), surfce, dim=1)
 
             end if
 
@@ -79672,8 +79601,8 @@ contains
 !                 to the segment frame's center. The offset is
 !                 expressed in the segment's frame.
 !
-                  call vsub ( segpt, offbuf(1,i), vtemp )
-                  call vequ ( vtemp,              segpt )
+                  vtemp = segpt - offbuf(:,i)
+                  segpt = vtemp
 
                end if
 
@@ -79683,7 +79612,7 @@ contains
 !              segment, but the current value of SEGPT needs to be
 !              reset.
 !
-               call vequ ( point, segpt )
+               segpt = point
 
             end if
 
@@ -79737,7 +79666,7 @@ contains
 !
 !                 Save the frame transformation for this segment.
 !
-                  call moved ( xform, 9, sgxbuf(1,1,nhit) )
+                  sgxbuf(:,:,nhit) = xform
 
                end if
 
@@ -79802,18 +79731,18 @@ contains
 !              Here I is an index in the hit list and J is
 !              an index in the input arrays.
 !
-               call moved ( sgxbuf(1,1,i), 9, xform )
+               xform = sgxbuf(:,:,i)
 
                call mxv  ( xform, point, segpt )
 
-               call vsub ( segpt, offbuf(1,j), vtemp )
-               call vequ ( vtemp,              segpt )
+               vtemp = segpt - offbuf(:,j)
+               segpt = vtemp
 
             end if
 
          else if ( multfr ) then
 
-            call vequ ( point, segpt )
+            segpt = point
 
          end if
 
@@ -79903,10 +79832,10 @@ contains
 !           The segment frame and input frame differ. The normal
 !           vector must be converted back to the input frame.
 !
-            call moved( sgxbuf(1,1,winner), 9, xform )
+            xform = sgxbuf(:,:,winner)
 
             call mtxv ( xform, normal, vtemp  )
-            call vequ ( vtemp,         normal )
+            normal = vtemp
 
          end if
 
@@ -79960,7 +79889,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: touchd
       implicit none
 
 
@@ -80096,8 +80024,8 @@ contains
 !     Note: input argument ET is provided to support time-dependent
 !     data types.
 !
-      retval = touchd( et )
-      dc(1)  = touchd( dc(1) )
+      retval = (et)
+      dc(1)  = (dc(1))
 
       if ( dtype == 2 ) then
 !
@@ -80160,8 +80088,8 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi, moved, orderd
-      use pepper_math, only: mtxv, mxv, vadd, vdist, vequ, vnorm, vsub, vzero
+      use pepper_arrays, only: orderd
+      use pepper_math, only: mtxv, mxv, vdist, vnorm
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
@@ -80468,8 +80396,8 @@ contains
 !     Make a local copy of the ray. We'll update this copy
 !     later if need be.
 !
-      call vequ ( vertex, segvtx )
-      call vequ ( raydir, segdir )
+      segvtx = vertex
+      segdir = raydir
 
 !
 !     Obtain the radius of an outer bounding sphere for the given body
@@ -80514,7 +80442,7 @@ contains
 
          end if
 
-         call vequ ( sphvtx, segvtx )
+         segvtx = sphvtx
 
       end if
 
@@ -80552,7 +80480,7 @@ contains
             if ( nsurf > 0 ) then
 
                surfce = nint( dskbuf(srfidx,i) )
-               j      = isrchi( surfce, nsurf, srflst )
+               j      = findloc(srflst(1:nsurf), surfce, dim=1)
 
             end if
 
@@ -80614,8 +80542,8 @@ contains
 !                 to the segment frame's center. The offset is
 !                 expressed in the segment's frame.
 !
-                  call vsub ( segvtx, offbuf(1,i), vtemp  )
-                  call vequ ( vtemp,               segvtx )
+                  vtemp = segvtx - offbuf(:,i)
+                  segvtx = vtemp
 
                end if
 
@@ -80625,8 +80553,8 @@ contains
 !              segment, but the current values of SEGVTX and SEGDIR
 !              need to be reset.
 !
-               call vequ ( vertex, segvtx )
-               call vequ ( raydir, segdir )
+               segvtx = vertex
+               segdir = raydir
 
             end if
 
@@ -80660,7 +80588,7 @@ contains
 !
 !                 Save the frame transformation for this segment.
 !
-                  call moved ( xform, 9, sgxbuf(1,1,nhit) )
+                  sgxbuf(:,:,nhit) = xform
 
                end if
 
@@ -80723,20 +80651,20 @@ contains
 !              Here J is an index in the hit list and K is
 !              an index in the input arrays.
 !
-               call moved ( sgxbuf(1,1,j), 9, xform )
+               xform = sgxbuf(:,:,j)
 
                call mxv  ( xform,  vertex, segvtx )
                call mxv  ( xform,  raydir, segdir )
 
-               call vsub ( segvtx, offbuf(1,k), vtemp  )
-               call vequ ( vtemp,               segvtx )
+               vtemp = segvtx - offbuf(:,k)
+               segvtx = vtemp
 
             end if
 
          else if ( multfr ) then
 
-            call vequ ( vertex, segvtx )
-            call vequ ( raydir, segdir )
+            segvtx = vertex
+            segdir = raydir
 
          end if
 
@@ -80767,7 +80695,7 @@ contains
                found  = .true.
                dmin   = vdist( srfx, segvtx )
 
-               call vequ ( srfx, xpt )
+               xpt = srfx
 
                winner = j
 
@@ -80787,7 +80715,7 @@ contains
 !
                   dmin   = dist
 
-                  call vequ ( srfx, xpt )
+                  xpt = srfx
 
                   winner = j
 
@@ -80872,20 +80800,20 @@ contains
 !           done before the frame transformation, since the offset
 !           is expressed relative to the segment's frame.
 !
-            if ( .not. vzero( offbuf(1,k) ) ) then
+            if ( .not. all(offbuf(:,k) == 0.0_wp) ) then
 !
 !              OFFBUF(*,K) contains the offset of the segment frame
 !              center from the segment's central body.
 !
-               call vadd ( xpt,   offbuf(1,k), vtemp )
-               call vequ ( vtemp,              xpt   )
+               vtemp = xpt + offbuf(:,k)
+               xpt = vtemp
 
             end if
 
-            call moved( sgxbuf(1,1,winner), 9, xform )
+            xform = sgxbuf(:,:,winner)
 
             call mtxv ( xform, xpt, vtemp )
-            call vequ ( vtemp,      xpt   )
+            xpt = vtemp
 
          end if
 
@@ -81221,7 +81149,6 @@ contains
 !!     prepare unprioritized ray surface intercept
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
@@ -81296,7 +81223,7 @@ contains
 !     Find the index of the input body ID in the body table. If
 !     we re-initialized the tables, the index will be zero.
 !
-      bix = isrchi( bodyid, btnbod, btbody )
+      bix = findloc(btbody(1:btnbod), bodyid, dim=1)
 
       if ( bix == 0 ) then
 !
@@ -81485,7 +81412,6 @@ contains
 !!     unprioritized ray surface intercept with info
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi, moved, movei
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
@@ -81560,7 +81486,7 @@ contains
 !     Find the index of the input body ID in the body table. If
 !     we re-initialized the tables, the index will be zero.
 !
-      bix = isrchi( bodyid, btnbod, btbody )
+      bix = findloc(btbody(1:btnbod), bodyid, dim=1)
 
       if ( bix == 0 ) then
 !
@@ -81604,8 +81530,8 @@ contains
 
          handle = sthan( segidx )
 
-         call movei ( stdlad(1,segidx), dladsz, dladsc )
-         call moved ( stdscr(1,segidx), dskdsz, dskdsc )
+         dladsc(1:dladsz) = stdlad(1:dladsz,segidx)
+         dskdsc(1:dskdsz) = stdscr(1:dskdsz,segidx)
 
       end if
 
@@ -81736,7 +81662,6 @@ contains
 !!     prepare unprioritized normal vector computation
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
@@ -81816,7 +81741,7 @@ contains
 !     Find the index of the input body ID in the body table. If
 !     we re-initialized the tables, the index will be zero.
 !
-      bix = isrchi( bodyid, btnbod, btbody )
+      bix = findloc(btbody(1:btnbod), bodyid, dim=1)
 
       if ( bix == 0 ) then
 !
@@ -84878,7 +84803,7 @@ contains
 !!
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vequ, vminus, vsep
+      use pepper_math, only: vsep
       use pepper_strings, only: eqstr
       use pepper_inc_dsk
       use pepper_inc_gf
@@ -85264,8 +85189,8 @@ contains
 !     for the following angle computation. Set the output SRFVEC while
 !     we're at it.
 !
-      call vequ   ( opstat, srfvec )
-      call vminus ( srfvec, obspos )
+      srfvec = opstat(1:3)
+      obspos = -srfvec
 
 !
 !     Find the illumination angles. VSEP will give us angular
@@ -86852,7 +86777,6 @@ contains
 !!
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, movei
       use pepper_inc_dsk
       implicit none
       integer(ip), parameter :: elltrg = 1
@@ -86888,12 +86812,12 @@ contains
 
       savnsf = nsurf
 
-      call movei ( srflst, savnsf, savsrf )
+      savsrf(1:savnsf) = srflst(1:savnsf)
 
       savfid = fixfid
       savtrg = trgcde
 
-      call cleard ( 3, savrad )
+      savrad = 0.0_wp
 
       if ( ctx%failed() ) return
 
@@ -88709,7 +88633,7 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
-      use pepper_math, only: vequ, vhatip, vlcom, vminus, vsep
+      use pepper_math, only: vhatip, vsep
       use pepper_strings, only: eqstr
       use pepper_inc_dsk
       use pepper_inc_gf
@@ -89060,8 +88984,8 @@ contains
 !     for the following angle computation. Set the output SRFVEC while
 !     we're at it.
 !
-      call vequ   ( opstat, srfvec )
-      call vminus ( srfvec, obspos )
+      srfvec = opstat(1:3)
+      obspos = -srfvec
 
 !
 !     Find the surface normal at SPOINT. This computation depends
@@ -89162,7 +89086,7 @@ contains
 !
             scale = tolscl * maxrad
 
-            call vlcom ( 1.0_wp, spoint, scale, normal, vertex )
+            vertex = 1.0_wp*spoint + scale*normal
 
             if ( visibl ) then
 !
@@ -91060,7 +90984,7 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
-      use pepper_math, only: latrec, vdot, vminus
+      use pepper_math, only: latrec, vdot
       use pepper_strings, only: eqstr
       use pepper_inc_dsk
       use pepper_inc_gf
@@ -91341,7 +91265,7 @@ contains
 
             call latrec ( r, lonlat(1,i), lonlat(2,i), x )
 
-            call vminus ( x, raydir )
+            raydir = -x
 !
 !           Find the ray-surface intercept for the ray emanating
 !           from X and pointing in the -X direction, where the
@@ -93114,10 +93038,9 @@ contains
 !!
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vzero
       use pepper_strings, only: eqstr
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -93326,7 +93249,7 @@ contains
 !
 !     Check for a zero ray direction vector.
 !
-      if ( vzero(dvec) ) then
+      if ( all(dvec == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input ray direction was the zero vector; this ' &
          //            'vector must be non-zero.'                      )
@@ -95017,11 +94940,10 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: touchd
-      use pepper_math, only: mtxv, mxv, vdist, vequ, vminus, vnorm, vsub
+      use pepper_math, only: mtxv, mxv, vdist, vnorm
       use pepper_strings, only: eqstr
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -95417,7 +95339,7 @@ contains
 !     Negate the target's position to obtain the position of the
 !     observer relative to the target.
 !
-      call vminus ( tpos, obspos )
+      obspos = -tpos
 
 !
 !     Make a first estimate of the target epoch.
@@ -95480,7 +95402,7 @@ contains
 !
 !           Generate the ray direction; find the DSK intercept.
 !
-            call vsub ( spoint, obspos, dvec )
+            dvec = spoint - obspos
 
             call zzsbfxr ( ctx, trgcde, nsurf,  srflst, trgepc, &
                            fixfid, obspos, dvec,   spoint, fnd )
@@ -95507,7 +95429,7 @@ contains
 !           Re-compute the altitude using the intercept on the DSK
 !           surface.
 !
-            call vsub ( spoint, obspos, srfvec )
+            srfvec = spoint - obspos
 
             alt = vnorm( srfvec )
 
@@ -95545,7 +95467,7 @@ contains
 !
 !           Generate the ray direction; find the DSK intercept.
 !
-            call vminus ( obspos, dvec )
+            dvec = -obspos
 
             call zzsbfxr ( ctx, trgcde, nsurf,  srflst, trgepc, &
                            fixfid, obspos, dvec,   spoint, fnd )
@@ -95572,7 +95494,7 @@ contains
 !           Re-compute the altitude using the intercept on the DSK
 !           surface.
 !
-            call vsub ( spoint, obspos, srfvec )
+            srfvec = spoint - obspos
 
             alt = vnorm( srfvec )
 
@@ -95598,7 +95520,7 @@ contains
 !        the vector OBSPOS. SPOINT was set immediately above. The
 !        only output left to compute is SRFVEC.
 !
-         call vsub ( spoint, obspos, srfvec )
+         srfvec = spoint - obspos
 
          return
 
@@ -95658,7 +95580,7 @@ contains
 !        Convert this vector from the J2000 frame to the target
 !        frame at TRGEPC.
 !
-         call vsub   ( ssbost,  ssbtst, j2pos         )
+         j2pos = ssbost(1:3) - ssbtst(1:3)
          call pxform ( ctx, 'J2000', fixref, trgepc, xform )
 
          if ( ctx%failed() ) return
@@ -95685,7 +95607,7 @@ contains
 !           relative to the target body-fixed frame at TRGEPC. We must
 !           perform our corrections in an inertial frame.
 !
-            call vsub ( spoint, obspos, subvec )
+            subvec = spoint - obspos
 
             call mtxv ( xform,  subvec, subvj2 )
 
@@ -95696,7 +95618,7 @@ contains
             end if
 
             call mxv  ( xform,  corvj2, corpos )
-            call vsub ( corpos, subvec, stloff )
+            stloff = corpos - subvec
 
 !
 !           In principle, we want to shift the target body position
@@ -95705,8 +95627,8 @@ contains
 !           location relative to the target body's center by
 !           subtracting off STLOFF.
 !
-            call vsub ( obspos, stloff, vtemp  )
-            call vequ ( vtemp,          obspos )
+            vtemp = obspos - stloff
+            obspos = vtemp
 
          end if
 
@@ -95736,7 +95658,7 @@ contains
 !
 !              Generate the ray direction; find the DSK intercept.
 !
-               call vsub ( spoint, obspos, dvec )
+               dvec = spoint - obspos
 
                call zzsbfxr ( ctx, trgcde, nsurf,  srflst, trgepc, &
                               fixfid, obspos, dvec,   spoint, fnd )
@@ -95764,7 +95686,7 @@ contains
 !              Re-compute the altitude using the intercept on the
 !              DSK surface.
 !
-               call vsub ( spoint, obspos, srfvec )
+               srfvec = spoint - obspos
 
                alt = vnorm( srfvec )
 
@@ -95777,7 +95699,7 @@ contains
 !
 !           Generate the ray direction.
 !
-            call vminus ( obspos, dvec )
+            dvec = -obspos
 !
 !           Locate the surface intercept of the ray from the
 !           observer to the target center.
@@ -95832,7 +95754,7 @@ contains
 !              Compute the altitude using the intercept on the DSK
 !              surface.
 !
-               call vsub ( spoint, obspos, srfvec )
+               srfvec = spoint - obspos
 
                alt = vnorm( srfvec )
 
@@ -95863,8 +95785,8 @@ contains
 !        the problem, because that variable can be optimized out of
 !        existence.
 !
-         ltdiff  =   abs( touchd(lt     - prevlt) )
-         etdiff  =   abs( touchd(trgepc - prevet) )
+         ltdiff  =   abs( (lt     - prevlt) )
+         etdiff  =   abs( (trgepc - prevet) )
          prevlt  =   lt
          prevet  =   trgepc
          i       =   i + 1
@@ -95875,7 +95797,7 @@ contains
 !     SPOINT, TRGEPC, and OBSPOS have been set at this point. Compute
 !     SRFVEC.
 !
-      call vsub ( spoint, obspos, srfvec )
+      srfvec = spoint - obspos
 
       return
       end associate
@@ -97002,11 +96924,10 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: touchd
-      use pepper_math, only: mxv, vadd, vdist, vequ, vminus, vsub
+      use pepper_math, only: mxv, vdist
       use pepper_strings, only: eqstr
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -97407,7 +97328,7 @@ contains
 !     Negate the target's position to obtain the position of the
 !     observer relative to the target.
 !
-      call vminus ( tpos, obspos )
+      obspos = -tpos
 
 !
 !     Make a first estimate of the target epoch.
@@ -97462,7 +97383,7 @@ contains
 !
 !           Generate the ray direction; find the DSK intercept.
 !
-            call vsub ( spoint, spos, dvec )
+            dvec = spoint - spos
 
             call zzsbfxr ( ctx, trgcde, nsurf, srflst, trgepc, &
                            fixfid, spos,  dvec,   spoint, fnd )
@@ -97494,7 +97415,7 @@ contains
 !
 !        Generate the ray direction.
 !
-         call vminus ( spos, dvec )
+         dvec = -spos
 
          if ( shape == ellshp ) then
 !
@@ -97565,7 +97486,7 @@ contains
 !
          trgepc = et
 
-         call vsub ( spoint, obspos, srfvec )
+         srfvec = spoint - obspos
 
          return
 
@@ -97631,7 +97552,7 @@ contains
 !        Convert this vector from the J2000 frame to the target
 !        frame at TRGEPC.
 !
-         call vsub   ( ssbost,  ssbtst, j2pos         )
+         j2pos = ssbost(1:3) - ssbtst(1:3)
          call pxform ( ctx, 'J2000', fixref, trgepc, xform )
 
          if ( ctx%failed() ) return
@@ -97661,7 +97582,7 @@ contains
 !
 !        Create the target-center to sun vector.
 !
-         call vadd ( sunst, spoint, spos )
+         spos = sunst(1:3) + spoint
 
          if ( ctx%failed() ) return
 
@@ -97690,7 +97611,7 @@ contains
 !              Locate the surface intercept of the ray from the
 !              Sun to the target center.
 !
-               call vsub ( spoint, spos, dvec )
+               dvec = spoint - spos
 
                call zzsbfxr ( ctx, trgcde, nsurf, srflst, trgepc, &
                               fixfid, spos,  dvec,   spoint, fnd )
@@ -97722,7 +97643,7 @@ contains
 !
 !           Generate the ray direction.
 !
-            call vminus ( spos, dvec )
+            dvec = -spos
 
             if ( shape == ellshp ) then
 !
@@ -97801,8 +97722,8 @@ contains
 !        the problem, because that variable can be optimized out of
 !        existence.
 !
-         ltdiff  =   abs( touchd(lt     - prevlt) )
-         etdiff  =   abs( touchd(trgepc - prevet) )
+         ltdiff  =   abs( (lt     - prevlt) )
+         etdiff  =   abs( (trgepc - prevet) )
          prevlt  =   lt
          prevet  =   trgepc
          i       =   i + 1
@@ -97816,7 +97737,7 @@ contains
 !        Convert this vector from the J2000 frame to the target
 !        frame at TRGEPC.
 !
-         call vsub   ( ssbost,  ssbtst, j2pos         )
+         j2pos = ssbost(1:3) - ssbtst(1:3)
          call pxform ( ctx, 'J2000', fixref, trgepc, xform )
 
          if ( ctx%failed() ) return
@@ -97839,11 +97760,11 @@ contains
                        'TARGET', abcorr, obsrvr, sslrst, sslrlt )
          if ( ctx%failed() ) return
 
-         call vequ ( sslrst, srfvec )
+         srfvec = sslrst(1:3)
 
       else
 
-         call vsub ( spoint, obspos, srfvec )
+         srfvec = spoint - obspos
 
       end if
 
@@ -98199,7 +98120,7 @@ contains
 !!     initialize tangent ray finding state function
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vcrss, vequ, vhat, vhatip, vzero
+      use pepper_math, only: vcrss, vhat, vhatip
       use pepper_inc_zzdsk
       implicit none
       real(wp)              apex   ( 3 )
@@ -98217,7 +98138,7 @@ contains
 !
 !     Check for zero vectors on input.
 !
-      if ( vzero(axis) ) then
+      if ( all(axis == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input axis vector is the zero vector.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                     )
@@ -98225,7 +98146,7 @@ contains
 
       end if
 
-      if ( vzero(plnvec) ) then
+      if ( all(plnvec == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input reference vector is the zero vector.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                          )
@@ -98276,7 +98197,7 @@ contains
 !
       call vcrss ( axis, plnvec, svnrml )
 
-      if ( vzero(svnrml) ) then
+      if ( all(svnrml == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input reference vector and axis vector ' &
          //            'are linearly dependent.'                 )
@@ -98297,7 +98218,7 @@ contains
 !     will be used, after addition of an offset, in the
 !     terminator computations. Save the evaluation epoch.
 !
-      call vequ ( axis, svvrtx )
+      svvrtx = axis
       call vhat ( axis, svaxis )
 
       svet = et
@@ -98477,7 +98398,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
-      use pepper_math, only: vadd, vrotv, vsclip
+      use pepper_math, only: vrotv
       use pepper_inc_zzdsk
       implicit none
       real(wp)              apex   ( 3 )
@@ -98519,8 +98440,8 @@ contains
 !        has unit length.
 !
          call vrotv  ( svaxis, svnrml, angle-(pi/2), vrtoff )
-         call vsclip ( svirad, vrtoff )
-         call vadd   ( svvrtx, vrtoff, apex )
+         vrtoff = svirad*vrtoff
+         apex = svvrtx + vrtoff
 
          call zzraysfx ( ctx, apex, raydir, svet, point, ocultd )
 
@@ -98541,9 +98462,9 @@ contains
 !
          call vrotv  ( svaxis, svnrml, (1.5_wp*pi)-angle, vrtoff )
 
-         call vsclip ( svirad, vrtoff )
+         vrtoff = svirad*vrtoff
 
-         call vadd   ( svvrtx, vrtoff, apex )
+         apex = svvrtx + vrtoff
 
          call zzraysfx ( ctx, apex, raydir, svet, point, ocultd )
 
@@ -98596,7 +98517,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
-      use pepper_math, only: vequ, vnorm, vrotv
+      use pepper_math, only: vnorm, vrotv
       use pepper_inc_zzdsk
       implicit none
 
@@ -98879,7 +98800,7 @@ contains
 
          call vrotv ( plnvec, axis, pi, refvec )
       else
-         call vequ  ( plnvec,             refvec )
+         refvec = plnvec
       end if
 
 !
@@ -99080,7 +99001,7 @@ contains
 
                result(i-1) = result(i)
 
-               call vequ ( points(1,i), points(1,i-1) )
+               points(1:3,i-1) = points(1:3,i)
 
             end do
 
@@ -101140,11 +101061,10 @@ contains
        use pepper_containers, only: grow, grow_cell
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: cleari, touchd
-      use pepper_math, only: el2cgv, mtxv, mxv, ucrss, vadd, vcrss, vdot, vequ, vlcom, vminus, vnorm, vrotv, vsclip, vsub, vzero
+      use pepper_math, only: el2cgv, mtxv, mxv, ucrss, vcrss, vdot, vnorm, vrotv
       use pepper_strings, only: eqstr, ljucrs
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -101559,7 +101479,7 @@ contains
 !
 !     Check the reference vector.
 !
-      if ( vzero(refvec) ) then
+      if ( all(refvec == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The reference vector was the zero vector.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                         )
@@ -101740,7 +101660,7 @@ contains
 !
 !     Find limb points on the target.
 !
-      call cleari ( ncuts,  npts   )
+      npts(1:ncuts) = 0
 !
 !     PEPPER: the window of transitions in a cutting half-plane and the
 !     buffer of points grow as ZZTANGNT finds points (SPICELIB: 2000
@@ -101758,7 +101678,7 @@ contains
 
       if ( ctx%failed() ) return
 
-      if ( vzero(pos) ) then
+      if ( all(pos == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The distance between the observer and ' &
          //            'target at ET # is zero.'               )
@@ -101787,7 +101707,7 @@ contains
 !        Compute the central axis, which is also the common ray vertex.
 !        The axis points from the target to the observer.
 !
-         call vminus ( pos, axis )
+         axis = -pos
 
 !
 !        Make sure the reference vector and axis are linearly
@@ -101795,7 +101715,7 @@ contains
 !
          call vcrss ( axis, refvec, cp )
 
-         if ( vzero(cp) ) then
+         if ( all(cp == 0.0_wp) ) then
 
             call ctx%setmsg ( 'Input reference vector and observer-target ' &
             //            'vector are linearly dependent.'             )
@@ -101826,7 +101746,7 @@ contains
 !
             if ( vdot( enorml, axis ) < 0.0_wp ) then
 
-               call vsclip ( -1.0_wp, enorml )
+               enorml = (-1.0_wp)*enorml
 
             end if
 
@@ -101906,7 +101826,7 @@ contains
 !
                   call ucrss ( cutnml, enorml, edir )
 
-                  if ( vzero(edir) ) then
+                  if ( all(edir == 0.0_wp) ) then
 
                      call ctx%setmsg ( 'Vector defining cutting half plane ' &
                      //            'and ellipsoid limb normal vector ' &
@@ -101923,8 +101843,8 @@ contains
 !                 perform this computation, since the surface may be
 !                 invisible from the interior of the target.
 !
-                  call vlcom ( 1.0_wp, center, 3.0_wp*maxrad, edir, rayvtx )
-                  call vminus( edir, raydir )
+                  rayvtx = 1.0_wp*center + (3.0_wp*maxrad)*edir
+                  raydir = -edir
 
                   call zzraysfx ( ctx, rayvtx,      raydir, trgepc, &
                                   pntbuf(1,1), fnd             )
@@ -101959,7 +101879,7 @@ contains
 !
                call ucrss ( cutnml, enorml, edir )
 
-               if ( vzero(edir) ) then
+               if ( all(edir == 0.0_wp) ) then
 
                   call ctx%setmsg ( 'Vector defining cutting half plane ' &
                   //            'and ellipsoid limb normal vector ' &
@@ -102028,8 +101948,8 @@ contains
 !
             do j = 1, npts(i)
 
-               call vequ ( pntbuf(1,j),       points(1,to) )
-               call vsub ( pntbuf(1,j), axis, tangts(1,to) )
+               points(1:3,to) = pntbuf(1:3,j)
+               tangts(1:3,to) = pntbuf(1:3,j) - axis
 
                epochs(to) = trgepc
 
@@ -102110,7 +102030,7 @@ contains
 !                 LT was set either prior to this loop or
 !                 during the previous loop iteration.
 !
-                  epoch  =  touchd( et + s*lt )
+                  epoch  =  (et + s*lt)
 
                   call spkgps ( ctx, trgcde, epoch,  iref, &
                                 ssb,    ssbtrg, ssblt )
@@ -102120,7 +102040,7 @@ contains
 !                 Compute the position of the target center relative to
 !                 the observer in the inertial frame.
 !
-                  call vsub ( ssbtrg, stobs, ptarg )
+                  ptarg = ssbtrg - stobs(1:3)
 
                   if ( usestl ) then
 !
@@ -102144,18 +102064,18 @@ contains
 !                       We apply the correction found for the previous
 !                       limb point estimate.
 !
-                        call vadd ( ptarg, stloff, stlpos )
+                        stlpos = ptarg + stloff
 
                      end if
 !
 !                    Set CORTRG with the vector corrected for
 !                    stellar aberration.
 !
-                     call vequ ( stlpos, cortrg )
+                     cortrg = stlpos
 
                   else
 
-                     call vequ ( ptarg,  cortrg )
+                     cortrg = ptarg
 
                   end if
 !
@@ -102173,7 +102093,7 @@ contains
                   if ( ctx%failed() ) return
 
                   call mxv    ( xform,  cortrg, tmpvec )
-                  call vminus ( tmpvec,         axis   )
+                  axis = -tmpvec
 !
 !                 Rotate the reference vector about the axis by
 !                 the current angle to obtain the plane vector.
@@ -102199,7 +102119,7 @@ contains
 !
                   if ( vdot( enorml, axis ) < 0.0_wp ) then
 
-                     call vsclip ( -1.0_wp, enorml )
+                     enorml = (-1.0_wp)*enorml
 
                   end if
 
@@ -102215,7 +102135,7 @@ contains
 !
                   call ucrss ( cutnml, enorml, edir )
 
-                  if ( vzero(edir) ) then
+                  if ( all(edir == 0.0_wp) ) then
 
                      call ctx%setmsg ( 'Vector defining cutting half plane ' &
                      //            'and ellipsoid limb normal vector ' &
@@ -102256,7 +102176,7 @@ contains
 !                 corrected limb point.
 !
                   call mtxv ( xform,  epoint, ipoint )
-                  call vadd ( ipoint, ptarg,  isrfvc )
+                  isrfvc = ipoint + ptarg
 
                   if ( usestl ) then
 !
@@ -102274,14 +102194,14 @@ contains
                         call stelab ( ctx, isrfvc, stobs(4), stlpos )
                      end if
 
-                     call vsub ( stlpos, isrfvc, stloff )
+                     stloff = stlpos - isrfvc
 
                   end if
 !
 !                 Compute the light time to the limb point.
 !
                   prvlt = lt
-                  lt    = touchd(  vnorm(isrfvc) / clight  )
+                  lt    = (vnorm(isrfvc) / clight)
 
 !
 !                 LTERR is the magnitude of the change between the
@@ -102289,8 +102209,7 @@ contains
 !                 estimate, relative to the previous light time
 !                 corrected epoch.
 !
-                  lterr = touchd(    abs( lt  - prvlt      ) &
-                                   / max( 1.0_wp, abs(epoch) )  )
+                  lterr = (abs( lt  - prvlt      )  / max( 1.0_wp, abs(epoch) ))
 
                   j     = j + 1
 
@@ -102304,7 +102223,7 @@ contains
 !              Compute the axis in the body-fixed frame.
 !
                call mxv    ( xform,  cortrg, tmpvec )
-               call vminus ( tmpvec, axis )
+               axis = -tmpvec
 
                epoch = et + s*lt
 
@@ -102319,7 +102238,7 @@ contains
 !              Compute the central axis, which is the common ray
 !              vertex.
 !
-               call vminus ( pos, axis )
+               axis = -pos
 
 !
 !              The target epoch matches the observer epoch.
@@ -102354,7 +102273,7 @@ contains
 !
                if ( vdot( enorml, axis ) < 0.0_wp ) then
 
-                  call vsclip ( -1.0_wp, enorml )
+                  enorml = (-1.0_wp)*enorml
 
                end if
 
@@ -102370,7 +102289,7 @@ contains
 !
                call ucrss ( cutnml, enorml, edir )
 
-               if ( vzero(edir) ) then
+               if ( all(edir == 0.0_wp) ) then
 
                   call ctx%setmsg ( 'Vector defining cutting half plane ' &
                   //            'and ellipsoid limb normal vector ' &
@@ -102410,7 +102329,7 @@ contains
 !           case. In the DSK case, we'll update the values when we
 !           know them.
 !
-            call vequ ( epoint, pntbuf(1,1) )
+            pntbuf(1:3,1) = epoint
 
             npts(i) = 1
 
@@ -102471,8 +102390,8 @@ contains
 !
             do j = 1, npts(i)
 
-               call vequ ( pntbuf(1,j),       points(1,to) )
-               call vsub ( pntbuf(1,j), axis, tangts(1,to) )
+               points(1:3,to) = pntbuf(1:3,j)
+               tangts(1:3,to) = pntbuf(1:3,j) - axis
 
                epochs(to) = epoch
 
@@ -104334,11 +104253,10 @@ contains
        use pepper_containers, only: grow, grow_cell
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: cleari, touchd
-      use pepper_math, only: mtxv, mxv, vadd, vcrss, vequ, vhat, vminus, vnorm, vrotv, vscl, vsub, vzero
+      use pepper_math, only: mtxv, mxv, vcrss, vhat, vnorm, vrotv
       use pepper_strings, only: eqstr, ljucrs
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -104797,7 +104715,7 @@ contains
 !
 !     Check the reference vector.
 !
-      if ( vzero(refvec) ) then
+      if ( all(refvec == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The reference vector was the zero vector.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                         )
@@ -104970,7 +104888,7 @@ contains
 !
 !     Find terminator points on the target.
 !
-      call cleari ( ncuts,  npts   )
+      npts(1:ncuts) = 0
 !
 !     PEPPER: the window of transitions in a cutting half-plane and the
 !     buffer of points grow as ZZTANGNT finds points (SPICELIB: 2000
@@ -104988,7 +104906,7 @@ contains
 
       if ( ctx%failed() ) return
 
-      if ( vzero(trgpos) ) then
+      if ( all(trgpos == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The distance between the observer and ' &
          //            'target at ET # is zero.'               )
@@ -105028,7 +104946,7 @@ contains
 !
          call vcrss ( axis, refvec, cp )
 
-         if ( vzero(cp) ) then
+         if ( all(cp == 0.0_wp) ) then
 
             call ctx%setmsg ( 'Input reference vector and illumination ' &
             //            'source-target vector are linearly ' &
@@ -105120,8 +105038,8 @@ contains
 !                 to perform this computation, since the surface may be
 !                 invisible from the interior of the target.
 !
-                  call vscl  ( 3.0_wp*maxrad, edir, rayvtx )
-                  call vminus( edir, raydir )
+                  rayvtx = (3.0_wp*maxrad)*edir
+                  raydir = -edir
 
                   call zzsudski ( ctx, trgcde, nsurf, srflst, fxfcde )
 
@@ -105201,8 +105119,8 @@ contains
 !
             do j = 1, npts(i)
 
-               call vequ ( pntbuf(1,j),         points(1,to) )
-               call vadd ( pntbuf(1,j), trgpos, trmvcs(1,to) )
+               points(1:3,to) = pntbuf(1:3,j)
+               trmvcs(1:3,to) = pntbuf(1:3,j) + trgpos
 
                epochs( to ) = trgepc
 
@@ -105288,7 +105206,7 @@ contains
 !                 Compute the position of the target center relative to
 !                 the observer in the inertial frame.
 !
-                  call vsub ( ssbtrg, stobs, ptarg )
+                  ptarg = ssbtrg - stobs(1:3)
 
 !
 !                 Find the position of the illumination source relative
@@ -105328,13 +105246,13 @@ contains
                   if ( ctx%failed() ) return
 
                   call mxv  ( xform, ptarg, trgpos )
-                  call vadd ( pntbuf(1,1),  trgpos, srfvec )
+                  srfvec = pntbuf(1:3,1) + trgpos
 
 !
 !                 Compute the light time to the terminator point.
 !
                   prvlt = lt
-                  lt    = touchd(  vnorm(srfvec) / clight  )
+                  lt    = (vnorm(srfvec) / clight)
 
 !
 !                 LTERR is the magnitude of the change between the
@@ -105342,8 +105260,7 @@ contains
 !                 estimate, relative to the previous light time
 !                 corrected epoch.
 !
-                  lterr = touchd(    abs( lt  - prvlt      ) &
-                                   / max( 1.0_wp, abs(epoch) )  )
+                  lterr = (abs( lt  - prvlt      )  / max( 1.0_wp, abs(epoch) ))
                   j     = j + 1
 
                end do
@@ -105367,7 +105284,7 @@ contains
 !              Compute the position of the target center relative to
 !              the observer in the inertial frame.
 !
-               call vsub ( ssbtrg, stobs, ptarg )
+               ptarg = ssbtrg - stobs(1:3)
 !
 !              Transform the observer-target position to the body-fixed
 !              frame at EPOCH.
@@ -105386,17 +105303,17 @@ contains
 !                 stellar aberration correction.
 !
                   call mtxv ( xform,  pntbuf(1,1), tmpvec )
-                  call vadd ( tmpvec, ptarg,       itrmvc )
+                  itrmvc = tmpvec + ptarg
 
                   call stelab ( ctx, itrmvc, stobs(4),  tmpvec )
-                  call vsub   ( tmpvec, itrmvc,    icorvc )
+                  icorvc = tmpvec - itrmvc
 
                   call mxv  ( xform, icorvc, stloff )
 
                end if
 
                call mxv  ( xform,  ptarg, tmpvec )
-               call vequ ( tmpvec,        trgpos )
+               trgpos = tmpvec
 
 !
 !              Find the apparent position of the illumination source
@@ -105506,8 +105423,8 @@ contains
 !
             do j = 1, npts(i)
 
-               call vequ ( pntbuf(1,j),         points(1,to) )
-               call vadd ( pntbuf(1,j), trgpos, trmvcs(1,to) )
+               points(1:3,to) = pntbuf(1:3,j)
+               trmvcs(1:3,to) = pntbuf(1:3,j) + trgpos
 
                if ( usestl ) then
 !
@@ -105515,8 +105432,8 @@ contains
 !                 half-plane to each terminator vector in the output
 !                 buffer.
 !
-                  call vadd ( trmvcs(1,to), stloff, tmpvec )
-                  call vequ ( tmpvec,               trmvcs(1,to) )
+                  tmpvec = trmvcs(:,to) + stloff
+                  trmvcs(:,to) = tmpvec
 
                end if
 

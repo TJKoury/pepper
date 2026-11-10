@@ -267,8 +267,7 @@ contains
 !!     Make the initial assignments to the saved character array.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       implicit none
       integer(ip), parameter :: idxsys = 1
       integer(ip), parameter :: idxos = idxsys + 1
@@ -352,14 +351,14 @@ contains
 !     values.
 !
       call ucase ( key,    keycpy )
-      call ljust ( keycpy, keycpy )
+      keycpy = adjustl(keycpy)
 
 !
 !     Find out which key we were given.  In the event that one of the
 !     KEYVALs (or some equivalent string) was not passed in, ISRCHC
 !     returns a value of zero.
 !
-      index = isrchc ( keycpy, nattr, keyval )
+      index = findloc(keyval(1:nattr), keycpy, dim=1)
       value = attcpy ( index )
 
       return
@@ -1409,7 +1408,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: nextwd, ucase
       use pepper_inc_zzddhman
       implicit none
@@ -1536,7 +1534,7 @@ contains
       call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
       call ucase    ( tmpstr,        tmpstr )
 
-      natbff = isrchc ( tmpstr, numbff, strbff )
+      natbff = findloc(strbff(1:numbff), tmpstr, dim=1)
 
       if ( natbff == 0 ) then
 
@@ -1580,7 +1578,7 @@ contains
 !
          if ( .not. done ) then
 
-            supbff(i) = isrchc ( tmpstr, numbff, strbff )
+            supbff(i) = findloc(strbff(1:numbff), tmpstr, dim=1)
 
 !
 !           Check to see if the binary file format listed
@@ -1895,8 +1893,7 @@ contains
 !!     Left justify and convert the input to upper case.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: locsiz = 8
@@ -1911,10 +1908,10 @@ contains
                   stramh => ctx%zzddhgsd%stramh, &
                   strarc => ctx%zzddhgsd%strarc, &
                   strbff => ctx%zzddhgsd%strbff )
-      call ljust ( class,  tmpstr )
+      tmpstr = adjustl(class)
       call ucase ( tmpstr, tmpstr )
 
-      clsid = isrchc ( tmpstr, numcls, clslst )
+      clsid = findloc(clslst, tmpstr, dim=1)
 
 !
 !     Initialize LABEL to the default response.
@@ -2084,7 +2081,6 @@ contains
 !!     Set default output value to zero.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: idlen = 8
@@ -2190,7 +2186,7 @@ contains
 !              is not supported, simply get out (note that the default
 !              return value was set to zero at the start.)
 !
-               supidx = isrchi ( bff, numsup, supbff )
+               supidx = findloc(supbff(1:numsup), bff, dim=1)
 
                if ( supidx == 0 ) return
 
@@ -2604,7 +2600,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: pos, ucase
       use pepper_inc_zzddhman
       use pepper_inc_zzftprms
@@ -2738,7 +2733,7 @@ contains
 !
 !     Now locate FILARC in the STRARC array.
 !
-      tstarc = isrchc ( filarc, numarc, strarc )
+      tstarc = findloc(strarc, filarc, dim=1)
 
 !
 !     If FILARC was not found, signal an appropriate error.
@@ -2822,7 +2817,7 @@ contains
 !
 !        See if we can find BFFIDW in the STRBFF list.
 !
-         bff = isrchc ( bffidw, numbff + 1, strbff )
+         bff = findloc(strbff(1:numbff + 1), bffidw, dim=1)
 
 !
 !        Check to see if BFF is 0, if it is, signal an error since
@@ -2858,7 +2853,7 @@ contains
          call zzplatfm ( ctx, 'FILE_FORMAT', bffidw )
          call ucase    ( bffidw,        bffidw )
 
-         bff = isrchc ( bffidw, numbff, strbff )
+         bff = findloc(strbff(1:numbff), bffidw, dim=1)
 
          if ( bff == 0 ) then
 
@@ -3646,7 +3641,6 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_constants, only: intmin
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
@@ -3692,7 +3686,7 @@ contains
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
          call ucase    ( tmpstr,        tmpstr )
 
-         natbff = isrchc ( tmpstr, numbff, strbff )
+         natbff = findloc(strbff, tmpstr, dim=1)
 
          if ( natbff == 0 ) then
 
@@ -4552,7 +4546,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_strings, only: rtrim
       use pepper_inc_zzddhman
       implicit none
@@ -4835,7 +4828,7 @@ contains
 !        Since the file is opened, see if we can find its unit
 !        in the unit table.
 !
-         uindex = isrchi ( unit, nut, utlun )
+         uindex = findloc(utlun(1:nut), unit, dim=1)
 
 !
 !        When UINDEX is 0, the file is opened, but not by
@@ -5849,7 +5842,6 @@ contains
 !!     This routine checks in on the first pass only.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
@@ -5878,7 +5870,7 @@ contains
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
          call ucase    ( tmpstr,        tmpstr )
 
-         savbff = isrchc ( tmpstr, numbff, strbff )
+         savbff = findloc(strbff, tmpstr, dim=1)
 
          if ( savbff == 0 ) then
 
@@ -6336,8 +6328,8 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchi, isrchc, isrchi
-      use pepper_strings, only: ljust, repmc, rtrim, ucase
+      use pepper_arrays, only: bsrchi
+      use pepper_strings, only: repmc, rtrim, ucase
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: scrlen = 4096  !! PEPPER: room for the OS's name of a scratch file
@@ -6438,7 +6430,7 @@ contains
 !
       tmpstr = method
       call ucase ( tmpstr, tmpstr )
-      accmet = isrchc ( tmpstr, numamh, stramh )
+      accmet = findloc(stramh, tmpstr, dim=1)
 
 !
 !     Check if the code was located.
@@ -6465,7 +6457,7 @@ contains
 !
       tmpstr = arch
       call ucase ( tmpstr, tmpstr )
-      filarc = isrchc ( tmpstr, numarc, strarc )
+      filarc = findloc(strarc, tmpstr, dim=1)
 
 !
 !     Check if the code was located.
@@ -6926,7 +6918,7 @@ contains
 !
             if ( accmet == read ) then
 
-               supidx = isrchi ( bff, numsup, supbff )
+               supidx = findloc(supbff(1:numsup), bff, dim=1)
 
                if ( supidx == 0 ) then
 
@@ -7212,7 +7204,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchi, isrchc, isrchi
+      use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
@@ -7294,7 +7286,7 @@ contains
 !
       tmpstr = arch
       call ucase ( tmpstr, tmpstr )
-      filarc = isrchc ( tmpstr, numarc, strarc )
+      filarc = findloc(strarc, tmpstr, dim=1)
 
 !
 !     Check to see if FILARC matches the code stored in the FTARC
@@ -7348,7 +7340,7 @@ contains
 !
 !     Locate HANDLE in the unit table.
 !
-      uindex = isrchi ( handle, nut, uthan )
+      uindex = findloc(uthan(1:nut), handle, dim=1)
 
       if ( uindex /= 0 ) then
 
@@ -7388,7 +7380,7 @@ contains
 !
          if ( nft < nut ) then
 
-            uindex = isrchi ( 0, nut, uthan )
+            uindex = findloc(uthan(1:nut), 0, dim=1)
 
 !
 !           Now check to see if we located a zero valued handle.
@@ -7547,7 +7539,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchi, isrchc, isrchi
+      use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
@@ -7642,7 +7634,7 @@ contains
 !
       tmpstr = arch
       call ucase ( tmpstr, tmpstr )
-      filarc = isrchc ( tmpstr, numarc, strarc )
+      filarc = findloc(strarc, tmpstr, dim=1)
 
 !
 !     Check to see if FILARC matches the code stored in the FTARC
@@ -7674,7 +7666,7 @@ contains
 !     Now check to see if the handle is already present in the
 !     unit table.
 !
-      uindex = isrchi ( handle, nut, uthan )
+      uindex = findloc(uthan(1:nut), handle, dim=1)
 
 !
 !     Check to see if we didn't locate the HANDLE in the table.
@@ -7908,7 +7900,7 @@ contains
 !!     Standard SPICE discovery error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchi, isrchc, isrchi
+      use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
@@ -7980,7 +7972,7 @@ contains
 !
 !     Look up the handle in the unit table.
 !
-      uindex = isrchi ( handle, nut, uthan )
+      uindex = findloc(uthan(1:nut), handle, dim=1)
 
 !
 !     Now check the results of the lookup.  If HANDLE was not found
@@ -8022,7 +8014,7 @@ contains
 !
       tmpstr = arch
       call ucase ( tmpstr, tmpstr )
-      filarc = isrchc ( tmpstr, numarc, strarc )
+      filarc = findloc(strarc, tmpstr, dim=1)
 
 !
 !     Check to see if FILARC matches the code stored in the FTARC
@@ -8516,7 +8508,6 @@ contains
 !!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ljust
       use pepper_inc_zzddhman
       implicit none
       character(:), allocatable :: locfnm
@@ -8695,7 +8686,6 @@ contains
 !!     Do the initialization tasks.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_zzddhman
       implicit none
       logical               return
@@ -8756,7 +8746,7 @@ contains
 !
 !     Look up the unit in the table.
 !
-      uindex = isrchi ( unit, nut, utlun )
+      uindex = findloc(utlun(1:nut), unit, dim=1)
 
       if ( uindex == 0 ) then
          handle = 0

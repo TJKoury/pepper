@@ -193,7 +193,7 @@ contains
 !
 !     Find the last non-blank character of the input string.
 !
-      last   = lastnb ( instr )
+      last   = len_trim(instr)
 
 !
 !     Get the numeric representation of ASCIIB and ASCIIE.
@@ -663,7 +663,7 @@ contains
 !     string.
 !
       l  =  len    ( string )
-      i  =  frstnb ( string )
+      i  =  verify(string, ' ')
 
 !
 !     If there isn't a non-blank character, this isn't an
@@ -1071,7 +1071,7 @@ contains
 !     first non-blank character.
 !
       l     = len    ( string )
-      i     = frstnb ( string )
+      i     = verify(string, ' ')
 
 !
 !     If there isn't a non-blank character, this isn't an
@@ -2555,6 +2555,9 @@ contains
       !>
       !> The function returns the index of the first non-blank character in
       !> STRING.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (VERIFY instead).
       elemental integer(ip) function frstnb ( string )
 !! ## Abstract
 !!
@@ -2662,32 +2665,15 @@ contains
 !
 !     Local parameters
 !
-      integer(ip)           ispace
-      parameter           ( ispace = 32 )
 
 !
 !     Local variables
 !
-      integer(ip)      i
 
 !
 !     Just like it says in the header.
 !
-      if ( string == ' ' ) then
-         frstnb = 0
-
-      else
-         do i = 1, len ( string )
-
-            if ( ichar(string(i:i)) /= ispace ) then
-               frstnb = i
-               return
-            end if
-
-         end do
-      end if
-
-      return
+      frstnb = verify(string, ' ')
       end function frstnb
 
 !$Procedure FRSTNP ( First non-printable character )
@@ -3054,7 +3040,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
       implicit none
 
       character(*), intent(in) :: keywd  !! Word that marks the beginning of text of interest.
@@ -3291,7 +3276,7 @@ contains
 !     terminator.
 !
       if ( e /= 0 ) then
-         delims = isrchc( wordsq(b:e), nterms, terms )
+         delims = findloc(terms(1:nterms), wordsq(b:e), dim=1)
       end if
 
 !
@@ -3329,7 +3314,7 @@ contains
          call fndnwd ( wordsq, start, b, e )
 
          if ( e /= 0 ) then
-            delims = isrchc ( wordsq(b:e), nterms, terms )
+            delims = findloc(terms(1:nterms), wordsq(b:e), dim=1)
          end if
 
       end do
@@ -3354,6 +3339,9 @@ contains
       !>
       !> The function returns the index of the last non-blank character in
       !> STRING.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (LEN_TRIM instead).
       elemental integer(ip) function  lastnb ( string )
 !! ## Abstract
 !!
@@ -3465,32 +3453,15 @@ contains
 !
 !     Local parameters
 !
-      integer(ip)           ispace
-      parameter           ( ispace = 32 )
 
 !
 !     Local variables
 !
-      integer(ip)      i
 
 !
 !     Just like it says in the header.
 !
-      if ( string == ' ' ) then
-         lastnb = 0
-
-      else
-         do i = len (string), 1, -1
-
-            if ( ichar(string(i:i)) /= ispace ) then
-               lastnb = i
-               return
-            end if
-
-         end do
-      end if
-
-      return
+      lastnb = len_trim(string)
       end function lastnb
 
 !$Procedure LASTPC ( Last printable character )
@@ -3839,8 +3810,8 @@ contains
                   lpos         = lpos + dlen
 
                else
-                  first = frstnb ( items(i) )
-                  last  = lastnb ( items(i) )
+                  first = verify(items(i), ' ')
+                  last  = len_trim(items(i))
                   ilen  = last - first + 1
 
                   list(lpos: ) = items(i)(first:last)
@@ -4224,6 +4195,9 @@ contains
 !$Procedure LJUST ( Left justify a character string )
 
       !> Left-justify a character string.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (ADJUSTL instead).
       elemental subroutine ljust ( input, output )
 !! ## Abstract
 !!
@@ -4332,76 +4306,13 @@ contains
 !
 !     Local variables
 !
-      integer(ip)           li
-      integer(ip)           lo
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           pos
 
 !
 !     Is the first character of the input string non-blank? If yes, the
 !     input string is already left-justified. There is nothing to do
 !     but to assign the input string to the output string.
 !
-      if ( input(1:1) /= ' ' ) then
-
-         output = input
-
-      else
-
-!
-!        Get the first non-blank character. Start OUTPUT at that point.
-!
-         li = len    ( input )
-         lo = len    ( output)
-
-         j  = 1
-
-!
-!        Set I equal to position of first non-blank character of INPUT.
-!
-         i   = 0
-         pos = 1
-
-         do while ( i == 0 .and. pos <= li )
-
-            if ( input(pos:pos) /= ' ' )  then
-               i    =  pos
-            else
-               pos  =  pos + 1
-            end if
-
-         end do
-
-!
-!        Did we find a non-blank character? If not, the input string is
-!        blank. Set output to blank.
-!
-         if ( i == 0 ) then
-
-            output = ' '
-
-         else
-
-!
-!           I is now the index of the first non-blank character of
-!           INPUT.
-!
-            do while  ( ( i <= li ) .and. ( j <= lo ) )
-               output(j:j) = input(i:i)
-               j           = j + 1
-               i           = i + 1
-            end do
-
-            if ( j <= lo ) then
-               output(j:) = ' '
-            end if
-
-         end if
-
-      end if
-
-      return
+      output = adjustl(input)
       end subroutine ljust
 
 !$Procedure LPARSE ( Parse items from a list )
@@ -5474,7 +5385,7 @@ contains
 !
 !     `Just do it'.
 !
-      ltrim = max ( 1, frstnb (string) )
+      ltrim = max ( 1, verify(string, ' ') )
 
       end function ltrim
 
@@ -6010,10 +5921,10 @@ contains
 !
 !     First let's get everybody's measurements.
 !
-      sfirst = frstnb ( string )
-      slast  = lastnb ( string )
-      tfirst = frstnb ( templ  )
-      tlast  = lastnb ( templ  )
+      sfirst = verify(string, ' ')
+      slast  = len_trim(string)
+      tfirst = verify(templ, ' ')
+      tlast  = len_trim(templ)
 
       tlen   = tlast - tfirst + 1
       slen   = slast - sfirst + 1
@@ -6406,7 +6317,7 @@ contains
       if ( string == ' ' ) then
          nblen = 0
       else
-         nblen = lastnb ( string ) - frstnb ( string ) + 1
+         nblen = len_trim(string) - verify(string, ' ') + 1
       end if
 
       return
@@ -6419,6 +6330,9 @@ contains
       !>
       !> The function returns the index of the rightmost non-blank
       !> character in the entire array of strings ARRAY.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (MAXVAL and LEN_TRIM instead).
       pure integer(ip) function nbwid ( array, nelt )
 !! ## Abstract
 !!
@@ -6538,55 +6452,11 @@ contains
 !
 !     Local variables
 !
-      integer(ip)           strlen
-      integer(ip)           i
-      integer(ip)           j
 
 !
 !     Nonsense case: no elements.
 !
-      if ( nelt < 1 ) then
-
-         nbwid = 0
-
-!
-!     Get the length of the individual elements of the string.
-!     So far, we have no maximum width, because we haven't examined
-!     any elements.
-!
-      else
-
-         strlen = len ( array(1) )
-         nbwid  = 0
-         i      = 0
-
-!
-!        Continue until the end of the array is reached, or until
-!        a string with no trailing blanks is found.
-!
-         do while ( i < nelt  .and.  nbwid < strlen )
-
-!
-!           Search no further than the current value of NBWID.
-!
-            i = i + 1
-            j = strlen
-
-            do while ( j > nbwid  .and.  array(i)(j:j) == ' ' )
-               j = j - 1
-            end do
-
-!
-!           NBWID only increases if this string was wider than all
-!           previous strings.
-!
-            nbwid = max ( nbwid, j )
-
-         end do
-
-      end if
-
-      return
+      nbwid = max(0, maxval(len_trim(array(1:nelt))))
       end function nbwid
 
 !$Procedure NCPOS ( NOT character position )
@@ -7258,7 +7128,7 @@ contains
          next = string(begin:i)
 
          if ( i < end ) then
-            call ljust ( string(i+1:), rest )
+            rest = adjustl(string(i+1:))
          else
             rest = ' '
          end if
@@ -7854,8 +7724,8 @@ contains
 !     The token to be parsed extends from the first non-blank
 !     character to the last non-blank character of STRING.
 !
-      first  =  frstnb(string)
-      last   =  lastnb(string)
+      first  =  verify(string, ' ')
+      last   =  len_trim(string)
 
       if ( first == 0 ) then
 
@@ -8719,7 +8589,7 @@ contains
 !     PLEN is the length of the prefix. Remember that a blank (null)
 !     prefix has zero length.
 !
-      plen = lastnb ( pref )
+      plen = len_trim(pref)
 
 !
 !     SLEN is the allocated length of the string.
@@ -8894,7 +8764,7 @@ contains
          call suffix ( right, 1, out )
 
       else
-         out = in(frstnb(in) : lastnb(in))
+         out = in(verify(in, ' ') : len_trim(in))
          call prefix ( left,  0, out )
          call suffix ( right, 0, out )
       end if
@@ -9235,8 +9105,8 @@ contains
 !
       if ( new /= ' ' ) then
 
-         f = frstnb ( new )
-         l = lastnb ( new )
+         f = verify(new, ' ')
+         l = len_trim(new)
 
 !
 !        Except in the lucky case that the word to insert is the
@@ -9584,8 +9454,8 @@ contains
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      mrknbf = frstnb(marker)
-      mrknbl = lastnb(marker)
+      mrknbf = verify(marker, ' ')
+      mrknbl = len_trim(marker)
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
@@ -9613,11 +9483,7 @@ contains
 
       else
 
-         call zzrepsub ( in, &
-                         mrkpsb, &
-                         mrkpse, &
-                         value( frstnb(value) : lastnb(value) ), &
-                         out  )
+         call zzrepsub ( in,  mrkpsb,  mrkpse,  value( verify(value, ' ') : len_trim(value) ),  out  )
 
       end if
 
@@ -9763,8 +9629,8 @@ contains
 !     Get the first non-blank character. Start OUTPUT at that point.
 !
       else
-         first  = frstnb ( input )
-         last   = lastnb ( input )
+         first  = verify(input, ' ')
+         last   = len_trim(input)
          start  = len ( output ) - (last-first)
 
 !
@@ -9927,7 +9793,7 @@ contains
 !
 !     `Just do it'.
 !
-      rtrim = max ( 1, lastnb (string) )
+      rtrim = max ( 1, len_trim(string) )
 
       return
       end function rtrim
@@ -10315,7 +10181,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchi
       implicit none
 
       integer(ip), intent(in) :: ids  ( * )  !! value of id's of tokens that should be dumped.
@@ -10457,7 +10322,7 @@ contains
 
       do i = 1, ntokns
 
-         if ( isrchi(ident(i), n, ids) == 0 ) then
+         if ( findloc(ids(1:n), ident(i), dim=1) == 0 ) then
 
             j        = j + 1
             ident(j) = ident(i)
@@ -11061,8 +10926,8 @@ contains
 !
 !     Find the first and last non-blank characters in the string.
 !
-      begin  = max ( 1, frstnb (in) )
-      end    = max ( 1, lastnb (in) )
+      begin  = max ( 1, verify(in, ' ') )
+      end    = max ( 1, len_trim(in) )
       lchar  = ' '
 !
 !     Trivial case.
@@ -11379,7 +11244,7 @@ contains
 !     the last non-blank character of the prefix.
 !
       slen = len    ( string )
-      l    = lastnb ( string )
+      l    = len_trim(string)
 
 !
 !     Put the suffix at the end of the string. The spaces will fill
@@ -11897,11 +11762,11 @@ contains
 !
 !     Find the ends of the word and input string.
 !
-      endstr = lastnb ( string )
-      begstr = frstnb ( string )
+      endstr = len_trim(string)
+      begstr = verify(string, ' ')
 
-      endwd  = lastnb ( word   )
-      begwd  = frstnb ( word   )
+      endwd  = len_trim(word)
+      begwd  = verify(word, ' ')
 
 !
 !     Get the offset from the beginning of the word to the end of the
@@ -12306,7 +12171,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: sumai
       implicit none
       character(*), intent(in) :: in  !! Input string.
       integer(ip), intent(in) :: left  !! Ends of substring to be replaced.
@@ -12503,7 +12367,7 @@ contains
 !     is longer than the original substring. The main thing is to
 !     avoid overwriting characters that have yet to be moved.
 !
-      end = sumai ( use, 3 )
+      end = sum(use)
 
       if ( myleft + strlen > right ) then
 
@@ -14183,10 +14047,10 @@ contains
 !
 !     First let's get everybody's measurements.
 !
-      sfirst = frstnb ( string )
-      slast  = lastnb ( string )
-      tfirst = frstnb ( templ  )
-      tlast  = lastnb ( templ  )
+      sfirst = verify(string, ' ')
+      slast  = len_trim(string)
+      tfirst = verify(templ, ' ')
+      tlast  = len_trim(templ)
 
       tlen   = tlast - tfirst + 1
       slen   = slast - sfirst + 1

@@ -2041,7 +2041,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
-      use pepper_strings, only: intstr, lastnb, prefix, suffix
+      use pepper_strings, only: intstr, prefix, suffix
       use pepper_inc_sclk
       implicit none
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
@@ -2144,8 +2144,8 @@ contains
 
       call suffix ( '/', 0, prtstr )
 
-      prelen = lastnb ( prtstr )
-      suflen = lastnb ( sclkch )
+      prelen = len_trim(prtstr)
+      suflen = len_trim(sclkch)
 
       if ( len ( sclkch ) - suflen < prelen ) then
 

@@ -1490,7 +1490,6 @@ contains
 !!     Set up the error processing.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchi
       implicit none
       integer(ip)         maxlen
       parameter         ( maxlen = 255 )
@@ -1563,7 +1562,7 @@ contains
 
          end if
 
-         index = isrchi ( number, n, units )
+         index = findloc(units(1:n), number, dim=1)
 
          if ( index == 0 ) then
 !
@@ -1832,7 +1831,6 @@ contains
 !!     Which file?
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchi
       implicit none
       integer(ip)         maxlen
       parameter         ( maxlen = 255 )
@@ -1871,7 +1869,7 @@ contains
 
       end if
 
-      index = isrchi ( number, n, units )
+      index = findloc(units(1:n), number, dim=1)
 
       if ( index > 0 ) then
 
@@ -2364,7 +2362,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust, rtrim
+      use pepper_strings, only: rtrim
       implicit none
       character(*)          dat
       parameter           ( dat = 'begindata' )
@@ -2454,7 +2452,7 @@ contains
 
       end do
 
-      call ljust ( first, first )
+      first = adjustl(first)
       linnum =  1
 
 !
@@ -2657,7 +2655,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust, rtrim
+      use pepper_strings, only: rtrim
       implicit none
       character(*)          dat
       parameter           ( dat = 'begindata' )
@@ -2735,7 +2733,7 @@ contains
 
          end do
 
-         call ljust ( line, line )
+         line = adjustl(line)
          linnum = linnum + 1
 
          if ( eof ) then
@@ -3048,7 +3046,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: lastnb, zzrepsub
+      use pepper_strings, only: zzrepsub
       implicit none
 
 ! $ Detailed_Input
@@ -3134,7 +3132,7 @@ contains
 !     portion of the marker.  (We use LAST as the pointer to the
 !     last valid character of the marker).
 !
-      lmrk   = lastnb(mark)
+      lmrk   = len_trim(mark)
       lpat   = len   (pattrn)
       mymark = mark
       last   = lmrk
@@ -4911,7 +4909,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
-      use pepper_arrays, only: bsrchc, isrchc
+      use pepper_arrays, only: bsrchc
       use pepper_strings, only: prefix, repmc, rtrim, suffix, ucase, zzinssub
       implicit none
 
@@ -5915,7 +5913,7 @@ contains
 
          if ( havzon ) then
 
-            mapto = isrchc ( modify(zone), nzones, zones )
+            mapto = findloc(zones, modify(zone), dim=1)
 
             if ( mapto /= 0 ) then
                modify(zone) = offset(mapto)
@@ -8886,7 +8884,6 @@ contains
 !!-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: nparsd, pos, prefix, repmc, suffix, ucase, zzinssub, zzrepsub
       implicit none
       logical               yes
@@ -9010,7 +9007,7 @@ contains
             e     = e     + 1
 
             call ucase ( string(j:k), month )
-            value = isrchc ( month, 12, months )
+            value = findloc(months, month, dim=1)
 
             if ( value == 0 ) then
                call nparsd  ( string(j:k), tvec(2), error, ptr )
@@ -10468,7 +10465,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
-      use pepper_strings, only: lastnb, lastpc, nparsd, rtrim
+      use pepper_strings, only: lastpc, nparsd, rtrim
       implicit none
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
@@ -11415,7 +11412,7 @@ contains
                      call rdklin ( ctx, file, number )
                      r1 = rtrim  ( file )
 
-                     lstnb = lastnb(error)
+                     lstnb = len_trim(error)
 
                      call ctx%setmsg ( 'Encountered ''#'' while ' &
                      //            'attempting to parse a time ' &
@@ -11441,7 +11438,7 @@ contains
 
                      call rdklin ( ctx, file, number )
 
-                     lstnb = lastnb(error)
+                     lstnb = len_trim(error)
 
                      call ctx%setmsg ( 'Encountered ''#'' while ' &
                      //            'attempting to parse a number on ' &

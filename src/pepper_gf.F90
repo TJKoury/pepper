@@ -883,7 +883,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc, moved
       use pepper_math, only: reccyl, reclat, recrad, recsph
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -923,7 +922,7 @@ contains
 !     Find the index of the coordinate system name in the list of
 !     supported names.
 !
-      sysidx = isrchc ( crdsys, nsys, sysnms )
+      sysidx = findloc(sysnms, crdsys, dim=1)
 
       if ( sysidx == 0 ) then
 !
@@ -942,7 +941,7 @@ contains
 !     Find the index of the coordinate name in the list of
 !     supported names.
 !
-      crdidx = isrchc ( crdnam, 3, crdnms(1,sysidx) )
+      crdidx = findloc(crdnms(:,sysidx), crdnam, dim=1)
 
       if ( crdidx == 0 ) then
 !
@@ -1047,7 +1046,7 @@ contains
 !
 !        No conversion needed for rectangular coordinates.
 !
-         call moved ( pos, 3, coords )
+         coords = pos
 
       else if ( sysnam == latsys ) then
 
@@ -1127,8 +1126,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleari
-      use pepper_math, only: latrec, mxv, vdot, vhat, vhatip, vpack, vzero
+      use pepper_math, only: latrec, mxv, vdot, vhat, vhatip
       use pepper_inc_zzgf
       implicit none
 
@@ -1420,14 +1418,14 @@ contains
 !     velocity vector is non-zero, convert it to a unit vector; this
 !     guarantees that overflow can't occur.
 
-      if (  vzero( state(4) )  ) then
+      if (  all(state(4:6) == 0.0_wp)  ) then
 !
 !        The velocity is zero. Indicate that the coordinates are
 !        not changing and return. Returning now simplifies the
 !        logic of the rest of the routine, since the case of
 !        zero-velocity can be ignored.
 !
-         call cleari ( 3, cdsign )
+         cdsign = 0
 
          return
 
@@ -1666,7 +1664,7 @@ contains
 !        The normal vector is aligned with the local radial
 !        direction; this vector is parallel to the X-Y plane.
 !
-         call vpack  ( state(1), state(2), 0.0_wp, normal )
+         normal = [state(1), state(2), 0.0_wp]
          call vhatip ( normal )
 
       else
@@ -2824,10 +2822,9 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi
-      use pepper_arrays, only: cleard
       use pepper_containers, only: grow
-      use pepper_math, only: frame, mxv, ucrss, vequ, vhat, vhatip, vnorm, vrotv, vscl, vsclip, vsep, vsub, vzero
-      use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_math, only: frame, mxv, ucrss, vhat, vhatip, vnorm, vrotv, vsep
+      use pepper_strings, only: cmprss, ucase
       use pepper_inc_zzabcorr
       use pepper_inc_zzocced
       use pepper_inc_gf
@@ -2913,16 +2910,16 @@ contains
 !     for all cases.
 !
       if ( allocated ( ctx%zzgffvu_state%svbnds ) ) ctx%zzgffvu_state%svbnds = 0.0_wp
-      call cleard ( 3,        svedct )
-      call cleard ( 3,        svfaxi )
+      svedct = 0.0_wp
+      svfaxi = 0.0_wp
       if ( allocated ( ctx%zzgffvu_state%svfpol ) ) ctx%zzgffvu_state%svfpol = 0.0_wp
-      call cleard ( 9,        svfsmx )
-      call cleard ( ubpl,     svplan )
-      call cleard ( 3,        svrdir )
+      svfsmx = 0.0_wp
+      svplan = 0.0_wp
+      svrdir = 0.0_wp
       svtarg = 0
       ctx%zzgffvu_state%svtfrm = ' '
       svtnam = ' '
-      call cleard ( 3,        svtrad )
+      svtrad = 0.0_wp
       svustl = .false.
       svxmit = .false.
 
@@ -2950,7 +2947,7 @@ contains
 !     Save a left-justified, upper case version of the target shape
 !     specifier.
 !
-      call ljust ( tshape, svtshp )
+      svtshp = adjustl(tshape)
       call ucase ( svtshp, svtshp )
 
 !
@@ -3059,7 +3056,7 @@ contains
 !        Save the target frame name.
 !
          ctx%zzgffvu_state%svtfrm = tframe
-         call ljust ( tframe, ctx%zzgffvu_state%svtfrm )
+         ctx%zzgffvu_state%svtfrm = adjustl(tframe)
          call ucase ( ctx%zzgffvu_state%svtfrm, ctx%zzgffvu_state%svtfrm )
 
 !
@@ -3188,7 +3185,7 @@ contains
 !        We don't have an ellipsoidal target body: zero out radius
 !        values for this target.
 !
-         call cleard ( 3, svtrad )
+         svtrad = 0.0_wp
 
       end if
 
@@ -3200,7 +3197,7 @@ contains
 !        Make sure the direction vector is non-zero. Save a unit-length
 !        copy of the vector.
 !
-         if ( vzero( raydir ) ) then
+         if ( all(raydir == 0.0_wp) ) then
 
             call ctx%setmsg ( 'Input ray direction was the zero vector; ' &
             //            'this vector must be non-zero.'            )
@@ -3234,7 +3231,7 @@ contains
 !
 !     Save the instrument's name.
 !
-      call ljust ( inst,   svinam )
+      svinam = adjustl(inst)
       call ucase ( svinam, svinam )
 
 !
@@ -3283,7 +3280,7 @@ contains
 !     Make sure the instrument shape specifier is left-justified
 !     and in upper case.
 !
-      call ljust ( svishp, svishp )
+      svishp = adjustl(svishp)
       call ucase ( svishp, svishp )
 
 !
@@ -3309,7 +3306,7 @@ contains
 
       else
 
-         call vequ ( bsite, svfaxi )
+         svfaxi = bsite
 
       end if
 
@@ -3346,7 +3343,7 @@ contains
 !     Convert the FOV shape specifier to a left-justified, upper
 !     case form.
 !
-      call ljust ( svishp, svishp )
+      svishp = adjustl(svishp)
       call ucase ( svishp, svishp )
 
 !
@@ -3415,7 +3412,7 @@ contains
 !
 !           Compute and find the length of each semi-axis vector.
 !
-            call vsub ( semipt(1,i), svfvct, svsemi(1,i) )
+            svsemi(:,i) = semipt(:,i) - svfvct
 
             svxmag(i) = vnorm ( svsemi(1,i) )
 
@@ -3467,7 +3464,7 @@ contains
 !
 !        The ellipsoid's center is SVEDCT.
 !
-         call vscl ( 1.0_wp + ctrext, svfvct, svedct )
+         svedct = (1.0_wp + ctrext)*svfvct
 
 !
 !        NOTE: in the code and discussion that follow, there are
@@ -3492,14 +3489,14 @@ contains
 !        that SVFVCT is a unit vector pointing in the desired
 !        direction.
 !
-         call vscl ( ellrad(3), svfvct, svfsmx(1,3) )
+         svfsmx(:,3) = ellrad(3)*svfvct
 
 !
 !        The first ellipsoid semi-axis is associated with SEMIPT(*,1)
 !        and also has length ELLRAD(3):
 !
          call vhat ( svsemi(1,1), vtemp )
-         call vscl ( ellrad(1),   vtemp,  svfsmx(1,1) )
+         svfsmx(:,1) = ellrad(1)*vtemp
 
 !
 !        The ellipsoid's second semi-axis points from SVFVCT toward
@@ -3515,7 +3512,7 @@ contains
 !        ensure we produce a matrix with positive determinant.
 !
          call ucrss  ( svfsmx(1,3), svfsmx(1,1), vtemp )
-         call vscl   ( ellrad(2),   vtemp,       svfsmx(1,2) )
+         svfsmx(:,2) = ellrad(2)*vtemp
 
 !
 !        Scale the ellipsoid and the distance of its center from
@@ -3528,10 +3525,10 @@ contains
          escale = fvemax/ ( vnorm(svedct) + max(ellrad(1), ellrad(2)) )
 
          do i = 1, 3
-            call vsclip ( escale, svfsmx(1,i) )
+            svfsmx(:,i) = escale*svfsmx(:,i)
          end do
 
-         call vsclip ( escale, svedct )
+         svedct = escale*svedct
 
       end if
 
@@ -3562,7 +3559,7 @@ contains
 !        will have vertices given by the (X,Y) components of each
 !        intersection.
 !
-         call vequ ( svfaxi, z )
+         z = svfaxi
 
          call frame ( z, x, y )
 
@@ -3598,7 +3595,7 @@ contains
 
             end if
 
-            call vsub ( xpt,   svfvct, vtemp  )
+            vtemp = xpt - svfvct
             call mxv ( svfovm, vtemp,  vtemp2 )
 
             svfpol(1,i) = vtemp2(1)
@@ -3718,7 +3715,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: el2cgv, mtxv, mxm, mxv, vadd, vdot, vequ, vminus, vscl, vsep, vsub
+      use pepper_math, only: el2cgv, mtxv, mxm, mxv, vdot, vsep
       use pepper_inc_zzabcorr
       use pepper_inc_zzocced
       use pepper_inc_gf
@@ -3847,7 +3844,7 @@ contains
 !           Negate POS to obtain the position of the observer with
 !           respect to the target.
 !
-            call vminus ( pos, obspos )
+            obspos = -pos
 
 !
 !           Find the limb in the target body-fixed frame.
@@ -3872,8 +3869,8 @@ contains
 !           in the target body-fixed frame, this is a convenient
 !           place for the translation.
 !
-            call vadd ( pos,   m1(1,1), vtemp )
-            call vequ ( vtemp, m1(1,1)        )
+            vtemp = pos + m1(:,1)
+            m1(:,1) = vtemp
 
             do i = 1, 3
                call mxv ( insmat, m1(1,i), m2(1,i) )
@@ -3913,7 +3910,7 @@ contains
 !           to obtain the semi-axis matrix for the target.
 !
             do i = 1, 3
-               call vscl ( svtrad(i), insmat(1,i), trgsmx(1,i) )
+               trgsmx(:,i) = svtrad(i)*insmat(:,i)
             end do
 
             ocstat = zzocced ( ctx, svorig, svedct, svfsmx, trgctr, trgsmx )
@@ -4109,7 +4106,7 @@ contains
 !              Find the vector from the center of the FOV to XPT.
 !              Call this vector FOVPT.
 !
-               call vsub ( xpt, svfvct, fovpt )
+               fovpt = xpt - svfvct
 
                if ( svishp == ellfov ) then
 !
@@ -4590,8 +4587,7 @@ contains
 !!     illumination angle initialization routine
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vequ
-      use pepper_strings, only: cmprss, esrchc, ljust, ucase
+      use pepper_strings, only: cmprss, esrchc, ucase
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: bdnmln = 36
@@ -4767,19 +4763,19 @@ contains
 
       if ( ctx%failed() ) return
 
-      call vequ ( normal, svnrml )
+      svnrml = normal
 
 !
 !     Save the surface point in the body-fixed reference frame.
 !
-      call vequ ( spoint, svsspt)
+      svsspt = spoint
 
 !
 !     Save a left-justified, upper case copy of the computation method
 !     for the illumination angles.
 !
       ctx%zzgfilu_state%svmeth = method  ! PEPPER: allocated to the length of METHOD
-      call ljust ( method, ctx%zzgfilu_state%svmeth )
+      ctx%zzgfilu_state%svmeth = adjustl(method)
       call ucase ( ctx%zzgfilu_state%svmeth, ctx%zzgfilu_state%svmeth )
 
       if ( ctx%zzgfilu_state%svmeth /= 'ELLIPSOID' ) then
@@ -4797,7 +4793,7 @@ contains
 !     name.
 !
       ctx%zzgfilu_state%svref = fixref
-      call ljust ( fixref, ctx%zzgfilu_state%svref )
+      ctx%zzgfilu_state%svref = adjustl(fixref)
       call ucase ( ctx%zzgfilu_state%svref,  ctx%zzgfilu_state%svref )
 
 !
@@ -5809,8 +5805,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, isrchc, maxad, minad, moved
-      use pepper_strings, only: eqstr, ljust, suffix, ucase
+      use pepper_strings, only: eqstr, suffix, ucase
       use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -6096,13 +6091,13 @@ contains
 !     Save a single upper-case character representing the occultation
 !     type string.
 !
-      call ljust ( occtyp, svtype )
+      svtype = adjustl(occtyp)
       call ucase ( svtype, svtype )
 
 !
 !     Check the occultation type.
 !
-      occnum = isrchc ( svtype, noctyp, svtyps )
+      occnum = findloc(svtyps, svtype, dim=1)
 
       if ( occnum == 0 ) then
 
@@ -6210,20 +6205,24 @@ contains
 !
             if ( i == 1 ) then
 
-               call moved ( radii,  3,  svfrad )
+               svfrad = radii
 !
 !              Select smallest and largest semi-axis lengths of body
 !              for later tests.
 !
-               call minad ( svfrad, 3,  svmnfr, loc )
-               call maxad ( svfrad, 3,  svmxfr, loc )
+               svmnfr = minval(svfrad)
+               loc = minloc(svfrad, dim=1)
+               svmxfr = maxval(svfrad)
+               loc = maxloc(svfrad, dim=1)
 
             else
 
-               call moved ( radii,  3,  svbrad )
+               svbrad = radii
 
-               call minad ( svbrad, 3,  svmnbr, loc )
-               call maxad ( svbrad, 3,  svmxbr, loc )
+               svmnbr = minval(svbrad)
+               loc = minloc(svbrad, dim=1)
+               svmxbr = maxval(svbrad)
+               loc = maxloc(svbrad, dim=1)
 
             end if
 
@@ -6353,7 +6352,7 @@ contains
 !
             if ( i == 1 ) then
 
-               call cleard ( 3, svfrad )
+               svfrad = 0.0_wp
 
                svmnfr = 0.0_wp
                svmxfr = 0.0_wp
@@ -6361,7 +6360,7 @@ contains
 
             else
 
-               call cleard ( 3, svbrad )
+               svbrad = 0.0_wp
 
                svmnbr = 0.0_wp
                svmxbr = 0.0_wp
@@ -6504,7 +6503,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
-      use pepper_math, only: vminus, vnorm, vscl, vsep, vsub
+      use pepper_math, only: vnorm, vsep
       use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -6628,7 +6627,7 @@ contains
 !        target.
 !
          do i = 1, 3
-            call vscl ( svbrad(i), mtemp(1,i), bsmaxs(1,i) )
+            bsmaxs(:,i) = svbrad(i)*mtemp(:,i)
          end do
 
          call zzcorepc ( ctx, svcorr,  time,   ltfrnt, etfcor )
@@ -6640,7 +6639,7 @@ contains
 !        target.
 !
          do i = 1, 3
-            call vscl ( svfrad(i), mtemp(1,i), fsmaxs(1,i) )
+            fsmaxs(:,i) = svfrad(i)*mtemp(:,i)
          end do
 
 !
@@ -6733,7 +6732,7 @@ contains
 !        but we want it now in order to make sure that BACK doesn't
 !        intersect FRONT.
 !
-         call vsub ( frtpos, bckpos, bckfrt )
+         bckfrt = frtpos - bckpos
 
          if ( pntocc ) then
 !
@@ -6852,8 +6851,8 @@ contains
 !        We'll need the negatives of the observer-target vectors in
 !        several places later, so compute them now.
 !
-         call vminus ( frtpos, frtobs )
-         call vminus ( bckpos, bckobs )
+         frtobs = -frtpos
+         bckobs = -bckpos
 
 !
 !        Now check for an occulted state assuming a spherical extended
@@ -6881,7 +6880,7 @@ contains
 !              find the position of FRONT and BACK relative to each
 !              other.
 !
-               call vminus  ( bckfrt, frtbck )
+               frtbck = -bckfrt
 
                t2sep = vsep ( frtobs, frtbck )
 
@@ -7545,8 +7544,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: touchd
-      use pepper_math, only: brcktd
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8153,7 +8150,7 @@ contains
 !           to the next.
 !
             prvdif = dpmax
-            diff   = touchd( abs(t2 - t1) )
+            diff   = (abs(t2 - t1))
             nloop  = 0
 
             do while (       ( diff > tol    ) &
@@ -8202,7 +8199,7 @@ contains
 !              point. Set T1 and T2 equal to T.
 !
 
-               t = brcktd ( t, t1, t2 )
+               t = max(min(t1, t2), min(max(t1, t2), t))
 
                if ( t == t1 ) then
 
@@ -8240,7 +8237,7 @@ contains
 !              test.
 !
                prvdif = diff
-               diff   = touchd( abs(t2 - t1) )
+               diff   = (abs(t2 - t1))
 
             end do
 
@@ -8248,7 +8245,7 @@ contains
 !           Let TRNSTN be the midpoint of [T1, T2].  Record this
 !           time as marking the transition from STATE1 to STATE2.
 !
-            trnstn = brcktd( (t1 + t2)*0.5_wp, t1, t2 )
+            trnstn = max(min(t1, t2), min(max(t1, t2), (t1 + t2)*0.5_wp))
 
 !
 !           In state-of-interest or not?
@@ -8366,8 +8363,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: touchd
-      use pepper_math, only: brcktd
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8987,7 +8982,7 @@ contains
 !           to the next.
 !
             prvdif = dpmax
-            diff   = touchd( abs(t2 - t1) )
+            diff   = (abs(t2 - t1))
             nloop  = 0
 
             do while (       ( diff > tol    ) &
@@ -9037,7 +9032,7 @@ contains
 !              point. Set T1 and T2 equal to T.
 !
 
-               t = brcktd ( t, t1, t2 )
+               t = max(min(t1, t2), min(max(t1, t2), t))
 
                if ( t == t1 ) then
 
@@ -9075,7 +9070,7 @@ contains
 !              test.
 !
                prvdif = diff
-               diff   = touchd( abs(t2 - t1) )
+               diff   = (abs(t2 - t1))
 
             end do
 
@@ -9083,7 +9078,7 @@ contains
 !           Let TRNSTN be the midpoint of [T1, T2].  Record this
 !           time as marking the transition from STATE1 to STATE2.
 !
-            trnstn = brcktd( (t1 + t2)*0.5_wp, t1, t2 )
+            trnstn = max(min(t1, t2), min(max(t1, t2), (t1 + t2)*0.5_wp))
 
 !
 !           In state-of-interest or not?
@@ -9908,8 +9903,7 @@ contains
 !!     angular separation initialization routine
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc
-      use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_strings, only: cmprss, ucase
       use pepper_inc_zzabcorr
       implicit none
       real(wp)              axes1 (3)
@@ -10035,13 +10029,13 @@ contains
 !
 !     Check shapes...
 !
-      call ljust ( shape(1), shape(1) )
+      shape(1) = adjustl(shape(1))
       call ucase ( shape(1), shape(1) )
 
 !
 !     If we pass the error check, then SHAPE(1) exists in SVSHAP.
 !
-      svshp1 = isrchc( shape(1), spshpn, svshap)
+      svshp1 = findloc(svshap, shape(1), dim=1)
 
       if ( svshp1 == 0 ) then
 
@@ -10079,13 +10073,13 @@ contains
 
       end if
 
-      call ljust ( shape(2), shape(2) )
+      shape(2) = adjustl(shape(2))
       call ucase ( shape(2), shape(2) )
 
 !
 !     If we pass the error check, then SHAPE(2) exists in SVSHAP.
 !
-      svshp2 = isrchc( shape(2), spshpn, svshap)
+      svshp2 = findloc(svshap, shape(2), dim=1)
 
       if ( svshp2 == 0 ) then
 
@@ -10985,8 +10979,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: cleard, moved
-      use pepper_math, only: mxvg, vaddg, vdot, vhat, vminug, vscl, vsubg
+      use pepper_math, only: mxvg, vdot, vhat
       use pepper_strings, only: eqstr
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -11123,8 +11116,8 @@ contains
 !        Transform the ray's direction vector from DREF to the J2000
 !        frame. The velocity of DVEC in frame DREF is zero.
 !
-         call moved  ( dvec, 3, stemp    )
-         call cleard (       3, stemp(4) )
+         stemp(1:3) = dvec
+         stemp(4:6) = 0.0_wp
 
          call mxvg ( dcorxf, stemp, 6, 6, j2dsta )
 
@@ -11171,7 +11164,7 @@ contains
 !        Compute the state of the observer with respect to the target
 !        in the body-fixed frame.
 !
-         call vminug ( fxtsta, 6, fxosta )
+         fxosta = -fxtsta
 
 !
 !        Transform the state of the direction vector from the J2000
@@ -11241,8 +11234,8 @@ contains
 !
 !        The velocity of DVEC in frame DREF is zero.
 !
-         call moved  ( dvec, 3, stemp    )
-         call cleard (       3, stemp(4) )
+         stemp(1:3) = dvec
+         stemp(4:6) = 0.0_wp
 
          call mxvg ( dcorxf, stemp, 6, 6, j2dsta )
 
@@ -11332,8 +11325,8 @@ contains
 !        body-fixed frame. At this point we don't know the point's
 !        velocity; set it to zero.
 !
-         call moved  ( spoint, 3, fxpsta    )
-         call cleard (         3, fxpsta(4) )
+         fxpsta(1:3) = spoint
+         fxpsta(4:6) = 0.0_wp
 
          if ( usestl ) then
 !
@@ -11370,7 +11363,7 @@ contains
 !        pass yields a reasonable estimate. On the second pass,
 !        we'll use the velocity derived on the first pass.
 !
-         call cleard ( 3, fxpvel )
+         fxpvel = 0.0_wp
 
 !
 !        We'll also estimate the rate of change of light time
@@ -11394,13 +11387,13 @@ contains
 !           correct the velocity for the rate of change of light
 !           time.
 !
-            call moved ( ssbtg0, 3,         ssbtrg    )
-            call vscl  ( scale,  ssbtg0(4), ssbtrg(4) )
+            ssbtrg(1:3) = ssbtg0(1:3)
+            ssbtrg(4:6) = scale*ssbtg0(4:6)
 
 !
 !           Get the state of the target with respect to the observer.
 !
-            call vsubg ( ssbtrg, ssbobs, 6, obstrg )
+            obstrg = ssbtrg - ssbobs
 
 !
 !           Correct the J2000 to body-fixed state transformation matrix
@@ -11424,7 +11417,7 @@ contains
 !           Find the J2000-relative state of the surface intercept
 !           point with respect to the target.
 !
-            call vaddg ( obstrg, pntsta, 6, obspnt )
+            obspnt = obstrg + pntsta
 
             if ( usestl ) then
 !
@@ -11434,18 +11427,18 @@ contains
 !
                call zzstelab ( ctx, xmit, acc, ssbobs(4), obspnt, sa, savel )
 
-               call moved ( sa,    3, sastat    )
-               call moved ( savel, 3, sastat(4) )
+               sastat(1:3) = sa
+               sastat(4:6) = savel
 !
 !              Adding the stellar aberration state to the target center
 !              state gives us the state of the target center with
 !              respect to the observer, corrected for the aberrations
 !              applicable to the surface intercept point.
 !
-               call vaddg ( obstrg, sastat, 6, stemp )
+               stemp = obstrg + sastat
 
             else
-               call moved ( obstrg, 6, stemp )
+               stemp = obstrg
             end if
 
 !
@@ -11457,7 +11450,7 @@ contains
 !           At long last, compute the state of the observer
 !           with respect to the target in the body-fixed frame.
 !
-            call vminug ( fxtsta, 6, fxosta )
+            fxosta = -fxtsta
 
 !
 !           Transform the state of the direction vector from the
@@ -11491,7 +11484,7 @@ contains
 !           with respect to the observer.
 !
             call mxvg  ( corxfi, fxpsta, 6, 6, pntsta )
-            call vaddg ( obstrg, pntsta, 6,    obspnt )
+            obspnt = obstrg + pntsta
 
 !
 !           Now that we have an improved estimate of the
@@ -11535,7 +11528,7 @@ contains
 !     Copy the computed state to the output argument STATE.
 !     FOUND has already been set to .TRUE. by SURFPV.
 !
-      call moved ( fxpsta, 6, state )
+      state = fxpsta
 
       return
       end associate
@@ -11777,8 +11770,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: cleard, moved
-      use pepper_math, only: mxvg, vaddg, vdot, vhat, vminug, vscl, vsubg
+      use pepper_math, only: mxvg, vdot, vhat
       use pepper_strings, only: eqstr
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -11936,7 +11928,7 @@ contains
 !        Compute the state of the observer with respect to the target
 !        in the body-fixed frame.
 !
-         call vminug ( fxtsta, 6, fxosta )
+         fxosta = -fxtsta
 
 !
 !        Now we can obtain the surface velocity of the sub-observer
@@ -11967,7 +11959,7 @@ contains
 !           the negative of the observer's position relative
 !           to the target center.
 !
-            call vminug ( fxosta, 6, raysta )
+            raysta = -fxosta
 
             call surfpv ( ctx, fxosta,   raysta, &
                           radii(1), radii(2), radii(3), fxpsta, found )
@@ -12071,8 +12063,8 @@ contains
 !        body-fixed frame. At this point we don't know the
 !        point's velocity; set it to zero.
 !
-         call moved  ( spoint, 3, fxpsta    )
-         call cleard (         3, fxpsta(4) )
+         fxpsta(1:3) = spoint
+         fxpsta(4:6) = 0.0_wp
 
          if ( usestl ) then
 !
@@ -12109,7 +12101,7 @@ contains
 !        pass yields a reasonable estimate. On the second pass,
 !        we'll use the velocity derived on the first pass.
 !
-         call cleard ( 3, fxpvel )
+         fxpvel = 0.0_wp
 
 !
 !        We'll also estimate the rate of change of light time
@@ -12133,13 +12125,13 @@ contains
 !           correct the velocity for the rate of change of light
 !           time.
 !
-            call moved ( ssbtg0, 3,         ssbtrg    )
-            call vscl  ( scale,  ssbtg0(4), ssbtrg(4) )
+            ssbtrg(1:3) = ssbtg0(1:3)
+            ssbtrg(4:6) = scale*ssbtg0(4:6)
 
 !
 !           Get the state of the target with respect to the observer.
 !
-            call vsubg ( ssbtrg, ssbobs, 6, obstrg )
+            obstrg = ssbtrg - ssbobs
 
 !
 !           Correct the J2000 to body-fixed state transformation matrix
@@ -12162,7 +12154,7 @@ contains
 !           Find the J2000-relative state of the sub-observer
 !           point with respect to the target.
 !
-            call vaddg ( obstrg, pntsta, 6, obspnt )
+            obspnt = obstrg + pntsta
 
             if ( usestl ) then
 !
@@ -12172,18 +12164,18 @@ contains
 !
                call zzstelab ( ctx, xmit, acc, ssbobs(4), obspnt, sa, savel )
 
-               call moved ( sa,    3, sastat    )
-               call moved ( savel, 3, sastat(4) )
+               sastat(1:3) = sa
+               sastat(4:6) = savel
 !
 !              Adding the stellar aberration state to the target center
 !              state gives us the state of the target center with
 !              respect to the observer, corrected for the aberrations
 !              applicable to the sub-observer point.
 
-               call vaddg ( obstrg, sastat, 6, stemp )
+               stemp = obstrg + sastat
 
             else
-               call moved ( obstrg, 6, stemp )
+               stemp = obstrg
             end if
 
 !
@@ -12195,7 +12187,7 @@ contains
 !           At long last, compute the state of the observer
 !           with respect to the target in the body-fixed frame.
 !
-            call vminug ( fxtsta, 6, fxosta )
+            fxosta = -fxtsta
 
 !
 !           Now we can obtain the surface velocity of the
@@ -12226,7 +12218,7 @@ contains
 !              point." The ray direction is simply the negative of the
 !              observer's position relative to the target center.
 !
-               call vminug ( fxosta, 6, raysta )
+               raysta = -fxosta
 
                call surfpv ( ctx, fxosta,   raysta,   radii(1), &
                              radii(2), radii(3), fxpsta,   found )
@@ -12263,7 +12255,7 @@ contains
 !           with respect to the observer.
 !
             call mxvg  ( corxfi, fxpsta, 6, 6, pntsta )
-            call vaddg ( obstrg, pntsta, 6,    obspnt )
+            obspnt = obstrg + pntsta
 
 !
 !           Now that we have an improved estimate of the
@@ -12306,7 +12298,7 @@ contains
 !
 !     Copy the computed state to the output argument STATE.
 !
-      call moved ( fxpsta, 6, state )
+      state = fxpsta
 
       return
       end associate
@@ -15451,7 +15443,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_gf
       use pepper_inc_zzdsk
       implicit none
@@ -16649,11 +16641,11 @@ contains
 !     Check the target shape specifications.
 !
       lbshap = bshape
-      call ljust ( bshape, lbshap )
+      lbshap = adjustl(bshape)
       call ucase ( lbshap, lbshap )
 
       lfshap = fshape
-      call ljust ( fshape, lfshap )
+      lfshap = adjustl(fshape)
       call ucase ( lfshap, lfshap )
 
 !
@@ -16763,7 +16755,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_gf
       use pepper_inc_occult
       use pepper_inc_dsk
@@ -17584,19 +17576,19 @@ contains
 !     Left justify the shapes and target names and make them upper case.
 !
       shap1 = shape1
-      call ljust ( shape1, shap1 )
+      shap1 = adjustl(shape1)
       call ucase ( shap1,  shap1 )
 
       shap2 = shape2
-      call ljust ( shape2, shap2 )
+      shap2 = adjustl(shape2)
       call ucase ( shap2,  shap2 )
 
       fname = targ1
-      call ljust ( targ1,  fname )
+      fname = adjustl(targ1)
       call ucase ( fname,  fname )
 
       bname = targ2
-      call ljust ( targ2,  bname )
+      bname = adjustl(targ2)
       call ucase ( bname,  bname )
 
 !
@@ -20003,7 +19995,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_math, only: vdot, vhat, vsclip
+      use pepper_math, only: vdot, vhat
       use pepper_inc_zzabcorr
       implicit none
       character(*), parameter :: ref = 'J2000'
@@ -20078,7 +20070,7 @@ contains
 !
 !        Apply the correction to the velocity vector components.
 !
-         call vsclip ( 1.0_wp - dlt,  s2(4) )
+         s2(4:6) = (1.0_wp - dlt)*s2(4:6)
 
       end if
 
@@ -20764,8 +20756,8 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc, swapi
-      use pepper_strings, only: ljust, ucase
+      use pepper_arrays, only: swapi
+      use pepper_strings, only: ucase
       use pepper_inc_gf
       implicit none
       integer(ip), parameter :: lbcell = -5
@@ -20878,10 +20870,10 @@ contains
 !
 !     Make sure the requested comparison is one we recognize.
 !
-      call ljust ( relate, locrel )
+      locrel = adjustl(relate)
       call ucase ( locrel, locrel )
 
-      qcnum = isrchc ( locrel, nc, cnames )
+      qcnum = findloc(cnames, locrel, dim=1)
 
       if ( qcnum == 0 ) then
 
@@ -21855,8 +21847,8 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc, swapi
-      use pepper_strings, only: ljust, ucase
+      use pepper_arrays, only: swapi
+      use pepper_strings, only: ucase
       use pepper_inc_gf
       implicit none
       integer(ip), parameter :: lbcell = -5
@@ -21968,10 +21960,10 @@ contains
 !
 !     Make sure the requested comparison is one we recognize.
 !
-      call ljust ( relate, locrel )
+      locrel = adjustl(relate)
       call ucase ( locrel, locrel )
 
-      qcnum = isrchc ( locrel, nc, cnames )
+      qcnum = findloc(cnames, locrel, dim=1)
 
       if ( qcnum == 0 ) then
 
@@ -23005,7 +22997,6 @@ contains
 !!     ZZGF low-level progress report increment
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: brcktd
       use pepper_strings, only: rtrim
       use pepper_inc_zzgf
       implicit none
@@ -23049,7 +23040,7 @@ contains
 !
 !           Report how much work has been done.
 !
-            fractn = brcktd ( ( done/entire )*100.0_wp,  0.0_wp,  100.0_wp )
+            fractn = max(0.0_wp, min(100.0_wp, ( done/entire )*100.0_wp))
 
             call dpfmt ( ctx, fractn, 'xxx.xx', prcent )
 
@@ -28196,7 +28187,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lastnb
       use pepper_inc_zzgf
       implicit none
       integer(ip), parameter :: lbcell = -5
@@ -28227,22 +28217,22 @@ contains
 !     Check to see if either the message prefix or suffix
 !     is too long.
 !
-      if ( lastnb(begmss) > mxbegm ) then
+      if ( len_trim(begmss) > mxbegm ) then
 
          call ctx%setmsg ( 'Progress report prefix message contains ' &
          //            '# characters; limit is #.'                 )
-         call ctx%errint ( '#', lastnb(begmss)                         )
+         call ctx%errint ( '#', len_trim(begmss)                         )
          call ctx%errint ( '#', mxbegm                                 )
          call ctx%sigerr ( 'SPICE(MESSAGETOOLONG)'                     )
          return
 
       end if
 
-      if ( lastnb(endmss) > mxendm ) then
+      if ( len_trim(endmss) > mxendm ) then
 
          call ctx%setmsg ( 'Progress report suffix message contains ' &
          //            '# characters; limit is #.'                 )
-         call ctx%errint ( '#', lastnb(endmss)                         )
+         call ctx%errint ( '#', len_trim(endmss)                         )
          call ctx%errint ( '#', mxendm                                 )
          call ctx%sigerr ( 'SPICE(MESSAGETOOLONG)'                     )
          return
@@ -28253,7 +28243,7 @@ contains
 !     Now check that all the characters in the message prefix and
 !     suffix can be printed.
 !
-      do i = 1, lastnb(begmss)
+      do i = 1, len_trim(begmss)
 
          chrcod = ichar( begmss(i:i) )
 
@@ -28270,7 +28260,7 @@ contains
 
       end do
 
-      do i = 1, lastnb(endmss)
+      do i = 1, len_trim(endmss)
 
          chrcod = ichar( endmss(i:i) )
 
@@ -32315,9 +32305,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
-      use pepper_arrays, only: cleard, isrchc, moved
-      use pepper_math, only: vzero
-      use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_strings, only: cmprss, ucase
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -32437,7 +32425,7 @@ contains
 !
 !     Store a compressed, upper case, left-justified copy of VECDEF.
 !
-      call ljust ( vecdef,          svvdef )
+      svvdef = adjustl(vecdef)
       call cmprss ( ' ', 1, svvdef, svvdef )
       call ucase ( svvdef,          svvdef )
 
@@ -32461,11 +32449,11 @@ contains
 !
 !     Store a compressed, upper case, left-justified copy of CRDSYS.
 !
-      call ljust ( crdsys,          svcsys )
+      svcsys = adjustl(crdsys)
       call cmprss ( ' ', 0, svcsys, svcsys )
       call ucase ( svcsys,          svcsys )
 
-      sysidx = isrchc ( svcsys, nsys, sysnms )
+      sysidx = findloc(sysnms, svcsys, dim=1)
 
       if ( sysidx == 0 ) then
 !
@@ -32481,7 +32469,7 @@ contains
 !
 !     Store a compressed, upper case, left-justified copy of CRDNAM.
 !
-      call ljust  ( crdnam,        svcrd )
+      svcrd = adjustl(crdnam)
       call cmprss ( ' ', 1, svcrd, svcrd )
       call ucase  ( svcrd,         svcrd )
 
@@ -32489,7 +32477,7 @@ contains
 !     Find and save the index of the coordinate name in the list of
 !     supported names.
 !
-      svcidx = isrchc ( svcrd, 3, crdnms(1,sysidx) )
+      svcidx = findloc(crdnms(:,sysidx), svcrd, dim=1)
 
       if ( svcidx == 0 ) then
 !
@@ -32508,7 +32496,7 @@ contains
 !     Store an upper case, left-justified copy of REF.
 !
       ctx%zzgfcou_state%svref = ref
-      call ljust ( ref,   ctx%zzgfcou_state%svref )
+      ctx%zzgfcou_state%svref = adjustl(ref)
       call ucase ( ctx%zzgfcou_state%svref, ctx%zzgfcou_state%svref )
 
 !
@@ -32678,7 +32666,7 @@ contains
 !           Store an upper case, left-justified copy of METHOD.
 !
             ctx%zzgfcou_state%svmeth = method  ! PEPPER: allocated to the length of METHOD
-            call ljust ( method, ctx%zzgfcou_state%svmeth )
+            ctx%zzgfcou_state%svmeth = adjustl(method)
             call ucase ( ctx%zzgfcou_state%svmeth, ctx%zzgfcou_state%svmeth )
 
          else
@@ -32727,7 +32715,7 @@ contains
 !
       if ( svvdef == sindef ) then
 
-         if ( vzero(dvec) ) then
+         if ( all(dvec == 0.0_wp) ) then
 
             call ctx%setmsg ( 'Ray''s direction vector is the zero ' &
             //            'vector. This variable might be ' &
@@ -32739,7 +32727,7 @@ contains
 !
 !        Save DVEC and DREF.
 !
-         call moved  ( dvec, 3, svdvec )
+         svdvec = dvec
 
          ctx%zzgfcou_state%svdref = dref
 
@@ -32766,7 +32754,7 @@ contains
          ctx%zzgfcou_state%svdref = ' '
          svdctr = 0
 
-         call cleard ( 3, svdvec )
+         svdvec = 0.0_wp
 
       end if
 
@@ -33769,7 +33757,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_math, only: reccyl, reclat, recrad, recsph
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -33864,7 +33851,7 @@ contains
 !
 !        No conversion needed for rectangular coordinates.
 !
-         call moved ( state, 3, coords )
+         coords = state(1:3)
 
       else if ( svcsys == latsys ) then
 
@@ -34049,7 +34036,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_math, only: reccyl, reclat, recrad, recsph
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -34143,7 +34129,7 @@ contains
 !
 !        No conversion needed for rectangular coordinates.
 !
-         call moved ( state, 3, coords )
+         coords = state(1:3)
 
       else if ( svcsys == latsys ) then
 
@@ -35004,9 +34990,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
-      use pepper_arrays, only: isrchc
       use pepper_math, only: smsgnd
-      use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_strings, only: cmprss, ucase
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
@@ -35324,7 +35309,7 @@ contains
 !     Get an upper case, left-justified version of the
 !     requested comparison operation.
 !
-      call ljust ( relate, uop )
+      uop = adjustl(relate)
       call ucase ( uop,    uop )
 
 !
@@ -35332,7 +35317,7 @@ contains
 !
 !     Use the original operator string in the error message.
 !
-      i = isrchc( uop, nc, ops )
+      i = findloc(ops, uop, dim=1)
 
       if ( i == 0 ) then
 
@@ -35404,11 +35389,11 @@ contains
 !     Get an upper case, left-justified, compressed versions of the
 !     coordinate system and coordinate names.
 !
-      call ljust  ( crdsys,           nrmsys )
+      nrmsys = adjustl(crdsys)
       call cmprss ( ' ',   0, nrmsys, nrmsys )
       call ucase  ( nrmsys,           nrmsys )
 
-      call ljust  ( crdnam,           nrmcrd )
+      nrmcrd = adjustl(crdnam)
       call cmprss ( ' ',   1, nrmcrd, nrmcrd )
       call ucase  ( nrmcrd,           nrmcrd )
 
@@ -37507,8 +37492,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc
-      use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_strings, only: cmprss, ucase
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
@@ -37624,10 +37608,10 @@ contains
 !     Make sure that the requested comparison operation is one we
 !     recognize.
 !
-      call ljust ( relate,  uop )
+      uop = adjustl(relate)
       call ucase ( uop,     uop )
 
-      loc = isrchc ( uop, nc, cnames )
+      loc = findloc(cnames, uop, dim=1)
 
       if ( loc == 0 ) then
 
@@ -37662,7 +37646,7 @@ contains
 !     Create a left-justified, compressed copy of the
 !     input vector definition method.
 !
-      call ljust  ( vecdef,         locvdf )
+      locvdf = adjustl(vecdef)
       call cmprss ( ' ', 1, locvdf, locvdf )
       call ucase  ( locvdf,         locvdf )
 
@@ -37789,7 +37773,7 @@ contains
 !     Create a left-justified, compressed, upper case copy of the
 !     input coordinate name.
 !
-      call ljust  ( crdnam,         loccrd )
+      loccrd = adjustl(crdnam)
       call cmprss ( ' ', 1, loccrd, loccrd )
       call ucase  ( loccrd,         loccrd )
 
@@ -39360,9 +39344,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc
-      use pepper_math, only: vequ
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -39512,10 +39494,10 @@ contains
 !     Make sure the requested quantity is one we recognize.
 !
 
-      call ljust ( gquant, quant )
+      quant = adjustl(gquant)
       call ucase ( quant,  quant )
 
-      qtnum = isrchc ( quant, nq, qnames )
+      qtnum = findloc(qnames, quant, dim=1)
 
       if ( qtnum == 0 ) then
 
@@ -39552,10 +39534,10 @@ contains
 !
       do i = 1, qnpars
 
-         call ljust ( qpnams(i), pnames(i) )
+         pnames(i) = adjustl(qpnams(i))
          call ucase ( pnames(i), pnames(i) )
 
-         call ljust ( qcpars(i), cpars(i) )
+         cpars(i) = adjustl(qcpars(i))
          call ucase ( cpars(i),  cpars(i) )
 
       end do
@@ -39570,7 +39552,7 @@ contains
 !
 !           The Ith parameter must be supplied by the caller.
 !
-            loc = isrchc ( qpars(i,qtnum), qnpars, pnames )
+            loc = findloc(pnames(1:qnpars), qpars(i,qtnum), dim=1)
 
             if ( loc == 0 ) then
 
@@ -39618,7 +39600,7 @@ contains
 !
 !     -TARGET-
 !
-      loc = isrchc ( 'TARGET', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'TARGET', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39629,7 +39611,7 @@ contains
 !
 !     -OBSERVER-
 !
-      loc = isrchc ( 'OBSERVER', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'OBSERVER', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39640,7 +39622,7 @@ contains
 !
 !     -ILLUM-
 !
-      loc = isrchc ( 'ILLUM', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'ILLUM', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39651,7 +39633,7 @@ contains
 !
 !     -TARGET1-
 !
-      loc = isrchc ( 'TARGET1', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'TARGET1', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39662,7 +39644,7 @@ contains
 !
 !     -TARGET2-
 !
-      loc = isrchc ( 'TARGET2', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'TARGET2', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39673,7 +39655,7 @@ contains
 !
 !     -FRAME1-
 !
-      loc = isrchc ( 'FRAME1', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'FRAME1', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39684,7 +39666,7 @@ contains
 !
 !     -FRAME2-
 !
-      loc = isrchc ( 'FRAME2', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'FRAME2', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39695,7 +39677,7 @@ contains
 !
 !     -SHAPE1-
 !
-      loc = isrchc ( 'SHAPE1', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'SHAPE1', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39706,7 +39688,7 @@ contains
 !
 !     -SHAPE2-
 !
-      loc = isrchc ( 'SHAPE2', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'SHAPE2', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39717,7 +39699,7 @@ contains
 !
 !     -ABCORR-
 !
-      loc = isrchc ( 'ABCORR', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'ABCORR', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39728,7 +39710,7 @@ contains
 !
 !     -REFERENCE FRAME-
 !
-      loc = isrchc ( 'REFERENCE FRAME', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'REFERENCE FRAME', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39739,7 +39721,7 @@ contains
 !
 !     -COORDINATE SYSTEM-
 !
-      loc = isrchc ( 'COORDINATE SYSTEM',  qnpars, qpnams )
+      loc = findloc(qpnams(1:qnpars), 'COORDINATE SYSTEM', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39750,7 +39732,7 @@ contains
 !
 !     -COORDINATE-
 !
-      loc = isrchc ( 'COORDINATE', qnpars, qpnams )
+      loc = findloc(qpnams(1:qnpars), 'COORDINATE', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39761,7 +39743,7 @@ contains
 !
 !     -VECTOR DEFINITION-
 !
-      loc = isrchc ( 'VECTOR DEFINITION',  qnpars, qpnams )
+      loc = findloc(qpnams(1:qnpars), 'VECTOR DEFINITION', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39772,18 +39754,18 @@ contains
 !
 !     -DVEC-
 !
-      loc = isrchc ( 'DVEC', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'DVEC', dim=1)
 
       if ( loc > 0 ) then
 
-         call vequ( qdpars(1), dvec(1)  )
+         dvec(1:3) = qdpars(1:3)
 
       end if
 
 !
 !     -METHOD-
 !
-      loc = isrchc ( 'METHOD',  qnpars, qpnams )
+      loc = findloc(qpnams(1:qnpars), 'METHOD', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39794,7 +39776,7 @@ contains
 !
 !     -DREF-
 !
-      loc = isrchc ( 'DREF', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'DREF', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39805,7 +39787,7 @@ contains
 !
 !     -ANGTYP-
 !
-      loc = isrchc ( 'ANGTYP', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'ANGTYP', dim=1)
 
       if ( loc > 0 ) then
 
@@ -39816,11 +39798,11 @@ contains
 !
 !     -SPOINT-
 !
-      loc = isrchc ( 'SPOINT', qnpars, pnames )
+      loc = findloc(pnames(1:qnpars), 'SPOINT', dim=1)
 
       if ( loc > 0 ) then
 
-         call vequ( qdpars(1), spoint )
+         spoint = qdpars(1:3)
 
       end if
 
@@ -39829,10 +39811,10 @@ contains
 !     recognize.
 !
 
-      call ljust ( op,   uop )
+      uop = adjustl(op)
       call ucase ( uop,  uop )
 
-      loc = isrchc ( uop, nc, cnames )
+      loc = findloc(cnames, uop, dim=1)
 
       if ( loc == 0 ) then
 
@@ -41359,7 +41341,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
@@ -42623,7 +42604,7 @@ contains
 !     Copy SPOINT to elements 1-3 of the QDPARS array.
 !
       qpnams(8) = 'SPOINT'
-      call moved ( spoint, 3, qdpars )
+      qdpars(1:3) = spoint
 
 !
 !     Initialize the corresponding character parameter, even though
@@ -43767,7 +43748,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: even
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -45571,7 +45551,7 @@ contains
 !
 !     Confirm minimum window sizes.
 !
-      if ( mw < 2 .or. .not. even(mw) ) then
+      if ( mw < 2 .or. .not. (mod(mw, 2) == 0) ) then
 
          call ctx%setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )
@@ -46762,7 +46742,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: even
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
@@ -47795,7 +47774,7 @@ contains
 !
       if ( ctx%failed() ) return
 
-      if ( mw < 2 .or. .not. even(mw) ) then
+      if ( mw < 2 .or. .not. (mod(mw, 2) == 0) ) then
 
          call ctx%setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )
@@ -47816,7 +47795,7 @@ contains
 
       end if
 
-      if ( sized( ctx,result) < 2 .or. .not. even( sized( ctx,result) ) ) then
+      if ( sized( ctx,result) < 2 .or. .not. (mod(sized( ctx,result), 2) == 0) ) then
 
          call ctx%setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2 and an even value.'             )
@@ -47927,7 +47906,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: even
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzholdd
@@ -49330,7 +49308,7 @@ contains
 !
 !     Confirm minimum window sizes.
 !
-      if ( mw < 2 .or. .not. even(mw) ) then
+      if ( mw < 2 .or. .not. (mod(mw, 2) == 0) ) then
 
          call ctx%setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )
@@ -49460,7 +49438,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: even
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -50621,7 +50598,7 @@ contains
 !
 !     Confirm minimum window sizes.
 !
-      if ( mw < 2 .or. .not. even(mw) ) then
+      if ( mw < 2 .or. .not. (mod(mw, 2) == 0) ) then
 
          call ctx%setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )

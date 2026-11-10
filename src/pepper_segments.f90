@@ -907,7 +907,6 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
-      use pepper_arrays, only: isrchi
       implicit none
 !
 !     PEPPER: the segments of the file are indexed now (SPICELIB found
@@ -1124,7 +1123,6 @@ contains
 !!        When unloading a file, close it.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi, moved
       implicit none
       if ( ctx%failed() ) return
       if ( .not. allocated ( ctx%spice%spkbsr ) ) return
@@ -1407,7 +1405,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin, intmax
-      use pepper_arrays, only: cleard, isrchi, moved
       implicit none
       found = .false.
       if ( ctx%failed() ) return
@@ -2371,7 +2368,6 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
-      use pepper_arrays, only: isrchi
       implicit none
 !
 !     PEPPER: the segments of the file are indexed now (SPICELIB found
@@ -2500,7 +2496,6 @@ contains
 !!     unload PCK file
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi, moved
       implicit none
       if ( ctx%failed() ) return
       if ( .not. allocated ( ctx%spice%pckbsr ) ) return
@@ -2692,7 +2687,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin, intmax
-      use pepper_arrays, only: cleard, isrchi, moved
       implicit none
       found = .false.
       if ( ctx%failed() ) return
@@ -3879,7 +3873,6 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
-      use pepper_arrays, only: isrchi
       implicit none
 !
 !     PEPPER: the segments of the file are indexed now (SPICELIB found
@@ -4087,7 +4080,6 @@ contains
 !!-    Beta Version 1.0.0, 07-SEP-1990 (RET) (IMU)
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi, moved
       implicit none
       if ( ctx%failed() ) return
       if ( .not. allocated ( ctx%spice%ckbsr ) ) return
@@ -4259,7 +4251,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       implicit none
       if ( .not. allocated ( ctx%ckbsr_cache ) ) allocate ( ctx%ckbsr_cache )
       associate ( cs => ctx%ckbsr_cache )
@@ -4593,7 +4584,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin, intmax
-      use pepper_arrays, only: cleard, moved
       implicit none
       integer(ip) :: e
       integer(ip) :: s
@@ -5285,7 +5275,6 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
-      use pepper_arrays, only: isrchi
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
@@ -5420,7 +5409,6 @@ contains
 !!     None.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
@@ -5545,7 +5533,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
@@ -5737,7 +5724,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
-      use pepper_arrays, only: moved, movei
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr

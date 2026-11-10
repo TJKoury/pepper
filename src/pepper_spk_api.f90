@@ -1674,8 +1674,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
-      use pepper_strings, only: lastnb
       use pepper_inc_sgparam
       implicit none
       integer(ip), parameter :: fprint = 32
@@ -1746,7 +1744,7 @@ contains
 !
       if ( nft > 0 ) then
 
-         index = isrchi ( handle, nft, fthan )
+         index = findloc(fthan(1:nft), handle, dim=1)
 
          if ( index /= 0 ) then
 
@@ -1780,7 +1778,7 @@ contains
 !     Get the length of the segment ID. Leading blanks are considered to
 !     be important. A blank segment ID is OK too.
 !
-      sidlen = lastnb ( segid )
+      sidlen = len_trim(segid)
 !
 !     Check the segment ID to see if it is OK. Its length must be less
 !     than NC and it must consist of only printing ASCII characters.
@@ -2101,8 +2099,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
-      use pepper_strings, only: lastnb
       use pepper_inc_sgparam
       implicit none
       integer(ip), parameter :: fprint = 32
@@ -2174,7 +2170,7 @@ contains
 !
       if ( nft > 0 ) then
 
-         index = isrchi ( handle, nft, fthan )
+         index = findloc(fthan(1:nft), handle, dim=1)
 
          if ( index /= 0 ) then
 
@@ -2208,7 +2204,7 @@ contains
 !     Get the length of the segment ID. Leading blanks are considered to
 !     be important. A blank segment ID is OK too.
 !
-      sidlen = lastnb ( segid )
+      sidlen = len_trim(segid)
 !
 !     Check the segment ID to see if it is OK. Its length must be less
 !     than NC and it must consist of only printing ASCII characters.
@@ -2576,7 +2572,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_sgparam
       implicit none
       integer(ip), parameter :: fprint = 32
@@ -2642,7 +2637,7 @@ contains
 !
       if ( handle /= lsthan ) then
 
-         index = isrchi ( handle, nft, fthan )
+         index = findloc(fthan(1:nft), handle, dim=1)
 
          if ( index == 0 ) then
 
@@ -3103,7 +3098,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_sgparam
       implicit none
       integer(ip), parameter :: fprint = 32
@@ -3170,7 +3164,7 @@ contains
 !
       if ( handle /= lsthan ) then
 
-         index = isrchi ( handle, nft, fthan )
+         index = findloc(fthan(1:nft), handle, dim=1)
 
          if ( index == 0 ) then
 
@@ -3560,7 +3554,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_sgparam
       implicit none
       real(wp) :: mysize_1(1)  !! one-element copy of mysize (array argument)
@@ -3635,7 +3628,7 @@ contains
 !
       if ( handle /= lsthan ) then
 
-         index = isrchi ( handle, nft, fthan )
+         index = findloc(fthan(1:nft), handle, dim=1)
 
          if ( index == 0 ) then
 
@@ -5111,8 +5104,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: cleard, isrchi, moved
-      use pepper_math, only: mxv, mxvg, vaddg, vnorm, vsubg
+      use pepper_math, only: mxv, mxvg, vnorm
       use pepper_strings, only: frstnp, intstr, prefix, suffix
       use pepper_inc_ninert
       use pepper_inc_zzctr
@@ -5178,7 +5170,7 @@ contains
 
          lt = 0.0_wp
 
-         call cleard ( 6, state )
+         state = 0.0_wp
          return
 
       end if
@@ -5313,7 +5305,7 @@ contains
       ctarg(i) =  targ
       found    = .true.
 
-      call cleard ( 6, starg(1,i) )
+      starg(:,i) = 0.0_wp
 
       do while (           found &
                   .and.  ( i        < chlen ) &
@@ -5392,7 +5384,7 @@ contains
 !
                if ( tframe(chlen) == tmpfrm ) then
 
-                  call moved ( starg(1,chlen), 6, vtemp )
+                  vtemp = starg(:,chlen)
 
                else if ( isinrt ( tframe(chlen), tmpfrm ) ) then
 
@@ -5410,7 +5402,7 @@ contains
 
                end if
 
-               call vaddg ( vtemp,  stemp,        6, starg(1,chlen) )
+               starg(:,chlen) = vtemp + stemp
 
                tframe(chlen) = tmpfrm
 
@@ -5447,7 +5439,7 @@ contains
 !     the first values for COBS and SOBS.
 !
       cobs = obs
-      call cleard ( 6, sobs )
+      sobs = 0.0_wp
 
 !
 !     Perhaps we have a common node already.
@@ -5522,8 +5514,8 @@ contains
 !              number of legs in the observer state is one or greater.
 !
                if ( legs > 0 ) then
-                  call vaddg ( sobs,  stemp, 6, vtemp )
-                  call moved ( vtemp,        6, sobs  )
+                  vtemp = sobs + stemp
+                  sobs = vtemp
                end if
 
             else if ( isinrt( cframe, tmpfrm ) ) then
@@ -5531,7 +5523,7 @@ contains
                call irfrot ( ctx, cframe, tmpfrm, rot )
                call mxv    ( rot,    sobs(1),   vtemp(1)  )
                call mxv    ( rot,    sobs(4),   vtemp(4)  )
-               call vaddg  ( vtemp,  stemp,     6, sobs   )
+               sobs = vtemp + stemp
                cframe = tmpfrm
 
             else
@@ -5541,7 +5533,7 @@ contains
                if ( ctx%failed() ) return
 
                call mxvg   ( stxfrm, sobs,   6, 6, vtemp  )
-               call vaddg  ( vtemp,  stemp,     6, sobs   )
+               sobs = vtemp + stemp
                cframe = tmpfrm
 
             end if
@@ -5552,7 +5544,7 @@ contains
 !           is a common node. If not, repeat the loop.
 !
             legs  = legs + 1
-            ctpos = isrchi ( cobs, nct, ctarg )
+            ctpos = findloc(ctarg(1:nct), cobs, dim=1)
 
          end if
 
@@ -5645,16 +5637,16 @@ contains
 
          if ( tframe(i) == tframe(i+1) ) then
 
-            call vaddg  ( starg(1,i), starg(1,i+1), 6, vtemp        )
-            call moved  ( vtemp,                    6, starg(1,i+1) )
+            vtemp = starg(:,i) + starg(:,i+1)
+            starg(:,i+1) = vtemp
 
          else if ( isinrt ( tframe(i), tframe(i+1) ) ) then
 
             call irfrot ( ctx, tframe(i),  tframe(i+1),     rot          )
             call mxv    ( rot,        starg(1,i),      stemp(1)     )
             call mxv    ( rot,        starg(4,i),      stemp(4)     )
-            call vaddg  ( stemp,      starg(1,i+1), 6, vtemp        )
-            call moved  ( vtemp,                    6, starg(1,i+1) )
+            vtemp = stemp + starg(:,i+1)
+            starg(:,i+1) = vtemp
 
          else
 
@@ -5663,8 +5655,8 @@ contains
             if ( ctx%failed() ) return
 
             call mxvg   ( stxfrm,     starg(1,i),  6,6, stemp        )
-            call vaddg  ( stemp,      starg(1,i+1),  6, vtemp        )
-            call moved  ( vtemp,                     6, starg(1,i+1) )
+            vtemp = stemp + starg(:,i+1)
+            starg(:,i+1) = vtemp
 
          end if
 
@@ -5678,7 +5670,7 @@ contains
 !
       if ( tframe(ctpos) == cframe ) then
 
-         call vsubg  ( starg(1,ctpos), sobs, 6,   state  )
+         state = starg(:,ctpos) - sobs
 
       else if ( tframe(ctpos) == refid ) then
 
@@ -5709,7 +5701,7 @@ contains
 !        Set CFRAME to reflect this.
 !
          cframe = refid
-         call vsubg ( starg(1,ctpos),  stemp, 6, state )
+         state = starg(:,ctpos) - stemp
 
       else if ( isinrt( tframe(ctpos), cframe ) ) then
 !
@@ -5719,7 +5711,7 @@ contains
          call irfrot ( ctx, tframe(ctpos),  cframe,               rot      )
          call mxv    ( rot,            starg(1,ctpos),       stemp(1) )
          call mxv    ( rot,            starg(4,ctpos),       stemp(4) )
-         call vsubg  ( stemp,          sobs,            6,   state    )
+         state = stemp - sobs
 
       else
 !
@@ -5730,7 +5722,7 @@ contains
          if ( ctx%failed() ) return
 
          call mxvg   ( stxfrm,         starg(1,ctpos),  6,6, stemp  )
-         call vsubg  ( stemp,          sobs,            6,   state  )
+         state = stemp - sobs
 
       end if
 
@@ -5751,7 +5743,7 @@ contains
          call irfrot ( ctx, cframe,  refid,      rot      )
          call mxv    ( rot,     state(1),   stemp(1) )
          call mxv    ( rot,     state(4),   stemp(4) )
-         call moved  ( stemp,   6,          state    )
+         state = stemp
 
       else
 
@@ -5760,7 +5752,7 @@ contains
          if ( ctx%failed() ) return
 
          call mxvg   ( stxfrm,  state, 6, 6, stemp )
-         call moved  ( stemp,          6,    state )
+         state = stemp
 
       end if
 
@@ -6061,8 +6053,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: cleard, isrchi, moved
-      use pepper_math, only: mxv, vadd, vequ, vnorm, vsub
+      use pepper_math, only: mxv, vnorm
       use pepper_strings, only: frstnp, intstr, prefix, suffix
       use pepper_inc_ninert
       use pepper_inc_zzctr
@@ -6128,7 +6119,7 @@ contains
 
          lt = 0.0_wp
 
-         call cleard ( 3, pos )
+         pos = 0.0_wp
          return
 
       end if
@@ -6263,7 +6254,7 @@ contains
       ctarg(i) =  targ
       found    = .true.
 
-      call cleard ( 6, starg(1,i) )
+      starg(:,i) = 0.0_wp
 
       do while (           found &
                   .and.  ( i        < chlen ) &
@@ -6344,7 +6335,7 @@ contains
 !
                if ( tframe(chlen) == tmpfrm ) then
 
-                  call moved ( starg(1,chlen), 3, vtemp )
+                  vtemp(1:3) = starg(1:3,chlen)
 
                else if ( isinrt ( tframe(chlen), tmpfrm ) ) then
 
@@ -6361,7 +6352,7 @@ contains
 
                end if
 
-               call vadd ( vtemp,  stemp, starg(1,chlen) )
+               starg(1:3,chlen) = vtemp(1:3) + stemp(1:3)
 
                tframe(chlen) = tmpfrm
 
@@ -6398,7 +6389,7 @@ contains
 !     the first values for COBS and SOBS.
 !
       cobs = obs
-      call cleard ( 6, sobs )
+      sobs = 0.0_wp
 
 !
 !     Perhaps we have a common node already.
@@ -6475,15 +6466,15 @@ contains
 !              greater.
 !
                if ( legs > 0 ) then
-                  call vadd ( sobs,  stemp, vtemp )
-                  call vequ ( vtemp,        sobs  )
+                  vtemp(1:3) = sobs(1:3) + stemp(1:3)
+                  sobs(1:3) = vtemp(1:3)
                end if
 
             else if ( isinrt( cframe, tmpfrm ) ) then
 
                call irfrot ( ctx, cframe, tmpfrm, rot )
                call mxv    ( rot,    sobs(1),   vtemp(1)  )
-               call vadd   ( vtemp,  stemp,     sobs      )
+               sobs(1:3) = vtemp(1:3) + stemp(1:3)
                cframe = tmpfrm
 
             else
@@ -6493,7 +6484,7 @@ contains
                if ( ctx%failed() ) return
 
                call mxv    ( psxfrm, sobs,         vtemp  )
-               call vadd   ( vtemp,  stemp,        sobs   )
+               sobs(1:3) = vtemp(1:3) + stemp(1:3)
                cframe = tmpfrm
 
             end if
@@ -6504,7 +6495,7 @@ contains
 !           is a common node. If not, repeat the loop.
 !
             legs  = legs + 1
-            ctpos = isrchi ( cobs, nct, ctarg )
+            ctpos = findloc(ctarg(1:nct), cobs, dim=1)
 
          end if
 
@@ -6597,15 +6588,15 @@ contains
 
          if ( tframe(i) == tframe(i+1) ) then
 
-            call vadd  ( starg(1,i), starg(1,i+1),  stemp        )
-            call moved ( stemp,      3,             starg(1,i+1) )
+            stemp(1:3) = starg(1:3,i) + starg(1:3,i+1)
+            starg(1:3,i+1) = stemp(1:3)
 
          else if ( isinrt ( tframe(i), tframe(i+1) ) ) then
 
             call irfrot ( ctx, tframe(i),  tframe(i+1),     rot          )
             call mxv    ( rot,        starg(1,i),      stemp(1)     )
-            call vadd   ( stemp,      starg(1,i+1),    vtemp        )
-            call moved  ( vtemp,      3,               starg(1,i+1) )
+            vtemp(1:3) = stemp(1:3) + starg(1:3,i+1)
+            starg(1:3,i+1) = vtemp(1:3)
 
          else
 
@@ -6614,8 +6605,8 @@ contains
             if ( ctx%failed() ) return
 
             call mxv    ( psxfrm,     starg(1,i),       stemp        )
-            call vadd   ( stemp,      starg(1,i+1),     vtemp        )
-            call moved  ( vtemp,      3,                starg(1,i+1) )
+            vtemp(1:3) = stemp(1:3) + starg(1:3,i+1)
+            starg(1:3,i+1) = vtemp(1:3)
 
          end if
 
@@ -6629,7 +6620,7 @@ contains
 !
       if ( tframe(ctpos) == cframe ) then
 
-         call vsub   ( starg(1,ctpos), sobs,  pos  )
+         pos = starg(1:3,ctpos) - sobs(1:3)
 
       else if ( tframe(ctpos) == refid ) then
 
@@ -6659,7 +6650,7 @@ contains
 !        Set CFRAME to reflect this.
 !
          cframe = refid
-         call vsub  ( starg(1,ctpos), stemp, pos )
+         pos = starg(1:3,ctpos) - stemp(1:3)
 
       else if ( isinrt( tframe(ctpos), cframe ) ) then
 
@@ -6669,7 +6660,7 @@ contains
 !
          call irfrot ( ctx, tframe(ctpos),  cframe,               rot      )
          call mxv    ( rot,            starg(1,ctpos),       stemp(1) )
-         call vsub   ( stemp,          sobs,                 pos    )
+         pos = stemp(1:3) - sobs(1:3)
 
       else
 !
@@ -6680,7 +6671,7 @@ contains
          if ( ctx%failed() ) return
 
          call mxv    ( psxfrm,         starg(1,ctpos),       stemp  )
-         call vsub   ( stemp,          sobs,                 pos  )
+         pos = stemp(1:3) - sobs(1:3)
 
       end if
 
@@ -6700,7 +6691,7 @@ contains
 !
          call irfrot ( ctx, cframe,  refid,    rot          )
          call mxv    ( rot,     pos(1),   stemp(1)     )
-         call moved  ( stemp,        3,   pos          )
+         pos = stemp(1:3)
 
       else
 
@@ -6709,7 +6700,7 @@ contains
          if ( ctx%failed() ) return
 
          call mxv    ( psxfrm,  pos,        stemp   )
-         call moved  ( stemp,          3,   pos     )
+         pos = stemp(1:3)
 
       end if
 
@@ -11849,8 +11840,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
-      use pepper_math, only: vsclip
       implicit none
 
 
@@ -12210,7 +12199,7 @@ contains
 !     the lower left, first copy the input matrix
 !     to the output matrix.
 !
-      call moved ( xform, 36, corxfm )
+      corxfm = xform
 
 !
 !     Adjust the rotation derivative block for
@@ -12226,7 +12215,7 @@ contains
 !        Scale the vector starting at index
 !        (4,COL) in place.
 !
-         call vsclip ( scale, corxfm(4,col) )
+         corxfm(4:6,col) = scale*corxfm(4:6,col)
 
       end do
 
@@ -12488,7 +12477,7 @@ contains
 !!-    SPICELIB Version 2.0.0, 11-JAN-2012 (NJB)
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: mxvg, vequ, vlcom
+      use pepper_math, only: mxvg
       implicit none
       real(wp)              delta
       real(wp)              xstate ( 6 )
@@ -12507,9 +12496,9 @@ contains
 !
       delta = et - svet
 
-      call vlcom ( 1.0_wp, svstat(1), delta, svstat(4), xstate )
+      xstate(1:3) = 1.0_wp*svstat(1:3) + delta*svstat(4:6)
 
-      call vequ  ( svstat(4), xstate(4) )
+      xstate(4:6) = svstat(4:6)
 
 !
 !     Convert the extrapolated state to the requested frame
@@ -12621,7 +12610,6 @@ contains
 !!-    SPICELIB Version 2.0.0, 11-JAN-2012 (NJB)
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
       real(wp)              delta
       real(wp)              xstate ( 6 )
@@ -12640,7 +12628,7 @@ contains
 !
 !     Save all inputs.
 !
-      call moved ( state, 6, svstat )
+      svstat = state
 
       svctr = center
       svet  = et
@@ -14480,8 +14468,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: isrchc
-      use pepper_math, only: odd, vequ, vnorm, vsub
+      use pepper_math, only: odd, vnorm
       use pepper_strings, only: ljucrs
       implicit none
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
@@ -14529,7 +14516,7 @@ contains
 !
 !        Locate the flag in our list of flags.
 !
-         i = isrchc ( corr, nflags, flags )
+         i = findloc(flags, corr, dim=1)
 
          if ( i == 0 ) then
 
@@ -14606,8 +14593,8 @@ contains
 
       if ( ctx%failed() ) return
 
-      call vsub   ( ptarg,  sobs,           tpos      )
-      call vequ   ( tpos,   ptarg                     )
+      tpos = ptarg - sobs(1:3)
+      ptarg = tpos
       lt = vnorm  ( ptarg ) / clight
 
 !
@@ -14629,8 +14616,8 @@ contains
 
          if ( ctx%failed() ) return
 
-         call vsub   ( ptarg,  sobs,     tpos )
-         call vequ   ( tpos,   ptarg )
+         tpos = ptarg - sobs(1:3)
+         ptarg = tpos
          lt = vnorm  ( ptarg ) / clight
 
       end do
@@ -14652,7 +14639,7 @@ contains
 !           "reception" stellar aberration to PTARG.
 !
             call stlabx ( ctx, ptarg, sobs(4), tpos )
-            call vequ   ( tpos,  ptarg )
+            ptarg = tpos
 
          else
 !
@@ -14662,7 +14649,7 @@ contains
 !           "reception" stellar aberration to PTARG.
 !
             call stelab ( ctx, ptarg, sobs(4), tpos )
-            call vequ   ( tpos,  ptarg )
+            ptarg = tpos
 
          end if
 
@@ -15156,8 +15143,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: touchd
-      use pepper_math, only: vdot, vlcom, vnorm, vsubg
+      use pepper_math, only: vdot, vnorm
       use pepper_inc_zzabcorr
       implicit none
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
@@ -15262,7 +15248,7 @@ contains
 
       if ( ctx%failed() ) return
 
-      call vsubg  ( ssbtrg, stobs, 6,   starg  )
+      starg = ssbtrg - stobs
 
       dist = vnorm(starg)
       lt   = dist / clight
@@ -15333,17 +15319,16 @@ contains
 
          if ( ctx%failed() ) return
 
-         call vsubg  ( ssbtrg, stobs, 6, starg )
+         starg = ssbtrg - stobs
 
          prvlt = lt
-         lt    = touchd(  vnorm( starg ) / clight  )
+         lt    = (vnorm( starg ) / clight)
 
 !        LTERR is the magnitude of the change between the current
 !        estimate of light time and the previous estimate, relative to
 !        the previous light time corrected epoch.
 !
-         lterr = touchd(    abs( lt  - prvlt      ) &
-                          / max( 1.0_wp, abs(epoch) )  )
+         lterr = (abs( lt  - prvlt      )  / max( 1.0_wp, abs(epoch) ))
          i     = i + 1
 
       end do
@@ -15458,8 +15443,7 @@ contains
 !     Overwrite the velocity portion of the output state
 !     with the light-time corrected velocity.
 !
-      call vlcom ( 1.0_wp + ltsign*dlt, ssbtrg(4), &
-                  -1.0_wp,              stobs(4),   starg(4) )
+      starg(4:6) = (1.0_wp + ltsign*dlt)*ssbtrg(4:6) + (-1.0_wp)*stobs(4:6)
 
       return
       end associate
@@ -16870,8 +16854,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: isrchc, moved
-      use pepper_math, only: odd, vequ, vnorm, vsubg
+      use pepper_math, only: odd, vnorm
       use pepper_strings, only: ljucrs
       implicit none
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
@@ -16919,7 +16902,7 @@ contains
 !
 !        Locate the flag in our list of flags.
 !
-         i = isrchc ( corr, nflags, flags )
+         i = findloc(flags, corr, dim=1)
 
          if ( i == 0 ) then
 
@@ -16994,8 +16977,8 @@ contains
 !     light time.
 !
       call spkssb ( ctx, targ,  et,   ref, starg  )
-      call vsubg  ( starg, sobs, 6,   tstate )
-      call moved  ( tstate,      6,   starg  )
+      tstate = starg - sobs
+      starg = tstate
 
       lt = vnorm  ( starg ) / clight
 
@@ -17021,8 +17004,8 @@ contains
       do i = 1, maxitr
 
          call spkssb ( ctx, targ,  et + ltsign*lt,  ref,  starg  )
-         call vsubg  ( starg, sobs,            6,    tstate )
-         call moved  ( tstate,                 6,    starg  )
+         tstate = starg - sobs
+         starg = tstate
          lt = vnorm  ( starg ) / clight
 
       end do
@@ -17046,7 +17029,7 @@ contains
 !           "reception" stellar aberration to STARG.
 !
             call stlabx ( ctx, starg, sobs(4), sapos )
-            call vequ   ( sapos, starg )
+            starg(1:3) = sapos
 
          else
 !
@@ -17056,7 +17039,7 @@ contains
 !           "reception" stellar aberration to STARG.
 !
             call stelab ( ctx, starg, sobs(4), sapos )
-            call vequ   ( sapos, starg )
+            starg(1:3) = sapos
 
          end if
 
@@ -17620,7 +17603,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vadd, vequ
       use pepper_inc_zzabcorr
       implicit none
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
@@ -17719,14 +17701,14 @@ contains
 !     time-corrected target position yields the position corrected for
 !     both light time and stellar aberration.
 !
-      call vadd ( pcorr,  starg, corpos )
-      call vequ ( corpos, starg         )
+      corpos = pcorr + starg(1:3)
+      starg(1:3) = corpos
 
 !
 !     Velocity is treated in an analogous manner.
 !
-      call vadd ( dpcorr, starg(4), corvel )
-      call vequ ( corvel, starg(4)         )
+      corvel = dpcorr + starg(4:6)
+      starg(4:6) = corvel
 
       return
       end associate
@@ -18508,7 +18490,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv
       use pepper_strings, only: eqchr, eqstr, ltrim
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       character(*), parameter :: rname = 'SPKEZP'
@@ -19236,8 +19218,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: touchd
-      use pepper_math, only: vaddg, vdot, vlcom, vnorm, vsubg
+      use pepper_math, only: vdot, vnorm
       use pepper_inc_zzabcorr
       implicit none
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
@@ -19345,8 +19326,8 @@ contains
 
       if ( ctx%failed() ) return
 
-      call vaddg  ( ctrssb, sttctr, 6,      ssbtrg )
-      call vsubg  ( ssbtrg, stobs,  6,      starg  )
+      ssbtrg = ctrssb + sttctr
+      starg = ssbtrg - stobs
 
       dist = vnorm(starg)
       lt   = dist / clight
@@ -19412,26 +19393,25 @@ contains
 !        LT was set either prior to this loop or
 !        during the previous loop iteration.
 !
-         epoch = touchd(  et  +  ( ltsign * lt )  )
+         epoch = (et  +  ( ltsign * lt ))
 
          call trgsub (         ctx, epoch,  ref, trgctr, sttctr )
          call spkssb ( ctx, trgctr, epoch,  ref,         ctrssb )
 
          if ( ctx%failed() ) return
 
-         call vaddg  ( ctrssb, sttctr, 6,           ssbtrg )
-         call vsubg  ( ssbtrg, stobs,  6,           starg  )
+         ssbtrg = ctrssb + sttctr
+         starg = ssbtrg - stobs
 
          prvlt = lt
-         lt    = touchd(  vnorm ( starg ) / clight  )
+         lt    = (vnorm ( starg ) / clight)
 
 !
 !        LTERR is the magnitude of the change between the current
 !        estimate of light time and the previous estimate, relative to
 !        the previous light time corrected epoch.
 !
-         lterr = touchd(    abs ( lt  - prvlt      ) &
-                          / max ( 1.0_wp, abs(epoch) )  )
+         lterr = (abs ( lt  - prvlt      )  / max ( 1.0_wp, abs(epoch) ))
          i     = i + 1
 
       end do
@@ -19546,8 +19526,7 @@ contains
 !     Overwrite the velocity portion of the output state
 !     with the light-time corrected velocity.
 !
-      call vlcom ( 1.0_wp + ltsign*dlt, ssbtrg(4), &
-                  -1.0_wp,              stobs(4),   starg(4) )
+      starg(4:6) = (1.0_wp + ltsign*dlt)*ssbtrg(4:6) + (-1.0_wp)*stobs(4:6)
 
       return
       end associate
@@ -20016,7 +19995,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       use pepper_inc_zzabcorr
       implicit none
       logical :: usestl  !! (PEPPER) copy of the saved flag for this call
@@ -20121,7 +20099,7 @@ contains
 
       else
 
-         call cleard ( 3, acc )
+         acc = 0.0_wp
 
       end if
 
@@ -21345,8 +21323,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
-      use pepper_math, only: vaddg
       use pepper_inc_zzabcorr
       implicit none
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
@@ -21445,7 +21421,7 @@ contains
 
       if ( ctx%failed() ) return
 
-      call vaddg  ( stctro, stctr, 6, ssbobs )
+      ssbobs = stctro + stctr
 
       if ( usestl ) then
 !
@@ -21463,7 +21439,7 @@ contains
 
             if ( ctx%failed() ) return
 
-            call vaddg  ( stctro, stctr, 6, stobs(1,i) )
+            stobs(:,i) = stctro + stctr
 
          end do
 
@@ -21471,7 +21447,7 @@ contains
 
       else
 
-         call cleard ( 3, acc )
+         acc = 0.0_wp
 
       end if
 
@@ -21830,7 +21806,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vadd, vequ
       use pepper_inc_zzabcorr
       implicit none
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
@@ -21938,14 +21913,14 @@ contains
 !     time-corrected target position yields the position corrected for
 !     both light time and stellar aberration.
 !
-      call vadd ( pcorr,  starg, corpos )
-      call vequ ( corpos, starg         )
+      corpos = pcorr + starg(1:3)
+      starg(1:3) = corpos
 
 !
 !     Velocity is treated in an analogous manner.
 !
-      call vadd ( dpcorr, starg(4), corvel )
-      call vequ ( corvel, starg(4)         )
+      corvel = dpcorr + starg(4:6)
+      starg(4:6) = corvel
 
       return
       end associate
@@ -22919,8 +22894,8 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: mxvg, vsclip
-      use pepper_inc_frmtyp
+      use pepper_math, only: mxvg
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
@@ -23162,7 +23137,7 @@ contains
 !
          do i = 1, 3
 
-            call vsclip ( 1.0_wp + ltsign*dltctr, xform(4,i))
+            xform(4:6,i) = (1.0_wp + ltsign*dltctr)*xform(4:6,i)
 
          end do
 
@@ -23495,7 +23470,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       use pepper_inc_zzabcorr
       implicit none
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
@@ -23609,7 +23583,7 @@ contains
 
       else
 
-         call cleard ( 3, acc )
+         acc = 0.0_wp
 
       end if
 
@@ -24332,8 +24306,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_math, only: mxvg, vaddg, vnorm, vsubg
-      use pepper_inc_frmtyp
+      use pepper_math, only: mxvg, vnorm
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       implicit none
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
@@ -24438,7 +24412,7 @@ contains
 
          if ( ctx%failed() ) return
 
-         call vsubg  ( stemp, stoctr, 6,      starg  )
+         starg = stemp - stoctr
 
          lt = vnorm ( starg ) / clight
 
@@ -24518,7 +24492,7 @@ contains
 
             if ( ctx%failed() ) return
 
-            call vaddg  ( stemp,   stoctr,  6,        stobs  )
+            stobs = stemp + stoctr
 
             call spkltc ( ctx, center, et,     'J2000', abcorr, stobs, &
                           stemp,  ltcent, dltctr                 )
@@ -25908,7 +25882,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_math, only: mxvg
       use pepper_strings, only: esrchc
       use pepper_inc_zzabcorr
@@ -26113,7 +26086,7 @@ contains
 
          if ( orfcde == j2code ) then
 
-            call moved ( j2stat, 6, state )
+            state = j2stat
 
          else
 
@@ -26166,7 +26139,7 @@ contains
 !           The output frame is J2000. No frame transformation is
 !           required.
 !
-            call moved ( j2stat, 6, state )
+            state = j2stat
 
          else
 !
@@ -27505,8 +27478,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_math, only: mxvg, vaddg, vnorm
-      use pepper_inc_frmtyp
+      use pepper_math, only: mxvg, vnorm
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       implicit none
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
@@ -27609,7 +27582,7 @@ contains
 
          if ( ctx%failed() ) return
 
-         call vaddg  ( sttctr, stemp, 6, starg )
+         starg = sttctr + stemp
 
          lt = vnorm( starg ) / clight
 
@@ -27760,8 +27733,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: cleard
-      use pepper_math, only: vequ
       use pepper_inc_zzabcorr
       implicit none
 
@@ -29034,8 +29005,8 @@ contains
 !     Create a state vector for the observer. The velocity
 !     portion of the state is zero.
 !
-      call vequ   ( obspos, obssta    )
-      call cleard ( 3,      obssta(4) )
+      obssta(1:3) = obspos
+      obssta(4:6) = 0.0_wp
 
 !
 !     Set the observation epoch; the value is arbitrary, since
@@ -30086,7 +30057,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_math, only: mxvg
       use pepper_strings, only: esrchc
       use pepper_inc_zzabcorr
@@ -30290,7 +30260,7 @@ contains
 
          if ( orfcde == j2code ) then
 
-            call moved ( j2stat, 6, state )
+            state = j2stat
 
          else
 
@@ -30343,7 +30313,7 @@ contains
 !           The output frame is J2000. No frame transformation is
 !           required.
 !
-            call moved ( j2stat, 6, state )
+            state = j2stat
 
          else
 !
@@ -30409,8 +30379,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: cleard
-      use pepper_math, only: vequ
       use pepper_inc_zzabcorr
       implicit none
 
@@ -31372,8 +31340,8 @@ contains
 !     Create a state vector for the target. The velocity
 !     portion of the state is zero.
 !
-      call vequ   ( trgpos, trgsta    )
-      call cleard ( 3,      trgsta(4) )
+      trgsta(1:3) = trgpos
+      trgsta(4:6) = 0.0_wp
 
 !
 !     Set the target epoch; the value is arbitrary, since

@@ -1970,7 +1970,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_strings, only: cmprss, eqstr, lparsm, nparsi, ucase
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -2004,7 +2003,7 @@ contains
 !
 !     Start with a clean slate.
 !
-      call cleari ( cdscsz, pardsc )
+      pardsc(1:cdscsz) = 0
 
 !
 !     Our declaration language has been cleverly designed so that the
@@ -2721,7 +2720,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, cleari
       use pepper_inc_ekquery
       use pepper_inc_ekqlimit
       use pepper_inc_ekbool
@@ -2846,7 +2844,7 @@ contains
 !     STRINGTOOSHORT).
 !
       call ssizei ( ctx, isize, eqryi )
-      call cleard ( dsize, eqryd )
+      eqryd(1:dsize) = 0.0_wp
       eqryc = ' '
 
 !
@@ -2860,7 +2858,7 @@ contains
 !
 !     Clear out the fixed-size portion of the integer cell.
 !
-      call cleari ( eqvbas, eqryi(1) )
+      eqryi(1:eqvbas) = 0
 
 !
 !     Fill in the architecture version.
@@ -3187,8 +3185,7 @@ contains
 !!     Find the location of the named item.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_ekquery
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: namlen = 32
@@ -3206,10 +3203,10 @@ contains
       character(namlen) :: tmpnam
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzekreqi_state ) ) allocate ( ctx%zzekreqi_state )
-      call ljust ( name,   tmpnam )
+      tmpnam = adjustl(name)
       call ucase ( tmpnam, tmpnam )
 
-      i  =  isrchc ( tmpnam, maxnam, namlst )
+      i  =  findloc(namlst, tmpnam, dim=1)
 
       if ( i == 0 ) then
 
@@ -4556,7 +4553,6 @@ contains
 !!     Clean out the stack buffer.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       integer(ip), parameter :: memsiz = 2500000
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
@@ -4859,7 +4855,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchc, isrchc
+      use pepper_arrays, only: bsrchc
       use pepper_strings, only: beint, frstpc, lxqstr, nparsd, parsqs, prefix, repmc, rtrim, suffix, ucase
       use pepper_inc_ekkeyw
       use pepper_inc_ektokn
@@ -5408,7 +5404,7 @@ contains
             do while (  ( i >= 1 ) .and. ( j == 0 ) )
 
                last =  cptr + i - 1
-               j    =  isrchc ( tquery(cptr:last), nspec, spcstr )
+               j    =  findloc(spcstr, tquery(cptr:last), dim=1)
 
                if ( j == 0 ) then
                   i  =  i - 1
@@ -6213,7 +6209,7 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: cmprss, ljust, posr, repmc, rtrim, suffix, ucase
+      use pepper_strings, only: cmprss, posr, repmc, rtrim, suffix, ucase
       use pepper_inc_ektype
       implicit none
       integer(ip), parameter :: lnsize = 80
@@ -6263,7 +6259,7 @@ contains
 !     'MO SCLK', 'VGR1 SCLK', etc.).
 !
       call cmprss ( ' ',   1,  timstr,  locstr )
-      call ljust  ( locstr,             locstr )
+      locstr = adjustl(locstr)
       call ucase  ( locstr,             locstr )
 
       loc  =  posr ( locstr, 'SCLK', rtrim(locstr) )
@@ -6626,8 +6622,7 @@ contains
 !!     Find the location of the named item.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_ekquery
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: namlen = 32
@@ -6645,10 +6640,10 @@ contains
       character(namlen) :: tmpnam
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzekweqi_state ) ) allocate ( ctx%zzekweqi_state )
-      call ljust ( name,   tmpnam )
+      tmpnam = adjustl(name)
       call ucase ( tmpnam, tmpnam )
 
-      i  =  isrchc ( tmpnam, maxnam, namlst )
+      i  =  findloc(namlst, tmpnam, dim=1)
 
       if ( i == 0 ) then
 
@@ -7444,7 +7439,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_ekquery
       use pepper_inc_ektype
       use pepper_inc_ekbool
@@ -7600,7 +7594,7 @@ contains
 !
 !     Fill in the descriptor.
 !
-      call cleari ( eqvdsz, descr )
+      descr(1:eqvdsz) = 0
 
       descr( eqdtyp )  =  chr
       descr( eqblex )  =  lexbeg
@@ -7640,7 +7634,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleari
       use pepper_inc_ekquery
       use pepper_inc_ektype
       use pepper_inc_ekbool
@@ -7776,7 +7769,7 @@ contains
 !
 !     Fill in the descriptor.
 !
-      call cleari ( eqvdsz, descr )
+      descr(1:eqvdsz) = 0
 
       descr( eqdtyp )  =  type
       descr( eqblex )  =  lexbeg
@@ -8436,7 +8429,6 @@ contains
 !!     The file must be open for write access.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: fillc, filld, filli
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
@@ -8475,9 +8467,9 @@ contains
 !
 !     Initialize our fill buffers.
 !
-      call fillc ( ' ',   1,       cfill )
-      call filld ( 0.0_wp,  pgsizd,  dfill )
-      call filli ( 0,     pgsizi,  ifill )
+      cfill = ' '
+      dfill = 0.0_wp
+      ifill = 0
 
 !
 !     Initialize enough integer addresses to hold the metadata area.
@@ -12692,7 +12684,6 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
-      use pepper_arrays, only: cleari
       integer(ip) :: nsv_1(1)  !! one-element copy of nsv (array argument)
       integer(ip) :: j_1(1)  !! one-element copy of j (array argument)
       integer(ip) :: ntabs_1(1)  !! one-element copy of ntabs (array argument)
@@ -13648,7 +13639,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleari, isrchi
       use pepper_strings, only: repmc
       use pepper_inc_ekkeyw
       use pepper_inc_ekopcd
@@ -13978,8 +13968,8 @@ contains
 !           We have a keyword.  Identify it and locate the corresponding
 !           code.
 !
-            j  =  isrchi ( values(i), nlogop,   logops )
-            k  =  isrchi ( values(i), nrelop-1, cmpops )
+            j  =  findloc(logops, values(i), dim=1)
+            k  =  findloc(cmpops(1:nrelop-1), values(i), dim=1)
 
             if ( j > 0 ) then
 !
@@ -14332,7 +14322,7 @@ contains
                   if ( lnknfn( ctx,dspool) < 1 ) call more_descriptors ( )
                   call lnkan ( ctx, dspool, tabptr )
 
-                  call cleari ( dscsiz, dscbuf(1,tabptr) )
+                  dscbuf(1:dscsiz,tabptr) = 0
                   dscbuf(eqctyp,tabptr)  =  chr
                   dscbuf(dscsiz,tabptr)  =  ident
 
@@ -15497,9 +15487,7 @@ contains
                   do i = 1, cardi( ctx,relset)
 
                      relptr          =  relset( i )
-                     j               =  isrchi( rels(2,relptr), &
-                                                nrelop, &
-                                                cmpcde         )
+                     j               =  findloc(cmpcde, rels(2,relptr), dim=1)
                      rels(2,relptr)  =  cmpneg( j )
 
                   end do
@@ -16263,7 +16251,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari, movei
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
@@ -16309,7 +16296,7 @@ contains
 !
 !     Set the key count in the first child.
 !
-      call cleari ( pgsizi, c1page )
+      c1page = 0
 
       c1page ( trnkc )  =  mnkeyc
 
@@ -16318,14 +16305,14 @@ contains
 !     first MNKEYC locations in the root.  Also take the left child
 !     pointer of the middle key.
 !
-      call movei ( rpage(trkeyr+1), mnkeyc,    c1page(trkeyc+1) )
-      call movei ( rpage(trdatr+1), mnkeyc,    c1page(trdatc+1) )
-      call movei ( rpage(trkidr+1), mnkeyc+1,  c1page(trkidc+1) )
+      c1page(trkeyc+1:trkeyc+1+mnkeyc-1) = rpage(trkeyr+1:trkeyr+1+mnkeyc-1)
+      c1page(trdatc+1:trdatc+1+mnkeyc-1) = rpage(trdatr+1:trdatr+1+mnkeyc-1)
+      c1page(trkidc+1:trkidc+1+mnkeyc) = rpage(trkidr+1:trkidr+1+mnkeyc)
 
 !
 !     Set up the key count in the second child.
 !
-      call cleari ( pgsizi, c2page )
+      c2page = 0
 
       c2page ( trnkc  )  =  mnkeyc
 
@@ -16336,9 +16323,9 @@ contains
 !
       middle = mnkeyc + 1
 
-      call movei ( rpage(trkeyr+middle+1), mnkeyc,    c2page(trkeyc+1) )
-      call movei ( rpage(trdatr+middle+1), mnkeyc,    c2page(trdatc+1) )
-      call movei ( rpage(trkidr+middle+1), mnkeyc+1,  c2page(trkidc+1) )
+      c2page(trkeyc+1:trkeyc+1+mnkeyc-1) = rpage(trkeyr+middle+1:trkeyr+middle+1+mnkeyc-1)
+      c2page(trdatc+1:trdatc+1+mnkeyc-1) = rpage(trdatr+middle+1:trdatr+middle+1+mnkeyc-1)
+      c2page(trkidc+1:trkidc+1+mnkeyc) = rpage(trkidr+middle+1:trkidr+middle+1+mnkeyc)
 
 !
 !     The keys in this second node must be adjusted to account for the
@@ -16366,9 +16353,9 @@ contains
       rpage ( trdpth     )  =  rpage ( trdpth ) + 1
       rpage ( trnnod     )  =  rpage ( trnnod ) + 2
 
-      call cleari ( mxkeyr, rpage(trkeyr+2) )
-      call cleari ( mxkeyr, rpage(trdatr+2) )
-      call cleari ( mxkeyr, rpage(trkidr+3) )
+      rpage(trkeyr+2:trkeyr+2+mxkeyr-1) = 0
+      rpage(trdatr+2:trdatr+2+mxkeyr-1) = 0
+      rpage(trkidr+3:trkidr+3+mxkeyr-1) = 0
 
 !
 !     Write out our updates.
@@ -16547,7 +16534,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movei
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
@@ -16623,9 +16609,9 @@ contains
 !     left child into the root.  The number of predecessors of the
 !     new keys is unchanged by this operation.
 !
-      call movei ( c1page(trkeyc+1), nlkeys,     rpage(trkeyr+1)  )
-      call movei ( c1page(trdatc+1), nlkeys,     rpage(trdatr+1)  )
-      call movei ( c1page(trkidc+1), nlkeys+1,   rpage(trkidr+1)  )
+      rpage(trkeyr+1:trkeyr+1+nlkeys-1) = c1page(trkeyc+1:trkeyc+1+nlkeys-1)
+      rpage(trdatr+1:trdatr+1+nlkeys-1) = c1page(trdatc+1:trdatc+1+nlkeys-1)
+      rpage(trkidr+1:trkidr+1+nlkeys) = c1page(trkidc+1:trkidc+1+nlkeys)
 
 !
 !     Copy in the keys, data pointers, and child pointers from the
@@ -16640,8 +16626,8 @@ contains
          rpage( trkeyr+middle+i )  =  c2page(trkeyc + i)  +  delta
       end do
 
-      call movei ( c2page(trdatc+1), nrkeys,    rpage(trdatr+middle+1) )
-      call movei ( c2page(trkidc+1), nrkeys+1,  rpage(trkidr+middle+1) )
+      rpage(trdatr+middle+1:trdatr+middle+1+nrkeys-1) = c2page(trdatc+1:trdatc+1+nrkeys-1)
+      rpage(trkidr+middle+1:trkidr+middle+1+nrkeys) = c2page(trkidc+1:trkidc+1+nrkeys)
 
 !
 !     Now the root must be updated.  The root now contains
@@ -17119,7 +17105,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
@@ -17144,9 +17129,9 @@ contains
 !
 !     Set all keys to zero; set all child and data pointers to null.
 !
-      call cleari (  mxkeyr,  page(trkeyr+1)  )
-      call cleari (  mxkeyr,  page(trdatr+1)  )
-      call cleari (  mxkidr,  page(trkidr+1)  )
+      page(trkeyr+1:trkeyr+1+mxkeyr-1) = 0
+      page(trdatr+1:trdatr+1+mxkeyr-1) = 0
+      page(trkidr+1:trkidr+1+mxkidr-1) = 0
 
 !
 !     Write out the page.
@@ -18087,7 +18072,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movei
       use pepper_inc_ektree
       use pepper_inc_ekpage
       integer(ip)           datbas
@@ -18353,8 +18337,8 @@ contains
             rpage(trkeyc+i) = lpage(trkeyc+remain+1+i) + drotat
          end do
 
-         call movei( lpage(trdatc+remain+2), schlep-1, rpage(trdatc+1) )
-         call movei( lpage(trkidc+remain+2), schlep,   rpage(trkidc+1) )
+         rpage(trdatc+1:trdatc+1+schlep-1-1) = lpage(trdatc+remain+2:trdatc+remain+2+schlep-1-1)
+         rpage(trkidc+1:trkidc+1+schlep-1) = lpage(trkidc+remain+2:trkidc+remain+2+schlep-1)
 
 !
 !        Update the key counts in both the input node and sibling.
@@ -18435,9 +18419,9 @@ contains
 !        destination in the sibling.  Update the keys to account for
 !        their new offset.
 !
-         call movei( rpage(trkeyc+1), schlep-1, lpage(trkeyc+lnkeys+2) )
-         call movei( rpage(trdatc+1), schlep-1, lpage(trdatc+lnkeys+2) )
-         call movei( rpage(trkidc+1), schlep,   lpage(trkidc+lnkeys+2) )
+         lpage(trkeyc+lnkeys+2:trkeyc+lnkeys+2+schlep-1-1) = rpage(trkeyc+1:trkeyc+1+schlep-1-1)
+         lpage(trdatc+lnkeys+2:trdatc+lnkeys+2+schlep-1-1) = rpage(trdatc+1:trdatc+1+schlep-1-1)
+         lpage(trkidc+lnkeys+2:trkidc+lnkeys+2+schlep-1) = rpage(trkidc+1:trkidc+1+schlep-1)
 
          do i = 1, schlep-1
             lpage(trkeyc+lnkeys+1+i) = lpage(trkeyc+lnkeys+1+i) + drotat
@@ -18610,7 +18594,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: sameai
       use pepper_inc_ekjrs
       use pepper_inc_ekqlimit
       integer(ip) :: nr_1(1)  !! one-element copy of nr (array argument)
@@ -18762,7 +18745,7 @@ contains
 !
 !                 Compare the segment vectors and hope for the best.
 !
-                  if (  sameai ( candsv, predsv, svsize )  ) then
+                  if (  all(candsv(1:svsize) == predsv(1:svsize))  ) then
 !
 !                    Unfortunately, the two segment vectors match, so
 !                    there's something to do.  We'll have to compare
@@ -18806,7 +18789,7 @@ contains
                            base  =  prwbas + (prv-1)*rvsize
                            call zzeksrd ( ctx, base+1, base+rvsize, prwvec )
 
-                           if ( sameai(crwvec, prwvec, rvsize) ) then
+                           if ( all(crwvec(1:rvsize) == prwvec(1:rvsize)) ) then
 !
 !                             The row vectors, together with their
 !                             qualifying segment vectors, match.  The
@@ -19906,7 +19889,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleari, movei
       use pepper_strings, only: repmc
       use pepper_inc_ektokn
       use pepper_inc_ekkeyw
@@ -20349,7 +20331,7 @@ contains
 !                 actual alias is supplied, we'll update this
 !                 descriptor.
 !
-               call cleari ( eqvdsz, alsdsc )
+               alsdsc = 0
                alsdsc(eqdtyp)  =  chr
 
                do j = 1, eqvdsz
@@ -20425,9 +20407,7 @@ contains
 !              Update the place-holder alias descriptor in the integer
 !              part of the query.
 !
-               call movei ( alsdsc, &
-                            eqvdsz, &
-                            eqryi(  cardi( ctx,eqryi) - eqvdsz + 1  )   )
+               eqryi(cardi( ctx,eqryi) - eqvdsz + 1:cardi( ctx,eqryi) - eqvdsz + 1+eqvdsz-1) = alsdsc
 
                state  =  frmals
 
@@ -20586,7 +20566,7 @@ contains
 !                 turns out that the current name is a table name, we'll
 !                 update this descriptor.
 !
-               call cleari ( eqvdsz, valdsc )
+               valdsc = 0
                valdsc(eqdtyp)  =  chr
 
                do j = 1, eqvdsz
@@ -20713,9 +20693,7 @@ contains
 !              Update the place-holder table name descriptor in the
 !              encoded query.
 !
-               call movei ( namdsc, &
-                            eqvdsz, &
-                            eqryi(  cardi( ctx,eqryi) - eqvdsz + 1  )   )
+               eqryi(cardi( ctx,eqryi) - eqvdsz + 1:cardi( ctx,eqryi) - eqvdsz + 1+eqvdsz-1) = namdsc
 
 !
 !              Add the column name to the character part of the
@@ -20966,7 +20944,7 @@ contains
 !                 turns out that the current name is a table name, we'll
 !                 update this descriptor.
 !
-               call cleari ( eqvdsz, valdsc )
+               valdsc = 0
                valdsc(eqdtyp)  =  chr
 
                do j = 1, eqvdsz
@@ -21134,9 +21112,7 @@ contains
 !              Update the place-holder table name descriptor in the
 !              encoded query.
 !
-               call movei ( namdsc, &
-                            eqvdsz, &
-                            eqryi(  cardi( ctx,eqryi) - eqvdsz + 1  )   )
+               eqryi(cardi( ctx,eqryi) - eqvdsz + 1:cardi( ctx,eqryi) - eqvdsz + 1+eqvdsz-1) = namdsc
 
 !
 !              Add the column name to the character part of the
@@ -21674,7 +21650,6 @@ contains
 !!     Local variables
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari, movei
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
@@ -21804,7 +21779,7 @@ contains
 !     of LEFT and the left sibling of RIGHT.
 !
       call zzekpgal ( ctx, handle, int,   new, base )
-      call cleari   ( pgsizi, c3page )
+      c3page = 0
 
 !
 !     It's time to set up the keys in the middle child.  First, we'll
@@ -21824,8 +21799,8 @@ contains
          c3page(trkeyc+i) =  c1page(trkeyc+lsize+1+i) -  ldelta
       end do
 
-      call movei ( c1page(trdatc+lsize+2), lshift,   c3page(trdatc+1) )
-      call movei ( c1page(trkidc+lsize+2), lshift+1, c3page(trkidc+1) )
+      c3page(trdatc+1:trdatc+1+lshift-1) = c1page(trdatc+lsize+2:trdatc+lsize+2+lshift-1)
+      c3page(trkidc+1:trkidc+1+lshift) = c1page(trkidc+lsize+2:trkidc+lsize+2+lshift)
 
 !
 !     Compute the size of the tree headed by the left subnode.  We'll
@@ -21868,8 +21843,8 @@ contains
          c3page(trkeyc+lshift+1+i) = c2page(trkeyc+i) + rdelta
       end do
 
-      call movei ( c2page(trdatc+1), rshift,   c3page(trdatc+lshift+2) )
-      call movei ( c2page(trkidc+1), rshift+1, c3page(trkidc+lshift+2) )
+      c3page(trdatc+lshift+2:trdatc+lshift+2+rshift-1) = c2page(trdatc+1:trdatc+1+rshift-1)
+      c3page(trkidc+lshift+2:trkidc+lshift+2+rshift) = c2page(trkidc+1:trkidc+1+rshift)
 
 !
 !     Save the size of the entire key set moved into the middle from
@@ -21986,9 +21961,9 @@ contains
 !     For safety, clean out the vacated key and pointer locations.
 !     Clear the overflow addresses as well.
 !
-      call cleari ( mxkeyc+1-lsize,      c1page(trkeyc + lsize + 1)  )
-      call cleari ( mxkeyc+1-lsize,      c1page(trdatc + lsize + 1)  )
-      call cleari ( mxkidc+1-(lsize+1),  c1page(trkidc + lsize + 2)  )
+      c1page(trkeyc + lsize + 1:trkeyc + lsize + 1+mxkeyc+1-lsize-1) = 0
+      c1page(trdatc + lsize + 1:trdatc + lsize + 1+mxkeyc+1-lsize-1) = 0
+      c1page(trkidc + lsize + 2:trkidc + lsize + 2+mxkidc+1-(lsize+1)-1) = 0
 
 !
 !     The first child is set.
@@ -22022,9 +21997,9 @@ contains
 !     For safety, clean out the vacated key and pointer locations.
 !     Clear the overflow addresses as well.
 !
-      call cleari ( mxkeyc+1-rsize,      c2page(trkeyc + rsize + 1)  )
-      call cleari ( mxkeyc+1-rsize,      c2page(trdatc + rsize + 1)  )
-      call cleari ( mxkidc+1-(rsize+1),  c2page(trkidc + rsize + 2)  )
+      c2page(trkeyc + rsize + 1:trkeyc + rsize + 1+mxkeyc+1-rsize-1) = 0
+      c2page(trdatc + rsize + 1:trdatc + rsize + 1+mxkeyc+1-rsize-1) = 0
+      c2page(trkidc + rsize + 2:trkidc + rsize + 2+mxkidc+1-(rsize+1)-1) = 0
 
 !
 !     The second child is set.
@@ -22296,7 +22271,6 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movei
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
@@ -22593,8 +22567,8 @@ contains
          c1page(trkeyc+nlkeys+1+i) =  c2page(trkeyc+i) +  leftsz + 1
       end do
 
-      call movei ( c2page(trdatc+1),  n-1,  c1page(trdatc+nlkeys+2) )
-      call movei ( c2page(trkidc+1),  n,    c1page(trkidc+nlkeys+2) )
+      c1page(trdatc+nlkeys+2:trdatc+nlkeys+2+n-1-1) = c2page(trdatc+1:trdatc+1+n-1-1)
+      c1page(trkidc+nlkeys+2:trkidc+nlkeys+2+n-1) = c2page(trkidc+1:trkidc+1+n-1)
 
 !
 !     Set the key count in the left child.
@@ -22640,8 +22614,8 @@ contains
          c3page(trkeyc+i) = c2page(trkeyc+n+i) - lmidsz - 1
       end do
 
-      call movei ( c2page(trdatc+n+1), rshift-1, c3page(trdatc+1) )
-      call movei ( c2page(trkidc+n+1), rshift,   c3page(trkidc+1) )
+      c3page(trdatc+1:trdatc+1+rshift-1-1) = c2page(trdatc+n+1:trdatc+n+1+rshift-1-1)
+      c3page(trkidc+1:trkidc+1+rshift-1) = c2page(trkidc+n+1:trkidc+n+1+rshift-1)
 
 !
 !     Update the key count in the right child.
@@ -24897,7 +24871,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
@@ -25356,7 +25329,7 @@ contains
 !
 !              The current node is a non-leaf child node.
 !
-               call cleari ( pgsizi, page )
+               page = 0
 !
 !              The tree headed by this node has depth D-LEVEL+1 and
 !              must hold SUBSIZ keys.  We must figure out the size
@@ -27595,7 +27568,6 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_ekdatpag
       use pepper_inc_ekglimit
       use pepper_inc_ekpage
@@ -27647,10 +27619,10 @@ contains
 !
 !     Initialize all arrays.
 !
-      call cleari ( bufsiz, adrbuf )
-      call cleari ( mxclsg, colord )
-      call cleari ( pgsizi, ipage  )
-      call cleari ( sdscsz, segdsc )
+      adrbuf = 0
+      colord = 0
+      ipage = 0
+      segdsc = 0
 
 !
 !     Dig the handle and segment number out of the EK stack.  If the
@@ -27733,7 +27705,7 @@ contains
 
          call zzekpgpg ( ctx, int, addrss, p, pbase )
 
-         call cleari   ( ipsize, ipage )
+         ipage(1:ipsize) = 0
 
 !
 !        NR is the number of record pointers we'll write to this page.
@@ -29505,8 +29477,7 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari, movei
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
@@ -29648,7 +29619,7 @@ contains
 !     `last word' counts of each type for both the data and modified
 !     record trees are initialized in this fashion.
 !
-      call cleari ( pgsizi, ipage )
+      ipage = 0
 !
 !     The value at index EKTIDX is the segment type.
 !
@@ -29681,7 +29652,7 @@ contains
 !
       cpage  =  ' '
 
-      call ljust  ( tabnam, tmptnm )
+      tmptnm = adjustl(tabnam)
       call ucase  ( tmptnm, tmptnm )
 
       cpage ( :tnamsz )  =  tmptnm
@@ -29781,7 +29752,7 @@ contains
 !
 !           The whole descriptor fits in the current page.
 !
-            call movei ( cdscrs(1,i), cdscsz, ipage(dscbas+1) )
+            ipage(dscbas+1:dscbas+1+cdscsz-1) = cdscrs(:,i)
 
          else
 !
@@ -29789,7 +29760,7 @@ contains
 !           page.
 !
             if ( room > 0 ) then
-               call movei ( cdscrs(1,i), room, ipage(dscbas+1) )
+               ipage(dscbas+1:dscbas+1+room-1) = cdscrs(1:room,i)
             end if
 
 !
@@ -29805,8 +29776,8 @@ contains
             p       =  p + 1
             ipagno  =  ipagno + 1
 
-            call cleari ( pgsizi,                        ipage )
-            call movei  ( cdscrs(room+1,i), cdscsz-room, ipage )
+            ipage = 0
+            ipage(1:cdscsz-room) = cdscrs(room+1:room+1+cdscsz-room-1,i)
 
          end if
 
@@ -29948,8 +29919,7 @@ contains
 !!     Local parameters
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari, movei
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
@@ -30085,7 +30055,7 @@ contains
 !     `last word' counts of each type for both the data and modified
 !     record trees are initialized in this fashion.
 !
-      call cleari ( pgsizi, ipage )
+      ipage = 0
 !
 !     The value at index EKTIDX is the segment type.
 !
@@ -30118,7 +30088,7 @@ contains
 !
       cpage  =  ' '
 
-      call ljust  ( tabnam, tmptnm )
+      tmptnm = adjustl(tabnam)
       call ucase  ( tmptnm, tmptnm )
 
       cpage ( :tnamsz )  =  tmptnm
@@ -30204,7 +30174,7 @@ contains
 !
 !           The whole descriptor fits in the current page.
 !
-            call movei ( cdscrs(1,i), cdscsz, ipage(dscbas+1) )
+            ipage(dscbas+1:dscbas+1+cdscsz-1) = cdscrs(:,i)
 
          else
 !
@@ -30212,7 +30182,7 @@ contains
 !           page.
 !
             if ( room > 0 ) then
-               call movei ( cdscrs(1,i), room, ipage(dscbas+1) )
+               ipage(dscbas+1:dscbas+1+room-1) = cdscrs(1:room,i)
             end if
 
 !
@@ -30228,8 +30198,8 @@ contains
             p       =  p + 1
             ipagno  =  ipagno + 1
 
-            call cleari ( pgsizi,                        ipage )
-            call movei  ( cdscrs(room+1,i), cdscsz-room, ipage )
+            ipage = 0
+            ipage(1:cdscsz-room) = cdscrs(room+1:room+1+cdscsz-room-1,i)
 
          end if
 

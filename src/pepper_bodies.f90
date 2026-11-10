@@ -6007,8 +6007,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movec, movei
-      use pepper_strings, only: cmprss, ljust, ucase
+      use pepper_strings, only: cmprss, ucase
       use pepper_inc_zzbodtrn
       implicit none
       integer(ip) :: i
@@ -6034,7 +6033,7 @@ contains
          call zzidmap( ctx, bltcod, bltnam )
 
          do i = 1, nperm
-            call ljust  (         bltnam(i), bltnor(i) )
+            bltnor(i) = adjustl(bltnam(i))
             call ucase  (         bltnor(i), bltnor(i) )
             call cmprss ( ' ', 1, bltnor(i), bltnor(i) )
          end do
@@ -6063,9 +6062,9 @@ contains
 
       end if
 
-      call movec ( bltnam, nperm, names  )
-      call movec ( bltnor, nperm, nornam )
-      call movei ( bltcod, nperm, codes  )
+      names(1:nperm) = bltnam
+      nornam(1:nperm) = bltnor
+      codes(1:nperm) = bltcod
 
       nvals = nperm
 
@@ -6214,7 +6213,7 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderc, orderi
-      use pepper_strings, only: eqstr, intstr, lastnb, ucase
+      use pepper_strings, only: eqstr, intstr, ucase
       use pepper_output, only: wrline
       use pepper_inc_zzbodtrn
       implicit none
@@ -6240,7 +6239,7 @@ contains
 
       zzline = 'Total number of name/ID mappings: '//zzint
 
-      call wrline ( device, zzline(1: lastnb( zzline ) ) )
+      call wrline ( device, zzline(1: len_trim(zzline) ) )
 
 !
 !     Retrieve the current set of name/ID mappings
@@ -6263,7 +6262,7 @@ contains
 
             zzline = zzint // ' | ' // bltnam(zzocod(i))
 
-            call wrline ( device, zzline(1: lastnb( zzline ) ) )
+            call wrline ( device, zzline(1: len_trim(zzline) ) )
 
          end do
 
@@ -6285,7 +6284,7 @@ contains
 
             zzline = bltnam(zzonam(i)) // ' | ' // zzint
 
-            call wrline ( device, zzline(1:lastnb( zzline ) ) )
+            call wrline ( device, zzline(1:len_trim(zzline) ) )
 
          end do
 

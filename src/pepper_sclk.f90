@@ -486,7 +486,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: repmc, suffix
       use pepper_inc_sclk
       implicit none
@@ -619,7 +618,7 @@ contains
 !     See if the input name is in the list of items we know about.
 !     If it is, perform the bound checks that apply.
 !
-      i = isrchc ( name, nkitem, namlst )
+      i = findloc(namlst, name, dim=1)
 
       if ( i /= 0 ) then
 
@@ -963,7 +962,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: repmc, suffix
       use pepper_inc_sclk
       implicit none
@@ -1097,7 +1095,7 @@ contains
 !     See if the input name is in the list of items we know about.
 !     If it is, perform the bounds checks that apply.
 !
-      i = isrchc ( name, nkitem, namlst )
+      i = findloc(namlst, name, dim=1)
 
       if ( i /= 0 ) then
 
@@ -1442,7 +1440,6 @@ contains
 !!     Initial values
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: movec
       use pepper_strings, only: suffix
       use pepper_containers, only: grow
       use pepper_inc_errhnd
@@ -1491,7 +1488,7 @@ contains
 !
       sclkat = 0
       if ( ctx%failed() ) return
-      call movec ( namlst, nkitem, kvname )
+      kvname = namlst
       do i = 1, nkitem
          call suffix ( '_#',        0,         kvname(i) )
          call repmi  ( ctx, kvname(i),  '#',  -sc,  kvname(i) )
@@ -3078,7 +3075,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: sumai
       use pepper_strings, only: prefix, suffix
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
@@ -3177,7 +3173,7 @@ contains
 !     string we're about to assemble.  We need room for (NFIELD - 1)
 !     delimiters as well as for the numeric fields.
 !
-      needed  =  nfield  -  1  +  sumai ( cmpwid, nfield )
+      needed  =  nfield  -  1  +  sum(cmpwid(1:nfield))
 
       if (  len( clkstr )  <  needed  ) then
 
@@ -5224,7 +5220,6 @@ contains
 !!     return partition data for a type 1 SCLK
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
@@ -5284,8 +5279,8 @@ contains
 !
 !     Set the output partition arguments.
 !
-      call moved ( dpbuff(strbas+1), npart, parbeg )
-      call moved ( dpbuff(endbas+1), npart, parend )
+      parbeg(1:npart) = dpbuff(strbas+1:strbas+1+npart-1)
+      parend(1:npart) = dpbuff(endbas+1:endbas+1+npart-1)
 
       npartn = npart
 

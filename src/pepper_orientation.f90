@@ -999,11 +999,10 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
-      use pepper_arrays, only: cleard, moved
-      use pepper_math, only: mxm, vdotg, vpack
+      use pepper_math, only: mxm, vdotg
       use pepper_strings, only: suffix
       use pepper_inc_errhnd
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       real(wp), allocatable :: sinth(:), costh(:), dsinth(:), dcosth(:)
@@ -1356,19 +1355,19 @@ contains
 !           Prime Meridian.
 !
             item = 'POLE_RA'
-            call cleard (             mxpoly,     rcoef )
+            rcoef(0:0+mxpoly-1) = 0.0_wp
             call bodvcd ( ctx, body, item, mxpoly, na, rcoef )
 
             if ( ctx%failed() ) return
 
             item = 'POLE_DEC'
-            call cleard (             mxpoly,     dcoef )
+            dcoef(0:0+mxpoly-1) = 0.0_wp
             call bodvcd ( ctx, body, item, mxpoly, nd, dcoef )
 
             if ( ctx%failed() ) return
 
             item = 'PM'
-            call cleard (             mxpoly,     wcoef )
+            wcoef(0:0+mxpoly-1) = 0.0_wp
             call bodvcd ( ctx, body, item, mxpoly, nw, wcoef )
 
             if ( ctx%failed() ) return
@@ -1537,9 +1536,9 @@ contains
             bnd    ( at ) = nd
             bnw    ( at ) = nw
 
-            call moved( rcoef( 0 ), mxpoly,        brcoef( 0, at ) )
-            call moved( dcoef( 0 ), mxpoly,        bdcoef( 0, at ) )
-            call moved( wcoef( 0 ), mxpoly,        bwcoef( 0, at ) )
+            brcoef(0:0+mxpoly-1,at) = rcoef(0:0+mxpoly-1)
+            bdcoef(0:0+mxpoly-1,at) = dcoef(0:0+mxpoly-1)
+            bwcoef(0:0+mxpoly-1,at) = wcoef(0:0+mxpoly-1)
             bang(at)%t = tcoef(1:ntheta)
             bang(at)%a = ac(1:na)
             bang(at)%d = dc(1:nd)
@@ -1680,8 +1679,8 @@ contains
 !        Pack the Euler angles and their derivatives into
 !        a state vector.
 !
-         call vpack ( w,  delta,  phi,  eulsta    )
-         call vpack ( dw, ddelta, dphi, eulsta(4) )
+         eulsta(1:3) = [w, delta, phi]
+         eulsta(4:6) = [dw, ddelta, dphi]
 
 !
 !        Find the state transformation defined by the Euler angle
@@ -2111,8 +2110,7 @@ contains
 !!     routine.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
-      use pepper_math, only: ident, q2m, sharpr, vdot, vhatg, vsclip
+      use pepper_math, only: ident, q2m, sharpr, vdot, vhatg
       use pepper_strings, only: intstr, rtrim, ucase
       implicit none
       integer(ip), parameter :: bufsiz = 200
@@ -2508,7 +2506,7 @@ contains
 !           In this case the full transformation matrix has been
 !           specified.  We simply polish it up a bit.
 !
-            call moved  ( matrix, 9, rot )
+            rot = matrix
             call sharpr (            rot )
 
 !
@@ -2516,11 +2514,11 @@ contains
 !           the sense of the second and third columns if necessary.
 !
             if ( vdot( rot(1,2), matrix(1,2) ) < 0.0_wp ) then
-               call vsclip ( -1.0_wp, rot(1,2) )
+               rot(:,2) = (-1.0_wp)*rot(:,2)
             end if
 
             if ( vdot( rot(1,3), matrix(1,3) ) < 0.0_wp ) then
-               call vsclip ( -1.0_wp, rot(1,3) )
+               rot(:,3) = (-1.0_wp)*rot(:,3)
             end if
 
          else if ( spec == 'ANGLES' ) then
@@ -3643,7 +3641,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc, suffix
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
 
       implicit none
 
@@ -5061,7 +5059,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: moved
       use pepper_math, only: mxvg
       implicit none
 
@@ -5157,7 +5154,7 @@ contains
       call zzeprc76( ctx, et, m1    )
       call invstm  ( ctx, m1, m1inv )
 
-      call moved ( m1inv(1,1), 6, xj2000 )
+      xj2000 = m1inv(:,1)
 
 !
 !     Extract the TETE +Z vector and its derivative, both
@@ -5166,7 +5163,7 @@ contains
       call zzenut80( ctx, et, m2    )
       call invstm  ( ctx, m2, m2inv )
 
-      call moved ( m2inv(1,3), 6, z )
+      z = m2inv(:,3)
 
 !
 !     Transform Z to the J2000 frame.
@@ -5655,8 +5652,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
-      use pepper_arrays, only: moved
-      use pepper_math, only: mxvg, vadd, vequ, vlcom, vlcomg
+      use pepper_math, only: mxvg
       use pepper_inc_zzsgp4
       implicit none
       integer(ip), parameter :: nangs = 4
@@ -5767,10 +5763,10 @@ contains
 !
 !        Now compute the weighted average of the two states.
 !
-         call vlcomg ( 6,  w,    s1,       1.0_wp-w, s2,     state     )
-         call vlcom  (     dwdt, s1,       -dwdt,  s2,     vcomp     )
-         call vadd   (           state(4),         vcomp,  tmpsta(4) )
-         call vequ   (           tmpsta(4),                state(4)  )
+         state = w*s1 + (1.0_wp-w)*s2
+         vcomp = dwdt*s1(1:3) + (-dwdt)*s2(1:3)
+         tmpsta(4:6) = state(4:6) + vcomp
+         state(4:6) = tmpsta(4:6)
 
       else
 
@@ -5804,7 +5800,7 @@ contains
 !     ...now convert the TEME state to a J2000 state.
 !
       call mxvg   ( tm2j, state, 6, 6, tmpsta )
-      call moved  ( tmpsta,  6,      state     )
+      state = tmpsta
 
       return
       end procedure spke10
@@ -6258,7 +6254,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: xpose
       implicit none
 
 
@@ -6675,7 +6670,7 @@ contains
 !           REF to INS. We invert ROT to get the rotation
 !           from INST to REF.
 !
-            call xpose ( rot, rotate )
+            rotate = transpose(rot)
 
             return
 
@@ -7818,9 +7813,9 @@ contains
 !!
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: filld, lstled, moved
-      use pepper_math, only: ident, xpose
-      use pepper_inc_frmtyp
+      use pepper_arrays, only: lstled
+      use pepper_math, only: ident
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzswtchf
       use pepper_inc_zzctr
       implicit none
@@ -7911,7 +7906,7 @@ contains
 !
 !        Create a 6x6 identity matrix.
 !
-         call filld( 0.0_wp, size66, xident )
+         xident = 0.0_wp
 
          do i = 1, 6
             xident(i,i) = 1.0_wp
@@ -8178,7 +8173,7 @@ contains
                   end do
 
                else
-                  call moved( rmat, size33, xform )
+                  xform = rmat
                end if
 !
 !              OUTFRM and FOUND have been set by TKFRAM.
@@ -8192,7 +8187,7 @@ contains
                   call invstm ( ctx, tsipm, xform )
                else
                   call tipbod ( ctx, 'J2000', clsids(basidx), et, rmat  )
-                  call xpose  ( rmat,  xform )
+                  xform = transpose(rmat)
                end if
 
                if ( ctx%failed() ) then
@@ -8236,7 +8231,7 @@ contains
                   end do
 
                else
-                  call moved( rmat, size33, xform )
+                  xform = rmat
                end if
 
                outfrm = j2code
@@ -8249,7 +8244,7 @@ contains
 !
                if ( ndim == d6 ) then
 
-                  call moved ( xident, size66, xform )
+                  xform = xident
                else
                   call ident ( xform )
                end if

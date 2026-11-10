@@ -1258,9 +1258,8 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_math, only: mxm
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: ndc = 2
@@ -1396,7 +1395,7 @@ contains
 !              it maps from request frame to C-matrix frame.
 !
                call mxm   ( cmat,   rot, tmpmat )
-               call moved ( tmpmat, 9,   cmat   )
+               cmat = tmpmat
 
             end if
 
@@ -2285,9 +2284,8 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
-      use pepper_math, only: mtxv, mxm, vadd, xf2rav
-      use pepper_inc_frmtyp
+      use pepper_math, only: mtxv, mxm, xf2rav
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: ndc = 2
@@ -2427,7 +2425,7 @@ contains
 !
                call xf2rav ( xform,   rot,  omega  )
                call mxm    ( cmat,    rot,  tmpmat )
-               call moved  ( tmpmat,  9,    cmat   )
+               cmat = tmpmat
 !
 !              Now transform the angular velocity information.
 !              Currently we have OMEGA (the angular velocity of
@@ -2537,7 +2535,7 @@ contains
 !                                          CMAT         ROT
 !
                call mtxv ( rot,    av,    tmpv )
-               call vadd ( omega,  tmpv,  av   )
+               av = omega + tmpv
 
             end if
 

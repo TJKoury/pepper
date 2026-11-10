@@ -389,7 +389,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: axisar, mxmt, q2m, vequ, vequg, vnorm
+      use pepper_math, only: axisar, mxmt, q2m, vnorm
       implicit none
 
 
@@ -668,8 +668,8 @@ contains
 !        RECORD ( 9  ) = av2
 !        RECORD ( 10 ) = av3
 !
-      call vequg ( record(4), 4, quat )
-      call vequ  ( record(8), avtemp  )
+      quat = record(4:7)
+      avtemp = record(8:10)
 
 !
 !     Calculate the angle of the rotation.
@@ -715,7 +715,7 @@ contains
 !     Return the angular velocity only if it is requested.
 !
       if ( needav ) then
-         call vequ ( avtemp, av )
+         av = avtemp
       end if
 
       return
@@ -742,8 +742,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: moved
-      use pepper_math, only: axisar, mtxm, mxmt, q2m, vequ, vlcom
+      use pepper_math, only: axisar, mtxm, mxmt, q2m
       implicit none
 
 
@@ -1138,10 +1137,10 @@ contains
       t1   = record(1 )
       t2   = record(9 )
 
-      call moved ( record(2),  4, q1   )
-      call moved ( record(6),  3, av1  )
-      call moved ( record(10), 4, q2   )
-      call moved ( record(14), 3, av2  )
+      q1 = record(2:5)
+      av1 = record(6:8)
+      q2 = record(10:13)
+      av2 = record(14:16)
 
 !
 !     If T1 and T2 are the same then no interpolation or extrapolation
@@ -1155,7 +1154,7 @@ contains
          clkout = t1
 
          if ( needav ) then
-            call vequ ( av1, av )
+            av = av1
          end if
 
          return
@@ -1229,7 +1228,7 @@ contains
 
       if ( needav ) then
 
-         call vlcom ( 1.0_wp - frac, av1, frac, av2, av )
+         av = (1.0_wp - frac)*av1 + frac*av2
 
       end if
 
@@ -1641,8 +1640,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
-      use pepper_math, only: q2m, qdq2av, vdistg, vdotg, vequ, vhatg, vminug, vnormg, vsclg, vsclip, vsubg, xpsgip
+      use pepper_math, only: q2m, qdq2av, vdistg, vdotg, vhatg, vnormg, xpsgip
       use pepper_inc_ck05
       use pepper_inc_ckparam
       implicit none
@@ -2115,7 +2113,7 @@ contains
 !
             newptr = pktidx + packsz*(i-1)
 
-            call vminug ( record(newptr), 4,  qneg )
+            qneg = -record(newptr:newptr+4-1)
 
 !
 !           Replace the Ith quaternion with QNEG if QNEG is closer
@@ -2124,7 +2122,7 @@ contains
             if (     vdistg( record(prvptr), qneg,           4 ) &
                 < vdistg( record(prvptr), record(newptr), 4 ) ) then
 
-               call moved ( qneg, 4, record( newptr ) )
+               record(newptr:newptr+4-1) = qneg
 
             end if
 
@@ -2149,7 +2147,7 @@ contains
 !
             newptr = pktidx + packsz*(i-1)
 
-            call vminug ( record(newptr), 4,  qneg )
+            qneg = -record(newptr:newptr+4-1)
 !
 !           Replace the Ith quaternion with QNEG if QNEG is closer
 !           than the current quaternion to the previous quaternion.
@@ -2240,7 +2238,7 @@ contains
 
          end if
 
-         call vsclg ( 1.0_wp/mags, state, 4, q )
+         q = (1.0_wp/mags)*state(1:4)
 
          if ( needav ) then
 !
@@ -2257,12 +2255,12 @@ contains
 !              d(Q)/dt =  -------  -   -------------- * Q
 !                          ||S||            ||S||
 !
-            call moved ( state(5), 4, ds )
+            ds = state(5:8)
 
-            call vsclg ( 1.0_wp          / mags,  ds, 4,  sclddq )
-            call vsclg ( vdotg(q,ds,4) / mags,  q,  4,  radtrm )
+            sclddq = (1.0_wp          / mags)*ds
+            radtrm = (vdotg(q,ds,4) / mags)*q
 
-            call vsubg ( sclddq, radtrm, 4, dq )
+            dq = sclddq - radtrm
 !
 !           Derive angular velocity from Q and dQ/dt:
 !
@@ -2271,7 +2269,7 @@ contains
 !
 !           Scale the AV from radians/tick to radians/second.
 !
-            call vsclip ( 1.0_wp/rate, av )
+            av = (1.0_wp/rate)*av
 
          end if
 
@@ -2327,7 +2325,7 @@ contains
 !
 !           The angular velocity already is in units of radians/second.
 !
-            call vequ ( state(5), av )
+            av = state(5:7)
 
          end if
 
@@ -2395,7 +2393,7 @@ contains
 
          end if
 
-         call vsclg ( 1.0_wp/mags, state, 4, q )
+         q = (1.0_wp/mags)*state(1:4)
 
          if ( needav ) then
 
@@ -2414,12 +2412,12 @@ contains
 !                 d(Q)/dt =  -------  -   -------------- * Q
 !                             ||S||            ||S||
 !
-               call moved ( state(5), 4, ds )
+               ds = state(5:8)
 
-               call vsclg ( 1.0_wp          / mags,  ds, 4,  sclddq )
-               call vsclg ( vdotg(q,ds,4) / mags,  q,  4,  radtrm )
+               sclddq = (1.0_wp          / mags)*ds
+               radtrm = (vdotg(q,ds,4) / mags)*q
 
-               call vsubg ( sclddq, radtrm, 4, dq )
+               dq = sclddq - radtrm
 !
 !              Derive angular velocity from Q and dQ/dt:
 !
@@ -2428,7 +2426,7 @@ contains
 !
 !              Scale the AV from radians/tick to radians/second.
 !
-               call vsclip ( 1.0_wp/rate, av )
+               av = (1.0_wp/rate)*av
 
             else
 !
@@ -2480,7 +2478,7 @@ contains
 !              The angular velocity is already in units of
 !              radians/second.
 !
-               call vequ ( vbuff, av )
+               av = vbuff(1:3)
 
             end if
 !
@@ -3124,7 +3122,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
-      use pepper_math, only: vequg
       implicit none
       real(wp) :: stopi_1(1)  !! one-element copy of stopi (array argument)
 
@@ -3767,7 +3764,7 @@ contains
 
       record ( 3 ) = prec ( psiz )
 
-      call vequg ( prec, 7, record( 4 ) )
+      record(4:10) = prec(1:7)
 
 !
 !     That is all.
@@ -4125,7 +4122,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: lstled, lstltd, moved
+      use pepper_arrays, only: lstled, lstltd
       implicit none
       real(wp) :: nstart_1(1)  !! one-element copy of nstart (array argument)
       real(wp) :: start_1(1)  !! one-element copy of start (array argument)
@@ -4447,8 +4444,8 @@ contains
 !
                call dafgda ( ctx, handle, beg, beg + psiz - 1, buffer )
 
-               call moved ( buffer, psiz, record ( 2  ) )
-               call moved ( buffer, psiz, record ( 10 ) )
+               record(2:2+psiz-1) = buffer(1:psiz)
+               record(10:10+psiz-1) = buffer(1:psiz)
 
                record ( 17 ) = sclkdp
 
@@ -4509,8 +4506,8 @@ contains
 
             call dafgda ( ctx, handle, addr, addr + psiz - 1, buffer )
 
-            call moved ( buffer, psiz, record ( 2  ) )
-            call moved ( buffer, psiz, record ( 10 ) )
+            record(2:2+psiz-1) = buffer(1:psiz)
+            record(10:10+psiz-1) = buffer(1:psiz)
 
             record ( 17 ) = sclkdp
 
@@ -4792,8 +4789,8 @@ contains
 
                call dafgda ( ctx, handle, laddr, laddr+psiz-1, buffer )
 
-               call moved ( buffer, psiz, record ( 2  ) )
-               call moved ( buffer, psiz, record ( 10 ) )
+               record(2:2+psiz-1) = buffer(1:psiz)
+               record(10:10+psiz-1) = buffer(1:psiz)
 
             else
 
@@ -4802,8 +4799,8 @@ contains
 
                call dafgda ( ctx, handle, raddr, raddr+psiz-1, buffer )
 
-               call moved ( buffer, psiz, record ( 2  ) )
-               call moved ( buffer, psiz, record ( 10 ) )
+               record(2:2+psiz-1) = buffer(1:psiz)
+               record(10:10+psiz-1) = buffer(1:psiz)
 
             end if
 
@@ -5034,8 +5031,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: lstled, lstltd, moved
-      use pepper_math, only: brcktd, odd
+      use pepper_arrays, only: lstled, lstltd
+      use pepper_math, only: odd
       use pepper_inc_ck05
       use pepper_inc_ckparam
       implicit none
@@ -5155,7 +5152,7 @@ contains
 !
 !     Set the request time to use for searching.
 !
-      t = brcktd ( sclkdp, dc(1), dc(2) )
+      t = max(min(dc(1), dc(2)), min(max(dc(1), dc(2)), sclkdp))
 
 !
 !     From this point onward, we assume the segment was constructed
@@ -5847,9 +5844,7 @@ contains
 !
 !     Finally, add the epochs to the output record.
 !
-      call moved ( pbuffr(i+1), &
-                   j-i, &
-                   record( parsiz + 1 + wndsiz*packsz )  )
+      record(parsiz + 1 + wndsiz*packsz:parsiz + 1 + wndsiz*packsz+j-i-1) = pbuffr(i+1:i+1+j-i-1)
 
 !
 !     Save the information about the interval and segment.
@@ -6119,8 +6114,8 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: lstled, lstltd, touchl
-      use pepper_math, only: brcktd, odd
+      use pepper_arrays, only: lstled, lstltd
+      use pepper_math, only: odd
       use pepper_inc_ckparam
       use pepper_inc_ck06
       implicit none
@@ -6254,8 +6249,8 @@ contains
 !
 !     "Touch" the input argument NEEDAV to suppress compiler warnings.
 !
-      lval = touchl ( needav )
-      lval = touchl ( lval   )
+      lval = (needav)
+      lval = (lval)
 
 !
 !     Unpack the segment descriptor, and get the start and end addresses
@@ -6312,7 +6307,7 @@ contains
 !
 !     Set the request time to use for searching.
 !
-      t = brcktd ( sclkdp, dc(1), dc(2) )
+      t = max(min(dc(1), dc(2)), min(max(dc(1), dc(2)), sclkdp))
 
 !
 !     From this point onward, we assume the segment was constructed
@@ -7832,8 +7827,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
-      use pepper_arrays, only: moved
-      use pepper_math, only: vsclip
       implicit none
 
 
@@ -8117,7 +8110,7 @@ contains
 !
 !     Convert the angles to radians.
 !
-      call vsclip ( dscale, pos )
+      pos = dscale*pos
 
 !
 !     Append the angles to the record. Since we inserted three
@@ -8125,7 +8118,7 @@ contains
 !     elements, the target index is the same as if we had copied the
 !     record directly to the output array.
 !
-      call moved ( pos, 3, record(recsiz+1) )
+      record(recsiz+1:recsiz+1+3-1) = pos
 
 !
 !     Convert the angular rate Chebyshev coefficients to units of
@@ -8356,7 +8349,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_inc_sgparam
       implicit none
       real(wp) :: dmtasz_1(1)  !! one-element copy of dmtasz (array argument)
@@ -8398,11 +8390,11 @@ contains
 !        located in the last two "integer" positions of the descriptor.
 !
          if ( nieven ) then
-            call moved ( descr(ioffst), 1, dtemp )
+            dtemp(1:1) = descr(ioffst:ioffst)
             begin = itemp(1)
             end   = itemp(2)
          else
-            call moved ( descr(ioffst), 2, dtemp )
+            dtemp = descr(ioffst:ioffst+2-1)
             begin = itemp(2)
             end   = itemp(3)
          end if
@@ -8469,11 +8461,11 @@ contains
 !        located in the last two "integer" positions of the descriptor.
 !
          if ( nieven ) then
-            call moved ( descr(ioffst), 1, dtemp )
+            dtemp(1:1) = descr(ioffst:ioffst)
             begin = itemp(1)
             end   = itemp(2)
          else
-            call moved ( descr(ioffst), 2, dtemp )
+            dtemp = descr(ioffst:ioffst+2-1)
             begin = itemp(2)
             end   = itemp(3)
          end if
@@ -8756,7 +8748,6 @@ contains
 !!     If the RETURN function is set, don't even bother with this.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
       real(wp) :: tl_1(1)  !! one-element copy of tl (array argument)
       integer(ip) :: j
@@ -8800,9 +8791,9 @@ contains
 !
 !     For our purposes, NTE is always 3.
 !
-      call moved ( record( 1), 1, tl_1 )
+      tl_1 = record(1:1)
       tl = tl_1(1)
-      call moved ( record( 2), 15, g  )
+      g = record(2:16)
 !
 !     Collect the reference position and velocity.
 !
@@ -8815,7 +8806,7 @@ contains
       refpos(3) =  record(21)
       refvel(3) =  record(22)
 
-      call moved ( record(23), 45, dt )
+      dt = reshape(record(23:67), shape(dt))
 
       kqmax1    = int ( record(68) )
       kq(1)     = int ( record(69) )
@@ -9639,7 +9630,6 @@ contains
 !!     Initialize the workspace array to suppress compiler warnings.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: xposeg
       use pepper_inc_spkrec
       implicit none
       integer(ip), parameter :: statsz = 6
@@ -9661,7 +9651,7 @@ contains
 !
       n   =  nint( record(sizidx) )
 
-      call xposeg ( record(staidx), statsz, n, locrec )
+      locrec(1:n*statsz) = reshape(transpose(reshape(record(staidx:staidx+statsz*n-1), [statsz, n])), [n*statsz])
 
 !
 !     We interpolate each state component in turn.
@@ -9700,8 +9690,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
-      use pepper_math, only: xposeg
       use pepper_inc_spkrec
       implicit none
 
@@ -9893,8 +9881,8 @@ contains
 !
       n   =  nint( record(sizidx) )
 
-      call xposeg ( record(staidx),  statsz,   n,  locrec         )
-      call moved  ( locrec,          statsz*n,     record(staidx) )
+      locrec(1:n*statsz) = reshape(transpose(reshape(record(staidx:staidx+statsz*n-1), [statsz, n])), [n*statsz])
+      record(staidx:staidx+statsz*n-1) = locrec(1:statsz*n)
 
 !
 !     We interpolate each state component in turn.
@@ -10814,7 +10802,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vequ, xpsgip
+      use pepper_math, only: xpsgip
       use pepper_inc_spk18
       use pepper_inc_spkrec
       implicit none
@@ -11133,7 +11121,7 @@ contains
 !        Fill in the velocity in the output state using the results of
 !        interpolating velocity and acceleration.
 !
-         call vequ ( vbuff, state(4) )
+         state(4:6) = vbuff(1:3)
 
       end if
 
@@ -11159,7 +11147,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vequ, xpsgip
+      use pepper_math, only: xpsgip
       use pepper_inc_spk19
       use pepper_inc_spkrec
       implicit none
@@ -11462,7 +11450,7 @@ contains
 !        Fill in the velocity in the output state using the results of
 !        interpolating velocity and acceleration.
 !
-         call vequ ( vbuff, state(4) )
+         state(4:6) = vbuff(1:3)
 
       else if ( subtyp == s19tp1 ) then
 !
@@ -11560,7 +11548,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vadd
       implicit none
 
 
@@ -11788,7 +11775,7 @@ contains
 !
       posloc = 4  +  ( 3 * ncof )
 
-      call vadd ( record(posloc), intgrl, xyzdot )
+      xyzdot(1:3) = record(posloc:posloc+3-1) + intgrl
 
       return
       end procedure spke20
@@ -11933,7 +11920,6 @@ contains
 !!     If the RETURN function is set, don't even bother with this.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_inc_spk21
       implicit none
       real(wp) :: tl_1(1)  !! one-element copy of tl (array argument)
@@ -11999,9 +11985,9 @@ contains
 !     For our purposes, NTE is always 3.
 !
 
-      call moved ( record( 2), 1, tl_1 )
+      tl_1 = record(2:2)
       tl = tl_1(1)
-      call moved ( record( 3), maxdim, g  )
+      g(1:maxdim) = record(3:3+maxdim-1)
 
 !
 !     Collect the reference position and velocity.
@@ -12023,7 +12009,7 @@ contains
 !     to each component.
 !
       do i = 1, 3
-         call moved ( record(i*maxdim+9), maxdim, dt(1,i) )
+         dt(1:maxdim,i) = record(i*maxdim+9:i*maxdim+9+maxdim-1)
       end do
 
       kqmax1    = int ( record(4*maxdim + 9 ) )
@@ -12910,7 +12896,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: lstltd, moved
+      use pepper_arrays, only: lstltd
       implicit none
 
 
@@ -13294,8 +13280,8 @@ contains
 
             call dafgda ( ctx, handle, begin, begin + 5, data )
 
-            call moved  ( data, 6, record(1) )
-            call moved  ( data, 6, record(7) )
+            record(1:6) = data(1:6)
+            record(7:12) = data(1:6)
 
             return
 
@@ -13327,8 +13313,8 @@ contains
 
             call dafgda ( ctx, handle, addrss, addrss + 5, data )
 
-            call moved ( data, 6, record(1) )
-            call moved ( data, 6, record(7) )
+            record(1:6) = data(1:6)
+            record(7:12) = data(1:6)
 
             return
 
@@ -13366,7 +13352,7 @@ contains
 
       call dafgda ( ctx, handle, addrss, addrss + 11, data )
 
-      call moved  ( data, 12, record(1) )
+      record(1:12) = data(1:12)
 
       return
       end procedure spkr05
@@ -16444,8 +16430,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
-      use pepper_arrays, only: moved
-      use pepper_math, only: vsclip
       implicit none
 
 
@@ -16733,7 +16717,7 @@ contains
 !
 !     Convert the position vector to km.
 !
-      call vsclip ( dscale, pos )
+      pos = dscale*pos
 
 !
 !     Append the position to the record. Since we inserted three
@@ -16741,7 +16725,7 @@ contains
 !     elements, the target index is the same as if we had copied the
 !     record directly to the output array.
 !
-      call moved ( pos, 3, record(recsiz+1) )
+      record(recsiz+1:recsiz+1+3-1) = pos
 
 !
 !     Convert the velocity Chebyshev coefficients to units of km/s.
@@ -20927,7 +20911,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bschoi, clearc, orderi
+      use pepper_arrays, only: bschoi, orderi
       use pepper_strings, only: intstr, ljucrs, prefix, suffix
       use pepper_inc_zzctr
       implicit none
@@ -20968,7 +20952,7 @@ contains
 !        Clear AGENTS array. We will use a non-blank AGENT value as the
 !        flag to delete previously set watchers.
 !
-         call clearc ( nck, agent )
+         agent = ' '
 
          first = .false.
 
@@ -22124,7 +22108,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_math, only: brcktd, brckti, vcrss, vdot, vequg, vlcom, vnorm, vzero
+      use pepper_math, only: vcrss, vdot, vnorm
       implicit none
       integer(ip), parameter :: bufsiz = 3
       integer(ip), parameter :: maxbit = 64
@@ -22285,7 +22269,7 @@ contains
 !
 !        Next for a zero position vector
 !
-         if ( vzero(pos) ) then
+         if ( all(pos == 0.0_wp) ) then
             call ctx%sigerr ( 'SPICE(ZEROPOSITION)'   )
             return
          end if
@@ -22293,7 +22277,7 @@ contains
 !
 !        Finally for a zero velocity vector
 !
-         if ( vzero(vel) ) then
+         if ( all(vel == 0.0_wp) ) then
             call ctx%sigerr ( 'SPICE(ZEROVELOCITY)'   )
             return
          end if
@@ -22351,7 +22335,7 @@ contains
 !                                            GM            R0
 !
          call vcrss ( vel,       hvec,                      tmpvec  )
-         call vlcom ( 1.0_wp/gm,  tmpvec,  -1.0_wp/r0,  pos,  eqvec   )
+         eqvec = (1.0_wp/gm)*tmpvec + (-1.0_wp/r0)*pos
 
          e  = vnorm ( eqvec )
 
@@ -22674,7 +22658,7 @@ contains
 !        on the list down and put the new guy on top of the list.
 !
 
-         nsaved = brckti ( nsaved+1, 1, bufsiz )
+         nsaved = max(min(1, bufsiz), min(max(1, bufsiz), nsaved+1))
          bumped = newest ( nsaved              )
 
          do i = nsaved, 2, -1
@@ -22768,7 +22752,7 @@ contains
 !        inside the domain for which KFUN can be computed.
 !
       x    = dt / bq
-      x    = brcktd ( x, -bound, bound )
+      x    = max(min(-bound, bound), min(max(-bound, bound), x))
       fx2  = f*x*x
 
       call stmp03 ( ctx, fx2, c0, c1, c2, c3 )
@@ -22785,7 +22769,7 @@ contains
             upper = lower
             lower = lower * 2.0_wp
             oldx  = x
-            x     = brcktd ( lower, -bound, bound )
+            x     = max(min(-bound, bound), min(max(-bound, bound), lower))
 
 !
 !           Make sure we are making progress. (In other words make sure
@@ -22834,7 +22818,7 @@ contains
             lower = upper
             upper = upper * 2.0_wp
             oldx  = x
-            x     = brcktd ( upper, -bound, bound )
+            x     = max(min(-bound, bound), min(max(-bound, bound), upper))
 !
 !           Make sure we are making progress.
 !
@@ -22870,7 +22854,7 @@ contains
 
       else
 
-         call vequg  ( pvinit, 6, pvprop )
+         pvprop = pvinit
          return
 
       end if
@@ -22950,8 +22934,8 @@ contains
 !
 !     ... and compute the linear combinations needed to get PVPROP
 !
-      call vlcom ( pc,    pos, vc,    vel,       pvprop(1) )
-      call vlcom ( pcdot, pos, vcdot, vel,       pvprop(4) )
+      pvprop(1:3) = pc*pos + vc*vel
+      pvprop(4:6) = pcdot*pos + vcdot*vel
 
       return
       end associate
@@ -25979,8 +25963,6 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: pi
-      use pepper_arrays, only: moved
-      use pepper_math, only: vadd, vequ, vlcom, vlcomg
       implicit none
 
 
@@ -26185,7 +26167,7 @@ contains
 !
 !     Unpack the record, for easier reading.
 !
-      call moved ( record, 12, pv )
+      pv = reshape(record(1:12), shape(pv))
 
       t1 = record(13)
       t2 = record(14)
@@ -26231,10 +26213,10 @@ contains
          w      =  0.5_wp + 0.5_wp * cos( arg )
          dwdt   =        - 0.5_wp * sin( arg ) * dargdt
 
-         call vlcomg ( 6,  w,    s1,       1.0_wp-w, s2,     state    )
-         call vlcom  (     dwdt, s1,       -dwdt,  s2,     vcomp    )
-         call vadd   (           state(4),         vcomp,  vel      )
-         call vequ   (           vel,                      state(4) )
+         state = w*s1 + (1.0_wp-w)*s2
+         vcomp = dwdt*s1(1:3) + (-dwdt)*s2(1:3)
+         vel = state(4:6) + vcomp
+         state(4:6) = vel
 
       else
 
@@ -26265,8 +26247,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, pi, twopi
-      use pepper_arrays, only: moved
-      use pepper_math, only: vcrss, vdot, vequ, vhatip, vrotv, vscl, vsclip, vsep, vzero
+      use pepper_math, only: vcrss, vdot, vhatip, vrotv, vsep
       implicit none
 
 
@@ -26545,12 +26526,12 @@ contains
 !
 !     The trajectory pole vector.
 !
-      call vequ ( recin(2), tp )
+      tp = recin(2:4)
 
 !
 !     The periapsis vector.
 !
-      call vequ ( recin(5), pa )
+      pa = recin(5:7)
 
 !
 !     Semi-latus rectum ( P in the P/(1 + ECC*COS(Nu)  ),
@@ -26567,7 +26548,7 @@ contains
 !
 !     Central body pole vector.
 !
-      call vequ ( recin(11), pv )
+      pv = recin(11:13)
 
 !
 !     The central mass, J2 and radius of the central body.
@@ -26613,7 +26594,7 @@ contains
          call ctx%sigerr ( 'SPICE(NONPOSITIVEMASS)'  )
          return
 
-      else if ( vzero(tp) ) then
+      else if ( all(tp == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The trajectory pole vector supplied to ' &
          //            'SPKE15 had length zero. The most likely ' &
@@ -26622,7 +26603,7 @@ contains
          call ctx%sigerr ( 'SPICE(BADVECTOR)'   )
          return
 
-      else if ( vzero(pa) ) then
+      else if ( all(pa == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The periapse vector supplied to SPKE15 ' &
          //            'had length zero. The most likely cause ' &
@@ -26631,7 +26612,7 @@ contains
          call ctx%sigerr ( 'SPICE(BADVECTOR)'   )
          return
 
-      else if ( vzero(pv) ) then
+      else if ( all(pv == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The central pole vector supplied to ' &
          //            'SPKE15 had length zero. The most likely ' &
@@ -26689,13 +26670,13 @@ contains
 !
 !     Next get the position at periapse ...
 !
-      call vscl( near, pa, state0 )
+      state0(1:3) = near*pa
 
 !
 !     ... and the velocity at periapsis.
 !
       call vcrss  ( tp,    pa, state0(4) )
-      call vsclip ( speed,     state0(4) )
+      state0(4:6) = speed*state0(4:6)
 
 !
 !     Determine the elapsed time from periapse to the requested
@@ -26783,7 +26764,7 @@ contains
 
             call vrotv ( state(1), tp, dperi, tmpsta(1) )
             call vrotv ( state(4), tp, dperi, tmpsta(4) )
-            call moved ( tmpsta,   6,         state     )
+            state = tmpsta
 
          end if
 
@@ -26795,7 +26776,7 @@ contains
 
             call vrotv ( state,    pv, dnode, tmpsta(1) )
             call vrotv ( state(4), pv, dnode, tmpsta(4) )
-            call moved ( tmpsta,   6,         state     )
+            state = tmpsta
 
          end if
 
@@ -26947,7 +26928,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_inc_sgparam
       implicit none
       integer(ip), parameter :: nconst = 8
@@ -27043,7 +27023,7 @@ contains
 !     that the record is properly constructed.
 !
       if ( from == to ) then
-         call moved ( record(begel1), nelems + nangs, record(begel2) )
+         record(begel2:begel2+nelems + nangs-1) = record(begel1:begel1+nelems + nangs-1)
       end if
 
       return

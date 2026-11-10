@@ -1655,7 +1655,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_zzswtchf
       implicit none
 
@@ -1742,7 +1741,7 @@ contains
 !     Both of the following routines will execute even when a SPICE
 !     error condition exists.
 !
-      call cleari   ( maxfrm, basbeg )
+      basbeg(1:maxfrm) = 0
       call zzhsiini ( ctx, maxfrm, hdfram, frpool )
 
       return
@@ -1776,7 +1775,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_zzswtchf
       implicit none
 
@@ -1881,8 +1879,8 @@ contains
 
       end if
 
-      call cleari ( maxfrm, fidlst )
-      call cleari ( maxfrm, basbeg )
+      fidlst(1:maxfrm) = 0
+      basbeg(1:maxfrm) = 0
 
       free = 1
 
@@ -2104,7 +2102,7 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderi
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
       implicit none
@@ -3822,10 +3820,10 @@ contains
 !!     Frame name to frame ID code translation
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust, prefix, ucase
+      use pepper_strings, only: prefix, ucase
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       character(:), allocatable :: pname
@@ -3846,7 +3844,7 @@ contains
 !     copy of its own length; SPICELIB truncated it to 32 characters.
 !
       allocate ( character(len(frname)) :: pname )
-      call ljust ( frname, pname )
+      pname = adjustl(frname)
       call ucase ( pname,  pname )
       call framex_code ( ctx, pname, frcode, found )
       return
@@ -4017,10 +4015,9 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       character(:), allocatable :: name
@@ -4267,10 +4264,9 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: non = nninrt
@@ -4677,10 +4673,10 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bschoi
-      use pepper_strings, only: ljust, prefix, repmc, ucase
+      use pepper_strings, only: prefix, repmc, ucase
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       character(:), allocatable :: name
@@ -4856,10 +4852,10 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust, prefix, repmc, ucase
+      use pepper_strings, only: prefix, repmc, ucase
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       character(:), allocatable :: lookup
@@ -5173,7 +5169,7 @@ contains
       use pepper_strings, only: prefix, repmc, suffix
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
       character(:), allocatable :: name

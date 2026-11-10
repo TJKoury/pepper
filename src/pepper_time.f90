@@ -769,7 +769,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: ucase
       implicit none
 
@@ -1168,8 +1167,8 @@ contains
       call ucase ( in,  inu  )
       call ucase ( out, outu )
 
-      i    = isrchc( inu,  total, units )
-      j    = isrchc( outu, total, units )
+      i    = findloc(units, inu, dim=1)
+      j    = findloc(units, outu, dim=1)
 
       if (      ( i == 0 ) &
            .or. ( j== 0 ) ) then
@@ -2327,7 +2326,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: dpstr, ljust, ncpos, pos, rjust
+      use pepper_strings, only: dpstr, ncpos, pos, rjust
       implicit none
 
 
@@ -2836,7 +2835,7 @@ contains
 
             call dpstr ( x, sigdig, mystr )
             mystr(1:1) = sign
-            call ljust ( mystr, str )
+            str = adjustl(mystr)
             call rjust ( str(1:lastch), str(1:lastch) )
 
          end if
@@ -2895,7 +2894,7 @@ contains
 
             call dpstr ( x, sigdig, mystr )
             mystr(1:1) = sign
-            call ljust ( mystr, str )
+            str = adjustl(mystr)
             call rjust ( str(1:lastch), str(1:lastch) )
             return
 
@@ -3279,7 +3278,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: frstnb, lastnb, ljust, ucase, zzrepsub
+      use pepper_strings, only: ucase, zzrepsub
       implicit none
 
 
@@ -3600,8 +3599,8 @@ contains
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      mrknbf = frstnb(marker)
-      mrknbl = lastnb(marker)
+      mrknbf = verify(marker, ' ')
+      mrknbl = len_trim(marker)
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
@@ -3618,13 +3617,13 @@ contains
 !     Okay, MARKER is non-blank and has been found. Convert the
 !     number to text, and substitute the text for the marker.
 !
-      call ljust   ( format, gdfmt )
+      gdfmt = adjustl(format)
       call ucase   ( gdfmt,  gdfmt )
 
       call dpstrf  ( ctx, value, sigdig, gdfmt, substr )
 
-      subnbf = frstnb(substr)
-      subnbl = lastnb(substr)
+      subnbf = verify(substr, ' ')
+      subnbl = len_trim(substr)
 
       if ( subnbf /= 0 .and. subnbl /= 0 ) then
 
@@ -4800,7 +4799,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax, intmin, spd
       use pepper_arrays, only: lstlti
-      use pepper_strings, only: cmprss, intstr, ljust
+      use pepper_strings, only: cmprss, intstr
       implicit none
       integer(ip), parameter :: dp400y = 365*400 + 97
       integer(ip), parameter :: dp100y = 365*100 + 24
@@ -5169,7 +5168,7 @@ contains
 !     We don't want any leading spaces in SSTR, (HSTR and MSTR don't
 !     have leading spaces by construction.
 !
-      call ljust ( sstr, sstr )
+      sstr = adjustl(sstr)
 !
 !     Now form the date string, squeeze out extra spaces and
 !     left justify the whole thing.
@@ -5188,7 +5187,7 @@ contains
       //     sstr(1:6)
 
       call cmprss ( ' ', 1, date, date )
-      call ljust  (         date, date )
+      date = adjustl(date)
 
       calstr = date
 
@@ -7118,8 +7117,7 @@ contains
 !!     Local Variables.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc
-      use pepper_strings, only: ljust, prefix, ucase
+      use pepper_strings, only: prefix, ucase
       implicit none
       integer(ip), parameter :: wdsize = 16
       integer(ip), parameter :: nzones = 8
@@ -7144,10 +7142,10 @@ contains
 !
 !     Normalize the input.
 !
-      call ljust ( action, myactn )
+      myactn = adjustl(action)
       call ucase ( myactn, myactn )
 
-      call ljust ( item,   myitem )
+      myitem = adjustl(item)
       call ucase ( myitem, myitem )
 
 !
@@ -7158,7 +7156,7 @@ contains
 !
       if ( myactn == 'SET' ) then
 
-         call ljust ( value,  myval  )
+         myval = adjustl(value)
          call ucase ( myval,  myval  )
 
          if      ( myitem == 'SYSTEM' ) then
@@ -7188,7 +7186,7 @@ contains
 
          else if ( myitem == 'ZONE' ) then
 
-            zone = isrchc ( myval, nzones, zones )
+            zone = findloc(zones, myval, dim=1)
 
 !
 !           If MYVAL was one of the recognized time zones, we
@@ -7503,7 +7501,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
-      use pepper_arrays, only: somfls
       use pepper_strings, only: ucase
       use pepper_inc_zzctr
       implicit none
@@ -7632,7 +7629,7 @@ contains
 !
 !        If anything wasn't found, it's an error dude.
 !
-         if ( somfls ( found, needed ) ) then
+         if ( (.not. all(found)) ) then
 
             nodata = .true.
 
@@ -8614,7 +8611,6 @@ contains
 !!     Initial values
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_strings, only: prefix, repmc
       implicit none
       integer(ip), parameter :: smwdsz = 16
@@ -8852,7 +8848,7 @@ contains
 !
          if ( tvec(yr) < 1580.0_wp ) then
 
-            call moved  ( tvec, 6, tvecm )
+            tvecm(1:6) = tvec(1:6)
 
             tvecm(1) = tvecm(1) + 4.0_wp
 
@@ -8873,7 +8869,7 @@ contains
 !        are no bounds in the years where we might be on a century.
 !        So we just check twice for each time vector.
 !
-         call moved  ( tvec, 6, tvecm )
+         tvecm(1:6) = tvec(1:6)
 
          tvecm(1) = tvecm(1) + 4.0_wp
 

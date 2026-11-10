@@ -1093,7 +1093,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: drdcyl, reccyl, vpack
+      use pepper_math, only: drdcyl, reccyl
       implicit none
 
 ! $ Detailed_Input
@@ -1424,7 +1424,7 @@ contains
 !
 !     First move the X,Y and Z coordinates into a vector.
 !
-      call vpack  ( x, y, z, rectan )
+      rectan = [x, y, z]
 
 !
 !     Convert from rectangular to cylindrical coordinates.
@@ -1467,7 +1467,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: drdlat, reclat, vpack
+      use pepper_math, only: drdlat, reclat
       implicit none
 
 ! $ Detailed_Input
@@ -1799,7 +1799,7 @@ contains
 !
 !     First move the X,Y and Z coordinates into a vector.
 !
-      call vpack  ( x, y, z, rectan )
+      rectan = [x, y, z]
 
 !
 !     Convert from rectangular to latitudinal coordinates.
@@ -3014,7 +3014,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: drdsph, recsph, vpack
+      use pepper_math, only: drdsph, recsph
       implicit none
 
 ! $ Detailed_Input
@@ -3347,7 +3347,7 @@ contains
 !
 !     First move the X,Y and Z coordinates into a vector.
 !
-      call vpack  ( x, y, z, rectan )
+      rectan = [x, y, z]
 
 !
 !     Convert from rectangular to spherical coordinates.
@@ -3390,7 +3390,7 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
-      use pepper_math, only: mxv, vlcom, vlcom3
+      use pepper_math, only: mxv
       implicit none
 
 ! $ Detailed_Input
@@ -3907,7 +3907,7 @@ contains
 !
 !     Form the planetary mean equator position vector
 !
-      call vlcom ( x1, vf, y1, vg, xhold )
+      xhold(1:3) = x1*vf + y1*vg
 
 !
 !     Form the planetary mean equator velocity vector
@@ -3916,7 +3916,7 @@ contains
       temp (2) =  nodedt*xhold(1)
       temp (3) =  0.0_wp
 
-      call vlcom3 ( 1.0_wp, temp, dx, vf, dy, vg, xhold(4) )
+      xhold(4:6) = 1.0_wp*temp + dx*vf + dy*vg
 
 !
 !     Transform to an inertial state vector
@@ -3949,8 +3949,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: touchd
-      use pepper_math, only: vzero
       implicit none
 
 ! $ Detailed_Input
@@ -4115,7 +4113,7 @@ contains
 !     The input point must be non-zero, or we can't scale it
 !     to the ellipsoid.
 !
-      if ( vzero(p) ) then
+      if ( all(p == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input point was the zero vector. ' &
          //            'A non-zero vector is required.'   )
@@ -4128,7 +4126,7 @@ contains
 !     Find the level surface parameter of the input point with respect
 !     to the scaled ellipsoid.
 !
-      level = touchd( ( p(1)/a )**2 + ( p(2)/b )**2 + ( p(3)/c )**2  )
+      level = (( p(1)/a )**2 + ( p(2)/b )**2 + ( p(3)/c )**2)
 
       if ( level <= 0.0_wp ) then
 !
@@ -4180,8 +4178,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: touchd
-      use pepper_math, only: vzero
       implicit none
 
 ! $ Detailed_Input
@@ -4491,9 +4487,9 @@ contains
 !
       scale = max ( a, b, c )
 
-      sa    = touchd( a / scale )
-      sb    = touchd( b / scale )
-      sc    = touchd( c / scale )
+      sa    = (a / scale)
+      sb    = (b / scale)
+      sc    = (c / scale)
 !
 !     If any of the scaled-semi axes underflowed to zero,
 !     we can't continue.
@@ -4516,7 +4512,7 @@ contains
 !
 !     The normal vector can't be the zero vector.
 !
-      if ( vzero(normal) ) then
+      if ( all(normal == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The input normal vector was the zero vector. ' &
          //            'There is no solution.'                        )
@@ -4556,8 +4552,7 @@ contains
       nb2 = normal(2) * sb * sb
       nc2 = normal(3) * sc * sc
 
-      arg = touchd(   ( na2 * normal(1) ) + ( nb2 * normal(2) ) &
-                    + ( nc2 * normal(3) )                        )
+      arg = (( na2 * normal(1) ) + ( nb2 * normal(2) )  + ( nc2 * normal(3) ))
 
       if ( arg <= 0.0_wp ) then
 
@@ -7587,7 +7582,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
-      use pepper_math, only: el2cgv, pl2nvc, pl2nvp, vdot, vequ, vlcom3, vnormg, vsep, vsub, vzero, vzerog
+      use pepper_math, only: el2cgv, pl2nvc, pl2nvp, vdot, vnormg, vsep
       implicit none
 
       integer(ip), parameter :: ubel = 9
@@ -7851,7 +7846,7 @@ contains
 !
       call pl2nvc ( plane, normal, inpcon )
 
-      if ( vzero(normal) ) then
+      if ( all(normal == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Input SPICE plane has zero normal vector.' )
          call ctx%sigerr ( 'SPICE(INVALIDPLANE)'                       )
@@ -7877,7 +7872,7 @@ contains
 !
       call el2cgv ( ellips, center, smajor, sminor )
 
-      if ( .not. vzero(sminor) ) then
+      if ( .not. all(sminor == 0.0_wp) ) then
 
          sep = vsep( smajor, sminor )
 
@@ -7906,7 +7901,7 @@ contains
 !     If the input ellipse is a single point, decide now
 !     whether the ellipse lies in the plane.
 !
-      if ( vzero(smajor) ) then
+      if ( all(smajor == 0.0_wp) ) then
 !
 !        The ellipse is a single point. If the ellipse's center
 !        lies in the plane, the whole ellipse is the one
@@ -7919,8 +7914,8 @@ contains
 !
             nxpts = 1
 
-            call vequ ( center, xpt1 )
-            call vequ ( center, xpt2 )
+            xpt1 = center
+            xpt2 = center
 
          else
 !
@@ -7949,7 +7944,7 @@ contains
 !     the point.  Find the plane constant of the translated plane.
 !
       call pl2nvp ( plane,   normal,  tmpvec )
-      call vsub   ( tmpvec,  center,  point  )
+      point = tmpvec - center
       call nvp2pl ( ctx, normal,  point,   trans  )
 
       call pl2nvc ( trans,   normal,  const  )
@@ -7985,7 +7980,7 @@ contains
 !
 !     Test whether the plane and ellipse are parallel:
 !
-      if (  vzerog( v, 2 )  ) then
+      if (  all(v == 0.0_wp)  ) then
 !
 !        The ellipse lies in the plane if and only if CONST is zero.
 !        In any case, we don't modify XPT1 or XPT2.
@@ -8077,7 +8072,7 @@ contains
 !
 !     the solutions are identical.
 !
-      if ( vzero(sminor) ) then
+      if ( all(sminor == 0.0_wp) ) then
 
          nxpts = 1
 
@@ -8097,13 +8092,9 @@ contains
 !
 !     Compute the intersection points.
 !
-      call vlcom3 ( 1.0_wp,         center, &
-                    dcos(angle1),  smajor, &
-                    dsin(angle1),  sminor,    xpt1 )
+      xpt1 = 1.0_wp*center + dcos(angle1)*smajor + dsin(angle1)*sminor
 
-      call vlcom3 ( 1.0_wp,         center, &
-                    dcos(angle2),  smajor, &
-                    dsin(angle2),  sminor,    xpt2 )
+      xpt2 = 1.0_wp*center + dcos(angle2)*smajor + dsin(angle2)*sminor
 
       return
       end procedure inelpl
@@ -8127,8 +8118,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: cleard
-      use pepper_math, only: pl2nvc, smsgnd, vdot, vequ, vhat, vlcom, vnorm, vscl, vsclip, vzero
+      use pepper_math, only: pl2nvc, smsgnd, vdot, vhat, vnorm
       implicit none
 
       integer(ip)           ubpl
@@ -8686,7 +8676,7 @@ contains
 !
       call vhat ( dir, udir )
 
-      if ( vzero (udir) ) then
+      if ( all(udir == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Ray''s direction vector is the zero vector.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                           )
@@ -8702,12 +8692,12 @@ contains
 
       if ( mscale /= 0.0_wp ) then
 
-         call vscl ( 1.0_wp / mscale, vertex, sclvtx )
+         sclvtx = (1.0_wp / mscale)*vertex
          sclcon  =  const / mscale
 
       else
 
-         call vequ ( vertex, sclvtx )
+         sclvtx = vertex
          sclcon   =  const
 
       end if
@@ -8736,7 +8726,7 @@ contains
 !
 !        XPT is the original, unscaled vertex.
 !
-         call vequ ( vertex, xpt )
+         xpt = vertex
 
          if (  vdot ( normal, udir )  ==  0.0_wp  )  then
 !
@@ -8809,7 +8799,7 @@ contains
 !        The ray is parallel to or points away from the plane.
 !
          nxpts = 0
-         call cleard ( 3, xpt )
+         xpt = 0.0_wp
 
          return
 
@@ -8840,7 +8830,7 @@ contains
 !        exists.
 !
          nxpts = 0
-         call cleard ( 3, xpt )
+         xpt = 0.0_wp
 
          return
 
@@ -8855,13 +8845,13 @@ contains
       nxpts    =   1
       scale    =   abs (prjdif)  /   abs (prjdir)
 
-      call vlcom ( 1.0_wp, sclvtx, scale, udir, xpt )
+      xpt = 1.0_wp*sclvtx + scale*udir
 
 !
 !     Re-scale XPT.  This is safe, since TOOBIG has already been
 !     scaled to allow for any growth of XPT at this step.
 !
-      call vsclip ( mscale, xpt )
+      xpt = mscale*xpt
 
       return
       end procedure inrypl
@@ -8888,7 +8878,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_math, only: unorm, vsclip, xpose
+      use pepper_math, only: unorm
       implicit none
 
 ! $ Detailed_Input
@@ -9136,14 +9126,14 @@ contains
 
          scale = 1.0_wp / length
 
-         call vsclip ( scale, temp(1,i) )
+         temp(:,i) = scale*temp(:,i)
 
       end do
 
 !
 !     If we make it this far, we just need to transpose TEMP into MIT.
 !
-      call xpose ( temp, mit )
+      mit = transpose(temp)
       return
       end procedure invort
 
@@ -9433,7 +9423,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: brcktd, det, unorm
+      use pepper_math, only: det, unorm
       implicit none
 
 ! $ Detailed_Input
@@ -9658,11 +9648,11 @@ contains
 
       d      =  det ( unit )
 
-      normok =       ( n1 == brcktd ( n1, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
-               .and. ( n2 == brcktd ( n2, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
-               .and. ( n3 == brcktd ( n3, 1.0_wp - ntol, 1.0_wp + ntol ) )
+      normok =       ( n1 == max(min(1.0_wp - ntol, 1.0_wp + ntol), min(max(1.0_wp - ntol, 1.0_wp + ntol), &
+         n1)) )  .and. ( n2 == max(min(1.0_wp - ntol, 1.0_wp + ntol), min(max(1.0_wp - ntol, 1.0_wp + ntol), &
+         n2)) )  .and. ( n3 == max(min(1.0_wp - ntol, 1.0_wp + ntol), min(max(1.0_wp - ntol, 1.0_wp + ntol), n3)) )
 
-      detok  =         d  == brcktd ( d,  1.0_wp - dtol, 1.0_wp + dtol )
+      detok  =         d  == max(min(1.0_wp - dtol, 1.0_wp + dtol), min(max(1.0_wp - dtol, 1.0_wp + dtol), d))
 
       if ( normok .and. detok ) then
          isrot = .true.
@@ -10780,7 +10770,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: vadd, vdist, vproj, vsub, vzero
+      use pepper_math, only: vdist, vproj
       implicit none
 
 ! $ Detailed_Input
@@ -10913,7 +10903,7 @@ contains
 !
 !     We need a real direction vector to work with.
 !
-      if (  vzero (lindir)  )  then
+      if (  all(lindir == 0.0_wp)  )  then
 
          call ctx%setmsg ( 'Direction vector must be non-zero.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                  )
@@ -10926,9 +10916,9 @@ contains
 !     the origin.  Then the nearest point on the translated line to the
 !     translated point TRANS is the projection of TRANS onto the line.
 !
-      call vsub  ( point,  linpt,  trans )
+      trans = point - linpt
       call vproj ( trans,  lindir, proj  )
-      call vadd  ( proj,   linpt,  pnear )
+      pnear = proj + linpt
 
       dist = vdist ( pnear,  point )
 
@@ -10954,7 +10944,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: vdist, vdot, vequ, vsub, vzero
+      use pepper_math, only: vdist, vdot
       implicit none
 
 ! $ Detailed_Input
@@ -11101,14 +11091,14 @@ contains
 !
 !     Find a direction vector defined by the endpoints.
 !
-      call vsub ( ep2, ep1, seg )
+      seg = ep2 - ep1
 
-      if ( vzero(seg) ) then
+      if ( all(seg == 0.0_wp) ) then
 !
 !        The endpoints coincide, and both coincide with the
 !        near point.
 !
-         call vequ ( ep1, pnear )
+         pnear = ep1
 
          dist = vdist( ep1, point )
 
@@ -11128,7 +11118,7 @@ contains
 !     Determine whether LNEAR is on the segment, "before" EP1, or
 !     "after" EP2, where SEG points in the "increasing" direction.
 !
-      call vsub ( lnear, ep1, offset )
+      offset = lnear - ep1
 
       offdot = vdot( offset, seg )
 
@@ -11137,7 +11127,7 @@ contains
 !        The nearest point on the line precedes the first endpoint.
 !        The closest point on the segment is the first endpoint.
 !
-         call vequ ( ep1, pnear )
+         pnear = ep1
 
          dist = vdist ( ep1, point )
 
@@ -11154,7 +11144,7 @@ contains
 !           The nearest point on the line follows the last endpoint.
 !           The closest point on the segment is the last endpoint.
 !
-            call vequ ( ep2, pnear )
+            pnear = ep2
 
             dist = vdist ( ep2, point )
 
@@ -11163,7 +11153,7 @@ contains
 !           The near point is on the segment. LNEAR is actually the
 !           solution.
 !
-            call vequ ( lnear, pnear )
+            pnear = lnear
 
 !
 !           DIST was correctly set by the call to NPLNPT.
@@ -11195,7 +11185,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: unorm, vequ, vminus
+      use pepper_math, only: unorm
       implicit none
 
       integer(ip)           ubpl
@@ -11554,8 +11544,8 @@ contains
       if ( plane(conpos) < 0.0_wp ) then
 
          plane(conpos) =   -plane(conpos)
-         call vminus     (  plane(nmlpos), tmpvec        )
-         call vequ       (  tmpvec,        plane(nmlpos) )
+         tmpvec = -plane(nmlpos:nmlpos+3-1)
+         plane(nmlpos:nmlpos+3-1) = tmpvec
 
       end if
 
@@ -11582,7 +11572,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vdot, vequ, vhat, vminus, vzero
+      use pepper_math, only: vdot, vhat
       implicit none
 
       integer(ip)           ubpl
@@ -11747,7 +11737,7 @@ contains
 !
 !     The normal vector must be non-zero.
 !
-      if ( vzero (normal) ) then
+      if ( all(normal == 0.0_wp) ) then
 
          call ctx%setmsg ( 'Plane''s normal must be non-zero.' )
          call ctx%sigerr ( 'SPICE(ZEROVECTOR)'                 )
@@ -11767,8 +11757,8 @@ contains
       if ( plane(conpos) < 0.0_wp ) then
 
          plane(conpos) =   -plane(conpos)
-         call vminus     (  plane(nmlpos), tmpvec        )
-         call vequ       (  tmpvec,        plane(nmlpos) )
+         tmpvec = -plane(nmlpos:nmlpos+3-1)
+         plane(nmlpos:nmlpos+3-1) = tmpvec
 
       end if
 
@@ -11795,7 +11785,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: ucrss, vdot, vequ, vminus, vzero
+      use pepper_math, only: ucrss, vdot
       implicit none
 
       integer(ip)           ubpl
@@ -11969,7 +11959,7 @@ contains
 !
       call ucrss (  span1,  span2,  plane(nmlpos)  )
 
-      if (  vzero ( plane(nmlpos) )  ) then
+      if (  all(plane(nmlpos:nmlpos+3-1) == 0.0_wp)  ) then
          call ctx%setmsg ( 'Spanning vectors are parallel.' )
          call ctx%sigerr ( 'SPICE(DEGENERATECASE)'          )
          return
@@ -11989,8 +11979,8 @@ contains
       if ( plane(conpos) < 0.0_wp ) then
 
          plane(conpos) =   -plane(conpos)
-         call vminus     (  plane(nmlpos), tmpvec        )
-         call vequ       (  tmpvec,        plane(nmlpos) )
+         tmpvec = -plane(nmlpos:nmlpos+3-1)
+         plane(nmlpos:nmlpos+3-1) = tmpvec
 
       end if
 
@@ -12018,7 +12008,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vcrss, vnorm, vsub
+      use pepper_math, only: vcrss, vnorm
       implicit none
 
 ! $ Detailed_Input
@@ -12312,11 +12302,9 @@ contains
 !
 !        Take the cross product of two edges of the Ith plate.
 !
-         call vsub ( vrtces( 1, plates(2,i) ), &
-                     vrtces( 1, plates(1,i) ),   edge1 )
+         edge1 = vrtces(:,plates(2,i)) - vrtces(:,plates(1,i))
 
-         call vsub ( vrtces( 1, plates(3,i) ), &
-                     vrtces( 1, plates(2,i) ),   edge2 )
+         edge2 = vrtces(:,plates(3,i)) - vrtces(:,plates(2,i))
 
          call vcrss ( edge1, edge2, cp )
 
@@ -12354,7 +12342,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: vadd, vcrss, vdist, vdot, vequ, vnorm, vperp, vsub, vzero
+      use pepper_math, only: vcrss, vdist, vdot, vnorm, vperp
       implicit none
 
 ! $ Detailed_Input
@@ -12543,9 +12531,9 @@ contains
 !
 !     Compute the plate's edges.
 !
-      call vsub ( v2, v1, e1 )
-      call vsub ( v3, v2, e2 )
-      call vsub ( v1, v3, e3 )
+      e1 = v2 - v1
+      e2 = v3 - v2
+      e3 = v1 - v3
 
 !
 !     Compute a normal vector for the plate, if possible.
@@ -12561,8 +12549,7 @@ contains
       call vcrss ( e2, normal, enorm2 )
       call vcrss ( e3, normal, enorm3 )
 
-      degen =      vzero(normal) .or. vzero(enorm1) &
-              .or. vzero(enorm2) .or. vzero(enorm3)
+      degen =      all(normal == 0.0_wp) .or. all(enorm1 == 0.0_wp)  .or. all(enorm2 == 0.0_wp) .or. all(enorm3 == 0.0_wp)
 
       if ( degen ) then
 !
@@ -12578,7 +12565,7 @@ contains
 !           Up to round-off error, the vertices coincide.
 !           The vertex V1 for practical purposes is the plate.
 !
-            call vequ ( v1, pnear )
+            pnear = v1
 
             dist = vdist( pnear, point )
 
@@ -12623,7 +12610,7 @@ contains
 !     the plate. Find the offset of the POINT from V1, and
 !     find the component of this offset orthogonal to NORMAL.
 !
-      call vsub  ( point, v1,     pdiff )
+      pdiff = point - v1
       call vperp ( pdiff, normal, perp  )
 
 !
@@ -12643,7 +12630,7 @@ contains
 !        V1+PERP is inside the plate. It is the closest
 !        point on the plate to POINT.
 !
-         call vadd ( v1, perp, pnear )
+         pnear = v1 + perp
 !
 !        We have the near point; set the distance.
 !
@@ -12687,12 +12674,12 @@ contains
 
             if ( d1 <= min(d2, d3) ) then
 
-               call vequ ( np1, pnear )
+               pnear = np1
                dist = d1
 
             else if ( d2 <= min(d3, d1) ) then
 
-               call vequ ( np2, pnear )
+               pnear = np2
                dist = d2
 
             else
@@ -12732,7 +12719,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: det, vequ
+      use pepper_math, only: det
       implicit none
 
 ! $ Detailed_Input
@@ -13226,7 +13213,7 @@ contains
 !
          do j = 1, 3
 
-            call vequ (  vrtces( 1, plates(j,i) ),  m(1,j)  )
+            m(:,j) = vrtces(:,plates(j,i))
 
          end do
 
@@ -13270,7 +13257,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vlcomg
       implicit none
 
 ! $ Detailed_Input
@@ -13441,7 +13427,7 @@ contains
 !
 !        =    (0.5/DELTA) * F(X2)  +  (-0.5/DELTA) * F(X0)
 !
-      call vlcomg (  ndim, 0.5_wp/delta, f2, -0.5_wp/delta, f0, dfdt )
+      dfdt = (0.5_wp/delta)*f2 + (-0.5_wp/delta)*f0
 
       return
       end procedure qderiv
@@ -13468,7 +13454,7 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: pi
-      use pepper_math, only: vhat, vnorm, vzero
+      use pepper_math, only: vhat, vnorm
       implicit none
 
 ! $ Detailed_Input
@@ -13866,7 +13852,7 @@ contains
 !     We take a few precautions to handle the case of an identity
 !     rotation.
 !
-      if ( vzero(q(1)) ) then
+      if ( all(q(1:3) == 0.0_wp) ) then
 
          angle = 0
          axis(1) = 0.0_wp
@@ -13911,7 +13897,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: moved
       implicit none
 
 ! $ Detailed_Input
@@ -14203,7 +14188,7 @@ contains
 !        We set the second root equal to the first, rather than
 !        leaving it undefined.
 !
-         call moved ( root1, 2, root2 )
+         root2 = root1
 
       end if
 
@@ -14486,7 +14471,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: approx, pl2nvc, vdot, vlcom, vnorm
+      use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
 
       integer(ip)           ubpl
@@ -14712,11 +14697,7 @@ contains
 !
 !     Subtracting this multiple of NORMAL from VIN yields VOUT.
 !
-      call vlcom (  1.0_wp, &
-                    vin, &
-                    const - vdot ( vin, normal ), &
-                    normal, &
-                    vout                          )
+      vout = 1.0_wp*vin + (const - vdot ( vin, normal ))*normal
 
       return
       end procedure vprjp
@@ -14744,7 +14725,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_math, only: approx, pl2nvc, vdot, vlcom, vnorm
+      use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
 
       integer(ip)           ubpl
@@ -15082,7 +15063,7 @@ contains
 !
          mult = numer / denom
 
-         call vlcom ( 1.0_wp, vin, mult, projn, vout )
+         vout = 1.0_wp*vin + mult*projn
 
          found = .true.
 
@@ -15117,8 +15098,7 @@ contains
 !!
       use pepper_kinds, only: wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: moved
-      use pepper_math, only: vcrss, vdot, vhat, vnorm, vrotv, vscl
+      use pepper_math, only: vcrss, vdot, vhat, vnorm, vrotv
       implicit none
 
 ! $ Detailed_Input
@@ -15436,7 +15416,7 @@ contains
 !
       onebyc = 1.0_wp / clight
 
-      call vscl  ( onebyc, vobs, vbyc )
+      vbyc = onebyc*vobs
 
 !
 !     If the square of the length of the velocity vector is greater than
@@ -15478,7 +15458,7 @@ contains
 
       else
 
-         call moved ( pobj, 3, appobj )
+         appobj = pobj
 
       end if
 
@@ -15505,7 +15485,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_math, only: vminus
       implicit none
 
 ! $ Detailed_Input
@@ -15795,7 +15774,7 @@ contains
 !     the inverse of the usual stellar aberration correction,
 !     which is exactly what we seek.
 !
-      call vminus ( vobs, negvel )
+      negvel = -vobs
 
       call stelab ( ctx, pobj, negvel, corpos )
 

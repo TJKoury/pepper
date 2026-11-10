@@ -1145,6 +1145,9 @@ contains
 !$Procedure CLEARC ( Clear an array of strings )
 
       !> Fill an array of strings with blank strings.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine clearc ( ndim, array )
 !! ## Abstract
 !!
@@ -1315,18 +1318,15 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      do i = 1, ndim
-         array(i) = ' '
-      end do
-
-      return
+      array(1:ndim) = ' '
       end subroutine clearc
 
 !$Procedure CLEARD ( Clear a double precision array )
 
       !> Fill a double precision array with zeros.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine cleard ( ndim, array )
 !! ## Abstract
 !!
@@ -1470,18 +1470,15 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      do i = 1, ndim
-        array(i) = 0.0_wp
-      end do
-
-      return
+      array(1:ndim) = 0.0_wp
       end subroutine cleard
 
 !$Procedure CLEARI ( Clear an integer array )
 
       !> Fill an integer array with zeros.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine cleari ( ndim, array )
 !! ## Abstract
 !!
@@ -1630,18 +1627,15 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      do i = 1, ndim
-        array(i) = 0
-      end do
-
-      return
+      array(1:ndim) = 0
       end subroutine cleari
 
 !$Procedure FILLC ( Fill a character array )
 
       !> Fill a character string array with a specified string.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine fillc ( value, ndim, array )
 !! ## Abstract
 !!
@@ -1747,18 +1741,15 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      do i = 1, ndim
-        array(i) = value
-      end do
-
-      return
+      array(1:ndim) = value
       end subroutine fillc
 
 !$Procedure FILLD ( Fill a double precision array )
 
       !> Fill a double precision array with a specified value.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine filld ( value, ndim, array )
 !! ## Abstract
 !!
@@ -1907,18 +1898,15 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      do i = 1, ndim
-        array(i) = value
-      end do
-
-      return
+      array(1:ndim) = value
       end subroutine filld
 
 !$Procedure FILLI ( Fill an integer array )
 
       !> Fill an integer array with a specified value.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine filli ( value, ndim, array )
 !! ## Abstract
 !!
@@ -2064,13 +2052,7 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      do i = 1, ndim
-        array(i) = value
-      end do
-
-      return
+      array(1:ndim) = value
       end subroutine filli
 
 !$Procedure ISORDV ( Is it an order vector )
@@ -2353,6 +2335,9 @@ contains
       !>
       !> The function returns the index of the first matching array
       !> element or zero if the value is not found.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (FINDLOC instead).
       pure integer(ip) function  isrchc ( value, ndim, array )
 !! ## Abstract
 !!
@@ -2466,20 +2451,7 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      isrchc = 0
-
-      do i = 1, ndim
-
-         if ( array(i) == value ) then
-            isrchc = i
-            return
-         end if
-
-      end do
-
-      return
+      isrchc = findloc(array(1:ndim), value, dim=1)
       end function isrchc
 
 !$Procedure ISRCHD  ( Search in a double precision array )
@@ -2626,6 +2598,9 @@ contains
       !>
       !> The function returns the index of the first matching array
       !> element or zero if the value is not found.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (FINDLOC instead).
       pure integer(ip) function  isrchi ( value, ndim, array )
 !! ## Abstract
 !!
@@ -2733,20 +2708,7 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      isrchi = 0
-
-      do i = 1, ndim
-
-         if ( array(i) == value ) then
-            isrchi = i
-            return
-         end if
-
-      end do
-
-      return
+      isrchi = findloc(array(1:ndim), value, dim=1)
       end function isrchi
 
 !$Procedure LSTCLD ( Last closest double precision array element )
@@ -4940,6 +4902,9 @@ contains
 !$Procedure MAXAD  ( Maximum element of array, DP )
 
       !> Locate the maximum element of a DP array.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (MAXVAL and MAXLOC instead).
       pure subroutine maxad ( array, ndim, maxval, loc )
 !! ## Abstract
 !!
@@ -5060,29 +5025,20 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      if (ndim <= 0) then
+      if ( ndim <= 0 ) then
          loc = 0
          return
       end if
-
-      maxval = array(1)
-      loc = 1
-
-      do i = 2, ndim
-         if (array(i) > maxval) then
-            maxval = array(i)
-            loc = i
-         end if
-      end do
-
-      return
+      loc = maxloc(array(1:ndim), dim=1)
+      maxval = array(loc)
       end subroutine maxad
 
 !$Procedure MAXAI  ( Maximum element of array, integer )
 
       !> Locate the maximum element of an integer array.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (MAXVAL and MAXLOC instead).
       pure subroutine maxai ( array, ndim, maxval, loc )
 !! ## Abstract
 !!
@@ -5203,24 +5159,12 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      if (ndim <= 0) then
+      if ( ndim <= 0 ) then
          loc = 0
          return
       end if
-
-      maxval = array(1)
-      loc = 1
-
-      do i = 2, ndim
-         if (array(i) > maxval) then
-            maxval = array(i)
-            loc = i
-         end if
-      end do
-
-      return
+      loc = maxloc(array(1:ndim), dim=1)
+      maxval = array(loc)
       end subroutine maxai
 
 !$Procedure MINAC  ( Minimum element of array, character )
@@ -5373,6 +5317,9 @@ contains
 !$Procedure MINAD  ( Minimum element of array, DP )
 
       !> Locate the minimum element of a DP array.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (MINVAL and MINLOC instead).
       pure subroutine minad ( array, ndim, minval, loc )
 !! ## Abstract
 !!
@@ -5490,29 +5437,20 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      if (ndim <= 0) then
+      if ( ndim <= 0 ) then
          loc = 0
          return
       end if
-
-      minval = array(1)
-      loc = 1
-
-      do i = 2, ndim
-         if (array(i) < minval) then
-            minval = array(i)
-            loc = i
-         end if
-      end do
-
-      return
+      loc = minloc(array(1:ndim), dim=1)
+      minval = array(loc)
       end subroutine minad
 
 !$Procedure MINAI  ( Minimum element of array, integer )
 
       !> Locate the minimum element of an integer array.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (MINVAL and MINLOC instead).
       pure subroutine minai ( array, ndim, minval, loc )
 !! ## Abstract
 !!
@@ -5630,30 +5568,21 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      if (ndim <= 0) then
+      if ( ndim <= 0 ) then
          loc = 0
          return
       end if
-
-      minval = array(1)
-      loc = 1
-
-      do i = 2, ndim
-         if (array(i) < minval) then
-            minval = array(i)
-            loc = i
-         end if
-      end do
-
-      return
+      loc = minloc(array(1:ndim), dim=1)
+      minval = array(loc)
       end subroutine minai
 
 !$Procedure MOVEC  ( Move a character array to another )
 
       !> Copy the elements of one character array into another
       !> array.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine movec ( arrfrm, ndim, arrto )
 !! ## Abstract
 !!
@@ -5781,19 +5710,16 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      do i = 1, ndim
-        arrto(i) = arrfrm(i)
-      end do
-
-      return
+      arrto(1:ndim) = arrfrm(1:ndim)
       end subroutine movec
 
 !$Procedure MOVED ( Move a double precision array to another )
 
       !> Copy the elements of one double precision array into another
       !> array.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine moved ( arrfrm, ndim, arrto )
 !! ## Abstract
 !!
@@ -6026,17 +5952,16 @@ contains
 !     PEPPER: copy directly. SPICELIB called MOVEI with 2*NDIM integers,
 !     which needs an implicit interface (type mismatch).
 !
-      if ( ndim > 0 ) then
-         arrto(1:ndim) = arrfrm(1:ndim)
-      end if
-
-      return
+      arrto(1:ndim) = arrfrm(1:ndim)
       end subroutine moved
 
 !$Procedure MOVEI  ( Move a integer array to another )
 
       !> Copy the elements of one integer array into another
       !> array.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine movei ( arrfrm, ndim, arrto )
 !! ## Abstract
 !!
@@ -6164,13 +6089,7 @@ contains
 !
 !     Local variables
 !
-      integer(ip) i
-
-      do i = 1, ndim
-        arrto(i) = arrfrm(i)
-      end do
-
-      return
+      arrto(1:ndim) = arrfrm(1:ndim)
       end subroutine movei
 
 !$Procedure NOTRU ( No true entries? )
@@ -8882,6 +8801,9 @@ contains
       !> Indicate whether two integer arrays are equal.
       !>
       !> The function returns the value .TRUE. if and only if A1 = A2.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (ALL instead).
       pure logical function sameai ( a1, a2, ndim )
 !! ## Abstract
 !!
@@ -8987,23 +8909,11 @@ contains
 !
 !     Local variables
 !
-      integer(ip)           i
 
 !
 !     Executable code
 !
-      sameai = .true.
-
-      do i = 1, ndim
-
-         if (  a1(i)  /=  a2(i)  ) then
-            sameai = .false.
-            return
-         end if
-
-      end do
-
-      return
+      sameai = all(a1(1:ndim) == a2(1:ndim))
       end function sameai
 
 !$Procedure SHELLC ( Shell sort a character array )
@@ -9543,6 +9453,9 @@ contains
       !>
       !> The function returns .TRUE. if some of the values in the array
       !> LOGCLS are .FALSE.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (ALL instead).
       pure logical function somfls ( logcls, n )
 !! ## Abstract
 !!
@@ -9649,26 +9562,11 @@ contains
 !
 !-&
 
-      integer(ip)           i
 
 !
 !     Just do it.
 !
-
-      do i = 1, n
-
-         if ( .not. logcls(i) ) then
-
-            somfls = .true.
-            return
-
-         end if
-
-      end do
-
-      somfls = .false.
-      return
-
+      somfls = .not. all(logcls(1:n))
       end function somfls
 
 !$Procedure SOMTRU ( Some entries true? )
@@ -9956,6 +9854,9 @@ contains
       !> Return the sum of the elements of an integer array.
       !>
       !> The function returns the sum of the elements of ARRAY.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (SUM instead).
       pure integer(ip) function sumai ( array, n )
 !! ## Abstract
 !!
@@ -10071,27 +9972,11 @@ contains
 !
 !     Local variables
 !
-      integer(ip)      sum
-      integer(ip)      i
 
 !
 !     Begin at zero.
 !
-      sum = 0
-
-!
-!     Sum the elements. If N is zero or negative, nothing happens.
-!
-      do i = 1, n
-         sum = sum + array(i)
-      end do
-
-!
-!     Return the sum.
-!
-      sumai = sum
-
-      return
+      sumai = sum(array(1:n))
       end function sumai
 
 !$Procedure SWAPC ( Swap character values )
@@ -10605,6 +10490,9 @@ contains
       !> Return the value of a double precision number.
       !>
       !> The function returns the value of DP.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (the value itself instead).
       elemental real(wp) function touchd ( dp )
 !! ## Abstract
 !!
@@ -10714,9 +10602,7 @@ contains
 !     touch a d.p. number
 !
 !-&
-
       touchd = dp
-      return
       end function touchd
 
 !$Procedure TOUCHI ( Touch a variable )
@@ -10843,6 +10729,9 @@ contains
       !> Return the value of the input logical
       !>
       !> The function returns the value of LOG.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (the value itself instead).
       elemental logical function touchl ( log )
 !! ## Abstract
 !!
@@ -10951,9 +10840,7 @@ contains
 !     touch a logical
 !
 !-&
-
       touchl = log
-      return
       end function touchl
 
 end module pepper_arrays

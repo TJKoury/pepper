@@ -343,7 +343,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: dpstr, frstnb, lastnb, zzrepsub
+      use pepper_strings, only: dpstr, zzrepsub
       implicit none
 
       integer(ip), parameter :: maxldp = 23
@@ -618,8 +618,8 @@ contains
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      mrknbf = frstnb(marker)
-      mrknbl = lastnb(marker)
+      mrknbf = verify(marker, ' ')
+      mrknbl = len_trim(marker)
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
@@ -638,8 +638,8 @@ contains
 !
       call dpstr  ( value, sigdig, substr )
 
-      subnbf = frstnb(substr)
-      subnbl = lastnb(substr)
+      subnbf = verify(substr, ' ')
+      subnbl = len_trim(substr)
 
       if ( subnbf /= 0 .and. subnbl /= 0 ) then
 
@@ -674,7 +674,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: frstnb, intstr, lastnb, zzrepsub
+      use pepper_strings, only: intstr, zzrepsub
       implicit none
 
       integer(ip), parameter :: maxli = 11
@@ -907,8 +907,8 @@ contains
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      mrknbf = frstnb(marker)
-      mrknbl = lastnb(marker)
+      mrknbf = verify(marker, ' ')
+      mrknbl = len_trim(marker)
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
@@ -927,11 +927,7 @@ contains
 !
       call intstr ( value, substr )
 
-      call zzrepsub ( in, &
-                      mrkpsb, &
-                      mrkpse, &
-                      substr( :lastnb(substr) ), &
-                      out  )
+      call zzrepsub ( in,  mrkpsb,  mrkpse,  substr( :len_trim(substr) ),  out  )
 
       return
       end procedure repmi
@@ -956,7 +952,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: sumai
       implicit none
 
 ! $ Detailed_Input
@@ -1182,7 +1177,7 @@ contains
 !     is longer than the original substring. The main thing is to
 !     avoid overwriting characters that have yet to be moved.
 !
-      end = sumai ( use, 3 )
+      end = sum(use)
 
       if ( left + strlen > right ) then
 
@@ -1250,7 +1245,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: lastnb
       implicit none
 
 ! $ Detailed_Input
@@ -1412,7 +1406,7 @@ contains
 !     How much of the input string will we use? And how big is the
 !     output string?
 !
-      inlen  = lastnb ( in  )
+      inlen  = len_trim(in)
       outlen = len    ( out )
 
 !
@@ -1987,7 +1981,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: frstnp, lastnb
+      use pepper_strings, only: frstnp
       implicit none
 
 ! $ Detailed_Input
@@ -2166,7 +2160,7 @@ contains
 
       end if
 
-      l  =  lastnb( id )
+      l  =  len_trim(id)
 
 !
 !     The ID must not be too long.
@@ -2240,7 +2234,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: astrip, lastnb
+      use pepper_strings, only: astrip
       implicit none
 
 ! $ Detailed_Input
@@ -2456,7 +2450,7 @@ contains
 !              If LINE is blank, LASTNB will return 0 which is just
 !              what we want.
 !
-               chars = chars + lastnb ( line )
+               chars = chars + len_trim(line)
 
 !
 !              Remove the printable characters from the line.  If
@@ -3547,7 +3541,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust, ltrim
+      use pepper_strings, only: ltrim
       implicit none
 
 ! $ Detailed_Input
@@ -3987,7 +3981,7 @@ contains
 !
             bltemp = bltemp + 1
 
-            call ljust ( line, line )
+            line = adjustl(line)
 
 !
 !           By convention, if BMARK is blank, it matches the
@@ -4051,7 +4045,7 @@ contains
 !
             eltemp = eltemp + 1
 
-            call ljust ( line, line )
+            line = adjustl(line)
 
             if ( emark /= ' ' ) then
                if ( emark ( ltrim(emark): ) == line  ) then

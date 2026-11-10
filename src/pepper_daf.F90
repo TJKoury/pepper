@@ -3759,7 +3759,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
@@ -3813,7 +3812,7 @@ contains
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
          call ucase    ( tmpstr,        tmpstr )
 
-         natbff = isrchc ( tmpstr, numbff, strbff )
+         natbff = findloc(strbff, tmpstr, dim=1)
 
          if ( natbff == 0 ) then
 
@@ -4336,7 +4335,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc, moved
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
@@ -4377,7 +4375,7 @@ contains
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
          call ucase    ( tmpstr,        tmpstr )
 
-         natbff = isrchc ( tmpstr, numbff, strbff )
+         natbff = findloc(strbff, tmpstr, dim=1)
 
          if ( natbff == 0 ) then
 
@@ -4488,7 +4486,7 @@ contains
 !     to the caller.
 !
       found = .true.
-      call moved ( dpbuf, 128, dprec )
+      dprec(1:128) = dpbuf
 
       return
       end associate
@@ -4613,7 +4611,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc, moved
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
@@ -4663,7 +4660,7 @@ contains
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
          call ucase    ( tmpstr,        tmpstr )
 
-         natbff = isrchc ( tmpstr, numbff, strbff )
+         natbff = findloc(strbff, tmpstr, dim=1)
 
          if ( natbff == 0 ) then
 
@@ -4893,7 +4890,7 @@ contains
 !     caller.
 !
       found = .true.
-      call moved ( dpbuf, 128, dprec )
+      dprec(1:128) = dpbuf
 
       return
       end associate
@@ -6039,7 +6036,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: inteoc = 4
@@ -6960,7 +6956,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       use pepper_strings, only: ltrim, rtrim
       use pepper_inc_zzddhman
       implicit none
@@ -7119,7 +7114,7 @@ contains
       bward  = fward
       crec   = ' '
 
-      call cleard ( 128, drec )
+      drec(1:128) = 0.0_wp
       call dafrwa ( ctx, fward+2, 1, free )
 
 !
@@ -7524,7 +7519,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: inteoc = 4
@@ -7642,7 +7636,7 @@ contains
       bward  = fward
       crec   = ' '
 
-      call cleard ( 128, drec )
+      drec(1:128) = 0.0_wp
       call dafrwa ( ctx, fward+2, 1, free )
 
 !
@@ -8086,7 +8080,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: inteoc = 4
@@ -8402,7 +8395,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: inteoc = 4
@@ -9851,7 +9843,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: inteoc = 4
@@ -9901,7 +9893,7 @@ contains
 !
 !     Get an upper case, left-justified copy of ACCESS.
 !
-      call ljust ( access, acc )
+      acc = adjustl(access)
       call ucase ( acc,    acc )
 
 !
@@ -10468,7 +10460,6 @@ contains
 !!     be stored directly.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved, movei
       implicit none
       real(wp)              dequiv   ( 125 )
       integer(ip)           iequiv   ( 250 )
@@ -10477,15 +10468,15 @@ contains
       equivalence         ( dequiv, iequiv )
       n = min ( 125, max ( 0, nd ) )
 
-      call moved ( dc, n, sum )
+      sum(1:n) = dc(1:n)
 
 !
 !     The integer components must detour through an equivalence.
 !
       m = min ( 250 - 2 * n, max ( 0, ni ) )
 
-      call movei ( ic,          m,              iequiv   )
-      call moved ( dequiv,     (m - 1) / 2 + 1, sum(n+1) )
+      iequiv(1:m) = ic(1:m)
+      sum(n+1:n+1+(m-1)/2) = dequiv(1:(m - 1) / 2 + 1)
 
       return
       end procedure dafps
@@ -10751,7 +10742,6 @@ contains
 !!     Just undo whatever DAFPS did.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved, movei
       implicit none
       real(wp)              dequiv   ( 125 )
       integer(ip)           iequiv   ( 250 )
@@ -10760,12 +10750,12 @@ contains
       equivalence         ( dequiv, iequiv )
       n = min ( 125, max ( 0, nd ) )
 
-      call moved ( sum, n, dc )
+      dc(1:n) = sum(1:n)
 
       m = min ( 250 - 2 * n, max ( 0, ni ) )
 
-      call moved ( sum(n+1), (m - 1) / 2 + 1, dequiv )
-      call movei ( iequiv,    m,              ic     )
+      dequiv(1:(m - 1) / 2 + 1) = sum(n+1:n+1+(m-1)/2)
+      ic(1:m) = iequiv(1:m)
 
       return
       end procedure dafus
@@ -11204,7 +11194,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
-      use pepper_arrays, only: minai, moved
       implicit none
       integer(ip), parameter :: rbsize = 100
       integer(ip), parameter :: rdsize = 128 * rbsize
@@ -11272,7 +11261,12 @@ contains
 !
       if ( .not. stored ) then
 
-         call minai ( rbreq, rbnbr, minval, bufloc )
+         if ( rbnbr > 0 ) then
+            bufloc = minloc(rbreq(1:rbnbr), dim=1)
+            minval = rbreq(bufloc)
+         else
+            bufloc = 0
+         end if
 
          call zzdafgdr ( ctx, handle, recno, rbdat(1,bufloc), locfnd )
 
@@ -11312,7 +11306,7 @@ contains
          e     = min(128,end)
          count = e-b+1
 
-         call moved ( rbdat(b,bufloc), count, data )
+         data(1:count) = rbdat(b:b+count-1,bufloc)
 
 !
 !        Increment the request counter in such a way that integer
@@ -11485,7 +11479,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
-      use pepper_arrays, only: minai, moved
       implicit none
       integer(ip), parameter :: rbsize = 100
       integer(ip), parameter :: rdsize = 128 * rbsize
@@ -11553,7 +11546,12 @@ contains
 !
       if ( .not. stored ) then
 
-         call minai ( rbreq, rbnbr, minval, bufloc )
+         if ( rbnbr > 0 ) then
+            bufloc = minloc(rbreq(1:rbnbr), dim=1)
+            minval = rbreq(bufloc)
+         else
+            bufloc = 0
+         end if
 
          call dafhsf ( ctx, handle, nd, ni )
 
@@ -11596,7 +11594,7 @@ contains
          e     = min(128,end)
          count = e-b+1
 
-         call moved ( rbdat(b,bufloc), count, data )
+         data(1:count) = rbdat(b:b+count-1,bufloc)
 
 !
 !        Increment the request counter in such a way that integer
@@ -11868,7 +11866,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
-      use pepper_arrays, only: minai, moved
       implicit none
       integer(ip), parameter :: rbsize = 100
       integer(ip), parameter :: rdsize = 128 * rbsize
@@ -11954,7 +11951,12 @@ contains
 !
       if ( .not. stored ) then
 
-         call minai ( rbreq, rbnbr, minval, bufloc )
+         if ( rbnbr > 0 ) then
+            bufloc = minloc(rbreq(1:rbnbr), dim=1)
+            minval = rbreq(bufloc)
+         else
+            bufloc = 0
+         end if
 
          call zzdafgdr ( ctx, handle, recno, rbdat(1, bufloc), locfnd )
 
@@ -11994,7 +11996,7 @@ contains
          e     = min(128,end)
          count = e-b+1
 
-         call moved ( rbdat(b,bufloc), count, data )
+         data(1:count) = rbdat(b:b+count-1,bufloc)
 
 !
 !        Increment the request counter in such a way that integer
@@ -12148,7 +12150,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
       integer(ip), parameter :: rbsize = 100
       integer(ip), parameter :: rdsize = 128 * rbsize
@@ -12223,7 +12224,7 @@ contains
 !
       if ( stored ) then
          if ( iostat == 0 ) then
-            call moved  ( drec, 128, rbdat(1,bufloc) )
+            rbdat(:,bufloc) = drec
          else
             rbhan(bufloc) = 0
             rbrec(bufloc) = 0
@@ -12415,7 +12416,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       implicit none
 
 ! $ Detailed_Input
@@ -12703,7 +12703,7 @@ contains
          call dafgdr ( ctx, handle, recno, first, last, data( next ), found )
 
          if ( .not. found ) then
-            call cleard ( last-first+1, data( next ) )
+            data(next:next+last-first) = 0.0_wp
          end if
 
          next = next + ( last-first+1 )
@@ -12972,7 +12972,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmin
-      use pepper_arrays, only: isrchc, moved
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
@@ -13024,7 +13023,7 @@ contains
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
          call ucase    ( tmpstr,        tmpstr )
 
-         natbff = isrchc ( tmpstr, numbff, strbff )
+         natbff = findloc(strbff, tmpstr, dim=1)
 
          if ( natbff == 0 ) then
 
@@ -13337,7 +13336,7 @@ contains
 !
                if ( k == inblen-1 ) then
 
-                  call moved ( dpbufr, dpblen, output(outpos) )
+                  output(outpos:outpos+dpblen-1) = dpbufr
                   outpos = outpos + dpblen
                   k = 1
 
@@ -13355,7 +13354,7 @@ contains
 !           into OUTPUT.
 !
             if ( k /= 1 ) then
-               call moved ( dpbufr, k/2, output(outpos) )
+               output(outpos:outpos+k/2-1) = dpbufr(1:k/2)
             end if
 
          else
@@ -13620,7 +13619,7 @@ contains
 !
                if ( k == inblen-1 ) then
 
-                  call moved ( dpbufr, dpblen, output(outpos) )
+                  output(outpos:outpos+dpblen-1) = dpbufr
                   outpos = outpos + dpblen
                   k = 1
 
@@ -13638,7 +13637,7 @@ contains
 !           into OUTPUT.
 !
             if ( k /= 1 ) then
-               call moved ( dpbufr, k/2, output(outpos) )
+               output(outpos:outpos+k/2-1) = dpbufr(1:k/2)
             end if
 
          else
@@ -13698,7 +13697,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       implicit none
 
 ! $ Detailed_Input
@@ -13961,7 +13959,7 @@ contains
          call dafrdr ( ctx, handle, recno, first, last, data( next ), found )
 
          if ( .not. found ) then
-            call cleard ( last-first+1, data( next ) )
+            data(next:next+last-first) = 0.0_wp
          end if
 
          next = next + ( last-first+1 )
@@ -14729,7 +14727,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, moved
       implicit none
       integer(ip), parameter :: bsize = 128
       integer(ip)           begr
@@ -14781,7 +14778,7 @@ contains
             call dafrdr ( ctx, handle, recno, 1, bsize, buffer, found )
 
             if ( .not. found ) then
-               call cleard ( bsize, buffer )
+               buffer = 0.0_wp
             end if
          end if
 
@@ -14802,7 +14799,7 @@ contains
             n     = bsize
          end if
 
-         call moved ( data(next), n, buffer(first) )
+         buffer(first:first+n-1) = data(next:next+n-1)
          next = next + n
 
          call dafwdr ( ctx, handle, recno, buffer )
@@ -16374,7 +16371,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: cpos, lastnb, ncpos
+      use pepper_strings, only: cpos, ncpos
       implicit none
 
 ! $ Detailed_Input
@@ -16809,7 +16806,7 @@ contains
 !
 !        Get the length of the significant portion of a comment line.
 !
-         length = lastnb ( buffer(i) )
+         length = len_trim(buffer(i))
 !
 !        Scan the comment line for non printing characters.
 !
@@ -17037,7 +17034,7 @@ contains
 !
 !        Get the length of the significant portion of comment line I.
 !
-         length = lastnb ( buffer(i) )
+         length = len_trim(buffer(i))
 !
 !        Process the comment line.
 !
@@ -18049,7 +18046,6 @@ contains
 !!
       use pepper_containers, only: grow
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchi
       use pepper_strings, only: cpos, ncpos
       implicit none
       integer(ip), parameter :: ifnlen = 60
@@ -18158,7 +18154,7 @@ contains
 !
       if ( nfiles > 0 ) then
 
-         index = isrchi ( handle, nfiles, filhan )
+         index = findloc(filhan(1:nfiles), handle, dim=1)
 
       else
 
@@ -19490,7 +19486,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: arycnt = 3
@@ -19841,7 +19836,7 @@ contains
 !
 !     Set the local copies of the array's summary and name.
 !
-      call moved ( sum, sumsiz, stlsum(1,p) )
+      stlsum(1:sumsiz,p) = sum(1:sumsiz)
 
       stname( p )  =  name
 
@@ -20187,7 +20182,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, moved
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: arycnt = 3
@@ -20294,7 +20288,7 @@ contains
       sumsiz  =  nd      +         ( ni + 1 ) / 2
       dloc    =  arycnt  +  1  +   narray * sumsiz
 
-      call moved ( stlsum(1,p), sumsiz, sumrec(dloc) )
+      sumrec(dloc:dloc+sumsiz-1) = stlsum(1:sumsiz,p)
 
       namsiz  =        8      * sumsiz
       cloc    =  1  +  narray * namsiz
@@ -20337,7 +20331,7 @@ contains
 !        written, and should point forwards to nothing. Of course,
 !        it contains no summaries, and no names.
 !
-         call cleard ( dprsiz, sumrec )
+         sumrec = 0.0_wp
          sumrec(fwdptr)  =  0.0_wp
          sumrec(bwdptr)  =  real( stlast(p), wp )
          sumrec(arycnt)  =  0.0_wp
@@ -23755,7 +23749,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: crlen = 1000
@@ -23843,7 +23836,7 @@ contains
 
       offset  =  3    +   ( stcurr(p) - 1 )  *  sumsiz
 
-      call moved (  stsr( offset+1, p ),  sumsiz,  sum )
+      sum(1:sumsiz) = stsr(offset+1:offset+1+sumsiz-1,p)
 
       return
       end associate
@@ -24479,7 +24472,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved, movei
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: crlen = 1000
@@ -24579,16 +24571,16 @@ contains
 !     but the addresses (the final two integer components), and
 !     repack. Then replace the existing summary within the record.
 !
-      call moved (  stsr( offset+1, p ),  sumsiz,  exsum )
+      exsum(1:sumsiz) = stsr(offset+1:offset+1+sumsiz-1,p)
 
       call dafus ( ctx, exsum, nd, ni, exdc,  exic  )
       call dafus ( ctx, sum,   nd, ni, newdc, newic )
 
-      call moved ( newdc, nd,   exdc )
-      call movei ( newic, ni-2, exic )
+      exdc(1:nd) = newdc(1:nd)
+      exic(1:ni-2) = newic(1:ni-2)
       call dafps ( ctx, nd, ni, exdc, exic, exsum )
 
-      call moved (  exsum,  sumsiz,  stsr( offset+1, p )  )
+      stsr(offset+1:offset+1+sumsiz-1,p) = exsum(1:sumsiz)
 
 !
 !     Rewrite the modified summary record.
@@ -25001,7 +24993,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: crlen = 1000
@@ -25091,7 +25082,7 @@ contains
 
       offset  =  3    +   ( stcurr(p) - 1 ) * sumsiz
 
-      call moved (  sum,  sumsiz,  stsr( offset+1, p )  )
+      stsr(offset+1:offset+1+sumsiz-1,p) = sum(1:sumsiz)
 
 !
 !     Rewrite the modified summary record.

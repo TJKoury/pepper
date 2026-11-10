@@ -216,7 +216,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
 
 
@@ -381,7 +380,7 @@ contains
 !
 !  Move the buffered matrix into MOUT.
 !
-      call moved (prodm, 9, mout)
+      mout = prodm
       return
       end procedure rotmat
 
@@ -407,7 +406,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
       use pepper_math, only: mtxm, mxm, vhat
       implicit none
 
@@ -1183,7 +1181,7 @@ contains
 !
 !        Set up the entries of CHANGE:
 !
-         call cleard ( 9, change )
+         change = 0.0_wp
 
          change ( axis3, 3 ) =         1.0_wp
          change ( axis2, 1 ) =         1.0_wp
@@ -1306,7 +1304,7 @@ contains
 !
 !        Set up the entries of CHANGE:
 !
-         call cleard ( 9, change )
+         change = 0.0_wp
 
          change ( axis3, 1 ) =         1.0_wp
          change ( axis2, 2 ) =         1.0_wp
@@ -3032,7 +3030,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_math, only: mxm, mxv
       implicit none
       integer(ip), parameter :: alpha = 1
@@ -3074,7 +3071,7 @@ contains
 !     state vector EULANG.  We'll also use a local set of axis
 !     numbers.
 !
-      call moved ( eulang, 6, locang )
+      locang = eulang
 
       locaxa = axisa
       locaxb = axisb
@@ -3261,8 +3258,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
-      use pepper_math, only: ucrss, vhat, xpose
+      use pepper_math, only: ucrss, vhat
       implicit none
 
 
@@ -3501,8 +3497,8 @@ contains
 !
 !     Transpose MOUT.
 !
-      call xpose ( mout,     mtemp )
-      call moved ( mtemp, 9, mout  )
+      mtemp = transpose(mout)
+      mout = mtemp
 
       return
       end procedure twovec
@@ -3772,8 +3768,7 @@ contains
 !!     Local Variables
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, moved
-      use pepper_math, only: ducrss, dvhat, vzero
+      use pepper_math, only: ducrss, dvhat
       real(wp)              tmpsta ( 6 )
 
       integer(ip)           i
@@ -3854,11 +3849,11 @@ contains
 !
          call ducrss ( axdef,        plndef,        xform(1,i3) )
          call ducrss ( xform(1,i3),  axdef,         tmpsta      )
-         call moved  ( tmpsta,       6,             xform(1,i2) )
+         xform(:,i2) = tmpsta
       else
          call ducrss ( plndef,       axdef,         xform(1,i2) )
          call ducrss ( axdef,        xform(1,i2),   tmpsta      )
-         call moved  ( tmpsta,       6,             xform(1,i3) )
+         xform(:,i3) = tmpsta
       end if
 
 !
@@ -3872,9 +3867,9 @@ contains
 !     The upper right block is the 3x3 zero matrix.
 !     The lower right block matches the upper left block.
 !
-      call cleard ( 3,                xform(1,4) )
-      call cleard ( 3,                xform(1,5) )
-      call cleard ( 3,                xform(1,6) )
+      xform(1:3,4) = 0.0_wp
+      xform(1:3,5) = 0.0_wp
+      xform(1:3,6) = 0.0_wp
 
       do j = 1, 3
 
@@ -3892,7 +3887,7 @@ contains
 !     XFORM(1,I2) and XFORM(1,I3) (we need only check one of them since
 !     they are related by a cross product).
 !
-      if (  vzero ( xform(1,i2) )  ) then
+      if (  all(xform(1:3,i2) == 0.0_wp)  ) then
 
          call ctx%setmsg ( 'The direction vectors associated with ' // &
                        'states AXDEF and PLNDEF are '           // &
@@ -4622,7 +4617,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchc, moved
       use pepper_math, only: mxm, mxmt
       use pepper_strings, only: nparsd, nparsi, nthwd, wdcnt
       use pepper_inc_ninert
@@ -4739,14 +4733,14 @@ contains
                call convrt ( ctx, angle, 'ARCSECONDS', 'RADIANS', radang )
 
                call rotmat ( ctx, trans(1,i),  radang,  axis,  tmpmat     )
-               call moved  ( tmpmat,      9,              trans(1,i) )
+               trans(:,i) = reshape(tmpmat, [9])
 
             end do
 
-            b = isrchc ( bases(i), i, frames )
+            b = findloc(frames(1:i), bases(i), dim=1)
 
             call mxm   ( trans(1,i), trans(1,b), tmpmat     )
-            call moved ( tmpmat,     9,          trans(1,i) )
+            trans(:,i) = reshape(tmpmat, [9])
 
          end do
 
@@ -6840,7 +6834,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: mxv, unorm, vdot, vlcom, vsub, vtmv
+      use pepper_math, only: mxv, unorm, vdot, vtmv
       implicit none
       real(wp)              denom
       real(wp)              dterm  ( 3 )
@@ -6934,7 +6928,7 @@ contains
       gradm(2,2) = 1.0_wp/(b*b)
       gradm(3,3) = 1.0_wp/(c*c)
 
-      call vsub  ( state,  nearp, zenith )
+      zenith = state(1:3) - nearp
 
       call mxv   ( gradm,  nearp,    grad   )
       call unorm ( grad,   norml,    length )
@@ -7022,7 +7016,7 @@ contains
 !
 !        N'  = M * ( P' - L'*GRAD )
 !
-      call vlcom ( 1.0_wp, state(4), -lprime, grad, temp     )
+      temp = 1.0_wp*state(4:6) + (-lprime)*grad
       call mxv   ( m,     temp,                    dnear )
 
 !
@@ -7553,8 +7547,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
-      use pepper_arrays, only: cleard
-      use pepper_math, only: dvhat, vadd, vdot, vequ, vhat, vlcom, vlcom3, vminus, vnorm, vperp, vzero
+      use pepper_math, only: dvhat, vdot, vhat, vnorm, vperp
       implicit none
 
 
@@ -7863,19 +7856,19 @@ contains
 !        DPTMAG
 !
       if ( xmit ) then
-         call vminus ( vobs,   lcvobs )
-         call vminus ( accobs, lcacc  )
+         lcvobs = -vobs
+         lcacc = -accobs
       else
-         call vequ   ( vobs,   lcvobs )
-         call vequ   ( accobs, lcacc  )
+         lcvobs = vobs
+         lcacc = accobs
       end if
 
-      call vequ  ( starg,      ptarg )
-      call vequ  ( starg(4),   vtarg )
+      ptarg = starg(1:3)
+      vtarg = starg(4:6)
 
       call dvhat ( starg,      srhat )
-      call vequ  ( srhat,      rhat  )
-      call vequ  ( srhat(4),   drhat )
+      rhat = srhat(1:3)
+      drhat = srhat(4:6)
 
       call vperp ( lcvobs, rhat, vp    )
 
@@ -7913,8 +7906,8 @@ contains
 !     aberration correction. We avoid relying on
 !     VHAT's exception handling for the zero vector.
 !
-      if ( vzero(vp) ) then
-         call cleard ( 3,  vphat )
+      if ( all(vp == 0.0_wp) ) then
+         vphat = 0.0_wp
       else
          call vhat   ( vp, vphat )
       end if
@@ -7929,8 +7922,7 @@ contains
 !
       ptgmag = vnorm( ptarg )
 
-      call vlcom ( ptgmag * s,           vphat, &
-                   ptgmag * (c - 1.0_wp),  rhat,   scorr )
+      scorr = (ptgmag * s)*vphat + (ptgmag * (c - 1.0_wp))*rhat
 
 !
 !     Now we use S as an estimate of PHI to decide if we're
@@ -7952,21 +7944,18 @@ contains
 !            = ACCOBS - (  ( <VOBS,DRHAT> + <ACCOBS, RHAT> )*RHAT
 !                        +   <VOBS,RHAT>  * DRHAT                 )
 !
-         call vlcom3 ( 1.0_wp,                                      lcacc, &
-                       -vdot(lcvobs, drhat) - vdot(lcacc, rhat),  rhat, &
-                       -vdot(lcvobs, rhat ),                      drhat, &
-                       dvp                                             )
+         dvp = 1.0_wp*lcacc + (-vdot(lcvobs, drhat) - vdot(lcacc, rhat))*rhat + (-vdot(lcvobs, rhat ))*drhat
 
          call vhat ( vp, vphat )
 
 !
 !        Now we can compute DVPHAT, the derivative of VPHAT:
 !
-         call vequ  ( vp,        svp    )
-         call vequ  ( dvp,       svp(4) )
+         svp(1:3) = vp
+         svp(4:6) = dvp
 
          call dvhat ( svp,       svphat )
-         call vequ  ( svphat(4), dvphat )
+         dvphat = svphat(4:6)
 
 !
 !        Compute the DPHI, the time derivative of PHI, using equation 8:
@@ -7991,17 +7980,13 @@ contains
 !
 !                +  ( sin(phi)*VPHAT + (cos(phi)-1)*RHAT ) * DPTMAG
 !
-         call vlcom  ( s,             dvphat, &
-                       c * dphi,      vphat,  term1 )
+         term1 = s*dvphat + (c * dphi)*vphat
 
-         call vlcom  ( c - 1.0_wp,      drhat, &
-                       (-s) * dphi,   rhat,   term2 )
+         term2 = (c - 1.0_wp)*drhat + ((-s) * dphi)*rhat
 
-         call vadd   ( term1,  term2, term3 )
+         term3 = term1 + term2
 
-         call vlcom3 ( ptgmag,                term3, &
-                       dptmag * s,            vphat, &
-                       dptmag * (c - 1.0_wp),   rhat,    dscorr )
+         dscorr = ptgmag*term3 + (dptmag * s)*vphat + (dptmag * (c - 1.0_wp))*rhat
 
       else
 !
@@ -8025,15 +8010,13 @@ contains
 !           the local copies of the input velocity and acceleration
 !           to make a linear estimate.
 !
-            call vlcom ( 1.0_wp,        lcvobs, &
-                         sgn*tdelta,  lcacc,     evobs )
+            evobs = 1.0_wp*lcvobs + (sgn*tdelta)*lcacc
 
 !
 !           Estimate the observer-target vector. We use the
 !           observer-target state velocity to make a linear estimate.
 !
-            call vlcom ( 1.0_wp,        starg, &
-                         sgn*tdelta,  starg(4),  eptarg )
+            eptarg = 1.0_wp*starg(1:3) + (sgn*tdelta)*starg(4:6)
 
 !
 !           Let RHAT be the unit observer-target position.
@@ -8045,8 +8028,8 @@ contains
             call vhat  ( eptarg,  rhat     )
             call vperp ( evobs,   rhat, vp )
 
-            if ( vzero(vp) ) then
-               call cleard ( 3,  vphat )
+            if ( all(vp == 0.0_wp) ) then
+               vphat = 0.0_wp
             else
                call vhat   ( vp, vphat )
             end if
@@ -8064,8 +8047,7 @@ contains
 !
             ptgmag = vnorm( eptarg )
 
-            call vlcom ( ptgmag * s,           vphat, &
-                         ptgmag * (c - 1.0_wp),  rhat,   saoff(1,i) )
+            saoff(:,i) = (ptgmag * s)*vphat + (ptgmag * (c - 1.0_wp))*rhat
          end do
 
 !

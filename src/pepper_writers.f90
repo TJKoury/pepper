@@ -5685,8 +5685,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vzerog
-      use pepper_strings, only: lastnb
       implicit none
 
 
@@ -6398,7 +6396,7 @@ contains
 !
 !     Check that all the characters in the segid can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          value = ichar( segid(i:i) )
 
@@ -6416,7 +6414,7 @@ contains
 !
 !     Also check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -6467,7 +6465,7 @@ contains
 !
       do i = 1, nrec
 
-         if (  vzerog( quats(0,i), 4 )  ) then
+         if (  all(quats(:,i) == 0.0_wp)  ) then
 
             call ctx%setmsg ( 'The quaternion at index # has magnitude ' &
             //            'zero.'                                    )
@@ -6559,8 +6557,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vzerog
-      use pepper_strings, only: lastnb
       implicit none
 
 
@@ -7331,7 +7327,7 @@ contains
 !
 !     Now check that all the characters in the segid can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          value = ichar( segid(i:i) )
 
@@ -7349,7 +7345,7 @@ contains
 !
 !     Also check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -7445,7 +7441,7 @@ contains
 !
       do i = 1, nrec
 
-         if (  vzerog( quats(0,i), 4 )  ) then
+         if (  all(quats(:,i) == 0.0_wp)  ) then
 
             call ctx%setmsg ( 'The quaternion at index # has magnitude ' &
             //            'zero.'                                    )
@@ -7528,8 +7524,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: vzerog
-      use pepper_strings, only: lastnb
       implicit none
 
 
@@ -8369,7 +8363,7 @@ contains
 !
 !     Check that all the characters in the segid can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          value = ichar( segid(i:i) )
 
@@ -8387,7 +8381,7 @@ contains
 !
 !     Also check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -8508,7 +8502,7 @@ contains
 !
       do i = 1, nrec
 
-         if (  vzerog( quats(0,i), 4 )  ) then
+         if (  all(quats(:,i) == 0.0_wp)  ) then
 
             call ctx%setmsg ( 'The quaternion at index # has magnitude ' &
             //            'zero.'                                    )
@@ -8621,7 +8615,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lastnb
       use pepper_inc_sgparam
       use pepper_inc_ckparam
       implicit none
@@ -8947,7 +8940,7 @@ contains
 !
 !     Check that all characters in the SEGID are printable.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          value = ichar( segid(i:i) )
 
@@ -8965,7 +8958,7 @@ contains
 !
 !     Also check if the segment identifier is too long.
 !
-      if ( lastnb( segid ) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than '   // &
                        '40 characters.'                           )
@@ -9323,8 +9316,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd, lstltd
-      use pepper_math, only: odd, vzerog
-      use pepper_strings, only: lastnb
+      use pepper_math, only: odd
       use pepper_inc_ck05
       implicit none
 
@@ -9943,7 +9935,7 @@ contains
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -9956,7 +9948,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -10095,7 +10087,7 @@ contains
 !
          addr = packsz * (i-1)  +  qidx
 
-         if (  vzerog( packts(addr), 4 )  ) then
+         if (  all(packts(addr:addr+4-1) == 0.0_wp)  ) then
 
             call ctx%setmsg ( 'The quaternion at index # has magnitude ' &
             //            'zero.'                                    )
@@ -10352,9 +10344,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
-      use pepper_math, only: even, odd, vdistg, vminug, vzerog
-      use pepper_strings, only: lastnb
+      use pepper_math, only: odd, vdistg
       use pepper_inc_ck06
       use pepper_inc_ckparam
       implicit none
@@ -11086,7 +11076,7 @@ contains
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                        )
@@ -11099,7 +11089,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -11377,7 +11367,7 @@ contains
 !
             addr = pktbeg  +  ( pktsiz*(j-1) )  -  1  +  qidx
 
-            if (  vzerog( packts(addr), 4 )  ) then
+            if (  all(packts(addr:addr+4-1) == 0.0_wp)  ) then
 
                call ctx%setmsg ( 'The quaternion in packet # within ' &
                //            'mini-segment # has magnitude zero.' )
@@ -11394,15 +11384,15 @@ contains
 !           sequence.
 !
 
-            if (  ( j > 1 )  .and.  even(subtyp)  ) then
+            if (  ( j > 1 )  .and.  (mod(subtyp, 2) == 0)  ) then
 !
 !              Compare the distance between the current quaternion
 !              and its predecessor vs the distance between the
 !              negative of the current quaternion and its predecessor.
 !
-               call moved  ( packts(addr),        4, q     )
-               call moved  ( packts(addr-pktsiz), 4, prevq )
-               call vminug ( q, 4, qneg )
+               q = packts(addr:addr+4-1)
+               prevq = packts(addr-pktsiz:addr-pktsiz+4-1)
+               qneg = -q
 
                if (      vdistg(prevq, qneg, 4 ) &
                     < vdistg(prevq, q,    4 )  ) then
@@ -14960,7 +14950,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: lastnb
       implicit none
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: maxcpr = 1000
@@ -15249,7 +15238,7 @@ contains
 !
 !        Each line is followed by a null character.
 !
-         eol           = lastnb ( data ) + 1
+         eol           = len_trim(data) + 1
          data(eol:eol) = null
 
 !
@@ -17733,7 +17722,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lastnb
       implicit none
 
       integer(ip), parameter :: dlsize = 71
@@ -17975,7 +17963,7 @@ contains
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -17988,7 +17976,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -19493,7 +19481,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lastnb
       implicit none
 
 
@@ -19879,7 +19866,7 @@ contains
 !
 !     Now check that all the characters in the segid can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          value = ichar( segid(i:i) )
 
@@ -19897,7 +19884,7 @@ contains
 !
 !     Also check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -19989,7 +19976,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lastnb
       use pepper_inc_spk08
       implicit none
 
@@ -20388,7 +20374,7 @@ contains
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -20401,7 +20387,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -20618,7 +20604,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lastnb
       implicit none
 
 
@@ -21073,7 +21058,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -21091,7 +21076,7 @@ contains
 !
 !     Also check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -21283,7 +21268,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       use pepper_inc_sgparam
       implicit none
 
@@ -21820,7 +21804,7 @@ contains
 !
          base = (i-1)*nelems
 
-         call moved ( elems(base + 1), 10, packet )
+         packet(1:10) = elems(base + 1:base + 1+10-1)
 !
 !        For each epoch, we need to get the nutation in obliquity,
 !        nutation in longitude and mean obliquity.
@@ -21867,8 +21851,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: even
-      use pepper_strings, only: lastnb
       use pepper_inc_spk12
       implicit none
 
@@ -22245,7 +22227,7 @@ contains
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -22258,7 +22240,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -22291,7 +22273,7 @@ contains
 !
 !     Make sure that the degree of the interpolating polynomials is odd.
 !
-      if (  even( degree )  )  then
+      if (  (mod(degree, 2) == 0)  )  then
 
          call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
                        'for SPK type 12, the degree must be odd.'      )
@@ -22469,8 +22451,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: even
-      use pepper_strings, only: lastnb
       implicit none
 
 
@@ -22881,7 +22861,7 @@ contains
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -22894,7 +22874,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -22927,7 +22907,7 @@ contains
 !
 !     Make sure that the degree of the interpolating polynomials is odd.
 !
-      if (  even( degree )  )  then
+      if (  (mod(degree, 2) == 0)  )  then
 
          call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
                        'for SPK type 13, the degree must be odd.'      )
@@ -23104,8 +23084,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
-      use pepper_math, only: vdot, vequ, vhat, vsep, vzero
-      use pepper_strings, only: lastnb
+      use pepper_math, only: vdot, vhat, vsep
       implicit none
 
 
@@ -23399,12 +23378,12 @@ contains
 !
 !     The trajectory pole vector.
 !
-      call vequ ( mytp, record(2) )
+      record(2:4) = mytp
 
 !
 !     The periapsis vector.
 !
-      call vequ ( mypa, record(5) )
+      record(5:7) = mypa
 
 !
 !     Semi-latus rectum ( P in the P/(1 + ECC*COS(Nu)  ),
@@ -23466,7 +23445,7 @@ contains
          call ctx%sigerr ( 'SPICE(NONPOSITIVEMASS)'  )
          return
 
-      else if ( vzero(tp) ) then
+      else if ( all(tp == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The trajectory pole vector supplied to ' &
          //            'SPKW15 had length zero. The most likely ' &
@@ -23475,7 +23454,7 @@ contains
          call ctx%sigerr ( 'SPICE(BADVECTOR)'   )
          return
 
-      else if ( vzero(pa) ) then
+      else if ( all(pa == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The periapse vector supplied to SPKW15 ' &
          //            'had length zero. The most likely cause ' &
@@ -23483,7 +23462,7 @@ contains
          call ctx%sigerr ( 'SPICE(BADVECTOR)'   )
          return
 
-      else if ( vzero(pv) ) then
+      else if ( all(pv == 0.0_wp) ) then
 
          call ctx%setmsg ( 'The central pole vector supplied to ' &
          //            'SPKW15 had length zero. The most likely ' &
@@ -23525,7 +23504,7 @@ contains
 !
 !     Make sure the segment identifier is not too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                          )
@@ -23536,7 +23515,7 @@ contains
 !
 !     Make sure it has only printing characters.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          value = ichar( segid(i:i) )
 
@@ -23596,8 +23575,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
-      use pepper_strings, only: lastnb
       implicit none
 
 
@@ -24012,7 +23989,7 @@ contains
 !
 !     The trajectory pole vector.
 !
-      call moved ( eqel, 9, record(2) )
+      record(2:10) = eqel
 
       record(11) = rapol
       record(12) = decpol
@@ -24054,7 +24031,7 @@ contains
 !
 !     Make sure the segment identifier is not too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                          )
@@ -24065,7 +24042,7 @@ contains
 !
 !     Make sure the segment identifier has only printing characters.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          value = ichar( segid(i:i) )
 
@@ -24130,7 +24107,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
-      use pepper_strings, only: lastnb
       use pepper_inc_spk18
       implicit none
 
@@ -24441,7 +24417,7 @@ contains
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -24454,7 +24430,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -24686,7 +24662,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
-      use pepper_strings, only: lastnb
       use pepper_inc_spk19
       use pepper_inc_spkrec
       implicit none
@@ -25109,7 +25084,7 @@ contains
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                        )
@@ -25122,7 +25097,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -26336,7 +26311,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lastnb
       use pepper_inc_spk21
       implicit none
 
@@ -26648,7 +26622,7 @@ contains
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) > sidlen ) then
+      if ( len_trim(segid) > sidlen ) then
 
          call ctx%setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -26661,7 +26635,7 @@ contains
 !     Now check that all the characters in the segment identifier
 !     can be printed.
 !
-      do i = 1, lastnb(segid)
+      do i = 1, len_trim(segid)
 
          chrcod = ichar( segid(i:i) )
 
@@ -26991,7 +26965,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
 
 
@@ -27448,7 +27421,7 @@ contains
 
       record ( 3 ) = prec ( psiz )
 
-      call moved ( prec, 7, record ( 4 ) )
+      record(4:10) = prec(1:7)
 
 !
 !     Next get the interval start time.  Need to go past all of the

@@ -675,10 +675,9 @@ contains
       !> routine; see zzdynfrm).
       recursive subroutine dynamic_frame_xform ( ctx, infram, center, et, xform, basfrm )
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, isrchc, moved
-      use pepper_math, only: latrec, mxmg, mxvg, polyds, vequ, vhat, vminug, vpack, vsep, vsubg
+      use pepper_math, only: latrec, mxmg, mxvg, polyds, vhat, vsep
       use pepper_strings, only: cmprss, eqstr, intstr, ucase
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzdyn
       implicit none
@@ -887,7 +886,7 @@ contains
 !
 !     Initialize the output arguments.
 !
-      call cleard ( 36, xform )
+      xform = 0.0_wp
 
       basfrm = 0
 
@@ -896,12 +895,12 @@ contains
 !     arithmetic operations using bogus, possibly large,
 !     undefined values.
 !
-      call cleard ( 36, nutxf  )
-      call cleard ( 36, oblxf  )
-      call cleard ( 36, precxf )
-      call cleard ( 36, xf2000 )
-      call cleard ( 36, xfinv  )
-      call cleard ( 36, xipm   )
+      nutxf = 0.0_wp
+      oblxf = 0.0_wp
+      precxf = 0.0_wp
+      xf2000 = 0.0_wp
+      xfinv = 0.0_wp
+      xipm = 0.0_wp
 
       mob    = 0.0_wp
       dmob   = 0.0_wp
@@ -1297,7 +1296,7 @@ contains
 !                 zero; the axes are arbitrary, as long as the
 !                 middle axis is distinct from the other two.
 !
-                  call cleard ( 6, eulang )
+                  eulang = 0.0_wp
                   eulang(3) = mob
                   eulang(6) = dmob
 
@@ -1343,7 +1342,7 @@ contains
 !
 !              Otherwise, XFTEMP is the matrix we want.
 !
-               call moved ( xftemp, 36, xform )
+               xform = xftemp
 
             end if
 
@@ -1366,7 +1365,7 @@ contains
 !
 !           Initialize the array S2.
 !
-            call cleard ( 12, s2 )
+            s2 = 0.0_wp
 
 !
 !           Fetch the specifications of the primary and secondary
@@ -1392,7 +1391,7 @@ contains
                call cmprss ( '-', 0, axname, axname )
                call cmprss ( '+', 0, axname, axname )
 
-               axis(i) = isrchc ( axname, 3, axes )
+               axis(i) = findloc(axes, axname, dim=1)
 
                if ( axis(i) == 0 ) then
 
@@ -1488,7 +1487,7 @@ contains
 !
                   delta = max ( 1.0_wp,  (2.0_wp**qexp) * t0 )
 
-                  call vpack ( t0-delta, t0, t0+delta, tarray )
+                  tarray = [t0-delta, t0, t0+delta]
 
                   do j = 1, 3
 
@@ -1511,8 +1510,8 @@ contains
                   call qderiv ( ctx, 3, &
                                 varray(1,1),  varray(1,3),  delta, acc )
 
-                  call vequ   ( varray(1,2),  s2(1,i) )
-                  call vequ   ( acc,          s2(4,i) )
+                  s2(1:3,i) = varray(:,2)
+                  s2(4:6,i) = acc
 
 !
 !                 We need the epoch VET at which VELFRM is evaluated.
@@ -1597,7 +1596,7 @@ contains
                      if ( ctx%failed() ) return
 
                      call mxvg     ( xf2000,  s2(1,i), 6, 6, stemp   )
-                     call moved    ( stemp,   6,             s2(1,i) )
+                     s2(:,i) = stemp
 
                   end if
 
@@ -1682,7 +1681,7 @@ contains
 !
                   if ( ctx%failed() ) return
 
-                  call vminug   ( stemp,   6,        stobs )
+                  stobs = -stemp
 
                   call dnearp   ( ctx, stobs,   radii(1), radii(2), radii(3), &
                                   stnear,  stalt,    fnd               )
@@ -1717,7 +1716,7 @@ contains
 !                 Find the observer-near point state in the target
 !                 body-fixed frame.
 !
-                  call vsubg ( stnear, stobs, 6, stemp  )
+                  stemp = stnear - stobs
 
 !
 !                 Transform the state to frame J2000.  To get the
@@ -2012,8 +2011,8 @@ contains
 !                 Fill in the state vector.  The velocity in the
 !                 constant vector's frame is zero.
 !
-                  call vequ  ( dirvec, s2(1,i) )
-                  call cleard( 3,      s2(4,i) )
+                  s2(1:3,i) = dirvec
+                  s2(4:6,i) = 0.0_wp
 
                   if ( frid /= j2000 ) then
 
@@ -2022,7 +2021,7 @@ contains
                      if ( ctx%failed() ) return
 
                      call mxvg ( xipm,  s2(1,i), 6, 6, stemp   )
-                     call moved( stemp, 6,             s2(1,i) )
+                     s2(:,i) = stemp
 
                   end if
 
@@ -2055,7 +2054,7 @@ contains
 !
 !                    Update the position portion of S2(*,I).
 !
-                     call vequ ( stemp, s2(1,i) )
+                     s2(1:3,i) = stemp(1:3)
 
                   end if
 
@@ -2087,8 +2086,8 @@ contains
 !              Negate the state vector if the axis has negative sign.
 !
                if ( negate ) then
-                  call vminug ( s2(1,i), 6, stemp   )
-                  call moved  ( stemp,   6, s2(1,i) )
+                  stemp = -s2(:,i)
+                  s2(:,i) = stemp
                end if
 
             end do
@@ -2161,7 +2160,7 @@ contains
 
             if ( basfrm /= j2000 ) then
 
-               call moved ( xform, 36, xftemp )
+               xftemp = xform
 
                call frmchg ( ctx, j2000, basfrm,  t0, xf2000 )
 
@@ -2310,7 +2309,7 @@ contains
 
             do i = 2, n
 
-               call moved  ( xform, 36, xftemp )
+               xftemp = xform
 
                call namfrm ( ctx, fframs(i)%s, fromid )
                call namfrm ( ctx, tframs(i)%s, toid   )
@@ -2320,7 +2319,7 @@ contains
                if ( ctx%failed() ) return
 
                call mxmg  ( xform, xftemp, 6, 6, 6, xout  )
-               call moved ( xout,  36,              xform )
+               xform = xout
 
             end do
 
@@ -2378,7 +2377,7 @@ contains
 !           out the derivative block.
 !
             do i = 1, 3
-               call cleard ( 3, xform(4,i) )
+               xform(4:6,i) = 0.0_wp
             end do
 
          else
@@ -2397,7 +2396,7 @@ contains
             call mxmg ( xf2000, xform, 6, 6, 6, xftemp )
 
             do i = 1, 3
-               call cleard ( 3, xftemp(4,i) )
+               xftemp(4:6,i) = 0.0_wp
             end do
 
 !
@@ -2415,7 +2414,7 @@ contains
             call mxmg   ( xfinv,  xftemp, 6, 6, 6, xout )
 
             do i = 1, 3
-               call vequ ( xout(4,i), xform(4,i) )
+               xform(4:6,i) = xout(4:6,i)
             end do
 
          end if
@@ -2429,7 +2428,7 @@ contains
       if ( frozen ) then
 
          do i = 1, 3
-            call cleard ( 3, xform(4,i) )
+            xform(4:6,i) = 0.0_wp
          end do
 
       end if
@@ -2446,10 +2445,9 @@ contains
       !> routine; see zzdynrot).
       recursive subroutine dynamic_frame_rotation ( ctx, infram, center, et, rotate, basfrm )
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard, isrchc, moved
-      use pepper_math, only: latrec, mxm, mxv, polyds, vequ, vhat, vminus, vsep, vsub, xpose
+      use pepper_math, only: latrec, mxm, mxv, polyds, vhat, vsep
       use pepper_strings, only: cmprss, eqstr, intstr, ucase
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzdyn
       implicit none
@@ -2657,7 +2655,7 @@ contains
 !
 !     Initialize the output arguments.
 !
-      call cleard ( 9, rotate )
+      rotate = 0.0_wp
 
       basfrm = 0
 
@@ -2666,13 +2664,13 @@ contains
 !     arithmetic operations using bogus, possibly large,
 !     undefined values.
 !
-      call cleard ( 36, nutxf  )
-      call cleard (  9, oblr   )
-      call cleard ( 36, precxf )
-      call cleard (  9, r2000  )
-      call cleard (  9, rtemp  )
-      call cleard (  9, rinv   )
-      call cleard (  9, tipm   )
+      nutxf = 0.0_wp
+      oblr = 0.0_wp
+      precxf = 0.0_wp
+      r2000 = 0.0_wp
+      rtemp = 0.0_wp
+      rinv = 0.0_wp
+      tipm = 0.0_wp
 
       mob    = 0.0_wp
       dmob   = 0.0_wp
@@ -2894,9 +2892,9 @@ contains
 !
                call zzeprc76 ( ctx, t0, precxf )
 
-               call moved ( precxf(1,1), 3, rprec(1,1) )
-               call moved ( precxf(1,2), 3, rprec(1,2) )
-               call moved ( precxf(1,3), 3, rprec(1,3) )
+               rprec(:,1) = precxf(1:3,1)
+               rprec(:,2) = precxf(1:3,2)
+               rprec(:,3) = precxf(1:3,3)
 
 !
 !              If we're in the mean-of-date case, invert this
@@ -2904,7 +2902,7 @@ contains
 !              mean-of-date frame to J2000.
 !
                if ( meaneq ) then
-                  call xpose ( rprec, rtemp )
+                  rtemp = transpose(rprec)
                end if
 
             else
@@ -2978,16 +2976,16 @@ contains
 !
                   call zzenut80 ( ctx, t0, nutxf )
 
-                  call moved ( nutxf(1,1), 3, rnut(1,1) )
-                  call moved ( nutxf(1,2), 3, rnut(1,2) )
-                  call moved ( nutxf(1,3), 3, rnut(1,3) )
+                  rnut(:,1) = nutxf(1:3,1)
+                  rnut(:,2) = nutxf(1:3,2)
+                  rnut(:,3) = nutxf(1:3,3)
 
 !
 !                 Find the rotation from the J2000 frame to the earth
 !                 true of date frame.  Invert.
 !
                   call mxm   ( rnut, rprec, rinv )
-                  call xpose ( rinv, rtemp )
+                  rtemp = transpose(rinv)
 
                else
 
@@ -3069,7 +3067,7 @@ contains
 !                 earth mean ecliptic of date frame.  Invert.
 !
                   call mxm   ( oblr, rprec, rinv )
-                  call xpose ( rinv, rtemp )
+                  rtemp = transpose(rinv)
 
                else
 
@@ -3104,7 +3102,7 @@ contains
 !
 !              Otherwise, RTEMP is the matrix we want.
 !
-               call moved ( rtemp, 9, rotate )
+               rotate = rtemp
 
             end if
 !
@@ -3122,7 +3120,7 @@ contains
 !           Fetch the specifications of the primary and secondary
 !           axes.
 !
-            call cleard ( 6, v2 )
+            v2 = 0.0_wp
 
             do i = 1, 2
 !
@@ -3144,7 +3142,7 @@ contains
                call cmprss ( '-', 0, axname, axname )
                call cmprss ( '+', 0, axname, axname )
 
-               axis(i) = isrchc ( axname, 3, axes )
+               axis(i) = findloc(axes, axname, dim=1)
 
                if ( axis(i) == 0 ) then
 
@@ -3322,7 +3320,7 @@ contains
                      if ( ctx%failed() ) return
 
                      call mxv      ( r2000,          v2(1,i),  ptemp )
-                     call moved    ( ptemp,  3,      v2(1,i)         )
+                     v2(:,i) = ptemp
 
                   end if
 
@@ -3408,7 +3406,7 @@ contains
 !
                   if ( ctx%failed() ) return
 
-                  call vminus   ( ptemp,  pobs )
+                  pobs = -ptemp
 
                   call nearpt   ( ctx, pobs,   radii(1), radii(2), radii(3), &
                                   pnear,  alt                          )
@@ -3419,7 +3417,7 @@ contains
 !                 Find the observer-near point vector in the current
 !                 frame CFRMNM.
 !
-                  call vsub ( pnear, pobs, ptemp )
+                  ptemp = pnear - pobs
 
 !
 !                 Rotate the vector to frame J2000.  To get the required
@@ -3699,7 +3697,7 @@ contains
 !
                   if ( frid == j2000 ) then
 
-                     call vequ ( dirvec, v2(1,i) )
+                     v2(:,i) = dirvec
 
                   else
 !
@@ -3739,7 +3737,7 @@ contains
 
                      if ( ctx%failed() ) return
 
-                     call vequ ( ptemp, v2(1,i) )
+                     v2(:,i) = ptemp
 
                   end if
 !
@@ -3770,8 +3768,8 @@ contains
 !              Negate the vector if the axis has negative sign.
 !
                if ( negate ) then
-                  call vminus ( v2(1,i),     ptemp   )
-                  call moved  ( ptemp,   3,  v2(1,i) )
+                  ptemp = -v2(:,i)
+                  v2(:,i) = ptemp
                end if
 
             end do
@@ -3841,11 +3839,11 @@ contains
 !
             call twovec   ( ctx, v2(1,1), axis(1), v2(1,2), axis(2), rinv )
 
-            call xpose    ( rinv,    rotate )
+            rotate = transpose(rinv)
 
             if ( basfrm /= j2000 ) then
 
-               call moved ( rotate, 9, rtemp )
+               rtemp = rotate
 
                call refchg ( ctx, j2000,   basfrm,  t0,  r2000  )
 
@@ -3986,7 +3984,7 @@ contains
 
             do i = 2, n
 
-               call moved  ( rotate, 9,  rtemp )
+               rtemp = rotate
 
                call namfrm ( ctx, fframs(i)%s, fromid )
                call namfrm ( ctx, tframs(i)%s, toid   )
@@ -3996,7 +3994,7 @@ contains
                if ( ctx%failed() ) return
 
                call mxm   ( rotate, rtemp, rout   )
-               call moved ( rout,  9,      rotate )
+               rotate = rout
 
             end do
 

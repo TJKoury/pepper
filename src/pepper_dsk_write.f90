@@ -35,8 +35,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi, twopi
-      use pepper_arrays, only: cleard, moved, movei
-      use pepper_math, only: vequ
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
       use pepper_inc_dsk02
@@ -1400,8 +1398,8 @@ contains
 !
 !     Extract double precision elements of the spatial index.
 !
-      call moved ( spaixd(sivtbd), 6, vtxbds )
-      call vequ  ( spaixd(sivxor),    voxori )
+      vtxbds = reshape(spaixd(sivtbd:sivtbd+6-1), shape(vtxbds))
+      voxori = spaixd(sivxor:sivxor+3-1)
 
       voxsiz = spaixd(sivxsz)
 
@@ -1411,7 +1409,7 @@ contains
 !
 !     Fetch grid extents (in units of whole voxels):
 !
-      call movei ( spaixi(sivgrx), 3, vgrext )
+      vgrext = spaixi(sivgrx:sivgrx+3-1)
 
 !
 !     Fetch coarse grid scale, voxel pointer count, and voxel-plate
@@ -1560,7 +1558,7 @@ contains
 !
 !     First, fill in the DSK segment descriptor.
 !
-      call cleard ( dskdsz, descr )
+      descr = 0.0_wp
 
       descr ( srfidx ) = surfid
       descr ( ctridx ) = center
@@ -1569,7 +1567,7 @@ contains
       descr ( frmidx ) = frmcde
       descr ( sysidx ) = corsys
 
-      call moved ( corpar, nsypar, descr( paridx ) )
+      descr(paridx:paridx+nsypar-1) = corpar(1:nsypar)
 
       descr ( mn1idx ) = segbds(1,1)
       descr ( mx1idx ) = segbds(2,1)

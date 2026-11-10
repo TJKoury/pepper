@@ -12991,7 +12991,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lastnb
       use pepper_inc_errhnd
       implicit none
 
@@ -13143,7 +13142,7 @@ contains
          msg = 'Left endpoint greater-than right. Left endpoint ' &
             // 'was #1. Right endpoint was #2.'
 
-         msg = msg(1: lastnb(msg) ) //' '// context(1: lastnb(context) )
+         msg = msg(1: len_trim(msg) ) //' '// context(1: len_trim(context) )
 
          call ctx%setmsg ( msg)
          call ctx%errdp  ( '#1', left  )
@@ -13170,8 +13169,7 @@ contains
                // 'insert an additional interval into the ' &
                // 'window.'
 
-            msg = msg(1: lastnb(msg) ) //' '// &
-                  context(1: lastnb(context) )
+            msg = msg(1: len_trim(msg) ) //' '//  context(1: len_trim(context) )
 
             call ctx%setmsg ( msg)
             call ctx%errint ( '#1', size  )
@@ -13234,8 +13232,7 @@ contains
                // 'between the previous interval and the' &
                // 'next.'
 
-            msg = msg(1: lastnb(msg) ) //' '// &
-                  context(1: lastnb(context) )
+            msg = msg(1: len_trim(msg) ) //' '//  context(1: len_trim(context) )
 
             call ctx%setmsg ( msg)
             call ctx%errint ( '#1', size  )
@@ -13316,7 +13313,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: even
       implicit none
 
       integer(ip)           lbcell
@@ -13486,7 +13482,7 @@ contains
 !
 !     Confirm the cardinality as an even integer.
 !
-      if( .not. even(wncard) ) then
+      if( .not. (mod(wncard, 2) == 0) ) then
 
          call ctx%setmsg ( 'Invalid window size, a window should ' &
               // 'have an even number of elements. The size was #.')
@@ -16970,7 +16966,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: even
       implicit none
 
       integer(ip)           lbcell
@@ -17285,7 +17280,7 @@ contains
 !
 !     Confirm evenness of CARD.
 !
-      if ( .not. even( card ) ) then
+      if ( .not. (mod(card, 2) == 0) ) then
 
          call ctx%setmsg ( 'Input window has odd cardinality. A valid ' &
                   //   'SPICE window must have even element ' &

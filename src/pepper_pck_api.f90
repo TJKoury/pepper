@@ -1692,7 +1692,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
-      use pepper_arrays, only: cleard
       use pepper_math, only: mxm, vdotg
       implicit none
       ! PEPPER: work arrays of the kernel variables' sizes (SPICELIB: saved
@@ -1916,15 +1915,15 @@ contains
 !        Prime Meridian.
 !
          item = 'POLE_RA'
-         call cleard (             mxpoly,     rcoef )
+         rcoef(0:0+mxpoly-1) = 0.0_wp
          call bodvcd ( ctx, body, item, mxpoly, na, rcoef )
 
          item = 'POLE_DEC'
-         call cleard (             mxpoly,     dcoef )
+         dcoef(0:0+mxpoly-1) = 0.0_wp
          call bodvcd ( ctx, body, item, mxpoly, nd, dcoef )
 
          item = 'PM'
-         call cleard (             mxpoly,     wcoef )
+         wcoef(0:0+mxpoly-1) = 0.0_wp
          call bodvcd ( ctx, body, item, mxpoly, nw, wcoef )
 
 !

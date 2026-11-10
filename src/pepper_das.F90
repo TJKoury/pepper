@@ -4426,7 +4426,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari, maxai
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
@@ -4707,7 +4706,8 @@ contains
 !     the directory records. It may happen that the last record in use
 !     is an empty directory.
 !
-      call maxai ( ldrec, 3, ldrmax, loc )
+      ldrmax = maxval(ldrec)
+      loc = maxloc(ldrec, dim=1)
 
       nrec   = locrrc + loccrc + 2
 
@@ -5098,7 +5098,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari, maxai
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
@@ -5361,7 +5360,8 @@ contains
 !     the directory records. It may happen that the last record in use
 !     is an empty directory.
 !
-      call maxai ( ldrec, 3, ldrmax, loc )
+      ldrmax = maxval(ldrec)
+      loc = maxloc(ldrec, dim=1)
 
       nrec   = locrrc + loccrc + 2
 
@@ -5692,7 +5692,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_strings, only: ltrim, rtrim
       use pepper_inc_das
       use pepper_inc_errhnd
@@ -5898,7 +5897,7 @@ contains
 !     are no reserved records, so the directory occupies record
 !     NCOMR+2.
 !
-      call cleari ( nwi, dirrec )
+      dirrec = 0
 
       write ( unit   = number, &
               rec    = ncomr + 2, &
@@ -6235,7 +6234,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
@@ -6396,7 +6394,7 @@ contains
 !
 !     NOTE: re-write this using ZZDDHCLS.
 !
-      call cleari (  nwi,               dirrec )
+      dirrec = 0
       call dasioi ( ctx, 'WRITE', number, 2, dirrec )
 
       if ( ctx%failed() ) then
@@ -6714,7 +6712,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
@@ -9892,7 +9889,7 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust, ucase
+      use pepper_strings, only: ucase
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
@@ -9969,7 +9966,7 @@ contains
 !
 !     Get an upper case, left-justified copy of ACCESS.
 !
-      call ljust ( access, acc )
+      acc = adjustl(access)
       call ucase ( acc,    acc )
 
 !
@@ -10736,7 +10733,6 @@ contains
 !!     If it hasn't been done yet, initialize the pointer list pools.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
       integer(ip), parameter :: nwd = 128
       integer(ip), parameter :: nwi = 256
@@ -10838,7 +10834,7 @@ contains
 
             else
 
-               call moved ( rcbufd(first, node),  last-first+1,  datad )
+               datad(1:last-first+1) = rcbufd(first:last,node)
 
             end if
 
@@ -10926,9 +10922,7 @@ contains
 !
 !     Don't forget to return the requested data.
 !
-      call moved (  rcbufd ( first,  node ), &
-                    last  -  first + 1, &
-                    datad                     )
+      datad(1:last  -  first + 1) = rcbufd(first:last,node)
 
       return
       end associate
@@ -11109,7 +11103,6 @@ contains
 !!     If it hasn't been done yet, initialize the pointer list pools.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: movei
       implicit none
       integer(ip), parameter :: nwd = 128
       integer(ip), parameter :: nwi = 256
@@ -11211,7 +11204,7 @@ contains
 
             else
 
-               call movei ( rcbufi(first, node),  last-first+1,  datai )
+               datai(1:last-first+1) = rcbufi(first:last,node)
 
             end if
 
@@ -11295,9 +11288,7 @@ contains
 !
 !     Don't forget to return the requested data.
 !
-      call movei (  rcbufi ( first,  node ), &
-                    last  -  first + 1, &
-                    datai                     )
+      datai(1:last  -  first + 1) = rcbufi(first:last,node)
 
       return
       end associate
@@ -11816,7 +11807,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
       integer(ip), parameter :: nwd = 128
       integer(ip), parameter :: nwi = 256
@@ -11884,7 +11874,7 @@ contains
 !
 !           Found it.  Update the buffered record.
 !
-            call moved (  recd,  nwd,  rcbufd(1, node)  )
+            rcbufd(1:nwd,node) = recd
 
 !
 !           Set the update flag, indicating that this buffer entry
@@ -11956,7 +11946,7 @@ contains
 !
 !     Now update the allocated buffer entry with the input data.
 !
-      call moved (  recd,  nwd,  rcbufd( 1, node )  )
+      rcbufd(1:nwd,node) = recd
 
 !
 !     Set the update flag, indicating that this buffer entry
@@ -12134,7 +12124,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: movei
       implicit none
       integer(ip), parameter :: nwd = 128
       integer(ip), parameter :: nwi = 256
@@ -12203,7 +12192,7 @@ contains
 !
 !           Found it.  Update the buffered record.
 !
-            call movei (  reci,  nwi,  rcbufi( 1, node )  )
+            rcbufi(1:nwi,node) = reci
 
 !
 !           Set the update flag, indicating that this buffer entry
@@ -12274,7 +12263,7 @@ contains
 !
 !     Now update the allocated buffer entry with the input data.
 !
-      call movei (  reci,  nwi,  rcbufi( 1, node )  )
+      rcbufi(1:nwi,node) = reci
 
 !
 !     Set the update flag, indicating that this buffer entry
@@ -12803,7 +12792,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
       integer(ip), parameter :: nwd = 128
       integer(ip), parameter :: nwi = 256
@@ -12898,7 +12886,7 @@ contains
 !
 !           Found it.  Update the buffered record.
 !
-            call moved ( datad,   last-first+1,   rcbufd(first, node)  )
+            rcbufd(first:last,node) = datad(1:last-first+1)
 
 !
 !           Set the update flag, indicating that this buffer entry
@@ -12995,7 +12983,7 @@ contains
 !     have to write the record back to the file; that will get done
 !     automatically before or at the time the file is closed.
 !
-      call moved (  datad,  last-first+1,  rcbufd( first, node )  )
+      rcbufd(first:last,node) = datad(1:last-first+1)
 
       return
       end associate
@@ -13189,7 +13177,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: movei
       implicit none
       integer(ip), parameter :: nwd = 128
       integer(ip), parameter :: nwi = 256
@@ -13284,7 +13271,7 @@ contains
 !
 !           Found it.  Update the buffered record.
 !
-            call movei ( datai,   last-first+1,   rcbufi(first, node) )
+            rcbufi(first:last,node) = datai(1:last-first+1)
 
 !
 !           Set the update flag, indicating that this buffer entry
@@ -13379,7 +13366,7 @@ contains
 !     have to write the record back to the file; that will get done
 !     automatically before or at the time the file is closed.
 !
-      call movei (  datai,  last-first+1,  rcbufi( first, node )  )
+      rcbufi(first:last,node) = datai(1:last-first+1)
 
       return
       end associate
@@ -15662,7 +15649,6 @@ contains
 !!     Make sure the data type is valid.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchi
       implicit none
       integer(ip) :: nxtrec_1(1)  !! one-element copy of nxtrec (array argument)
       integer(ip), parameter :: char = 1
@@ -15760,7 +15746,7 @@ contains
 
          else
 
-            fidx  =  isrchi ( handle, nfiles, tbhan )
+            fidx  =  findloc(tbhan(1:nfiles), handle, dim=1)
             known =  fidx > 0
 
          end if
@@ -16269,7 +16255,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari, maxai
       implicit none
       integer(ip) :: recno_1(1)  !! one-element copy of recno (array argument)
       integer(ip) :: descr_1(1)  !! one-element copy of descr (array argument)
@@ -16738,7 +16723,8 @@ contains
 !     descriptor in the file, and also find the type of the descriptor
 !     LTYPE.
 !
-      call maxai  ( lastrc,  3,  lrec,  loc )
+      lrec = maxval(lastrc)
+      loc = maxloc(lastrc, dim=1)
       lword  =  0
       ltype  =  0
 
@@ -16884,7 +16870,7 @@ contains
 !
 !           Start with an empty directory record.
 !
-            call cleari ( nwi, dirrec )
+            dirrec = 0
 
 !
 !           Add a new descriptor to the directory.  The record
@@ -17029,7 +17015,7 @@ contains
 !              Prepare the new directory record: clear it, set the
 !              backward pointer, and write the record.
 !
-               call cleari ( nwi, dirrec )
+               dirrec = 0
 
                dirrec ( bwdloc )  =  lrec
 
@@ -17089,7 +17075,7 @@ contains
 !           Now fill in the new directory record.  Start with a clean
 !           record.
 !
-            call cleari ( nwi, dirrec )
+            dirrec = 0
 
 !
 !           Set the backward pointer, the address range for TYPE,
@@ -17155,7 +17141,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleari, maxai
       implicit none
 
 ! $ Detailed_Input
@@ -17447,7 +17432,8 @@ contains
 !     Find the record and word positions LREC and LWORD of the last
 !     descriptor in the file.
 !
-      call maxai  ( lastrc,  3,  lrec,  loc )
+      lrec = maxval(lastrc)
+      loc = maxloc(lastrc, dim=1)
       lword  =  0
 
       do i = 1, 3
@@ -17475,7 +17461,7 @@ contains
 !
 !           NRESVR + NCOMR + N + 2
 !
-         call cleari ( nwi,                             dirrec )
+         dirrec = 0
          call dasioi ( ctx, 'WRITE', unit, nresvr+ncomr+n+2, dirrec )
 
       else
@@ -17683,7 +17669,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleari, maxai
       implicit none
 
 ! $ Detailed_Input
@@ -17955,7 +17940,8 @@ contains
 !     Find the record and word positions LREC and LWORD of the last
 !     descriptor in the file.
 !
-      call maxai  ( lastrc,  3,  lrec,  loc )
+      lrec = maxval(lastrc)
+      loc = maxloc(lastrc, dim=1)
       lword  =  0
 
       do i = 1, 3
@@ -17982,7 +17968,7 @@ contains
 !
 !           NRESVR + NCOMR + 2 - NSHIFT
 !
-         call cleari (  nwi,                                 dirrec )
+         dirrec = 0
          call dasioi ( ctx, 'WRITE', unit, nresvr+ncomr+2-nshift, dirrec )
 
       else
@@ -18148,7 +18134,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleari, maxai, sumai
       implicit none
       integer(ip) :: offset_1(1)  !! one-element copy of offset (array argument)
       integer(ip) :: savtyp_1(1)  !! one-element copy of savtyp (array argument)
@@ -18491,7 +18476,7 @@ contains
 !
 !     We also must maintain a count of records of each type.
 !
-      call cleari ( 4, count )
+      count = 0
 
 !
 !     Get the file summary for the DAS file to be segregated.
@@ -18512,7 +18497,8 @@ contains
 !     descriptor in the file, and also find the type of the descriptor
 !     LTYPE.
 !
-      call maxai  ( lastrc,  3,  lrec,  loc )
+      lrec = maxval(lastrc)
+      loc = maxloc(lastrc, dim=1)
       lword = 0
 
       do i = 1, 3
@@ -18632,7 +18618,7 @@ contains
 !     seen.  Set TOTAL to the total number of records that we've going
 !     to permute.
 !
-      total =  sumai ( count, 4 )
+      total =  sum(count)
 
 !
 !     The next step is to build a true order vector.  Let BASE be
@@ -18971,7 +18957,7 @@ contains
 !
       recno  =  drbase + 1
 
-      call cleari ( nwi, irec )
+      irec = 0
 
 !
 !     Set the logical address ranges in the directory record, for each
@@ -20001,7 +19987,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
       integer(ip), parameter :: dp = 2
       integer(ip), parameter :: nwd = 128
@@ -20098,7 +20083,7 @@ contains
 !
             if ( wordno == 0 ) then
 
-               call moved  (  data(nwritn+1),  numdp,   record  )
+               record(1:numdp) = data(nwritn+1:nwritn+1+numdp-1)
                call daswrd ( ctx,  handle,          recno,   record  )
 
             else
@@ -20449,7 +20434,6 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: movei
       implicit none
       integer(ip), parameter :: int = 3
       integer(ip), parameter :: nwi = 256
@@ -20543,7 +20527,7 @@ contains
 !
             if ( wordno == 0 ) then
 
-               call movei  (  data(nwritn+1),  numint,  record  )
+               record(1:numint) = data(nwritn+1:nwritn+1+numint-1)
                call daswri ( ctx,  handle,          recno,   record  )
 
             else
@@ -24464,7 +24448,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: lastnb
       implicit none
 
 ! $ Detailed_Input
@@ -24714,7 +24697,7 @@ contains
 !
 !        Get the length of the significant portion of a comment line.
 !
-         length = lastnb ( buffer(i) )
+         length = len_trim(buffer(i))
 !
 !        Scan the comment line for non printing characters.
 !
@@ -24869,7 +24852,7 @@ contains
 !
 !        Get the length of the significant portion of a comment line.
 !
-         length = lastnb ( buffer(i) )
+         length = len_trim(buffer(i))
 !
 !        Process the comment line.
 !
@@ -24970,7 +24953,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: lastnb, ljust
       implicit none
 
 ! $ Detailed_Input
@@ -25411,7 +25393,7 @@ contains
       do while ( line /= begmrk )
 
          call readln ( ctx, comlun, line, eof )
-         call ljust  ( line, line        )
+         line = adjustl(line)
 
          if ( ctx%failed() ) then
 
@@ -25468,7 +25450,7 @@ contains
 
                do i = 1, numcom
 
-                  length = lastnb ( combuf(i) )
+                  length = len_trim(combuf(i))
 !
 !                 Scan the comment line for non printing characters.
 !
@@ -25541,7 +25523,7 @@ contains
                do while ( more .and. ( i <= numcom ) )
 
                   line = combuf(i)
-                  call ljust ( line, line )
+                  line = adjustl(line)
 
                   if ( line == endmrk ) then
 
@@ -25565,7 +25547,7 @@ contains
 
                do i = 1, numcom
 
-                  length = lastnb ( combuf(i) )
+                  length = len_trim(combuf(i))
 !
 !                 Scan the comment line for non printinig characters.
 !
@@ -26245,7 +26227,6 @@ contains
 !!
       use pepper_containers, only: grow
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchi
       use pepper_inc_das
       implicit none
       integer(ip), parameter :: mxcrec = 1024
@@ -26346,7 +26327,7 @@ contains
 !
       if ( nfiles > 0 ) then
 
-         index = isrchi ( handle, nfiles, filhan )
+         index = findloc(filhan(1:nfiles), handle, dim=1)
 
       else
 

@@ -496,7 +496,7 @@ contains
 !
       do i = 1, 3
          call vrotv ( r(1,i), axis, angle, vtemp  )
-         call vequ  ( vtemp,               r(1,i) )
+         r(:,i) = vtemp
       end do
 
       return
@@ -1138,6 +1138,9 @@ contains
       !> alone. If not, set it to the nearest endpoint of the interval.)
       !>
       !> The function returns the bracketed number.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (MIN and MAX instead).
       elemental real(wp) function brcktd ( number, end1, end2 )
 !! ## Abstract
 !!
@@ -1404,17 +1407,7 @@ contains
 !
 !     What else is there to say?
 !
-      if ( end1 < end2 ) then
-
-         brcktd = max (  end1, min(end2,number)  )
-
-      else
-
-         brcktd = max (  end2, min(end1,number)  )
-
-      end if
-
-      return
+      brcktd = max(min(end1, end2), min(max(end1, end2), number))
       end function brcktd
 
 !$Procedure BRCKTI ( Bracket an integer value within an interval )
@@ -1425,6 +1418,9 @@ contains
       !> alone. If not, set it to the nearest endpoint of the interval.)
       !>
       !> The function returns the bracketed number.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (MIN and MAX instead).
       elemental integer(ip)  function brckti ( number, end1, end2 )
 !! ## Abstract
 !!
@@ -1687,17 +1683,7 @@ contains
 !
 !     What else is there to say?
 !
-      if ( end1 < end2 ) then
-
-         brckti = max (  end1, min(end2,number)  )
-
-      else
-
-         brckti = max (  end2, min(end1,number)  )
-
-      end if
-
-      return
+      brckti = max(min(end1, end2), min(max(end1, end2), number))
       end function brckti
 
 !$Procedure CHBDER ( Derivatives of a Chebyshev expansion )
@@ -5346,7 +5332,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: moved
       implicit none
 
       real(wp), intent(in) :: s1   ( 6 )  !! Left hand state for cross product and derivative.
@@ -5643,16 +5628,16 @@ contains
 
       if ( f1 > 0.0_wp ) then
 
-         call vsclg ( 1.0_wp/f1, s1, 6, scls1 )
+         scls1 = (1.0_wp/f1)*s1
       else
-         call moved ( s1,          6, scls1 )
+         scls1 = s1
       end if
 
       if ( f2 > 0.0_wp ) then
 
-         call vsclg ( 1.0_wp/f2, s2, 6, scls2 )
+         scls2 = (1.0_wp/f2)*s2
       else
-         call moved ( s2,          6, scls2 )
+         scls2 = s2
       end if
 
 !
@@ -6034,8 +6019,8 @@ contains
 !
 !     Put all of the pieces into SOUT.
 !
-      call vequ  ( vtemp,          sout(1) )
-      call vadd  ( dvtmp1, dvtmp2, sout(4) )
+      sout(1:3) = vtemp
+      sout(4:6) = dvtmp1 + dvtmp2
 
       return
       end subroutine dvcrss
@@ -6484,7 +6469,7 @@ contains
 !        If the length of the input position is zero, just copy
 !        the input velocity to the output velocity.
 !
-         call vequ ( s1(vel), sout(vel) )
+         sout(vel:vel+3-1) = s1(vel:vel+3-1)
 
       else
 !
@@ -6494,7 +6479,7 @@ contains
 !        input position.
 !
          call vperp  ( s1(vel),      sout(pos), sout(vel) )
-         call vsclip ( 1.0_wp/length,            sout(vel) )
+         sout(vel:vel+3-1) = (1.0_wp/length)*sout(vel:vel+3-1)
 
       end if
 
@@ -7064,9 +7049,9 @@ contains
 !     The center of the ellipse is held in the first three elements.
 !     The semi-major and semi-minor axes come next.
 !
-      call vequ ( ellips(ctrpos), center )
-      call vequ ( ellips(majpos), smajor )
-      call vequ ( ellips(minpos), sminor )
+      center = ellips(ctrpos:ctrpos+3-1)
+      smajor = ellips(majpos:majpos+3-1)
+      sminor = ellips(minpos:minpos+3-1)
 
       return
       end subroutine el2cgv
@@ -7076,6 +7061,9 @@ contains
       !> Determine whether an integer is even.
       !>
       !> The function returns .TRUE. if IVAL is even, otherwise .FALSE.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (MOD instead).
       elemental logical function even ( ival )
 !! ## Abstract
 !!
@@ -7188,9 +7176,7 @@ contains
 !
 !     Self-explanatory.
 !
-      even = ( mod (ival,2) == 0 )
-
-      return
+      even = mod(ival, 2) == 0
       end function even
 
 !$Procedure EXACT ( Round to exact value )
@@ -8286,7 +8272,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: filld
       implicit none
 
       real(wp), intent(in) :: m    ( 3,3 )  !! Matrix to be inverted.
@@ -8488,7 +8473,7 @@ contains
 !
       mdet = det(m)
       if ( dabs(mdet) < 1.0e-16_wp ) then
-         call filld ( 0.0_wp, 9, mout )
+         mout = 0.0_wp
          return
       end if
 
@@ -8509,7 +8494,7 @@ contains
 !  Multiply the cofactor matrix by 1/MDET to obtain the inverse
 !
       invdet = 1.0_wp / mdet
-      call vsclg (invdet, mtemp, 9, mout)
+      mout = invdet*mtemp
       return
       end subroutine invert
 
@@ -9813,7 +9798,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: moved
       implicit none
 
       real(wp), intent(in) :: m1   ( 3, 3 )  !! Input matrix.
@@ -9935,7 +9919,7 @@ contains
 !
 !-&
 
-      call moved (m1, 9, mout)
+      mout = m1
 
       return
       end subroutine mequ
@@ -9962,7 +9946,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
 
       integer(ip), intent(in) :: nr  !! Row dimension of M1 (and also MOUT).
@@ -10057,7 +10040,7 @@ contains
 !
 !-&
 
-      call moved (m1, nr*nc, mout)
+      mout = m1
       return
       end subroutine mequg
 
@@ -10080,7 +10063,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
 
       real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
@@ -10253,7 +10235,7 @@ contains
 !
 !  Move the result into MOUT
 !
-      call moved ( prodm, 9, mout )
+      mout = prodm
 
       return
       end subroutine mtxm
@@ -10911,7 +10893,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
 
       real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
@@ -11104,7 +11085,7 @@ contains
 !
 !  Move the result into MOUT
 !
-      call moved (prodm,9,mout)
+      mout = prodm
 
       return
       end subroutine mxm
@@ -11334,7 +11315,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved
       implicit none
 
       real(wp), intent(in) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
@@ -11540,7 +11520,7 @@ contains
 !
 !  Move the result into MOUT
 !
-      call moved (prodm,9,mout)
+      mout = prodm
 
       return
       end subroutine mxmt
@@ -12896,7 +12876,7 @@ contains
 !
 !     Unpack the plane.
 !
-      call vequ ( plane(nmlpos), normal )
+      normal = plane(nmlpos:nmlpos+3-1)
       konst   =   plane(conpos)
 
       return
@@ -13057,7 +13037,7 @@ contains
 !     plane to the origin.
 
       call pl2nvc ( plane, normal, const )
-      call vscl   ( const, normal, point )
+      point = const*normal
 
       return
       end subroutine pl2nvp
@@ -13723,8 +13703,8 @@ contains
 !     Type 2 plate vertices are ordered in the positive
 !     (right-handed) sense about the outward normal.
 !
-      call vsub ( v2, v1, edge1 )
-      call vsub ( v3, v2, edge2 )
+      edge1 = v2 - v1
+      edge2 = v3 - v2
 
       call vcrss ( edge1, edge2, normal )
 
@@ -15355,7 +15335,7 @@ contains
 !     Get the conjugate QSTAR of QHAT.
 !
       qstar(0) = qhat(0)
-      call vminus ( qhat(1),  qstar(1) )
+      qstar(1:3) = -qhat(1:3)
 
 !
 !     Compute the angular velocity via the relationship
@@ -15365,7 +15345,7 @@ contains
 !
 
       call qxq    ( qstar,  dq,        qtemp )
-      call vscl   ( -2.0_wp,  qtemp(1),  av    )
+      av = (-2.0_wp)*qtemp(1:3)
 
       return
       end subroutine qdq2av
@@ -15924,9 +15904,7 @@ contains
 !
       call vcrss  ( q1(1),  q2(1),  cross )
 
-      call vlcom3 ( q1(0),  q2(1), &
-                    q2(0),  q1(1), &
-                    1.0_wp,   cross,  qout(1) )
+      qout(1:3) = q1(0)*q2(1:3) + q2(0)*q1(1:3) + 1.0_wp*cross
 
       return
       end subroutine qxq
@@ -21307,6 +21285,9 @@ contains
 !$Procedure VADD ( Vector addition, 3 dimensional )
 
       !> Add two double precision 3-dimensional vectors.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vadd ( v1, v2, vout )
 !! ## Abstract
 !!
@@ -21473,17 +21454,15 @@ contains
 !     3-dimensional vector addition
 !
 !-&
-
-      vout(1) = v1(1) + v2(1)
-      vout(2) = v1(2) + v2(2)
-      vout(3) = v1(3) + v2(3)
-
-      return
+      vout = v1 + v2
       end subroutine vadd
 
 !$Procedure VADDG ( Vector addition, general dimension )
 
       !> Add two vectors of arbitrary dimension.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vaddg ( v1, v2, ndim, vout )
 !! ## Abstract
 !!
@@ -21669,13 +21648,7 @@ contains
 !
 !     Local variables
 !
-      integer(ip)         i
-
-      do i = 1, ndim
-         vout(i) = v1(i) + v2(i)
-      end do
-
-      return
+      vout(1:ndim) = v1(1:ndim) + v2(1:ndim)
       end subroutine vaddg
 
 !$Procedure VCRSS ( Vector cross product, 3 dimensions )
@@ -22036,7 +22009,7 @@ contains
 !
 !     No surprises.
 !
-      call vsub ( v1, v2, diff )
+      diff = v1 - v2
 
       vdist = vnorm (diff)
 
@@ -22642,6 +22615,9 @@ contains
 
       !> Make one double precision 3-dimensional vector equal to
       !> another.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine vequ ( vin, vout )
 !! ## Abstract
 !!
@@ -22797,18 +22773,16 @@ contains
 !     assign a 3-dimensional vector to another
 !
 !-&
-
-      vout(1) = vin(1)
-      vout(2) = vin(2)
-      vout(3) = vin(3)
-
-      return
+      vout = vin
       end subroutine vequ
 
 !$Procedure VEQUG ( Vector equality, general dimension )
 
       !> Make one double precision vector of arbitrary dimension equal
       !> to another.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array assignment instead).
       pure subroutine vequg ( vin, ndim, vout )
 !! ## Abstract
 !!
@@ -22975,13 +22949,7 @@ contains
 !
 !     Local variables
 !
-      integer(ip)         i
-
-      do i=1,ndim
-         vout(i) = vin(i)
-      end do
-
-      return
+      vout(1:ndim) = vin(1:ndim)
       end subroutine vequg
 
 !$Procedure VHAT ( "V-Hat", unit vector along V, 3 dimensions )
@@ -23546,6 +23514,9 @@ contains
 
       !> Compute a vector linear combination of two double precision,
       !> 3-dimensional vectors.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vlcom ( a, v1, b, v2, sum )
 !! ## Abstract
 !!
@@ -23794,18 +23765,16 @@ contains
 !     linear combination of two 3-dimensional vectors
 !
 !-&
-
-      sum(1) = a*v1(1) + b*v2(1)
-      sum(2) = a*v1(2) + b*v2(2)
-      sum(3) = a*v1(3) + b*v2(3)
-
-      return
+      sum = a*v1 + b*v2
       end subroutine vlcom
 
 !$Procedure VLCOM3 ( Vector linear combination, 3 dimensions )
 
       !> Compute the vector linear combination of three double precision
       !> 3-dimensional vectors.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vlcom3 ( a, v1, b, v2, c, v3, sum )
 !! ## Abstract
 !!
@@ -24026,18 +23995,16 @@ contains
 !     linear combination of three 3-dimensional vectors
 !
 !-&
-
-      sum(1) = a*v1(1) + b*v2(1) + c*v3(1)
-      sum(2) = a*v1(2) + b*v2(2) + c*v3(2)
-      sum(3) = a*v1(3) + b*v2(3) + c*v3(3)
-
-      return
+      sum = a*v1 + b*v2 + c*v3
       end subroutine vlcom3
 
 !$Procedure VLCOMG ( Vector linear combination, general dimension )
 
       !> Compute a vector linear combination of two double precision
       !> vectors of arbitrary dimension.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vlcomg ( n, a, v1, b, v2, sum )
 !! ## Abstract
 !!
@@ -24222,18 +24189,15 @@ contains
 !
 !     Local variables
 !
-      integer(ip)    i
-
-      do i = 1,n
-         sum(i) = a*v1(i) + b*v2(i)
-      end do
-
-      return
+      sum(1:n) = a*v1(1:n) + b*v2(1:n)
       end subroutine vlcomg
 
 !$Procedure VMINUG ( Negate vector, "-V", general dimension )
 
       !> Negate a double precision vector of arbitrary dimension.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vminug ( vin, ndim, vout )
 !! ## Abstract
 !!
@@ -24402,18 +24366,15 @@ contains
 !     negate an n-dimensional vector
 !
 !-&
-
-      integer(ip) i
-      do i = 1, ndim
-         vout(i) = -vin(i)
-      end do
-
-      return
+      vout(1:ndim) = -vin(1:ndim)
       end subroutine vminug
 
 !$Procedure VMINUS ( Negate vector, "-V", 3 dimensions )
 
       !> Negate a double precision 3-dimensional vector.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vminus ( v1, vout )
 !! ## Abstract
 !!
@@ -24573,11 +24534,7 @@ contains
 !     negate a 3-dimensional vector
 !
 !-&
-
-      vout(1) = -v1(1)
-      vout(2) = -v1(2)
-      vout(3) = -v1(3)
-      return
+      vout = -v1
       end subroutine vminus
 
 !$Procedure VNORM ( Vector norm, 3 dimensions )
@@ -24979,6 +24936,9 @@ contains
 !$Procedure VPACK ( Pack three scalar components into a vector )
 
       !> Pack three scalar components into a vector.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (an array constructor instead).
       pure subroutine vpack ( x, y, z, v )
 !! ## Abstract
 !!
@@ -25145,11 +25105,7 @@ contains
 !
 !     Just shorthand, like it says above.
 !
-      v(1) = x
-      v(2) = y
-      v(3) = z
-
-      return
+      v = [x, y, z]
       end subroutine vpack
 
 !$Procedure VPERP ( Perpendicular component of a 3-vector )
@@ -25329,8 +25285,8 @@ contains
       r(3) = b(3) / bigb
 
       call vproj  ( t,    r, v )
-      call vsub   ( t,    v, p )
-      call vsclip ( biga,    p )
+      p = t - v
+      p = biga*p
 
       return
       end subroutine vperp
@@ -25586,7 +25542,7 @@ contains
 
       scale = vdot (t,r) * biga  / vdot (r,r)
 
-      call vscl ( scale, r, p )
+      p = scale*r
 
       return
       end subroutine vproj
@@ -25824,7 +25780,7 @@ contains
          scale = adotb/bdotb
       end if
 
-      call vsclg (scale, b, ndim, p)
+      p = scale*b
 
       return
       end subroutine vprojg
@@ -26289,7 +26245,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: wp
-      use pepper_arrays, only: moved
       implicit none
 
       real(wp), intent(in) :: v    ( 3 )  !! Vector to be rotated.
@@ -26433,7 +26388,7 @@ contains
 !     check, and if so return the input vector
 !
       if ( vnorm( axis ) == 0.0_wp ) then
-         call moved (v,3,r)
+         r = v
          return
       end if
 
@@ -26451,7 +26406,7 @@ contains
 !
 !     Compute the component of V orthogonal to the AXIS.  Call it V1.
 !
-      call vsub  ( v, p,  v1 )
+      v1 = v - p
 
 !
 !     Rotate V1 by 90 degrees about the AXIS and call the result V2.
@@ -26465,13 +26420,13 @@ contains
       c = dcos (theta)
       s = dsin (theta)
 
-      call vlcom ( c, v1, s, v2, rplane )
+      rplane = c*v1 + s*v2
 
 !
 !     Add the rotated component in the normal plane to AXIS to the
 !     projection of V onto AXIS (P) to obtain R.
 !
-      call vadd ( rplane, p, r )
+      r = rplane + p
 
       return
       end subroutine vrotv
@@ -26479,6 +26434,9 @@ contains
 !$Procedure VSCL ( Vector scaling, 3 dimensions )
 
       !> Multiply a scalar and a double precision 3-dimensional vector.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vscl ( s, v1, vout )
 !! ## Abstract
 !!
@@ -26651,18 +26609,16 @@ contains
 !     3-dimensional vector scaling
 !
 !-&
-
-      vout(1) = s * v1(1)
-      vout(2) = s * v1(2)
-      vout(3) = s * v1(3)
-
-      return
+      vout = s*v1
       end subroutine vscl
 
 !$Procedure VSCLG ( Vector scaling, general dimension )
 
       !> Multiply a scalar and a double precision vector of arbitrary
       !> dimension.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vsclg ( s, v1, ndim, vout )
 !! ## Abstract
 !!
@@ -26843,19 +26799,16 @@ contains
 !
 !     Local variables
 !
-      integer(ip)        i
-
-      do i=1,ndim
-         vout(i) = s * v1(i)
-      end do
-
-      return
+      vout(1:ndim) = s*v1(1:ndim)
       end subroutine vsclg
 
 !$Procedure VSCLIP ( Vector scaling, 3 dimensions, in place )
 
       !> Multiply a scalar and a 3-dimensional double precision vector,
       !> replacing the input vector with the result.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vsclip ( s, v )
 !! ## Abstract
 !!
@@ -26963,12 +26916,7 @@ contains
 !     3-dimensional vector scaling in place
 !
 !-&
-
-      v(1) = s * v(1)
-      v(2) = s * v(2)
-      v(3) = s * v(3)
-
-      return
+      v = s*v
       end subroutine vsclip
 
 !$Procedure VSEP  ( Angular separation of vectors, 3 dimensions )
@@ -27568,6 +27516,9 @@ contains
 
       !> Compute the difference between two double precision 3-dimensional
       !> vectors.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vsub ( v1, v2, vout )
 !! ## Abstract
 !!
@@ -27757,18 +27708,16 @@ contains
 !     3-dimensional vector subtraction
 !
 !-&
-
-      vout(1) = v1(1) - v2(1)
-      vout(2) = v1(2) - v2(2)
-      vout(3) = v1(3) - v2(3)
-
-      return
+      vout = v1 - v2
       end subroutine vsub
 
 !$Procedure VSUBG ( Vector subtraction, general dimension )
 
       !> Compute the difference between two double precision vectors of
       !> arbitrary dimension.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (array expressions instead).
       pure subroutine vsubg ( v1, v2, ndim, vout )
 !! ## Abstract
 !!
@@ -27969,13 +27918,7 @@ contains
 !
 !     Local variables
 !
-      integer(ip)           i
-
-      do i=1,ndim
-         vout(i) = v1(i) - v2(i)
-      end do
-
-      return
+      vout(1:ndim) = v1(1:ndim) - v2(1:ndim)
       end subroutine vsubg
 
 !$Procedure VTMV ( Vector transpose times matrix times vector, 3 dim )
@@ -28597,6 +28540,9 @@ contains
       !>
       !> The function returns the value .TRUE. if and only if V is the
       !> zero vector.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (ALL instead).
       pure logical function vzero ( v )
 !! ## Abstract
 !!
@@ -28729,11 +28675,7 @@ contains
 !
 !     `Just do it'.
 !
-      vzero   =        (  v(1) == 0.0_wp  ) &
-                .and.  (  v(2) == 0.0_wp  ) &
-                .and.  (  v(3) == 0.0_wp  )
-
-      return
+      vzero = all(v == 0.0_wp)
       end function vzero
 
 !$Procedure VZEROG ( Is a vector the zero vector? -- general dim. )
@@ -28742,6 +28684,9 @@ contains
       !>
       !> The function returns the value .TRUE. if and only if V is the
       !> zero vector.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (ALL instead).
       pure logical function vzerog ( v, ndim )
 !! ## Abstract
 !!
@@ -29007,28 +28952,13 @@ contains
 !
 !     Local variables
 !
-      integer(ip)           i
 
 !
 !     Leave as soon as we find a non-zero component.  If we get through
 !     the loop, we have a zero vector, as long as the vector's dimension
 !     is valid.
 !
-      do i = 1, ndim
-
-         if ( v(i) /= 0.0_wp ) then
-            vzerog = .false.
-            return
-         end if
-
-      end do
-
-!
-!     We have a zero vector if and only if the vector's dimension is at
-!     least 1.
-!
-      vzerog  =  ( ndim >= 1 )
-
+      vzerog = ndim >= 1 .and. all(v(1:ndim) == 0.0_wp)
       end function vzerog
 
 !$Procedure XF2RAV ( Transform to rotation and angular velocity)
@@ -29346,6 +29276,9 @@ contains
 !$Procedure XPOSE ( Transpose a matrix, 3x3 )
 
       !> Transpose a 3x3 matrix.
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (TRANSPOSE instead).
       pure subroutine xpose ( m1, mout )
 !! ## Abstract
 !!
@@ -29512,37 +29445,20 @@ contains
 !
 !     Local variables
 !
-      real(wp) temp
 
 !
 !  Move the three diagonal elements from M1 to MOUT
 !
-      mout(1,1) = m1(1,1)
-      mout(2,2) = m1(2,2)
-      mout(3,3) = m1(3,3)
-
-!
-!  Switch the three pairs of off-diagonal elements
-!
-      temp = m1(1,2)
-      mout(1,2) = m1(2,1)
-      mout(2,1) = temp
-
-      temp = m1(1,3)
-      mout(1,3) = m1(3,1)
-      mout(3,1) = temp
-
-      temp = m1(2,3)
-      mout(2,3) = m1(3,2)
-      mout(3,2) = temp
-
-      return
+      mout = transpose(m1)
       end subroutine xpose
 
 !$Procedure XPOSEG ( Transpose a matrix, general )
 
       !> Transpose a matrix of arbitrary size (the matrix
       !> need not be square).
+      !>
+      !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
+      !> library does not use it (TRANSPOSE and RESHAPE instead).
       pure subroutine xposeg ( matrix, nrow, ncol, xposem )
 !! ## Abstract
 !!
@@ -29732,100 +29648,14 @@ contains
 !
 !     Local Variables
 !
-      real(wp) temp
-      real(wp) source
 
-      integer(ip)      dest
-      integer(ip)      moved
-      integer(ip)      start
 
-      integer(ip)      k
-      integer(ip)      nmoves
-      integer(ip)      r
-      integer(ip)      m
-      integer(ip)      n
 
 !
 !     Take care of dumb cases first.
 !
-      if (( nrow <= 0 ) .or. ( ncol <= 0 )) then
-         return
-      end if
-
-      n      = nrow
-      m      = ncol
-
-!
-!     Set up the upper bound for the number of objects to be moved and
-!     initialize the counters.
-!
-      nmoves = n*m - 2
-      moved  = 0
-      start  = 1
-
-!
-!     Until MOVED is equal to NMOVES, there is some matrix element that
-!     has not been moved to its proper location in the transpose matrix.
-!
-      do while (moved < nmoves)
-         source  = matrix(start)
-         k       = start / n
-         r       = start - n*k
-         dest    = r*m   + k
-
-!
-!        Perform this cycle of the permutation.  We will be done when
-!        the destination of the next element is equal to the starting
-!        position of the first element to be moved in this cycle.
-!
-         do while (dest /= start)
-            temp         = matrix(dest)
-            xposem(dest) = source
-            source       = temp
-
-            moved        = moved + 1
-            k            = dest  / n
-            r            = dest  - k*n
-            dest         = m*r   + k
-
-         end do
-
-         xposem(dest) = source
-         dest         = 0
-         moved        = moved + 1
-
-!
-!        Find the next element of the matrix that has not already been
-!        moved by the transposition operation.
-!
-         if (moved < nmoves) then
-
-            do while (dest /= start)
-               start = start + 1
-               k     = start / n
-               r     = start - k*n
-               dest  = r*m   + k
-
-               do while ( dest > start)
-                  k     = dest / n
-                  r     = dest - k*n
-                  dest  = m*r  + k
-               end do
-
-            end do
-
-         end if
-
-      end do
-
-!
-!     Just in case this isn't an in-place transpose, move the last
-!     element of MATRIX to XPOSEM
-!
-      xposem(0)     = matrix(0    )
-      xposem(n*m-1) = matrix(n*m-1)
-
-      return
+      if ( nrow <= 0 .or. ncol <= 0 ) return
+      xposem(0:nrow*ncol-1) = reshape(transpose(reshape(matrix(0:nrow*ncol-1), [nrow, ncol])), [nrow*ncol])
       end subroutine xposeg
 
 !$Procedure XPSGIP ( Transpose a matrix, general dimension, in place )

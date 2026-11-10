@@ -30,7 +30,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -179,7 +179,7 @@ contains
 !
       if ( locsym > 0 ) then
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          dimval = tabptr(locsym)
 
          call remlac ( ctx, 1, locsym, tabsym(1), nsym )
@@ -215,7 +215,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchc, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -363,7 +363,7 @@ contains
 !
       if ( locsym > 0 ) then
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          dimval = tabptr(locsym)
 
          call remlac ( ctx, 1, locsym, tabsym(1), nsym )
@@ -399,7 +399,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -548,7 +548,7 @@ contains
 !
       if ( locsym > 0 ) then
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          dimval = tabptr(locsym)
 
          call remlac ( ctx, 1, locsym, tabsym(1), nsym )
@@ -1122,7 +1122,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -1309,7 +1309,7 @@ contains
 !
       else
 
-         locval(1) = sumai  ( tabptr(1), locsym(1)-1 ) + 1
+         locval(1) = sum(tabptr(1:locsym(1)-1)) + 1
          dimval(1) = tabptr(locsym(1))
 
 !
@@ -1317,11 +1317,11 @@ contains
 !        too, for the same reason.
 !
          if ( oldsym(2) ) then
-            locval(2) = sumai ( tabptr(1), locsym(2)-1 ) + 1
+            locval(2) = sum(tabptr(1:locsym(2)-1)) + 1
             dimval(2) = tabptr(locsym(2))
             newsym    = 0
          else
-            locval(2) = sumai ( tabptr(1), locsym(2) ) + 1
+            locval(2) = sum(tabptr(1:locsym(2))) + 1
             dimval(2) = 0
             newsym    = 1
          end if
@@ -1426,7 +1426,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -1615,7 +1615,7 @@ contains
 !
       else
 
-         locval(1) = sumai  ( tabptr(1), locsym(1)-1 ) + 1
+         locval(1) = sum(tabptr(1:locsym(1)-1)) + 1
          dimval(1) = tabptr(locsym(1))
 
 !
@@ -1623,11 +1623,11 @@ contains
 !        too, for the same reason.
 !
          if ( oldsym(2) ) then
-            locval(2) = sumai ( tabptr(1), locsym(2)-1 ) + 1
+            locval(2) = sum(tabptr(1:locsym(2)-1)) + 1
             dimval(2) = tabptr(locsym(2))
             newsym    = 0
          else
-            locval(2) = sumai ( tabptr(1), locsym(2) ) + 1
+            locval(2) = sum(tabptr(1:locsym(2))) + 1
             dimval(2) = 0
             newsym    = 1
          end if
@@ -1732,7 +1732,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -1921,7 +1921,7 @@ contains
 !
       else
 
-         locval(1) = sumai  ( tabptr(1), locsym(1)-1 ) + 1
+         locval(1) = sum(tabptr(1:locsym(1)-1)) + 1
          dimval(1) = tabptr(locsym(1))
 
 !
@@ -1929,11 +1929,11 @@ contains
 !        too, for the same reason.
 !
          if ( oldsym(2) ) then
-            locval(2) = sumai ( tabptr(1), locsym(2)-1 ) + 1
+            locval(2) = sum(tabptr(1:locsym(2)-1)) + 1
             dimval(2) = tabptr(locsym(2))
             newsym    = 0
          else
-            locval(2) = sumai ( tabptr(1), locsym(2) ) + 1
+            locval(2) = sum(tabptr(1:locsym(2))) + 1
             dimval(2) = 0
             newsym    = 1
          end if
@@ -2562,7 +2562,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, movec, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -2743,10 +2743,10 @@ contains
 
          found = .true.
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          n      = tabptr(locsym)
 
-         call movec ( tabval(locval), n, values )
+         values(1:n) = tabval(locval:locval+n-1)
 
       end if
 
@@ -2772,7 +2772,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchc, moved, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -2956,10 +2956,10 @@ contains
 
          found = .true.
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          n      = tabptr(locsym)
 
-         call moved ( tabval(locval), n, values )
+         values(1:n) = tabval(locval:locval+n-1)
 
       end if
 
@@ -2985,7 +2985,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, movei, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3169,10 +3169,10 @@ contains
 
          found = .true.
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          n      = tabptr(locsym)
 
-         call movei ( tabval(locval), n, values )
+         values(1:n) = tabval(locval:locval+n-1)
 
       end if
 
@@ -3198,7 +3198,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3370,7 +3370,7 @@ contains
 
          found  = .true.
 
-         locval = sumai ( tabptr(1), locsym-1 ) + nth
+         locval = sum(tabptr(1:locsym-1)) + nth
          value  = tabval(locval)
 
       end if
@@ -3397,7 +3397,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchc, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3571,7 +3571,7 @@ contains
 
          found  = .true.
 
-         locval = sumai ( tabptr(1), locsym-1 ) + nth
+         locval = sum(tabptr(1:locsym-1)) + nth
          value  = tabval(locval)
 
       end if
@@ -3598,7 +3598,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3771,7 +3771,7 @@ contains
 
          found  = .true.
 
-         locval = sumai ( tabptr(1), locsym-1 ) + nth
+         locval = sum(tabptr(1:locsym-1)) + nth
          value  = tabval(locval)
 
       end if
@@ -3799,7 +3799,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, shellc, sumai
+      use pepper_arrays, only: bsrchc, shellc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -3941,7 +3941,7 @@ contains
 !
       if ( locsym > 0 ) then
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          n      = tabptr(locsym)
 
          call shellc ( tabptr(locsym), tabval(locval) )
@@ -3970,7 +3970,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchc, shelld, sumai
+      use pepper_arrays, only: bsrchc, shelld
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -4118,7 +4118,7 @@ contains
 !
       if ( locsym > 0 ) then
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          n      = tabptr(locsym)
 
          call shelld ( tabptr(locsym), tabval(locval) )
@@ -4147,7 +4147,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, shelli, sumai
+      use pepper_arrays, only: bsrchc, shelli
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -4297,7 +4297,7 @@ contains
 !
       if ( locsym > 0 ) then
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          n      = tabptr(locsym)
 
          call shelli ( tabptr(locsym), tabval(locval) )
@@ -4327,7 +4327,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -4505,7 +4505,7 @@ contains
 !        Begin by saving and removing the initial value for this
 !        symbol from the value table.
 !
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          value  = tabval(locval)
 
          call remlac ( ctx, 1, locval, tabval(1), nval )
@@ -4553,7 +4553,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchc, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -4739,7 +4739,7 @@ contains
 !        Begin by saving and removing the initial value for this
 !        symbol from the value table.
 !
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          value  = tabval(locval)
 
          call remlad ( ctx, 1, locval, tabval(1), nval )
@@ -4787,7 +4787,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -4972,7 +4972,7 @@ contains
 !        Begin by saving and removing the initial value for this
 !        symbol from the value table.
 !
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          value  = tabval(locval)
 
          call remlai ( ctx, 1, locval, tabval(1), nval )
@@ -5020,7 +5020,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -5224,11 +5224,11 @@ contains
 !     to check for overflow.
 !
       if ( oldsym ) then
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          dimval = tabptr(locsym)
          newsym = 0
       else
-         locval = sumai ( tabptr(1), locsym ) + 1
+         locval = sum(tabptr(1:locsym)) + 1
          dimval = 0
          newsym = 1
       end if
@@ -5315,7 +5315,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -5536,11 +5536,11 @@ contains
 !     to check for overflow.
 !
       if ( oldsym ) then
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          dimval = tabptr(locsym)
          newsym = 0
       else
-         locval = sumai ( tabptr(1), locsym ) + 1
+         locval = sum(tabptr(1:locsym)) + 1
          dimval = 0
          newsym = 1
       end if
@@ -5628,7 +5628,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -5842,11 +5842,11 @@ contains
 !     to check for overflow.
 !
       if ( oldsym ) then
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          dimval = tabptr(locsym)
          newsym = 0
       else
-         locval = sumai ( tabptr(1), locsym ) + 1
+         locval = sum(tabptr(1:locsym)) + 1
          dimval = 0
          newsym = 1
       end if
@@ -5933,7 +5933,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, movec, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -6143,9 +6143,9 @@ contains
               .and. begin <= end ) then
 
             found  = .true.
-            locval = sumai ( tabptr(1), locsym-1 ) + 1
+            locval = sum(tabptr(1:locsym-1)) + 1
 
-            call movec ( tabval(locval+begin-1), end-begin+1, values )
+            values(1:end-begin+1) = tabval(locval+begin-1:locval+begin-1+end-begin)
 
          else
             found = .false.
@@ -6175,7 +6175,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchc, moved, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -6384,9 +6384,9 @@ contains
               .and. begin <= end ) then
 
             found  = .true.
-            locval = sumai ( tabptr(1), locsym-1 ) + 1
+            locval = sum(tabptr(1:locsym-1)) + 1
 
-            call moved ( tabval(locval+begin-1), end-begin+1, values )
+            values(1:end-begin+1) = tabval(locval+begin-1:locval+begin-1+end-begin)
 
          else
             found = .false.
@@ -6416,7 +6416,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, movei, sumai
+      use pepper_arrays, only: bsrchc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -6628,9 +6628,9 @@ contains
               .and. begin <= end ) then
 
             found  = .true.
-            locval = sumai ( tabptr(1), locsym-1 ) + 1
+            locval = sum(tabptr(1:locsym-1)) + 1
 
-            call movei ( tabval(locval+begin-1), end-begin+1, values )
+            values(1:end-begin+1) = tabval(locval+begin-1:locval+begin-1+end-begin)
 
          else
             found = .false.
@@ -6661,7 +6661,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -6848,7 +6848,7 @@ contains
 !
       if ( oldsym ) then
 
-         locval = sumai  ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          dimval = tabptr(locsym)
 
          if ( dimval > 1 ) then
@@ -6896,7 +6896,7 @@ contains
          call inslai ( ctx, [ 1 ], 1, locsym+1, tabptr(1), nptr )
          call scardi ( ctx, nptr, tabptr )
 
-         locval = sumai ( tabptr(1), locsym ) + 1
+         locval = sum(tabptr(1:locsym)) + 1
 
          call inslac ( ctx, value, 1, locval, tabval(1), nval )
          call scardc ( ctx, nval, tabval )
@@ -6926,7 +6926,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -7109,7 +7109,7 @@ contains
 !
       if ( oldsym ) then
 
-         locval = sumai  ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          dimval = tabptr(locsym)
 
          if ( dimval > 1 ) then
@@ -7157,7 +7157,7 @@ contains
          call inslai ( ctx, [ 1 ], 1, locsym+1, tabptr(1), nptr )
          call scardi ( ctx, nptr, tabptr )
 
-         locval = sumai ( tabptr(1), locsym ) + 1
+         locval = sum(tabptr(1:locsym)) + 1
 
          call inslad ( ctx, [ value ], 1, locval, tabval(1), nval )
          call scardd ( ctx, nval, tabval )
@@ -7187,7 +7187,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -7372,7 +7372,7 @@ contains
 !
       if ( oldsym ) then
 
-         locval = sumai  ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
          dimval = tabptr(locsym)
 
          if ( dimval > 1 ) then
@@ -7420,7 +7420,7 @@ contains
          call inslai ( ctx, [ 1 ], 1, locsym+1, tabptr(1), nptr )
          call scardi ( ctx, nptr, tabptr )
 
-         locval = sumai ( tabptr(1), locsym ) + 1
+         locval = sum(tabptr(1:locsym)) + 1
 
          call inslai ( ctx, [ value ], 1, locval, tabval(1), nval )
          call scardi ( ctx, nval, tabval )
@@ -7449,7 +7449,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, sumai, swapc
+      use pepper_arrays, only: bsrchc, swapc
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -7641,7 +7641,7 @@ contains
 !
             if ( idx1 /= idx2 ) then
 
-               locval = sumai ( tabptr(1), locsym-1 ) + 1
+               locval = sum(tabptr(1:locsym-1)) + 1
 
                call swapc ( tabval(locval+idx1-1), &
                             tabval(locval+idx2-1) )
@@ -7682,7 +7682,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchc, sumai, swapd
+      use pepper_arrays, only: bsrchc, swapd
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -7881,7 +7881,7 @@ contains
 !
             if ( idx1 /= idx2 ) then
 
-               locval = sumai ( tabptr(1), locsym-1 ) + 1
+               locval = sum(tabptr(1:locsym-1)) + 1
 
                call swapd ( tabval(locval+idx1-1), &
                             tabval(locval+idx2-1) )
@@ -7922,7 +7922,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, sumai, swapi
+      use pepper_arrays, only: bsrchc, swapi
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8118,7 +8118,7 @@ contains
 !
             if ( idx1 /= idx2 ) then
 
-               locval = sumai ( tabptr(1), locsym-1 ) + 1
+               locval = sum(tabptr(1:locsym-1)) + 1
 
                call swapi ( tabval(locval+idx1-1), &
                             tabval(locval+idx2-1) )
@@ -8160,7 +8160,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8350,7 +8350,7 @@ contains
 !
       else
 
-         locval = sumai ( tabptr(1), locsym ) + 1
+         locval = sum(tabptr(1:locsym)) + 1
 
          call inslac ( ctx, value, 1, locval, tabval(1), nval )
          call scardc ( ctx, nval, tabval )
@@ -8382,7 +8382,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8577,7 +8577,7 @@ contains
 !
       else
 
-         locval = sumai ( tabptr(1), locsym ) + 1
+         locval = sum(tabptr(1:locsym)) + 1
 
          call inslad ( ctx, [ value ], 1, locval, tabval(1), nval )
          call scardd ( ctx, nval, tabval )
@@ -8609,7 +8609,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -8799,7 +8799,7 @@ contains
 !
       else
 
-         locval = sumai ( tabptr(1), locsym ) + 1
+         locval = sum(tabptr(1:locsym)) + 1
 
          call inslai ( ctx, [ value ], 1, locval, tabval(1), nval )
          call scardi ( ctx, nval, tabval )
@@ -8831,7 +8831,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9018,7 +9018,7 @@ contains
 !
       else
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
 
          call inslac ( ctx, value, 1, locval, tabval(1), nval )
          call scardc ( ctx, nval, tabval )
@@ -9050,7 +9050,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9241,7 +9241,7 @@ contains
 !
       else
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
 
          call inslad ( ctx, [ value ], 1, locval, tabval(1), nval )
          call scardd ( ctx, nval, tabval )
@@ -9273,7 +9273,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: lstlec, sumai
+      use pepper_arrays, only: lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9461,7 +9461,7 @@ contains
 !
       else
 
-         locval = sumai ( tabptr(1), locsym-1 ) + 1
+         locval = sum(tabptr(1:locsym-1)) + 1
 
          call inslai ( ctx, [ value ], 1, locval, tabval(1), nval )
          call scardi ( ctx, nval, tabval )
@@ -9491,7 +9491,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, lstlec, sumai
+      use pepper_arrays, only: bsrchc, lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9700,8 +9700,8 @@ contains
 !
          newloc = lstlec ( new, nsym, tabsym(1) ) + 1
 
-         oldval = sumai ( tabptr(1), oldloc-1 ) + 1
-         newval = sumai ( tabptr(1), newloc-1 ) + 1
+         oldval = sum(tabptr(1:oldloc-1)) + 1
+         newval = sum(tabptr(1:newloc-1)) + 1
 
          olddim = tabptr(oldloc)
 
@@ -9742,7 +9742,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: bsrchc, lstlec, sumai
+      use pepper_arrays, only: bsrchc, lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -9949,8 +9949,8 @@ contains
 !
          newloc = lstlec ( new, nsym, tabsym(1) ) + 1
 
-         oldval = sumai ( tabptr(1), oldloc-1 ) + 1
-         newval = sumai ( tabptr(1), newloc-1 ) + 1
+         oldval = sum(tabptr(1:oldloc-1)) + 1
+         newval = sum(tabptr(1:newloc-1)) + 1
 
          olddim = tabptr(oldloc)
 
@@ -9991,7 +9991,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: bsrchc, lstlec, sumai
+      use pepper_arrays, only: bsrchc, lstlec
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -10198,8 +10198,8 @@ contains
 !
          newloc = lstlec ( new, nsym, tabsym(1) ) + 1
 
-         oldval = sumai ( tabptr(1), oldloc-1 ) + 1
-         newval = sumai ( tabptr(1), newloc-1 ) + 1
+         oldval = sum(tabptr(1:oldloc-1)) + 1
+         newval = sum(tabptr(1:newloc-1)) + 1
 
          olddim = tabptr(oldloc)
 

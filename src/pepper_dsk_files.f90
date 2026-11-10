@@ -580,7 +580,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: ljust, nextwd, ucase
+      use pepper_strings, only: nextwd, ucase
       use pepper_inc_zzddhman
       implicit none
 
@@ -1519,7 +1519,7 @@ contains
 !
 !     Identify the architecture and type, if we can.
 !
-      call ljust  ( tmpwrd, tmpwrd         )
+      tmpwrd = adjustl(tmpwrd)
       call ucase  ( tmpwrd, tmpwrd         )
       call nextwd ( tmpwrd, idword, tmpwrd )
 
@@ -1849,8 +1849,8 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
-      use pepper_arrays, only: orderd, reordd, touchd
-      use pepper_math, only: approx, brcktd, vadd, vdist, vequ, vnorm, vperp, vsclip, vzero
+      use pepper_arrays, only: orderd, reordd
+      use pepper_math, only: approx, vdist, vnorm, vperp
       implicit none
 
 ! $ Detailed_Input
@@ -2630,7 +2630,7 @@ contains
       axis(2)  = b
       axis(3)  = c
 
-      call vequ   ( positn,    point  )
+      point = positn
 
       call orderd ( axis,   3, iorder )
 
@@ -2645,9 +2645,9 @@ contains
 !
       scale = 1.0_wp/axis(1)
 
-      call vsclip ( scale, axis   )
-      call vsclip ( scale, point  )
-      call vequ   ( point, orignl )
+      axis = scale*axis
+      point = scale*point
+      orignl = point
 
 !
 !     Save the norm of the scaled input point.
@@ -2747,7 +2747,7 @@ contains
 !        contribute to an addition to the corresponding component
 !        of AXIS, is in fact zero.
 !
-         call vequ ( point, copy )
+         copy = point
 
          do i = 1, 3
 
@@ -3060,7 +3060,7 @@ contains
 !        that may be caused by extended precision register usage by
 !        some compilers.
 !
-         do while ( touchd(upper-lower) > 0.0_wp )
+         do while ( (upper-lower) > 0.0_wp )
 
             itr = itr + 1
 
@@ -3132,7 +3132,7 @@ contains
 !              bracketing interval.  Force it back in to the current
 !              interval.
 !
-               lambda = brcktd ( lambda, lower, upper )
+               lambda = max(min(lower, upper), min(max(lower, upper), lambda))
 
             end if
 !
@@ -3172,7 +3172,7 @@ contains
 !           If LOWER and UPPER aren't the same, we compute the
 !           value of Q at our new guess for LAMBDA.
 !
-            if ( touchd(upper-lower) > 0 ) then
+            if ( (upper-lower) > 0 ) then
 
                do i = 1, 3
 
@@ -3216,7 +3216,7 @@ contains
 
                end do
 
-               q  =  touchd( term(1) + term(2) + term(3) - 1.0_wp )
+               q  =  (term(1) + term(2) + term(3) - 1.0_wp)
 
             end if
 !
@@ -3522,7 +3522,7 @@ contains
               if (      vdist(epoint, point) &
                    < vdist(spoint, point) ) then
 
-                 call vequ ( epoint, spoint )
+                 spoint = epoint
 
               end if
 
@@ -3548,8 +3548,8 @@ contains
 !           contain both the current solution point and the
 !           original point).
 !
-            call   vequ ( spoint, point  )
-            call   vequ ( spoint, bestpt )
+            point = spoint
+            bestpt = spoint
 
             bestht = vdist ( bestpt, orignl )
 
@@ -3615,7 +3615,7 @@ contains
 !           Check for a zero projection. If so, set iteration flag to
 !           prevent an iteration pass after the current finishes.
 !
-            if ( vzero(errp) ) then
+            if ( all(errp == 0.0_wp) ) then
                solvng = .false.
             end if
 
@@ -3645,12 +3645,12 @@ contains
                end if
 
                if ( solvng ) then
-                  call vsclip ( vnorm(spoint)/pnorm, errp )
+                  errp = (vnorm(spoint)/pnorm)*errp
                end if
 
             end if
 
-            call vadd ( spoint, errp, point )
+            point = spoint + errp
 
             if (  (spoint(1) == point(1)) .and. &
                   (spoint(2) == point(2)) .and. &
@@ -3666,7 +3666,7 @@ contains
 !           this sharpening doesn't improve our estimate of the
 !           near point, we can just return our current best guess.
 !
-            call vequ ( spoint, bestpt )
+            bestpt = spoint
 
          else if ( solutn > 2 ) then
 
@@ -3716,7 +3716,7 @@ contains
 !           Check for a zero difference. If so, set iteration flag to
 !           prevent an iteration pass after the current finishes.
 !
-            if ( vzero(err) ) then
+            if ( all(err == 0.0_wp) ) then
                solvng = .false.
                newerr = 0.0_wp
             else
@@ -3739,7 +3739,7 @@ contains
                olderr  =  newerr
                bestht  =  height
 
-               call  vequ ( spoint,  bestpt )
+               bestpt = spoint
 
 !
 !              Next, if we haven't passed the limit on the number of
@@ -3759,7 +3759,7 @@ contains
 !                 flag to prevent an iteration pass after the current
 !                 finishes.
 !
-                  if ( vzero(errp) ) then
+                  if ( all(errp == 0.0_wp) ) then
                      solvng = .false.
                   end if
 
@@ -3789,12 +3789,12 @@ contains
                      end if
 
                      if ( solvng ) then
-                        call vsclip ( vnorm(spoint)/pnorm, errp )
+                        errp = (vnorm(spoint)/pnorm)*errp
                      end if
 
                   end if
 
-                  call vadd  ( spoint, errp, point )
+                  point = spoint + errp
 
                   if (  (spoint(1) == point(1)) .and. &
                         (spoint(2) == point(2)) .and. &
@@ -3836,7 +3836,7 @@ contains
 !     Re-scale and re-order the components of our solution point. Scale
 !     and copy the value of BESTHT into the output argument.
 !
-      call vsclip( 1.0_wp/scale, bestpt )
+      bestpt = (1.0_wp/scale)*bestpt
 
       do i = 1,3
          npoint( iorder(i) ) = bestpt(i)
@@ -6363,8 +6363,6 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
-      use pepper_arrays, only: cleari
-      use pepper_math, only: brcktd, vpack
       use pepper_inc_dsk02
       implicit none
       real(wp), parameter :: tol = 1.0e-3_wp
@@ -6706,7 +6704,7 @@ contains
       cgrdim(2) = ny / cgscal
       cgrdim(3) = nz / cgscal
 
-      call cleari ( ncgflg, cgrptr )
+      cgrptr(1:ncgflg) = 0
 
 !
 !     TO points to the first free location in the VXPTR array.
@@ -6732,23 +6730,17 @@ contains
          zp(2) = vrtces( 3, plates(2,i) )
          zp(3) = vrtces( 3, plates(3,i) )
 
-         bxmin = brcktd( min( xp(1), xp(2), xp(3) ) - mdltol, &
-                         xextnt(1),  xextnt(2)                )
+         bxmin = max(min(xextnt(1), xextnt(2)), min(max(xextnt(1), xextnt(2)), min( xp(1), xp(2), xp(3) ) - mdltol))
 
-         bxmax = brcktd( max( xp(1), xp(2), xp(3) ) + mdltol, &
-                         xextnt(1),  xextnt(2)                )
+         bxmax = max(min(xextnt(1), xextnt(2)), min(max(xextnt(1), xextnt(2)), max( xp(1), xp(2), xp(3) ) + mdltol))
 
-         bymin = brcktd( min( yp(1), yp(2), yp(3) ) - mdltol, &
-                         xextnt(3),  xextnt(4)                )
+         bymin = max(min(xextnt(3), xextnt(4)), min(max(xextnt(3), xextnt(4)), min( yp(1), yp(2), yp(3) ) - mdltol))
 
-         bymax = brcktd( max( yp(1), yp(2), yp(3) ) + mdltol, &
-                         xextnt(3),  xextnt(4)                )
+         bymax = max(min(xextnt(3), xextnt(4)), min(max(xextnt(3), xextnt(4)), max( yp(1), yp(2), yp(3) ) + mdltol))
 
-         bzmin = brcktd( min( zp(1), zp(2), zp(3) ) - mdltol, &
-                         xextnt(5),  xextnt(6)                )
+         bzmin = max(min(xextnt(5), xextnt(6)), min(max(xextnt(5), xextnt(6)), min( zp(1), zp(2), zp(3) ) - mdltol))
 
-         bzmax = brcktd( max( zp(1), zp(2), zp(3) ) + mdltol, &
-                         xextnt(5),  xextnt(6)                )
+         bzmax = max(min(xextnt(5), xextnt(6)), min(max(xextnt(5), xextnt(6)), max( zp(1), zp(2), zp(3) ) + mdltol))
 
 !
 !        Find the range of voxel coordinates that contain the bounding
@@ -6757,7 +6749,7 @@ contains
 !
 !        Start with the corner having minimum coordinates:
 !
-         call vpack ( bxmin, bymin, bzmin, vmod )
+         vmod = [bxmin, bymin, bzmin]
 
          call zzgetvox ( ctx, voxsiz, voxori, nvox, vmod, inbox, vcoord )
 
@@ -6788,7 +6780,7 @@ contains
 !
 !        Now handle the corner having maximum coordinates:
 !
-         call vpack ( bxmax, bymax, bzmax, vmod )
+         vmod = [bxmax, bymax, bzmax]
 
          call zzgetvox ( ctx, voxsiz, voxori, nvox, vmod, inbox, vcoord )
 
@@ -7390,7 +7382,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: filli
       use pepper_inc_dla
       implicit none
 
@@ -7795,7 +7786,7 @@ contains
 !     due to the initialization of the file's last segment pointer
 !     to NULPTR.
 !
-      call filli ( nulptr, dladsz, descr )
+      descr = nulptr
 
       descr(bwdidx) = sgptrs(lstidx)
 
@@ -11206,8 +11197,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: moved, movei
-      use pepper_math, only: vequ
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
@@ -11524,7 +11513,7 @@ contains
       voxnpl = ibuff ( ixvxls )
       vtxnpl = ibuff ( ixvtls )
 
-      call movei ( ibuff(ixvgrx), 3, vgrext )
+      vgrext = ibuff(ixvgrx:ixvgrx+3-1)
 
 !
 !     Read the d.p. parameters.
@@ -11534,8 +11523,8 @@ contains
 
       call dasrdd( ctx, handle, b, e, dbuff )
 
-      call moved ( dbuff,   vtbsiz,  vtxbds )
-      call vequ  ( dbuff(vtbsiz+1),  voxori )
+      vtxbds = reshape(dbuff(1:vtbsiz), [2, 3])
+      voxori = dbuff(vtbsiz+1:vtbsiz+1+3-1)
 
       voxsiz = dbuff ( ixvxsz - dskdsz )
 
@@ -12898,7 +12887,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_math, only: ucrss, vsub
+      use pepper_math, only: ucrss
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
@@ -13290,8 +13279,8 @@ contains
 !     Use the right-handed order of the vertices to determine the
 !     correct choice of normal direction.
 !
-      call vsub ( verts(1,2), verts(1,1), edge1 )
-      call vsub ( verts(1,3), verts(1,1), edge2 )
+      edge1 = verts(:,2) - verts(:,1)
+      edge2 = verts(:,3) - verts(:,1)
 
       call ucrss ( edge1, edge2, normal )
 
@@ -15449,7 +15438,7 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
-      use pepper_math, only: vdist, vlcom3, vnorm
+      use pepper_math, only: vdist, vnorm
       use pepper_inc_dskdsc
       implicit none
 
@@ -16018,9 +16007,7 @@ contains
 !
          do i = 1, np
 
-            call vlcom3 ( third, vrtces( 1, plates(1,i) ), &
-                          third, vrtces( 1, plates(2,i) ), &
-                          third, vrtces( 1, plates(3,i) ),  center )
+            center = third*vrtces(:,plates(1,i)) + third*vrtces(:,plates(2,i)) + third*vrtces(:,plates(3,i))
 
             maxd = max (  vdist(  vrtces( 1, plates(1,i) ), center  ), &
                           vdist(  vrtces( 1, plates(2,i) ), center  ), &
@@ -16070,7 +16057,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: movei
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
@@ -16360,7 +16346,7 @@ contains
 !        Get the DSK descriptor of the current segment.
 !        This is where we'll find the body ID code.
 !
-         call movei ( nxtdsc, dladsz, dladsc )
+         dladsc = nxtdsc
 
          call dskgd ( ctx, handle, dladsc, dskdsc )
 !
@@ -16435,7 +16421,6 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: movei
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
@@ -16727,7 +16712,7 @@ contains
 !        Get the DSK descriptor of the current segment.
 !        This is where we'll find the body ID code.
 !
-         call movei ( nxtdsc, dladsz, dladsc )
+         dladsc = nxtdsc
 
          call dskgd ( ctx, handle, dladsc, dskdsc )
 !

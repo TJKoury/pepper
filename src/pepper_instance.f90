@@ -8689,7 +8689,7 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzfdat ( ctx, ncount, maxbfr, name, idcode, center, type, typid, centrd, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8716,7 +8716,7 @@ module pepper_instance
       module subroutine namfrm ( ctx, frname, frcode )
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: frname  !! The name of some reference frame
@@ -8728,7 +8728,7 @@ module pepper_instance
       module subroutine frmnam ( ctx, frcode, frname )
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(out) :: frname  !! the name associated with the reference frame.
@@ -8799,7 +8799,7 @@ module pepper_instance
       module subroutine frinfo ( ctx, frcode, cent, frclss, clssid, found )
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: frcode  !! the ID code for some frame
@@ -8813,7 +8813,7 @@ module pepper_instance
       module subroutine cidfrm ( ctx, cent, frcode, frname, found )
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(out) :: frname  !! the name of the frame with ID FRCODE
@@ -8826,7 +8826,7 @@ module pepper_instance
       module subroutine cnmfrm ( ctx, cname, frcode, frname, found )
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: cname  !! name of the object to find a frame for
@@ -8840,7 +8840,7 @@ module pepper_instance
       module subroutine ccifrm ( ctx, frclss, clssid, frcode, frname, cent, found )
       use pepper_inc_ninert
       use pepper_inc_nninrt
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(out) :: frname  !! Name of the frame identified by FRCLSS, CLSSID.
@@ -8873,7 +8873,7 @@ module pepper_instance
       !> coordinates.
       module subroutine tisbod ( ctx, ref, body, et, tsipm )
       use pepper_inc_errhnd
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: ref  !! ID of inertial reference frame to transform from
@@ -8923,7 +8923,7 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zznofcon ( ctx, et, frame1, endp1, frame2, endp2, errmsg )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Epoch.
          integer(ip), intent(in) :: frame1  !! "From" frame ID code.
@@ -9043,7 +9043,7 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzswfxfm ( ctx, infrm, et, ndim, xform, outfrm, found )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzswtchf
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9066,7 +9066,7 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       recursive module subroutine zzdynfrm ( ctx, infram, center, et, xform, basfrm )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9081,7 +9081,7 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       recursive module subroutine zzdynrot ( ctx, infram, center, et, rotate, basfrm )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzdyn
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9100,7 +9100,7 @@ module pepper_instance
       !> Find the transformation from a user specified frame to
       !> another frame at a user specified epoch.
       recursive module subroutine frmget ( ctx, infrm, et, xform, outfrm, found )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
@@ -9112,7 +9112,7 @@ module pepper_instance
       !> Find the rotation from a user specified frame to another frame at
       !> a user specified epoch.
       recursive module subroutine rotget ( ctx, infrm, et, rotate, outfrm, found )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
@@ -9125,7 +9125,7 @@ module pepper_instance
       !> frame to another.
       recursive module subroutine frmchg ( ctx, frame1, frame2, et, xform )
       use pepper_inc_errhnd
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
          integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
@@ -9137,7 +9137,7 @@ module pepper_instance
       !> frame to another.
       recursive module subroutine refchg ( ctx, frame1, frame2, et, rotate )
       use pepper_inc_errhnd
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
          integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
@@ -9360,7 +9360,7 @@ module pepper_instance
 
       !> Get pointing (attitude) for a specified spacecraft clock time.
       module subroutine ckgp ( ctx, inst, sclkdp, tol, ref, cmat, clkout, found )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
@@ -9375,7 +9375,7 @@ module pepper_instance
       !> Get pointing (attitude) and angular velocity for a specified
       !> spacecraft clock time.
       module subroutine ckgpav ( ctx, inst, sclkdp, tol, ref, cmat, av, clkout, found )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
@@ -10055,7 +10055,7 @@ module pepper_instance
       !> body, optionally corrected for light time (planetary aberration)
       !> and stellar aberration.
       recursive module subroutine spkezp ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: targ  !! Target body NAIF ID code.
@@ -10175,7 +10175,7 @@ module pepper_instance
       !> relative to an observing body, optionally corrected for light
       !> time (planetary aberration) and stellar aberration.
       recursive module subroutine spkez ( ctx, targ, et, ref, abcorr, obs, starg, lt )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10208,7 +10208,7 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzspkfzo ( ctx, targ, et, ref, abcorr, obssub, starg, lt )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzspk_state) :: obssub  !! routine returning the observer's state (relative to the SSB)
@@ -10260,7 +10260,7 @@ module pepper_instance
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       module subroutine zzspkfzt ( ctx, trgsub, et, ref, abcorr, obs, starg, lt )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
@@ -11819,7 +11819,7 @@ module pepper_instance
       !> Return a set containing the frame IDs of all built-in frames of a
       !> specified class.
       module subroutine bltfrm ( ctx, frmcls, idset )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12052,7 +12052,7 @@ module pepper_instance
       !> Return a SPICE set containing the frame IDs of all reference
       !> frames of a given class having specifications in the kernel pool.
       module subroutine kplfrm ( ctx, frmcls, idset )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12984,7 +12984,7 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsfxcor ( ctx, udnear, udmaxr, udrayx, trgcde, et, abcorr, uselt, usecn, usestl, xmit, fixref, obscde, dfrcde, dclass, dcentr, dvec, spoint, trgepc, srfvec, found )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          procedure(zzsfx_near) :: udnear  !! the zzsfx_near routine
@@ -14009,7 +14009,7 @@ module pepper_instance
       !> routine SINCPT. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine srfxpt ( ctx, method, target, et, abcorr, obsrvr, dref, dvec, spoint, dist, trgepc, obspos, found )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: method  !! Computation method.
@@ -14031,7 +14031,7 @@ module pepper_instance
       !> to the target's surface. Also compute the point on the target's
       !> surface nearest to the tangent point.
       module subroutine tangpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, dref, dvec, tanpt, alt, range, srfpt, trgepc, srfvec )
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14480,7 +14480,7 @@ module pepper_instance
       !> stellar aberration.
       module subroutine sincpt ( ctx, method, target, et, fixref, abcorr, obsrvr, dref, dvec, spoint, trgepc, srfvec, found )
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -14505,7 +14505,7 @@ module pepper_instance
       !> light time and stellar aberration.
       module subroutine subpnt ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -14527,7 +14527,7 @@ module pepper_instance
       !> light time and stellar aberration.
       module subroutine subslr ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -14613,7 +14613,7 @@ module pepper_instance
       !> center vector in which to search for limb points.
       module subroutine limbpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, tangts )
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -14643,7 +14643,7 @@ module pepper_instance
       !> center vector, in which to search for terminator points.
       module subroutine termpt ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, trmvcs )
       use pepper_inc_dsk
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr

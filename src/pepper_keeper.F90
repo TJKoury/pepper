@@ -324,7 +324,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: lastnb, suffix
+      use pepper_strings, only: suffix
       implicit none
 
       integer(ip), parameter :: maxord = 148
@@ -451,7 +451,7 @@ contains
 
       call inttxt ( ctx, n, mystr )
 
-      last  = lastnb(mystr)
+      last  = len_trim(mystr)
       i     = last
 
 !
@@ -542,7 +542,7 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_strings, only: frstnb, lastnb, lcase, ljust, ucase
+      use pepper_strings, only: lcase, ucase
       implicit none
 
 
@@ -810,7 +810,7 @@ contains
 !
 !     Bail out if RTCASE is not recognized.
 !
-      call ljust ( rtcase, tmpcas )
+      tmpcas = adjustl(rtcase)
       call ucase ( tmpcas, tmpcas )
 
       if (        ( tmpcas /= 'U' ) &
@@ -840,8 +840,8 @@ contains
 !     (ignoring leading and trailing blanks). If MARKER is not
 !     a substring of IN, no substitution can be performed.
 !
-      mrknbf = frstnb(marker)
-      mrknbl = lastnb(marker)
+      mrknbf = verify(marker, ' ')
+      mrknbl = len_trim(marker)
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
@@ -878,11 +878,7 @@ contains
 !
 !     Replace MARKER with CARD.
 !
-      call repsub ( ctx, in, &
-                    mrkpsb, &
-                    mrkpse, &
-                    ord ( : lastnb(ord) ), &
-                    out )
+      call repsub ( ctx, in,  mrkpsb,  mrkpse,  ord ( : len_trim(ord) ),  out )
 
       return
       end procedure repmot

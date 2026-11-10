@@ -150,8 +150,7 @@ contains
 !!     Set output flag.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
       integer(ip)           center
       integer(ip)           i
@@ -176,7 +175,7 @@ contains
 !
       if ( pass1 ) then
 
-         call cleard( 36, idnt66 )
+         idnt66 = 0.0_wp
 
          do i = 1, 6
             idnt66(i,i) = 1.0_wp
@@ -193,7 +192,7 @@ contains
 
       if ( .not. found ) then
 
-         call cleard ( 36, xform )
+         xform = 0.0_wp
          outfrm = 0
 
          return
@@ -276,7 +275,7 @@ contains
 
       else
 
-         call cleard ( 36, xform )
+         xform = 0.0_wp
          outfrm = 0
          found  = .false.
 
@@ -301,7 +300,7 @@ contains
 !
       if ( ctx%failed() .or. .not. found ) then
 
-         call cleard ( 36, xform )
+         xform = 0.0_wp
          outfrm = 0
          found  = .false.
 
@@ -450,9 +449,7 @@ contains
 !!     Set output flag.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: cleard
-      use pepper_math, only: xpose
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
       integer(ip)           center
       integer(ip)           type
@@ -474,7 +471,7 @@ contains
 
       if ( .not. found ) then
 
-         call cleard ( 9, rotate )
+         rotate = 0.0_wp
          outfrm = 0
 
          return
@@ -501,7 +498,7 @@ contains
 
          if ( .not. ctx%failed() ) then
 
-            call xpose ( tipm, rotate )
+            rotate = transpose(tipm)
 
             outfrm = 1
 
@@ -537,7 +534,7 @@ contains
 
       else
 
-         call cleard ( 9, rotate )
+         rotate = 0.0_wp
          outfrm = 0
          found  = .false.
 
@@ -562,7 +559,7 @@ contains
 !
       if ( ctx%failed() .or. .not. found ) then
 
-         call cleard ( 9, rotate )
+         rotate = 0.0_wp
          outfrm = 0
          found  = .false.
 
@@ -591,10 +588,9 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
       use pepper_math, only: zzmsxf
       use pepper_inc_errhnd
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
 
 
@@ -1125,7 +1121,7 @@ contains
                get    = put
                put    = put + inc
                inc    =     - inc
-               cmnode = isrchi ( this, node, frame )
+               cmnode = findloc(frame(1:node), this, dim=1)
                gotone = cmnode > 0
             end if
 
@@ -1191,7 +1187,7 @@ contains
                inc    =     - inc
                this   = relto
 
-               cmnode = isrchi ( this, node, frame )
+               cmnode = findloc(frame(1:node), this, dim=1)
                gotone = cmnode > 0
 
             end if
@@ -1285,10 +1281,9 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_arrays, only: isrchi
-      use pepper_math, only: ident, xpose, zzrxr
+      use pepper_math, only: ident, zzrxr
       use pepper_inc_errhnd
-      use pepper_inc_frmtyp
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
 
 
@@ -1683,7 +1678,7 @@ contains
                get    = put
                put    = put + inc
                inc    =     - inc
-               cmnode = isrchi ( this, node, frame )
+               cmnode = findloc(frame(1:node), this, dim=1)
                gotone = cmnode > 0
             end if
 
@@ -1720,7 +1715,7 @@ contains
                inc    =     - inc
                this   = relto
 
-               cmnode = isrchi ( this, node, frame )
+               cmnode = findloc(frame(1:node), this, dim=1)
                gotone = cmnode > 0
 
             end if
@@ -1788,7 +1783,7 @@ contains
 !     sequence of rotation matrices together to get the
 !     result from FRAME1 to FRAME2.
 !
-      call xpose ( rot2(1,1,get), rot(1,1,cmnode) )
+      rot(:,:,cmnode) = transpose(rot2(:,:,get))
       call zzrxr ( rot,   cmnode, rotate          )
 
       return
