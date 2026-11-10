@@ -129,6 +129,7 @@
       CHARACTER*(LINLEN)    BUFFER ( BUFLEN )
       CHARACTER*(NAMLEN)    HOLD
       CHARACTER*(NAMLEN)    NAME
+      CHARACTER*(NAMLEN)    XNAME
       CHARACTER*(NAMLEN)    TKNAME
 
       INTEGER               BASCOD ( MAXE )
@@ -903,7 +904,7 @@
 !
 ! --- Case: ------------------------------------------------------
 !
-      CALL TCASE ( 'Overflow TEXT buffer with unique entries.' )
+      CALL TCASE ( 'More unique entries than SPICELIB''s NROOM (PEPPER: no overflow).' )
 
 !
 !     Load up many more definitions than ZZBODTRN can handle.
@@ -925,12 +926,25 @@
 !     routine that causes the processing of the NAME/CODE kernel pool
 !     variable pair.
 !
+!     PEPPER: the kernel name tables grow (SPICELIB's held NROOM names
+!     and signaled SPICE(KERVARTOOBIG)): the first and the last of the
+!     NROOM+1 names are found.
+!
       NAME = '<UNCHANGED>'
       CALL BODC2N ( TKBASE+1, NAME, FOUND )
-      CALL CHCKXC ( .TRUE., 'SPICE(KERVARTOOBIG)', OK )
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL CHCKSL ( 'FOUND', FOUND, .FALSE., OK )
-      CALL CHCKSC ( 'NAME', NAME, '=', '<UNCHANGED>', OK )
+      CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
+      XNAME = 'F_BODCOD_TEST_#'
+      CALL REPMI  ( XNAME, '#', TKBASE+1, XNAME )
+      CALL CHCKSC ( 'NAME', NAME, '=', XNAME, OK )
+
+      CALL BODC2N ( TKBASE+NROOM+1, NAME, FOUND )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL CHCKSL ( 'FOUND (last)', FOUND, .TRUE., OK )
+      XNAME = 'F_BODCOD_TEST_#'
+      CALL REPMI  ( XNAME, '#', TKBASE+NROOM+1, XNAME )
+      CALL CHCKSC ( 'NAME (last)', NAME, '=', XNAME, OK )
 
 !
 !     Clear the pool, resetting kernel pool variable assignments.
@@ -1053,7 +1067,7 @@
 !     This test case must be commented out in general, because
 !     BODDEF assignments (as of yet) can not be removed once made.
 !
-      CALL TCASE ( 'Overflow BODDEF buffer.' )
+      CALL TCASE ( 'More BODDEF definitions than SPICELIB''s MAXE (PEPPER: no overflow).' )
 
 !
 !     We expect this to result in an error being signaled, although
@@ -1078,8 +1092,16 @@
       CALL REPMI ( NAME, '#', BDBASE+J+1, NAME )
 
       CALL BODDEF ( NAME, BDBASE+J+1 )
+!
+!     PEPPER: the definitions grow (SPICELIB signaled
+!     SPICE(TOOMANYPAIRS) here): the name is defined.
+!
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL CHCKXC ( .TRUE., 'SPICE(TOOMANYPAIRS)', OK )
+      CALL BODN2C ( NAME, CODE, FOUND )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
+      CALL CHCKSI ( 'CODE', CODE, '=', BDBASE+J+1, 0, OK )
 
 !
 !     Clean up

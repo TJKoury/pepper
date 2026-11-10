@@ -4,13 +4,14 @@
 !> unloading, more DAFs written at once than DAFANA's 20, and comments
 !> read from many DAFs in turn (DAFEC's table), and the kernel pool past
 !> its limits (variables, values, name and string lengths), and more
-!> kernel frames than FRAMEX's caches held (5209).
+!> kernel frames than FRAMEX's caches held (5209), and body names past
+!> ZZBODTRN's limits.
 program test_limits
 
    use pepper_kinds, only: ip, wp
    use pepper_instance, only: pepper_spice, pepper_context
    use pepper_test_kernels, only: write_lsk, write_spk, kernel_name, delete_file, circle_state, &
-      write_tk_frames, frame_name
+      write_tk_frames, frame_name, write_body_names, body_name
 
    implicit none
 
@@ -27,6 +28,7 @@ program test_limits
    call test_many_comment_readers()
    call test_pool()
    call test_frames()
+   call test_bodies()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -441,5 +443,58 @@ contains
       call ctx%unload(file)
       call delete_file(file)
    end subroutine test_frames
+
+   !> Body names past ZZBODTRN's limits: 20000 kernel pool names (NROOM
+   !> 14983), 500 BODDEF definitions (161 after the 692 built-in names),
+   !> and 60-character names (MAXL 36) both ways.
+   subroutine test_bodies()
+      integer(ip), parameter :: n = 20000, first = 2000001, ndef = 500
+      character(*), parameter :: file = prefix // 'names.tf'
+      character(:), allocatable :: long
+      character(80) :: name
+      integer(ip) :: i, code
+      logical :: found, ok
+      call write_body_names(file, n, first)
+      call ctx%furnsh(file)
+      call check_ok('bodies: loading 20000 names')
+      ok = .true.
+      do i = 1, n, 37
+         call ctx%bodn2c(body_name(i), code, found)
+         ok = ok .and. found .and. code == first + i - 1
+         call ctx%bodc2n(first + i - 1, name, found)
+         ok = ok .and. found .and. name == body_name(i)
+      end do
+      call check(ok, 'bodies: 20000 kernel names')
+      call ctx%unload(file)
+      call delete_file(file)
+
+      do i = 1, ndef
+         write (name, '(a,i0)') 'TEST_LIMITS_BODDEF_', i
+         call ctx%boddef(name, 3000000 + i)
+      end do
+      call check_ok('bodies: 500 boddef definitions')
+      ok = .true.
+      do i = 1, ndef, 7
+         write (name, '(a,i0)') 'TEST_LIMITS_BODDEF_', i
+         call ctx%bodn2c(name, code, found)
+         ok = ok .and. found .and. code == 3000000 + i
+      end do
+      call check(ok, 'bodies: 500 boddef definitions found')
+
+      long = 'A Body Name Of Sixty Characters ' // repeat('X', 28)
+      call ctx%boddef(long, 3100001)
+      call ctx%bodn2c('  a body  name of sixty characters ' // repeat('x', 28), code, found)
+      call check(found .and. code == 3100001, 'bodies: a 60-character boddef name, normalized')
+      call ctx%bodc2n(3100001, name, found)
+      call check(found .and. name == long, 'bodies: bodc2n returns the 60-character name')
+      call ctx%pcpool('NAIF_BODY_NAME', 1_ip, [repeat('K', 60)])
+      call ctx%pipool('NAIF_BODY_CODE', 1_ip, [3100002_ip])
+      call ctx%bodn2c(repeat('k', 60), code, found)
+      call check(found .and. code == 3100002, 'bodies: a 60-character kernel name')
+      call ctx%bodc2n(3100002, name, found)
+      call check(found .and. name == repeat('K', 60), 'bodies: bodc2n of a 60-character kernel name')
+      call ctx%clpool()
+      call check_ok('bodies')
+   end subroutine test_bodies
 
 end program test_limits

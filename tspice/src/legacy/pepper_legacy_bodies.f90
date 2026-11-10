@@ -290,10 +290,17 @@
       !> to the volatile nature of this routine.
       !>
       !> Legacy interface: calls zz routine zzbodker with the legacy context.
+      !> PEPPER's ZZBODKER fills a body_names record, with no limit
+      !> on the number or length of the names; this keeps SPICELIB's
+      !> interface: it signals SPICE(KERVARTOOBIG) when the pool vectors do
+      !> not fit its NROOM arrays, copies the names and codes into them,
+      !> and builds SPICELIB's hash tables with ZZBODINI.
       subroutine zzbodker ( names,  nornam, codes,  nvals,  extker, &
                             bnmlst, bnmpol, bnmnms, bnmidx, &
                             bidlst, bidpol, bidids, bididx  )
-      use pepper_instance, only: pepper_context, pepper_zzbodker => zzbodker
+      use pepper_instance, only: pepper_context, pepper_zzbodker => zzbodker, &
+         pepper_zzbodini => zzbodini
+      use pepper_states, only: body_names
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
@@ -314,8 +321,43 @@
       integer(ip) :: bidids (          nroom )  !! Body ID-based hash item list
       integer(ip) :: bididx (          nroom )  !! Body ID-based hash index storage array
       type(pepper_context), pointer :: ctx
+      type(body_names) :: ker
+      character(1) :: type(2)
+      integer(ip) :: nsiz(2), i
+      logical :: found(2)
       ctx => legacy_context()
-      call pepper_zzbodker ( ctx, names, nornam, codes, nvals, extker, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
+      if ( ctx%failed() ) return
+      extker = .false.
+      call ctx%dtpool ( 'NAIF_BODY_NAME', found(1), nsiz(1), type(1) )
+      call ctx%dtpool ( 'NAIF_BODY_CODE', found(2), nsiz(2), type(2) )
+      if (       found(1) .and. type(1) == 'C' &
+           .and. found(2) .and. type(2) == 'N' &
+           .and. ( nsiz(1) > nroom .or. nsiz(2) > nroom ) ) then
+         call ctx%setmsg ( 'The kernel pool vectors used to ' &
+         //            'define the names/ID-codes mapping' &
+         //            'exceeds the max size. The size of ' &
+         //            'the NAME vector is #1. The size of ' &
+         //            'the CODE vector is #2. The max ' &
+         //            'number allowed of elements is #3.'   )
+         call ctx%errint ( '#1', nsiz(1)                         )
+         call ctx%errint ( '#2', nsiz(2)                         )
+         call ctx%errint ( '#3', nroom                           )
+         call ctx%sigerr ( 'SPICE(KERVARTOOBIG)'                 )
+         return
+      end if
+      call pepper_zzbodker ( ctx, ker )
+      if ( ctx%failed() .or. .not. ker%extker ) return
+      nvals = ker%nvals
+      do i = 1, nvals
+         names(i)  = ker%names(i)%s
+         nornam(i) = ker%nornam(i)%s
+         codes(i)  = ker%codes(i)
+      end do
+      call pepper_zzbodini ( ctx, names, nornam, codes, nvals, nroom, &
+                             bnmlst, bnmpol, bnmnms, bnmidx, &
+                             bidlst, bidpol, bidids, bididx )
+      if ( ctx%failed() ) return
+      extker = .true.
       end subroutine zzbodker
 
       !> SPICE Private routine intended solely for the support of SPICE

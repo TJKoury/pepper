@@ -43,7 +43,7 @@ module pepper_states
    use pepper_inc_sgparam, only: mxmeta
    use pepper_inc_srftrn, only: mxnsrf, sfnmln
    use pepper_inc_zzabcorr, only: corlen, nabcor
-   use pepper_inc_zzbodtrn, only: maxe, maxl, nperm, zzbodtrn_nroom => nroom
+   use pepper_inc_zzbodtrn, only: maxe, maxl, nperm
    use pepper_inc_zzctr, only: ctrsiz
    use pepper_inc_zzddhman, only: numamh, numarc, numbff, strsiz, utsize
    use pepper_inc_zzdsk, only: acllen, ellshp, mthlen
@@ -3232,6 +3232,33 @@ module pepper_states
 
    ! ------------------------------------------------------------------ ZZBODTRN
 
+   !> Body names and codes: those from the kernel pool (NAIF_BODY_NAME,
+   !> NAIF_BODY_CODE, as ZZBODKER reads them), or the built-in and BODDEF
+   !> definitions.
+   !>
+   !> PEPPER: SPICELIB kept them in arrays and hash tables of NROOM (14983)
+   !> and MAXE (853) entries, with names of at most MAXL (36) characters,
+   !> and signaled SPICE(KERVARTOOBIG) or SPICE(TOOMANYPAIRS) for more;
+   !> these grow, and names have any length.
+   !> As in SPICELIB, the last assignment of a name counts, and a code maps
+   !> to the last assignment whose name is not assigned again later.
+   type, public :: body_names
+      type(string), allocatable :: names(:)  !! the names, as in the kernel pool
+      type(string), allocatable :: nornam(:)  !! the names, normalized (uppercase, single blanks)
+      integer(ip), allocatable :: codes(:)  !! the codes
+      integer(ip) :: nvals = 0  !! number of names and codes
+      logical :: extker = .false.  !! the kernel pool defines names
+      type(string_map) :: name_map  !! the index of each normalized name
+      type(int_map) :: code_map  !! the index of each code
+   contains
+      procedure :: clear => body_names_clear
+      procedure :: append => body_names_append
+      procedure :: remove => body_names_remove
+      procedure :: index => body_names_index
+      procedure :: name_index => body_names_name_index
+      procedure :: code_index => body_names_code_index
+   end type body_names
+
    !> SPICE Private routine intended solely for the support of SPICE
    !> routines.  Users should not call this routine directly due
    !> to the volatile nature of this routine.
@@ -3242,41 +3269,13 @@ module pepper_states
    !>
    !> No default initialization (1677792 bytes): see init_zzbodtrn_state.
    type, public :: zzbodtrn_state
-      character(maxl) :: defnam ( maxe )  !! names of the built-in and BODDEF-defined bodies
-      character(maxl) :: defnor ( maxe )  !! the names, normalized (uppercase, single blanks)
-      integer(ip) :: defcod ( maxe )  !! their NAIF ID codes
-      integer(ip) :: defsiz  !! number of built-in and defined names
-      integer(ip) :: dnmlst (          maxe )  !! hash table of the defined names: head nodes
-      integer(ip) :: dnmpol ( lbpool : maxe )  !! hash table of the defined names: collision lists
-      character(maxl) :: dnmnms (          maxe )  !! hash table of the defined names: the names
-      integer(ip) :: dnmidx (          maxe )  !! hash table of the defined names: index of each
-                                               !! name in defnam
-      integer(ip) :: didlst (          maxe )  !! hash table of the defined codes: head nodes
-      integer(ip) :: didpol ( lbpool : maxe )  !! hash table of the defined codes: collision lists
-      integer(ip) :: didids (          maxe )  !! hash table of the defined codes: the codes
-      integer(ip) :: dididx (          maxe )  !! hash table of the defined codes: index of each
-                                               !! code in defcod
-      character(maxl) :: kernam ( zzbodtrn_nroom )  !! names from the kernel pool (NAIF_BODY_NAME)
-      integer(ip) :: kercod ( zzbodtrn_nroom )  !! codes from the kernel pool (NAIF_BODY_CODE)
-      integer(ip) :: knmlst (          zzbodtrn_nroom )  !! hash table of the kernel pool names: head nodes
-      integer(ip) :: knmpol ( lbpool : zzbodtrn_nroom )  !! hash table of the kernel pool names: collision
-                                                         !! lists
-      character(maxl) :: knmnms (          zzbodtrn_nroom )  !! hash table of the kernel pool names: the
-                                                             !! names
-      integer(ip) :: knmidx (          zzbodtrn_nroom )  !! hash table of the kernel pool names: index of
-                                                         !! each name in kernam
-      integer(ip) :: kidlst (          zzbodtrn_nroom )  !! hash table of the kernel pool codes: head nodes
-      integer(ip) :: kidpol ( lbpool : zzbodtrn_nroom )  !! hash table of the kernel pool codes: collision
-                                                         !! lists
-      integer(ip) :: kidids (          zzbodtrn_nroom )  !! hash table of the kernel pool codes: the codes
-      integer(ip) :: kididx (          zzbodtrn_nroom )  !! hash table of the kernel pool codes: index of
-                                                         !! each code in kercod
+      type(body_names) :: def  !! the built-in and BODDEF-defined names and codes
+      type(body_names) :: ker  !! the names from the kernel pool (NAIF_BODY_NAME/CODE)
       integer(ip) :: subctr ( ctrsiz )  !! body name state counter (changes when the name tables
                                         !! change)
       integer(ip) :: pulctr ( ctrsiz )  !! the pool state counter when the kernel pool tables were
                                         !! built
       logical :: bodchg  !! the defined names changed
-      logical :: extker  !! the kernel pool defines names
       logical :: nodata  !! the kernel pool tables have not been built yet
       integer(ip) :: i  !! work variable (saved in SPICELIB; not shown to carry a value between
                         !! calls)
@@ -6616,37 +6615,89 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_zzbodtrn_state(state)
       type(zzbodtrn_state), intent(inout) :: state  !! the state
-      state%defnam = ' '
-      state%defnor = ' '
-      state%defcod = 0
-      state%defsiz = 0
-      state%dnmlst = 0
-      state%dnmpol = 0
-      state%dnmnms = ' '
-      state%dnmidx = 0
-      state%didlst = 0
-      state%didpol = 0
-      state%didids = 0
-      state%dididx = 0
-      state%kernam = ' '
-      state%kercod = 0
-      state%knmlst = 0
-      state%knmpol = 0
-      state%knmnms = ' '
-      state%knmidx = 0
-      state%kidlst = 0
-      state%kidpol = 0
-      state%kidids = 0
-      state%kididx = 0
       state%subctr = 0
       state%pulctr = 0
       state%bodchg = .false.
-      state%extker = .false.
       state%nodata = .true.
       state%i = 0
       state%first = .true.
       state%boddef_epoch = 0
    end subroutine init_zzbodtrn_state
+
+   !> Remove the kernel pool names.
+   pure subroutine body_names_clear(self)
+      class(body_names), intent(inout) :: self  !! the names
+      self%nvals = 0
+      self%extker = .false.
+      if (allocated(self%names)) deallocate (self%names)
+      if (allocated(self%nornam)) deallocate (self%nornam)
+      if (allocated(self%codes)) deallocate (self%codes)
+      call self%name_map%clear()
+      call self%code_map%clear()
+   end subroutine body_names_clear
+
+   !> Append a name and code (the maps are not updated: see index).
+   pure subroutine body_names_append(self, name, nornam, code)
+      class(body_names), intent(inout) :: self  !! the names
+      character(*), intent(in) :: name  !! the name
+      character(*), intent(in) :: nornam  !! the name, normalized
+      integer(ip), intent(in) :: code  !! the code
+      self%nvals = self%nvals + 1
+      call grow(self%names, self%nvals)
+      call grow(self%nornam, self%nvals)
+      call grow(self%codes, self%nvals)
+      self%names(self%nvals)%s = name
+      self%nornam(self%nvals)%s = nornam
+      self%codes(self%nvals) = code
+   end subroutine body_names_append
+
+   !> Remove the name and code i, keeping the order of the others (the
+   !> maps are not updated: see index).
+   pure subroutine body_names_remove(self, i)
+      class(body_names), intent(inout) :: self  !! the names
+      integer(ip), intent(in) :: i  !! the index
+      integer(ip) :: k
+      do k = i + 1, self%nvals
+         call move_alloc(self%names(k)%s, self%names(k - 1)%s)
+         call move_alloc(self%nornam(k)%s, self%nornam(k - 1)%s)
+         self%codes(k - 1) = self%codes(k)
+      end do
+      self%nvals = self%nvals - 1
+   end subroutine body_names_remove
+
+   !> Build the maps from the names and codes (SPICELIB's ZZBODINI order:
+   !> from the last assignment to the first, a name is added if it is new,
+   !> and then its code if the code is new).
+   pure subroutine body_names_index(self)
+      class(body_names), intent(inout) :: self  !! the names
+      integer(ip) :: i, k
+      logical :: found
+      call self%name_map%clear()
+      call self%code_map%clear()
+      do i = self%nvals, 1, -1
+         call self%name_map%get(self%nornam(i)%s, k, found)
+         if (found) cycle
+         call self%name_map%set(self%nornam(i)%s, i)
+         call self%code_map%get(self%codes(i), k, found)
+         if (.not. found) call self%code_map%set(self%codes(i), i)
+      end do
+   end subroutine body_names_index
+
+   !> The index of a normalized name: 0 if it is not assigned.
+   pure integer(ip) function body_names_name_index(self, nornam) result(i)
+      class(body_names), intent(in) :: self  !! the names
+      character(*), intent(in) :: nornam  !! the normalized name
+      logical :: found
+      call self%name_map%get(nornam, i, found)
+   end function body_names_name_index
+
+   !> The index of the assignment a code maps to: 0 if none.
+   pure integer(ip) function body_names_code_index(self, code) result(i)
+      class(body_names), intent(in) :: self  !! the names
+      integer(ip), intent(in) :: code  !! the code
+      logical :: found
+      call self%code_map%get(code, i, found)
+   end function body_names_code_index
 
    !> Set the initial values of a new zzddhman_state: SPICELIB's DATA
    !> values, and zero for the other components.

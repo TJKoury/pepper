@@ -5476,224 +5476,42 @@ contains
       use pepper_strings, only: ljucrs
       use pepper_inc_zzbodtrn
       implicit none
-
-
-      integer(ip), parameter :: lbpool = -5
-
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     NAMES     is the array of names extracted from the kernel pool
-!               vector NAIF_BODY_NAME. This array is parallel to
-!               NORNAM and CODES.
-!
-!     NORNAM    the array of names extracted from the kernel pool
-!               vector NAIF_BODY_NAME.  After extraction, each entry is
-!               converted to uppercase, and groups of spaces are
-!               compressed to a single space. This represents the
-!               canonical member of the equivalence class each parallel
-!               entry in NAMES belongs.
-!
-!     CODES     the array of codes extracted from the kernel pool
-!               vector NAIF_BODY_CODE.  This array is parallel to NAMES
-!               and NORNAM.
-!
-!     NVALS     the number of items contained in NAMES, NORNAM, and
-!               CODES.
-!
-!     EXTKER    is a logical that indicates to the caller whether any
-!               kernel pool name-code maps have been defined. If EXTKER
-!               is .FALSE., then the kernel pool variables
-!               NAIF_BODY_CODE and NAIF_BODY_NAME are empty and only
-!               the built-in and ZZBODDEF code-name mappings need
-!               consideration. If .TRUE., then the values returned by
-!               this module need consideration.
-!
-!     BNMLST
-!     BNMPOL
-!     BNMNMS    are the body name-based hash head node pointer, node
-!               collision, and item lists. Together they return the
-!               index of the element in the BNMIDX index storage array
-!               that stores the index of the body items in the NAMES,
-!               NORNAM, and CODES arrays.
-!
-!     BNMIDX    is the body name-based hash index storage array
-!               containing at the index determined by the hash for a
-!               given normalized name the index corresponding to this
-!               name in the NAMES, NORNAM, and CODES arrays.
-!
-!     BIDLST
-!     BIDPOL
-!     BIDIDS    are the body ID-based hash head node pointer, node
-!               collision, and item lists. Together they return the
-!               index of the element in the BNMIDX index storage array
-!               that stores the index of the body items in the
-!               NAMES, NORNAM, and CODES arrays.
-!
-!     BIDIDX    is the body ID-based hash index storage array
-!               containing at the index determined by the hash for a
-!               given ID the index corresponding to this ID in the
-!               NAMES, NORNAM, and CODES arrays.
-!
-! $ Parameters
-!
-!     LBPOOL    is the lower bound of the hashes' collision list array.
-!
-!     MAXL      is the maximum length of a body name.  Defined in the
-!               include file 'zzbodtrn.inc'.
-!
-!     NROOM     is the maximum number of kernel pool data items that
-!               can be processed from the NAIF_BODY_CODE and
-!               NAIF_BODY_NAME lists.
-!
-! $ Exceptions
-!
-!     1) The error SPICE(MISSINGKPV) is signaled when one of the
-!        NAIF_BODY_CODE and NAIF_BODY_NAME keywords is present in the
-!        kernel pool and the other is not.
-!
-!     2) The error SPICE(KERVARTOOBIG) is signaled if one or both of
-!        the NAIF_BODY_CODE and NAIF_BODY_NAME kernel pool vectors
-!        have a cardinality that exceeds NROOM.
-!
-!     3) The error SPICE(BADDIMENSIONS) is signaled if the cardinality
-!        of the NAIF_BODY_CODE and NAIF_BODY_NAME kernel pool vectors do
-!        not match.
-!
-!     4) The error SPICE(BLANKNAMEASSIGNED) is signaled if an entry
-!        in the NAIF_BODY_NAME kernel pool vector is a blank string.
-!        ID codes may not be assigned to a blank string.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine examines the contents of the kernel pool, ingests
-!     the contents of the NAIF_BODY_CODE and NAIF_BODY_NAME keywords,
-!     and produces name/code lists and hashes that ZZBODTRN requires to
-!     resolve code to name and name to code mappings.
-!
-!     The NAMES and CODES arrays stored all values provided in the
-!     corresponding POOL variables. No attempt to remove duplicates,
-!     change order, or do any other alterations to these arrays is made
-!     by this routine.
-!
-!     The order of mapping in the NAMES, NORNAM, and CODES arrays
-!     determines the priority, with the mapping with the lowest
-!     priority being first and the mapping with the highest priority
-!     being last.
-!
-!     If more than one entry with a particular normalized name is
-!     present in the NORNAM array, only the latest entry is registered
-!     in the name-based hash.
-!
-!     If more than one entry with a particular ID is present in the
-!     CODES array, only the latest entry that maps to a not-yet
-!     registered normalized name is registered in the ID-based hash.
-!     Registering IDs only for not-yet registered names achieves masking
-!     all IDs with the lower priority in cases when a single normalized
-!     name maps to more than one ID.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov   (JPL)
-!     F.S. Turner    (JPL)
-!     E.D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 16-SEP-2013 (BVS)
-!
-!        Changed routine's calling sequence by dropping name and ID
-!        order vectors and adding name- and ID-based hashes and
-!        modified it to initialize hashes instead of the order arrays.
-!
-!-    SPICELIB Version 1.0.0, 23-AUG-2002 (EDW) (FST)
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Parameters
-!
       integer(ip), parameter :: keylen = 32
-
-!
-!     Local Variables
-!
       character(keylen), parameter :: nbc = 'NAIF_BODY_CODE'
       character(keylen), parameter :: nbn = 'NAIF_BODY_NAME'
-      character(1)          type   ( 2 )
-
+      character(1)          type ( 2 )
       integer(ip)           i
-      integer(ip)           nsiz   ( 2 )
-      integer(ip)           num    ( 2 )
-
+      integer(ip)           iname
+      integer(ip)           nsiz ( 2 )
+      integer(ip)           num
       logical               found
       logical               plfind ( 2 )
-
 !
-!     Saved Variables
-!
-
-!
-!     Data Statements
-!
-
-!
-!     Standard SPICE error handling.
+!     PEPPER: the names are taken whole from the kernel pool (SPICELIB
+!     read them with GCPOOL into MAXL-character strings), and there is
+!     no limit on their number (SPICELIB: NROOM, SPICE(KERVARTOOBIG)).
+!     The codes are read with GIPOOL, as by SPICELIB.
 !
       if ( ctx%failed() ) return
-
-!
-!     Until the code below proves otherwise, we shall assume
-!     we lack kernel pool name/code mappings.
-!
-      extker = .false.
-
-!
-!     Check for the external body ID variables in the kernel pool.
-!
-      call gcpool ( ctx, nbn, 1, nroom, num(1), names, plfind(1) )
-      call gipool ( ctx, nbc, 1, nroom, num(2), codes, plfind(2) )
-
+      call ker%clear ( )
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      iname     = ctx%spice%pool%find ( nbn )
+      plfind(1) = .false.
+      if ( iname > 0 ) plfind(1) = ctx%spice%pool%vars(iname)%kind == pool_character
+      call dtpool ( ctx, nbc, found, nsiz(2), type(2) )
+      plfind(2) = found .and. type(2) == 'N'
+      if ( plfind(2) ) then
+         allocate ( ker%codes(nsiz(2)) )
+         call gipool ( ctx, nbc, 1, nsiz(2), num, ker%codes, found )
+      end if
       if ( ctx%failed() ) return
-
-!
-!     Examine PLFIND(1) and PLFIND(2) for problems.
-!
       if ( plfind(1) .neqv. plfind(2) ) then
-
-!
-!        If they are not both present or absent, signal an error.
-!
          call ctx%setmsg ( 'The kernel pool vector, #, used in ' &
          //            'mapping between names and ID-codes ' &
          //            'is absent, while # is not.  This is ' &
          //            'often due to an improperly constructed ' &
          //            'text kernel.  Check loaded kernels for ' &
          //            'these keywords.'                         )
-
          if ( plfind(1) ) then
             call ctx%errch ( '#', nbc )
             call ctx%errch ( '#', nbn )
@@ -5701,44 +5519,13 @@ contains
             call ctx%errch ( '#', nbn )
             call ctx%errch ( '#', nbc )
          end if
-
          call ctx%sigerr ( 'SPICE(MISSINGKPV)' )
          return
-
       else if ( .not. plfind(1) ) then
-
-!
-!        Return if both keywords are absent.
-!
          return
-
       end if
-
-!
-!     If we reach here, then both kernel pool variables are present.
-!     Perform some simple sanity checks on their lengths.
-!
-      call dtpool ( ctx, nbn, found, nsiz(1), type(1) )
-      call dtpool ( ctx, nbc, found, nsiz(2), type(2) )
-
-      if ( ctx%failed() ) return
-
-      if ( ( nsiz(1) > nroom ) .or. ( nsiz(2) > nroom ) ) then
-
-         call ctx%setmsg ( 'The kernel pool vectors used to ' &
-         //            'define the names/ID-codes mapping' &
-         //            'exceeds the max size. The size of ' &
-         //            'the NAME vector is #1. The size of ' &
-         //            'the CODE vector is #2. The max ' &
-         //            'number allowed of elements is #3.'   )
-         call ctx%errint ( '#1', nsiz(1)                         )
-         call ctx%errint ( '#2', nsiz(2)                         )
-         call ctx%errint ( '#3', nroom                           )
-         call ctx%sigerr ( 'SPICE(KERVARTOOBIG)'                 )
-         return
-
-      else if ( nsiz(1) /= nsiz(2) ) then
-
+      nsiz(1) = ctx%spice%pool%vars(iname)%n
+      if ( nsiz(1) /= nsiz(2) ) then
          call ctx%setmsg ( 'The kernel pool vectors used for ' &
          //            'mapping between names and ID-codes ' &
          //            'are not the same size.  The size ' &
@@ -5751,59 +5538,40 @@ contains
          call ctx%errint ( '#', nsiz(2)                           )
          call ctx%sigerr ( 'SPICE(BADDIMENSIONS)'                 )
          return
-
       end if
-
-!
-!     Compute the canonical member of the equivalence class of NAMES,
-!     NORNAM. This normalization compresses groups of spaces into a
-!     single space, left justifies the string, and upper-cases the
-!     contents.  While passing through the NAMES array, look for any
-!     blank strings and signal an appropriate error.
-!
-      nvals = num(1)
-
-      do i = 1, nvals
-
-!
-!        Check for blank strings.
-!
-         if ( names(i) == ' ' ) then
-
+      ker%nvals = nsiz(1)
+      ker%names = ctx%spice%pool%vars(iname)%cvals(1:ker%nvals)
+      allocate ( ker%nornam(ker%nvals) )
+      do i = 1, ker%nvals
+         if ( ker%names(i)%s == ' ' ) then
             call ctx%setmsg ( 'An attempt to assign the code, #, to ' &
             //            'a blank string was made.  Check loaded ' &
             //            'text kernels for a blank string in ' &
             //            'the NAIF_BODY_NAME array.'               )
             call ctx%errint ( '#', i                                    )
             call ctx%sigerr ( 'SPICE(BLANKNAMEASSIGNED)'                )
+            call ker%clear ( )
             return
-
          end if
-
-!
-!        Compute the canonical member of the equivalence class.
-!
-         call ljucrs ( 1, names(i), nornam(i) )
-
+         ker%nornam(i)%s = normalized ( ker%names(i)%s )
       end do
-
-!
-!     Populate hashes required by ZZBODTRN.
-!
-      call zzbodini ( ctx, names,  nornam, codes,  nvals,  nroom, &
-                      bnmlst, bnmpol, bnmnms, bnmidx, &
-                      bidlst, bidpol, bidids, bididx  )
-
-      if ( ctx%failed() ) return
-
-!
-!     We're on the home stretch if we make it to this point. Set EXTKER
-!     to .TRUE., return.
-!
-      extker = .true.
-
+      call ker%index ( )
+      ker%extker = .true.
       return
 
+      contains
+
+!
+!        A body name normalized as by LJUCRS (left-justified, uppercase,
+!        single blanks), without trailing blanks.
+!
+         pure function normalized ( name ) result ( nor )
+            character(*), intent(in) :: name
+            character(:), allocatable :: nor
+            character(len(name)) :: buf
+            call ljucrs ( 1, name, buf )
+            nor = trim ( buf )
+         end function normalized
       end procedure zzbodker
 
 !$Procedure ZZBODBLT ( Private --- Retrieve Built-In Body-Code Maps )
@@ -7447,10 +7215,8 @@ contains
       implicit none
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
-      character(maxl) :: tmpnam
-      integer(ip) :: kersiz
+      character(:), allocatable :: tmpnam
       logical :: lupdte
-      character(maxl) :: kernor  ( nroom )
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
       if ( ctx%failed() ) return
@@ -7458,31 +7224,10 @@ contains
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
       end if
-      associate ( defnam => ctx%zzbodtrn%defnam, &
-                  defnor => ctx%zzbodtrn%defnor, &
-                  defcod => ctx%zzbodtrn%defcod, &
-                  defsiz => ctx%zzbodtrn%defsiz, &
-                  dnmlst => ctx%zzbodtrn%dnmlst, &
-                  dnmpol => ctx%zzbodtrn%dnmpol, &
-                  dnmnms => ctx%zzbodtrn%dnmnms, &
-                  dnmidx => ctx%zzbodtrn%dnmidx, &
-                  didlst => ctx%zzbodtrn%didlst, &
-                  didpol => ctx%zzbodtrn%didpol, &
-                  didids => ctx%zzbodtrn%didids, &
-                  dididx => ctx%zzbodtrn%dididx, &
-                  kernam => ctx%zzbodtrn%kernam, &
-                  kercod => ctx%zzbodtrn%kercod, &
-                  knmlst => ctx%zzbodtrn%knmlst, &
-                  knmpol => ctx%zzbodtrn%knmpol, &
-                  knmnms => ctx%zzbodtrn%knmnms, &
-                  knmidx => ctx%zzbodtrn%knmidx, &
-                  kidlst => ctx%zzbodtrn%kidlst, &
-                  kidpol => ctx%zzbodtrn%kidpol, &
-                  kidids => ctx%zzbodtrn%kidids, &
-                  kididx => ctx%zzbodtrn%kididx, &
+      associate ( def => ctx%zzbodtrn%def, &
+                  ker => ctx%zzbodtrn%ker, &
                   subctr => ctx%zzbodtrn%subctr, &
                   pulctr => ctx%zzbodtrn%pulctr, &
-                  extker => ctx%zzbodtrn%extker, &
                   nodata => ctx%zzbodtrn%nodata, &
                   i => ctx%zzbodtrn%i, &
                   first => ctx%zzbodtrn%first )
@@ -7513,16 +7258,13 @@ contains
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code-name list.
 !
-         call zzbodget ( ctx, maxe, defnam, defnor, defcod, defsiz )
+         call body_builtins ( ctx, def )
 
          if ( ctx%failed() ) return
 
 !
 !        Populate the initial built-in code-name hashes.
 !
-         call zzbodini ( ctx, defnam, defnor, defcod, defsiz, maxe, &
-                         dnmlst, dnmpol, dnmnms, dnmidx, &
-                         didlst, didpol, didids, dididx  )
 
          if ( ctx%failed() ) return
 
@@ -7559,9 +7301,7 @@ contains
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         call zzbodker ( ctx, kernam, kernor, kercod, kersiz, extker, &
-                         knmlst, knmpol, knmnms, knmidx, &
-                         kidlst, kidpol, kidids, kididx  )
+         call zzbodker ( ctx, ker )
 
          if ( ctx%failed() ) then
 
@@ -7579,21 +7319,25 @@ contains
 !     Normalize the input argument NAME. We will look this normalized
 !     name up in the built-in and kernel pool names hashes.
 !
-      call ljucrs ( 1, name, tmpnam )
+      block
+         character(len(name)) :: buf
+         call ljucrs ( 1, name, buf )
+         tmpnam = trim ( buf )
+      end block
 
 !
 !     If necessary, first examine the contents of the kernel pool
 !     name-code mapping list.
 !
-      if ( extker ) then
+      if ( ker%extker ) then
 
 !
 !        Check if this name is in the kernel pool names hash.
 !
-         call zzhscchk ( ctx, knmlst, knmpol, knmnms, tmpnam, i )
+         i = ker%name_index ( tmpnam )
 
          if ( i /= 0 ) then
-            code  = kercod( knmidx( i ) )
+            code  = ker%codes( i )
             found = .true.
             return
          end if
@@ -7604,11 +7348,11 @@ contains
 !     If we reach here, we did not find this name in the kernel pool
 !     names hash. Check the built-in names hash.
 !
-      call zzhscchk ( ctx, dnmlst, dnmpol, dnmnms, tmpnam, i )
+      i = def%name_index ( tmpnam )
 
       if ( i /= 0 ) then
 
-         code  = defcod( dnmidx( i ) )
+         code  = def%codes( i )
          found = .true.
 
       end if
@@ -7819,9 +7563,7 @@ contains
       implicit none
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
-      integer(ip) :: kersiz
       logical :: lupdte
-      character(maxl) :: kernor  ( nroom )
       integer(ip) :: j
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
@@ -7830,31 +7572,10 @@ contains
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
       end if
-      associate ( defnam => ctx%zzbodtrn%defnam, &
-                  defnor => ctx%zzbodtrn%defnor, &
-                  defcod => ctx%zzbodtrn%defcod, &
-                  defsiz => ctx%zzbodtrn%defsiz, &
-                  dnmlst => ctx%zzbodtrn%dnmlst, &
-                  dnmpol => ctx%zzbodtrn%dnmpol, &
-                  dnmnms => ctx%zzbodtrn%dnmnms, &
-                  dnmidx => ctx%zzbodtrn%dnmidx, &
-                  didlst => ctx%zzbodtrn%didlst, &
-                  didpol => ctx%zzbodtrn%didpol, &
-                  didids => ctx%zzbodtrn%didids, &
-                  dididx => ctx%zzbodtrn%dididx, &
-                  kernam => ctx%zzbodtrn%kernam, &
-                  kercod => ctx%zzbodtrn%kercod, &
-                  knmlst => ctx%zzbodtrn%knmlst, &
-                  knmpol => ctx%zzbodtrn%knmpol, &
-                  knmnms => ctx%zzbodtrn%knmnms, &
-                  knmidx => ctx%zzbodtrn%knmidx, &
-                  kidlst => ctx%zzbodtrn%kidlst, &
-                  kidpol => ctx%zzbodtrn%kidpol, &
-                  kidids => ctx%zzbodtrn%kidids, &
-                  kididx => ctx%zzbodtrn%kididx, &
+      associate ( def => ctx%zzbodtrn%def, &
+                  ker => ctx%zzbodtrn%ker, &
                   subctr => ctx%zzbodtrn%subctr, &
                   pulctr => ctx%zzbodtrn%pulctr, &
-                  extker => ctx%zzbodtrn%extker, &
                   nodata => ctx%zzbodtrn%nodata, &
                   i => ctx%zzbodtrn%i, &
                   first => ctx%zzbodtrn%first )
@@ -7885,16 +7606,13 @@ contains
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code list.
 !
-         call zzbodget ( ctx, maxe, defnam, defnor, defcod, defsiz )
+         call body_builtins ( ctx, def )
 
          if ( ctx%failed() ) return
 
 !
 !        Populate the initial built-in code-name hashes.
 !
-         call zzbodini ( ctx, defnam, defnor, defcod, defsiz, maxe, &
-                         dnmlst, dnmpol, dnmnms, dnmidx, &
-                         didlst, didpol, didids, dididx  )
 
          if ( ctx%failed() ) return
 
@@ -7931,9 +7649,7 @@ contains
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         call zzbodker ( ctx, kernam, kernor, kercod, kersiz, extker, &
-                         knmlst, knmpol, knmnms, knmidx, &
-                         kidlst, kidpol, kidids, kididx  )
+         call zzbodker ( ctx, ker )
 
          if ( ctx%failed() ) then
 
@@ -7951,15 +7667,15 @@ contains
 !     If necessary, first examine the contents of the kernel pool
 !     name-code mapping list.
 !
-      if ( extker ) then
+      if ( ker%extker ) then
 
 !
 !        Check if this code is in the kernel pool codes hash.
 !
-         call zzhsichk ( ctx, kidlst, kidpol, kidids, code, i )
+         i = ker%code_index ( code )
 
          if ( i /= 0 ) then
-            name  = kernam(kididx(i))
+            name  = ker%names(i)%s
             found = .true.
             return
          end if
@@ -7970,7 +7686,7 @@ contains
 !     If we reach here, we did not find this code in the kernel pool
 !     codes hash. Check the built-in codes hash.
 !
-      call zzhsichk ( ctx, didlst, didpol, didids, code, i )
+      i = def%code_index ( code )
 
 !
 !     If we find a match, verify that it is not masked by a kernel pool
@@ -7978,14 +7694,13 @@ contains
 !
       if ( i /= 0 ) then
 
-         if ( extker ) then
+         if ( ker%extker ) then
 
 !
 !           Only bother performing this check if there are actually
 !           mappings present in the kernel pool lists.
 !
-            call zzhscchk ( ctx, knmlst, knmpol, knmnms, &
-                                            defnor(dididx(i)), j )
+            j = ker%name_index ( def%nornam(i)%s )
 
             if ( j /= 0 ) then
 
@@ -8003,7 +7718,7 @@ contains
 !              No match for this name in the kernel pool mapping list.
 !              Return the name.
 !
-               name  = defnam(dididx(i))
+               name  = def%names(i)%s
                found = .true.
 
             end if
@@ -8014,7 +7729,7 @@ contains
 !           No kernel pool mappings were defined, simply return
 !           return the name.
 !
-            name  = defnam(dididx(i))
+            name  = def%names(i)%s
             found = .true.
 
          end if
@@ -8283,24 +7998,13 @@ contains
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
       integer(ip) :: index
-      character(maxl) :: tmpnam
+      character(:), allocatable :: tmpnam
       integer(ip) :: codidx
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
       end if
-      associate ( defnam => ctx%zzbodtrn%defnam, &
-                  defnor => ctx%zzbodtrn%defnor, &
-                  defcod => ctx%zzbodtrn%defcod, &
-                  defsiz => ctx%zzbodtrn%defsiz, &
-                  dnmlst => ctx%zzbodtrn%dnmlst, &
-                  dnmpol => ctx%zzbodtrn%dnmpol, &
-                  dnmnms => ctx%zzbodtrn%dnmnms, &
-                  dnmidx => ctx%zzbodtrn%dnmidx, &
-                  didlst => ctx%zzbodtrn%didlst, &
-                  didpol => ctx%zzbodtrn%didpol, &
-                  didids => ctx%zzbodtrn%didids, &
-                  dididx => ctx%zzbodtrn%dididx, &
+      associate ( def => ctx%zzbodtrn%def, &
                   subctr => ctx%zzbodtrn%subctr, &
                   pulctr => ctx%zzbodtrn%pulctr, &
                   bodchg => ctx%zzbodtrn%bodchg, &
@@ -8328,16 +8032,13 @@ contains
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code list.
 !
-         call zzbodget ( ctx, maxe, defnam, defnor, defcod, defsiz )
+         call body_builtins ( ctx, def )
 
          if ( ctx%failed() ) return
 
 !
 !        Populate the initial built-in code-name hashes.
 !
-         call zzbodini ( ctx, defnam, defnor, defcod, defsiz, maxe, &
-                         dnmlst, dnmpol, dnmnms, dnmidx, &
-                         didlst, didpol, didids, dididx  )
 
          if ( ctx%failed() ) return
 
@@ -8380,18 +8081,17 @@ contains
 !
 !     Get normalized form of the input NAME.
 !
-      call ljucrs ( 1, name, tmpnam )
-
+      block
+         character(len(name)) :: buf
+         call ljucrs ( 1, name, buf )
+         tmpnam = trim ( buf )
+      end block
 !
 !     Determine if we are going to replace an entry currently present
-!     in the DEF* lists.
+!     in the definitions.
 !
-      call zzhscchk ( ctx, dnmlst, dnmpol, dnmnms, tmpnam, i )
-
-      if ( i /= 0 ) then
-
-         index = dnmidx( i )
-
+      index = def%name_index ( tmpnam )
+      if ( index /= 0 ) then
 !
 !        We are going to replace an existing entry.  There are
 !        two possible ways in which a replace operation can
@@ -8399,9 +8099,9 @@ contains
 !
 !           1) The caller is attempting to replace the highest
 !              precedent name-code mapping for a particular ID code.
-!              When this happens, we need only change the entry in
-!              DEFNAM at position INDEX. The user is simply changing
-!              the name that maps to the same normalized name.
+!              When this happens, we need only change the name at
+!              position INDEX. The user is simply changing the name
+!              that maps to the same normalized name.
 !
 !           2) The caller is attempting to change the code
 !              associated with a name, bump a lower precedence
@@ -8410,94 +8110,35 @@ contains
 !
 !        See if we should handle 1) first.
 !
-         call zzhsichk ( ctx, didlst, didpol, didids, code, i )
-
-         if ( i /= 0 ) then
-            codidx = dididx( i )
-         else
-            codidx = 0
-         end if
-
-!
-!        If CODIDX matches INDEX, then we simply have to replace the
-!        entry in DEFNAM and return.
-!
+         codidx = def%code_index ( code )
          if ( codidx == index ) then
-
 !
 !           We altered the built-in body list. Set BODCHG to .TRUE.
 !
-            bodchg           = .true.
-
-            defnam ( index ) = name
-
+            bodchg = .true.
+            def%names(index)%s = trim ( name )
             return
-
          end if
-
 !
-!        At this point we have to replace all of the values for the
-!        mapping defined at the INDEX position in DEFNAM, DEFNOR, and
-!        DEFCOD. This will require recomputing the hashes. First
-!        compress out the existing entry.
+!        At this point we have to replace the mapping at INDEX: remove
+!        it (the maps are rebuilt below).
 !
-         do i = index+1, defsiz
-
-            defnam( i-1 ) = defnam( i )
-            defnor( i-1 ) = defnor( i )
-            defcod( i-1 ) = defcod( i )
-
-         end do
-
-      else
-
-!
-!        We need to add this entry to the list.  See if there
-!        is room; signal an error and return if there is not.
-!
-         if ( defsiz >= maxe ) then
-
-            call ctx%setmsg ( 'There is no room available for adding ' &
-            //            '''#''  to the list of name/code pairs. ' &
-            //            'The number of names that can be ' &
-            //            'supported is #.  This number has been ' &
-            //            'reached. '                               )
-            call ctx%errch  ( '#', name                                 )
-            call ctx%errint ( '#', defsiz                               )
-            call ctx%sigerr ( 'SPICE(TOOMANYPAIRS)'                     )
-            return
-
-         end if
-
-!
-!        If we reach here, then there is room in the list. Increase
-!        it's size counter.
-!
-         defsiz = defsiz + 1
-
+         call def%remove ( index )
       end if
-
+!
+!     PEPPER: the definitions grow (SPICELIB signaled SPICE(TOOMANYPAIRS)
+!     when it had MAXE, 853, of them).
 !
 !     We are changing the body list, inform ZZBODRST by setting BODCHG
 !     to .TRUE.
 !
       bodchg = .true.
-
 !
-!     Now, we need to add the new entry on to the end of the
-!     DEFNAM, DEFNOR, and DEFCOD lists.
+!     Now, we need to add the new entry on to the end of the list, and
+!     rebuild the maps (SPICELIB's ZZBODINI).
 !
-      defnam ( defsiz ) = name
-      defnor ( defsiz ) = tmpnam
-      defcod ( defsiz ) = code
-
-!
-!     Reset the built-in/BODDEF hashes.
-!
-      call zzbodini ( ctx, defnam, defnor, defcod, defsiz, maxe, &
-                      dnmlst, dnmpol, dnmnms, dnmidx, &
-                      didlst, didpol, didids, dididx  )
-
+      call def%append ( trim ( name ), tmpnam, code )
+      call def%index ( )
       return
       end associate
       end subroutine zzboddef_apply
@@ -8612,38 +8253,15 @@ contains
       implicit none
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
-      integer(ip) :: kersiz
       logical :: lupdte
-      character(maxl) :: kernor  ( nroom )
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
       end if
-      associate ( defnam => ctx%zzbodtrn%defnam, &
-                  defnor => ctx%zzbodtrn%defnor, &
-                  defcod => ctx%zzbodtrn%defcod, &
-                  defsiz => ctx%zzbodtrn%defsiz, &
-                  dnmlst => ctx%zzbodtrn%dnmlst, &
-                  dnmpol => ctx%zzbodtrn%dnmpol, &
-                  dnmnms => ctx%zzbodtrn%dnmnms, &
-                  dnmidx => ctx%zzbodtrn%dnmidx, &
-                  didlst => ctx%zzbodtrn%didlst, &
-                  didpol => ctx%zzbodtrn%didpol, &
-                  didids => ctx%zzbodtrn%didids, &
-                  dididx => ctx%zzbodtrn%dididx, &
-                  kernam => ctx%zzbodtrn%kernam, &
-                  kercod => ctx%zzbodtrn%kercod, &
-                  knmlst => ctx%zzbodtrn%knmlst, &
-                  knmpol => ctx%zzbodtrn%knmpol, &
-                  knmnms => ctx%zzbodtrn%knmnms, &
-                  knmidx => ctx%zzbodtrn%knmidx, &
-                  kidlst => ctx%zzbodtrn%kidlst, &
-                  kidpol => ctx%zzbodtrn%kidpol, &
-                  kidids => ctx%zzbodtrn%kidids, &
-                  kididx => ctx%zzbodtrn%kididx, &
+      associate ( def => ctx%zzbodtrn%def, &
+                  ker => ctx%zzbodtrn%ker, &
                   subctr => ctx%zzbodtrn%subctr, &
                   pulctr => ctx%zzbodtrn%pulctr, &
-                  extker => ctx%zzbodtrn%extker, &
                   nodata => ctx%zzbodtrn%nodata, &
                   first => ctx%zzbodtrn%first )
       if ( ctx%failed() ) return
@@ -8668,16 +8286,13 @@ contains
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code list.
 !
-         call zzbodget ( ctx, maxe, defnam, defnor, defcod, defsiz )
+         call body_builtins ( ctx, def )
 
          if ( ctx%failed() ) return
 
 !
 !        Populate the initial built-in/BODDEF hashes.
 !
-         call zzbodini ( ctx, defnam, defnor, defcod, defsiz, maxe, &
-                         dnmlst, dnmpol, dnmnms, dnmidx, &
-                         didlst, didpol, didids, dididx  )
 
          if ( ctx%failed() ) return
 
@@ -8714,9 +8329,7 @@ contains
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         call zzbodker ( ctx, kernam, kernor, kercod, kersiz, extker, &
-                         knmlst, knmpol, knmnms, knmidx, &
-                         kidlst, kidpol, kidids, kididx  )
+         call zzbodker ( ctx, ker )
 
          if ( ctx%failed() ) then
 
@@ -8827,18 +8440,7 @@ contains
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
       end if
-      associate ( defnam => ctx%zzbodtrn%defnam, &
-                  defnor => ctx%zzbodtrn%defnor, &
-                  defcod => ctx%zzbodtrn%defcod, &
-                  defsiz => ctx%zzbodtrn%defsiz, &
-                  dnmlst => ctx%zzbodtrn%dnmlst, &
-                  dnmpol => ctx%zzbodtrn%dnmpol, &
-                  dnmnms => ctx%zzbodtrn%dnmnms, &
-                  dnmidx => ctx%zzbodtrn%dnmidx, &
-                  didlst => ctx%zzbodtrn%didlst, &
-                  didpol => ctx%zzbodtrn%didpol, &
-                  didids => ctx%zzbodtrn%didids, &
-                  dididx => ctx%zzbodtrn%dididx, &
+      associate ( def => ctx%zzbodtrn%def, &
                   subctr => ctx%zzbodtrn%subctr, &
                   pulctr => ctx%zzbodtrn%pulctr, &
                   bodchg => ctx%zzbodtrn%bodchg, &
@@ -8865,16 +8467,13 @@ contains
 !        Populate the initial values of the DEFNAM, DEFNOR, and DEFCOD
 !        arrays from the built-in code list.
 !
-         call zzbodget ( ctx, maxe, defnam, defnor, defcod, defsiz )
+         call body_builtins ( ctx, def )
 
          if ( ctx%failed() ) return
 
 !
 !        Populate the initial built-in code-name hashes.
 !
-         call zzbodini ( ctx, defnam, defnor, defcod, defsiz, maxe, &
-                         dnmlst, dnmpol, dnmnms, dnmidx, &
-                         didlst, didpol, didids, dididx  )
 
          if ( ctx%failed() ) return
 
@@ -8911,14 +8510,11 @@ contains
 !        to the improper specification of MAXE it would have been
 !        signaled already to the user.
 !
-         call zzbodget ( ctx, maxe, defnam, defnor, defcod, defsiz )
+         call body_builtins ( ctx, def )
 
 !
 !        Reset the built-in/BODDEF hashes.
 !
-         call zzbodini ( ctx, defnam, defnor, defcod, defsiz, maxe, &
-                         dnmlst, dnmpol, dnmnms, dnmidx, &
-                         didlst, didpol, didids, dididx  )
 
       end if
 
@@ -9085,9 +8681,7 @@ contains
       implicit none
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
-      integer(ip) :: kersiz
       logical :: lupdte
-      character(maxl) :: kernor  ( nroom )
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
       if ( ctx%failed() ) return
@@ -9095,19 +8689,9 @@ contains
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
       end if
-      associate ( kernam => ctx%zzbodtrn%kernam, &
-                  kercod => ctx%zzbodtrn%kercod, &
-                  knmlst => ctx%zzbodtrn%knmlst, &
-                  knmpol => ctx%zzbodtrn%knmpol, &
-                  knmnms => ctx%zzbodtrn%knmnms, &
-                  knmidx => ctx%zzbodtrn%knmidx, &
-                  kidlst => ctx%zzbodtrn%kidlst, &
-                  kidpol => ctx%zzbodtrn%kidpol, &
-                  kidids => ctx%zzbodtrn%kidids, &
-                  kididx => ctx%zzbodtrn%kididx, &
+      associate ( ker => ctx%zzbodtrn%ker, &
                   subctr => ctx%zzbodtrn%subctr, &
                   pulctr => ctx%zzbodtrn%pulctr, &
-                  extker => ctx%zzbodtrn%extker, &
                   nodata => ctx%zzbodtrn%nodata )
       if ( ctx%failed() ) return
 
@@ -9131,9 +8715,7 @@ contains
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         call zzbodker ( ctx, kernam, kernor, kercod, kersiz, extker, &
-                         knmlst, knmpol, knmnms, knmidx, &
-                         kidlst, kidpol, kidids, kididx  )
+         call zzbodker ( ctx, ker )
 
          if ( ctx%failed() ) then
 
@@ -12308,7 +11890,7 @@ contains
       call zzbodrst_apply ( ctx )
       do k = 1, ctx%spice%boddef_count
          if ( ctx%failed() ) return
-         call zzboddef_apply ( ctx, trim ( ctx%spice%boddef_names(k) ), &
+         call zzboddef_apply ( ctx, ctx%spice%boddef_names(k)%s, &
                                ctx%spice%boddef_codes(k) )
       end do
       ctx%zzbodtrn%boddef_epoch = ctx%spice%boddef_epoch
@@ -12316,27 +11898,37 @@ contains
 
       !> Append a name/code pair to the instance's record of definitions.
       subroutine record_boddef ( spice, name, code )
+      use pepper_containers, only: grow
       type(pepper_spice), intent(inout) :: spice  !! the instance
       character(*), intent(in) :: name  !! common name of some body
       integer(ip), intent(in) :: code  !! integer code for that body
-      character(36), allocatable :: names(:)
-      integer(ip), allocatable :: codes(:)
       integer(ip) :: n
-      if ( .not. allocated ( spice%boddef_names ) ) then
-         allocate ( spice%boddef_names(16), spice%boddef_codes(16) )
-      end if
-      n = spice%boddef_count
-      if ( n == size ( spice%boddef_names ) ) then
-         allocate ( names(2*n), codes(2*n) )
-         names(1:n) = spice%boddef_names
-         codes(1:n) = spice%boddef_codes
-         call move_alloc ( names, spice%boddef_names )
-         call move_alloc ( codes, spice%boddef_codes )
-      end if
-      spice%boddef_names(n+1) = name
-      spice%boddef_codes(n+1) = code
-      spice%boddef_count = n + 1
+      n = spice%boddef_count + 1
+      call grow ( spice%boddef_names, n )
+      call grow ( spice%boddef_codes, n )
+      spice%boddef_names(n)%s = trim ( name )
+      spice%boddef_codes(n) = code
+      spice%boddef_count = n
       spice%boddef_epoch = spice%boddef_epoch + 1
       end subroutine record_boddef
+
+      !> PEPPER: set the defined names to the built-in names (ZZBODGET),
+      !> with their maps (SPICELIB's ZZBODINI).
+      subroutine body_builtins ( ctx, def )
+      use pepper_inc_zzbodtrn
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(body_names), intent(inout) :: def  !! the defined names
+      character(maxl), allocatable :: names(:), nornam(:)
+      integer(ip), allocatable :: codes(:)
+      integer(ip) :: n, i
+      allocate ( names(maxe), nornam(maxe), codes(maxe) )
+      call zzbodget ( ctx, maxe, names, nornam, codes, n )
+      call def%clear ( )
+      if ( ctx%failed() ) return
+      do i = 1, n
+         call def%append ( trim ( names(i) ), trim ( nornam(i) ), codes(i) )
+      end do
+      call def%index ( )
+      end subroutine body_builtins
 
 end submodule pepper_bodies

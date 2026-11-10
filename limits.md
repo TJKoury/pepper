@@ -393,6 +393,16 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      over the context's watches; TKFRAM keeps up to 200).
    - **Measured:** `pxform` on a random TK frame 6.8 to 5.3 µs (14 µs before
      phase 3).
+   - **Body names** (ZZBODTRN, per context): the kernel pool names and the
+     built-in and BODDEF definitions are `body_names` records (names and
+     codes in arrays that grow, a name map and a code map, SPICELIB's
+     precedence). `KERVARTOOBIG` (14983 kernel names) and `TOOMANYPAIRS`
+     (853 definitions) are gone; names have any length (the kernel names
+     are read whole from the pool; SPICELIB's MAXL was 36). The 540 KB
+     `kernor` locals of four routines are gone. tspice's ZZBODKER adapter
+     keeps SPICELIB's interface for `F_ZZBDKR`. Tests: `test_limits`
+     (20000 kernel names, 500 BODDEFs, 60-character names); tspice
+     `F_BODCOD` (past NROOM and MAXE).
 
    The plan for the rest:
    - **Bodies:**
@@ -529,6 +539,8 @@ or listed for later.
 | POOL (GNPOOL, WRPOOL) | Scan all 26003 hash buckets on every call; CCIFRM and KPLFRM page through the matches with START, one scan per page | Done: the slots in use | 3 |
 | Watches (`watch_index`, PEPPER) | Find an agent by a linear search over all watches of the context; TKFRAM keeps one watch per buffered frame (up to 200) and calls CVPOOL on every lookup | Done: a map from agent to watch | 4 |
 | FRAMEX (NAMFRM) | Adds kernel frame names to its cache as `FRAME_<NAME>` but looks up `<NAME>`: every lookup of a kernel frame by name reads the pool | Done: cached under the name | 4 |
+| ZZBODTRN (BODDEF, `sync_boddefs`) | Each definition rebuilds the maps of all the definitions (SPICELIB's ZZBODINI), and a context replays all of the instance's BODDEFs when they change: O(n**2) for n definitions | Update the maps incrementally | later |
+| ZZBODTRN, FRAMEX (per context) | Every context builds its own tables of body names and kernel frames from the pool | Build them once per instance when the pool changes (read-only during queries) | 5 |
 | BSR tables | 10 MB each, allocated and zeroed in full by the first query of a context: 2.5 ms and about 20 MB per context | Start small, grow (decision 3) | 5 |
 
 ## Testing

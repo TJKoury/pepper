@@ -71,7 +71,7 @@ module pepper_instance
       integer(ip) :: generation = 0
       ! Body names defined by the program (boddef), in order of definition.
       ! Each context applies them to its own name tables (see pepper_bodies).
-      character(36), allocatable :: boddef_names(:)  !! names defined with boddef
+      type(string), allocatable :: boddef_names(:)  !! names defined with boddef (any length)
       integer(ip), allocatable :: boddef_codes(:)  !! their codes
       integer(ip) :: boddef_count = 0  !! number of definitions recorded
       integer(ip) :: boddef_epoch = 0  !! changed by every definition and by a reset
@@ -4176,36 +4176,12 @@ module pepper_instance
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> LBPOOL     P   Lower bound of hash pool arrays
-      !> MAXL       P   Maximum length of body name strings.
-      !> NROOM      P   Maximum length of kernel pool data vectors.
-      module subroutine zzbodker ( ctx, names, nornam, codes, nvals, extker, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
+      !> PEPPER: fills KER (SPICELIB returned arrays of NROOM entries and
+      !> their hash tables; see body_names).
+      module subroutine zzbodker ( ctx, ker )
       use pepper_inc_zzbodtrn
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbpool = -5
-         character(maxl), intent(out) :: names  (          nroom )  !! Array of kernel pool assigned
-                                                                    !! names.
-         character(maxl), intent(out) :: nornam (          nroom )  !! Array of normalized kernel
-                                                                    !! pool assigned names.
-         integer(ip), intent(out) :: codes  (          nroom )  !! Array of ID codes for
-                                                                !! NAMES/NORNAM.
-         integer(ip), intent(out) :: nvals  !! Length of NAMES, NORNAM, and CODES arrays.
-         logical, intent(out) :: extker  !! Logical indicating presence of kernel pool names.
-         integer(ip), intent(out) :: bnmlst (          nroom )  !! Body name-based hash head node
-                                                                !! pointer list
-         integer(ip), intent(out) :: bnmpol ( lbpool : nroom )  !! Body name-based hash node
-                                                                !! collision list
-         character(maxl), intent(out) :: bnmnms (          nroom )  !! Body name-based hash item
-                                                                    !! list
-         integer(ip), intent(out) :: bnmidx (          nroom )  !! Body name-based hash index
-                                                                !! storage array
-         integer(ip), intent(out) :: bidlst (          nroom )  !! Body ID-based hash head node
-                                                                !! pointer list
-         integer(ip), intent(out) :: bidpol ( lbpool : nroom )  !! Body ID-based hash node collision
-                                                                !! list
-         integer(ip), intent(out) :: bidids (          nroom )  !! Body ID-based hash item list
-         integer(ip), intent(out) :: bididx (          nroom )  !! Body ID-based hash index storage
-                                                                !! array
+         type(body_names), intent(inout) :: ker  !! the names and codes from the kernel pool
       end subroutine zzbodker
 
       !> SPICE Private routine intended solely for the support of SPICE
