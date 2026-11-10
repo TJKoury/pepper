@@ -20874,6 +20874,11 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: inisub = 32
       integer(ip), parameter :: limit1 = 250000
+      character(inisub), allocatable :: cdat ( : )  !! first INISUB characters of the primary order-by column's entry in each row
+      real(wp), allocatable :: ddat ( : )  !! d.p. entry of the primary order-by column in each row
+      integer(ip), allocatable :: idat ( : )  !! integer entry of the primary order-by column in each row
+      character(1), allocatable :: nf ( : )  !! null flag of the primary order-by column's entry in each row
+      integer(ip), allocatable :: ordvec ( : )  !! order vector of the rows, sorted in parallel with the data
       character(inisub)     c1
       character(inisub)     c2
       real(wp)              d1
@@ -20981,15 +20986,6 @@ contains
 
            n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
                        .and. (         c1 <= c2    )    )
-      if ( .not. allocated ( ctx%zzekjsrt_state ) ) then
-         allocate ( ctx%zzekjsrt_state )
-         call init_zzekjsrt_state ( ctx%zzekjsrt_state )
-      end if
-      associate ( cdat => ctx%zzekjsrt_state%cdat, &
-                  ddat => ctx%zzekjsrt_state%ddat, &
-                  idat => ctx%zzekjsrt_state%idat, &
-                  nf => ctx%zzekjsrt_state%nf, &
-                  ordvec => ctx%zzekjsrt_state%ordvec )
       if ( ctx%failed() ) return
 
 !
@@ -21068,6 +21064,11 @@ contains
       dtype = dtdscs( typidx, colptr )
 
       if ( nrows <= limit1 ) then
+!
+!        PEPPER: the work arrays are allocated for the rows to sort
+!        (SPICELIB: saved arrays for LIMIT1 rows, 12 MB per context).
+!
+         allocate ( cdat(nrows), ddat(nrows), idat(nrows), nf(nrows), ordvec(nrows) )
 !
 !        Case 1.
 !
@@ -21534,7 +21535,6 @@ contains
 !
 
       return
-      end associate
       end procedure zzekjsrt
 
 !$Procedure ZZEKLERC  ( EK, LLE, using record pointers, character  )

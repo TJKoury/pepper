@@ -605,6 +605,21 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      check-threads-ir` lists any uninitialized static in the generated
      code (none). `test-parallel`: 0 failures in 20 runs.
 
+   - **EK work areas** (step A of the EK work):
+     - The EK scratch area (ZZEKSCA, per context) keeps SPICELIB's
+       layout: up to 2.5 million integers in memory, the rest in a
+       scratch DAS. The in-memory part grows as the stack does (SPICELIB:
+       10 MB allocated by the first EK query of a context), the scratch
+       DAS is opened when the stack first goes past it (SPICELIB: on the
+       first push, a file per context even for small queries), and a
+       clean-up clears only the part in use (SPICELIB: all 10 MB on every
+       clean-up). Test: `test_limits` `test_ek_scratch` (3 million
+       integers: reads, updates and pops across the boundary).
+     - ZZEKJSRT (sorting query results): the work arrays are allocated
+       for the rows being sorted and freed after (SPICELIB: saved arrays
+       for 250000 rows, 12 MB per context). Beyond 250000 rows it still
+       sorts through the scratch area, as SPICELIB does.
+
    To do:
    - **EK queries:** last. The encoded query is a flat integer cell laid out
      from the maxima, so this is a rewrite of the parser's output, and the

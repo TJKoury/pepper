@@ -459,7 +459,6 @@ module pepper_instance
       type(ekbseg_state), allocatable :: ekbseg_state  !! state of EKBSEG
       type(stcc01_state), allocatable :: stcc01_state  !! state of STCC01
       type(zzekad06_state), allocatable :: zzekad06_state  !! state of ZZEKAD06
-      type(zzekjsrt_state), allocatable :: zzekjsrt_state  !! state of ZZEKJSRT
       type(zzekjtst_state), allocatable :: zzekjtst_state  !! state of ZZEKJTST
       type(ekqmgr_context_state), allocatable :: ekqmgr_query  !! per-context state of EKQMGR
       type(zzeksemc_state), allocatable :: zzeksemc_state  !! state of ZZEKSEMC

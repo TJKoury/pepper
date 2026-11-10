@@ -3598,8 +3598,7 @@ contains
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
       end if
-      associate ( return => ctx%zzeksca_state%return, &
-                  t => ctx%zzeksca_state%t )
+      associate ( t => ctx%zzeksca_state%t )
       top  =  t
       return
       end associate
@@ -3706,6 +3705,7 @@ contains
 !!     First time through, open a scratch DAS file.
 !!
       use pepper_kinds, only: ip
+      use pepper_containers, only: grow
       integer(ip), parameter :: memsiz = 2500000
       integer(ip) :: remain
       integer(ip) :: numadd
@@ -3721,20 +3721,17 @@ contains
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
       end if
-      associate ( return => ctx%zzeksca_state%return, &
-                  scrhan => ctx%zzeksca_state%scrhan, &
+!
+!     PEPPER: the in-memory part grows to hold the stack, up to MEMSIZ.
+!
+      if ( n > 0 .and. ctx%zzeksca_state%t < memsiz ) then
+         call grow ( ctx%zzeksca_state%scrtch, &
+                     min ( memsiz, ctx%zzeksca_state%t + n ) )
+      end if
+      associate ( scrhan => ctx%zzeksca_state%scrhan, &
                   scrtch => ctx%zzeksca_state%scrtch, &
                   t => ctx%zzeksca_state%t, &
                   first => ctx%zzeksca_state%first )
-      if ( first ) then
-
-         first = .false.
-
-         call dasops ( ctx, scrhan )
-
-         if ( ctx%failed() ) return
-
-      end if
 
 !
 !     Go back if there's no data to write.
@@ -3779,6 +3776,16 @@ contains
 !     be written to addresses previously written to, and which
 !     part will be appended.
 !
+!
+!     PEPPER: the scratch DAS is opened when the stack first goes past
+!     the in-memory part (SPICELIB: on the first push).
+!
+      if ( first ) then
+         first = .false.
+         call dasops ( ctx, scrhan )
+         if ( ctx%failed() ) return
+      end if
+
       call daslla ( ctx, scrhan, lastc, lastd, lasti )
 
 !
@@ -3935,20 +3942,14 @@ contains
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
       end if
-      associate ( return => ctx%zzeksca_state%return, &
-                  scrhan => ctx%zzeksca_state%scrhan, &
+      associate ( scrhan => ctx%zzeksca_state%scrhan, &
                   scrtch => ctx%zzeksca_state%scrtch, &
                   t => ctx%zzeksca_state%t, &
                   first => ctx%zzeksca_state%first )
-      if ( first ) then
-
-         first = .false.
-
-         call dasops ( ctx, scrhan )
-
-         if ( ctx%failed() ) return
-
-      end if
+!
+!     PEPPER: the scratch DAS is opened by ZZEKSPSH when the stack first
+!     goes past the in-memory part, and only read beyond it.
+!
 
 !
 !     You can't pop a negative number of elements.
@@ -4116,19 +4117,13 @@ contains
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
       end if
-      associate ( return => ctx%zzeksca_state%return, &
-                  scrhan => ctx%zzeksca_state%scrhan, &
+      associate ( scrhan => ctx%zzeksca_state%scrhan, &
                   t => ctx%zzeksca_state%t, &
                   first => ctx%zzeksca_state%first )
-      if ( first ) then
-
-         first = .false.
-
-         call dasops ( ctx, scrhan )
-
-         if ( ctx%failed() ) return
-
-      end if
+!
+!     PEPPER: the scratch DAS is opened by ZZEKSPSH when the stack first
+!     goes past the in-memory part.
+!
 
 !
 !     Catch non-positive decrement requests.
@@ -4281,8 +4276,7 @@ contains
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
       end if
-      associate ( return => ctx%zzeksca_state%return, &
-                  scrhan => ctx%zzeksca_state%scrhan, &
+      associate ( scrhan => ctx%zzeksca_state%scrhan, &
                   scrtch => ctx%zzeksca_state%scrtch, &
                   t => ctx%zzeksca_state%t )
       if (  ( beg < 1 ) .or. ( beg > t )  ) then
@@ -4459,8 +4453,7 @@ contains
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
       end if
-      associate ( return => ctx%zzeksca_state%return, &
-                  scrhan => ctx%zzeksca_state%scrhan, &
+      associate ( scrhan => ctx%zzeksca_state%scrhan, &
                   scrtch => ctx%zzeksca_state%scrtch, &
                   t => ctx%zzeksca_state%t )
       if (  ( beg < 1 ) .or. ( beg > t  )  ) then
@@ -4606,12 +4599,15 @@ contains
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
       end if
-      associate ( return => ctx%zzeksca_state%return, &
-                  scrhan => ctx%zzeksca_state%scrhan, &
+      associate ( scrhan => ctx%zzeksca_state%scrhan, &
                   scrtch => ctx%zzeksca_state%scrtch, &
                   t => ctx%zzeksca_state%t, &
                   first => ctx%zzeksca_state%first )
-      call cleari ( memsiz, scrtch )
+!
+!     PEPPER: only the part in use is cleared (SPICELIB: all MEMSIZ
+!     integers, on every clean-up).
+!
+      scrtch(1:min(t, size(scrtch, kind=ip))) = 0
       t  = 0
 
 !

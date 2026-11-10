@@ -11,7 +11,7 @@
 program test_limits
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context, zzprsmet, zzelvupy
+   use pepper_instance, only: pepper_spice, pepper_context, zzprsmet, zzelvupy, zzekspsh, zzekspop, zzeksrd, zzeksupd, zzekstop, zzekscln
    use pepper_test_kernels, only: write_lsk, write_spk, kernel_name, delete_file, circle_state, &
       write_tk_frames, frame_name, write_body_names, body_name
 
@@ -40,6 +40,7 @@ program test_limits
    call test_leapseconds()
    call test_fov_vertices()
    call test_dsk_hits()
+   call test_ek_scratch()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -769,6 +770,41 @@ contains
       call ctx%unload(dsk)
       call delete_file(dsk)
    end subroutine test_dsk_hits
+
+   !> The EK scratch area past its in-memory part (2500000 integers,
+   !> which now grows; beyond it the stack goes to a scratch DAS, opened
+   !> then): push 3000000 integers, read and update ranges that cross the
+   !> boundary, pop across it, and clean up.
+   subroutine test_ek_scratch()
+      integer(ip), parameter :: n = 3000000, memsiz = 2500000
+      integer(ip), allocatable :: data(:), back(:)
+      integer(ip) :: top, i
+      allocate (data(n), back(n))
+      do i = 1, n
+         data(i) = i
+      end do
+      call zzekspsh(ctx, n/2, data)
+      call zzekspsh(ctx, n - n/2, data(n/2 + 1:))
+      call zzekstop(ctx, top)
+      call check_ok('EK scratch: push')
+      call check(top == n, 'EK scratch: stack top')
+      call zzeksrd(ctx, memsiz - 10_ip, memsiz + 10_ip, back)
+      call check(all(back(1:21) == data(memsiz - 10:memsiz + 10)), 'EK scratch: read across the boundary')
+      call zzeksupd(ctx, memsiz - 1_ip, memsiz + 2_ip, [-1_ip, -2_ip, -3_ip, -4_ip])
+      call zzeksrd(ctx, memsiz - 1_ip, memsiz + 2_ip, back)
+      call check(all(back(1:4) == [-1, -2, -3, -4]), 'EK scratch: update across the boundary')
+      data(memsiz - 1:memsiz + 2) = [-1, -2, -3, -4]
+      call zzekspop(ctx, n - memsiz + 100, back)
+      call check(all(back(1:n - memsiz + 100) == data(memsiz - 99:n)), 'EK scratch: pop across the boundary')
+      call zzekscln(ctx)
+      call zzekstop(ctx, top)
+      call check_ok('EK scratch: clean up')
+      call check(top == 0, 'EK scratch: empty after clean up')
+      call zzekspsh(ctx, 3_ip, [7_ip, 8_ip, 9_ip])
+      call zzekspop(ctx, 3_ip, back)
+      call check(all(back(1:3) == [7, 8, 9]), 'EK scratch: reused after clean up')
+      call zzekscln(ctx)
+   end subroutine test_ek_scratch
 
    !> PCK constants of a body with its own nutation/precession angles
    !> (the first n of ANGLES) and coefficients (the first n of COEF).

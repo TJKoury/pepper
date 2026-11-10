@@ -63,7 +63,7 @@ module pepper_states
        init_sc01_state, &
        init_termpt_state, init_tisbod_state, init_tkfram_state, &
        init_zzbodblt_state, init_zzbodtrn_state, &
-       init_zzdsksbf_state, init_zzekjsrt_state, init_zzekjtst_state, &
+       init_zzdsksbf_state, init_zzekjtst_state, &
        init_zzeknrml_state, init_zzeksca_state, init_zzelvupy_state, init_zzgffvu_state, &
        init_zzswfxfm_state
 
@@ -3757,26 +3757,6 @@ module pepper_states
       logical :: first = .true.  !! padbuf has not been blanked yet
    end type zzekad06_state
 
-   ! ------------------------------------------------------------------ ZZEKJSRT
-
-   integer(ip), parameter :: inisub = 32
-   integer(ip), parameter :: limit1 = 250000
-
-   !> Sort the row vectors of a join row set union, given an order
-   !> relation defined by a set of qualified order-by columns.
-   !>
-   !> The saved variables of SPICELIB's ZZEKJSRT routines (entry points
-   !> zzekjsrt), held in pepper_context (one per thread).
-   !>
-   !> No default initialization (12250000 bytes): see init_zzekjsrt_state.
-   type, public :: zzekjsrt_state
-      character(inisub) :: cdat ( limit1 )  !! work: first inisub characters of the primary order-by column's entry in each row
-      real(wp) :: ddat ( limit1 )  !! work: d.p. entry of the primary order-by column in each row
-      integer(ip) :: idat ( limit1 )  !! work: integer entry of the primary order-by column in each row
-      character(1) :: nf ( limit1 )  !! work: null flag of the primary order-by column's entry in each row
-      integer(ip) :: ordvec ( limit1 )  !! work: order vector of the rows, sorted in parallel with the data
-   end type zzekjsrt_state
-
    ! ------------------------------------------------------------------ ZZEKJTST
 
    !> SPICE Private routine intended solely for the support of SPICE
@@ -3920,13 +3900,15 @@ module pepper_states
    !> zzekstop, zzekspsh, zzekspop, zzeksdec, zzeksupd, zzeksrd, zzekscln),
    !> held in pepper_context (one per thread).
    !>
-   !> No default initialization (10000016 bytes): see init_zzeksca_state.
+   !> PEPPER: the in-memory part grows as the stack does, up to MEMSIZ
+   !> integers (SPICELIB: 10 MB allocated by the first EK query of a
+   !> context), and the scratch DAS beyond it is opened when the stack
+   !> first goes past MEMSIZ (SPICELIB: by the first push).
    type, public :: zzeksca_state
-      logical :: return  !! unused (SPICELIB's declaration of the RETURN function, taken for a saved variable)
-      integer(ip) :: scrhan  !! handle of the scratch DAS file holding the stack beyond the in-memory part
-      integer(ip) :: scrtch ( memsiz )  !! in-memory part of the scratch stack (elements 1 to memsiz)
-      integer(ip) :: t  !! top of the scratch stack: number of integers in the scratch area
-      logical :: first  !! the scratch DAS is not open (set again by zzekscln after it is closed)
+      integer(ip) :: scrhan = 0  !! handle of the scratch DAS file holding the stack beyond the in-memory part
+      integer(ip), allocatable :: scrtch ( : )  !! in-memory part of the scratch stack (elements 1 to min(t, memsiz)); grows to memsiz
+      integer(ip) :: t = 0  !! top of the scratch stack: number of integers in the scratch area
+      logical :: first = .true.  !! the scratch DAS is not open (set again by zzekscln after it is closed)
    end type zzeksca_state
 
    ! ------------------------------------------------------------------ ZZEKSCAN
@@ -6519,17 +6501,6 @@ contains
       state%stfree = 1
    end subroutine init_zzdsksbf_state
 
-   !> Set the initial values of a new zzekjsrt_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_zzekjsrt_state(state)
-      type(zzekjsrt_state), intent(inout) :: state  !! the state
-      state%cdat = ' '
-      state%ddat = 0.0_wp
-      state%idat = 0
-      state%nf = ' '
-      state%ordvec = 0
-   end subroutine init_zzekjsrt_state
-
    !> Set the initial values of a new zzekjtst_state: SPICELIB's DATA
    !> values, and zero for the other components.
    pure subroutine init_zzekjtst_state(state)
@@ -6607,11 +6578,7 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_zzeksca_state(state)
       type(zzeksca_state), intent(inout) :: state  !! the state
-      state%return = .false.
-      state%scrhan = 0
-      state%scrtch = 0
-      state%t = 0
-      state%first = .true.
+      if (.not. allocated(state%scrtch)) allocate (state%scrtch(0))
    end subroutine init_zzeksca_state
 
    !> Set the initial values of a new zzelvupy_state: SPICELIB's DATA
