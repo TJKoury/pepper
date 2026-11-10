@@ -417,6 +417,21 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      characters, cut without an error, and 100 tokens).
    - **Tests:** `test_limits` (3000 surface names, a 60-character name, a
      150-surface method string of about 1100 characters).
+   - **SCLK type 1** (SC01, per context): the database's buffers and
+     clock table grow (an `int_map` of the clocks; SPICELIB: 100 clocks in
+     a hash table, emptied when full, and DBUFSZ numbers, about 2.6 MB
+     per context). No limit on coefficients (MXCOEF 100000 records,
+     `TOOMANYCOEFFS`) or partitions (MXPART 9999, `TOOMANYPARTITIONS`,
+     also SCLD01's `SIZEOUTOFRANGE`). ZZSCIN01, ZZSCAD01 and ZZSCUP01
+     work on the state and run before the type 1 routines' ASSOCIATE
+     blocks; tspice keeps copies of SPICELIB's array versions for
+     `F_ZZSC01`. SCENCD, SCDECD and SCPARS hold the partitions in arrays
+     of the clock's size (their saved MXPART work arrays, 240 KB per
+     routine and context, are gone; SPICELIB copied the partitions in
+     before checking their number). SCDECD formats any partition number
+     (PARTLN was 5 characters: 4 digits and the slash). Tests:
+     `test_limits` (100500 records, 12000 partitions, a string in
+     partition 10001, 150 clocks); tspice `F_ZZSC01`, `F_SCLK0`.
    - **Still fixed:** GF saves the occultation method strings in 500
      characters (`svfmth`, `svbmth`), and the geometry routines save the
      previous method in a fixed buffer (a longer method is only parsed

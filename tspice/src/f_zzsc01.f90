@@ -1920,7 +1920,11 @@
 !     The error will be trapped in ZZSCAD01.
 !
       CALL SCDECD( SC, 0.D0, CLKSTR )
-      CALL CHCKXC( .TRUE., 'SPICE(TOOMANYCOEFFS)', OK   )
+!
+!     PEPPER: no maximum number of coefficients (SPICELIB: MXCOEF,
+!     SPICE(TOOMANYCOEFFS)): the clock is loaded.
+!
+      CALL CHCKXC( .FALSE., ' ', OK   )
 
 !
 ! --- Case: ------------------------------------------------------
@@ -2098,7 +2102,13 @@
       CALL CHCKXC( .FALSE., ' ', OK   )
 
       CALL SCE2C ( SC, 1.D0, SCLKDP )
-      CALL CHCKXC ( .TRUE., 'SPICE(TOOMANYPARTITIONS)', OK )
+!
+!     PEPPER: no maximum number of partitions (SPICELIB: MXPART,
+!     SPICE(TOOMANYPARTITIONS)): the 10000 partitions are loaded; these
+!     made-up partitions do not cover ET 1, so the conversion fails for
+!     that reason.
+!
+      CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
 
 !
 !     Restore the correct parameters for clock -9.

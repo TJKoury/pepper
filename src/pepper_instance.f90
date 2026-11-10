@@ -308,8 +308,6 @@ module pepper_instance
       type(timout_state), allocatable :: timout_state  !! state of TIMOUT
       ! --- end pepper_time_api
       ! --- pepper_sclk_api
-      type(scdecd_state), allocatable :: scdecd_state  !! state of SCDECD
-      type(scencd_state), allocatable :: scencd_state  !! state of SCENCD
       ! --- end pepper_sclk_api
       ! --- pepper_ck_api
       type(ckgp_state), allocatable :: ckgp_state  !! state of CKGP
@@ -7187,64 +7185,30 @@ module pepper_instance
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+      module subroutine zzscin01 ( ctx )
       use pepper_inc_zzsc01
-         class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), intent(out) :: hdsclk ( * )  !! Array of heads of hash collision lists.
-         integer(ip), intent(out) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
-         integer(ip), intent(out) :: clklst ( * )  !! Array of SCLK codes.
-         integer(ip), intent(out) :: dpfree  !! Index of first free entry in d.p. data buffer.
-         integer(ip), intent(out) :: ifree  !! Index of first free entry in integer data buffer.
-         integer(ip), intent(out) :: prvsc  !! Previous SCLK ID code.
+         class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: its type 1 SCLK database is emptied)
       end subroutine zzscin01
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzscad01 ( ctx, sc, hdsclk, scpool, clklst, dpfree, dpbuff, ifree, intbuf, scbase, sclkat )
+      module subroutine zzscad01 ( ctx, sc, sclkat )
       use pepper_inc_errhnd
       use pepper_inc_zzsc01
-         class(pepper_context), intent(inout) :: ctx  !! the context
+         class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: its type 1 SCLK database grows)
          integer(ip), intent(in) :: sc  !! SCLK ID code.
-         integer(ip), intent(inout) :: hdsclk ( * )  !! Array of heads of hash collision lists.
-         integer(ip), intent(inout) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
-         integer(ip), intent(inout) :: clklst ( * )  !! Array of SCLK codes.
-         integer(ip), intent(inout) :: dpfree  !! Index of first free entry in d.p. data buffer.
-         real(wp), intent(inout) :: dpbuff ( * )  !! D.p. (double precision) data buffer
-         integer(ip), intent(inout) :: ifree  !! Index of first free entry in integer data buffer.
-         integer(ip), intent(inout) :: intbuf ( * )  !! Integer data buffer.
-         integer(ip), intent(inout) :: scbase ( * )  !! Base index in integer buffer corresponding to SC.
-         integer(ip), intent(out) :: sclkat  !! Index in CLKLST of SC.
+         integer(ip), intent(out) :: sclkat  !! Index of the clock in the database.
       end subroutine zzscad01
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzscup01 ( ctx, sc, polctr, hdsclk, scpool, clklst, dpfree, dpbuff, ifree, intbuf, scbase, prvsc, nfield, delcde, timsys, ncoeff, npart, cofbas, strbas, endbas, modbas, offbas )
+      module subroutine zzscup01 ( ctx, sc )
       use pepper_inc_zzsc01
       use pepper_inc_zzctr
-         class(pepper_context), intent(inout) :: ctx  !! the context
+         class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: the clock's data are made current in its database)
          integer(ip), intent(in) :: sc  !! SCLK ID code.
-         integer(ip), intent(inout) :: polctr ( ctrsiz )  !! Kernel pool update counter.
-         integer(ip), intent(inout) :: hdsclk ( * )  !! Array of heads of hash collision lists.
-         integer(ip), intent(inout) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
-         integer(ip), intent(inout) :: clklst ( * )  !! Array of SCLK codes.
-         integer(ip), intent(inout) :: dpfree  !! Index of first free entry in d.p. data buffer.
-         real(wp), intent(inout) :: dpbuff ( * )  !! Double precision SCLK data buffer.
-         integer(ip), intent(inout) :: ifree  !! Index of first free entry in integer data buffer.
-         integer(ip), intent(inout) :: intbuf ( * )  !! Integer SCLK data buffer.
-         integer(ip), intent(inout) :: scbase ( * )  !! Array of SCLK integer buffer base indices.
-         integer(ip), intent(inout) :: prvsc  !! Previous SCLK ID code.
-         integer(ip), intent(inout) :: nfield  !! Number of fields of current SCLK.
-         integer(ip), intent(inout) :: delcde  !! Delimiter code of current SCLK.
-         integer(ip), intent(inout) :: timsys  !! Time system code of current SCLK.
-         integer(ip), intent(inout) :: ncoeff  !! Number of coefficients current SCLK.
-         integer(ip), intent(inout) :: npart  !! Number of partitions of current SCLK.
-         integer(ip), intent(inout) :: cofbas  !! Base index of coefficients in d.p. buffer.
-         integer(ip), intent(inout) :: strbas  !! Base index of partition starts in d.p. buffer.
-         integer(ip), intent(inout) :: endbas  !! Base index of partition stops in d.p. buffer.
-         integer(ip), intent(inout) :: modbas  !! Base index of SCLK moduli in d.p. buffer.
-         integer(ip), intent(inout) :: offbas  !! Base index of SCLK offsets in d.p. buffer.
       end subroutine zzscup01
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -20156,6 +20120,22 @@ contains
       if (ios /= 0 .or. name == ' ') name = '<unavailable from the system>'
       call this%errch(marker, name)
    end subroutine ctx_errfnm
+
+   !> The number of partitions of a spacecraft clock (the size of its
+   !> SCLK_PARTITION_START kernel variable), at least 1: the room the
+   !> callers of SCPART allocate (PEPPER: SPICELIB used MXPART, 9999).
+   function sclk_partition_count(ctx, sc) result(n)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! the spacecraft clock ID
+      integer(ip) :: n  !! the number of partitions (at least 1)
+      character(40) :: name
+      character(1) :: type
+      logical :: found
+      write (name, '(a,i0)') 'SCLK_PARTITION_START_', -sc
+      call ctx%dtpool(name, found, n, type)
+      if (.not. found) n = 1
+      n = max(1_ip, n)
+   end function sclk_partition_count
 
    !> The name of the file with a DAF or DAS handle, whole (blank if no
    !> file has the handle).

@@ -970,7 +970,6 @@ contains
       integer(ip) :: nfield_1(1)  !! one-element copy of nfield (array argument)
       integer(ip), parameter :: msglen = 320
       integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: mxcofa = 3 * mxcoef
       integer(ip), parameter :: namlen = 80
       integer(ip), parameter :: nkitem = 9
       integer(ip), parameter :: cofidx = 1
@@ -997,8 +996,12 @@ contains
          0 ]
       integer(ip)           nf
       integer(ip)           nfield
+!
+!     PEPPER: no maximum number of coefficients or partitions (SPICELIB:
+!     3*MXCOEF and MXPART); the field counts keep MXNFLD (the format).
+!
       integer(ip), parameter :: ub ( nkitem ) = [ &
-         mxcofa, mxpart, mxpart, 1,&
+         huge(1_ip), huge(1_ip), huge(1_ip), 1,&
          mxnfld, mxnfld, 1, 1,&
          1 ]
       logical               found
@@ -1220,112 +1223,21 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: cleari
       use pepper_inc_zzsc01
       implicit none
-
-
-
-! $ Detailed_Input
 !
-!     None.
+!     PEPPER: the database is the context's sc01_state (growable arrays
+!     and a map of the clocks); emptying it keeps the arrays allocated.
 !
-! $ Detailed_Output
-!
-!     HDSCLK      is an array containing the head node indices of the
-!                 SCLK ID collision lists stored in SCPOOL. On output,
-!                 this array is zero-filled.
-!
-!     SCPOOL      is a singly linked list pool containing collision
-!                 lists for sets of SCLK IDs that have the same hash
-!                 values. On output, this data structure has the
-!                 initial state set by ZZHSIINI.
-!
-!     CLKLST      is an array of SCLK IDs, which is parallel to the
-!                 data portion of SCPOOL. Each allocated node of
-!                 SCPOOL is the index in CLKLST of the associated
-!                 SCLK ID. On output, this array is zero-filled.
-!
-!     DPFREE      is the index in the database's double precision
-!                 buffer of the first free element. On output, this
-!                 index is 1.
-!
-!     IFREE       is index in the database's integer buffer of the
-!                 first free element. On output, this index is 1.
-!
-!     PRVSC       is the previous ID code passed to the SC01 subsystem.
-!                 On output, this code is set to 0, which is never a
-!                 valid SCLK ID code.
-!
-! $ Parameters
-!
-!     See the include file zzsc01.inc.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     None. See usage in SC01.
-!
-! $ Restrictions
-!
-!     This is a SPICE-private routine. It should not
-!     be called directly by user application code.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 01-DEC-2021 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     initialize sclk type 1 database
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!`
-!-&
-
-!
-!     This routine must execute when SPICE error handling code is in
-!     the process of responding to an error, so this routine doesn't
-!     participate in SPICE error handling or tracing. The routines
-!     called here are error-free.
-!
-!     Initialize SC01 data structures.
-!
-!     ZZHSIINI won't signal an error as long as the parameter MXNCLK
-!     is positive, so we don't check FAILED here.
-!
-      call zzhsiini ( ctx, mxnclk, hdsclk, scpool )
-      call cleari   ( mxnclk, clklst         )
-
-      dpfree = 1
-      ifree  = 1
-      prvsc  = 0
-
+      if ( .not. allocated ( ctx%sc01_state ) ) then
+         allocate ( ctx%sc01_state )
+         call init_sc01_state ( ctx%sc01_state )
+      end if
+      call ctx%sc01_state%clkmap%clear ( )
+      ctx%sc01_state%nclk   = 0
+      ctx%sc01_state%dpfree = 1
+      ctx%sc01_state%ifree  = 1
+      ctx%sc01_state%prvsc  = 0
       return
       end procedure zzscin01
 
@@ -1532,6 +1444,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: movec
       use pepper_strings, only: suffix
+      use pepper_containers, only: grow
       use pepper_inc_errhnd
       use pepper_inc_zzsc01
       implicit none
@@ -1546,24 +1459,17 @@ contains
       integer(ip), parameter :: sysidx = delidx + 1
       integer(ip), parameter :: nkitem = sysidx
       integer(ip), parameter :: ndp = modidx
-      integer(ip), parameter :: mxcfsz = 3 * mxcoef
       character(1)          kvtype ( nkitem )
       character(namlen)     kvname ( nkitem )
       character(namlen), parameter :: namlst ( nkitem ) = [ character(namlen) :: &
          'SCLK01_COEFFICIENTS', 'SCLK_PARTITION_START', 'SCLK_PARTITION_END', 'SCLK01_OFFSETS',&
          'SCLK01_MODULI', 'SCLK01_N_FIELDS', 'SCLK01_OUTPUT_DELIM', 'SCLK01_TIME_SYSTEM' ]
-      character(smsgln)     shrtms
       integer(ip)           dpbase
-      integer(ip)           dproom
       integer(ip)           i
       integer(ip)           ibase
       integer(ip), parameter :: ibix ( nkitem ) = [ &
          ixbcof, ixbstr, ixbend, ixboff,&
          ixbmod, 0, 0, 0 ]
-      integer(ip)           iroom
-      integer(ip), parameter :: kvmaxn ( nkitem ) = [ &
-         mxcfsz, mxpart, mxpart, mxnfld,&
-         mxnfld, 1, 1, 1 ]
       integer(ip)           kvsize ( nkitem )
       integer(ip)           n
       integer(ip)           ncoeff
@@ -1573,173 +1479,31 @@ contains
       integer(ip)           npart
       integer(ip)           npartb
       integer(ip)           nparte
-      integer(ip)           nscavl
       integer(ip)           nsys
-      integer(ip)           prvsc
       logical               found
-      logical               new
+!
+!     PEPPER: works on the context's sc01_state, whose arrays grow: there
+!     is no limit on the number of clocks (SPICELIB: MXNCLK, 100, then the
+!     database was emptied) or on the coefficients and partitions of a
+!     clock (SPICELIB: MXCOEF, 100000, SPICE(TOOMANYCOEFFS); MXPART, 9999,
+!     SPICE(TOOMANYPARTITIONS)). The offsets and moduli still have at
+!     most MXNFLD values (the SCLK format's limit on fields).
+!
+      sclkat = 0
       if ( ctx%failed() ) return
-
-!
-!     Make up a list of names of kernel variables that we'll use.
-!     The first name in the list is SCLK_KERNEL_ID, which does not
-!     require the addition of a spacecraft code suffix.  For the
-!     rest of the names, we'll have to add the suffix.
-!
       call movec ( namlst, nkitem, kvname )
-
       do i = 1, nkitem
          call suffix ( '_#',        0,         kvname(i) )
          call repmi  ( ctx, kvname(i),  '#',  -sc,  kvname(i) )
       end do
-
-!
-!     Check available room in the clock hash and in the numeric data
-!     buffers. If there's no room, re-initialize the entire data
-!     structure.
-!
-      call zzhsiavl ( ctx, scpool, nscavl )
-
-      if ( nscavl == 0 ) then
-
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-
-      end if
-
-!
-!     Add this clock to the hash.
-!
-      call zzhsiadd ( ctx, hdsclk, scpool, clklst, sc, sclkat, new )
-
-      if ( ctx%failed() ) then
-!
-!        This code should be unreachable but is provided for safety.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         return
-
-      end if
-
-!
-!     Check room in the integer buffer.
-!
-      iroom = ibufsz + 1 - ifree
-
-      if (  ( iroom < nivals ) .or. ( iroom > ibufsz )  ) then
-!
-!        This code should be unreachable but is provided for safety.
-!
-         i = ifree
-
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-
-         call ctx%setmsg ( 'IROOM was #; must be in range #:#. ' &
-         //            'IFREE was #; must be in range 1:#.' )
-         call ctx%errint ( '#', iroom    )
-         call ctx%errint ( '#', nivals   )
-         call ctx%errint ( '#', ibufsz   )
-         call ctx%errint ( '#', i        )
-         call ctx%errint ( '#', ibufsz+1 )
-         call ctx%sigerr ( 'SPICE(BUG)'  )
-         return
-
-      end if
-
-!
-!     Compute available room for double precision data.
-!
-      dproom = dbufsz + 1 - dpfree
-
-      if (  ( dproom < 0 ) .or. ( dproom > dbufsz )  ) then
-!
-!        This code should be unreachable but is provided for safety.
-!
-         i = dpfree
-
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-
-         call ctx%setmsg ( 'DPROOM was #; must be in range 0:#. ' &
-         //            'DPFREE was #; must be in range 1:#.' )
-         call ctx%errint ( '#', dproom   )
-         call ctx%errint ( '#', dbufsz   )
-         call ctx%errint ( '#', i        )
-         call ctx%errint ( '#', dbufsz+1 )
-         call ctx%sigerr ( 'SPICE(BUG)'  )
-         return
-
-      end if
-
-!
-!     Set the base address for the next item to be added to the
-!     integer buffer. The index of the first element of the item
-!     is the successor of IBASE.
-!
-      ibase            = ifree-1
-      scbase( sclkat ) = ibase
-
-!
-!     Fetch from the kernel pool the integer items we need:
-!
-!        -  The number of fields in an (unabridged) SCLK string
-!        -  The output delimiter code
-!        -  The parallel time system code (optional; defaults to TDB)
-!
-      call scli01 ( ctx, namlst(nflidx), sc, 1, n,    intbuf(ibase+ixnfld) )
-      call scli01 ( ctx, namlst(delidx), sc, 1, n,    intbuf(ibase+ixdlim) )
-      call scli01 ( ctx, namlst(sysidx), sc, 1, nsys, intbuf(ibase+ixtsys) )
-
-      if ( ctx%failed() ) then
-
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         return
-
-      end if
-
-!
-!     The time system code need not be provided in the kernel pool.
-!     Set it to the default value if it's not present.
-!
-      if ( nsys == 0 ) then
-         intbuf(ibase+ixtsys) = tdb
-      end if
-
-!
-!     Check for presence in the kernel pool of all required d.p. kernel
-!     variables.
-!
-!     Get and check the sizes of the d.p. arrays: coefficients,
-!     partitions, moduli, and offsets.
-!
-!     We obtain sizes of d.p. kernel variables rather than using sizes
-!     returned by SCLD01 because we'll read data directly into our
-!     passed-in buffers. We need to know in advance how much room is
-!     needed.
-!
       do i = 1, ndp
-
          call dtpool ( ctx, kvname(i), found, kvsize(i), kvtype(i) )
-
          if ( ctx%failed() ) then
-!
-!           This code should be unreachable but is provided for
-!           safety. Initialize local data structures. ZZSCIN01 sets
-!           PRVSC to 0.
-!
-            call zzscin01 ( ctx, hdsclk, scpool, clklst, &
-                            dpfree, ifree,  prvsc  )
-
+            call zzscin01 ( ctx )
             return
-
          end if
-
-!
-!        Check that each required d.p. kernel variable was found.
-!
          if ( .not. found ) then
-
-            call zzscin01 ( ctx, hdsclk, scpool, clklst, &
-                            dpfree, ifree,  prvsc  )
-
+            call zzscin01 ( ctx )
             call ctx%setmsg ( 'Kernel variable # for spacecraft clock ' &
             //            '# was not found. An SCLK kernel for ' &
             //            'this clock may not have been loaded.'   )
@@ -1747,70 +1511,29 @@ contains
             call ctx%errint ( '#', sc                                  )
             call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'               )
             return
-
          end if
-
-!
-!        Check the number of values associated with the kernel
-!        variable.
-!
-         if ( kvsize(i) > kvmaxn(i) ) then
-
-            call zzscin01 ( ctx, hdsclk, scpool, clklst, &
-                            dpfree, ifree,  prvsc  )
-
+         if (       ( i == offidx .or. i == modidx ) &
+              .and. ( kvsize(i) > mxnfld ) ) then
+            call zzscin01 ( ctx )
             call ctx%setmsg ( 'The number of values associated with ' &
             //            'the kernel variable # for clock # ' &
             //            'is #, which exceeds the limit #.'     )
             call ctx%errch  ( '#', kvname(i)                         )
             call ctx%errint ( '#', sc                                )
             call ctx%errint ( '#', kvsize(i)                         )
-            call ctx%errint ( '#', kvmaxn(i)                         )
-!
-!           Customize the short error message a bit.
-!
-            if ( i == cofidx ) then
-
-               shrtms = 'SPICE(TOOMANYCOEFFS)'
-
-            else if (     ( i == prsidx ) &
-                     .or. ( i == preidx ) ) then
-
-               shrtms = 'SPICE(TOOMANYPARTITIONS)'
-            else
-               shrtms = 'SPICE(KERNELVARTOOLARGE)'
-            end if
-
-            call ctx%sigerr (  shrtms    )
+            call ctx%errint ( '#', mxnfld                            )
+            call ctx%sigerr ( 'SPICE(KERNELVARTOOLARGE)'             )
             return
-
          end if
-
       end do
-
-!
-!     Store kernel variable sizes as scalars for convenience.
-!
       ncoeff = kvsize(cofidx)
       npartb = kvsize(prsidx)
       nparte = kvsize(preidx)
       nmod   = kvsize(modidx)
       noff   = kvsize(offidx)
-
-!
-!     NDPVAL is the number of d.p. values that must be buffered to
-!     support this clock.
-!
       ndpval = ncoeff + npartb + nparte + nmod + noff
-
-!
-!     Check whether sizes of partition start and end kernel variables
-!     match.
-!
       if ( npartb /= nparte  ) then
-
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-
+         call zzscin01 ( ctx )
          call ctx%setmsg ( 'The numbers of partition start times # and ' &
          //            'stop times # are unequal for spacecraft ' &
          //            'clock #.'                                  )
@@ -1819,100 +1542,46 @@ contains
          call ctx%errint ( '#', sc                                     )
          call ctx%sigerr ( 'SPICE(NUMPARTSUNEQUAL)'                    )
          return
-
       else
          npart = npartb
       end if
-
-      if ( ndpval > dbufsz ) then
 !
-!        We couldn't make enough room even if we dumped all buffered
-!        data.
+!     Make room for the clock (the arrays grow; nothing is emptied).
 !
-!        This code should be unreachable but is provided for safety.
-!        We've already checked the existence, types, and sizes of the
-!        d.p. kernel variables.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-
-         call ctx%setmsg ( 'Total number of double precision data ' &
-         //            'values for SCLK # is #; this count exceeds ' &
-         //            'the maximum supported count #.' )
-         call ctx%errint ( '#', sc                          )
-         call ctx%errint ( '#', ndpval                      )
-         call ctx%errint ( '#', dbufsz                      )
-         call ctx%sigerr ( 'SPICE(BUG)'                     )
+      associate ( s => ctx%sc01_state )
+      call grow ( s%scbase, s%nclk + 1 )
+      call grow ( s%intbuf, s%ifree + nivals - 1 )
+      call grow ( s%dpbuff, s%dpfree + ndpval - 1 )
+      ibase = s%ifree - 1
+      call scli01 ( ctx, namlst(nflidx), sc, 1, n,    s%intbuf(ibase+ixnfld:) )
+      call scli01 ( ctx, namlst(delidx), sc, 1, n,    s%intbuf(ibase+ixdlim:) )
+      call scli01 ( ctx, namlst(sysidx), sc, 1, nsys, s%intbuf(ibase+ixtsys:) )
+      if ( ctx%failed() ) then
+         call zzscin01 ( ctx )
          return
-
-      else if ( ndpval > dproom ) then
-!
-!        We don't have room for this clock, but we will if we dump
-!        the existing buffered data.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-
       end if
-
-!
-!     Store in the integer buffer the sizes of the coefficient array
-!     and the number of partitions.
-!
-      intbuf( ibase+ixncof ) = ncoeff
-      intbuf( ibase+ixnprt ) = npart
-
-!
-!     Fetch from the kernel pool the d.p. items we need:
-!
-!        -  The SCLK coefficients array
-!        -  The partition start times
-!        -  The partition end times
-!        -  The moduli of the fields of an SCLK string
-!        -  The offsets for each clock field.
-!
-!     Set the base index in the d.p. buffer of the next d.p. item
-!     to store. The first element of the item has index DPBASE+1.
-!
-!     We don't update DPFREE until all d.p. data have been fetched
-!     successfully.
-!
-      dpbase = dpfree - 1
-
+      if ( nsys == 0 ) then
+         s%intbuf(ibase+ixtsys) = tdb
+      end if
+      s%intbuf( ibase+ixncof ) = ncoeff
+      s%intbuf( ibase+ixnprt ) = npart
+      dpbase = s%dpfree - 1
       do i = 1, ndp
-!
-!        Store in the integer buffer the base index in the d.p.
-!        buffer of the kernel variable's values.
-!
-         intbuf( ibase + ibix(i) ) = dpbase
-!
-!        Fetch d.p. values into buffer.
-!
-         call scld01 ( ctx, namlst(i), sc, &
-                       kvmaxn(i), n,  dpbuff(dpbase + 1) )
-
+         s%intbuf( ibase + ibix(i) ) = dpbase
+         call scld01 ( ctx, namlst(i), sc, max ( 1_ip, kvsize(i) ), n, s%dpbuff(dpbase + 1:) )
          if ( ctx%failed() ) then
-!
-!           This code could be reached if the kernel variable has
-!           character type.
-!
-            call zzscin01 ( ctx, hdsclk, scpool, clklst, &
-                            dpfree, ifree,  prvsc  )
-
+            call zzscin01 ( ctx )
             return
-
          end if
-!
-!        Update the d.p. buffer base index.
-!
          dpbase = dpbase + n
-
       end do
-
-!
-!     Account for buffer usage for the new clock.
-!
-      dpfree = dpfree + ndpval
-      ifree  = ifree  + nivals
-
+      s%nclk           = s%nclk + 1
+      sclkat           = s%nclk
+      s%scbase(sclkat) = ibase
+      call s%clkmap%set ( sc, sclkat )
+      s%dpfree = s%dpfree + ndpval
+      s%ifree  = s%ifree  + nivals
+      end associate
       return
       end procedure zzscad01
 
@@ -1939,409 +1608,55 @@ contains
 !!
 !! ## Declarations
 !!
-      use pepper_kinds, only: ip, wp
+      use pepper_kinds, only: ip
       use pepper_inc_zzsc01
+      use pepper_inc_zzctr
       implicit none
-
-
-
-! $ Detailed_Input
-!
-!     SC          is the SCLK ID of a type 1 clock. Data for this clock
-!                 are to be added to the type 1 database.
-!
-!     POLCTR      is the type 1 SCLK database's kernel pool tracking
-!                 counter.
-!
-!     HDSCLK      is an array containing the head node indices of the
-!                 SCLK ID collision lists stored in SCPOOL.
-!
-!     SCPOOL      is a singly linked list pool containing collision
-!                 lists for sets of SCLK IDs that have the same hash
-!                 values.
-!
-!     CLKLST      is an array of SCLK IDs, which is parallel to the
-!                 data portion of SCPOOL. Each allocated node of
-!                 SCPOOL is the index in CLKLST of the associated
-!                 SCLK ID.
-!
-!     DPFREE      is index in the database's double precision buffer of
-!                 the first free element.
-!
-!     DPBUFF      is the double precision buffer of the type 1
-!                 database.
-!
-!     IFREE       is index in the database's integer buffer of the
-!                 first free element.
-!
-!     INTBUF      is the integer buffer of the type 1 database.
-!
-!     SCBASE      is an array of base addresses in the array INTBUF of
-!                 the integer data sets associated with the clocks
-!                 in the type 1 database. The Ith element of SCBASE is
-!                 the base address of the clock at index I in the
-!                 array CLKLST.
-!
-!                 The "base" address of an integer data set immediately
-!                 precedes the first index of that data set: the index
-!                 in INTBUF of the first element of the integer data of
-!                 CLKLST(I) is SCBASE(I)+1.
-!
-!     PRVSC       is the SCLK ID code of the type 1 clock seen on the
-!                 previous, successful call to any SC01 entry point. If
-!                 the last call was unsuccessful, or if the current
-!                 call is the first, PRVSC will be 0, which is never a
-!                 valid SCLK ID code. If a clock of type other than 1
-!                 was seen by SCTY01 on the previous call, PRVSC will
-!                 be 0.
-!
-!     NFIELD      is the number of fields of the type 1 SCLK seen on
-!                 the previous, successful call to any SC01 entry
-!                 point. NFIELD is valid only if PRVSC is non-zero.
-!
-!     DELCDE      is the delimiter code of the type 1 SCLK seen on the
-!                 previous, successful call to any SC01 entry point.
-!                 DELCDE is valid only if PRVSC is non-zero.
-!
-!     TIMSYS      is the parallel time system of the type 1 SCLK seen
-!                 on the previous, successful call to any SC01 entry
-!                 point. TIMSYS is valid only if PRVSC is non-zero.
-!
-!     NCOEFF      is the number of individual coefficients of the type
-!                 1 SCLK seen on the previous, successful call to any
-!                 SC01 entry point. NCOEFF is valid only if PRVSC is
-!                 non-zero.
-!
-!     NPART       is the number partitions of the type 1 SCLK seen on
-!                 the previous, successful call to any SC01 entry
-!                 point. NPART is valid only if PRVSC is non-zero.
-!
-!     COFBAS      is the base index in the double precision buffer of
-!                 the set of SCLK coefficients of the type 1 SCLK seen
-!                 on the previous, successful call to any SC01 entry
-!                 point. COFBAS is valid only if PRVSC is non-zero.
-!
-!                 The first coefficient associated with PRVSC is
-!                 located at index COFBAS+1.
-!
-!     STRBAS      is the base index in the double precision buffer of
-!                 the set of partition start times of the type 1 SCLK
-!                 seen on the previous, successful call to any SC01
-!                 entry point. STRBAS is valid only if PRVSC is
-!                 non-zero.
-!
-!                 The first partition start time associated with PRVSC
-!                 is located at index STRBAS+1.
-!
-!     ENDBAS      is the base index in the double precision buffer of
-!                 the set of partition end times of the type 1 SCLK
-!                 seen on the previous, successful call to any SC01
-!                 entry point. ENDBAS is valid only if PRVSC is
-!                 non-zero.
-!
-!                 The first partition end time associated with PRVSC is
-!                 located at index ENDBAS+1.
-!
-!     MODBAS      is the base index in the double precision buffer of
-!                 the set of SCLK moduli of the type 1 SCLK seen on the
-!                 previous, successful call to any SC01 entry point.
-!                 MODBAS is valid only if PRVSC is non-zero.
-!
-!                 The first SCLK modulus associated with PRVSC is
-!                 located at index MODBAS+1.
-!
-!     OFFBAS      is the base index in the double precision buffer of
-!                 the set of SCLK offsets of the type 1 SCLK seen on
-!                 the previous, successful call to any SC01 entry
-!                 point. OFFBAS is valid only if PRVSC is non-zero.
-!
-!                 The first SCLK offset associated with PRVSC is
-!                 located at index OFFBAS+1.
-!
-! $ Detailed_Output
-!
-!     POLCTR      is the input kernel pool tracking counter, updated if
-!                 necessary to reflect a kernel pool update.
-!
-!     HDSCLK      is the input list head node array, updated if
-!                 necessary to reflect addition to the type 1 database
-!                 of data for a new clock.
-!
-!     SCPOOL      is the input singly linked list pool, updated if
-!                 necessary to reflect addition to the type 1 database
-!                 of data for a new clock.
-!
-!     CLKLST      is the input array of SCLK IDs, updated if necessary
-!                 to reflect addition to the type 1 database of data
-!                 for a new clock.
-!
-!     DPFREE      is the input index of the first free element of the
-!                 type 1 database's double precision buffer, updated if
-!                 necessary to reflect addition to the type 1 database
-!                 of data for a new clock.
-!
-!     DPBUFF      is the input double precision buffer of the type 1
-!                 database, updated if necessary to reflect addition to
-!                 the type 1 database of data for a new clock.
-!
-!     IFREE       is input index in the database's integer buffer of
-!                 the first free element, updated if necessary to
-!                 reflect addition to the type 1 database of data for a
-!                 new clock.
-!
-!     INTBUF      is the input integer buffer of the type 1 database,
-!                 updated if necessary to reflect addition to the type
-!                 1 database of data for a new clock.
-!
-!     SCBASE      is the input array of base addresses in the array
-!                 INTBUF, updated if necessary to reflect addition to
-!                 the type 1 database of data for a new clock.
-!
-!     PRVSC       is set to the input SC if the call to this routine
-!                 was successful. Otherwise PRVSC is set to zero.
-!
-!     NFIELD      is the number of fields of the type 1 SCLK designated
-!                 by SC.
-!
-!     DELCDE      is the delimiter code of the type 1 SCLK designated
-!                 by SC.
-!
-!     TIMSYS      is the parallel time system of the type 1 SCLK
-!                 designated by SC.
-!
-!     NCOEFF      is the number of individual coefficients of the type
-!                 1 SCLK designated by SC.
-!
-!     NPART       is the number partitions of the type 1 SCLK
-!                 designated by SC.
-!
-!     COFBAS      is the base index in the double precision buffer of
-!                 the set of SCLK coefficients of the type 1 SCLK
-!                 designated by SC.
-!
-!     STRBAS      is the base index in the double precision buffer of
-!                 the set of partition start times of the type 1 SCLK
-!                 designated by SC.
-!
-!     ENDBAS      is the base index in the double precision buffer of
-!                 the set of partition end times of the type 1 SCLK
-!                 designated by SC.
-!
-!     MODBAS      is the base index in the double precision buffer of
-!                 the set of SCLK moduli of the type 1 SCLK designated
-!                 by SC.
-!
-!     OFFBAS      is the base index in the double precision buffer of
-!                 the set of SCLK offsets of the type 1 SCLK
-!                 designated by SC.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the total number of double precision values associated
-!         with the input clock is greater than the double precision
-!         buffer size, the error will be signaled by a routine in the
-!         call tree of this routine.
-!
-!     2)  If the database contains entries for the maximum number
-!         of clocks and an addition is requested, the database will
-!         be re-initialized, and an entry for the new clock will be
-!         created. This case is not an error.
-!
-!     3)  If an error occurs while this routine looks up data from the
-!         kernel pool, the error will signaled by a routine in the call
-!         tree of this routine.
-!
-! $ Files
-!
-!     Appropriate kernels must be loaded by the calling program before
-!     this routine is called.
-!
-!     The following data are required:
-!
-!        - An SCLK kernel providing data for the SCLK designated by
-!          the input ID code SC.
-!
-!     In all cases, kernel data are normally loaded once per program
-!     run, NOT every time this routine is called.
-!
-! $ Particulars
-!
-!     This routine determines whether an update to the SCLK type 01
-!     database is needed and updates the database and associated
-!     SCLK parameter output arguments if so. Any updates to the kernel
-!     pool trigger SCLK database updates. If the database doesn't
-!     need to be updated, but the input SCLK ID doesn't match the
-!     SCLK ID from the previous, successful call to any SC01 entry
-!     point, as indicated by the condition
-!
-!         SC .EQ. PRVSC
-!
-!     then the output SCLK parameters are updated. If the input SCLK ID
-!     matches that of the previous, successful call to an entry point
-!     of SC01, and if the kernel pool has not been modified since that
-!     call, the database is left unchanged, and the output SCLK
-!     parameters are left untouched.
-!
-!     Note that a successful call to SCTY01 for a non-type 1 SCLK will
-!     leave PRVSC set to 0, so the condition above won't be met.
-!
-!     If the input SCLK ID doesn't match the previous one and the
-!     input ID is not present in the database, data for the input SCLK
-!     will be looked up from the kernel pool, if possible. If the
-!     required kernel pool data are found, the database is updated to
-!     reflect addition of the new clock, and the integer SCLK
-!     parameter output arguments are updated. If the data are not
-!     found, an error will be signaled.
-!
-!     The type 1 SCLK database uses an add-or-clear policy for data
-!     additions. If there is room in the SCLK ID hash and the data
-!     buffers, data for a new clock are added to the database. If there
-!     is not enough room, the database is re-initialized, after which
-!     data for the new clock are added. If a new clock has too much
-!     data to be buffered, an error is signaled.
-!
-!     Note that the database entry for a given SCLK is never updated
-!     with new data for that clock: if the data change, that means the
-!     kernel pool state has changed, so the type 01 SCLK database is
-!     re-initialized before data for the SCLK are fetched.
-!
-! $ Examples
-!
-!     None. See usage in SC01.
-!
-! $ Restrictions
-!
-!     This is a SPICE-private routine. It should not be called directly
-!     by user application code.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 01-DEC-2021 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     update current sclk data and type 1 sclk database
-!
-!-&
-
-! $ Revisions
-!
-!     None.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           ibase
       integer(ip)           sclkat
-
+      logical               found
       logical               samclk
       logical               update
-
+!
+!     PEPPER: works on the context's sc01_state (it may grow the
+!     database: callers do not hold ASSOCIATE names of its arrays).
+!
       if ( ctx%failed() ) return
-
-!
-!     Reinitialize local database if the kernel pool has been
-!     updated. The call below syncs POLCTR.
-!
-      call zzpctrck ( ctx, polctr, update )
-
+      associate ( s => ctx%sc01_state )
+      call zzpctrck ( ctx, s%polctr, update )
       if ( update ) then
-!
-!        Initialize local data structures.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, &
-                         dpfree, ifree,  prvsc )
-
+         call zzscin01 ( ctx )
          samclk = .false.
       else
-         samclk = ( sc /= 0 ) .and. ( sc == prvsc )
+         samclk = ( sc /= 0 ) .and. ( sc == s%prvsc )
       end if
-
-!
-!     Set the output arguments only if the clock has changed or if
-!     a kernel pool update has occurred.
-!
       if ( .not. samclk )  then
-!
-!        Look up the input clock. If the clock's information is not
-!        buffered, try to look up the information from the kernel pool.
-!
-         call zzhsichk ( ctx, hdsclk, scpool, clklst, sc, sclkat )
-
-         if ( sclkat == 0 ) then
-!
-!           This clock is unknown to the SC01 subsystem. Try to look up
-!           the clock's specification from the kernel pool.
-!
-            call zzscad01 ( ctx, sc,     hdsclk, scpool, clklst, dpfree, &
-                            dpbuff, ifree,  intbuf, scbase, sclkat )
-
+         call s%clkmap%get ( sc, sclkat, found )
+         if ( .not. found ) then
+            call zzscad01 ( ctx, sc, sclkat )
             if ( ctx%failed() ) then
-!
-!              ZZSCAD01 will have initialized the type 01 SCLK
-!              database; there's no need to do it again. Initialize
-!              the SCLK integer parameters.
-!
-               nfield = 0
-               delcde = 0
-               timsys = 0
-               ncoeff = 0
-               npart  = 0
-
-!
-!              Indicate valid data for the previous were not obtained.
-!
-               prvsc = 0
-
+               s%nfield = 0
+               s%delcde = 0
+               s%timsys = 0
+               s%ncoeff = 0
+               s%npart  = 0
+               s%prvsc  = 0
                return
-
             end if
-
          end if
-
-!
-!        IBASE is the base address in the integer buffer of the integer
-!        data for this clock.
-!
-         ibase = scbase( sclkat )
-
-!
-!        Set integer SCLK parameters to the correct values for
-!        the clock designated by SC.
-!
-         nfield = intbuf( ibase+ixnfld )
-         delcde = intbuf( ibase+ixdlim )
-         timsys = intbuf( ibase+ixtsys )
-         ncoeff = intbuf( ibase+ixncof )
-         npart  = intbuf( ibase+ixnprt )
-         cofbas = intbuf( ibase+ixbcof )
-         strbas = intbuf( ibase+ixbstr )
-         endbas = intbuf( ibase+ixbend )
-         modbas = intbuf( ibase+ixbmod )
-         offbas = intbuf( ibase+ixboff )
-
+         ibase    = s%scbase( sclkat )
+         s%nfield = s%intbuf( ibase+ixnfld )
+         s%delcde = s%intbuf( ibase+ixdlim )
+         s%timsys = s%intbuf( ibase+ixtsys )
+         s%ncoeff = s%intbuf( ibase+ixncof )
+         s%npart  = s%intbuf( ibase+ixnprt )
+         s%cofbas = s%intbuf( ibase+ixbcof )
+         s%strbas = s%intbuf( ibase+ixbstr )
+         s%endbas = s%intbuf( ibase+ixbend )
+         s%modbas = s%intbuf( ibase+ixbmod )
+         s%offbas = s%intbuf( ibase+ixboff )
       end if
-
+      end associate
       return
       end procedure zzscup01
 
@@ -3321,10 +2636,22 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
-      associate ( hdsclk => ctx%sc01_state%hdsclk, &
-                  scpool => ctx%sc01_state%scpool, &
-                  clklst => ctx%sc01_state%clklst, &
-                  scbase => ctx%sc01_state%scbase, &
+!
+!     PEPPER: make the clock's data current before the ASSOCIATE block
+!     (the database may grow).
+!
+      if ( ctx%failed() ) return
+      if ( ctx%sc01_state%pass1 ) then
+         call zzscin01 ( ctx )
+         call zzctruin ( ctx, ctx%sc01_state%polctr )
+         ctx%sc01_state%pass1 = .false.
+      end if
+      call zzscup01 ( ctx, sc )
+      if ( ctx%failed() ) then
+         ctx%sc01_state%pass1 = .true.
+         return
+      end if
+      associate ( scbase => ctx%sc01_state%scbase, &
                   cmp => ctx%sc01_state%cmp, &
                   error => ctx%sc01_state%error, &
                   cmptks => ctx%sc01_state%cmptks, &
@@ -3349,36 +2676,11 @@ contains
                   pass1 => ctx%sc01_state%pass1 )
       if ( ctx%failed() ) return
 
-      if ( pass1 ) then
-!
-!        Initialize local data structures. This routine is error-free.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         call zzctruin ( ctx, polctr )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      call zzscup01 ( ctx, sc,     polctr, hdsclk, scpool, clklst, dpfree, &
-                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
-                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
-                      endbas, modbas, offbas )
-
-      if ( ctx%failed() ) then
-!
-!        For safety, initialize the database on the next call to
-!        any entry point of SC01. Setting PASS1 to .TRUE.
-!        accomplishes this.
-!
-         pass1 = .true.
-
-         return
-      end if
 
 !
 !     If our clock string is blank, we can stop now.
@@ -3799,10 +3101,22 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
-      associate ( hdsclk => ctx%sc01_state%hdsclk, &
-                  scpool => ctx%sc01_state%scpool, &
-                  clklst => ctx%sc01_state%clklst, &
-                  scbase => ctx%sc01_state%scbase, &
+!
+!     PEPPER: make the clock's data current before the ASSOCIATE block
+!     (the database may grow).
+!
+      if ( ctx%failed() ) return
+      if ( ctx%sc01_state%pass1 ) then
+         call zzscin01 ( ctx )
+         call zzctruin ( ctx, ctx%sc01_state%polctr )
+         ctx%sc01_state%pass1 = .false.
+      end if
+      call zzscup01 ( ctx, sc )
+      if ( ctx%failed() ) then
+         ctx%sc01_state%pass1 = .true.
+         return
+      end if
+      associate ( scbase => ctx%sc01_state%scbase, &
                   cmp => ctx%sc01_state%cmp, &
                   cmptks => ctx%sc01_state%cmptks, &
                   cmpval => ctx%sc01_state%cmpval, &
@@ -3833,37 +3147,11 @@ contains
 !     clock ID changes, we will set watches on the SCLK kernel
 !     variables for the current clock.
 !
-      if ( pass1 ) then
-!
-!        Initialize local data structures. This routine is error-free.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         call zzctruin ( ctx, polctr )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      call zzscup01 ( ctx, sc,     polctr, hdsclk, scpool, clklst, dpfree, &
-                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
-                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
-                      endbas, modbas, offbas )
-
-      if ( ctx%failed() ) then
-!
-!        For safety, initialize the database on the next call to
-!        any entry point of SC01. Setting PASS1 to .TRUE.
-!        accomplishes this.
-!
-         pass1 = .true.
-
-         return
-
-      end if
 !
 !     Determine how many ticks each field is worth.
 !
@@ -4290,10 +3578,22 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
-      associate ( hdsclk => ctx%sc01_state%hdsclk, &
-                  scpool => ctx%sc01_state%scpool, &
-                  clklst => ctx%sc01_state%clklst, &
-                  scbase => ctx%sc01_state%scbase, &
+!
+!     PEPPER: make the clock's data current before the ASSOCIATE block
+!     (the database may grow).
+!
+      if ( ctx%failed() ) return
+      if ( ctx%sc01_state%pass1 ) then
+         call zzscin01 ( ctx )
+         call zzctruin ( ctx, ctx%sc01_state%polctr )
+         ctx%sc01_state%pass1 = .false.
+      end if
+      call zzscup01 ( ctx, sc )
+      if ( ctx%failed() ) then
+         ctx%sc01_state%pass1 = .true.
+         return
+      end if
+      associate ( scbase => ctx%sc01_state%scbase, &
                   dpbuff => ctx%sc01_state%dpbuff, &
                   partim => ctx%sc01_state%partim, &
                   cofbas => ctx%sc01_state%cofbas, &
@@ -4316,33 +3616,11 @@ contains
                   pass1 => ctx%sc01_state%pass1 )
       if ( ctx%failed() ) return
 
-      if ( pass1 ) then
-!
-!        Initialize local data structures. This routine is error-free.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         call zzctruin ( ctx, polctr )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      call zzscup01 ( ctx, sc,     polctr, hdsclk, scpool, clklst, dpfree, &
-                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
-                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
-                      endbas, modbas, offbas )
-
-      if ( ctx%failed() ) then
-
-         pass1 = .true.
-
-         return
-
-      end if
 
 !
 !     To check whether SCLKDP is in range, we must find the end time
@@ -4831,10 +4109,22 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
-      associate ( hdsclk => ctx%sc01_state%hdsclk, &
-                  scpool => ctx%sc01_state%scpool, &
-                  clklst => ctx%sc01_state%clklst, &
-                  scbase => ctx%sc01_state%scbase, &
+!
+!     PEPPER: make the clock's data current before the ASSOCIATE block
+!     (the database may grow).
+!
+      if ( ctx%failed() ) return
+      if ( ctx%sc01_state%pass1 ) then
+         call zzscin01 ( ctx )
+         call zzctruin ( ctx, ctx%sc01_state%polctr )
+         ctx%sc01_state%pass1 = .false.
+      end if
+      call zzscup01 ( ctx, sc )
+      if ( ctx%failed() ) then
+         ctx%sc01_state%pass1 = .true.
+         return
+      end if
+      associate ( scbase => ctx%sc01_state%scbase, &
                   dpbuff => ctx%sc01_state%dpbuff, &
                   partim => ctx%sc01_state%partim, &
                   cofbas => ctx%sc01_state%cofbas, &
@@ -4857,33 +4147,11 @@ contains
                   pass1 => ctx%sc01_state%pass1 )
       if ( ctx%failed() ) return
 
-      if ( pass1 ) then
-!
-!        Initialize local data structures. This routine is error-free.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         call zzctruin ( ctx, polctr )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      call zzscup01 ( ctx, sc,     polctr, hdsclk, scpool, clklst, dpfree, &
-                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
-                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
-                      endbas, modbas, offbas )
-
-      if ( ctx%failed() ) then
-
-         pass1 = .true.
-
-         return
-
-      end if
 
 !
 !     Convert the input TDB time to the parallel time system, if the
@@ -5348,10 +4616,22 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
-      associate ( hdsclk => ctx%sc01_state%hdsclk, &
-                  scpool => ctx%sc01_state%scpool, &
-                  clklst => ctx%sc01_state%clklst, &
-                  scbase => ctx%sc01_state%scbase, &
+!
+!     PEPPER: make the clock's data current before the ASSOCIATE block
+!     (the database may grow).
+!
+      if ( ctx%failed() ) return
+      if ( ctx%sc01_state%pass1 ) then
+         call zzscin01 ( ctx )
+         call zzctruin ( ctx, ctx%sc01_state%polctr )
+         ctx%sc01_state%pass1 = .false.
+      end if
+      call zzscup01 ( ctx, sc )
+      if ( ctx%failed() ) then
+         ctx%sc01_state%pass1 = .true.
+         return
+      end if
+      associate ( scbase => ctx%sc01_state%scbase, &
                   dpbuff => ctx%sc01_state%dpbuff, &
                   partim => ctx%sc01_state%partim, &
                   cofbas => ctx%sc01_state%cofbas, &
@@ -5374,33 +4654,11 @@ contains
                   pass1 => ctx%sc01_state%pass1 )
       if ( ctx%failed() ) return
 
-      if ( pass1 ) then
-!
-!        Initialize local data structures. This routine is error-free.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         call zzctruin ( ctx, polctr )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Get parameters and data for this clock from the type 1 database.
 !     Update the database if necessary.
 !
-      call zzscup01 ( ctx, sc,     polctr, hdsclk, scpool, clklst, dpfree, &
-                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
-                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
-                      endbas, modbas, offbas )
-
-      if ( ctx%failed() ) then
-
-         pass1 = .true.
-
-         return
-
-      end if
 
 !
 !     Convert the input TDB time to the parallel time system, if the
@@ -5731,18 +4989,12 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
-      associate ( hdsclk => ctx%sc01_state%hdsclk, &
-                  scpool => ctx%sc01_state%scpool, &
-                  clklst => ctx%sc01_state%clklst, &
-                  scbase => ctx%sc01_state%scbase, &
-                  dpbuff => ctx%sc01_state%dpbuff, &
-                  cofbas => ctx%sc01_state%cofbas, &
+      associate ( cofbas => ctx%sc01_state%cofbas, &
                   delcde => ctx%sc01_state%delcde, &
                   dpfree => ctx%sc01_state%dpfree, &
                   end => ctx%sc01_state%end, &
                   endbas => ctx%sc01_state%endbas, &
                   ifree => ctx%sc01_state%ifree, &
-                  intbuf => ctx%sc01_state%intbuf, &
                   modbas => ctx%sc01_state%modbas, &
                   ncoeff => ctx%sc01_state%ncoeff, &
                   nfield => ctx%sc01_state%nfield, &
@@ -5765,7 +5017,7 @@ contains
 !
 !        Initialize local data structures.
 !
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call zzscin01 ( ctx )
          call zzctruin ( ctx, polctr )
 
          pass1 = .false.
@@ -5787,7 +5039,7 @@ contains
 !
 !        Initialize local data structures.
 !
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         call zzscin01 ( ctx )
 
          samclk = .false.
 
@@ -5858,10 +5110,7 @@ contains
 !        call to any SC01 entry point. Update the SCLK parameters and,
 !        if necessary, the database.
 !
-         call zzscup01( ctx, sc,     polctr, hdsclk, scpool, clklst, dpfree, &
-                        dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
-                        delcde, timsys, ncoeff, npart,  cofbas, strbas, &
-                        endbas, modbas, offbas )
+         call zzscup01 ( ctx, sc )
 
          if ( ctx%failed() ) then
 
@@ -5990,10 +5239,22 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
-      associate ( hdsclk => ctx%sc01_state%hdsclk, &
-                  scpool => ctx%sc01_state%scpool, &
-                  clklst => ctx%sc01_state%clklst, &
-                  scbase => ctx%sc01_state%scbase, &
+!
+!     PEPPER: make the clock's data current before the ASSOCIATE block
+!     (the database may grow).
+!
+      if ( ctx%failed() ) return
+      if ( ctx%sc01_state%pass1 ) then
+         call zzscin01 ( ctx )
+         call zzctruin ( ctx, ctx%sc01_state%polctr )
+         ctx%sc01_state%pass1 = .false.
+      end if
+      call zzscup01 ( ctx, sc )
+      if ( ctx%failed() ) then
+         ctx%sc01_state%pass1 = .true.
+         return
+      end if
+      associate ( scbase => ctx%sc01_state%scbase, &
                   dpbuff => ctx%sc01_state%dpbuff, &
                   cofbas => ctx%sc01_state%cofbas, &
                   delcde => ctx%sc01_state%delcde, &
@@ -6014,33 +5275,11 @@ contains
                   pass1 => ctx%sc01_state%pass1 )
       if ( ctx%failed() ) return
 
-      if ( pass1 ) then
-!
-!        Initialize local data structures. This routine is error-free.
-!
-         call zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
-         call zzctruin ( ctx, polctr )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Get partition data for this clock. Update the type 1 database
 !     if necessary.
 !
-      call zzscup01 ( ctx, sc,     polctr, hdsclk, scpool, clklst, dpfree, &
-                      dpbuff, ifree,  intbuf, scbase, prvsc,  nfield, &
-                      delcde, timsys, ncoeff, npart,  cofbas, strbas, &
-                      endbas, modbas, offbas )
-
-      if ( ctx%failed() ) then
-
-         pass1 = .true.
-
-         return
-
-      end if
 
 !
 !     Set the output partition arguments.

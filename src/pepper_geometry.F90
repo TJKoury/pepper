@@ -47360,6 +47360,8 @@ contains
       use pepper_strings, only: cpos, nparsi, repmc
       use pepper_inc_sclk
       implicit none
+      real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
+      integer(ip)           npmax
 
 
 
@@ -47754,9 +47756,6 @@ contains
       character(255)        psmsg
       character(255)        strerr
 
-      real(wp)              pstart   ( mxpart )
-      real(wp)              pstop    ( mxpart )
-      real(wp)              ptotls   ( mxpart )
       real(wp)              ticks
 
       integer(ip)           dtype
@@ -47809,6 +47808,12 @@ contains
 !     Read the partition start and stop times (in ticks) for this
 !     mission. Error if there are too many of them.
 !
+!
+!     PEPPER: the partitions go to arrays of the clock's size (SPICELIB
+!     used arrays of MXPART, 9999, and SPICE(TOOMANYPARTS) for more).
+!
+      npmax = sclk_partition_count ( ctx, sc )
+      allocate ( pstart(npmax), pstop(npmax), ptotls(npmax) )
       call scpart ( ctx, sc, nparts, pstart, pstop )
 
       if ( ctx%failed() ) then
@@ -47821,19 +47826,6 @@ contains
 
       end if
 
-      if ( nparts > mxpart ) then
-!
-!        This code should be unreachable but is provided for safety.
-!
-         call ctx%setmsg ( 'The number of partitions, #, for spacecraft ' // &
-                       '# exceeds the value for parameter MXPART, #.' )
-         call ctx%errint ( '#', nparts           )
-         call ctx%errint ( '#', sc               )
-         call ctx%errint ( '#', mxpart           )
-         call ctx%sigerr ( 'SPICE(TOOMANYPARTS)' )
-         return
-
-      end if
 
 !
 !     First check if the string is blank.

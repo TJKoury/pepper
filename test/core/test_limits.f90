@@ -5,7 +5,8 @@
 !> read from many DAFs in turn (DAFEC's table), and the kernel pool past
 !> its limits (variables, values, name and string lengths), and more
 !> kernel frames than FRAMEX's caches held (5209), body names past
-!> ZZBODTRN's limits, and surface names past ZZSRFTRN's.
+!> ZZBODTRN's limits, surface names past ZZSRFTRN's, and type 1 SCLKs past
+!> SC01's.
 program test_limits
 
    use pepper_kinds, only: ip, wp
@@ -30,6 +31,7 @@ program test_limits
    call test_frames()
    call test_bodies()
    call test_surfaces()
+   call test_sclk()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -552,5 +554,77 @@ contains
       call ctx%clpool()
       call check_ok('surfaces')
    end subroutine test_surfaces
+
+   !> Define a type 1 spacecraft clock in the pool: two fields (moduli
+   !> 1000000 and 256: 256 ticks per second), TDB, NPART partitions of
+   !> 102400 ticks each, NREC coefficient records 40 s apart (one second
+   !> per unit of the first field), so that the encoded SCLK is 256 times
+   !> the TDB.
+   subroutine define_clock(sc, npart, nrec)
+      integer(ip), intent(in) :: sc  !! the clock ID (negative)
+      integer(ip), intent(in) :: npart  !! number of partitions
+      integer(ip), intent(in) :: nrec  !! number of coefficient records
+      real(wp), allocatable :: coef(:), pstart(:), pend(:)
+      character(40) :: id
+      integer(ip) :: k
+      write (id, '(i0)') -sc
+      allocate (coef(3*nrec), pstart(npart), pend(npart))
+      do k = 1, nrec
+         coef(3*k - 2) = 256.0_wp*40*(k - 1)
+         coef(3*k - 1) = 40.0_wp*(k - 1)
+         coef(3*k) = 1.0_wp  ! seconds per unit of the first field (256 ticks)
+      end do
+      pstart = 0
+      pend = 102400
+      call ctx%pipool('SCLK_DATA_TYPE_' // trim(id), 1_ip, [1_ip])
+      call ctx%pipool('SCLK01_TIME_SYSTEM_' // trim(id), 1_ip, [1_ip])
+      call ctx%pipool('SCLK01_N_FIELDS_' // trim(id), 1_ip, [2_ip])
+      call ctx%pdpool('SCLK01_MODULI_' // trim(id), 2_ip, [1000000.0_wp, 256.0_wp])
+      call ctx%pdpool('SCLK01_OFFSETS_' // trim(id), 2_ip, [0.0_wp, 0.0_wp])
+      call ctx%pipool('SCLK01_OUTPUT_DELIM_' // trim(id), 1_ip, [1_ip])
+      call ctx%pdpool('SCLK_PARTITION_START_' // trim(id), npart, pstart)
+      call ctx%pdpool('SCLK_PARTITION_END_' // trim(id), npart, pend)
+      call ctx%pdpool('SCLK01_COEFFICIENTS_' // trim(id), 3*nrec, coef)
+   end subroutine define_clock
+
+   !> Type 1 SCLKs past SC01's limits: a clock with 100500 coefficient
+   !> records (MXCOEF 100000) and 12000 partitions (MXPART 9999), used at an
+   !> epoch in partition 10001, and 150 clocks used in turn (MXNCLK 100).
+   subroutine test_sclk()
+      real(wp) :: sclkdp, et
+      character(60) :: str
+      integer(ip) :: i
+      logical :: ok
+      call define_clock(-77_ip, 12000_ip, 100500_ip)
+      call check_ok('sclk: defining the big clock')
+      et = 4.0e6_wp
+      call ctx%sce2c(-77_ip, et, sclkdp)
+      call check_ok('sclk: sce2c')
+      call check(abs(sclkdp - 256*et) < 1.0e-3_wp, 'sclk: sce2c past 100000 records')
+      call ctx%sct2e(-77_ip, sclkdp, et)
+      call check(abs(et - 4.0e6_wp) < 1.0e-6_wp, 'sclk: sct2e past 100000 records')
+      call ctx%sce2s(-77_ip, 4.0e6_wp, str)
+      call check_ok('sclk: sce2s')
+      call check(str(1:6) == '10001/', 'sclk: a string in partition 10001: ' // trim(str))
+      call ctx%scs2e(-77_ip, str, et)
+      call check_ok('sclk: scs2e')
+      call check(abs(et - 4.0e6_wp) < 1.0e-2_wp, 'sclk: scs2e in partition 10001')
+
+      do i = 1, 150
+         call define_clock(-1000_ip - i, 1_ip, 2_ip)
+      end do
+      ok = .true.
+      do i = 1, 150
+         call ctx%sce2c(-1000_ip - i, real(i, wp), sclkdp)
+         ok = ok .and. abs(sclkdp - 256*i) < 1.0e-6_wp
+      end do
+      do i = 150, 1, -1
+         call ctx%sce2c(-1000_ip - i, real(i, wp), sclkdp)
+         ok = ok .and. abs(sclkdp - 256*i) < 1.0e-6_wp
+      end do
+      call check_ok('sclk: 150 clocks')
+      call check(ok, 'sclk: 150 clocks in turn')
+      call ctx%clpool()
+   end subroutine test_sclk
 
 end program test_limits

@@ -2602,8 +2602,12 @@
       CALL PDPOOL ( KVNAME, MXPART+1, XSTART )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
+!
+!     PEPPER: no maximum number of partitions or coefficients (SPICELIB:
+!     MXPART and 3*MXCOEF, SPICE(SIZEOUTOFRANGE)): the values are read.
+!
       CALL SCLD01 ( ITEM, CLKID, MXPART+1, N, PSTART )
-      CALL CHCKXC ( .TRUE., 'SPICE(SIZEOUTOFRANGE)', OK )
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 !     Restore kernel variables for this clock.
@@ -2633,8 +2637,12 @@
       CALL PDPOOL ( KVNAME, MXPART+1, XSTOP )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
+!
+!     PEPPER: no maximum number of partitions or coefficients (SPICELIB:
+!     MXPART and 3*MXCOEF, SPICE(SIZEOUTOFRANGE)): the values are read.
+!
       CALL SCLD01 ( ITEM, CLKID, MXPART+1, N, PSTOP )
-      CALL CHCKXC ( .TRUE., 'SPICE(SIZEOUTOFRANGE)', OK )
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 !     Restore kernel variables for this clock.
@@ -2675,8 +2683,12 @@
       CALL PDPOOL ( KVNAME, 3*(MXCOEF+1), COEFFS )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
+!
+!     PEPPER: no maximum number of partitions or coefficients (SPICELIB:
+!     MXPART and 3*MXCOEF, SPICE(SIZEOUTOFRANGE)): the values are read.
+!
       CALL SCLD01 ( ITEM, CLKID, 3*(MXCOEF+1), N, COEFFS )
-      CALL CHCKXC ( .TRUE., 'SPICE(SIZEOUTOFRANGE)', OK )
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 !     Try a coefficient set that has size not a multiple of 3.

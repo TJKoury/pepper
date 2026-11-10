@@ -49,7 +49,7 @@ module pepper_states
    use pepper_inc_zzftprms, only: sizdlm, sizend, sizftp, sizstr
    use pepper_inc_zzgf, only: cylsys, geosys, latsys, mxbegm, mxendm, pgrsys, radsys, recsys, sphsys
    use pepper_inc_zzholdd, only: nid
-   use pepper_inc_zzsc01, only: dbufsz, dplen, ibufsz, lbsngl, mxnclk
+   use pepper_inc_zzsc01, only: dplen, lbsngl, nivals
    use pepper_inc_zzswtchf, only: maxbas, maxfrm
 
    implicit none
@@ -60,7 +60,7 @@ module pepper_states
        init_dafec_state, init_daffa_state, daffa_grow, init_dafrwd_state, init_dasec_state, &
        init_dasrwr_state, init_dskx02_state, init_ekqmgr_state, init_ekqmgr_context_state, &
        init_framex_state, init_limbpt_state, init_pckbsr_state, init_pckbsr_context_state, &
-       init_sc01_state, init_scdecd_state, init_scencd_state, init_spkbsr_state, &
+       init_sc01_state, init_spkbsr_state, &
        init_spkbsr_context_state, init_termpt_state, init_tisbod_state, init_tkfram_state, &
        init_zzbodblt_state, init_zzbodtrn_state, init_zzdskbsr_state, &
        init_zzdskbsr_context_state, init_zzdsksbf_state, init_zzekjsrt_state, init_zzekjtst_state, &
@@ -1928,15 +1928,18 @@ module pepper_states
    !>
    !> No default initialization (2566632 bytes): see init_sc01_state.
    type, public :: sc01_state
-      integer(ip) :: hdsclk ( mxnclk )  !! heads of the SCLK ID hash collision lists (in scpool)
-      integer(ip) :: scpool ( lbsngl : mxnclk )  !! singly linked list pool of the SCLK ID hash collision lists (heads in hdsclk)
-      integer(ip) :: clklst ( mxnclk )  !! SCLK ID of each clock in the type 1 database (parallel to the data portion of scpool)
-      integer(ip) :: scbase ( mxnclk )  !! base index in intbuf of the integer data of each clock in clklst
+      ! PEPPER: the type 1 database grows. SPICELIB's held MXNCLK (100)
+      ! clocks in a hash table (emptied when full) and DBUFSZ numbers in
+      ! all, with at most MXCOEF (100000) coefficients and MXPART (9999)
+      ! partitions per clock (SPICE(TOOMANYCOEFFS), TOOMANYPARTITIONS).
+      type(int_map) :: clkmap  !! index in scbase of each clock in the database
+      integer(ip) :: nclk = 0  !! number of clocks in the database
+      integer(ip), allocatable :: scbase ( : )  !! base index in intbuf of the integer data of each clock in clklst
       character(dplen) :: cmp ( mxnfld )  !! work: string value of each field of an SCLK string (parsed or formatted)
       character(errlen) :: error  !! work: error message from parsing an SCLK string field
       real(wp) :: cmptks ( mxnfld )  !! work: number of ticks per unit of each SCLK field
       real(wp) :: cmpval ( mxnfld )  !! work: numeric value of each SCLK field
-      real(wp) :: dpbuff ( dbufsz )  !! double precision buffer of the type 1 database (coefficients, partitions, moduli, offsets)
+      real(wp), allocatable :: dpbuff ( : )  !! double precision buffer of the type 1 database (coefficients, partitions, moduli, offsets)
       real(wp) :: partim  !! work: time in the clock's parallel time system (TDB or TDT)
       integer(ip) :: cmpwid ( mxnfld )  !! work: width (number of digits) of each SCLK field in an output string
       integer(ip) :: cofbas  !! base index in dpbuff of the coefficients of the previous clock (prvsc)
@@ -1945,7 +1948,7 @@ module pepper_states
       integer(ip) :: end  !! work: index of the last character before the decimal point of a formatted field
       integer(ip) :: endbas  !! base index in dpbuff of the partition end times of the previous clock (prvsc)
       integer(ip) :: ifree  !! index of the first free element of intbuf
-      integer(ip) :: intbuf ( ibufsz )  !! integer buffer of the type 1 database (nivals values per clock, see zzsc01.inc)
+      integer(ip), allocatable :: intbuf ( : )  !! integer buffer of the type 1 database (nivals values per clock, see zzsc01.inc)
       integer(ip) :: length ( mxnfld )  !! work: length of the string value of each SCLK field
       integer(ip) :: lower  !! work: index of the coefficient record bracketing the input time (binary search)
       integer(ip) :: modbas  !! base index in dpbuff of the field moduli of the previous clock (prvsc)
@@ -1962,33 +1965,7 @@ module pepper_states
 
    ! ------------------------------------------------------------------ SCDECD
 
-   !> Convert a double precision encoding of spacecraft clock time into
-   !> a character representation.
-   !>
-   !> The saved variables of SPICELIB's SCDECD routines (entry points scdecd),
-   !> held in pepper_context (one per thread).
-   !>
-   !> No default initialization (239976 bytes): see init_scdecd_state.
-   type, public :: scdecd_state
-      real(wp) :: pstart ( mxpart )  !! work: start counts of the SCLK partitions
-      real(wp) :: pstop ( mxpart )  !! work: stop counts of the SCLK partitions
-      real(wp) :: ptotls ( mxpart )  !! work: cumulative tick counts at the end of each partition
-   end type scdecd_state
-
    ! ------------------------------------------------------------------ SCENCD
-
-   !> Encode a character representation of spacecraft clock time into a
-   !> double precision number.
-   !>
-   !> The saved variables of SPICELIB's SCENCD routines (entry points scencd),
-   !> held in pepper_context (one per thread).
-   !>
-   !> No default initialization (239976 bytes): see init_scencd_state.
-   type, public :: scencd_state
-      real(wp) :: pstart ( mxpart )  !! work: start counts of the SCLK partitions
-      real(wp) :: pstop ( mxpart )  !! work: stop counts of the SCLK partitions
-      real(wp) :: ptotls ( mxpart )  !! work: cumulative tick counts at the end of each partition
-   end type scencd_state
 
    ! ------------------------------------------------------------------ SCPS01
 
@@ -6434,15 +6411,12 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_sc01_state(state)
       type(sc01_state), intent(inout) :: state  !! the state
-      state%hdsclk = 0
-      state%scpool = 0
-      state%clklst = 0
-      state%scbase = 0
+      allocate (state%scbase(8), state%intbuf(8*nivals), source=0_ip)
+      allocate (state%dpbuff(1024), source=0.0_wp)
       state%cmp = ' '
       state%error = ' '
       state%cmptks = 0.0_wp
       state%cmpval = 0.0_wp
-      state%dpbuff = 0.0_wp
       state%partim = 0.0_wp
       state%cmpwid = 0
       state%cofbas = 0
@@ -6451,7 +6425,6 @@ contains
       state%end = 0
       state%endbas = 0
       state%ifree = 1
-      state%intbuf = 0
       state%length = 0
       state%lower = 0
       state%modbas = 0
@@ -6465,24 +6438,6 @@ contains
       state%timsys = 0
       state%pass1 = .true.
    end subroutine init_sc01_state
-
-   !> Set the initial values of a new scdecd_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_scdecd_state(state)
-      type(scdecd_state), intent(inout) :: state  !! the state
-      state%pstart = 0.0_wp
-      state%pstop = 0.0_wp
-      state%ptotls = 0.0_wp
-   end subroutine init_scdecd_state
-
-   !> Set the initial values of a new scencd_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_scencd_state(state)
-      type(scencd_state), intent(inout) :: state  !! the state
-      state%pstart = 0.0_wp
-      state%pstop = 0.0_wp
-      state%ptotls = 0.0_wp
-   end subroutine init_scencd_state
 
    !> Set the initial values of a new spkbsr_state: SPICELIB's DATA
    !> values, and zero for the other components.

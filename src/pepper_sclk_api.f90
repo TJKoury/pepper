@@ -2044,20 +2044,15 @@ contains
       use pepper_strings, only: intstr, lastnb, prefix, suffix
       use pepper_inc_sclk
       implicit none
-      character(partln)     prtstr
+      real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
+      integer(ip)           npmax
+      character(12)         prtstr  ! PEPPER: any partition number and the slash (SPICELIB: PARTLN, 5)
       integer(ip)           nparts
       integer(ip)           part
       integer(ip)           prelen
       integer(ip)           suflen
       integer(ip)           i
       real(wp)              ticks
-      if ( .not. allocated ( ctx%scdecd_state ) ) then
-         allocate ( ctx%scdecd_state )
-         call init_scdecd_state ( ctx%scdecd_state )
-      end if
-      associate ( pstart => ctx%scdecd_state%pstart, &
-                  pstop => ctx%scdecd_state%pstop, &
-                  ptotls => ctx%scdecd_state%ptotls )
       if ( ctx%failed() ) return
 
 !
@@ -2073,23 +2068,16 @@ contains
 !     check FAILED in case error handling is not in ABORT or
 !     DEFAULT mode.
 !
+!
+!     PEPPER: the partitions go to arrays of the clock's size (SPICELIB
+!     used arrays of MXPART, 9999, and SPICE(TOOMANYPARTS) for more).
+!
+      npmax = sclk_partition_count ( ctx, sc )
+      allocate ( pstart(npmax), pstop(npmax), ptotls(npmax) )
       call scpart ( ctx, sc, nparts, pstart, pstop )
 
       if ( ctx%failed() ) return
 
-      if ( nparts > mxpart ) then
-!
-!        This code should be unreachable. It is included for safety.
-!
-         call ctx%setmsg ( 'The number of partitions, #, for spacecraft ' // &
-                       '# exceeds the value for parameter MXPART, #.' )
-         call ctx%errint ( '#', nparts           )
-         call ctx%errint ( '#', sc               )
-         call ctx%errint ( '#', mxpart           )
-         call ctx%sigerr ( 'SPICE(TOOMANYPARTS)' )
-         return
-
-      end if
 
 !
 !     For each partition, compute the total number of ticks in that
@@ -2175,7 +2163,6 @@ contains
       call prefix ( prtstr, 0, sclkch )
 
       return
-      end associate
       end procedure scdecd
 
       module procedure scencd
@@ -2646,6 +2633,8 @@ contains
       use pepper_strings, only: cpos, nparsi
       use pepper_inc_sclk
       implicit none
+      real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
+      integer(ip)           npmax
       integer(ip)           pos
       integer(ip)           nparts
       integer(ip)           pnter
@@ -2653,36 +2642,22 @@ contains
       integer(ip)           i
       real(wp)              ticks
       character(25)         error
-      if ( .not. allocated ( ctx%scencd_state ) ) then
-         allocate ( ctx%scencd_state )
-         call init_scencd_state ( ctx%scencd_state )
-      end if
-      associate ( pstart => ctx%scencd_state%pstart, &
-                  pstop => ctx%scencd_state%pstop, &
-                  ptotls => ctx%scencd_state%ptotls )
       if ( ctx%failed() ) return
 
 !
 !     Read the partition start and stop times (in ticks) for this
 !     mission. Error if there are too many of them.
 !
+!
+!     PEPPER: the partitions go to arrays of the clock's size (SPICELIB
+!     used arrays of MXPART, 9999, and SPICE(TOOMANYPARTS) for more).
+!
+      npmax = sclk_partition_count ( ctx, sc )
+      allocate ( pstart(npmax), pstop(npmax), ptotls(npmax) )
       call scpart ( ctx, sc, nparts, pstart, pstop )
 
       if ( ctx%failed() ) return
 
-      if ( nparts > mxpart ) then
-!
-!        This code should be unreachable. It is included for safety.
-!
-         call ctx%setmsg ( 'The number of partitions, #, for spacecraft ' // &
-                       '# exceeds the value for parameter MXPART, #.' )
-         call ctx%errint ( '#', nparts           )
-         call ctx%errint ( '#', sc               )
-         call ctx%errint ( '#', mxpart           )
-         call ctx%sigerr ( 'SPICE(TOOMANYPARTS)' )
-         return
-
-      end if
 
 !
 !     Convert the non-partition portion of the clock string to ticks.
@@ -2832,7 +2807,6 @@ contains
       end if
 
       return
-      end associate
       end procedure scencd
 
 !$Procedure SCE2S ( ET to SCLK string )
