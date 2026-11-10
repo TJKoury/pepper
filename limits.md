@@ -475,10 +475,18 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      - Test: `test_limits` (TK, dynamic, product and switch frames whose
        names differ only after the 32nd character; CIDFRM, CNMFRM,
        CCIFRM, KPLFRM; states in those frames).
-   - **Still fixed:** GF saves the occultation method strings in 500
-     characters (`svfmth`, `svbmth`), and the geometry routines save the
-     previous method in a fixed buffer (a longer method is only parsed
-     again on every call).
+   - **GF method strings:** no length limit. OCCULT and GFOCCE copied the
+     shape/method strings into 500 characters (MTHLEN), ZZGFOCIN saved
+     them in 500 (`svfmth`, `svbmth`), ZZGFCOIN (GFSUBC, GFSNTC) and
+     ZZGFILIN (GFILUM) in 200: a longer DSK method (a long
+     surface list) was cut, a syntax error or the wrong surfaces. The
+     copies and the saved strings are allocatable (the saved ones are
+     referenced directly, not through ASSOCIATE). Test: `test_limits`
+     `test_occult_methods` (OCCULT with a DSK method of 61 surfaces,
+     1487 characters; SPICELIB: SPICE(SYNTAXERROR) at index 486).
+   - **Still fixed, speed only:** the geometry routines save the previous
+     method in a fixed buffer (`prvmth`, 500); a longer method is parsed
+     again on every call.
 
    The plan for the rest:
    - **Bodies:**
@@ -699,7 +707,7 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      characters) expect the whole-string results.
 
    Phase 6 is done.
-7. **API for caller buffers** (E, its own design document first):
+7. **API for caller buffers** (E; design: [`phase7_design.md`](phase7_design.md)):
    - **Allocatable outputs:** variants like `gdpool(name, values)` with
      `values` allocatable, `bodvrd`, `getfov`, `spkcov` into a window type,
      and GF searches with allocated work windows.

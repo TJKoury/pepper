@@ -40,6 +40,7 @@ program test_limits
    call test_leapseconds()
    call test_fov_vertices()
    call test_dsk_hits()
+   call test_occult_methods()
    call test_ek_scratch()
    call test_ek_tables()
    call test_ek_queries()
@@ -773,6 +774,93 @@ contains
       call spice%unload(dsk)
       call delete_file(dsk)
    end subroutine test_dsk_hits
+
+   !> OCCULT with a DSK method string of more than 500 characters: the
+   !> front body's surface is the last of 61 listed (SPICELIB cut the
+   !> string at MTHLEN, 500, in OCCULT and ZZGFOCIN, and at 200 in the
+   !> other GF searches). The front body is a DSK octahedron (radius
+   !> 1000 km) between the observer and a point target.
+   subroutine test_occult_methods()
+      character(*), parameter :: dsk = prefix // 'occult.bds'
+      character(*), parameter :: frame = 'TEST_OCC_FIXED'
+      integer(ip), parameter :: nv = 6, np = 8, ndummy = 60
+      integer(ip), parameter :: front = 2001, back = 2002, obs = 2003, frid = 1700001
+      real(wp), parameter :: pi = acos(-1.0_wp), r = 1000.0_wp
+      real(wp) :: vrtces(3, nv), spaixd(10), corpar(10), mncor3, mxcor3
+      integer(ip) :: plates(3, np), handle, i, short_code, long_code
+      integer(ip), allocatable :: work(:, :), spaixi(:)
+      character(32) :: names(ndummy + 1)
+      integer(ip) :: ids(ndummy + 1)
+      character(:), allocatable :: method
+      ! the bodies: front at the origin, the point target and the observer on
+      ! either side of it
+      call write_spk(ctx, prefix // 'occ_front.bsp', front, 0_ip, 1.0_wp, 0.0_wp)
+      call write_spk(ctx, prefix // 'occ_back.bsp', back, 0_ip, 1.0e6_wp, 0.0_wp)
+      call write_spk(ctx, prefix // 'occ_obs.bsp', obs, 0_ip, 1.0e6_wp, pi)
+      call spice%furnsh(prefix // 'occ_front.bsp')
+      call spice%furnsh(prefix // 'occ_back.bsp')
+      call spice%furnsh(prefix // 'occ_obs.bsp')
+      ! the front body's frame: a TK frame centered on it
+      call spice%pipool('FRAME_' // frame, 1_ip, [frid])
+      call spice%pcpool('FRAME_1700001_NAME', 1_ip, [frame])
+      call spice%pipool('FRAME_1700001_CLASS', 1_ip, [4_ip])
+      call spice%pipool('FRAME_1700001_CLASS_ID', 1_ip, [frid])
+      call spice%pipool('FRAME_1700001_CENTER', 1_ip, [front])
+      call spice%pcpool('TKFRAME_1700001_RELATIVE', 1_ip, ['J2000'])
+      call spice%pcpool('TKFRAME_1700001_SPEC', 1_ip, ['ANGLES'])
+      call spice%pcpool('TKFRAME_1700001_UNITS', 1_ip, ['DEGREES'])
+      call spice%pipool('TKFRAME_1700001_AXES', 3_ip, [3_ip, 1_ip, 3_ip])
+      call spice%pdpool('TKFRAME_1700001_ANGLES', 3_ip, [0.0_wp, 0.0_wp, 0.0_wp])
+      ! surface names: 60 without data, then the octahedron's
+      do i = 1, ndummy
+         write (names(i), '(a,i2.2)') 'OCC DUMMY SURFACE ', i
+         ids(i) = 100 + i
+      end do
+      names(ndummy + 1) = 'OCC REAL SURFACE'
+      ids(ndummy + 1) = 1
+      call spice%pcpool('NAIF_SURFACE_NAME', ndummy + 1, names)
+      call spice%pipool('NAIF_SURFACE_CODE', ndummy + 1, ids)
+      call spice%pipool('NAIF_SURFACE_BODY', ndummy + 1, [(front, i = 1, ndummy + 1)])
+      ! the DSK
+      vrtces = reshape([r, 0.0_wp, 0.0_wp, -r, 0.0_wp, 0.0_wp, 0.0_wp, r, 0.0_wp, &
+                        0.0_wp, -r, 0.0_wp, 0.0_wp, 0.0_wp, r, 0.0_wp, 0.0_wp, -r], [3, nv])
+      plates = reshape([1, 3, 5, 3, 2, 5, 2, 4, 5, 4, 1, 5, 3, 1, 6, 2, 3, 6, 4, 2, 6, 1, 4, 6], [3, np])
+      allocate (work(2, 10000), spaixi(200000))
+      corpar = 0
+      call ctx%dskmi2(nv, vrtces, np, plates, 1.0_wp, 2_ip, 10000_ip, 10000_ip, 10000_ip, .true., &
+                      200000_ip, work, spaixd, spaixi)
+      call ctx%dskrb2(nv, vrtces, np, plates, 1_ip, corpar, mncor3, mxcor3)
+      call delete_file(dsk)
+      call ctx%dskopn(dsk, dsk, 0_ip, handle)
+      call ctx%dskw02(handle, front, 1_ip, 1_ip, frame, 1_ip, corpar, -pi, pi, -pi/2, pi/2, &
+                      mncor3, mxcor3, -1.0e9_wp, 1.0e9_wp, nv, vrtces, np, plates, spaixd, spaixi)
+      call ctx%dskcls(handle, .true.)
+      call spice%furnsh(dsk)
+      call check_ok('occult methods: kernels')
+      ! the method string: the real surface after the 60 others
+      method = 'DSK/UNPRIORITIZED/SURFACES = '
+      do i = 1, ndummy + 1
+         method = method // '"' // trim(names(i)) // '", '
+      end do
+      method = method(1:len(method) - 2)
+      call ctx%occult('2001', 'DSK/UNPRIORITIZED', frame, '2002', 'POINT', ' ', 'NONE', '2003', &
+                      0.0_wp, short_code)
+      call check_ok('occult methods: DSK/UNPRIORITIZED')
+      call check(short_code /= 0, 'occult methods: the point is occulted')
+      call ctx%occult('2001', method, frame, '2002', 'POINT', ' ', 'NONE', '2003', 0.0_wp, long_code)
+      call check_ok('occult methods: a method of 61 surfaces')
+      call check(long_code == short_code .and. len(method) > 1000, &
+                 'occult methods: the same result with 61 surfaces')
+      call spice%unload(dsk)
+      call spice%unload(prefix // 'occ_front.bsp')
+      call spice%unload(prefix // 'occ_back.bsp')
+      call spice%unload(prefix // 'occ_obs.bsp')
+      call spice%clpool()
+      call delete_file(dsk)
+      call delete_file(prefix // 'occ_front.bsp')
+      call delete_file(prefix // 'occ_back.bsp')
+      call delete_file(prefix // 'occ_obs.bsp')
+   end subroutine test_occult_methods
 
    !> The EK scratch area past its in-memory part (2500000 integers,
    !> which now grows; beyond it the stack goes to a scratch DAS, opened

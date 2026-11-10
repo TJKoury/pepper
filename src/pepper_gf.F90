@@ -4595,7 +4595,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: mthlen = 200
       integer(ip), parameter :: phsidx = 1
       integer(ip), parameter :: incidx = 2
       integer(ip), parameter :: emtidx = 3
@@ -4627,7 +4626,6 @@ contains
                   svaidx => ctx%zzgfilu_state%svaidx, &
                   svcorr => ctx%zzgfilu_state%svcorr, &
                   svinam => ctx%zzgfilu_state%svinam, &
-                  svmeth => ctx%zzgfilu_state%svmeth, &
                   svnrml => ctx%zzgfilu_state%svnrml, &
                   svonam => ctx%zzgfilu_state%svonam, &
                   svsspt => ctx%zzgfilu_state%svsspt, &
@@ -4780,10 +4778,11 @@ contains
 !     Save a left-justified, upper case copy of the computation method
 !     for the illumination angles.
 !
-      call ljust ( method, svmeth )
-      call ucase ( svmeth, svmeth )
+      ctx%zzgfilu_state%svmeth = method  ! PEPPER: allocated to the length of METHOD
+      call ljust ( method, ctx%zzgfilu_state%svmeth )
+      call ucase ( ctx%zzgfilu_state%svmeth, ctx%zzgfilu_state%svmeth )
 
-      if ( svmeth /= 'ELLIPSOID' ) then
+      if ( ctx%zzgfilu_state%svmeth /= 'ELLIPSOID' ) then
 
          call ctx%setmsg ( 'The only supported computation method ' &
          //            'is ELLIPSOID; the input method was #.' )
@@ -4969,7 +4968,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: mthlen = 200
       integer(ip), parameter :: phsidx = 1
       integer(ip), parameter :: incidx = 2
       integer(ip), parameter :: emtidx = 3
@@ -5003,7 +5001,6 @@ contains
       associate ( svaidx => ctx%zzgfilu_state%svaidx, &
                   svcorr => ctx%zzgfilu_state%svcorr, &
                   svinam => ctx%zzgfilu_state%svinam, &
-                  svmeth => ctx%zzgfilu_state%svmeth, &
                   svnrml => ctx%zzgfilu_state%svnrml, &
                   svonam => ctx%zzgfilu_state%svonam, &
                   svsspt => ctx%zzgfilu_state%svsspt, &
@@ -5013,7 +5010,7 @@ contains
 !
 !     Compute the rates of change of all of the illumination angles.
 !
-      call zzilusta ( ctx, svmeth, svtnam, svinam, et, &
+      call zzilusta ( ctx, ctx%zzgfilu_state%svmeth, svtnam, svinam, et, &
                       ctx%zzgfilu_state%svref,  svcorr, svonam, svsspt, &
                       svnrml, phssta, incsta, emista  )
 
@@ -5149,7 +5146,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: mthlen = 200
       integer(ip), parameter :: phsidx = 1
       integer(ip), parameter :: incidx = 2
       integer(ip), parameter :: emtidx = 3
@@ -5176,13 +5172,12 @@ contains
       associate ( svaidx => ctx%zzgfilu_state%svaidx, &
                   svcorr => ctx%zzgfilu_state%svcorr, &
                   svinam => ctx%zzgfilu_state%svinam, &
-                  svmeth => ctx%zzgfilu_state%svmeth, &
                   svonam => ctx%zzgfilu_state%svonam, &
                   svsspt => ctx%zzgfilu_state%svsspt, &
                   svtnam => ctx%zzgfilu_state%svtnam )
       if ( ctx%failed() ) return
 
-      call illumg ( ctx, svmeth, svtnam,    svinam,    et,      ctx%zzgfilu_state%svref, &
+      call illumg ( ctx, ctx%zzgfilu_state%svmeth, svtnam,    svinam,    et,      ctx%zzgfilu_state%svref, &
                     svcorr, svonam,    svsspt,    ettarg, &
                     srfvec, angles(1), angles(2), angles(3)       )
 
@@ -5881,12 +5876,10 @@ contains
          ctx%zzgfocu_state%svffrm = ' '
       end if
       associate ( svback => ctx%zzgfocu_state%svback, &
-                  svbmth => ctx%zzgfocu_state%svbmth, &
                   svbnam => ctx%zzgfocu_state%svbnam, &
                   svbrad => ctx%zzgfocu_state%svbrad, &
                   svbshp => ctx%zzgfocu_state%svbshp, &
                   svcorr => ctx%zzgfocu_state%svcorr, &
-                  svfmth => ctx%zzgfocu_state%svfmth, &
                   svfnam => ctx%zzgfocu_state%svfnam, &
                   svfrad => ctx%zzgfocu_state%svfrad, &
                   svfrnt => ctx%zzgfocu_state%svfrnt, &
@@ -5996,8 +5989,8 @@ contains
 !     stands for "method"---the name used in SPICE geometry
 !     APIs for this type of input string.
 !
-      svfmth = fshape
-      svbmth = bshape
+      ctx%zzgfocu_state%svfmth = fshape
+      ctx%zzgfocu_state%svbmth = bshape
 
 !
 !     Parse the front body shape string.
@@ -6012,7 +6005,7 @@ contains
 
       else
 
-         call zzprsmet ( ctx, idfrnt, svfmth, size(srflst, kind=ip), shpstr, subtyp, &
+         call zzprsmet ( ctx, idfrnt, ctx%zzgfocu_state%svfmth, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmtyp )
 
          if ( ctx%failed() ) return
@@ -6047,7 +6040,7 @@ contains
 
       else
 
-         call zzprsmet ( ctx, idfrnt, svbmth, size(srflst, kind=ip), shpstr, subtyp, &
+         call zzprsmet ( ctx, idfrnt, ctx%zzgfocu_state%svbmth, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmtyp )
 
          if ( ctx%failed() ) return
@@ -6577,12 +6570,10 @@ contains
       end if
       associate ( ncalls => ctx%zzgfocu_state%ncalls, &
                   svback => ctx%zzgfocu_state%svback, &
-                  svbmth => ctx%zzgfocu_state%svbmth, &
                   svbnam => ctx%zzgfocu_state%svbnam, &
                   svbrad => ctx%zzgfocu_state%svbrad, &
                   svbshp => ctx%zzgfocu_state%svbshp, &
                   svcorr => ctx%zzgfocu_state%svcorr, &
-                  svfmth => ctx%zzgfocu_state%svfmth, &
                   svfnam => ctx%zzgfocu_state%svfnam, &
                   svfrad => ctx%zzgfocu_state%svfrad, &
                   svfrnt => ctx%zzgfocu_state%svfrnt, &
@@ -6951,7 +6942,7 @@ contains
 !
             ncalls = ncalls + 1
 
-            call sincpt ( ctx, svfmth, svfnam,  time,    ctx%zzgfocu_state%svffrm, &
+            call sincpt ( ctx, ctx%zzgfocu_state%svfmth, svfnam,  time,    ctx%zzgfocu_state%svffrm, &
                           svcorr, svonam,  'J2000', bckpos, &
                           spoint, trgepc,  srfvec,  found )
 
@@ -6979,7 +6970,7 @@ contains
 !
 !           The back body is the extended one.
 !
-            call sincpt ( ctx, svbmth, svbnam,  time,    ctx%zzgfocu_state%svbfrm, &
+            call sincpt ( ctx, ctx%zzgfocu_state%svbmth, svbnam,  time,    ctx%zzgfocu_state%svbfrm, &
                           svcorr, svonam,  'J2000', frtpos, &
                           spoint, trgepc,  srfvec,  found )
 
@@ -16586,8 +16577,8 @@ contains
 !
 !     Local variables
 !
-      character(mthlen)     lbshap
-      character(mthlen)     lfshap
+      character(:), allocatable :: lbshap  !! PEPPER: any length (SPICELIB: MTHLEN, 500)
+      character(:), allocatable :: lfshap
 
       real(wp)              finish
       real(wp)              start
@@ -16657,9 +16648,11 @@ contains
 !
 !     Check the target shape specifications.
 !
+      lbshap = bshape
       call ljust ( bshape, lbshap )
       call ucase ( lbshap, lbshap )
 
+      lfshap = fshape
       call ljust ( fshape, lfshap )
       call ucase ( lfshap, lfshap )
 
@@ -17510,13 +17503,13 @@ contains
       character(:), allocatable :: back
       character(:), allocatable :: bname
       character(:), allocatable :: bframe
-      character(mthlen)     bmethd
-      character(mthlen)     bshape
-      character(mthlen)     fmethd
+      character(:), allocatable :: bmethd  !! PEPPER: any length (SPICELIB: MTHLEN, 500)
+      character(shplen)     bshape
+      character(:), allocatable :: fmethd
       character(:), allocatable :: fname
       character(:), allocatable :: front
       character(:), allocatable :: fframe
-      character(mthlen)     fshape
+      character(shplen)     fshape
       character(shplen), parameter :: occtyp ( 3 ) = [ character(shplen) :: &
          partl,&
          annulr,&
@@ -17524,8 +17517,8 @@ contains
       character(cvtlen)     pntdef
       character(shplen)     prshp1
       character(shplen)     prshp2
-      character(mthlen)     shap1
-      character(mthlen)     shap2
+      character(:), allocatable :: shap1  !! PEPPER: any length (SPICELIB: MTHLEN, 500)
+      character(:), allocatable :: shap2
       character(sublen)     subtyp
       character(tmtlen)     trmtyp
 
@@ -17590,9 +17583,11 @@ contains
 !
 !     Left justify the shapes and target names and make them upper case.
 !
+      shap1 = shape1
       call ljust ( shape1, shap1 )
       call ucase ( shap1,  shap1 )
 
+      shap2 = shape2
       call ljust ( shape2, shap2 )
       call ucase ( shap2,  shap2 )
 
@@ -32333,7 +32328,6 @@ contains
       integer(ip), parameter :: vdflen = 32
       integer(ip), parameter :: nsys = 7
       integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: metlen = 200
       integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
@@ -32365,7 +32359,6 @@ contains
                   svdctr => ctx%zzgfcou_state%svdctr, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
-                  svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svradi => ctx%zzgfcou_state%svradi, &
                   svrcnm => ctx%zzgfcou_state%svrcnm, &
@@ -32684,14 +32677,15 @@ contains
 !
 !           Store an upper case, left-justified copy of METHOD.
 !
-            call ljust ( method, svmeth )
-            call ucase ( svmeth, svmeth )
+            ctx%zzgfcou_state%svmeth = method  ! PEPPER: allocated to the length of METHOD
+            call ljust ( method, ctx%zzgfcou_state%svmeth )
+            call ucase ( ctx%zzgfcou_state%svmeth, ctx%zzgfcou_state%svmeth )
 
          else
 !
 !           Simply initialize SVMETH with a blank string.
 !
-            svmeth = ' '
+            ctx%zzgfcou_state%svmeth = ' '
 
          end if
 
@@ -32883,7 +32877,6 @@ contains
       integer(ip), parameter :: vdflen = 32
       integer(ip), parameter :: nsys = 7
       integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: metlen = 200
       integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
@@ -32913,7 +32906,6 @@ contains
                   svcsys => ctx%zzgfcou_state%svcsys, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
-                  svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svrctr => ctx%zzgfcou_state%svrctr, &
                   svre => ctx%zzgfcou_state%svre, &
@@ -32921,7 +32913,7 @@ contains
                   svvdef => ctx%zzgfcou_state%svvdef )
       if ( ctx%failed() ) return
 
-      call zzgfcoq ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref, &
+      call zzgfcoq ( ctx, svvdef, ctx%zzgfcou_state%svmeth, svtarg, et,     ctx%zzgfcou_state%svref, &
                      svcorr, svobs,  ctx%zzgfcou_state%svdref, svdvec, svcsys, &
                      svrctr, svre,   svf,    svcrd,  crdval, found )
 
@@ -33078,7 +33070,6 @@ contains
       integer(ip), parameter :: vdflen = 32
       integer(ip), parameter :: nsys = 7
       integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: metlen = 200
       integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
@@ -33117,7 +33108,6 @@ contains
                   svdctr => ctx%zzgfcou_state%svdctr, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
-                  svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svradi => ctx%zzgfcou_state%svradi, &
                   svre => ctx%zzgfcou_state%svre, &
@@ -33131,7 +33121,7 @@ contains
 !     state can't be computed, we consider the coordinate to be
 !     "not decreasing."
 !
-      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
+      call zzgfcost ( ctx, svvdef, ctx%zzgfcou_state%svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
                       svobs,  ctx%zzgfcou_state%svdref, svdctr, svdvec, svradi, state, &
                       found                                          )
 
@@ -33284,7 +33274,6 @@ contains
       integer(ip), parameter :: vdflen = 32
       integer(ip), parameter :: nsys = 7
       integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: metlen = 200
       integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
@@ -33319,7 +33308,6 @@ contains
       associate ( svcorr => ctx%zzgfcou_state%svcorr, &
                   svdctr => ctx%zzgfcou_state%svdctr, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
-                  svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svradi => ctx%zzgfcou_state%svradi, &
                   svtarg => ctx%zzgfcou_state%svtarg, &
@@ -33330,7 +33318,7 @@ contains
 !     Simply attempt to compute the state. The returned found flag
 !     is the result.
 !
-      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
+      call zzgfcost ( ctx, svvdef, ctx%zzgfcou_state%svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
                       svobs,  ctx%zzgfcou_state%svdref, svdctr, svdvec, svradi, state, &
                       crdfnd                                          )
 
@@ -33439,7 +33427,6 @@ contains
       integer(ip), parameter :: vdflen = 32
       integer(ip), parameter :: nsys = 7
       integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: metlen = 200
       integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
@@ -33469,7 +33456,6 @@ contains
                   svcsys => ctx%zzgfcou_state%svcsys, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
-                  svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svrctr => ctx%zzgfcou_state%svrctr, &
                   svre => ctx%zzgfcou_state%svre, &
@@ -33477,7 +33463,7 @@ contains
                   svvdef => ctx%zzgfcou_state%svvdef )
       if ( ctx%failed() ) return
 
-      call zzgfcoq ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref, &
+      call zzgfcoq ( ctx, svvdef, ctx%zzgfcou_state%svmeth, svtarg, et,     ctx%zzgfcou_state%svref, &
                      svcorr, svobs,  ctx%zzgfcou_state%svdref, svdvec, svcsys, &
                      svrctr, svre,   svf,    svcrd,  value, found )
 
@@ -33598,7 +33584,6 @@ contains
       integer(ip), parameter :: vdflen = 32
       integer(ip), parameter :: nsys = 7
       integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: metlen = 200
       integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
@@ -33628,7 +33613,6 @@ contains
                   svcsys => ctx%zzgfcou_state%svcsys, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
-                  svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svrctr => ctx%zzgfcou_state%svrctr, &
                   svre => ctx%zzgfcou_state%svre, &
@@ -33636,7 +33620,7 @@ contains
                   svvdef => ctx%zzgfcou_state%svvdef )
       if ( ctx%failed() ) return
 
-      call zzgfcoq ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref, &
+      call zzgfcoq ( ctx, svvdef, ctx%zzgfcou_state%svmeth, svtarg, et,     ctx%zzgfcou_state%svref, &
                      svcorr, svobs,  ctx%zzgfcou_state%svdref, svdvec, svcsys, &
                      svrctr, svre,   svf,    svcrd,  value, found )
 
@@ -33797,7 +33781,6 @@ contains
       integer(ip), parameter :: vdflen = 32
       integer(ip), parameter :: nsys = 7
       integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: metlen = 200
       integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
@@ -33836,7 +33819,6 @@ contains
                   svdctr => ctx%zzgfcou_state%svdctr, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
-                  svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svradi => ctx%zzgfcou_state%svradi, &
                   svrcnm => ctx%zzgfcou_state%svrcnm, &
@@ -33855,7 +33837,7 @@ contains
 !     state vector from whose position component Q is
 !     derived.
 !
-      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
+      call zzgfcost ( ctx, svvdef, ctx%zzgfcou_state%svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
                       svobs,  ctx%zzgfcou_state%svdref, svdctr, svdvec, svradi, state, &
                       found                                          )
 
@@ -34079,7 +34061,6 @@ contains
       integer(ip), parameter :: vdflen = 32
       integer(ip), parameter :: nsys = 7
       integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: metlen = 200
       integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
@@ -34118,7 +34099,6 @@ contains
                   svdctr => ctx%zzgfcou_state%svdctr, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
-                  svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svradi => ctx%zzgfcou_state%svradi, &
                   svrcnm => ctx%zzgfcou_state%svrcnm, &
@@ -34136,7 +34116,7 @@ contains
 !     Look up the individual terms. Start with the Cartesian state
 !     vector from whose position component Q is derived.
 !
-      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
+      call zzgfcost ( ctx, svvdef, ctx%zzgfcou_state%svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
                       svobs,  ctx%zzgfcou_state%svdref, svdctr, svdvec, svradi, state, &
                       found                                          )
 

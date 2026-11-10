@@ -4101,7 +4101,6 @@ module pepper_states
    integer(ip), parameter :: zzgfcou_bdnmln = 36
    integer(ip), parameter :: syslen = 32
    integer(ip), parameter :: vdflen = 32
-   integer(ip), parameter :: metlen = 200
 
    !> SPICE Private routine intended solely for the support of SPICE
    !> routines. Users should not call this routine directly due to the
@@ -4119,7 +4118,7 @@ module pepper_states
       character(:), allocatable :: svdref  !! ray direction frame name (intercept searches; blank otherwise)
       real(wp) :: svdvec ( 3 ) = 0.0_wp  !! ray direction vector (intercept searches; zero otherwise)
       real(wp) :: svf = 0.0_wp  !! flattening coefficient of the frame center body (geodetic/planetographic)
-      character(metlen) :: svmeth = ' '  !! subpoint/intercept computation method saved by ZZGFCOIN
+      character(:), allocatable :: svmeth  !! subpoint/intercept computation method saved by ZZGFCOIN (PEPPER: any length; SPICELIB: METLEN, 200)
       integer(ip) :: svobs = 0  !! observer ID code saved by ZZGFCOIN
       real(wp) :: svradi ( 3 ) = 0.0_wp  !! radii of the frame center body (sub-observer, intercept, geodetic, planetographic)
       character(zzgfcou_bdnmln) :: svrcnm = ' '  !! name of the frame center body (planetographic only)
@@ -4216,7 +4215,6 @@ module pepper_states
 
    integer(ip), parameter :: zzgfilu_bdnmln = 36
    integer(ip), parameter :: zzgfilu_frnmln = 32
-   integer(ip), parameter :: zzgfilu_mthlen = 200
    integer(ip), parameter :: zzgfilu_namlen = 50
 
    !> SPICE Private routine intended solely for the support of SPICE
@@ -4232,7 +4230,7 @@ module pepper_states
       integer(ip) :: svaidx = 0  !! index of the angle type in angnms
       character(corlen) :: svcorr = ' '  !! aberration correction saved by ZZGFILIN
       character(zzgfilu_bdnmln) :: svinam = ' '  !! illumination source name saved by ZZGFILIN
-      character(zzgfilu_mthlen) :: svmeth = ' '  !! computation method saved by ZZGFILIN
+      character(:), allocatable :: svmeth  !! computation method saved by ZZGFILIN (PEPPER: any length; SPICELIB: MTHLEN, 200)
       real(wp) :: svnrml ( 3 ) = 0.0_wp  !! outward surface normal at the surface point svsspt
       character(zzgfilu_bdnmln) :: svonam = ' '  !! observer name saved by ZZGFILIN
       character(:), allocatable :: svref  !! target body-fixed frame name saved by ZZGFILIN
@@ -4272,13 +4270,13 @@ module pepper_states
       integer(ip) :: ncalls = 0  !! number of SINCPT calls made by ZZGFOCST (diagnostic count only)
       integer(ip) :: svback = 0  !! back body ID code saved by ZZGFOCIN
       character(:), allocatable :: svbfrm  !! back body-fixed frame name (blank for a point)
-      character(mthlen) :: svbmth = ' '  !! back body shape/method string saved by ZZGFOCIN
+      character(:), allocatable :: svbmth  !! back body shape/method string saved by ZZGFOCIN (PEPPER: any length; SPICELIB: MTHLEN, 500)
       character(zzgfocu_bdnmln) :: svbnam = ' '  !! back body name saved by ZZGFOCIN
       real(wp) :: svbrad ( 3 ) = 0.0_wp  !! back body ellipsoid radii (zero for a point)
       character(shplen) :: svbshp = ' '  !! back body shape: point, ellipsoid or DSK
       character(corlen) :: svcorr = ' '  !! aberration correction for SPKEZP (stellar aberration removed)
       character(:), allocatable :: svffrm  !! front body-fixed frame name (blank for a point)
-      character(mthlen) :: svfmth = ' '  !! front body shape/method string saved by ZZGFOCIN
+      character(:), allocatable :: svfmth  !! front body shape/method string saved by ZZGFOCIN (PEPPER: any length; SPICELIB: MTHLEN, 500)
       character(zzgfocu_bdnmln) :: svfnam = ' '  !! front body name saved by ZZGFOCIN
       real(wp) :: svfrad ( 3 ) = 0.0_wp  !! front body ellipsoid radii (zero for a point)
       integer(ip) :: svfrnt = 0  !! front body ID code saved by ZZGFOCIN

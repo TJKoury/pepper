@@ -142,6 +142,7 @@ a kernel set to about 2600 TK frames.
 | Voxels on a ray, plates in a voxel group (DSK type 2 intercepts) | 50000 voxels, 256000 plates | SPICE(ARRAYTOOSMALL) |
 | Tangent points per half-plane (LIMBPT, TERMPT) | 2000 | SPICE(ARRAYTOOSMALL), SPICE(WINDOWEXCESS) |
 | FOV vertices (GF FOV searches) | 10000 | SPICE(BOUNDARYTOOBIG) |
+| Length of a shape/method string in OCCULT and the GF searches | 500 characters (200 in GFSUBC, GFSNTC and GFILUM) | Silently cut: a long DSK surface list gives a syntax error or the wrong surfaces |
 
 ### EK queries
 
