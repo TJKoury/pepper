@@ -1241,9 +1241,27 @@
       real(wp) :: eqryd  ( * )  !! Parsed query and string and number value buffers.
       logical :: error  !! Parse error flag.
       character(*) :: prserr  !! Parse error message.
+      integer(ip), allocatable :: qi(:)
+      integer(ip) :: n
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzeknrml ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
+      ! PEPPER: the context routine grows the integer part of the encoded
+      ! query (allocatable); this interface keeps SPICELIB's cell: it is
+      ! copied in and out, and a query larger than the cell is an error.
+      n = nint ( real ( eqryi(-1), wp ), ip )
+      allocate ( qi(lbcell:n) )
+      qi = eqryi(lbcell:n)
+      call pepper_zzeknrml ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, qi, eqryc, eqryd, error, prserr )
+      if ( ubound ( qi, 1, kind=ip ) > n ) then
+         if ( qi(0) > n .and. .not. ctx%failed() ) then
+            call ctx%setmsg ( 'The encoded query has # elements; the size of the cell is #.' )
+            call ctx%errint ( '#', qi(0) )
+            call ctx%errint ( '#', n )
+            call ctx%sigerr ( 'SPICE(CELLTOOSMALL)' )
+         end if
+         qi(-1) = n
+      end if
+      eqryi(lbcell:n) = qi(lbcell:n)
       end subroutine zzeknrml
 
       !> Set the forward data pointer for a specified EK data page.
@@ -1550,9 +1568,27 @@
       real(wp) :: eqryd  ( * )  !! Parsed query and string and number value buffers.
       logical :: error  !! Flag indicating whether query parsed correctly.
       character(*) :: prserr  !! Parse error description.
+      integer(ip), allocatable :: qi(:)
+      integer(ip) :: n
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekpars ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
+      ! PEPPER: the context routine grows the integer part of the encoded
+      ! query (allocatable); this interface keeps SPICELIB's cell: it is
+      ! copied in and out, and a query larger than the cell is an error.
+      n = nint ( real ( eqryi(-1), wp ), ip )
+      allocate ( qi(lbcell:n) )
+      qi = eqryi(lbcell:n)
+      call pepper_zzekpars ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, qi, eqryc, eqryd, error, prserr )
+      if ( ubound ( qi, 1, kind=ip ) > n ) then
+         if ( qi(0) > n .and. .not. ctx%failed() ) then
+            call ctx%setmsg ( 'The encoded query has # elements; the size of the cell is #.' )
+            call ctx%errint ( '#', qi(0) )
+            call ctx%errint ( '#', n )
+            call ctx%sigerr ( 'SPICE(CELLTOOSMALL)' )
+         end if
+         qi(-1) = n
+      end if
+      eqryi(lbcell:n) = qi(lbcell:n)
       end subroutine zzekpars
 
       !> Execute a 2-3 split:  split two sibling nodes into three nodes,

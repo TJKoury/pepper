@@ -42,6 +42,7 @@ program test_limits
    call test_dsk_hits()
    call test_ek_scratch()
    call test_ek_tables()
+   call test_ek_queries()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -891,6 +892,55 @@ contains
       call ctx%ekntab(n)
       call check(n == 0, 'EK tables: none after unloading all')
    end subroutine test_ek_tables
+
+   !> EK queries past the old parser limits: a WHERE clause of 150 OR'ed
+   !> comparisons (about 2700 characters and 600 tokens; SPICELIB:
+   !> MAXQRY = 2000, the rest cut off, and MAXTOK = 500), and one whose
+   !> normal form (an OR of ANDs) has 128 conjunctions of 7 relations,
+   !> more than its work pools start with (they grow).
+   subroutine test_ek_queries()
+      character(*), parameter :: ek = prefix // 'queries.bes'
+      character(:), allocatable :: query
+      character(80) :: errmsg
+      character(16) :: num
+      integer(ip) :: handle, segno, recno, i, nrows, val, sum
+      logical :: error, null, found
+      call delete_file(ek)
+      call ctx%ekopn(ek, ek, 0_ip, handle)
+      call ctx%ekbseg(handle, 'Q', 1_ip, ['C1'], ['DATATYPE = INTEGER'], segno)
+      do i = 1, 1000
+         call ctx%ekappr(handle, segno, recno)
+         call ctx%ekacei(handle, segno, recno, 'C1', 1_ip, [i], .false.)
+      end do
+      call ctx%ekcls(handle)
+      call ctx%furnsh(ek)
+      call check_ok('EK queries: write and load')
+      query = 'SELECT C1 FROM Q WHERE C1 = 1'
+      do i = 2, 150
+         write (num, '(i0)') i
+         query = query // '   OR   C1   =   ' // trim(num)
+      end do
+      call ctx%ekfind(query, nrows, error, errmsg)
+      call check_ok('EK queries: 150 comparisons')
+      call check(.not. error .and. nrows == 150 .and. len(query) > 2000, 'EK queries: 150 comparisons, ' // trim(errmsg))
+      sum = 0
+      do i = 1, nrows
+         call ctx%ekgi(1_ip, i, 1_ip, val, null, found)
+         sum = sum + val
+      end do
+      call check(sum == 150*151/2, 'EK queries: the 150 rows')
+      query = 'SELECT C1 FROM Q WHERE (C1 = 1 OR C1 = 2)'
+      do i = 3, 8
+         write (num, '(i0)') i
+         query = query // ' AND (C1 = 1 OR C1 = ' // trim(num) // ')'
+      end do
+      call ctx%ekfind(query, nrows, error, errmsg)
+      call ctx%ekgi(1_ip, 1_ip, 1_ip, val, null, found)
+      call check_ok('EK queries: 128 conjunctions')
+      call check(.not. error .and. nrows == 1 .and. val == 1, 'EK queries: 128 conjunctions, ' // trim(errmsg))
+      call ctx%unload(ek)
+      call delete_file(ek)
+   end subroutine test_ek_queries
 
    !> PCK constants of a body with its own nutation/precession angles
    !> (the first n of ANGLES) and coefficients (the first n of COEF).

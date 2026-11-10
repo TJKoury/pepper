@@ -64,7 +64,7 @@ module pepper_states
        init_termpt_state, init_tisbod_state, init_tkfram_state, &
        init_zzbodblt_state, init_zzbodtrn_state, &
        init_zzdsksbf_state, init_zzekjtst_state, &
-       init_zzeknrml_state, init_zzeksca_state, init_zzelvupy_state, init_zzgffvu_state, &
+       init_zzeksca_state, init_zzelvupy_state, init_zzgffvu_state, &
        init_zzswfxfm_state
 
    ! parameters of several states
@@ -3804,46 +3804,6 @@ module pepper_states
       logical :: lsmall  !! the non-equi-join key constraint requires LHS < or <= RHS
    end type zzekjtst_state
 
-   ! ------------------------------------------------------------------ ZZEKNRML
-
-   integer(ip), parameter :: maxrel = 10*maxtok
-   integer(ip), parameter :: maxstk = 500
-   integer(ip), parameter :: zzeknrml_dscsiz = eqvdsz + 1
-
-   !> Convert the WHERE clause of an EK query to a normalized form.
-   !>
-   !> The saved variables of SPICELIB's ZZEKNRML routines (entry points
-   !> zzeknrml), held in pepper_context (one per thread).
-   !>
-   !> No default initialization (436332 bytes): see init_zzeknrml_state.
-   type, public :: zzeknrml_state
-      integer(ip) :: rels ( 3,  maxrel          )  !! work: each comparison relation: token pointer, operator code, token
-      integer(ip) :: rlpool ( 2,  lbpool : maxrel )  !! work: linked list pool of the relations (rels)
-      integer(ip) :: cjpool ( 2,  lbpool : maxrel )  !! work: linked list pool of the conjunctions (one list per conjunction)
-      integer(ip) :: cjptrs (              maxrel )  !! work: relation (index in rels) of each conjunction list node
-      integer(ip) :: djpool ( 2,  lbpool : maxrel )  !! work: linked list pool of the disjunctions (one per expression)
-      integer(ip) :: djptrs (              maxrel )  !! work: head of the conjunction list (cjpool) of each disjunction node
-      integer(ip) :: mtpool ( 2,  lbpool : maxtok )  !! work: linked list pool of the meta-tokens of the query
-      integer(ip) :: mtcode (              maxtok )  !! work: classification code of each meta-token
-      integer(ip) :: mtexpr (              maxtok )  !! work: token, descriptor or disjunction list pointer of each meta-token
-      integer(ip) :: mstart ( maxstk )  !! work: the first meta-token node at each level of the normalization stack
-      integer(ip) :: popcnd ( maxstk )  !! work: pop condition (reduction or right grouper) of each stack level
-      integer(ip) :: cj (4)  !! work: conjunction list nodes made for a BETWEEN or NOT BETWEEN relation
-      integer(ip) :: dj (2)  !! work: disjunction list nodes being made or joined
-      integer(ip) :: dspool ( 2, lbpool : maxrel )  !! work: linked list pool of the descriptors in dscbuf
-      integer(ip) :: dscbuf ( zzeknrml_dscsiz,     maxrel )  !! work: descriptor and type code (value or ident) of each value/identifier
-      integer(ip) :: first  !! work: node of the first meta-token of the current expression
-      integer(ip) :: level  !! work: current level of the parser's state stack
-      integer(ip) :: newdj  !! work: disjunction list node just made
-      integer(ip) :: rel (4)  !! work: relations made for a BETWEEN or NOT BETWEEN relation
-      integer(ip) :: relset ( lbcell : maxrel )  !! work: set of the relations of an expression to negate, so each is negated once
-      integer(ip) :: retcnd  !! work: pop condition of the stack level to push
-      integer(ip) :: second  !! work: node of the second meta-token of the current expression
-      integer(ip) :: sizes ( maxcon )  !! work: number of relations of each conjunction of the normalized expression
-      integer(ip) :: start  !! work: node of the first meta-token of the subexpression to push
-      integer(ip) :: state  !! work: state of the parser (push, pop, parse, reduced or terminated)
-   end type zzeknrml_state
-
    ! ------------------------------------------------------------------ ZZEKPAGE
 
    !> SPICE Private routine intended solely for the support of SPICE
@@ -6523,37 +6483,6 @@ contains
       state%done = .false.
       state%lsmall = .false.
    end subroutine init_zzekjtst_state
-
-   !> Set the initial values of a new zzeknrml_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_zzeknrml_state(state)
-      type(zzeknrml_state), intent(inout) :: state  !! the state
-      state%rels = 0
-      state%rlpool = 0
-      state%cjpool = 0
-      state%cjptrs = 0
-      state%djpool = 0
-      state%djptrs = 0
-      state%mtpool = 0
-      state%mtcode = 0
-      state%mtexpr = 0
-      state%mstart = 0
-      state%popcnd = 0
-      state%cj = 0
-      state%dj = 0
-      state%dspool = 0
-      state%dscbuf = 0
-      state%first = 0
-      state%level = 0
-      state%newdj = 0
-      state%rel = 0
-      state%relset = 0
-      state%retcnd = 0
-      state%second = 0
-      state%sizes = 0
-      state%start = 0
-      state%state = 0
-   end subroutine init_zzeknrml_state
 
    !> Set the initial values of a new zzeksca_state: SPICELIB's DATA
    !> values, and zero for the other components.

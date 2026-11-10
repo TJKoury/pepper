@@ -43630,6 +43630,7 @@ contains
 !     Local parameters
 !
       integer(ip), parameter :: lbcell = -5
+      integer(ip)           room
 
 !
 !     Storage limits:
@@ -43639,21 +43640,21 @@ contains
 !
 !     Local variables
 !
-      character(maxcln)     chrbuf
-      character(maxcln)     eqryc
+      character(:), allocatable :: chrbuf
+      character(:), allocatable :: eqryc
 
-      real(wp)              eqryd  ( maxqnm )
-      real(wp)              numvls ( maxqnm )
+      real(wp), allocatable :: eqryd ( : )
+      real(wp), allocatable :: numvls ( : )
 
-      integer(ip)           chbegs ( maxtok )
-      integer(ip)           chends ( maxtok )
-      integer(ip)           eqryi  ( lbcell : eqimin )
+      integer(ip), allocatable :: chbegs ( : )
+      integer(ip), allocatable :: chends ( : )
+      integer(ip), allocatable :: eqryi ( : )
       integer(ip)           errptr
-      integer(ip)           lxbegs ( maxtok )
-      integer(ip)           lxends ( maxtok )
+      integer(ip), allocatable :: lxbegs ( : )
+      integer(ip), allocatable :: lxends ( : )
       integer(ip)           ntoken
-      integer(ip)           tokens ( maxtok )
-      integer(ip)           values ( maxtok )
+      integer(ip), allocatable :: tokens ( : )
+      integer(ip), allocatable :: values ( : )
 
 !
 !     Standard SPICE error handling.
@@ -43663,12 +43664,26 @@ contains
 !
 !     Initialize the encoded query each time, for safety.
 !
-      call zzekqini ( ctx, eqimin, maxqnm, eqryi, eqryc, eqryd )
+!
+!     PEPPER: the buffers are sized from the query: it has at most one
+!     token, and one number, per character, and its strings and names fit
+!     in its length; the integer part of the encoded query grows as it is
+!     written (SPICELIB: MAXQRY = 2000 characters, MAXTOK = 500 tokens,
+!     MAXQNM = 100 numbers, and EQIMIN elements, sized for the largest
+!     query).
+!
+      room = max ( len_trim ( query ), 1 )
+      allocate ( character(room) :: chrbuf, eqryc )
+      allocate ( eqryd(room), numvls(room), source = 0.0_wp )
+      allocate ( chbegs(room), chends(room), lxbegs(room), lxends(room), &
+                 tokens(room), values(room), source = 0_ip )
+      allocate ( eqryi(lbcell:eqvbas + 64), source = 0_ip )
+      call zzekqini ( ctx, ubound ( eqryi, 1, kind=ip ), room, eqryi, eqryc, eqryd )
 
 !
 !     Find the tokens in the input query.
 !
-      call zzekscan ( ctx, query,  maxtok, maxqnm, ntoken, tokens, &
+      call zzekscan ( ctx, query,  room, room, ntoken, tokens, &
                       lxbegs, lxends, values, numvls, chrbuf, &
                       chbegs, chends, error,  errmsg         )
 
@@ -43741,6 +43756,8 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektype
       integer(ip), parameter :: lbcell = -5
+      integer(ip)           room
+      integer(ip)           dsize
 
 
 ! $ Detailed_Input
@@ -43835,17 +43852,17 @@ contains
 !
 !     Local variables
 !
-      character(maxcln)     chrbuf
+      character(:), allocatable :: chrbuf
 
-      real(wp)              numvls ( maxqnm )
+      real(wp), allocatable :: numvls ( : )
 
-      integer(ip)           chbegs ( maxtok )
-      integer(ip)           chends ( maxtok )
-      integer(ip)           lxbegs ( maxtok )
-      integer(ip)           lxends ( maxtok )
+      integer(ip), allocatable :: chbegs ( : )
+      integer(ip), allocatable :: chends ( : )
+      integer(ip), allocatable :: lxbegs ( : )
+      integer(ip), allocatable :: lxends ( : )
       integer(ip)           ntoken
-      integer(ip)           tokens ( maxtok )
-      integer(ip)           values ( maxtok )
+      integer(ip), allocatable :: tokens ( : )
+      integer(ip), allocatable :: values ( : )
 
 !
 !     Standard SPICE error handling.
@@ -43855,12 +43872,25 @@ contains
 !
 !     Initialize the encoded query each time, for safety.
 !
-      call zzekqini ( ctx, eqimin, maxqnm, eqryi, eqryc, eqryd )
+!
+!     PEPPER: the scanner's buffers are sized from the query (at most one
+!     token per character); the encoded query keeps the sizes its caller
+!     initialized it with (ZZEKQINI; its integer part grows), and the
+!     numbers scanned are limited to its numeric part (SPICELIB: MAXQRY,
+!     MAXTOK, MAXQNM, EQIMIN).
+!
+      room  = max ( len_trim ( query ), 1 )
+      dsize = eqryi(eqnsiz)
+      allocate ( character(room) :: chrbuf )
+      allocate ( numvls(room), source = 0.0_wp )
+      allocate ( chbegs(room), chends(room), lxbegs(room), lxends(room), &
+                 tokens(room), values(room), source = 0_ip )
+      call zzekqini ( ctx, sizei ( ctx, eqryi ), dsize, eqryi, eqryc, eqryd )
 
 !
 !     Find the tokens in the input query.
 !
-      call zzekscan ( ctx, query,  maxtok, maxqnm, ntoken, tokens, &
+      call zzekscan ( ctx, query,  room, min ( room, dsize ), ntoken, tokens, &
                       lxbegs, lxends, values, numvls, chrbuf, &
                       chbegs, chends, error,  errmsg         )
 
@@ -44441,6 +44471,7 @@ contains
 !     Local parameters
 !
       integer(ip), parameter :: lbcell = -5
+      integer(ip)           room
 
       integer(ip), parameter :: ntypes = 4
 
@@ -44453,14 +44484,14 @@ contains
       character(short), parameter :: chrtyp ( ntypes ) = &
          [ character(short) :: 'CHR', 'DP', 'INT', 'TIME' ]
       character(cnamsz)     column
-      character(maxcln)     eqryc
+      character(:), allocatable :: eqryc
       character(tnamsz)     qtab
 
-      real(wp)              eqryd  ( maxqnm )
+      real(wp), allocatable :: eqryd ( : )
 
       integer(ip)           attdsc ( adscsz )
       integer(ip)           colidx
-      integer(ip)           eqryi  ( lbcell : eqimin )
+      integer(ip), allocatable :: eqryi ( : )
       integer(ip)           errptr
       integer(ip)           i
       integer(ip)           tabidx
@@ -44481,7 +44512,14 @@ contains
 !
 !     Initialize the encoded query each time, for safety.
 !
-      call zzekqini ( ctx, eqimin, maxqnm, eqryi, eqryc, eqryd )
+!
+!     PEPPER: the encoded query is sized from the query (see EKFIND).
+!
+      room = max ( len_trim ( query ), 1 )
+      allocate ( character(room) :: eqryc )
+      allocate ( eqryd(room), source = 0.0_wp )
+      allocate ( eqryi(lbcell:eqvbas + 64), source = 0_ip )
+      call zzekqini ( ctx, ubound ( eqryi, 1, kind=ip ), room, eqryi, eqryc, eqryd )
 
 !
 !     Encode the input query.

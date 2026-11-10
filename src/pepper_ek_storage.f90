@@ -2824,13 +2824,6 @@ contains
 !
 !     Minimum upper bound for the integer cell of an encoded query:
 !
-      integer(ip)           mnisiz
-      parameter           ( mnisiz =     eqvbas &
-                                      +  maxtab * eqvdsz * 2 &
-                                      +  maxcon * eqcdsz &
-                                      +  maxcon &
-                                      +  maxord * eqodsz &
-                                      +  maxsel * eqsdsz )
 
 !
 !     Local variables
@@ -2845,42 +2838,12 @@ contains
 !
 !     Check sizes:
 !
-      if ( isize < mnisiz ) then
-
-         call ctx%setmsg ( 'Size of integer component of encoded query ' // &
-                       'is #; at least # elements are required.'      )
-         call ctx%errint ( '#',   isize                                   )
-         call ctx%errint ( '#',   mnisiz                                  )
-         call ctx%sigerr ( 'SPICE(CELLTOOSMALL)'                          )
-         return
-
-      end if
-
-      if ( dsize < maxqnm ) then
-
-         call ctx%setmsg ( 'Size of d.p. component of encoded query ' // &
-                       'is #; at least # elements are required.'      )
-         call ctx%errint ( '#',   dsize                                   )
-         call ctx%errint ( '#',   maxqnm                                  )
-         call ctx%sigerr ( 'SPICE(CELLTOOSMALL)'                          )
-         return
-
-      end if
-
-      if ( len(eqryc) < maxcln ) then
-
-         call ctx%setmsg ( 'Size of character component of encoded query '// &
-                       'is #; a length of at least # characters is '  // &
-                       'required.'                                    )
-         call ctx%errint ( '#',   len(eqryc)                              )
-         call ctx%errint ( '#',   maxcln                                  )
-         call ctx%sigerr ( 'SPICE(STRINGTOOSHORT)'                        )
-         return
-
-      end if
-
 !
-!     Initialize the integer cell, the d.p. array, and the string.
+!     PEPPER: no minimum sizes. The callers size the encoded query from
+!     the query (its integer part grows as it is written; the numbers and
+!     the strings of the query fit in buffers sized from its length);
+!     SPICELIB required room for the largest query (CELLTOOSMALL,
+!     STRINGTOOSHORT).
 !
       call ssizei ( ctx, isize, eqryi )
       call cleard ( dsize, eqryd )
@@ -4974,7 +4937,7 @@ contains
       isquot ( chr )  =     ( chr == squote ) .or. ( chr == dquote )
       integer(ip) :: cptr
       integer(ip) :: j
-      character(maxqry) :: tquery
+      character(:), allocatable :: tquery
       integer(ip) :: room
       integer(ip) :: i
       character(lnsize) :: hdchrs
@@ -5021,7 +4984,12 @@ contains
 !     We'll work with a local copy of the query.
 !
       l       =  rtrim ( query )
-      tquery  =  query(:l)
+!
+!     PEPPER: the query is copied whole, with a blank after it as the
+!     padding of SPICELIB's MAXQRY-character copy gave (which cut longer
+!     queries without an error).
+!
+      tquery  =  query(:l) // ' '
 
 !
 !     Initialize pointers and counts.
@@ -13680,12 +13648,10 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektokn
       use pepper_inc_ektype
+      use pepper_containers, only: grow, grow_cell, grown_capacity, lnkgrow
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: maxrel = 10*maxtok
-      integer(ip), parameter :: maxmet = 10*maxtok
       integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxstk = 500
       integer(ip), parameter :: nlogop = 3
       integer(ip), parameter :: nrelop = 8
       integer(ip), parameter :: rgroup = -1
@@ -13758,35 +13724,57 @@ contains
       logical :: fnd
       integer(ip) :: exprhd
       integer(ip) :: skip
-      if ( .not. allocated ( ctx%zzeknrml_state ) ) then
-         allocate ( ctx%zzeknrml_state )
-         call init_zzeknrml_state ( ctx%zzeknrml_state )
-      end if
-      associate ( rels => ctx%zzeknrml_state%rels, &
-                  rlpool => ctx%zzeknrml_state%rlpool, &
-                  cjpool => ctx%zzeknrml_state%cjpool, &
-                  cjptrs => ctx%zzeknrml_state%cjptrs, &
-                  djpool => ctx%zzeknrml_state%djpool, &
-                  djptrs => ctx%zzeknrml_state%djptrs, &
-                  mtpool => ctx%zzeknrml_state%mtpool, &
-                  mtcode => ctx%zzeknrml_state%mtcode, &
-                  mtexpr => ctx%zzeknrml_state%mtexpr, &
-                  mstart => ctx%zzeknrml_state%mstart, &
-                  popcnd => ctx%zzeknrml_state%popcnd, &
-                  cj => ctx%zzeknrml_state%cj, &
-                  dj => ctx%zzeknrml_state%dj, &
-                  dspool => ctx%zzeknrml_state%dspool, &
-                  dscbuf => ctx%zzeknrml_state%dscbuf, &
-                  first => ctx%zzeknrml_state%first, &
-                  level => ctx%zzeknrml_state%level, &
-                  newdj => ctx%zzeknrml_state%newdj, &
-                  rel => ctx%zzeknrml_state%rel, &
-                  relset => ctx%zzeknrml_state%relset, &
-                  retcnd => ctx%zzeknrml_state%retcnd, &
-                  second => ctx%zzeknrml_state%second, &
-                  sizes => ctx%zzeknrml_state%sizes, &
-                  start => ctx%zzeknrml_state%start, &
-                  state => ctx%zzeknrml_state%state )
+!
+!     PEPPER: the work arrays are local and sized from the number of
+!     tokens (SPICELIB: saved arrays for MAXTOK = 500 tokens and 10*MAXTOK
+!     relations, conjunctions, disjunctions and descriptors, 0.4 MB per
+!     context); the linked list pools grow when they are full (SPICELIB:
+!     the parse errors "Relation table is full.", "Conjunction table is
+!     full.", "Disjunction table is full."), and the stack has room for
+!     the deepest nesting the tokens allow (SPICELIB: 500).
+!
+      integer(ip), allocatable :: rels ( :, : )  !! each comparison relation: token pointer, operator code, token
+      integer(ip), allocatable :: rlpool ( :, : )  !! linked list pool of the relations (rels)
+      integer(ip), allocatable :: cjpool ( :, : )  !! linked list pool of the conjunctions (one list per conjunction)
+      integer(ip), allocatable :: cjptrs ( : )  !! relation (index in rels) of each conjunction list node
+      integer(ip), allocatable :: djpool ( :, : )  !! linked list pool of the disjunctions (one per expression)
+      integer(ip), allocatable :: djptrs ( : )  !! head of the conjunction list (cjpool) of each disjunction node
+      integer(ip), allocatable :: mtpool ( :, : )  !! linked list pool of the meta-tokens of the query
+      integer(ip), allocatable :: mtcode ( : )  !! classification code of each meta-token
+      integer(ip), allocatable :: mtexpr ( : )  !! token, descriptor or disjunction list pointer of each meta-token
+      integer(ip), allocatable :: mstart ( : )  !! the first meta-token node at each level of the normalization stack
+      integer(ip), allocatable :: popcnd ( : )  !! pop condition (reduction or right grouper) of each stack level
+      integer(ip), allocatable :: dspool ( :, : )  !! linked list pool of the descriptors in dscbuf
+      integer(ip), allocatable :: dscbuf ( :, : )  !! descriptor and type code (value or ident) of each value/identifier
+      integer(ip), allocatable :: relset ( : )  !! set of the relations of an expression to negate, so each is negated once
+      integer(ip), allocatable :: sizes ( : )  !! number of relations of each conjunction of the normalized expression
+      integer(ip) :: cj (4)  !! conjunction list nodes made for a BETWEEN or NOT BETWEEN relation
+      integer(ip) :: dj (2)  !! disjunction list nodes being made or joined
+      integer(ip) :: rel (4)  !! relations made for a BETWEEN or NOT BETWEEN relation
+      integer(ip) :: first  !! node of the first meta-token of the current expression
+      integer(ip) :: level  !! current level of the parser's state stack
+      integer(ip) :: newdj  !! disjunction list node just made
+      integer(ip) :: retcnd  !! pop condition of the stack level to push
+      integer(ip) :: second  !! node of the second meta-token of the current expression
+      integer(ip) :: start  !! node of the first meta-token of the subexpression to push
+      integer(ip) :: state  !! state of the parser (push, pop, parse, reduced or terminated)
+      integer(ip) :: maxstk  !! size of the stack
+      integer(ip) :: maxrel  !! initial size of the relation, conjunction, disjunction and descriptor pools
+      integer(ip) :: mtsize  !! size of the meta-token pool
+
+      mtsize = max ( ntoken, 1_ip )
+      maxrel = 10 * mtsize
+      maxstk = mtsize + 2
+      allocate ( rels(3, maxrel), cjptrs(maxrel), djptrs(maxrel), &
+                 mtcode(mtsize), mtexpr(mtsize), mstart(maxstk), popcnd(maxstk), &
+                 dscbuf(dscsiz, maxrel), source = 0_ip )
+      allocate ( rlpool(2, lbpool:maxrel), cjpool(2, lbpool:maxrel), djpool(2, lbpool:maxrel), &
+                 dspool(2, lbpool:maxrel), mtpool(2, lbpool:mtsize), source = 0_ip )
+      allocate ( relset(lbcell:maxrel), source = 0_ip )
+      allocate ( sizes(0) )
+      cj = 0
+      dj = 0
+      rel = 0
       if ( ctx%failed() ) return
 
 !
@@ -13795,12 +13783,6 @@ contains
       error  = .false.
       prserr = ' '
 
-      if ( ntoken > maxtok ) then
-         error  = .true.
-         prserr = 'Too many tokens in query; max allowed is #.'
-         call repmi  ( ctx, prserr, '#', maxtok, prserr )
-         return
-      end if
 
 !
 !     Find out the start and end indices of the tokens comprising the
@@ -13856,7 +13838,7 @@ contains
       call lnkini ( ctx, maxrel, rlpool )
       call lnkini ( ctx, maxrel, cjpool )
       call lnkini ( ctx, maxrel, djpool )
-      call lnkini ( ctx, maxtok, mtpool )
+      call lnkini ( ctx, mtsize, mtpool )
       call lnkini ( ctx, maxrel, dspool )
 
 !
@@ -13903,6 +13885,7 @@ contains
 !
             mtcode(node) = value
 
+            if ( lnknfn( ctx,dspool) < 1 ) call more_descriptors ( )
             call lnkan ( ctx, dspool, mtexpr(node) )
 
             if ( tokens(i) == tkint ) then
@@ -13930,6 +13913,7 @@ contains
 !
             mtcode(node) = value
 
+            if ( lnknfn( ctx,dspool) < 1 ) call more_descriptors ( )
             call lnkan ( ctx, dspool, mtexpr(node) )
 
             b  =  chbegs( values(i) )
@@ -13957,6 +13941,7 @@ contains
 !
             mtcode(node) = ident
 
+            if ( lnknfn( ctx,dspool) < 1 ) call more_descriptors ( )
             call lnkan ( ctx, dspool, mtexpr(node) )
 
             b  =  chbegs( values(i) )
@@ -14336,6 +14321,7 @@ contains
 !                 null character descriptor.  Link this descriptor in
 !                 before the column descriptor.
 !
+                  if ( lnknfn( ctx,dspool) < 1 ) call more_descriptors ( )
                   call lnkan ( ctx, dspool, tabptr )
 
                   call cleari ( dscsiz, dscbuf(1,tabptr) )
@@ -14569,11 +14555,7 @@ contains
 !                 is store the expression in the relation table,
 !                 and free the second and third meta-tokens.
 !
-                  if ( lnknfn( ctx,rlpool) < 1 ) then
-                     error  = .true.
-                     prserr = 'Relation table is full.'
-                     return
-                  end if
+                  if ( lnknfn( ctx,rlpool) < 1 ) call more_relations ( )
 
                   call lnkan ( ctx, rlpool, newrel )
 
@@ -14589,11 +14571,7 @@ contains
 !                 and make this entry point to the relation table
 !                 entry.
 !
-                  if ( lnknfn( ctx,cjpool) < 1 ) then
-                     error  = .true.
-                     prserr = 'Conjunction table is full.'
-                     return
-                  end if
+                  if ( lnknfn( ctx,cjpool) < 1 ) call more_conjunctions ( )
 
                   call lnkan ( ctx, cjpool, newcj )
 
@@ -14604,11 +14582,7 @@ contains
 !                 and make this entry point to the conjunction pool
 !                 entry.
 !
-                  if ( lnknfn( ctx,djpool) < 1 ) then
-                     error  = .true.
-                     prserr = 'Disjunction table is full.'
-                     return
-                  end if
+                  if ( lnknfn( ctx,djpool) < 1 ) call more_disjunctions ( )
 
                   call lnkan ( ctx, djpool, newdj )
 
@@ -14684,11 +14658,7 @@ contains
 
                         end if
 
-                        if ( lnknfn( ctx,rlpool) < 1 ) then
-                           error  = .true.
-                           prserr = 'Relation table is full.'
-                           return
-                        end if
+                        if ( lnknfn( ctx,rlpool) < 1 ) call more_relations ( )
 
                         call lnkan ( ctx, rlpool, rel(i) )
 
@@ -14702,11 +14672,7 @@ contains
 
                         rels( 3, rel(i) ) = k
 
-                        if ( lnknfn( ctx,cjpool) < 1 ) then
-                           error  = .true.
-                           prserr = 'Conjunction table is full.'
-                           return
-                        end if
+                        if ( lnknfn( ctx,cjpool) < 1 ) call more_conjunctions ( )
 
                         call lnkan ( ctx, cjpool, cj(i) )
 
@@ -14727,11 +14693,7 @@ contains
 !
                      do i = 1, 2
 
-                        if ( lnknfn( ctx,djpool) < 1 ) then
-                           error  = .true.
-                           prserr = 'Disjunction table is full.'
-                           return
-                        end if
+                        if ( lnknfn( ctx,djpool) < 1 ) call more_disjunctions ( )
 
                         call lnkan ( ctx, djpool, dj(i) )
                         djptrs(dj(i))  =  cj( 2*i - 1 )
@@ -14804,11 +14766,7 @@ contains
 
                         end if
 
-                        if ( lnknfn( ctx,rlpool) < 1 ) then
-                           error  = .true.
-                           prserr = 'Relation table is full.'
-                           return
-                        end if
+                        if ( lnknfn( ctx,rlpool) < 1 ) call more_relations ( )
 
                         call lnkan ( ctx, rlpool, rel(i) )
 
@@ -14822,11 +14780,7 @@ contains
 
                         rels( 3, rel(i) ) = k
 
-                        if ( lnknfn( ctx,cjpool) < 1 ) then
-                           error  = .true.
-                           prserr = 'Conjunction table is full.'
-                           return
-                        end if
+                        if ( lnknfn( ctx,cjpool) < 1 ) call more_conjunctions ( )
 
                         call lnkan ( ctx, cjpool, cj(i) )
 
@@ -14847,11 +14801,7 @@ contains
 !
                      do i = 1, 2
 
-                        if ( lnknfn( ctx,djpool) < 1 ) then
-                           error  = .true.
-                           prserr = 'Disjunction table is full.'
-                           return
-                        end if
+                        if ( lnknfn( ctx,djpool) < 1 ) call more_disjunctions ( )
 
                         call lnkan ( ctx, djpool, dj(i) )
                         djptrs(dj(i))  =  cj( 2*i - 1 )
@@ -15142,11 +15092,7 @@ contains
 !                       the conjunction of the conjunction lists
 !                       pointed to by DJ(1) and DJ(2).
 !
-                        if ( lnknfn( ctx,djpool) < 1 ) then
-                           error  = .true.
-                           prserr = 'Disjunction table is full.'
-                           return
-                        end if
+                        if ( lnknfn( ctx,djpool) < 1 ) call more_disjunctions ( )
 
                         call lnkan ( ctx, djpool, newdj )
 
@@ -15159,11 +15105,7 @@ contains
 
                         do while ( cj(1) > 0 )
 
-                           if ( lnknfn( ctx,cjpool) < 1 ) then
-                              error  = .true.
-                              prserr = 'Conjunction table is full.'
-                              return
-                           end if
+                           if ( lnknfn( ctx,cjpool) < 1 ) call more_conjunctions ( )
 
                            call lnkan  ( ctx,  cjpool, newcj          )
                            call lnkila ( ctx,  tail,   newcj, cjpool  )
@@ -15181,11 +15123,7 @@ contains
 
                         do while ( cj(2) > 0 )
 
-                           if ( lnknfn( ctx,cjpool) < 1 ) then
-                              error  = .true.
-                              prserr = 'Conjunction table is full.'
-                              return
-                           end if
+                           if ( lnknfn( ctx,cjpool) < 1 ) call more_conjunctions ( )
 
                            call lnkan  ( ctx,  cjpool, newcj          )
                            call lnkila ( ctx,  tail,   newcj, cjpool  )
@@ -15376,19 +15314,11 @@ contains
 !                    that points to the relation pointed to by
 !                    CJNODE.
 !
-                     if ( lnknfn( ctx,djpool) < 1 ) then
-                        error  = .true.
-                        prserr = 'Disjunction table is full.'
-                        return
-                     end if
+                     if ( lnknfn( ctx,djpool) < 1 ) call more_disjunctions ( )
 
                      call lnkan ( ctx, djpool, newdj )
 
-                     if ( lnknfn( ctx,cjpool) < 1  ) then
-                        error  = .true.
-                        prserr = 'Conjunction table is full.'
-                        return
-                     end if
+                     if ( lnknfn( ctx,cjpool) < 1 ) call more_conjunctions ( )
 
                      call lnkan ( ctx, cjpool, newcj )
 
@@ -15446,11 +15376,7 @@ contains
 
                            do while ( cjnode > 0 )
 
-                              if ( lnknfn( ctx,cjpool) < 1 ) then
-                                 error  = .true.
-                                 prserr = 'Conjunction table is full.'
-                                 return
-                              end if
+                              if ( lnknfn( ctx,cjpool) < 1 ) call more_conjunctions ( )
 
                               call lnkan  ( ctx, cjpool, newcj         )
                               call lnkila ( ctx, tail,   newcj, cjpool )
@@ -15470,20 +15396,12 @@ contains
 !                          new disjunction table entry to point to this
 !                          new conjunction.
 !
-                           if ( lnknfn( ctx,cjpool) < 1 ) then
-                              error  = .true.
-                              prserr = 'Conjunction table is full.'
-                              return
-                           end if
+                           if ( lnknfn( ctx,cjpool) < 1 ) call more_conjunctions ( )
 
                            call lnkan ( ctx, cjpool, newcj )
                            cjptrs(newcj)  =  cjptrs(cj(2))
 
-                           if ( lnknfn( ctx,djpool) < 1  ) then
-                              error  = .true.
-                              prserr = 'Disjunction table is full.'
-                              return
-                           end if
+                           if ( lnknfn( ctx,djpool) < 1 ) call more_disjunctions ( )
 
                            call lnkan ( ctx, djpool, newdj )
 
@@ -15547,7 +15465,7 @@ contains
 !                 of relations to be negated, then negate each relation
 !                 in the set.
 !
-                  call ssizei ( ctx, maxrel, relset )
+                  call ssizei ( ctx, ubound ( relset, 1, kind=ip ), relset )
 
                   djnode = mtexpr(second)
 
@@ -15736,6 +15654,7 @@ contains
       do while ( djnode > 0 )
 
          nconj         =  nconj + 1
+         call grow ( sizes, nconj )
          sizes(nconj)  =  0
          cjnode        =  djptrs(djnode)
 
@@ -15743,6 +15662,18 @@ contains
 
             nrels          =  nrels        + 1
             sizes (nconj)  =  sizes(nconj) + 1
+!
+!           PEPPER: the constraint arrays of EKSRCH have room for MAXCON
+!           constraints; SPICELIB did not check (its relation pool
+!           allowed 10*MAXTOK) and wrote past them.
+!
+            if ( nrels > maxcon ) then
+               error  = .true.
+               prserr = 'Too many constraints in the normalized WHERE ' // &
+                        'clause; max allowed is #.'
+               call repmi ( ctx, prserr, '#', maxcon, prserr )
+               return
+            end if
             relptr         =  cjptrs(cjnode)
 
             tabptr         =  rels(1,relptr)
@@ -15757,7 +15688,7 @@ contains
 !           First, save space for the constraint type.  We'll fill this
 !           in after finding out what's on the right hand side.
 !
-            call appndi ( ctx, 0, eqryi )
+            call append_query ( ctx, 0, eqryi )
             k  =  cardi ( ctx, eqryi )
 
 !
@@ -15766,13 +15697,13 @@ contains
 !           pointed to by NAMPTR.
 !
             do i = 1, eqvdsz
-               call appndi ( ctx,  dscbuf( i, tabptr ),  eqryi  )
+               call append_query ( ctx,  dscbuf( i, tabptr ),  eqryi  )
             end do
 
             colptr  =  lnknxt( ctx, tabptr, dspool )
 
             do i = 1, eqvdsz
-               call appndi ( ctx,  dscbuf( i, colptr ),  eqryi  )
+               call append_query ( ctx,  dscbuf( i, colptr ),  eqryi  )
             end do
 
 !
@@ -15804,13 +15735,13 @@ contains
 !
 !              Set the operator code.
 !
-               call appndi ( ctx, op, eqryi )
+               call append_query ( ctx, op, eqryi )
 
 !
 !              Pad the constraint descriptor up to the full length.
 !
                do i = 1, 2*eqvdsz
-                  call appndi ( ctx, 0, eqryi )
+                  call append_query ( ctx, 0, eqryi )
                end do
 
 !
@@ -15826,7 +15757,7 @@ contains
 !              fill in the information describing the RHS of the
 !              constraint.
 !
-               call appndi ( ctx, op, eqryi )
+               call append_query ( ctx, op, eqryi )
 
                if (  dscbuf( dscsiz, rhsptr ) == value ) then
 !
@@ -15834,11 +15765,11 @@ contains
 !                 for the value, then pad the constraint descriptor.
 !
                   do i = 1, eqvdsz
-                     call appndi ( ctx,  dscbuf( i, rhsptr ),  eqryi  )
+                     call append_query ( ctx,  dscbuf( i, rhsptr ),  eqryi  )
                   end do
 
                   do i = 1, eqvdsz
-                     call appndi ( ctx,  0,  eqryi  )
+                     call append_query ( ctx,  0,  eqryi  )
                   end do
 
 !
@@ -15853,13 +15784,13 @@ contains
 !                 descriptors for the table and column.
 !
                   do i = 1, eqvdsz
-                     call appndi ( ctx,  dscbuf( i, rhsptr ),  eqryi  )
+                     call append_query ( ctx,  dscbuf( i, rhsptr ),  eqryi  )
                   end do
 
                   colptr  =  lnknxt( ctx, rhsptr, dspool )
 
                   do i = 1, eqvdsz
-                     call appndi ( ctx,  dscbuf( i, colptr ),  eqryi  )
+                     call append_query ( ctx,  dscbuf( i, colptr ),  eqryi  )
                   end do
 
 !
@@ -15896,11 +15827,48 @@ contains
 !     Add the conjunction size list to the encoded query.
 !
       do i = 1, nconj
-         call appndi ( ctx, sizes(i), eqryi )
+         call append_query ( ctx, sizes(i), eqryi )
       end do
 
       return
-      end associate
+
+      contains
+
+!
+!        PEPPER: grow the pools (and their parallel arrays) when full.
+!
+         !> Grow the relation pool, the relations and the relation set.
+         subroutine more_relations ( )
+            integer(ip) :: n
+            n = grown_capacity ( ubound ( rlpool, 2, kind=ip ), ubound ( rlpool, 2, kind=ip ) + 1 )
+            call lnkgrow ( rlpool, n )
+            call grow ( rels, n, 3_ip )
+            call grow_cell ( relset, n )
+         end subroutine more_relations
+
+         !> Grow the conjunction pool and its relation pointers.
+         subroutine more_conjunctions ( )
+            integer(ip) :: n
+            n = grown_capacity ( ubound ( cjpool, 2, kind=ip ), ubound ( cjpool, 2, kind=ip ) + 1 )
+            call lnkgrow ( cjpool, n )
+            call grow ( cjptrs, n )
+         end subroutine more_conjunctions
+
+         !> Grow the disjunction pool and its conjunction list pointers.
+         subroutine more_disjunctions ( )
+            integer(ip) :: n
+            n = grown_capacity ( ubound ( djpool, 2, kind=ip ), ubound ( djpool, 2, kind=ip ) + 1 )
+            call lnkgrow ( djpool, n )
+            call grow ( djptrs, n )
+         end subroutine more_disjunctions
+
+         !> Grow the descriptor pool and the descriptor buffer.
+         subroutine more_descriptors ( )
+            integer(ip) :: n
+            n = grown_capacity ( ubound ( dspool, 2, kind=ip ), ubound ( dspool, 2, kind=ip ) + 1 )
+            call lnkgrow ( dspool, n )
+            call grow ( dscbuf, n, dscsiz )
+         end subroutine more_descriptors
       end procedure zzeknrml
 
 !$Procedure      ZZEKSFWD ( EK, set forward pointer for data page )
@@ -19949,6 +19917,7 @@ contains
 
       implicit none
       integer(ip), parameter :: lbcell = -5
+      integer(ip)           dsize
 
 
 ! $ Detailed_Input
@@ -20232,7 +20201,13 @@ contains
 !
 !     Initialize the encoded query each time, for safety.
 !
-      call zzekqini ( ctx, eqimin, maxqnm, eqryi, eqryc, eqryd )
+!
+!     PEPPER: the encoded query is initialized at the sizes the caller
+!     allocated (SPICELIB: EQIMIN and MAXQNM); its integer part grows as
+!     it is written.
+!
+      dsize = eqryi(eqnsiz)
+      call zzekqini ( ctx, sizei ( ctx, eqryi ), dsize, eqryi, eqryc, eqryd )
 
       if ( ctx%failed() ) then
          error  =  .true.
@@ -20371,7 +20346,7 @@ contains
 !                 query.
 !
                   do j = 1, eqvdsz
-                     call appndi ( ctx, tabdsc(j), eqryi )
+                     call append_query ( ctx, tabdsc(j), eqryi )
                   end do
 
 !
@@ -20384,7 +20359,7 @@ contains
                   alsdsc(eqdtyp)  =  chr
 
                   do j = 1, eqvdsz
-                     call appndi ( ctx, alsdsc(j), eqryi )
+                     call append_query ( ctx, alsdsc(j), eqryi )
                   end do
 
 !
@@ -20629,7 +20604,7 @@ contains
                   valdsc(eqdtyp)  =  chr
 
                   do j = 1, eqvdsz
-                     call appndi ( ctx, valdsc(j), eqryi )
+                     call append_query ( ctx, valdsc(j), eqryi )
                   end do
 
 !
@@ -20672,7 +20647,7 @@ contains
 !              query.
 !
                do j = 1, eqvdsz
-                  call appndi ( ctx, namdsc(j), eqryi )
+                  call append_query ( ctx, namdsc(j), eqryi )
                end do
 
                state   =   term
@@ -20684,7 +20659,7 @@ contains
 !              query.  Another name should follow.
 !
                do j = 1, eqvdsz
-                  call appndi ( ctx, namdsc(j), eqryi )
+                  call append_query ( ctx, namdsc(j), eqryi )
                end do
 
                state  =  select
@@ -20704,7 +20679,7 @@ contains
 !              query.
 !
                do j = 1, eqvdsz
-                  call appndi ( ctx, namdsc(j), eqryi )
+                  call append_query ( ctx, namdsc(j), eqryi )
                end do
 
 !
@@ -20781,7 +20756,7 @@ contains
 !              query.
 !
                do j = 1, eqvdsz
-                  call appndi ( ctx, coldsc(j), eqryi )
+                  call append_query ( ctx, coldsc(j), eqryi )
                end do
 
                state  =  selcol
@@ -21017,7 +20992,7 @@ contains
                   valdsc(eqdtyp)  =  chr
 
                   do j = 1, eqvdsz
-                     call appndi ( ctx, valdsc(j), eqryi )
+                     call append_query ( ctx, valdsc(j), eqryi )
                   end do
 
 !
@@ -21060,7 +21035,7 @@ contains
 !              query.
 !
                do j = 1, eqvdsz
-                  call appndi ( ctx, namdsc(j), eqryi )
+                  call append_query ( ctx, namdsc(j), eqryi )
                end do
 
 !
@@ -21068,7 +21043,7 @@ contains
 !              supplied, append the default value ASCENDING to the
 !              order-by column descriptor in the encoded query.
 !
-               call appndi ( ctx, eqasnd, eqryi )
+               call append_query ( ctx, eqasnd, eqryi )
 
 !
 !              We're done with the ORDER BY clause; go on to parse the
@@ -21083,7 +21058,7 @@ contains
 !              query.  Another name should follow.
 !
                do j = 1, eqvdsz
-                  call appndi ( ctx, namdsc(j), eqryi )
+                  call append_query ( ctx, namdsc(j), eqryi )
                end do
 
 !
@@ -21091,7 +21066,7 @@ contains
 !              supplied, append the default value ASCENDING to the
 !              order-by column descriptor in the encoded query.
 !
-               call appndi ( ctx, eqasnd, eqryi )
+               call append_query ( ctx, eqasnd, eqryi )
 
                state  = ordrby
 
@@ -21112,7 +21087,7 @@ contains
 !              query.
 !
                do j = 1, eqvdsz
-                  call appndi ( ctx, namdsc(j), eqryi )
+                  call append_query ( ctx, namdsc(j), eqryi )
                end do
 
 !
@@ -21122,13 +21097,13 @@ contains
 !
                if ( values(toknum) == kwasnd ) then
 
-                  call appndi ( ctx, eqasnd, eqryi )
+                  call append_query ( ctx, eqasnd, eqryi )
 
                   state = ordsns
 
                else if ( values(toknum) == kwdsnd ) then
 
-                  call appndi ( ctx, eqdsnd, eqryi )
+                  call append_query ( ctx, eqdsnd, eqryi )
 
                   state = ordsns
 
@@ -21141,7 +21116,7 @@ contains
 !                 supplied, append the default value ASCENDING to the
 !                 order-by column descriptor in the encoded query.
 !
-                  call appndi ( ctx, eqasnd, eqryi )
+                  call append_query ( ctx, eqasnd, eqryi )
 
 !
 !                 We're done with the ORDER BY clause.  Go on to
@@ -21210,7 +21185,7 @@ contains
 !              query.
 !
                do j = 1, eqvdsz
-                  call appndi ( ctx, coldsc(j), eqryi )
+                  call append_query ( ctx, coldsc(j), eqryi )
                end do
 
                state  =  ordcol
@@ -21245,7 +21220,7 @@ contains
 !                 The ASCENDING keyword has been supplied.  After this,
 !                 look for another column.
 !
-                  call appndi ( ctx, eqasnd, eqryi )
+                  call append_query ( ctx, eqasnd, eqryi )
 
                   state  =  ordsns
 
@@ -21254,7 +21229,7 @@ contains
 !                 The DESCENDING keyword has been supplied.  After this,
 !                 look for another column.
 !
-                  call appndi ( ctx, eqdsnd, eqryi )
+                  call append_query ( ctx, eqdsnd, eqryi )
 
                   state  =  ordsns
 
@@ -21279,7 +21254,7 @@ contains
 !
 !              The ASCENDING keyword is implied.
 !
-               call appndi ( ctx, eqasnd, eqryi )
+               call append_query ( ctx, eqasnd, eqryi )
 
                state  =  ordrby
 
@@ -21287,7 +21262,7 @@ contains
 !
 !              The ASCENDING keyword is implied.
 !
-               call appndi ( ctx, eqasnd, eqryi )
+               call append_query ( ctx, eqasnd, eqryi )
 
 !
 !              We're done with the ORDER BY clause.  Parse the SELECT
@@ -30712,5 +30687,18 @@ contains
 
       return
       end procedure zzekrp2n
+
+   !> PEPPER: APPNDI for the integer part of an encoded query, which grows
+   !> (SPICELIB: a cell of EQIMIN elements, sized for the largest query).
+   subroutine append_query ( ctx, item, eqryi )
+      use pepper_containers, only: grow_cell
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: item  !! the item to append
+      integer(ip), allocatable, intent(inout) :: eqryi ( : )  !! the integer part of the encoded query, eqryi(lbcell:)
+      if ( cardi ( ctx, eqryi ) >= sizei ( ctx, eqryi ) ) then
+         call grow_cell ( eqryi, cardi ( ctx, eqryi ) + 1 )
+      end if
+      call appndi ( ctx, item, eqryi )
+   end subroutine append_query
 
 end submodule pepper_ek_storage

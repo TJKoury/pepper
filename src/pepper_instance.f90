@@ -451,7 +451,6 @@ module pepper_instance
       type(zzekweqi_state), allocatable :: zzekweqi_state  !! state of ZZEKWEQI
       type(zzekpage_state), allocatable :: zzekpage_state  !! state of ZZEKPAGE
       type(zzekvadr_state), allocatable :: zzekvadr_state  !! state of ZZEKVADR
-      type(zzeknrml_state), allocatable :: zzeknrml_state  !! state of ZZEKNRML
       type(zzektrit_state), allocatable :: zzektrit_state  !! state of ZZEKTRIT
       type(zzektrlk_state), allocatable :: zzektrlk_state  !! state of ZZEKTRLK
       ! --- end pepper_ek_storage
@@ -17305,7 +17304,7 @@ module pepper_instance
          character(*), intent(in) :: chrbuf  !! Buffer containing string token values.
          integer(ip), intent(in) :: chbegs ( * )  !! String token begin and end character positions.
          integer(ip), intent(in) :: chends ( * )  !! String token begin and end character positions.
-         integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Parsed query and string and number value buffers.
+         integer(ip), allocatable, intent(inout) :: eqryi ( : )  !! Parsed query and string and number value buffers. PEPPER: allocatable, lower bound LBCELL; grows as the query is encoded.
          character(*), intent(out) :: eqryc  !! Parsed query and string and number value buffers.
          real(wp), intent(out) :: eqryd  ( * )  !! Parsed query and string and number value buffers.
          logical, intent(out) :: error  !! Parse error flag.
@@ -17503,7 +17502,7 @@ module pepper_instance
          character(*), intent(in) :: chrbuf  !! Buffer containing string token values.
          integer(ip), intent(in) :: chbegs ( * )  !! String token begin and end character positions.
          integer(ip), intent(in) :: chends ( * )  !! String token begin and end character positions.
-         integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Parsed query and string and number value buffers.
+         integer(ip), allocatable, intent(inout) :: eqryi ( : )  !! Parsed query and string and number value buffers. PEPPER: allocatable, lower bound LBCELL; grows as the query is encoded.
          character(*), intent(out) :: eqryc  !! Parsed query and string and number value buffers.
          real(wp), intent(out) :: eqryd  ( * )  !! Parsed query and string and number value buffers.
          logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
@@ -20059,7 +20058,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Query specifying events to be found.
-         integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer component of encoded query.
+         integer(ip), allocatable, intent(inout) :: eqryi ( : )  !! Integer component of encoded query. PEPPER: allocatable, lower bound LBCELL; grows as the query is encoded.
          character(*), intent(out) :: eqryc  !! Character component of encoded query.
          real(wp), intent(out) :: eqryd  ( * )  !! Numeric component of encoded query.
          logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.

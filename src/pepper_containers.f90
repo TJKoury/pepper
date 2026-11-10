@@ -29,6 +29,12 @@ module pepper_containers
    public :: string, string_map, int_map
    public :: grow, grown_capacity, grow_cell, lnkgrow
 
+   !> Make room in a SPICE cell held in an allocatable array (lower bound
+   !> -5): `grow_cell(cell, needed)`.
+   interface grow_cell
+      module procedure grow_cell_real, grow_cell_int
+   end interface grow_cell
+
    integer(ip), parameter :: min_capacity = 8  !! smallest capacity `grow` allocates
    integer(ip), parameter :: min_slots = 16  !! initial number of slots of a hash map
    !> A hash map grows when its number of keys would exceed this fraction
@@ -236,7 +242,7 @@ contains
    !> (LBCELL). The control area and the elements are kept, and the
    !> cell's size (`cell(-1)`) is set to the new capacity. A cell that is
    !> not allocated is allocated empty, with its size set.
-   pure subroutine grow_cell(cell, needed)
+   pure subroutine grow_cell_real(cell, needed)
       real(wp), allocatable, intent(inout) :: cell(:)  !! the cell, `cell(-5:size)`
       integer(ip), intent(in) :: needed  !! the number of elements needed
       real(wp), allocatable :: tmp(:)
@@ -253,7 +259,31 @@ contains
          allocate (cell(-5:m), source=0.0_wp)
       end if
       cell(-1) = real(m, wp)
-   end subroutine grow_cell
+   end subroutine grow_cell_real
+
+   !> Make room for `needed` elements in an integer SPICE cell (or set)
+   !> held in an allocatable array with lower bound -5 (LBCELL). The
+   !> control area and the elements are kept, and the cell's size
+   !> (`cell(-1)`) is set to the new capacity. A cell that is not
+   !> allocated is allocated empty, with its size set.
+   pure subroutine grow_cell_int(cell, needed)
+      integer(ip), allocatable, intent(inout) :: cell(:)  !! the cell, `cell(-5:size)`
+      integer(ip), intent(in) :: needed  !! the number of elements needed
+      integer(ip), allocatable :: tmp(:)
+      integer(ip) :: n, m
+      if (allocated(cell)) then
+         n = ubound(cell, 1, kind=ip)
+         if (n >= needed) return
+         m = grown_capacity(n, needed)
+         allocate (tmp(-5:m), source=0_ip)
+         tmp(-5:n) = cell
+         call move_alloc(tmp, cell)
+      else
+         m = grown_capacity(0_ip, needed)
+         allocate (cell(-5:m), source=0_ip)
+      end if
+      cell(-1) = m
+   end subroutine grow_cell_int
 
    !> Enlarge a doubly linked list pool (the layout of LNKINI: `pool(2,
    !> lbpool:size)` with the size, the number of free nodes and the head of

@@ -635,8 +635,36 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      segments, 126 tables, 6300 column attribute entries, 12500 column
      descriptors; queries, unloading 10 files, loading one again).
 
+   - **EK query text and parsing** (step C1 of the EK work): the
+     encoding of a query no longer has room only for the largest query.
+     The query is scanned whole (SPICELIB: copied into 2000 characters,
+     the rest cut off silently); the scanner's buffers and the encoded
+     query's string and number parts are sized from the query's length
+     (a token per character at most; SPICELIB: 500 tokens, 100 numbers,
+     2000 characters); the integer part of the encoded query grows as
+     ZZEKPARS and ZZEKNRML write it (SPICELIB: EQIMIN elements). The
+     encoded query's layout was already count-based (each part found
+     from the counts of the parts before it), so its readers are
+     unchanged. ZZEKNRML's work arrays are local, sized from the token
+     count, and its pools grow (SPICELIB: 0.4 MB per context, "Relation
+     table is full." and the like); the normalized WHERE clause is
+     checked against MAXCON (1000 constraints), which SPICELIB wrote past
+     (`spicelib_bugs.md`), until step C2 sizes EKSRCH's constraint
+     arrays. ZZEKQINI has no minimum sizes; ZZEKPARS, ZZEKNRML and
+     ZZEKENCD take the integer part as an allocatable (the legacy
+     interface copies SPICELIB's cell in and out). Test: `test_limits`
+     `test_ek_queries` (a 2700-character, 600-token WHERE clause; one
+     with 64 conjunctions of 7 relations; the pools were also checked
+     starting from 2 nodes).
+
    To do:
-   - **EK queries:** last. The encoded query is a flat integer cell laid out
+   - **EK queries:** step C2, the counts: FROM tables (MAXTAB 10),
+     SELECT columns (MAXSEL 50), ORDER BY columns (MAXORD 10),
+     constraints (MAXCON 1000, EKSRCH and ZZEKKEY), joins (MXJOIN 10,
+     MXJCON 100) and join row sets (MXJRS 200, a conjunction each), and
+     the arrays sized by them (EKQMGR's per-context query arrays, the
+     row and segment vectors of the fetch routines); step C3, string
+     comparisons cut at MAXSTR (1024) characters. The encoded query is a flat integer cell laid out
      from the maxima, so this is a rewrite of the parser's output, and the
      least-used subsystem. EKQMGR's tables of loaded EK files, tables,
      segments and columns (from phase 2) go with it.

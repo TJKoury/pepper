@@ -3015,9 +3015,27 @@
       logical :: error  !! Flag indicating whether query parsed correctly.
       character(*) :: errmsg  !! Parse error description.
       integer(ip) :: errptr  !! Error pointer.
+      integer(ip), allocatable :: qi(:)
+      integer(ip) :: n
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekencd ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
+      ! PEPPER: the context routine grows the integer part of the encoded
+      ! query (allocatable); this interface keeps SPICELIB's cell: it is
+      ! copied in and out, and a query larger than the cell is an error.
+      n = nint ( real ( eqryi(-1), wp ), ip )
+      allocate ( qi(lbcell:n) )
+      qi = eqryi(lbcell:n)
+      call pepper_zzekencd ( ctx, query, qi, eqryc, eqryd, error, errmsg, errptr )
+      if ( ubound ( qi, 1, kind=ip ) > n ) then
+         if ( qi(0) > n .and. .not. ctx%failed() ) then
+            call ctx%setmsg ( 'The encoded query has # elements; the size of the cell is #.' )
+            call ctx%errint ( '#', qi(0) )
+            call ctx%errint ( '#', n )
+            call ctx%sigerr ( 'SPICE(CELLTOOSMALL)' )
+         end if
+         qi(-1) = n
+      end if
+      eqryi(lbcell:n) = qi(lbcell:n)
       end subroutine zzekencd
 
       !> Parse the SELECT clause of an EK query, returning full particulars
