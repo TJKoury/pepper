@@ -30,7 +30,7 @@ Kinds:
 | SGBWFS | Passes the array `PKTSIZ` to ERRINT. | Passes `PKTSIZ(1)`. |
 | STMP03 | Truncates its series at 10 terms with Intel Fortran on Windows (`#if`), 11 elsewhere. | 11 everywhere. |
 | POOL | Message text "an entry which performs performs no run-time function". | Unchanged (faithful). |
-| ET2LST | Signals `SPICE(CANTGETROTATIONTYPE)`, 26 characters; short messages hold 25, so it is stored as `SPICE(CANTGETROTATIONTYP`. | Unchanged (to be fixed with the limits plan, `limits.md`). |
+| ET2LST | Signals `SPICE(CANTGETROTATIONTYPE)`, 26 characters; short messages hold 25, so it is stored as `SPICE(CANTGETROTATIONTYPE` (without the closing parenthesis). | Fixed: messages have no length limit (`limits.md`, phase 1). |
 | ZZDDHOPN (ZZDDHMAN) | Copies the file name into a `CHARACTER*(FILEN)` (255) local without a length check: a longer path is silently truncated, and the wrong file is opened or inquired. FURNSH checks the length, but DAFOPR, DASOPR, etc. called directly do not. | Unchanged (to be fixed with the limits plan). |
 | FRAMEX | The cache of kernel-defined frames (`MAXKFR` = 5209 entries) is reset only when the pool changes, and entries are added with ZZHSCADD/ZZHSIADD without checking for room (ZZHSCAVL), so looking up the 5210th distinct kernel frame between pool changes signals `SPICE(HASHISFULL)` instead of evicting. | Unchanged (to be fixed with the limits plan). |
 | ZZBODDEF (BODDEF) | The documented limit is `MAXP` = 150 new names, but the check is against `MAXE` − `NPERM` = 161; `MAXP` is not used in code. | Unchanged. |

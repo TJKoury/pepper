@@ -13,6 +13,8 @@ program test_context
    call test_independent()
    call test_actions()
    call test_settings()
+   call test_lengths()
+   call test_report()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -124,5 +126,102 @@ contains
       call ctx%reset()
       call check(.not. ctx%failed(), 'reset')
    end subroutine test_settings
+
+   !> Messages and the device have no length limit (SPICELIB's are 25,
+   !> 1840 and 255 characters): getmsg cuts to the caller's variable,
+   !> message returns the whole text.
+   subroutine test_lengths()
+      type(pepper_context) :: ctx
+      character(25) :: short
+      character(1840) :: long
+      character(:), allocatable :: text, path
+      character(400) :: dev
+      ctx = spice%new_context()
+      ! ET2LST's short message has 26 characters
+      call ctx%sigerr('SPICE(CANTGETROTATIONTYPE)')
+      call check(ctx%message('SHORT') == 'SPICE(CANTGETROTATIONTYPE)', 'a 26-character short message')
+      call ctx%getmsg('SHORT', short)
+      call check(short == 'SPICE(CANTGETROTATIONTYPE', 'getmsg cuts to the variable')
+      call ctx%reset()
+      call check(ctx%message('SHORT') == '' .and. ctx%message('LONG') == '', 'reset clears the messages')
+
+      ! a long message of 5000 characters, with a marker past 1840
+      call ctx%setmsg(repeat('ab ', 1500) // 'value #.')
+      call ctx%errint('#', 42_ip)
+      call ctx%sigerr('SPICE(LONGMESSAGE)')
+      text = ctx%message('LONG')
+      call check(len(text) == 4500 + 9 .and. text(4501:) == 'value 42.', 'a 4509-character long message')
+      call ctx%getmsg('LONG', long)
+      call check(long == text(1:1840), 'getmsg cuts the long message')
+      call ctx%reset()
+
+      ! an invalid option
+      text = ctx%message('BOGUS')
+      call check(text == '' .and. ctx%failed(), 'message: invalid option')
+      call ctx%reset()
+
+      ! a device name longer than 255 characters ('./' repeated)
+      path = repeat('./', 140) // 'test_context_device.txt'
+      dev = path
+      call ctx%errdev('SET', dev)
+      call check(.not. ctx%failed(), 'a 303-character device name')
+      dev = ' '
+      call ctx%errdev('GET', dev)
+      call check(dev == path, 'the device name is kept whole')
+   end subroutine test_lengths
+
+   !> The report written to a device: lines of at most 80 characters,
+   !> the long message broken between words, a word longer than a line
+   !> split across lines.
+   subroutine test_report()
+      type(pepper_context) :: ctx
+      character(*), parameter :: file = 'test_context_report.txt'
+      character(:), allocatable :: msg, all
+      character(200) :: line, dev
+      integer :: unit, ios, longest
+      logical :: exists
+      ctx = spice%new_context()
+      inquire (file=file, exist=exists)
+      if (exists) then
+         open (newunit=unit, file=file, status='old')
+         close (unit, status='delete')
+      end if
+      msg = repeat('word ', 30) // repeat('X', 200) // ' end ' // repeat('Y', 85) // ' last.'
+      dev = file
+      call ctx%errdev('SET', dev)
+      call ctx%setmsg(msg)
+      call ctx%sigerr('SPICE(REPORTED)')
+      dev = 'NULL'
+      call ctx%errdev('SET', dev)
+      ! the library keeps the report file open (SPICELIB's WRLINE)
+      inquire (file=file, opened=exists, number=unit)
+      if (exists) close (unit)
+      ! the report: no line longer than 80; its text without blanks
+      ! contains the message without blanks
+      all = ''
+      longest = 0
+      open (newunit=unit, file=file, status='old', action='read')
+      do
+         read (unit, '(a)', iostat=ios) line
+         if (ios /= 0) exit
+         longest = max(longest, len_trim(line))
+         all = all // no_blanks(line)
+      end do
+      close (unit, status='delete')
+      call check(longest <= 80, 'report: lines of at most 80 characters')
+      call check(index(all, no_blanks(msg)) > 0, 'report: the whole long message')
+      call check(index(all, 'SPICE(REPORTED)') > 0, 'report: the short message')
+   end subroutine test_report
+
+   !> A string without its blanks.
+   pure function no_blanks(s) result(t)
+      character(*), intent(in) :: s  !! the string
+      character(:), allocatable :: t
+      integer :: i
+      t = ''
+      do i = 1, len(s)
+         if (s(i:i) /= ' ') t = t // s(i:i)
+      end do
+   end function no_blanks
 
 end program test_context

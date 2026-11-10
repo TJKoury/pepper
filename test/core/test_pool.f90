@@ -20,6 +20,7 @@ program test_pool
    call test_errors()
    call test_text_kernel()
    call test_watches()
+   call test_long_line()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -160,5 +161,29 @@ contains
       open (newunit=unit, file=file, status='old')
       close (unit, status='delete')
    end subroutine test_text_kernel
+
+   !> A text kernel line longer than 132 characters is cut there without
+   !> an error (SPICELIB's behavior, kept and documented): a value past
+   !> column 132 is lost.
+   subroutine test_long_line()
+      character(*), parameter :: file = 'test_pool_long_line.tk'
+      character(:), allocatable :: line
+      real(wp) :: values(5)
+      integer(ip) :: n, unit
+      logical :: found
+      line = 'TEST_LONG = ( 1, 2,'
+      line = line // repeat(' ', 140 - len(line)) // '3'
+      open (newunit=unit, file=file, status='replace', action='write')
+      write (unit, '(a)') '\begindata', line, ')', '\begintext'
+      close (unit)
+      call ctx%ldpool(file)
+      call check(.not. ctx%failed(), 'long line: no error')
+      call ctx%gdpool('TEST_LONG', 1_ip, 5_ip, n, values, found)
+      call check(found .and. n == 2 .and. all(values(1:2) == [1.0_wp, 2.0_wp]), &
+                 'long line: the value past column 132 is lost')
+      call ctx%reset()
+      open (newunit=unit, file=file, status='old')
+      close (unit, status='delete')
+   end subroutine test_long_line
 
 end program test_pool

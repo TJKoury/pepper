@@ -4183,6 +4183,12 @@ contains
 !!
 !! ## Restrictions
 !!
+!!     PEPPER: a line of a text kernel or meta-kernel may have at most
+!!     132 characters (NAIF's text kernel rule). A longer line is cut to
+!!     132 characters without an error, as in SPICELIB: a value or name
+!!     that continues past column 132 is lost or misread. Split long
+!!     values over several lines.
+!!
 !!     1)  A meta-kernel cannot reference another meta-kernel.
 !!
 !!     2)  Failure during an attempt to load a text kernel or a

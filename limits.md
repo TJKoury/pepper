@@ -248,8 +248,11 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
 399/399 (with the noted test changes) and `pixi run test` passing.
 
 0. **Foundations** (no change in behavior). Done: the benchmarks (with the
-   baseline below), `pepper_containers` and the test generators. To do: one
-   definition per limit.
+   baseline below), `pepper_containers` and the test generators. One
+   definition per limit is done in each phase for the limits it touches:
+   the census found hundreds of local copies (`lbcell` 454, `frnmln` 69,
+   `ftsize` 41 with two meanings: 5000 for the file tables, 20 in EK), and
+   most of them sit in code that the phases rewrite.
    - **Benchmarks:**
      - loading N small kernels;
      - `spkezr`/`pxform` on many bodies and frames;
@@ -264,20 +267,27 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
    - **Test generators:** a helper that writes N small SPK, PCK and text
      kernels and N frame or body definitions to a temporary directory, so
      tests can exceed the old limits quickly.
-1. **Strings that truncate silently** (fixes two SPICELIB bugs):
-   - **File and path names:** allocatable strings in KEEPER, ZZDDHMAN, DAS,
-     RDTEXT and `closed_files`.
+1. **Strings that truncate silently.** Done:
+   - **Error messages:** the short and long messages and the device name
+     are `character(:), allocatable` in the context, with no length limit.
+     `getmsg` still cuts to the caller's variable; `ctx%message(option)`
+     returns the whole text. `DEVICENAMETOOLONG` is gone. This fixes
+     `et2lst`'s code (test: `test_context`).
+   - **Text kernel lines:** the 132-character limit stays (decision 2),
+     documented in the `furnsh` and `ldpool` headers and interfaces; a test
+     (`test_pool`) pins the behavior (a value past column 132 is lost).
+   - **File and path names** moved to phase 2: they are stored in the same
+     tables (KEEPER, ZZDDHMAN, DAF/DAS) that phase 2 turns into growable
+     records, so each table is converted once.
+2. **Number of loaded kernels, and file names:**
+   - **File and path names** (from phase 1): allocatable strings in the
+     records of KEEPER, ZZDDHMAN, DAS, RDTEXT and `closed_files`.
      - `FILENAMETOOLONG` and `PATHTOOLONG` go away. Path names are limited
-       only by the OS.
+       only by the OS. This fixes ZZDDHOPN's truncation.
+     - The 27 DAF and 17 DAS `character(filen)` locals that fetch a file
+       name for an error message use `errhan` (or an allocatable name)
+       instead.
      - Test: load a kernel through a path longer than 255 characters.
-   - **Error messages:** deferred-length `short`, `long` and `device`.
-     `getmsg` still truncates to the caller's buffer; an allocatable getter is
-     added. This fixes `et2lst`'s code.
-   - **Text kernel lines:** the 132-character limit stays (decision 2). It
-     is documented in the `furnsh` and `ldpool` docstrings and the user
-     docs. Today the read (`rdtext`, into `character(132)`) cuts a longer
-     line without an error; making that an error is proposed, not decided.
-2. **Number of loaded kernels:**
    - **Tables, in order:**
      - ZZDDHMAN file table;
      - DAFAH, DAFFA, DASFM;
@@ -406,6 +416,20 @@ What it shows:
 - **TK frames use the pool:** each takes 10 variables, so 26003 pool
   variables limit a kernel set to about 2600 TK frames, well before the
   frame cache's 5209.
+
+## Inefficiencies
+
+Things SPICELIB does slowly or with more memory than needed, found along the
+way (not limits as such). Each gets fixed in the phase that touches the code,
+or listed for later.
+
+| Where | Cost | Fix | Phase |
+|---|---|---|---|
+| KEEPER `unload` | Reloads every remaining SPK/CK/PCK/DSK after an unload (one file open each): O(N²) opens to unload N files, 16.7 ms per unload at 2000 files | Remove the file from the BSR tables directly; reload only for a file loaded twice | 2 |
+| ZZDDHOPN (`zzddhf2h`) | Opens a file to identify it (inode/name) on every load, including reloads | Follows from the unload fix; consider identifying by name first | 2 |
+| SPKBSR + unit table | A random query among 2000 SPKs takes 192 µs against 1 µs for one body; probably the 23-unit LRU closing and reopening files (to confirm with a profile) | Measure; a larger unit table (an instance setting, decision 3), or keep files open | 5 |
+| `wrline` (error reports, `pepper_output`) | Looks up the file by name (`inquire`) for every line written | Keep the unit with the device in the context | later (only when reports go to a file) |
+| BSR tables | 10 MB each, allocated and zeroed in full by the first query of a context: 2.5 ms and about 20 MB per context | Start small, grow (decision 3) | 5 |
 
 ## Testing
 

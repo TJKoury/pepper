@@ -57,10 +57,7 @@ module pepper_instance
       integer(int64) :: seen = -1  !! pool_changes at the last check (-1: a notice is pending)
    end type pool_watch
 
-   integer, parameter, public :: short_message_length = 25    !! SPICELIB's short message length
-   integer, parameter, public :: long_message_length = 1840   !! SPICELIB's long message length
    integer, parameter, public :: explanation_length = 80      !! length of an explanation (EXPLN)
-   integer, parameter, public :: device_length = 255          !! length of a device name (ERRDEV)
 
    ! Error actions (ERRACT).
    integer, parameter :: action_abort = 1, action_report = 2, action_return = 3, &
@@ -166,9 +163,12 @@ module pepper_instance
       logical :: failure = .false.  !! an error was signaled (and not reset)
       logical :: messages_allowed = .true.  !! the long message may be changed (ACCEPT, ALLOWD)
       integer :: action = action_return  !! error action (index in action_names)
-      character(short_message_length) :: short = ' '  !! short error message
-      character(long_message_length) :: long = ' '  !! long error message
-      character(device_length) :: device = 'NULL'  !! output device of the reports: SCREEN, NULL or a file
+      ! The messages and the device have no length limit (SPICELIB's are 25,
+      ! 1840 and 255 characters); unallocated means blank (the device:
+      ! 'NULL'). Read them with short_text, long_text and device_text.
+      character(:), allocatable :: short  !! short error message
+      character(:), allocatable :: long  !! long error message
+      character(:), allocatable :: device  !! output device of the reports: SCREEN, NULL or a file
       logical :: print_short = .true.  !! reports include the short message (ERRPRT)
       logical :: print_explain = .true.  !! reports include the explanation of the short message
       logical :: print_long = .true.  !! reports include the long message
@@ -477,6 +477,7 @@ module pepper_instance
       procedure, non_overridable :: errhan => ctx_errhan
       procedure, non_overridable :: reset => ctx_reset
       procedure, non_overridable :: getmsg => ctx_getmsg
+      procedure, non_overridable :: message => ctx_message
       procedure, non_overridable :: erract => ctx_erract
       procedure, non_overridable :: errdev => ctx_errdev
       procedure, non_overridable :: errprt => ctx_errprt
@@ -3859,7 +3860,8 @@ module pepper_instance
       end subroutine clpool
 
       !> Load the variables contained in a NAIF ASCII kernel file into the
-      !> kernel pool.
+      !> kernel pool. Lines have at most 132 characters; a longer line is
+      !> cut without an error (see Restrictions).
       module subroutine ldpool ( ctx, fname )
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6989,7 +6991,9 @@ module pepper_instance
          integer(ip), intent(out) :: handle  !! The handle associated with the loaded kernel.
       end subroutine zzldker
 
-      !> Load one or more SPICE kernels into a program.
+      !> Load one or more SPICE kernels into a program. Lines of text
+      !> kernels and meta-kernels have at most 132 characters; a longer
+      !> line is cut without an error (see Restrictions).
       !>
       !> FILSIZ     P   Maximum file name length.
       module subroutine furnsh ( ctx, file )
@@ -20235,12 +20239,11 @@ contains
    !> program.
    subroutine ctx_sigerr(this, msg)
       class(pepper_context), intent(inout) :: this  !! the context
-      character(*), intent(in) :: msg  !! short error message, e.g. 'SPICE(BADINPUT)' (at most 25
-                                       !! characters)
+      character(*), intent(in) :: msg  !! short error message, e.g. 'SPICE(BADINPUT)'
       if (this%action /= action_ignore) then
          if (this%action /= action_return .or. .not. this%failure) then
             this%failure = .true.
-            this%short = msg
+            this%short = trim(msg)
             if (this%action /= action_default) then
                call this%outmsg('SHORT, EXPLAIN, LONG, TRACEBACK')
             else
@@ -20258,9 +20261,8 @@ contains
    !> (e.g. '#') are replaced by errch, errdp, errint, errfnm and errhan.
    subroutine ctx_setmsg(this, msg)
       class(pepper_context), intent(inout) :: this  !! the context
-      character(*), intent(in) :: msg  !! long error message (at most 1840 characters), with markers
-                                       !! to replace
-      if (this%messages_allowed) this%long = msg
+      character(*), intent(in) :: msg  !! long error message, with markers to replace
+      if (this%messages_allowed) this%long = trim(msg)
    end subroutine ctx_setmsg
 
    !> Replace the first occurrence of marker in the long message with the
@@ -20607,30 +20609,53 @@ contains
    subroutine ctx_reset(this)
       class(pepper_context), intent(inout) :: this  !! the context
       this%failure = .false.
-      this%short = ' '
-      this%long = ' '
+      this%short = ''
+      this%long = ''
       this%messages_allowed = .true.
    end subroutine ctx_reset
 
    !> Get an error message: option 'SHORT', 'LONG' or 'EXPLAIN' (the
-   !> explanation of the short message), case-insensitive.
+   !> explanation of the short message), case-insensitive. A message longer
+   !> than `msg` is cut to its length; `message` returns it whole.
    subroutine ctx_getmsg(this, option, msg)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: option  !! 'SHORT', 'LONG' or 'EXPLAIN'
       character(*), intent(out) :: msg  !! the message
       select case (upper(adjustl(option)))
       case ('SHORT')
-         msg = this%short
+         msg = short_text(this)
       case ('EXPLAIN')
-         call expln(this%short, msg)
+         call expln(short_text(this), msg)
       case ('LONG')
-         msg = this%long
+         msg = long_text(this)
       case default
          call this%setmsg('GETMSG: An invalid value of OPTION was input.  Valid choices are ''SHORT'','// &
                           '       ''EXPLAIN'', or ''LONG''.  The value that was input was:  ' // option)
          call this%sigerr('SPICE(INVALIDMSGTYPE)')
       end select
    end subroutine ctx_getmsg
+
+   !> An error message, whole: option 'SHORT', 'LONG' or 'EXPLAIN' (as
+   !> getmsg), case-insensitive. Blank if there is no error; an invalid
+   !> option signals SPICE(INVALIDMSGTYPE) and returns a blank.
+   function ctx_message(this, option) result(msg)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: option  !! 'SHORT', 'LONG' or 'EXPLAIN'
+      character(:), allocatable :: msg  !! the message (without trailing blanks)
+      character(explanation_length) :: xmsg
+      select case (upper(adjustl(option)))
+      case ('SHORT')
+         msg = short_text(this)
+      case ('EXPLAIN')
+         call expln(short_text(this), xmsg)
+         msg = trim(xmsg)
+      case ('LONG')
+         msg = long_text(this)
+      case default
+         msg = ''
+         call this%getmsg(option, xmsg)
+      end select
+   end function ctx_message
 
    !> Get (op = 'GET') or set (op = 'SET') the error action: 'ABORT',
    !> 'REPORT', 'RETURN', 'IGNORE' or 'DEFAULT'.
@@ -20657,7 +20682,9 @@ contains
    end subroutine ctx_erract
 
    !> Get (op = 'GET') or set (op = 'SET') the device the error reports are
-   !> written to: 'SCREEN', 'NULL' or the name of a file.
+   !> written to: 'SCREEN', 'NULL' or the name of a file (of any length:
+   !> SPICELIB's limit of 255 characters and its DEVICENAMETOOLONG error
+   !> are gone).
    subroutine ctx_errdev(this, op, device)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: op  !! 'GET' or 'SET'
@@ -20665,18 +20692,13 @@ contains
       character(len(device)) :: up
       select case (upper(adjustl(op)))
       case ('GET')
-         device = this%device
+         device = device_text(this)
       case ('SET')
          up = upper(adjustl(device))
-         if (len_trim(up) > device_length) then
-            call this%setmsg('ERRDEV:  Device name exceeds FILEN characters; device selection not '// &
-                             'updated. The first FILEN characters of the name were:  ' // &
-                             device(:device_length))
-            call this%sigerr('SPICE(DEVICENAMETOOLONG)')
-         else if (up == 'SCREEN' .or. up == 'NULL') then
-            this%device = up
+         if (up == 'SCREEN' .or. up == 'NULL') then
+            this%device = trim(up)
          else
-            this%device = device
+            this%device = trim(device)
          end if
       case default
          call this%setmsg('ERRDEV:  An invalid value of OP was supplied.  The value was: ' // op)
@@ -20759,12 +20781,14 @@ contains
          'error messages to output, and where to send the output.  Please read the ERROR', &
          '"Required Reading" file, or see the routines ERRACT, ERRDEV, and ERRPRT.']
       character(16) :: words(5)
-      character(ll) :: border, line
+      character(ll) :: border
       character(explanation_length) :: xmsg
-      character(long_message_length) :: lmsg, outwrd
+      character(:), allocatable :: dev, sms, lms
       character(80) :: versn
-      integer(ip) :: nwords, i, nw, start, wrdlen, remain
+      integer(ip) :: nwords, i
+      integer :: k, e
       logical :: short, expl, long, dfault
+      dev = device_text(this)
       border = repeat('=', ll)
       short = .false.; expl = .false.; long = .false.; dfault = .false.
       call lparse(list, ',', size(words, kind=ip), nwords, words)
@@ -20780,90 +20804,102 @@ contains
          case ('DEFAULT')
             dfault = .true.
          case default
-            call wrline(this%device, 'SPICE(INVALIDLISTITEM)')
-            call wrline(this%device, ' ')
-            call wrline(this%device, 'OUTMSG:  An invalid message type was specified in the type list. ')
-            call wrline(this%device, 'The invalid message type was ' // words(i))
+            call wrline(dev, 'SPICE(INVALIDLISTITEM)')
+            call wrline(dev, ' ')
+            call wrline(dev, 'OUTMSG:  An invalid message type was specified in the type list. ')
+            call wrline(dev, 'The invalid message type was ' // words(i))
          end select
       end do
       short = short .and. this%print_short
       expl = expl .and. this%print_explain
       long = long .and. this%print_long
       dfault = dfault .and. this%print_default
-      if (.not. (short .or. expl .or. long .or. dfault) .or. upper(adjustl(this%device)) == 'NULL') return
-      call wrline(this%device, ' ')
-      call wrline(this%device, border)
-      call wrline(this%device, ' ')
+      if (.not. (short .or. expl .or. long .or. dfault) .or. upper(adjustl(dev)) == 'NULL') return
+      sms = short_text(this)
+      call wrline(dev, ' ')
+      call wrline(dev, border)
+      call wrline(dev, ' ')
       call tkvrsn(this, 'TOOLKIT', versn)
-      call wrline(this%device, 'Toolkit version: ' // versn)
-      call wrline(this%device, ' ')
+      call wrline(dev, 'Toolkit version: ' // versn)
+      call wrline(dev, ' ')
       if (short .and. expl) then
-         call expln(this%short, xmsg)
-         call wrline(this%device, trim(this%short) // ' -- ' // xmsg)
-         call wrline(this%device, ' ')
+         call expln(sms, xmsg)
+         call wrline(dev, sms // ' -- ' // xmsg)
+         call wrline(dev, ' ')
       else if (short) then
-         call wrline(this%device, this%short)
-         call wrline(this%device, ' ')
+         call wrline(dev, sms)
+         call wrline(dev, ' ')
       else if (expl) then
-         call expln(this%short, xmsg)
-         call wrline(this%device, xmsg)
-         call wrline(this%device, ' ')
+         call expln(sms, xmsg)
+         call wrline(dev, xmsg)
+         call wrline(dev, ' ')
       end if
       if (long) then
          ! the long message in lines of at most LL characters, broken
-         ! between words (words longer than a line are cut)
-         lmsg = this%long
-         nw = wdcnt(lmsg)
-         line = ' '
-         start = 1
-         do i = 1, nw
-            call nextwd(lmsg, outwrd, lmsg)
-            wrdlen = len_trim(outwrd)
-            if (start + wrdlen <= ll) then
-               line(start:) = outwrd
-               start = start + wrdlen + 1
-            else if (wrdlen <= ll) then
-               call wrline(this%device, line)
-               start = wrdlen + 2
-               line = outwrd
-            else
-               if (start > 1) then
-                  remain = ll - start
-               else
-                  remain = ll
-               end if
-               if (remain < 10) then
-                  call wrline(this%device, line)
-                  line = ' '
-                  remain = ll
-                  start = 1
-               end if
-               do while (wrdlen > ll)
-                  line(start:) = outwrd(1:remain)
-                  call wrline(this%device, line)
-                  outwrd(1:remain) = ' '
-                  outwrd = adjustl(outwrd)
-                  line = ' '
-                  wrdlen = wrdlen - remain
-                  remain = ll
-                  start = 1
+         ! between words (words longer than a line are split)
+         lms = long_text(this)
+         block
+            character(ll) :: line
+            integer :: start, remain
+            line = ' '
+            start = 1
+            k = 1
+            do
+               ! the next word: lms(k:e)
+               do while (k <= len(lms))
+                  if (lms(k:k) /= ' ') exit
+                  k = k + 1
                end do
-               if (wrdlen > 0) then
-                  start = wrdlen + 2
-                  line = outwrd
+               if (k > len(lms)) exit
+               e = index(lms(k:), ' ')
+               if (e == 0) then
+                  e = len(lms)
+               else
+                  e = k + e - 2
                end if
-            end if
-         end do
-         if (line /= ' ') call wrline(this%device, line)
-         call wrline(this%device, ' ')
+               if (start + (e - k + 1) <= ll) then
+                  line(start:) = lms(k:e)
+                  start = start + (e - k + 1) + 1
+               else if (e - k + 1 <= ll) then
+                  call wrline(dev, line)
+                  line = lms(k:e)
+                  start = (e - k + 1) + 2
+               else
+                  ! a word longer than a line: fill the rest of the line
+                  ! (or a new one if fewer than 10 places are left), then
+                  ! whole lines
+                  remain = ll
+                  if (start > 1) remain = ll - start
+                  if (remain < 10) then
+                     call wrline(dev, line)
+                     line = ' '
+                     remain = ll
+                     start = 1
+                  end if
+                  do while (e - k + 1 > ll)
+                     line(start:) = lms(k:k + remain - 1)
+                     call wrline(dev, line)
+                     k = k + remain
+                     line = ' '
+                     remain = ll
+                     start = 1
+                  end do
+                  line = lms(k:e)
+                  start = (e - k + 1) + 2
+               end if
+               k = e + 1
+            end do
+            if (line /= ' ') call wrline(dev, line)
+         end block
+         call wrline(dev, ' ')
       end if
       if (dfault) then
          do i = 1, size(defmsg)
-            call wrline(this%device, defmsg(i))
+            call wrline(dev, defmsg(i))
          end do
-         call wrline(this%device, ' ')
+         call wrline(dev, ' ')
       end if
-      call wrline(this%device, border)
+      call wrline(dev, border)
    end subroutine ctx_outmsg
 
    ! ------------------------------------------------------------------------
@@ -20897,28 +20933,28 @@ contains
    subroutine ctx_getsms(this, msg)
       class(pepper_context), intent(in) :: this  !! the context
       character(*), intent(out) :: msg  !! the short message
-      msg = this%short
+      msg = short_text(this)
    end subroutine ctx_getsms
 
    !> Store the short error message (SPICELIB's PUTSMS).
    subroutine ctx_putsms(this, msg)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: msg  !! the short message
-      this%short = msg
+      this%short = trim(msg)
    end subroutine ctx_putsms
 
    !> The long error message (SPICELIB's GETLMS).
    subroutine ctx_getlms(this, msg)
       class(pepper_context), intent(in) :: this  !! the context
       character(*), intent(out) :: msg  !! the long message
-      msg = this%long
+      msg = long_text(this)
    end subroutine ctx_getlms
 
    !> Store the long error message (SPICELIB's PUTLMS).
    subroutine ctx_putlms(this, msg)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: msg  !! the long message
-      this%long = msg
+      this%long = trim(msg)
    end subroutine ctx_putlms
 
    !> The error action as a code: 1 ABORT, 2 REPORT, 3 RETURN, 4 IGNORE,
@@ -20940,14 +20976,14 @@ contains
    subroutine ctx_getdev(this, device)
       class(pepper_context), intent(in) :: this  !! the context
       character(*), intent(out) :: device  !! the device
-      device = this%device
+      device = device_text(this)
    end subroutine ctx_getdev
 
    !> Store the device of the error reports (SPICELIB's PUTDEV).
    subroutine ctx_putdev(this, device)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: device  !! the device
-      this%device = device
+      this%device = trim(device)
    end subroutine ctx_putdev
 
    !> Select the parts of the error reports; returns .true. (SPICELIB's
@@ -20984,9 +21020,9 @@ contains
       case ('DEFAULT')
          ctx_msgsel = this%print_default
       case default
-         call wrline(this%device, 'SPICE(INVALIDMSGTYPE)')
-         call wrline(this%device, ' ')
-         call wrline(this%device, 'MSGSEL:  An invalid message type was specified: ' // type)
+         call wrline(device_text(this), 'SPICE(INVALIDMSGTYPE)')
+         call wrline(device_text(this), ' ')
+         call wrline(device_text(this), 'MSGSEL:  An invalid message type was specified: ' // type)
          ctx_msgsel = .false.
       end select
    end function ctx_msgsel
@@ -21121,12 +21157,46 @@ contains
       character(:), allocatable :: mark
       integer :: k
       if (.not. this%messages_allowed) return
+      if (.not. allocated(this%long)) return
       mark = trim(adjustl(marker))
       if (len(mark) == 0) return
       k = index(this%long, mark)
       if (k == 0) return
       this%long = this%long(:k - 1) // string // this%long(k + len(mark):)
    end subroutine replace_marker
+
+   !> The short error message (blank if none).
+   pure function short_text(this) result(msg)
+      type(pepper_context), intent(in) :: this  !! the context
+      character(:), allocatable :: msg  !! the message
+      if (allocated(this%short)) then
+         msg = this%short
+      else
+         msg = ''
+      end if
+   end function short_text
+
+   !> The long error message (blank if none).
+   pure function long_text(this) result(msg)
+      type(pepper_context), intent(in) :: this  !! the context
+      character(:), allocatable :: msg  !! the message
+      if (allocated(this%long)) then
+         msg = this%long
+      else
+         msg = ''
+      end if
+   end function long_text
+
+   !> The device of the error reports ('NULL' if never set).
+   pure function device_text(this) result(device)
+      type(pepper_context), intent(in) :: this  !! the context
+      character(:), allocatable :: device  !! the device
+      if (allocated(this%device)) then
+         device = this%device
+      else
+         device = 'NULL'
+      end if
+   end function device_text
 
    !> Uppercase version of a string (ASCII letters).
    pure function upper(s) result(u)
