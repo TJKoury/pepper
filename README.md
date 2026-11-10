@@ -12,6 +12,9 @@ PEPPER provides tools for computing planetary ephemerides, positions, pointing, 
 - Identify and analyze astronomical events.
 - Handle rotations and transformations efficiently.
 
+How PEPPER differs from SPICELIB (thread safety, the limits it removes, speed
+comparisons): [pepper_vs_spicelib.md](pepper_vs_spicelib.md).
+
 ## Building and testing
 
 PEPPER builds with [fpm](https://fpm.fortran-lang.org); the development
