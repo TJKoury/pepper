@@ -122,6 +122,10 @@ module pepper_inc_ekqlimit
 !     Maximum length of literal string values allowed in queries:
 !     MAXSTR.
 !
+!     PEPPER: the library no longer uses it. The EK comparison routines (ZZEKECMP,
+!     ZZEKSCMP, ZZEKVMCH, ZZEKFRX) compared at most the first MAXSTR
+!     characters of strings; they compare whole strings.
+!
    integer               maxstr
    parameter           ( maxstr = 1024 )
 

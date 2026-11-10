@@ -43,6 +43,7 @@ program test_limits
    call test_ek_scratch()
    call test_ek_tables()
    call test_ek_queries()
+   call test_ek_strings()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -989,6 +990,98 @@ contains
       call ctx%unload(ek)
       call delete_file(ek)
    end subroutine test_ek_queries
+
+   !> EK queries compare whole strings (SPICELIB: the first MAXSTR = 1024
+   !> characters). The strings agree in their first 1200 characters. Rows
+   !> are added one by one to columns with and without an index, and with
+   !> the fast loader to columns of fixed-length strings: fixed-count
+   !> (class 9, whose strings fit in a page) longer than the sort key of
+   !> ZZEKJSRT (32), and longer than MAXSTR.
+   subroutine test_ek_strings()
+      character(*), parameter :: ek = prefix // 'strings.bes'
+      character(*), parameter :: tails = 'cabd'
+      character(1200) :: base
+      character(1500) :: fixed(3), cdata
+      character(40) :: short(3)
+      character(:), allocatable :: query
+      character(80) :: errmsg
+      integer(ip) :: handle, segno, recno, i, nrows, rcptrs(3), wkindx(3)
+      logical :: error, null, found, ok
+      base = repeat('x', len(base))
+      call delete_file(ek)
+      call ctx%ekopn(ek, ek, 0_ip, handle)
+      call ctx%ekbseg(handle, 'S', 2_ip, ['V', 'U'], &
+                      ['DATATYPE = CHARACTER*(*), INDEXED = TRUE', &
+                       'DATATYPE = CHARACTER*(*)                '], segno)
+      do i = 1, 4
+         call ctx%ekappr(handle, segno, recno)
+         call ctx%ekacec(handle, segno, recno, 'V', 1_ip, [base // tails(i:i)], .false.)
+         call ctx%ekacec(handle, segno, recno, 'U', 1_ip, [base // tails(i:i)], .false.)
+      end do
+      recno = 4
+      call ctx%ekdelr(handle, segno, recno)
+      do i = 1, 3
+         short(i) = repeat('w', 34) // tails(i:i)
+         fixed(i) = base // tails(i:i)
+      end do
+      call ctx%ekifld(handle, 'F', 1_ip, 3_ip, ['W'], ['DATATYPE = CHARACTER*(40), FIXED_COUNT = TRUE'], segno, rcptrs)
+      call ctx%ekaclc(handle, segno, 'W', short, [1_ip, 1_ip, 1_ip], [.false., .false., .false.], rcptrs, wkindx)
+      call ctx%ekffld(handle, segno, rcptrs)
+      call ctx%ekifld(handle, 'G', 1_ip, 3_ip, ['L'], ['DATATYPE = CHARACTER*(1500)'], segno, rcptrs)
+      call ctx%ekaclc(handle, segno, 'L', fixed, [1_ip, 1_ip, 1_ip], [.false., .false., .false.], rcptrs, wkindx)
+      call ctx%ekffld(handle, segno, rcptrs)
+      call ctx%ekcls(handle)
+      call ctx%furnsh(ek)
+      call check_ok('EK strings: write and load')
+      ! an indexed and a plain column: =, LIKE
+      query = 'SELECT V FROM S WHERE V = ''' // base // 'b'''
+      call ctx%ekfind(query, nrows, error, errmsg)
+      call check_ok('EK strings: indexed =')
+      call check(.not. error .and. nrows == 1, 'EK strings: indexed =, ' // trim(errmsg))
+      query = 'SELECT U FROM S WHERE U = ''' // base // 'b'''
+      call ctx%ekfind(query, nrows, error, errmsg)
+      call check_ok('EK strings: =')
+      call check(.not. error .and. nrows == 1, 'EK strings: =, ' // trim(errmsg))
+      call ctx%ekfind('SELECT U FROM S WHERE U LIKE ''*b''', nrows, error, errmsg)
+      call check_ok('EK strings: LIKE')
+      call check(.not. error .and. nrows == 1, 'EK strings: LIKE, ' // trim(errmsg))
+      ! ORDER BY, after the deletion of a row from the index (ZZEKFRX)
+      call ctx%ekfind('SELECT V FROM S ORDER BY V', nrows, error, errmsg)
+      ok = .not. error .and. nrows == 3
+      do i = 1, min(nrows, 3_ip)
+         call ctx%ekgc(1_ip, i, 1_ip, cdata, null, found)
+         ok = ok .and. cdata(1201:1201) == 'abc'(i:i)
+      end do
+      call check_ok('EK strings: ORDER BY')
+      call check(ok, 'EK strings: ORDER BY, ' // trim(errmsg))
+      ! joins
+      call ctx%ekfind('SELECT S1.U FROM S S1, S S2 WHERE S1.U = S2.U', nrows, error, errmsg)
+      call check_ok('EK strings: join =')
+      call check(.not. error .and. nrows == 3, 'EK strings: join =, ' // trim(errmsg))
+      call ctx%ekfind('SELECT S1.U FROM S S1, S S2 WHERE S1.U < S2.U', nrows, error, errmsg)
+      call check_ok('EK strings: join <')
+      call check(.not. error .and. nrows == 3, 'EK strings: join <, ' // trim(errmsg))
+      call ctx%ekfind('SELECT S1.U FROM S S1, S S2 WHERE S1.U LIKE S2.U', nrows, error, errmsg)
+      call check_ok('EK strings: join LIKE')
+      call check(.not. error .and. nrows == 3, 'EK strings: join LIKE, ' // trim(errmsg))
+      ! fixed-length strings: 40 characters (ORDER BY), 1500 (=)
+      call ctx%ekfind('SELECT W FROM F ORDER BY W', nrows, error, errmsg)
+      ok = .not. error .and. nrows == 3
+      do i = 1, min(nrows, 3_ip)
+         call ctx%ekgc(1_ip, i, 1_ip, cdata, null, found)
+         ok = ok .and. cdata(35:35) == 'abc'(i:i)
+      end do
+      call check_ok('EK strings: ORDER BY, 40 characters')
+      call check(ok, 'EK strings: ORDER BY, 40 characters, ' // trim(errmsg))
+      query = 'SELECT L FROM G WHERE L = ''' // base // 'b'''
+      call ctx%ekfind(query, nrows, error, errmsg)
+      call ctx%ekgc(1_ip, 1_ip, 1_ip, cdata, null, found)
+      call check_ok('EK strings: = 1500 characters')
+      call check(.not. error .and. nrows == 1 .and. cdata(1201:1201) == 'b', &
+                 'EK strings: = 1500 characters, ' // trim(errmsg))
+      call ctx%unload(ek)
+      call delete_file(ek)
+   end subroutine test_ek_strings
 
    !> PCK constants of a body with its own nutation/precession angles
    !> (the first n of ANGLES) and coefficients (the first n of COEF).

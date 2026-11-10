@@ -553,7 +553,7 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      Whole run (100 contexts): 157 s → 129 s (system time 40 s → 9.7 s),
      peak memory 1.11 GB → 0.60 GB. With 23 open files, the random query
      is now the cost of reopening a file (the setting removes it).
-6. **Algorithm work buffers.** Done so far:
+6. **Algorithm work buffers.** Done:
    - **DSK ray intercepts** (DSKX02, per context): SPICELIB's work
      arrays (50000 voxels on a ray, 256000 plates in a voxel group, the
      100000-entry coarse grid: 3.4 MB per context, and 1.6 MB more on the
@@ -676,12 +676,29 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      60 SELECT and 12 ORDER BY columns, a join of 11 tables with 120 join
      constraints in one conjunction).
 
-   To do:
-   - **EK queries:** step C3, string comparisons cut at MAXSTR (1024)
-     characters. The encoded query is a flat integer cell laid out
-     from the maxima, so this is a rewrite of the parser's output, and the
-     least-used subsystem. EKQMGR's tables of loaded EK files, tables,
-     segments and columns (from phase 2) go with it.
+   - **EK string comparisons** (step C3 of the EK work): strings are
+     compared whole (SPICELIB: their first MAXSTR = 1024 characters, in
+     ZZEKECMP, ZZEKSCMP, ZZEKVMCH and ZZEKFRX, so that strings agreeing
+     that far were equal for =, <, LIKE, ORDER BY and joins, and the value
+     in a query was cut too). The four routines read column entries with
+     `zzekrsc_whole`: a buffer of the column's declared length, or for
+     variable-length strings 1024 characters to start, read again at the
+     string's length if longer. ZZEKJSRT failed (SPICE(STRINGTRUNCATED))
+     to order by a fixed-count string column longer than its 32-character
+     sort keys; it reads such strings whole. ZZEKRSC now sets the length
+     of class 6 strings (`spicelib_bugs.md`). Compatibility: an index
+     that SPICELIB built row by row (EKACEC) orders strings agreeing in
+     their first 1024 characters by record, not by the rest of the string
+     (the fast loader sorted them whole); lookups by such strings in such
+     a file may miss. Test: `test_limits` `test_ek_strings` (1201-character
+     strings agreeing in their first 1200: =, LIKE, ORDER BY, joins, on
+     indexed, plain and 1500-character fixed-length columns, a deleted
+     indexed row; ORDER BY a 40-character fixed-count column), all
+     failing on the previous code. tspice: F_EK04 and F_NNEK04 cases 5
+     to 7 (ZZEKSCMP on strings that agree in their first 1024
+     characters) expect the whole-string results.
+
+   Phase 6 is done.
 7. **API for caller buffers** (E, its own design document first):
    - **Allocatable outputs:** variants like `gdpool(name, values)` with
      `values` allocatable, `bodvrd`, `getfov`, `spkcov` into a window type,
@@ -795,7 +812,7 @@ or listed for later.
   needed.
 - **tspice:** cases that assert an old limit (`F_DDHOPN`, `F_DDHFTSIZE`,
   `F_PCKBSR`, `F_ZZDSKBSR`, `F_SBF`, `F_BODCOD`, `F_ZZBDKR`, `F_ZZSC01`,
-  `F_SRFTRN`, `F_ZZSWFXFM`) change to expect success, each with a PEPPER note.
+  `F_SRFTRN`, `F_ZZSWFXFM`, `F_EK04`, `F_NNEK04`) change to expect success, each with a PEPPER note.
   Tests of tspice's own copies of SPICELIB code (`t_spkbsr`, `t_ckbsr`,
   `f_zzhsc`, `f_zzhsi`) are not affected.
 - **Untested today, tested after:** `KERNELPOOLFULL`, `NOMOREROOM`, `DASFTFULL`

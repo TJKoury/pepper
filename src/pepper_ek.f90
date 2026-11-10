@@ -12871,6 +12871,11 @@ contains
 !
          call zzekrd06 ( ctx, handle,  segdsc,  coldsc,  recptr, &
                          eltidx,  eltidx,  cval,    isnull,  found )
+!
+!        PEPPER: the strings of a class 6 column have the column's
+!        declared length. SPICELIB left CVLEN unset for this class.
+!
+         cvlen  =  coldsc ( lenidx )
 
       else if ( class == 9 ) then
 
@@ -15367,6 +15372,8 @@ contains
 !!     3)  Only the first MAXSTR characters of character strings are
 !!         used in comparisons.
 !!
+!!         PEPPER: the whole strings are compared.
+!!
 !! ## Literature References
 !!
 !!     None.
@@ -15395,14 +15402,13 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
-      use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(maxstr)     cval   ( 2 )
+      character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
+      character(:), allocatable :: cval2  !! the right-hand string
 
       real(wp)              dval   ( 2 )
 
-      integer(ip)           cmplen ( 2 )
       integer(ip)           cvlen  ( 2 )
       integer(ip)           i
       integer(ip)           ival   ( 2 )
@@ -15417,6 +15423,11 @@ contains
 !
       zzekecmp  =  eq
 
+!
+!     PEPPER: the right-hand entries of numeric columns are read with
+!     element index ELTS(2); SPICELIB used ELTS(1) (always equal, as
+!     only scalar entries are compared).
+!
       lhstyp    =  cldscs( typidx, 1 )
       rhstyp    =  cldscs( typidx, 2 )
 
@@ -15446,7 +15457,7 @@ contains
          if ( rhstyp == int ) then
 
             call zzekrsi ( ctx, hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
-                           elts(1), ival(2),     null(2),     found   )
+                           elts(2), ival(2),     null(2),     found   )
 
             if ( .not. found ) then
 
@@ -15485,7 +15496,7 @@ contains
          else if ( rhstyp == dp ) then
 
             call zzekrsd ( ctx, hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
-                           elts(1), dval(2),     null(2),     found   )
+                           elts(2), dval(2),     null(2),     found   )
 
             if ( .not. found ) then
 
@@ -15554,7 +15565,7 @@ contains
          if ( rhstyp == int ) then
 
             call zzekrsi ( ctx, hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
-                           elts(1), ival(2),     null(2),     found   )
+                           elts(2), ival(2),     null(2),     found   )
 
             if ( .not. found ) then
 
@@ -15593,7 +15604,7 @@ contains
          else if ( rhstyp == dp ) then
 
             call zzekrsd ( ctx, hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
-                           elts(1), dval(2),     null(2),     found   )
+                           elts(2), dval(2),     null(2),     found   )
 
             if ( .not. found ) then
 
@@ -15712,15 +15723,17 @@ contains
 
          do i = 1, 2
 
-            call zzekrsc ( ctx,  hans  (  i), &
-                            sgdscs(1,i), &
-                            cldscs(1,i), &
-                            rows(i), &
-                            elts(i), &
-                            cvlen(i), &
-                            cval(i), &
-                            null(i), &
-                            found           )
+!
+!           PEPPER: read the whole strings (SPICELIB compared at most
+!           MAXSTR characters).
+!
+            if ( i == 1 ) then
+               call zzekrsc_whole ( ctx, hans(i), sgdscs(1,i), cldscs(1,i), rows(i), &
+                                    elts(i), cvlen(i), cval1, null(i), found )
+            else
+               call zzekrsc_whole ( ctx, hans(i), sgdscs(1,i), cldscs(1,i), rows(i), &
+                                    elts(i), cvlen(i), cval2, null(i), found )
+            end if
 
             if ( .not. found ) then
 
@@ -15735,10 +15748,6 @@ contains
 
             end if
 
-!
-!           Let CMPLEN(I) be the string length to use in comparisons.
-!
-            cmplen(i) = min ( cvlen(i), maxstr )
 
          end do
 
@@ -15752,13 +15761,13 @@ contains
 
          else
 
-            if (   llt (   cval(1)( :cmplen(1) ), &
-                           cval(2)( :cmplen(2) )  )   ) then
+            if (   llt (   cval1( :cvlen(1) ), &
+                           cval2( :cvlen(2) )  )   ) then
 
                zzekecmp = lt
 
-            else if (   lgt (  cval(1)( :cmplen(1) ), &
-                               cval(2)( :cmplen(2) )  )   ) then
+            else if (   lgt (  cval1( :cvlen(1) ), &
+                               cval2( :cvlen(2) )  )   ) then
                zzekecmp = gt
             else
                zzekecmp = eq
@@ -15803,7 +15812,6 @@ contains
       use pepper_strings, only: matchi
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
-      use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       use pepper_inc_ekwild
@@ -15999,7 +16007,7 @@ contains
 !
 !     Local variables
 !
-      character(maxstr)     eltc
+      character(:), allocatable :: eltc  !! the column entry (PEPPER: SPICELIB's CHARACTER*(MAXSTR))
 
       real(wp)              eltd
       real(wp)              numval
@@ -16026,17 +16034,18 @@ contains
 
       if ( coltyp == chr ) then
 !
-!        We'll use at most the first MAXSTR characters of the input
-!        string.
+!        PEPPER: compare the whole strings. SPICELIB used at most the
+!        first MAXSTR characters of the input string and of the column
+!        entry.
 !
-         cvlen = min ( len(cval), maxstr )
+         cvlen = len(cval)
 
 !
 !        Fetch the column entry to be compared. Note that ROW
 !        is a polymorphic identifier. See ZZEKRSC for details
 !        on how ROW is used.
 !
-         call zzekrsc ( ctx,  handle,  segdsc,  coldsc,  row, &
+         call zzekrsc_whole ( ctx,  handle,  segdsc,  coldsc,  row, &
                          eltidx,  strlen,  eltc,    enull, found )
 
          if ( ctx%failed() ) then
@@ -16051,7 +16060,7 @@ contains
 !
          if (  found  .and.  ( .not. enull )  ) then
 
-            cmplen = min ( strlen, maxstr )
+            cmplen = strlen
          else
             cmplen = 0
          end if
@@ -19984,6 +19993,8 @@ contains
 !!
 !!     3)  Only the first MAXSTR characters of character strings are
 !!         used in comparisons.
+!!
+!!         PEPPER: the whole strings are compared.
 !!C
 !!
 !! ## Literature References
@@ -20023,8 +20034,8 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ekwild
-      use pepper_inc_ekqlimit
-      character(maxstr)     cval   ( 2 )
+      character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
+      character(:), allocatable :: cval2  !! the right-hand string
 
       integer(ip)           cldscs ( cdscsz, 2 )
       integer(ip)           cmplen ( 2 )
@@ -20115,15 +20126,17 @@ contains
 
                do i = 1, 2
 
-                  call zzekrsc ( ctx,  hans(i), &
-                                  sgdscs(1,i), &
-                                  cldscs(1,i), &
-                                  rows(i), &
-                                  elts(i), &
-                                  cvlen(i), &
-                                  cval(i), &
-                                  null(i), &
-                                  found           )
+!
+!                 PEPPER: read the whole strings (SPICELIB matched at
+!                 most MAXSTR characters).
+!
+                  if ( i == 1 ) then
+                     call zzekrsc_whole ( ctx, hans(i), sgdscs(1,i), cldscs(1,i), rows(i), &
+                                          elts(i), cvlen(i), cval1, null(i), found )
+                  else
+                     call zzekrsc_whole ( ctx, hans(i), sgdscs(1,i), cldscs(1,i), rows(i), &
+                                          elts(i), cvlen(i), cval2, null(i), found )
+                  end if
 
                   if ( .not. found ) then
 
@@ -20141,15 +20154,15 @@ contains
 
                   if (  found  .and. ( .not. null(i) )  ) then
 
-                     cmplen(i) = min ( cvlen(i), maxstr )
+                     cmplen(i) = cvlen(i)
                   else
                      cmplen(i) = 0
                   end if
 
                end do
 
-               zzekvmch  =  matchi ( cval(1)( :cmplen(1) ), &
-                                     cval(2)( :cmplen(2) ), &
+               zzekvmch  =  matchi ( cval1( :cmplen(1) ), &
+                                     cval2( :cmplen(2) ), &
                                      wstr, &
                                      wchr                  )
 
@@ -20158,15 +20171,17 @@ contains
 
                do i = 1, 2
 
-                  call zzekrsc ( ctx,  hans(i), &
-                                  sgdscs(1,i), &
-                                  cldscs(1,i), &
-                                  rows(i), &
-                                  elts(i), &
-                                  cvlen(i), &
-                                  cval(i), &
-                                  null(i), &
-                                  found      )
+!
+!                 PEPPER: read the whole strings (SPICELIB matched at
+!                 most MAXSTR characters).
+!
+                  if ( i == 1 ) then
+                     call zzekrsc_whole ( ctx, hans(i), sgdscs(1,i), cldscs(1,i), rows(i), &
+                                          elts(i), cvlen(i), cval1, null(i), found )
+                  else
+                     call zzekrsc_whole ( ctx, hans(i), sgdscs(1,i), cldscs(1,i), rows(i), &
+                                          elts(i), cvlen(i), cval2, null(i), found )
+                  end if
 
                   if ( .not. found ) then
 
@@ -20184,15 +20199,15 @@ contains
 
                   if (  found  .and. ( .not. null(i) )  ) then
 
-                     cmplen(i) = min ( cvlen(i), maxstr )
+                     cmplen(i) = cvlen(i)
                   else
                      cmplen(i) = 0
                   end if
 
                end do
 
-               zzekvmch  =  .not. matchi ( cval(1)( :cmplen(1) ), &
-                                           cval(2)( :cmplen(2) ), &
+               zzekvmch  =  .not. matchi ( cval1( :cmplen(1) ), &
+                                           cval2( :cmplen(2) ), &
                                            wstr, &
                                            wchr                 )
 
@@ -20879,6 +20894,7 @@ contains
       integer(ip), allocatable :: idat ( : )  !! integer entry of the primary order-by column in each row
       character(1), allocatable :: nf ( : )  !! null flag of the primary order-by column's entry in each row
       integer(ip), allocatable :: ordvec ( : )  !! order vector of the rows, sorted in parallel with the data
+      character(:), allocatable :: cbuf  !! a whole string of a fixed-count column (PEPPER)
       character(inisub)     c1
       character(inisub)     c2
       real(wp)              d1
@@ -21125,15 +21141,30 @@ contains
 
             if ( dtype == chr ) then
 
-               call zzekrsc ( ctx, handle, &
-                              stsdsc(1,seg), &
-                              dtdscs(1,colptr), &
-                              row, &
-                              eltidx, &
-                              cvlen, &
-                              cdat(i), &
-                              null, &
-                              found            )
+!
+!              PEPPER: the reader of a fixed-count column (class 9)
+!              signals SPICE(STRINGTRUNCATED) if the buffer is shorter
+!              than the column's strings, as CDAT's INISUB characters
+!              are for strings longer than that. Read the whole string
+!              and keep its first INISUB characters.
+!
+               if (       ( dtdscs(clsidx,colptr) == 9      ) &
+                    .and. ( dtdscs(lenidx,colptr) >  inisub )  ) then
+
+                  call zzekrsc_whole ( ctx, handle, stsdsc(1,seg), dtdscs(1,colptr), &
+                                       row, eltidx, cvlen, cbuf, null, found )
+                  cdat(i) = cbuf
+               else
+                  call zzekrsc ( ctx, handle, &
+                                 stsdsc(1,seg), &
+                                 dtdscs(1,colptr), &
+                                 row, &
+                                 eltidx, &
+                                 cvlen, &
+                                 cdat(i), &
+                                 null, &
+                                 found            )
+               end if
 
                if ( .not. found ) then
 
@@ -22266,10 +22297,9 @@ contains
 !!
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
-      use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(maxstr)     cval
+      character(:), allocatable :: cval  !! the column entry (PEPPER: SPICELIB's CHARACTER*(MAXSTR))
 
       real(wp)              dval
 
@@ -22296,12 +22326,16 @@ contains
 
       if ( dtype == chr ) then
 
-         call zzekrsc ( ctx,  handle,  segdsc,  coldsc,  recptr, &
-                         1,       cvlen,   cval,    isnull,  found  )
+!
+!        PEPPER: read the whole string. SPICELIB looked up at most its
+!        first MAXSTR characters in the column's index.
+!
+         call zzekrsc_whole ( ctx,  handle,  segdsc,  coldsc,  recptr, &
+                              1,       cvlen,   cval,    isnull,  found  )
 
          if (  found  .and. ( .not. isnull )  ) then
 
-            cmplen = min ( cvlen, maxstr )
+            cmplen = cvlen
          else
             cmplen = 0
          end if
@@ -45056,5 +45090,49 @@ contains
       q%relts = 1
       end associate
    end subroutine ekqmgr_query_room
+
+   !> PEPPER: read an element of a character column entry, as ZZEKRSC
+   !> does, into a buffer that holds the whole string. The buffer has the
+   !> declared length of a column of fixed-length strings (whose readers
+   !> signal SPICE(STRINGTRUNCATED) on a shorter one); a variable-length
+   !> string longer than the buffer is read again into a buffer of its
+   !> length. SPICELIB read into a CHARACTER*(MAXSTR) buffer and compared
+   !> at most MAXSTR (1024) characters.
+   subroutine zzekrsc_whole ( ctx, handle, segdsc, coldsc, recptr, eltidx, cvlen, cval, isnull, found )
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      !> length of the first buffer for a variable-length string
+      integer(ip), parameter :: inilen = 1024
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+      integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+      integer(ip), intent(out) :: cvlen  !! Length of stored string.
+      character(:), allocatable, intent(inout) :: cval  !! Character value in column entry (at least CVLEN characters long, when found and not null).
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicating whether entry element was found.
+      integer(ip) :: n
+      n = coldsc ( lenidx )
+      if ( n < 1 ) n = inilen
+      call room ( n )
+      call zzekrsc ( ctx, handle, segdsc, coldsc, recptr, eltidx, cvlen, cval, isnull, found )
+      if ( ctx%failed() ) return
+      if ( found .and. ( .not. isnull ) .and. ( cvlen > len ( cval ) ) ) then
+         call room ( cvlen )
+         call zzekrsc ( ctx, handle, segdsc, coldsc, recptr, eltidx, cvlen, cval, isnull, found )
+      end if
+   contains
+      !> make CVAL at least N characters long
+      subroutine room ( n )
+         integer(ip), intent(in) :: n  !! the length needed
+         if ( allocated ( cval ) ) then
+            if ( len ( cval ) >= n ) return
+            deallocate ( cval )
+         end if
+         allocate ( character(n) :: cval )
+      end subroutine room
+   end subroutine zzekrsc_whole
 
 end submodule pepper_ek

@@ -431,6 +431,11 @@
 !     Since these entries agree up to the first MAXSTR characters,
 !     we expect equality.
 !
+!
+!     PEPPER: strings are compared whole, not cut at MAXSTR
+!     characters (SPICELIB): the entry (...ZAB) is less than CVAL
+!     (...ZAC), and LIKE templates match the whole entry.
+!
       ELTIDX = 1
       DTYPE  = CHR
       CVAL   = CDATA(2)
@@ -453,7 +458,7 @@
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL CHCKSL ( 'EQ MATCH', MATCH, .TRUE., OK )
+      CALL CHCKSL ( 'EQ MATCH', MATCH, .FALSE., OK )
 
 
       MATCH = ZZEKSCMP ( LT,     HANDLE, SEGDSC, CLDSC1, RECPTR, &
@@ -461,7 +466,7 @@
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL CHCKSL ( 'LT MATCH', MATCH, .FALSE., OK )
+      CALL CHCKSL ( 'LT MATCH', MATCH, .TRUE., OK )
 
 
       MATCH = ZZEKSCMP ( GT,     HANDLE, SEGDSC, CLDSC1, RECPTR, &
@@ -474,7 +479,7 @@
 
 
       MATCH = ZZEKSCMP ( LIKE,   HANDLE, SEGDSC, CLDSC1, RECPTR, &
-                         ELTIDX, DTYPE,  '*XZ',  DVAL,   IVAL,  NULL )
+                         ELTIDX, DTYPE,  '*XZAB',  DVAL,   IVAL,  NULL )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -498,7 +503,7 @@
 
 
       MATCH = ZZEKSCMP ( UNLIKE, HANDLE, SEGDSC, CLDSC1, RECPTR, &
-                         ELTIDX, DTYPE,  '*XZ',  DVAL,   IVAL,  NULL )
+                         ELTIDX, DTYPE,  '*XZAB',  DVAL,   IVAL,  NULL )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -550,6 +555,10 @@
 !     Since these entries agree up to the first MAXSTR characters,
 !     we expect equality.
 !
+!
+!     PEPPER: strings are compared whole, not cut at MAXSTR
+!     characters (SPICELIB): LIKE templates match the whole entry.
+!
       ELTIDX = 1
       DTYPE  = CHR
       CVAL   = CDATA(1)
@@ -593,7 +602,7 @@
 
 
       MATCH = ZZEKSCMP ( LIKE,   HANDLE, SEGDSC, CLDSC1, RECPTR, &
-                         ELTIDX, DTYPE,  '*XV',  DVAL,   IVAL,  NULL )
+                         ELTIDX, DTYPE,  '*XVAB',  DVAL,   IVAL,  NULL )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -617,7 +626,7 @@
 
 
       MATCH = ZZEKSCMP ( UNLIKE, HANDLE, SEGDSC, CLDSC1, RECPTR, &
-                         ELTIDX, DTYPE,  '*XV',  DVAL,   IVAL,  NULL )
+                         ELTIDX, DTYPE,  '*XVAB',  DVAL,   IVAL,  NULL )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -669,6 +678,10 @@
 !     Since these entries agree up to the first MAXSTR characters,
 !     we expect equality.
 !
+!
+!     PEPPER: strings are compared whole, not cut at MAXSTR
+!     characters (SPICELIB): LIKE templates match the whole entry.
+!
       ELTIDX = 1
       DTYPE  = CHR
       CVAL   = CDATA(4)
@@ -712,7 +725,7 @@
 
 
       MATCH = ZZEKSCMP ( LIKE,   HANDLE, SEGDSC, CLDSC1, RECPTR, &
-                         ELTIDX, DTYPE,  '*XZ',  DVAL,   IVAL,  NULL )
+                         ELTIDX, DTYPE,  '*XZAB',  DVAL,   IVAL,  NULL )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -736,7 +749,7 @@
 
 
       MATCH = ZZEKSCMP ( UNLIKE, HANDLE, SEGDSC, CLDSC1, RECPTR, &
-                         ELTIDX, DTYPE,  '*XZ',  DVAL,   IVAL,  NULL )
+                         ELTIDX, DTYPE,  '*XZAB',  DVAL,   IVAL,  NULL )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
